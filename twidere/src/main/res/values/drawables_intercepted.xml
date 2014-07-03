@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<item name="solid_pressed_white_intercepted" type="drawable"/>
+	<item name="solid_focused_white_intercepted" type="drawable"/>
+	<item name="rect_focused_background_white_intercepted" type="drawable"/>
+
+</resources>

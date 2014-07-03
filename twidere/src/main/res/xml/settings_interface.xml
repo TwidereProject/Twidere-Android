@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:robobunny="http://robobunny.com"
+	android:title="@string/settings_interface">
+
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="true"
+		android:key="unread_count"
+		android:title="@string/unread_count"/>
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="bottom_send_button"
+		android:title="@string/bottom_send_button"/>
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="bottom_compose_button"
+		android:summary="@string/bottom_compose_button_summary"
+		android:title="@string/bottom_compose_button"/>
+
+	<org.mariotaku.twidere.preference.LeftsideComposeButtonPreference
+		android:defaultValue="false"
+		android:dependency="bottom_compose_button"
+		android:key="leftside_compose_button"
+		android:summary="@string/leftside_compose_button_summary"
+		android:title="@string/leftside_compose_button"/>
+
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="fast_scroll_thumb"
+		android:title="@string/fast_scroll_thumb"/>
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="disable_tab_swipe"
+		android:title="@string/disable_tab_swipe"/>
+
+	<org.mariotaku.twidere.preference.AutoInvalidateListPreference
+		android:defaultValue="@string/default_tab_display_option"
+		android:entries="@array/entries_tab_display_option"
+		android:entryValues="@array/values_tab_display_option"
+		android:key="tab_display_option"
+		android:summary="%s"
+		android:title="@string/tab_display_option"/>
+
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="long_click_to_open_menu"
+		android:title="@string/long_click_to_open_menu"/>
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="swipe_back"
+		android:title="@string/swipe_back"/>
+
+</PreferenceScreen>

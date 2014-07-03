@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<integer name="nyan_star_rows">15</integer>
+	<integer name="nyan_star_cols">19</integer>
+	<integer name="default_text_size">17</integer>
+	<integer name="unread_count_text_size">12</integer>
+	<integer name="default_multi_column_list_count">2</integer>
+	<integer name="theme_preview_pane_space_weight">2</integer>
+	<integer name="default_live_wallpaper_scale">3</integer>
+	<integer name="staggered_grid_columns_port">2</integer>
+	<integer name="staggered_grid_columns_land">3</integer>
+
+</resources>

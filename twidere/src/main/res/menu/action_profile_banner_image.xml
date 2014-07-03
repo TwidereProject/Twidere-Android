@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@id/take_photo"
+		android:icon="@android:drawable/ic_menu_camera"
+		android:title="@string/take_photo"/>
+	<item
+		android:id="@id/pick_from_gallery"
+		android:icon="@android:drawable/ic_menu_gallery"
+		android:title="@string/pick_from_gallery"/>
+	<item
+		android:id="@+id/delete_submenu"
+		android:icon="@android:drawable/ic_menu_delete"
+		android:title="@string/delete">
+		<menu>
+			<item
+				android:id="@id/delete"
+				android:icon="@android:drawable/ic_menu_delete"
+				android:title="@string/delete"/>
+			<item
+				android:icon="@android:drawable/ic_menu_close_clear_cancel"
+				android:title="@android:string/cancel"/>
+		</menu>
+	</item>
+
+</menu>

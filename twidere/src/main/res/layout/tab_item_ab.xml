@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent"
+	android:orientation="horizontal">
+
+	<ImageView
+		android:id="@android:id/icon"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="center"
+		android:contentDescription="@string/icon"
+		android:scaleType="centerInside"/>
+
+	<TextView
+		android:id="@android:id/title"
+		style="?android:actionBarTabTextStyle"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="center"/>
+
+</LinearLayout>

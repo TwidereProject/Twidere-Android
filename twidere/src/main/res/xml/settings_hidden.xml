@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/hidden_settings">
+
+	<Preference android:layout="@layout/header_hidden_settings"/>
+
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="force_using_private_apis"
+		android:title="@string/force_using_private_apis"/>
+
+	<org.mariotaku.twidere.preference.AutoFixEditTextPreference
+		android:defaultValue="140"
+		android:inputType="number"
+		android:key="status_text_limit"
+		android:title="@string/status_text_limit"/>
+
+	<Preference android:title="@string/settings_wizard">
+		<intent
+			android:targetClass="org.mariotaku.twidere.activity.SettingsWizardActivity"
+			android:targetPackage="org.mariotaku.twidere"/>
+	</Preference>
+
+</PreferenceScreen>

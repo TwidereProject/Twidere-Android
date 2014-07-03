@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".fragment.SearchFragment">
+
+	<org.mariotaku.twidere.view.ExtendedViewPager
+		android:id="@+id/search_pager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+
+	<com.viewpagerindicator.CirclePageIndicator
+		android:id="@+id/search_pager_indicator"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:padding="@dimen/element_spacing_normal"/>
+
+</FrameLayout>

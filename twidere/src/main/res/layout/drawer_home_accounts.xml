@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.LeftDrawerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/left_drawer_container"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<fragment
+		android:id="@+id/left_drawer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		class="org.mariotaku.twidere.fragment.support.AccountsDrawerFragment"
+		tools:layout="@layout/fragment_accounts_drawer"/>
+
+</org.mariotaku.twidere.view.LeftDrawerFrameLayout>

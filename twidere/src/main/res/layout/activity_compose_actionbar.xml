@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/compose_actionbar"
+	style="?android:actionBarStyle"
+	android:layout_width="match_parent"
+	android:layout_height="?android:actionBarSize"
+	android:baselineAligned="false"
+	android:gravity="center_vertical"
+	android:orientation="horizontal">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1">
+
+		<LinearLayout
+			android:id="@+id/close"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:background="?android:actionBarItemBackground"
+			android:clickable="true"
+			android:focusable="true"
+			android:orientation="horizontal"
+			android:paddingLeft="0dp"
+			android:paddingRight="8dp">
+
+			<org.mariotaku.twidere.view.ActionBarHomeAsUpIndicator
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"/>
+
+			<ImageView
+				android:layout_width="?android:actionBarSize"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="-8dp"
+				android:layout_marginRight="-8dp"
+				android:contentDescription="@string/app_name"
+				android:paddingBottom="6dp"
+				android:paddingTop="6dp"
+				android:scaleType="centerInside"
+				android:src="@drawable/ic_launcher_twidere_iconic"/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:gravity="center_vertical"
+				android:orientation="vertical"
+				android:paddingLeft="4dp">
+
+				<org.mariotaku.twidere.view.ActionBarTitleView
+					android:id="@+id/actionbar_title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:singleLine="true"/>
+
+				<org.mariotaku.twidere.view.ActionBarSubtitleView
+					android:id="@+id/actionbar_subtitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:singleLine="true"
+					android:text="@string/quote_protected_status_notice"
+					android:visibility="gone"/>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+
+	<ProgressBar
+		android:id="@+id/actionbar_progress_indeterminate"
+		style="?android:progressBarStyle"
+		android:layout_width="?android:actionBarSize"
+		android:layout_height="?android:actionBarSize"
+		android:layout_gravity="center_vertical"
+		android:layout_weight="0"
+		android:indeterminateOnly="true"
+		android:padding="2dp"
+		android:visibility="gone"/>
+
+	<org.mariotaku.menucomponent.widget.MenuBar
+		android:id="@+id/action_menu"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_weight="0"
+		android:background="@null"
+		android:max="@integer/max_compose_menu_buttons_top"/>
+
+	<include layout="@layout/action_item_compose"/>
+
+</LinearLayout>

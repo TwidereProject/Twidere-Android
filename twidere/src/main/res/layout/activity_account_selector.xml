@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	tools:context=".activity.SelectAccountActivity">
+
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1"/>
+
+	<View
+		android:id="@+id/select_account_divider"
+		android:layout_width="match_parent"
+		android:layout_height="0.2dp"
+		android:background="#40808080"/>
+
+	<LinearLayout
+		android:id="@+id/select_account_buttons"
+		style="?android:buttonBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:orientation="horizontal">
+
+		<Button
+			android:id="@+id/save"
+			style="?android:borderlessButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:onClick="onClick"
+			android:text="@android:string/ok"/>
+	</LinearLayout>
+
+</LinearLayout>

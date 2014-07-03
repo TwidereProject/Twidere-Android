@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:key="settings_content"
+	android:title="@string/content_and_storage">
+
+	<PreferenceCategory
+		android:key="category_multimedia_contents"
+		android:title="@string/multimedia_contents">
+		<org.mariotaku.twidere.preference.MediaUploaderPreference
+			android:defaultValue=""
+			android:key="media_uploader"
+			android:summary="%s"
+			android:title="@string/image_uploader"/>
+
+		<EditTextPreference
+			android:defaultValue="[TEXT] [LINK]"
+			android:dialogTitle="@string/image_upload_format"
+			android:key="media_upload_format"
+			android:singleLine="true"
+			android:summary="@string/image_upload_format_summary"
+			android:title="@string/image_upload_format"/>
+
+		<org.mariotaku.twidere.preference.ImagePreloadPreference
+			android:key="image_preload_options"
+			android:title="@string/image_preload_options"/>
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="preload_wifi_only"
+			android:title="@string/preload_wifi_only"/>
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:key="category_content"
+		android:title="@string/content">
+		<org.mariotaku.twidere.preference.StatusShortenerPreference
+			android:defaultValue=""
+			android:key="status_shortener"
+			android:summary="%s"
+			android:title="@string/status_shortener"/>
+
+		<EditTextPreference
+			android:defaultValue="RT @[NAME]: [TEXT]"
+			android:dialogTitle="@string/quote_format"
+			android:key="quote_format"
+			android:singleLine="true"
+			android:summary="@string/quote_format_summary"
+			android:title="@string/quote_format"/>
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="link_to_quoted_tweet"
+			android:title="@string/link_to_quoted_status"/>
+
+		<EditTextPreference
+			android:defaultValue="[TITLE] - [TEXT]"
+			android:dialogTitle="@string/share_format"
+			android:key="share_format"
+			android:singleLine="true"
+			android:summary="@string/share_format_summary"
+			android:title="@string/share_format"/>
+
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="load_more_automatically"
+			android:summary="@string/load_more_automatically_summary"
+			android:title="@string/load_more_automatically"/>
+
+		<org.mariotaku.twidere.preference.SeekBarDialogPreference
+			android:defaultValue="20"
+			android:key="load_item_limit"
+			android:summary="@string/load_item_limit_summary"
+			android:title="@string/load_item_limit"
+			app:max="200"
+			app:min="10"/>
+
+		<org.mariotaku.twidere.preference.TimelineSyncPreference
+			android:defaultValue=""
+			android:key="timeline_sync_service"
+			android:summary="%s"
+			android:title="@string/timeline_sync_service"/>
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="remember_position"
+			android:summary="@string/remember_position_summary"
+			android:title="@string/remember_position"/>
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="load_more_from_top"
+			android:summary="@string/load_more_from_top_summary"
+			android:title="@string/load_more_from_top"/>
+
+		<org.mariotaku.twidere.preference.TrendsLocationPreference
+			android:key="trends_location"
+			android:summary="@string/trends_location_summary"
+			android:title="@string/trends_location"/>
+
+		<org.mariotaku.twidere.preference.TranslationDestinationPreference
+			android:key="translation_destination"
+			android:title="@string/translation_destination"/>
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:key="category_safety"
+		android:title="@string/safety">
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="phishing_link_warning"
+			android:summary="@string/phishing_link_warning_summary"
+			android:title="@string/phishing_link_warning"/>
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="display_sensitive_contents"
+			android:summary="@string/display_sensitive_contents_summary"
+			android:title="@string/display_sensitive_contents"/>
+	</PreferenceCategory>
+
+</PreferenceScreen>

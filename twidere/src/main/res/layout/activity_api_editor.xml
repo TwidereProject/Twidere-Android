@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1">
+
+		<include layout="@layout/api_editor_content"/>
+	</FrameLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.2dp"
+		android:background="#40808080"/>
+
+	<Button
+		android:id="@+id/save"
+		style="?android:borderlessButtonStyle"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/button_bar_height"
+		android:layout_gravity="center_horizontal"
+		android:gravity="center"
+		android:text="@android:string/ok"/>
+
+</LinearLayout>

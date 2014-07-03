@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="support-v13-20.0.0">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/build/intermediates/exploded-aar/com.android.support/support-v13/20.0.0/res" />
+      <root url="jar://$PROJECT_DIR$/build/intermediates/exploded-aar/com.android.support/support-v13/20.0.0/libs/internal_impl-20.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/intermediates/exploded-aar/com.android.support/support-v13/20.0.0/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

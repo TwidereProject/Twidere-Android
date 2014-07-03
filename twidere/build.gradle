@@ -1,0 +1,36 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "org.mariotaku.twidere"
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 95
+        versionName "0.2.9.14"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v13:20.0.0'
+    compile 'com.google.android.gms:play-services:5.0.77'
+    compile 'com.negusoft.holoaccent:library:+'
+    compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'com.viewpagerindicator:library:2.4.1'
+    compile 'com.sothree.slidinguppanel:library:2.0.0'
+    compile 'com.twitter:twitter-text:1.9.5'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.2'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.3'
+    compile 'org.apache.httpcomponents:httpmime:4.3.3'
+    compile 'ch.acra:acra:4.5.0'
+    compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

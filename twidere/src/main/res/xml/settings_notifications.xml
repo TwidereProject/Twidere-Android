@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:title="@string/notifications">
+
+	<org.mariotaku.twidere.preference.NotificationAccountsListPreference
+		android:key="cat_accounts"
+		android:title="@string/accounts"
+		app:switchDefault="true"
+		app:switchKey="notification"/>
+
+	<PreferenceCategory
+		android:key="cat_general"
+		android:title="@string/general">
+		<org.mariotaku.twidere.preference.SilentNotificationsPreference
+			android:key="silent_notifications"
+			android:summary="@string/silent_notifications_summary"
+			android:title="@string/silent_notifications"/>
+
+		<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+			android:defaultValue="false"
+			android:key="background_toast_notification"
+			android:summary="@string/background_toast_notification_summary"
+			android:title="@string/background_toast_notification"/>
+	</PreferenceCategory>
+
+</PreferenceScreen>

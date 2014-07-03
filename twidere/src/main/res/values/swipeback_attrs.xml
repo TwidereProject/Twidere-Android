@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<declare-styleable name="SwipeBackLayout">
+		<attr name="edgeSize" format="dimension"/>
+		<attr name="edgeFlag">
+			<enum name="left" value="0"/>
+			<enum name="right" value="1"/>
+			<enum name="bottom" value="2"/>
+			<enum name="all" value="3"/>
+		</attr>
+		<attr name="shadowLeft" format="reference"/>
+		<attr name="shadowRight" format="reference"/>
+		<attr name="shadowBottom" format="reference"/>
+		<attr name="scrimColor" format="color"/>
+		<attr name="scrimAlpha" format="float"/>
+		<attr name="scalePercent" format="fraction"/>
+	</declare-styleable>
+
+	<attr name="SwipeBackLayoutStyle" format="reference"/>
+
+</resources>

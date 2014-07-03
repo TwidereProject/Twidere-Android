@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dnsjava-ipv6-1.0-with-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/twidere/libs/dnsjava-ipv6-1.0-with-sources.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@id/open_in_browser"
+		android:icon="@drawable/ic_iconic_action_web"
+		android:showAsAction="always"
+		android:title="@string/browser_sign_in"/>
+	<item
+		android:id="@id/edit_api"
+		android:icon="@drawable/ic_iconic_action_server"
+		android:showAsAction="always"
+		android:title="@string/edit_api"/>
+	<item
+		android:id="@id/settings"
+		android:icon="@drawable/ic_iconic_action_preferences"
+		android:showAsAction="always"
+		android:title="@string/settings"/>
+
+</menu>

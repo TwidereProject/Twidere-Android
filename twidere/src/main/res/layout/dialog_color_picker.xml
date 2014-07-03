@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:gravity="center_horizontal"
+	android:orientation="vertical"
+	android:padding="@dimen/element_spacing_normal">
+
+	<org.mariotaku.twidere.view.ColorPickerView
+		android:id="@+id/color_picker"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"/>
+
+	<com.scvngr.levelup.views.gallery.Gallery
+		android:id="@+id/color_presets"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/button_bar_height"
+		android:layout_weight="0"
+		android:spacing="0dp"/>
+
+</LinearLayout>

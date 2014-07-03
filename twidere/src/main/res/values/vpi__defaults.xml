@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<dimen name="default_line_indicator_line_width">12dp</dimen>
+	<dimen name="default_line_indicator_gap_width">4dp</dimen>
+	<dimen name="default_line_indicator_stroke_width">1dp</dimen>
+
+	<color name="default_line_indicator_selected_color">#FF33B5E5</color>
+	<color name="default_line_indicator_unselected_color">#FFBBBBBB</color>
+
+	<bool name="default_line_indicator_centered">true</bool>
+
+</resources>

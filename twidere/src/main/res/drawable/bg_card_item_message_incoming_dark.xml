@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:drawable="@drawable/bg_card_item_message_incoming_normal_dark" android:state_window_focused="false"/>
+	<item android:drawable="@drawable/bg_card_item_message_incoming_pressed_dark" android:state_pressed="true" android:state_selected="true"/>
+	<item android:drawable="@drawable/bg_card_item_message_incoming_pressed_dark" android:state_pressed="true" android:state_selected="false"/>
+	<item android:drawable="@drawable/bg_card_item_message_incoming_focused_dark" android:state_selected="true"/>
+
+</selector>

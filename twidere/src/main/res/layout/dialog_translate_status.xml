@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<include layout="@layout/dialog_scrollable_status"/>
+
+	<LinearLayout
+		android:id="@+id/progress_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/status_container"
+		android:layout_alignRight="@+id/status_container"
+		android:baselineAligned="false"
+		android:orientation="horizontal"
+		android:padding="@dimen/element_spacing_large">
+
+		<ProgressBar
+			android:id="@android:id/progress"
+			style="?android:attr/progressBarStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="16dip"/>
+
+		<TextView
+			android:id="@android:id/message"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:text="@string/please_wait"/>
+	</LinearLayout>
+
+</RelativeLayout>

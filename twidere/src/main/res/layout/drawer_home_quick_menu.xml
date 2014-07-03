@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.RightDrawerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/right_drawer_container"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<fragment
+		android:id="@+id/right_drawer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		class="org.mariotaku.twidere.fragment.support.QuickMenuFragment"
+		tools:layout="@layout/fragment_quick_menu"/>
+
+</org.mariotaku.twidere.view.RightDrawerFrameLayout>

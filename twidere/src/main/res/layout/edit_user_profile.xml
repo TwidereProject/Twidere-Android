@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<ScrollView
+		android:id="@+id/content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<org.mariotaku.twidere.view.ProfileImageBannerLayout
+					android:id="@+id/profile_image_banner"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"/>
+
+				<LinearLayout
+					android:id="@+id/profile_name_container"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="bottom"
+					android:clickable="true"
+					android:gravity="center_vertical"
+					android:orientation="vertical"
+					android:padding="8dp">
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/name"
+						android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+					<EditText
+						android:id="@+id/name"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:inputType="textPersonName"
+						android:maxLength="20"
+						android:singleLine="true"
+						android:textAppearance="?android:attr/textAppearanceMedium"/>
+				</LinearLayout>
+			</FrameLayout>
+
+			<LinearLayout
+				android:id="@+id/description_container"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:padding="4dp">
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/description"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+				<EditText
+					android:id="@+id/description"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="top"
+					android:inputType="textMultiLine"
+					android:maxLength="160"
+					android:minLines="4"
+					android:singleLine="false"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/location_container"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:padding="4dp">
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="true"
+					android:text="@string/location"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+				<EditText
+					android:id="@+id/location"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="textPostalAddress"
+					android:maxLength="30"
+					android:singleLine="true"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/url_container"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:padding="4dp">
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="true"
+					android:text="@string/url"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+				<EditText
+					android:id="@+id/url"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="textUri"
+					android:maxLength="100"
+					android:singleLine="true"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+
+	<ProgressBar
+		android:id="@+id/progress"
+		style="?android:attr/progressBarStyleLarge"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"/>
+
+</merge>

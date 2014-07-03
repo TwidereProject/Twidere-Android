@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.CardItemLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/content"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:paddingBottom="@dimen/element_spacing_small"
+	android:paddingLeft="@dimen/element_spacing_normal"
+	android:paddingRight="@dimen/element_spacing_normal"
+	android:paddingTop="@dimen/element_spacing_small"
+	tools:context=".adapter.DraftsAdapter">
+
+	<org.mariotaku.twidere.view.ImagePreviewContainer
+		android:id="@+id/image_preview_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<org.mariotaku.twidere.view.HighlightImageView
+			android:id="@+id/image_preview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"/>
+
+		<ProgressBar
+			android:id="@+id/image_preview_progress"
+			style="?android:progressBarStyleHorizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_margin="16dp"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.2dp"
+			android:layout_gravity="bottom"
+			android:background="#40808080"/>
+	</org.mariotaku.twidere.view.ImagePreviewContainer>
+
+	<org.mariotaku.twidere.view.themed.ThemedTextView
+		android:id="@+id/text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="?android:listPreferredItemHeightSmall"
+		android:paddingBottom="@dimen/element_spacing_normal"
+		android:paddingLeft="@dimen/element_spacing_normal"
+		android:paddingRight="@dimen/element_spacing_normal"
+		android:paddingTop="@dimen/element_spacing_normal"
+		android:textAppearance="?android:textAppearanceSmall"
+		android:textColor="?android:textColorPrimary"/>
+
+	<org.mariotaku.twidere.view.themed.ThemedTextView
+		android:id="@+id/time"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="@dimen/element_spacing_normal"
+		android:paddingLeft="@dimen/element_spacing_normal"
+		android:paddingRight="@dimen/element_spacing_normal"
+		android:textAppearance="?android:textAppearanceSmall"
+		android:textColor="?android:textColorPrimary"/>
+
+</org.mariotaku.twidere.view.CardItemLinearLayout>

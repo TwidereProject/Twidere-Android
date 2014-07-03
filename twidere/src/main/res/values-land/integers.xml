@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<integer name="nyan_star_rows">5</integer>
+	<integer name="nyan_star_cols">17</integer>
+	<integer name="max_action_buttons">4</integer>
+
+</resources>

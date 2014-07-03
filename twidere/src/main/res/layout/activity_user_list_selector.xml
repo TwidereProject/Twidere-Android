@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".activity.UserListSelectorActivity">
+
+	<LinearLayout
+		android:id="@+id/user_lists_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone">
+
+		<ListView
+			android:id="@+id/user_lists_list"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"/>
+
+		<LinearLayout
+			android:id="@+id/create_list_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="0.2dp"
+				android:background="#40808080"/>
+
+			<Button
+				android:id="@+id/create_list"
+				style="?android:borderlessButtonStyle"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/button_bar_height"
+				android:gravity="center"
+				android:onClick="onClick"
+				android:text="@string/new_user_list"/>
+		</LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/users_list_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		tools:context=".activity.UserListSelectorActivity">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<TextView
+				style="?android:listSeparatorTextViewStyle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/user"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:orientation="horizontal"
+				android:padding="@dimen/element_spacing_normal">
+
+				<AutoCompleteTextView
+					android:id="@+id/edit_screen_name"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:ems="10"
+					android:singleLine="true"/>
+
+				<ImageButton
+					android:id="@+id/screen_name_confirm"
+					android:layout_width="@dimen/minimum_element_size"
+					android:layout_height="@dimen/minimum_element_size"
+					android:layout_weight="0"
+					android:background="?android:selectableItemBackground"
+					android:contentDescription="@android:string/search_go"
+					android:onClick="onClick"
+					android:src="@android:drawable/ic_menu_search"/>
+			</LinearLayout>
+
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="0.2dp"
+				android:background="#40808080"/>
+		</LinearLayout>
+
+		<ListView
+			android:id="@+id/users_list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+	</LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tab_container"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:baselineAligned="false"
+	android:orientation="horizontal">
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:orientation="horizontal">
+
+		<view
+			android:id="@android:id/tabs"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="left"
+			class="org.mariotaku.twidere.view.TabPageIndicator"/>
+	</LinearLayout>
+
+	<org.mariotaku.twidere.view.HomeActionsActionView
+		android:id="@+id/actions_button"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_weight="0"/>
+
+</LinearLayout>

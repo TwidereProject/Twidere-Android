@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent">
+
+	<org.mariotaku.twidere.view.ForegroundImageView
+		android:id="@android:id/icon"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentTop="true"
+		android:layout_margin="@dimen/element_spacing_extra_small"
+		android:background="?android:activatedBackgroundIndicator"
+		android:foreground="?android:selectableItemBackground"
+		android:padding="@dimen/element_spacing_extra_small"/>
+	<!--
+	<org.mariotaku.twidere.view.ActivatedCheckBox
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:clickable="false"
+		android:focusable="false"/>
+	-->
+
+</org.mariotaku.twidere.view.SquareRelativeLayout>

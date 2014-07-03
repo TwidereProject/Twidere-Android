@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+	android:oneshot="false">
+
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame00"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame01"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame02"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame03"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame04"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame05"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame06"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame07"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame08"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame09"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame10"/>
+	</item>
+	<item android:duration="70">
+		<bitmap
+			android:antialias="false"
+			android:filter="false"
+			android:src="@drawable/nyan_sakamoto_frame11"/>
+	</item>
+
+</animation-list>

@@ -1,0 +1,6 @@
+<org.mariotaku.menucomponent.widget.MenuBar xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/menu_bar"
+	style="?android:actionBarSplitStyle"
+	android:layout_width="match_parent"
+	android:layout_height="?android:actionBarSize"
+	android:max="@integer/max_action_buttons_bottom"/>

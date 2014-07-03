@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<integer name="nyan_star_rows">8</integer>
+	<integer name="nyan_star_cols">23</integer>
+	<integer name="default_multi_column_list_count">2</integer>
+
+</resources>

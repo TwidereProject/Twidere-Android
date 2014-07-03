@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".activity.DonateActivity">
+
+	<TableLayout
+		android:id="@+id/table_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@+id/divider"
+		android:layout_gravity="center"
+		android:gravity="center">
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:padding="@dimen/element_spacing_normal">
+
+			<TextView
+				android:id="@+id/label_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:singleLine="true"
+				android:text="@string/name"
+				android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+			<EditText
+				android:id="@+id/name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:inputType="textPersonName"
+				android:singleLine="true"/>
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:padding="@dimen/element_spacing_normal">
+
+			<TextView
+				android:id="@+id/label_amount"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:singleLine="true"
+				android:text="@string/amount_usd"
+				android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+			<EditText
+				android:id="@+id/amount"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:inputType="numberDecimal"
+				android:singleLine="true"/>
+		</TableRow>
+	</TableLayout>
+
+	<View
+		android:id="@+id/divider"
+		android:layout_width="match_parent"
+		android:layout_height="0.2dp"
+		android:layout_above="@+id/donate"
+		android:background="#40808080"/>
+
+	<Button
+		android:id="@+id/donate"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/button_bar_height"
+		android:layout_alignParentBottom="true"
+		android:background="?android:selectableItemBackground"
+		android:text="@string/donate"/>
+
+</RelativeLayout>

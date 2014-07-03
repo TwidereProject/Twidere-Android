@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minHeight="@dimen/compose_min_height"
+	android:minWidth="@dimen/compose_min_width"
+	android:orientation="vertical">
+
+	<org.mariotaku.twidere.view.ActionBarThemedContainer
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout="@layout/activity_compose_actionbar"/>
+
+	<LinearLayout
+		android:id="@+id/compose_content"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<org.mariotaku.twidere.view.ColorLabelRelativeLayout
+			android:id="@+id/accounts_color"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:animateLayoutChanges="true">
+
+			<org.mariotaku.dynamicgridview.DynamicGridView
+				android:id="@+id/medias_thumbnail_preview"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_alignBottom="@+id/edit_text_container"
+				android:layout_alignTop="@+id/edit_text_container"
+				android:alpha="0.2"
+				android:numColumns="@integer/grid_column_image_preview"
+				android:stretchMode="columnWidth"
+				tools:listitem="@layout/grid_item_image_preview"/>
+
+			<FrameLayout
+				android:id="@+id/edit_text_container"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/element_spacing_normal">
+
+				<org.mariotaku.twidere.view.StatusComposeEditText
+					android:id="@+id/edit_text"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:completionThreshold="1"
+					android:gravity="top"
+					android:hint="@string/status_hint"
+					android:imeOptions="actionDone"
+					android:minLines="10"/>
+			</FrameLayout>
+		</org.mariotaku.twidere.view.ColorLabelRelativeLayout>
+
+		<org.mariotaku.twidere.view.ActionBarSplitThemedContainer
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout="@layout/activity_compose_bottombar"/>
+	</LinearLayout>
+
+</LinearLayout>

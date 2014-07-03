@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@id/take_photo"
+		android:icon="@drawable/ic_iconic_action_camera"
+		android:showAsAction="ifRoom"
+		android:title="@string/take_photo"/>
+	<item
+		android:id="@id/add_image"
+		android:icon="@drawable/ic_iconic_action_gallery"
+		android:showAsAction="ifRoom"
+		android:title="@string/add_image"/>
+	<item
+		android:id="@id/add_location"
+		android:checkable="true"
+		android:icon="@drawable/ic_iconic_action_mylocation"
+		android:showAsAction="ifRoom"
+		android:title="@string/location"/>
+	<item
+		android:id="@id/view"
+		android:icon="@drawable/ic_iconic_action_reply"
+		android:showAsAction="ifRoom"
+		android:title="@string/original_status"
+		android:visible="false"/>
+	<item
+		android:id="@id/drafts"
+		android:icon="@drawable/ic_iconic_action_drafts"
+		android:showAsAction="ifRoom"
+		android:title="@string/drafts"/>
+	<item
+		android:id="@id/toggle_sensitive"
+		android:checkable="true"
+		android:icon="@drawable/ic_iconic_action_warning"
+		android:title="@string/mark_as_sensitive"/>
+
+</menu>

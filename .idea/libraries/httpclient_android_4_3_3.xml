@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="httpclient-android-4.3.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-android/4.3.3/39ba75b570e5f1535356e8a1bf920b1c6cc83a9a/httpclient-android-4.3.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<integer name="nyan_star_rows">10</integer>
+	<integer name="nyan_star_cols">13</integer>
+	<integer name="default_text_size">16</integer>
+	<integer name="unread_count_text_size">11</integer>
+	<integer name="max_action_buttons">4</integer>
+	<integer name="default_live_wallpaper_scale">2</integer>
+	<integer name="max_compose_menu_buttons_bottom">4</integer>
+	<integer name="max_compose_menu_buttons_top">2</integer>
+	<integer name="max_compose_menu_buttons_bottom_singleaccount">5</integer>
+	<integer name="staggered_grid_columns_port">1</integer>
+	<integer name="staggered_grid_columns_land">2</integer>
+	<integer name="grid_column_image_preview">3</integer>
+
+</resources>

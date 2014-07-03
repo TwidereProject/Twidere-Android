@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- HTTP 407 - Proxy authentication required -->
+	<string name="error_http_407">Proxy authentication required</string>
+
+</resources>

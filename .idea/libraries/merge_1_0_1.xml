@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="merge-1.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/twidere/libs/merge-1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

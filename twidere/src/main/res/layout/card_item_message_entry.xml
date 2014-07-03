@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.CardItemLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/content"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:paddingBottom="@dimen/element_spacing_small"
+	android:paddingLeft="@dimen/element_spacing_normal"
+	android:paddingRight="@dimen/element_spacing_normal"
+	android:paddingTop="@dimen/element_spacing_small"
+	tools:context=".adapter.DirectMessagesEntryAdapter">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:baselineAligned="false"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:padding="8dp">
+
+		<org.mariotaku.twidere.view.ForegroundImageView
+			android:id="@+id/profile_image"
+			android:layout_width="@dimen/icon_size_card_list_item"
+			android:layout_height="@dimen/icon_size_card_list_item"
+			android:layout_marginRight="8dp"
+			android:layout_weight="0"
+			android:contentDescription="@string/profile_image"
+			android:scaleType="fitCenter"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+
+				<FrameLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1">
+
+					<org.mariotaku.twidere.view.HandleSpanClickTextView
+						android:id="@+id/name"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:singleLine="true"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:textColor="?android:attr/textColorPrimary"
+						android:textStyle="bold"/>
+				</FrameLayout>
+
+				<org.mariotaku.twidere.view.ShortTimeView
+					android:id="@+id/time"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="0"
+					android:drawablePadding="4dp"
+					android:gravity="center"
+					android:singleLine="true"
+					android:textColor="?android:attr/textColorSecondary"/>
+			</LinearLayout>
+
+			<org.mariotaku.twidere.view.HandleSpanClickTextView
+				android:id="@+id/screen_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:singleLine="true"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textColor="?android:attr/textColorSecondary"/>
+		</LinearLayout>
+	</LinearLayout>
+
+	<View
+		android:id="@+id/divider"
+		android:layout_width="match_parent"
+		android:layout_height="0.2dp"
+		android:background="#40808080"/>
+
+	<org.mariotaku.twidere.view.themed.ThemedTextView
+		android:id="@+id/text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:padding="8dp"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="?android:attr/textColorSecondary"/>
+
+</org.mariotaku.twidere.view.CardItemLinearLayout>

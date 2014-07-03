@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/compose_bottombar"
+	style="?android:actionBarSplitStyle"
+	android:layout_width="match_parent"
+	android:layout_height="?android:actionBarSize"
+	android:baselineAligned="false"
+	android:gravity="center_vertical"
+	android:orientation="horizontal">
+
+	<com.scvngr.levelup.views.gallery.Gallery
+		android:id="@+id/account_selector"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1"/>
+
+	<View
+		android:id="@+id/account_selector_divider"
+		android:layout_width="0.2dp"
+		android:layout_height="match_parent"
+		android:layout_margin="@dimen/element_spacing_normal"
+		android:layout_weight="0"
+		android:background="#80808080"/>
+
+	<HorizontalScrollView
+		android:id="@+id/bottom_menu_container"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_weight="0">
+
+		<org.mariotaku.menucomponent.widget.MenuBar
+			android:id="@+id/bottom_menu"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="right"
+			android:background="@null"
+			android:max="@integer/max_action_buttons"/>
+	</HorizontalScrollView>
+
+	<View
+		android:id="@+id/bottom_send_divider"
+		android:layout_width="0.2dp"
+		android:layout_height="match_parent"
+		android:layout_margin="@dimen/element_spacing_normal"
+		android:layout_weight="0"
+		android:background="#80808080"/>
+
+	<include layout="@layout/action_item_compose"/>
+
+</LinearLayout>

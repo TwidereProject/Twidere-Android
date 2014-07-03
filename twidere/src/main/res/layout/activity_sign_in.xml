@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_gravity="center">
+
+		<RelativeLayout
+			android:layout_width="300dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center">
+
+			<LinearLayout
+				android:id="@+id/username_password"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:padding="8dp">
+
+				<EditText
+					android:id="@+id/username"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:ems="10"
+					android:hint="@string/username"
+					android:inputType="textEmailAddress"
+					android:singleLine="true"
+					android:typeface="normal"/>
+
+				<EditText
+					android:id="@+id/password"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="8dp"
+					android:ems="10"
+					android:hint="@string/password"
+					android:inputType="textPassword"
+					android:singleLine="true"
+					android:typeface="normal"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/sign_in_sign_up"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/username_password"
+				android:orientation="horizontal"
+				android:padding="8dp">
+
+				<Button
+					android:id="@+id/sign_in"
+					style="?android:buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:minHeight="48dp"
+					android:onClick="onClick"
+					android:text="@string/sign_in"/>
+
+				<Button
+					android:id="@+id/sign_up"
+					style="?android:buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:minHeight="48dp"
+					android:onClick="onClick"
+					android:text="@string/sign_up"/>
+			</LinearLayout>
+
+			<Button
+				android:id="@+id/sign_in_method_introduction"
+				style="?android:borderlessButtonStyle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/sign_in_sign_up"
+				android:layout_margin="8dp"
+				android:clickable="true"
+				android:gravity="center_vertical"
+				android:minHeight="36dp"
+				android:onClick="onClick"
+				android:text="@string/sign_in_method_introduction_title"
+				android:textAppearance="?android:textAppearanceSmall"/>
+		</RelativeLayout>
+	</ScrollView>
+
+	<ImageButton
+		android:id="@+id/set_color"
+		android:layout_width="56dp"
+		android:layout_height="56dp"
+		android:layout_gravity="bottom|right"
+		android:layout_weight="0"
+		android:contentDescription="@string/set_color"
+		android:onClick="onClick"/>
+
+</merge>

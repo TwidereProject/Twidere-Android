@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<fraction name="swipeback_scale_enter">100%p</fraction>
+	<fraction name="swipeback_scale_exit">90%p</fraction>
+
+</resources>

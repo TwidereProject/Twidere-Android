@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/theme_preview_status_content"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1">
+
+		<include
+			android:id="@+id/status_content"
+			layout="@layout/header_status"/>
+
+		<View
+			android:id="@+id/theme_preview_window_content_overlay"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignBottom="@+id/status_content"
+			android:layout_alignTop="@+id/status_content"/>
+	</RelativeLayout>
+
+	<org.mariotaku.menucomponent.widget.MenuBar
+		android:id="@+id/actionbar_split"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		android:layout_weight="0"
+		android:max="@integer/max_action_buttons_bottom"/>
+
+</LinearLayout>

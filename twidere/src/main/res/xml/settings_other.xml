@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/other_settings">
+
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="quick_send"
+		android:summary="@string/quick_send_summary"
+		android:title="@string/quick_send"/>
+
+	<org.mariotaku.twidere.preference.AutoInvalidateListPreference
+		android:defaultValue="ask"
+		android:entries="@array/entries_compose_quit_action"
+		android:entryValues="@array/values_compose_quit_action"
+		android:key="compose_quit_action"
+		android:summary="%s"
+		android:title="@string/compose_quit_action"/>
+
+	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+		android:defaultValue="false"
+		android:key="no_close_after_tweet_sent"
+		android:summary="@string/no_close_after_status_updated_summary"
+		android:title="@string/no_close_after_status_updated"/>
+
+	<org.mariotaku.twidere.preference.ComponentStatePreference
+		android:name="org.mariotaku.twidere.activity.TwitterLinkHandlerActivity"
+		android:key="twitter_link_handler"
+		android:title="@string/twitter_link_handler"/>
+	<org.mariotaku.twidere.preference.ComponentStatePreference
+		android:name="org.mariotaku.twidere.activity.AssistLauncherActivity"
+		android:key="compose_now"
+		android:summary="@string/compose_now_summary"
+		android:title="@string/compose_now"/>
+
+	<org.mariotaku.twidere.preference.AutoInvalidateListPreference
+		android:defaultValue="compose"
+		android:dependency="compose_now"
+		android:entries="@array/entries_compose_now_action"
+		android:entryValues="@array/values_compose_now_action"
+		android:key="compose_now_action"
+		android:summary="%s"
+		android:title="@string/compose_now_action"/>
+
+	<Preference
+		android:fragment="org.mariotaku.twidere.fragment.DataProfilingSettingsFragment"
+		android:key="data_profiling_settings"
+		android:title="@string/data_profiling"/>
+
+</PreferenceScreen>

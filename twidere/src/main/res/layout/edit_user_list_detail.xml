@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="8dp">
+
+	<EditText
+		android:id="@+id/name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@+id/is_public"
+		android:hint="@string/name"
+		android:inputType="text"
+		android:maxLength="20"
+		android:singleLine="true"/>
+
+	<EditText
+		android:id="@+id/description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/name"
+		android:gravity="top"
+		android:hint="@string/description"
+		android:inputType="textMultiLine"
+		android:maxLength="160"
+		android:minLines="3"
+		android:singleLine="false"/>
+
+	<CheckBox
+		android:id="@+id/is_public"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentTop="true"
+		android:checked="true"
+		android:singleLine="true"
+		android:text="@string/is_public"/>
+
+</RelativeLayout>

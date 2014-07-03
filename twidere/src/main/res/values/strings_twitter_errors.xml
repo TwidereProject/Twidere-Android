@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- 32 Could not authenticate you: Your call could not be completed as dialed. -->
+	<string name="error_twitter_32">Could not authenticate you, you may need to sign in again.</string>
+	<!-- 34 Sorry, that page does not exist: Corresponds with HTTP 404 - the specified resource was not found. -->
+	<string name="error_twitter_34">This tweet, user or page does not exist.</string>
+	<!-- 88 Rate limit exceeded: The request limit for this resource has been reached for the current rate limit window. -->
+	<string name="error_twitter_88">Rate limit exceeded, please try later.</string>
+	<!-- 89 Invalid or expired token: The access token used in the request is incorrect or has expired. Used in API v1.1 -->
+	<string name="error_twitter_89">Your sign in information is incorrect or has expired, please sign in again.</string>
+	<!-- 64 Your account is suspended and is not permitted to access this feature: Corresponds with an HTTP 403 - the access token being used belongs to a suspended user and they can't complete the action you're trying to take -->
+	<string name="error_twitter_64">Your account is suspended and is not permitted to access this feature.</string>
+	<!-- 130 Over capacity: Corresponds with HTTP 503 - Twitter is temporarily over capacity. -->
+	<string name="error_twitter_130">Twitter is temporarily over capacity.</string>
+	<!-- 131 Internal error: Corresponds with HTTP 500 - An unknown internal error occurred. -->
+	<string name="error_twitter_131">Twitter\'s server may temporarily down, please try later.</string>
+	<!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
+	<string name="error_twitter_135">Please check your system clock.</string>
+	<string name="error_twitter_161">You\'ve already requested to follow this user.</string>
+	<!-- 172 You have been blocked from following this account at the request of the user. -->
+	<string name="error_twitter_162">You\'ve been blocked by this user.</string>
+	<!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
+	<string name="error_twitter_172">You\'ve already saved this search.</string>
+	<!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
+	<string name="error_twitter_179">You can\'t see this protected user\'s tweet.</string>
+	<!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
+	<string name="error_twitter_187">You\'ve already send this tweet.</string>
+	<string name="error_twitter_193">The photo you upload is too large.</string>
+	<!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
+	<string name="error_twitter_215">You may need to sign in again.</string>
+
+</resources>

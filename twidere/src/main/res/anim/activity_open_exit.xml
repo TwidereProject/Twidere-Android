@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@android:color/transparent"
+	android:duration="@integer/activity_anim_time"
+	android:fillAfter="true"
+	android:fillBefore="true"
+	android:fillEnabled="true"
+	android:interpolator="@android:interpolator/decelerate_quint"
+	android:shareInterpolator="false"
+	android:zAdjustment="normal">
+
+	<alpha
+		android:fromAlpha="1"
+		android:toAlpha="0.25"/>
+
+	<scale
+		android:fromXScale="@fraction/swipeback_scale_enter"
+		android:fromYScale="@fraction/swipeback_scale_enter"
+		android:pivotX="50%p"
+		android:pivotY="50%p"
+		android:toXScale="@fraction/swipeback_scale_exit"
+		android:toYScale="@fraction/swipeback_scale_exit"/>
+
+</set>

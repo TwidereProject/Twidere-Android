@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/tabs">
+
+	<org.mariotaku.twidere.preference.WizardPageNavPreference
+		android:key="edit_custom_tabs"
+		android:order="11"
+		android:title="@string/edit"/>
+	<org.mariotaku.twidere.preference.WizardPageNavPreference
+		android:key="use_defaults"
+		android:order="12"
+		android:title="@string/wizard_page_welcome_not_now"/>
+
+</PreferenceScreen>

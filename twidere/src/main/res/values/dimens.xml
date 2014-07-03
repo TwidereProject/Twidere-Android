@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<dimen name="element_size_default">48dp</dimen>
+	<dimen name="element_spacing_extra_small">2dp</dimen>
+	<dimen name="element_spacing_small">4dp</dimen>
+	<dimen name="element_spacing_normal">8dp</dimen>
+	<dimen name="element_spacing_large">16dp</dimen>
+	<dimen name="element_spacing_xlarge">24dp</dimen>
+	<dimen name="icon_size_list_item">56dp</dimen>
+	<dimen name="icon_size_list_item_small">42dp</dimen>
+	<dimen name="icon_size_card_list_item">48dp</dimen>
+	<dimen name="icon_size_card_details">56dp</dimen>
+	<dimen name="icon_size_wizard_large">240dp</dimen>
+	<dimen name="icon_size_user_profile">64dp</dimen>
+	<dimen name="profile_image_size_activity_small">32dp</dimen>
+	<dimen name="default_sliding_menu_shadow_width">8dp</dimen>
+	<dimen name="default_sliding_menu_margin_threshold">16dp</dimen>
+	<dimen name="button_bar_height">52dp</dimen>
+	<dimen name="minimum_element_size">48dp</dimen>
+	<dimen name="drawer_width_home">240dp</dimen>
+	<dimen name="accounts_drawer_name_size">16sp</dimen>
+	<dimen name="accounts_drawer_screen_name_size">14sp</dimen>
+	<dimen name="accounts_drawer_default_indicator_size">12sp</dimen>
+	<dimen name="accounts_drawer_switch_label_size">16sp</dimen>
+	<dimen name="accounts_drawer_child_size">16sp</dimen>
+	<dimen name="home_actions_button_size">56dp</dimen>
+	<dimen name="action_button_size">56dp</dimen>
+	<dimen name="text_size_extra_small">12sp</dimen>
+
+	<!-- Size of icons in the top-level of settings -->
+	<dimen name="header_icon_width">28dp</dimen>
+	<dimen name="text_size_wizard_title">56sp</dimen>
+	<dimen name="text_size_wizard_nav_item">28sp</dimen>
+	<dimen name="text_size_wizard_text">20sp</dimen>
+	<dimen name="line_indicator_line_width_wizard">24dp</dimen>
+	<dimen name="line_indicator_stroke_width_wizard">3dp</dimen>
+
+	<!-- Size of the item menu -->
+	<dimen name="item_menu_width_default">32dp</dimen>
+	<dimen name="item_menu_height_default">40dp</dimen>
+	<dimen name="item_menu_padding_top_default">4dp</dimen>
+	<dimen name="item_menu_padding_start_default">6dp</dimen>
+	<dimen name="item_menu_padding_bottom_default">2dp</dimen>
+	<dimen name="item_menu_padding_end_default">10dp</dimen>
+	<dimen name="item_menu_card_padding_compact">28dp</dimen>
+
+	<!-- Dimensions for color picker -->
+	<dimen name="color_button_width">48dp</dimen>
+	<dimen name="color_button_height">48dp</dimen>
+
+	<!-- Dimensions for compose dialog -->
+	<dimen name="compose_min_width">400dp</dimen>
+	<dimen name="compose_min_height">320dp</dimen>
+
+	<!-- Dimensions for Tab indicator -->
+	<dimen name="tab_item_minwidth_vpi">64dp</dimen>
+
+	<!-- Dimensions for alert dialog -->
+	<dimen name="icon_size_alert_dialog">32dp</dimen>
+
+	<!-- Dimensions for quick menu -->
+	<dimen name="header_height_quick_menu">@dimen/element_size_default</dimen>
+
+	<!-- Dimensions for buttons -->
+	<dimen name="button_width_content_min">72dp</dimen>
+
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+	style="?tabItemStyle"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent"
+	class="org.mariotaku.twidere.view.TabPageIndicator$TabView">
+
+	<LinearLayout
+		android:id="@+id/tab_item_content"
+		style="?tabItemContentStyle"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="center">
+
+		<ImageView
+			android:id="@+id/tab_item_icon"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="center"
+			android:contentDescription="@string/icon"
+			android:scaleType="centerInside"/>
+
+		<TextView
+			android:id="@+id/tab_item_title"
+			style="?attr/tabItemTextStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:gravity="center"/>
+	</LinearLayout>
+
+</view>

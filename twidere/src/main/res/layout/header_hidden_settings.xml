@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:padding="@dimen/element_spacing_normal">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/hidden_settings_warning_title"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="@android:color/holo_orange_dark"
+		android:textStyle="bold"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/hidden_settings_warning_message"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="?android:textColorPrimary"/>
+
+</LinearLayout>

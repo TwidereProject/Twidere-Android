@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:clickable="true"
+	android:padding="@dimen/element_spacing_normal">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:text="@string/click_item_to_config"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textStyle="bold|italic"/>
+
+</FrameLayout>

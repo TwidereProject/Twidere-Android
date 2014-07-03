@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:orientation="vertical"
+			android:paddingLeft="@dimen/element_spacing_large"
+			android:paddingRight="@dimen/element_spacing_large">
+
+			<ImageView
+				android:layout_width="@dimen/icon_size_wizard_large"
+				android:layout_height="@dimen/icon_size_wizard_large"
+				android:contentDescription="@string/app_name"
+				android:padding="@dimen/element_spacing_large"
+				android:scaleType="fitCenter"
+				android:src="@drawable/ic_launcher_web"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:lineSpacingMultiplier="1.25"
+				android:padding="@dimen/element_spacing_normal"
+				android:text="@string/wizard_page_finished_text"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textSize="@dimen/text_size_wizard_text"
+				android:textStyle="normal"/>
+		</LinearLayout>
+
+		<FrameLayout
+			android:id="@+id/exit_wizard"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?android:selectableItemBackground"
+			android:clickable="true"
+			android:padding="@dimen/element_spacing_large">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:fontFamily="sans-serif-condensed"
+				android:singleLine="true"
+				android:text="@android:string/ok"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textColor="?android:colorActivatedHighlight"
+				android:textSize="@dimen/text_size_wizard_nav_item"
+				android:textStyle="bold|italic"/>
+		</FrameLayout>
+	</LinearLayout>
+
+</ScrollView>

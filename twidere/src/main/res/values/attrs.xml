@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<declare-styleable name="Twidere">
+		<attr name="cardItemBackground" format="reference"/>
+		<attr name="cardItemBackgroundColor" format="color"/>
+		<attr name="cardItemMessageIncomingBackground" format="reference"/>
+		<attr name="cardItemMessageOutgoingBackground" format="reference"/>
+		<attr name="cardItemMessageProfileImageIncomingBackground" format="reference"/>
+		<attr name="cardItemMessageProfileImageOutgoingBackground" format="reference"/>
+		<attr name="listMenuOverflowButton" format="reference"/>
+		<attr name="ignorePadding" format="boolean"/>
+		<attr name="linePageIndicatorStyle" format="reference"/>
+		<attr name="cardItemViewStyle" format="reference"/>
+		<attr name="staggeredGridViewStyle" format="reference"/>
+	</declare-styleable>
+	<declare-styleable name="CardItemView">
+		<attr name="cardBackground" format="reference"/>
+		<attr name="cardSelector" format="reference"/>
+		<attr name="cardActivatedIndicator" format="reference"/>
+		<attr name="cardOverflowIcon" format="reference"/>
+		<attr name="cardBackgroundAlpha" format="fraction"/>
+		<attr name="cardGapHeight" format="dimension"/>
+		<attr name="cardGapText" format="string"/>
+		<attr name="cardGapTextColor" format="color"/>
+		<attr name="cardGapTextSize" format="dimension"/>
+	</declare-styleable>
+	<declare-styleable name="TabPagerIndicator">
+		<attr name="tabItemStyle" format="reference"/>
+		<attr name="tabItemContentStyle" format="reference"/>
+		<attr name="tabItemTextStyle" format="reference"/>
+	</declare-styleable>
+	<declare-styleable name="ValueDependencyPreference">
+		<attr name="dependencyKey" format="string"/>
+		<attr name="dependencyValues" format="reference"/>
+		<attr name="dependencyValueDefault" format="string"/>
+	</declare-styleable>
+	<declare-styleable name="AccountsListPreference">
+		<attr name="switchKey" format="string"/>
+		<attr name="switchDefault" format="boolean"/>
+	</declare-styleable>
+	<declare-styleable name="NotificationTypePreference">
+		<attr name="notificationType"/>
+	</declare-styleable>
+	<declare-styleable name="SeekBarDialogPreference">
+		<attr name="max" format="integer"/>
+		<attr name="min" format="integer"/>
+		<attr name="progressTextSuffix" format="string"/>
+	</declare-styleable>
+
+	<attr name="notificationType">
+		<flag name="none" value="0"/>
+		<flag name="ringtone" value="1"/>
+		<flag name="vibration" value="2"/>
+		<flag name="light" value="4"/>
+	</attr>
+
+</resources>

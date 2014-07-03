@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:descendantFocusability="blocksDescendants"
+	android:gravity="center_vertical"
+	android:minHeight="48dp"
+	android:orientation="horizontal">
+
+	<ImageView
+		android:id="@android:id/icon"
+		android:layout_width="42dp"
+		android:layout_height="42dp"
+		android:layout_marginLeft="12dp"
+		android:layout_weight="0"
+		android:scaleType="centerInside"/>
+
+	<org.mariotaku.twidere.view.themed.ThemedTextView
+		android:id="@android:id/text1"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:layout_marginLeft="8dp"
+		android:layout_weight="1"
+		android:gravity="center_vertical"
+		android:singleLine="true"
+		android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+	<CheckBox
+		android:id="@android:id/checkbox"
+		android:layout_width="wrap_content"
+		android:layout_height="48dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="12dp"
+		android:layout_weight="0"
+		android:clickable="false"
+		android:focusable="false"
+		android:visibility="gone"/>
+
+</LinearLayout>

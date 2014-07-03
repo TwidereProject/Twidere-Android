@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@id/reply"
+		android:icon="@drawable/ic_iconic_action_reply"
+		android:title="@string/reply"/>
+	<item
+		android:id="@id/retweet"
+		android:icon="@drawable/ic_iconic_action_retweet"
+		android:title="@string/retweet"/>
+	<item
+		android:id="@id/quote"
+		android:icon="@drawable/ic_iconic_action_quote"
+		android:title="@string/quote"/>
+	<item
+		android:id="@id/favorite"
+		android:icon="@drawable/ic_iconic_action_star"
+		android:title="@string/favorite"/>
+	<item
+		android:id="@id/share"
+		android:icon="@drawable/ic_iconic_action_share"
+		android:title="@string/share"/>
+	<item
+		android:id="@id/copy"
+		android:icon="@drawable/ic_iconic_action_copy"
+		android:title="@android:string/copy"/>
+	<item
+		android:id="@id/translate"
+		android:icon="@drawable/ic_iconic_action_translate"
+		android:title="@string/translate"/>
+	<item
+		android:id="@id/add_to_filter"
+		android:icon="@drawable/ic_iconic_action_speaker_muted"
+		android:title="@string/add_to_filter"/>
+	<item
+		android:id="@id/delete"
+		android:icon="@drawable/ic_iconic_action_delete"
+		android:title="@string/delete"
+		android:visible="false"/>
+	<item
+		android:id="@id/multi_select"
+		android:icon="@drawable/ic_iconic_action_checked"
+		android:title="@string/multi_select"/>
+
+</menu>
