@@ -64,6 +64,7 @@
     <orderEntry type="library" exported="" name="support-v13-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="library-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="httpclient-android-4.3.3" level="project" />
+    <orderEntry type="library" exported="" name="play-services-5.0.77" level="project" />
     <orderEntry type="library" exported="" name="merge-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="library-1.0.5" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
@@ -72,16 +73,17 @@
     <orderEntry type="library" exported="" name="library-1.0" level="project" />
     <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="dnsjava-ipv6-1.0-with-sources" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-r7" level="project" />
     <orderEntry type="library" exported="" name="jsonserializer-1.0" level="project" />
-    <orderEntry type="library" exported="" name="drag-sort-listview-apklib-1.0" level="project" />
-    <orderEntry type="library" exported="" name="sacklist-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.3.3" level="project" />
+    <orderEntry type="library" exported="" name="sacklist-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="twitter-text-1.9.5" level="project" />
-    <orderEntry type="library" exported="" name="library-2.4.1" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.2" level="project" />
+    <orderEntry type="module" module-name="SlidingMenu" exported="" />
+    <orderEntry type="module" module-name="DragSortListView" exported="" />
+    <orderEntry type="module" module-name="MenuComponent" exported="" />
+    <orderEntry type="module" module-name="RefreshNow" exported="" />
   </component>
 </module>
 

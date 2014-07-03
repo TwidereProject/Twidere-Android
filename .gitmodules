@@ -1,0 +1,12 @@
+[submodule "libraries/SlidingMenu"]
+	path = libraries/SlidingMenu
+	url = https://github.com/mariotaku/SlidingMenu-Gradle
+[submodule "libraries/DragSortListView"]
+	path = libraries/DragSortListView
+	url = https://github.com/mariotaku/DragSortListView-Gradle
+[submodule "libraries/MenuComponent"]
+	path = libraries/MenuComponent
+	url = https://github.com/mariotaku/MenuComponent-Android
+[submodule "libraries/RefreshNow"]
+	path = libraries/RefreshNow
+	url = https://github.com/mariotaku/RefreshNow-Android

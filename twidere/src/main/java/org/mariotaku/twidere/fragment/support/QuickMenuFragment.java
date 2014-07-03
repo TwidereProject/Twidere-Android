@@ -83,7 +83,7 @@ public class QuickMenuFragment extends BaseSupportFragment {
 	public void onDestroy() {
 		super.onDestroy();
 		final SharedPreferences.Editor editor = mPreferences.edit();
-		editor.putBoolean(KEY_QUICK_MENU_EXPANDED, mSlidingUpPanel.isExpanded());
+		editor.putBoolean(KEY_QUICK_MENU_EXPANDED, mSlidingUpPanel.isPanelExpanded());
 		editor.apply();
 	}
 

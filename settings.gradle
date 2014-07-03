@@ -1,1 +1,5 @@
-include ':twidere'
+include ':twidere', ':SlidingMenu', ':DragSortListView', ':MenuComponent', ':RefreshNow'
+project(':SlidingMenu').projectDir = new File('libraries/SlidingMenu/library')
+project(':DragSortListView').projectDir = new File('libraries/DragSortListView/library')
+project(':MenuComponent').projectDir = new File('libraries/MenuComponent/library')
+project(':RefreshNow').projectDir = new File('libraries/RefreshNow/library')

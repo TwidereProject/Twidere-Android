@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.ActionBar;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
@@ -34,8 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
@@ -44,137 +40,135 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.ExtendedViewPager;
+import org.mariotaku.twidere.view.LinePageIndicator;
 
 public class SearchFragment extends BaseSupportFragment implements Panes.Left, OnPageChangeListener,
-		RefreshScrollTopInterface, SupportFragmentCallback {
+        RefreshScrollTopInterface, SupportFragmentCallback {
 
-	private ExtendedViewPager mViewPager;
+    private ExtendedViewPager mViewPager;
 
-	private SupportTabsAdapter mAdapter;
-	private CirclePageIndicator mPagerIndicator;
+    private SupportTabsAdapter mAdapter;
+    private LinePageIndicator mPagerIndicator;
 
-	private Fragment mCurrentVisibleFragment;
+    private Fragment mCurrentVisibleFragment;
 
-	@Override
-	public Fragment getCurrentVisibleFragment() {
-		return mCurrentVisibleFragment;
-	}
+    @Override
+    public Fragment getCurrentVisibleFragment() {
+        return mCurrentVisibleFragment;
+    }
 
-	public void hideIndicator() {
-	}
+    public void hideIndicator() {
+    }
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setHasOptionsMenu(true);
-		final Bundle args = getArguments();
-		final FragmentActivity activity = getActivity();
-		mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
-		mAdapter.addTab(SearchStatusesFragment.class, args, getString(R.string.statuses),
-				R.drawable.ic_iconic_action_twitter, 0);
-		mAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_iconic_action_user, 1);
-		mViewPager.setAdapter(mAdapter);
-		mViewPager.setOnPageChangeListener(this);
-		mViewPager.setOffscreenPageLimit(2);
-		final TypedArray a = activity.obtainStyledAttributes(new int[] { android.R.attr.colorForeground });
-		final int foregroundColor = a.getColor(0, Color.GRAY);
-		a.recycle();
-		mPagerIndicator.setFillColor(foregroundColor);
-		mPagerIndicator.setStrokeColor(foregroundColor);
-		mPagerIndicator.setViewPager(mViewPager);
-		if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
-			final String query = args.getString(EXTRA_QUERY);
-			final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),
-					RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
-			suggestions.saveRecentQuery(query, null);
-			if (activity instanceof LinkHandlerActivity) {
-				final ActionBar ab = activity.getActionBar();
-				if (ab != null) {
-					ab.setSubtitle(query);
-				}
-			}
-		}
-	}
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        final Bundle args = getArguments();
+        final FragmentActivity activity = getActivity();
+        mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
+        mAdapter.addTab(SearchStatusesFragment.class, args, getString(R.string.statuses),
+                R.drawable.ic_iconic_action_twitter, 0);
+        mAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_iconic_action_user, 1);
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setOnPageChangeListener(this);
+        mViewPager.setOffscreenPageLimit(2);
+        mPagerIndicator.setSelectedColor(ThemeUtils.getThemeColor(activity));
+        mPagerIndicator.setViewPager(mViewPager);
+        if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
+            final String query = args.getString(EXTRA_QUERY);
+            final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),
+                    RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+            if (activity instanceof LinkHandlerActivity) {
+                final ActionBar ab = activity.getActionBar();
+                if (ab != null) {
+                    ab.setSubtitle(query);
+                }
+            }
+        }
+    }
 
-	@Override
-	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_search, menu);
-	}
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+    }
 
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_search, container, false);
-	}
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_search, container, false);
+    }
 
-	@Override
-	public void onDetachFragment(final Fragment fragment) {
+    @Override
+    public void onDetachFragment(final Fragment fragment) {
 
-	}
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_SAVE: {
-				final AsyncTwitterWrapper twitter = getTwitterWrapper();
-				final Bundle args = getArguments();
-				if (twitter != null && args != null) {
-					final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-					final String query = args.getString(EXTRA_QUERY);
-					twitter.createSavedSearchAsync(accountId, query);
-				}
-				return true;
-			}
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_SAVE: {
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final Bundle args = getArguments();
+                if (twitter != null && args != null) {
+                    final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+                    final String query = args.getString(EXTRA_QUERY);
+                    twitter.createSavedSearchAsync(accountId, query);
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-	}
+    @Override
+    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+    }
 
-	@Override
-	public void onPageScrollStateChanged(final int state) {
-	}
+    @Override
+    public void onPageScrollStateChanged(final int state) {
+    }
 
-	@Override
-	public void onPageSelected(final int position) {
-	}
+    @Override
+    public void onPageSelected(final int position) {
+    }
 
-	@Override
-	public void onSetUserVisibleHint(final Fragment fragment, final boolean isVisibleToUser) {
-		if (isVisibleToUser) {
-			mCurrentVisibleFragment = fragment;
-		}
-	}
+    @Override
+    public void onSetUserVisibleHint(final Fragment fragment, final boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            mCurrentVisibleFragment = fragment;
+        }
+    }
 
-	@Override
-	public void onViewCreated(final View view, final Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		mViewPager = (ExtendedViewPager) view.findViewById(R.id.search_pager);
-		mPagerIndicator = (CirclePageIndicator) view.findViewById(R.id.search_pager_indicator);
-	}
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewPager = (ExtendedViewPager) view.findViewById(R.id.search_pager);
+        mPagerIndicator = (LinePageIndicator) view.findViewById(R.id.search_pager_indicator);
+    }
 
-	@Override
-	public boolean scrollToStart() {
-		if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;
-		((RefreshScrollTopInterface) mCurrentVisibleFragment).scrollToStart();
-		return true;
-	}
+    @Override
+    public boolean scrollToStart() {
+        if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;
+        ((RefreshScrollTopInterface) mCurrentVisibleFragment).scrollToStart();
+        return true;
+    }
 
-	public void showIndicator() {
-	}
+    public void showIndicator() {
+    }
 
-	@Override
-	public boolean triggerRefresh() {
-		if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;
-		((RefreshScrollTopInterface) mCurrentVisibleFragment).triggerRefresh();
-		return true;
-	}
+    @Override
+    public boolean triggerRefresh() {
+        if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;
+        ((RefreshScrollTopInterface) mCurrentVisibleFragment).triggerRefresh();
+        return true;
+    }
 
-	@Override
-	public boolean triggerRefresh(final int position) {
-		return false;
-	}
+    @Override
+    public boolean triggerRefresh(final int position) {
+        return false;
+    }
 
 }

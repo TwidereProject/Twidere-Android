@@ -8,6 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/libraries/DragSortListView/library" />
+            <option value="$PROJECT_DIR$/libraries/MenuComponent/library" />
+            <option value="$PROJECT_DIR$/libraries/RefreshNow/library" />
+            <option value="$PROJECT_DIR$/libraries/SlidingMenu/library" />
             <option value="$PROJECT_DIR$/twidere" />
           </set>
         </option>
