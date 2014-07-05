@@ -175,7 +175,7 @@ public interface ListsResources {
 	 * This method calls http://api.twitter.com/1.1/lists/members.json
 	 * 
 	 * @param listId The id of the list
-	 * @param cursor Breaks the results into pages. A single page contains 20
+	 * @param paging Breaks the results into pages. A single page contains 20
 	 *            lists. Provide a value of -1 to begin paging. Provide values
 	 *            as returned to in the response body's next_cursor and
 	 *            previous_cursor attributes to page back and forth in the list.
@@ -359,7 +359,7 @@ public interface ListsResources {
 	 * This method calls http://api.twitter.com/1.1/lists/subscribers.json
 	 * 
 	 * @param listId The id of the list
-	 * @param cursor Breaks the results into pages. A single page contains 20
+	 * @param paging Breaks the results into pages. A single page contains 20
 	 *            lists. Provide a value of -1 to begin paging. Provide values
 	 *            as returned to in the response body's next_cursor and
 	 *            previous_cursor attributes to page back and forth in the list.

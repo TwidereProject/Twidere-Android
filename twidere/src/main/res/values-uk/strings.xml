@@ -444,7 +444,6 @@
   <string name="no_close_after_status_updated_summary">Маленький подарунок для базіки</string>
   <string name="status_saved_to_draft">Твіт збережено у чернетці.</string>
   <string name="default_account">Типовий профіль</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> твіт(ів) на день)</string>
   <string name="empty_content">Порожній вміст</string>
   <string name="fast_image_loading">Швидке завантаження зображення</string>
   <string name="fast_image_loading_summary">Вмикання робить завантаження зображень швидшим, вимкніть це, якщо деякі малюнки не відображаються.</string>

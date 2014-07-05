@@ -376,7 +376,6 @@
   <string name="ask">ถาม</string>
   <string name="status_saved_to_draft">บันทึกข้อความร่างแล้ว</string>
   <string name="default_account">บัญชีหลัก</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (ทวีต <xliff:g id="daily_tweet">%2$d</xliff:g> ต่อวัน)</string>
   <string name="select_user">เลือกผู้ใช้</string>
   <string name="add_to_list">เพิ่มไปยังรายการ</string>
   <string name="account_delete_confirm_title">ลบบัญชี</string>

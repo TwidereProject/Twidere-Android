@@ -444,7 +444,6 @@
   <string name="no_close_after_status_updated_summary">트윗 입력창에 작은 특전이 있습니다.</string>
   <string name="status_saved_to_draft">트윗이 보관함에 저장되었습니다.</string>
   <string name="default_account">기본 계정</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (하루에 <xliff:g id="daily_tweet">%2$d</xliff:g> 트윗)</string>
   <string name="empty_content">내용 없음</string>
   <string name="fast_image_loading">빠른 이미지 불러오기</string>
   <string name="fast_image_loading_summary">이미지를 빨리 불러오려면 설정하고 이미지가 보이지 않으면 체크를 해재해 주십시오.</string>
@@ -529,7 +528,7 @@
   <string name="no_tab_hint">탭 없음</string>
   <string name="delete_user"><xliff:g id="name">%s</xliff:g>님을 삭제하기</string>
   <string name="delete_users">사용자 삭제하기</string>
-  <string name="delete_user_confirm_message"> <xliff:g id="name">%s</xliff:g>?님을 삭제하겠습니까? 되돌릴 수 없습니다.</string>
+  <string name="delete_user_confirm_message"> <xliff:g id="name">%s</xliff:g>님을 삭제하겠습니까? 되돌릴 수 없습니다.</string>
   <string name="toggle">토글</string>
   <string name="general">일반</string>
   <string name="hints">힌트</string>

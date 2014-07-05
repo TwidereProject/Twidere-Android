@@ -447,7 +447,6 @@
   <string name="no_close_after_status_updated_summary">ツイート編集画面の動作を変更します。</string>
   <string name="status_saved_to_draft">ツイートは下書きに保存されました。</string>
   <string name="default_account">デフォルト</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (一日に平均<xliff:g id="daily_tweet">%2$d</xliff:g>回ツイート)</string>
   <string name="empty_content">コンテンツなし</string>
   <string name="fast_image_loading">高速画像読み込み</string>
   <string name="fast_image_loading_summary">有効にすると画像を高速に読み込みます。\n画像が読み込めない場合は無効にしてください。</string>

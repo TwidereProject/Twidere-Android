@@ -444,7 +444,6 @@
   <string name="no_close_after_status_updated_summary">Pemberian kecil untuk chatterbox</string>
   <string name="status_saved_to_draft">Twit disimpan di draf.</string>
   <string name="default_account">Pengguna utama</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet per hari)</string>
   <string name="empty_content">Konten kosong</string>
   <string name="fast_image_loading">Memuat gambar dengan cepat</string>
   <string name="fast_image_loading_summary">Aktifkan untuk membuat gambar dimuat dengan cepat, nonaktifkan ini jika beberapa gambar tidak bisa ditampilkan.</string>

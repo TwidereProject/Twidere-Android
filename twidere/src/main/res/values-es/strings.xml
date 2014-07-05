@@ -447,7 +447,6 @@
   <string name="no_close_after_status_updated_summary">Un pequeño regalo para chatterbox</string>
   <string name="status_saved_to_draft">Tuit salvado como borrador.</string>
   <string name="default_account">Cuenta predeterminada</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet(s) por dia)</string>
   <string name="empty_content">Contenido vacío</string>
   <string name="fast_image_loading">Carga rápida de imágenes</string>
   <string name="fast_image_loading_summary">Habilitar para acelerar la carga de imágenes, deshabilitar si algunas imágenes no se muestran.</string>

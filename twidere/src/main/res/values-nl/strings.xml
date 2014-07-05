@@ -444,7 +444,6 @@
   <string name="no_close_after_status_updated_summary">Een klein cadeau voor chatterbox</string>
   <string name="status_saved_to_draft">Tweet opgeslagen als ontwerp.</string>
   <string name="default_account">Standaard account</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g>(<xliff:g id="daily_tweet">%2$d</xliff:g> tweet(s) per dag)</string>
   <string name="empty_content">Lege inhoud</string>
   <string name="fast_image_loading">Snel foto\'s laden</string>
   <string name="fast_image_loading_summary">Schakel in om foto\'s sneller te laten laden, schakel uit als sommige foto\'s niet worden weergegeven.</string>

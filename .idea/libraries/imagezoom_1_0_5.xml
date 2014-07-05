@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="imagezoom-1.0.5">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/build/intermediates/exploded-aar/it.sephiroth.android.library.imagezoom/imagezoom/1.0.5/res" />
+      <root url="jar://$PROJECT_DIR$/build/intermediates/exploded-aar/it.sephiroth.android.library.imagezoom/imagezoom/1.0.5/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

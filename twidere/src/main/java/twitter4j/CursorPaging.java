@@ -118,9 +118,6 @@ public final class CursorPaging {
 	 * This method also Validates the preset parameters, and throws
 	 * IllegalStateException if any unsupported parameter is set.
 	 * 
-	 * @param supportedParams char array representation of supported parameters
-	 * @param perPageParamName name used for per-page parameter.
-	 *            getUserListStatuses() requires "per_page" instead of "count".
 	 * @return list of PostParameter
 	 */
 	/* package */List<HttpParameter> asPostParameterList() {

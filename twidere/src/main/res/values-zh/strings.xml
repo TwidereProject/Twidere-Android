@@ -444,7 +444,6 @@
   <string name="no_close_after_status_updated_summary">給不二的小禮物</string>
   <string name="status_saved_to_draft">推文已經儲存到草稿箱</string>
   <string name="default_account">預設帳號</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> （每天<xliff:g id="daily_tweet">%2$d</xliff:g>推）</string>
   <string name="empty_content">空內容</string>
   <string name="fast_image_loading">快速圖像載入</string>
   <string name="fast_image_loading_summary">啟用可以使圖片載入更快，如果一些圖片不能顯示的話則可以把它關閉</string>

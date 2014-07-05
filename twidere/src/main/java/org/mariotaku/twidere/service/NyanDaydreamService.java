@@ -19,9 +19,11 @@
 
 package org.mariotaku.twidere.service;
 
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
+import android.os.Build;
 import android.service.dreams.DreamService;
 import android.view.View;
 import android.view.View.OnSystemUiVisibilityChangeListener;
@@ -30,6 +32,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.NyanDaydreamView;
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class NyanDaydreamService extends DreamService implements Constants, OnSharedPreferenceChangeListener,
 		OnSystemUiVisibilityChangeListener {
 

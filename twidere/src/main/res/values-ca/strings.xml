@@ -444,7 +444,6 @@
   <string name="no_close_after_status_updated_summary">Un regalet per a «chatterbox»</string>
   <string name="status_saved_to_draft">S\'ha desat la piulada com a esborrany.</string>
   <string name="default_account">Compte per defecte</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> piulada/es al dia)</string>
   <string name="empty_content">No hi ha contingut</string>
   <string name="fast_image_loading">Càrrega ràpida de les imatges</string>
   <string name="fast_image_loading_summary">Habilita-ho per a carregar més ràpidament les imatges, però inhabilita-ho si no se\'t mostra alguna imatge.</string>

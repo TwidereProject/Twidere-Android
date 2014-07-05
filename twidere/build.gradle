@@ -11,6 +11,30 @@ android {
         versionCode 95
         versionName "0.2.9.14"
     }
+    signingConfigs {
+        debug {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                Properties signingProp = new Properties()
+                signingProp.load(signingPropFile.newDataInputStream())
+                storeFile file(signingProp.get("twidere.debug.storeFile"))
+                storePassword signingProp.get("twidere.debug.storePassword")
+                keyAlias signingProp.get("twidere.debug.keyAlias")
+                keyPassword signingProp.get("twidere.debug.keyPassword")
+            }
+        }
+        release {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                Properties signingProp = new Properties()
+                signingProp.load(signingPropFile.newDataInputStream())
+                storeFile file(signingProp.get("twidere.release.storeFile"))
+                storePassword signingProp.get("twidere.release.storePassword")
+                keyAlias signingProp.get("twidere.release.keyAlias")
+                keyPassword signingProp.get("twidere.release.keyPassword")
+            }
+        }
+    }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -22,8 +46,15 @@ android {
         exclude 'META-INF/ASL2.0'
     }
     buildTypes {
-        release {
+        debug {
+            signingConfig signingConfigs.debug
         }
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -33,6 +64,7 @@ dependencies {
     compile 'com.negusoft.holoaccent:library:+'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.sothree.slidinguppanel:library:2.0.0'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
     compile 'com.twitter:twitter-text:1.9.5'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.2'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.3'

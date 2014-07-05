@@ -10,7 +10,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 
-	<com.viewpagerindicator.CirclePageIndicator
+	<org.mariotaku.twidere.view.LinePageIndicator
 		android:id="@+id/search_pager_indicator"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

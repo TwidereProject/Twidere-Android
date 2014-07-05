@@ -21,10 +21,12 @@ package org.mariotaku.twidere.util.content;
 
 import static android.text.TextUtils.isEmpty;
 
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CancellationSignal;
 
 import org.mariotaku.twidere.util.ArrayUtils;
@@ -98,7 +100,8 @@ public class ContentResolverUtils {
 		return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
 	}
 
-	public static Cursor query(final ContentResolver resolver, final Uri uri, final String[] projection,
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static Cursor query(final ContentResolver resolver, final Uri uri, final String[] projection,
 			final String selection, final String[] selectionArgs, final String sortOrder,
 			final CancellationSignal cancellationSignal) {
 		StrictModeUtils.checkDiskIO();

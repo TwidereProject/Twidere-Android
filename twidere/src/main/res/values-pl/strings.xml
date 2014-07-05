@@ -442,7 +442,6 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="no_close_after_status_updated_summary">Drobny prezent dla gaduł</string>
   <string name="status_saved_to_draft">Ćwierk zapisany jako szkic.</string>
   <string name="default_account">Domyślne konto</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> ćwierknięć na dzień)</string>
   <string name="empty_content">Pusta zawartość</string>
   <string name="fast_image_loading">Szybkie ładowanie obrazów</string>
   <string name="fast_image_loading_summary">Włącz aby ładować obrazy szybciej, wyłącz w przypadku błędów wyświetlania.</string>

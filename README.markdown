@@ -57,8 +57,8 @@ Thanks to their excellent design!
 * [HttpMime](http://hc.apache.org/httpcomponents-client-ga/httpmime/), Copyright 1999-2013 The Apache Software Foundation
 * [ACRA](http://github.com/ACRA/acra), Copyright 2013 Kevin Gaudin
 * [drag-sort-listview](https://github.com/bauerca/drag-sort-listview), Copyright 2012 Carl Bauer
-* [Android-MenuComponent](https://github.com/mariotaku/Android-MenuComponent), Copyright 2013 Mariotaku Lee
-* [RefreshNow](https://github.com/mariotaku/RefreshNow), Copyright 2014 Mariotaku Lee
+* [MenuComponent-Android](https://github.com/mariotaku/MenuComponent-Android), Copyright 2014 Mariotaku Lee
+* [RefreshNow-Android](https://github.com/mariotaku/RefreshNow-Android), Copyright 2014 Mariotaku Lee
 * [AndroidStaggeredGrid](https://github.com/etsy/AndroidStaggeredGrid), Copyright 2013 Etsy
 * [cwac-merge](https://github.com/commonsguy/cwac-merge), Copyright 2013 CommonsWare
 * [cwac-sacklist](https://github.com/commonsguy/cwac-sacklist), Copyright 2013 CommonsWare
@@ -78,9 +78,7 @@ I started a crowdin project, so anyone can do something for Twidere. Visit this 
 
 **Donation methods**
 
-PayPal: "mariotaku.lee#gmail.com".replace("#", "@");
-
-AliPay: http://me.alipay.com/mariotaku
+PayPal & AliPay: "mariotaku.lee#gmail.com".replace("#", "@");
 
 Bitcoin: 1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW
 

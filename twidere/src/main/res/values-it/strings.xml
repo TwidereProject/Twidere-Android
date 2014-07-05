@@ -442,7 +442,6 @@
   <string name="no_close_after_status_updated_summary">Un piccolo regalo per i chiacchieroni</string>
   <string name="status_saved_to_draft">Tweet salvato in bozze.</string>
   <string name="default_account">Account principale</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g>tweet al giorno)</string>
   <string name="empty_content">Contenuto vuoto</string>
   <string name="fast_image_loading">Caricamento veloce immagini</string>
   <string name="fast_image_loading_summary">Seleziona per far caricare più velocemente le immagini, disattivalo se alcune immagini non sono mostrate correttamente.</string>

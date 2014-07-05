@@ -447,7 +447,6 @@
   <string name="no_close_after_status_updated_summary">Pieni lisä chatterboxiin</string>
   <string name="status_saved_to_draft">Twiitti tallennettu luonnoksiin.</string>
   <string name="default_account">Oletustili</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> twiittiä päivää kohden)</string>
   <string name="empty_content">Tyhjennä sisältö</string>
   <string name="fast_image_loading">Kuvien nopea lataus</string>
   <string name="fast_image_loading_summary">Ota käyttöön, jotta kuvat latautuvat nopeammin. Ota pois käytöstä, jos jotkin kuvat eivät näy.</string>

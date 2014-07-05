@@ -447,7 +447,6 @@
   <string name="no_close_after_status_updated_summary">Небольшой подарок для любителей поболтать</string>
   <string name="status_saved_to_draft">Твит сохранен в черновик.</string>
   <string name="default_account">Аккаунт по умолчанию</string>
-  <string name="daily_statuses_count"><xliff:g id="created_at">%1$s</xliff:g>(<xliff:g id="daily_tweet">%2$d</xliff:g>твитов за день)</string>
   <string name="empty_content">Пустое содержимое</string>
   <string name="fast_image_loading">Быстрая загрузка изображений</string>
   <string name="fast_image_loading_summary">Включите, для более быстрой загрузки изображений, отключите, если некоторые изображения не показываются.</string>

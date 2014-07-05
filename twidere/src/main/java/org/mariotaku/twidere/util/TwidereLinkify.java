@@ -202,23 +202,18 @@ public final class TwidereLinkify implements Constants {
 	 * @param highlightColor
 	 * @param highlightOption
 	 * @param listener
-	 * 
-	 * @param description TextView whose text is to be marked-up with links
-	 * @param pattern Regex pattern to be used for finding links
-	 * @param scheme Url scheme string (eg <code>http://</code> to be prepended
-	 *            to the url of links that do not have a scheme specified in the
-	 *            link text
+	 *
 	 */
-	private final void addLinks(final SpannableString string, final long account_id, final int type,
+	private final void addLinks(final SpannableString string, final long accountId, final int type,
 			final boolean sensitive, final OnLinkClickListener listener, final int highlightOption,
 			final int highlightColor) {
 		switch (type) {
 			case LINK_TYPE_MENTION: {
-				addMentionOrListLinks(string, account_id, listener, highlightOption, highlightColor);
+				addMentionOrListLinks(string, accountId, listener, highlightOption, highlightColor);
 				break;
 			}
 			case LINK_TYPE_HASHTAG: {
-				addHashtagLinks(string, account_id, listener, highlightOption, highlightColor);
+				addHashtagLinks(string, accountId, listener, highlightOption, highlightColor);
 				break;
 			}
 			case LINK_TYPE_LINK: {
@@ -230,7 +225,7 @@ public final class TwidereLinkify implements Constants {
 						continue;
 					}
 					string.removeSpan(span);
-					applyLink(span.getURL(), start, end, string, account_id, LINK_TYPE_LINK, sensitive, listener,
+					applyLink(span.getURL(), start, end, string, accountId, LINK_TYPE_LINK, sensitive, listener,
 							highlightOption, highlightColor);
 				}
 				final List<Extractor.Entity> urls = mExtractor.extractURLsWithIndices(ParseUtils.parseString(string));
@@ -240,7 +235,7 @@ public final class TwidereLinkify implements Constants {
 							|| string.getSpans(start, end, URLSpan.class).length > 0) {
 						continue;
 					}
-					applyLink(entity.getValue(), start, end, string, account_id, LINK_TYPE_LINK, sensitive, listener,
+					applyLink(entity.getValue(), start, end, string, accountId, LINK_TYPE_LINK, sensitive, listener,
 							highlightOption, highlightColor);
 				}
 				break;
@@ -254,14 +249,14 @@ public final class TwidereLinkify implements Constants {
 						final int end = string.getSpanEnd(span);
 						final String url = matcherGroup(matcher, GROUP_ID_TWITTER_STATUS_STATUS_ID);
 						string.removeSpan(span);
-						applyLink(url, start, end, string, account_id, LINK_TYPE_STATUS, sensitive, listener,
+						applyLink(url, start, end, string, accountId, LINK_TYPE_STATUS, sensitive, listener,
 								highlightOption, highlightColor);
 					}
 				}
 				break;
 			}
 			case LINK_TYPE_CASHTAG: {
-				addCashtagLinks(string, account_id, listener, highlightOption, highlightColor);
+				addCashtagLinks(string, accountId, listener, highlightOption, highlightColor);
 				break;
 			}
 			default: {
