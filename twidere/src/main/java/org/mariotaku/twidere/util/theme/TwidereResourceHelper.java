@@ -22,21 +22,39 @@ package org.mariotaku.twidere.util.theme;
 import android.content.Context;
 import android.content.res.Resources;
 
-import org.mariotaku.twidere.content.res.TwidereResources;
+import org.mariotaku.twidere.content.res.NoAccentResources;
 
 public class TwidereResourceHelper {
 
-	private final int mOverrideThemeRes;
+    private final int mOverrideThemeRes;
 
-	private Resources mResources;
+    private NoAccentResources mResources;
+    private OnInitListener mInitListener;
 
-	public TwidereResourceHelper(final int overrideThemeRes) {
-		mOverrideThemeRes = overrideThemeRes;
-	}
+    public TwidereResourceHelper(final int overrideThemeRes, OnInitListener listener) {
+        mOverrideThemeRes = overrideThemeRes;
+        mInitListener = listener;
+    }
 
-	public Resources getResources(final Context c, final Resources resources) {
-		if (mResources != null) return mResources;
-		return mResources = new TwidereResources(c, resources, mOverrideThemeRes);
-	}
+    public Resources getResources(final Context c, final Resources resources) {
+        if (mResources != null) return mResources;
+        mResources = new NoAccentResources(c, resources);
+        if (mInitListener != null)
+            mInitListener.onInitResources(mResources);
+        return mResources;
+    }
+
+    /**
+     * Set a listener to be notified when the instance of AccentResources is created.
+     *
+     * @param listener The actual listener or null to disable any event reporting.
+     */
+    public void setOnInitListener(OnInitListener listener) {
+        mInitListener = listener;
+    }
+
+    public interface OnInitListener {
+        public void onInitResources(NoAccentResources resources);
+    }
 
 }

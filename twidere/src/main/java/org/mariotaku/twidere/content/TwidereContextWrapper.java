@@ -25,63 +25,69 @@ import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
+import org.mariotaku.twidere.content.res.NoAccentResources;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 
-public class TwidereContextWrapper extends ContextWrapper implements ITwidereContextWrapper {
+public class TwidereContextWrapper extends ContextWrapper implements ITwidereContextWrapper, TwidereResourceHelper.OnInitListener {
 
-	private final Resources mResources;
-	private final int mThemeResourceId;
-	private Theme mTheme;
-	private final TwidereResourceHelper mResourceHelper;
+    private final Resources mResources;
+    private final int mThemeResourceId;
+    private Theme mTheme;
+    private final TwidereResourceHelper mResourceHelper;
 
-	public TwidereContextWrapper(final Context base) {
-		this(base, null, getThemeResource(base));
-	}
+    public TwidereContextWrapper(final Context base) {
+        this(base, null, getThemeResource(base));
+    }
 
-	public TwidereContextWrapper(final Context base, final int theme) {
-		this(base, null, theme);
-	}
+    public TwidereContextWrapper(final Context base, final int theme) {
+        this(base, null, theme);
+    }
 
-	public TwidereContextWrapper(final Context base, final Resources res) {
-		this(base, res, getThemeResource(base));
-	}
+    public TwidereContextWrapper(final Context base, final Resources res) {
+        this(base, res, getThemeResource(base));
+    }
 
-	public TwidereContextWrapper(final Context base, final Resources res, final int theme) {
-		super(base);
-		mResources = res;
-		mThemeResourceId = theme;
-		mResourceHelper = new TwidereResourceHelper(theme);
-	}
+    public TwidereContextWrapper(final Context base, final Resources res, final int theme) {
+        super(base);
+        mResources = res;
+        mThemeResourceId = theme;
+        mResourceHelper = new TwidereResourceHelper(theme, this);
+    }
 
-	@Override
-	public Resources getResources() {
-		if (mResources == null) return mResourceHelper.getResources(this, super.getResources());
-		return mResourceHelper.getResources(this, mResources);
-	}
+    @Override
+    public Resources getResources() {
+        if (mResources == null) return mResourceHelper.getResources(this, super.getResources());
+        return mResourceHelper.getResources(this, mResources);
+    }
 
-	@Override
-	public Theme getTheme() {
-		if (mTheme == null) {
-			mTheme = getResources().newTheme();
-			mTheme.setTo(super.getTheme());
-			final int getThemeResourceId = getThemeResourceId();
-			if (getThemeResourceId != 0) {
-				mTheme.applyStyle(getThemeResourceId, true);
-			}
-		}
-		return mTheme;
-	}
+    @Override
+    public Theme getTheme() {
+        if (mTheme == null) {
+            mTheme = getResources().newTheme();
+            mTheme.setTo(super.getTheme());
+            final int getThemeResourceId = getThemeResourceId();
+            if (getThemeResourceId != 0) {
+                mTheme.applyStyle(getThemeResourceId, true);
+            }
+        }
+        return mTheme;
+    }
 
-	@Override
-	public int getThemeResourceId() {
-		return mThemeResourceId;
-	}
+    @Override
+    public int getThemeResourceId() {
+        return mThemeResourceId;
+    }
 
-	private static int getThemeResource(final Context base) {
-		if (base instanceof ITwidereContextWrapper)
-			return ((ITwidereContextWrapper) base).getThemeResourceId();
-		else
-			return 0;
-	}
+    private static int getThemeResource(final Context base) {
+        if (base instanceof ITwidereContextWrapper)
+            return ((ITwidereContextWrapper) base).getThemeResourceId();
+        else
+            return 0;
+    }
 
+    @Override
+    public void onInitResources(NoAccentResources resources) {
+        ThemeUtils.initResourceInterceptors(this, resources);
+    }
 }

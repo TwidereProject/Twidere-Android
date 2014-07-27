@@ -26,57 +26,62 @@ import android.os.Bundle;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.content.res.NoAccentResources;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 
 @SuppressLint("Registered")
-public class BaseSupportDialogActivity extends BaseSupportThemedActivity implements Constants, IThemedActivity {
+public class BaseSupportDialogActivity extends BaseSupportThemedActivity implements Constants, IThemedActivity, TwidereResourceHelper.OnInitListener {
 
-	private TwidereResourceHelper mResourceHelper;
-	private boolean mInstanceStateSaved;
+    private TwidereResourceHelper mResourceHelper;
+    private boolean mInstanceStateSaved;
 
-	@Override
-	public Resources getResources() {
-		if (mResourceHelper == null) {
-			mResourceHelper = new TwidereResourceHelper(getThemeResourceId());
-		}
-		return mResourceHelper.getResources(this, getDefaultResources());
-	}
+    @Override
+    public Resources getResources() {
+        if (mResourceHelper == null) {
+            mResourceHelper = new TwidereResourceHelper(getThemeResourceId(), this);
+        }
+        return mResourceHelper.getResources(this, getDefaultResources());
+    }
 
-	@Override
-	public int getThemeColor() {
-		return ThemeUtils.getThemeColor(this);
-	}
+    @Override
+    public int getThemeColor() {
+        return ThemeUtils.getThemeColor(this);
+    }
 
-	@Override
-	public int getThemeResourceId() {
-		return ThemeUtils.getDialogThemeResource(this);
-	}
+    @Override
+    public int getThemeResourceId() {
+        return ThemeUtils.getDialogThemeResource(this);
+    }
 
-	public TwidereApplication getTwidereApplication() {
-		return (TwidereApplication) getApplication();
-	}
+    public TwidereApplication getTwidereApplication() {
+        return (TwidereApplication) getApplication();
+    }
 
-	@Override
-	public final boolean shouldOverrideActivityAnimation() {
-		// Dialog theme should never use custom animations
-		return false;
-	}
+    @Override
+    public final boolean shouldOverrideActivityAnimation() {
+        // Dialog theme should never use custom animations
+        return false;
+    }
 
-	protected boolean isStateSaved() {
-		return mInstanceStateSaved;
-	}
+    protected boolean isStateSaved() {
+        return mInstanceStateSaved;
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mInstanceStateSaved = false;
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mInstanceStateSaved = false;
+    }
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		mInstanceStateSaved = true;
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        mInstanceStateSaved = true;
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    public void onInitResources(NoAccentResources resources) {
+        ThemeUtils.initResourceInterceptors(this, resources);
+    }
 }

@@ -19,141 +19,132 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import static org.mariotaku.twidere.util.Utils.restartActivity;
-
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 
-import com.negusoft.holoaccent.AccentHelper;
+import com.negusoft.holoaccent.AccentResources;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.theme.TwidereAccentHelper;
 
-public abstract class BaseSupportThemedActivity extends FragmentActivity implements Constants, IThemedActivity {
+import static org.mariotaku.twidere.util.Utils.restartActivity;
 
-	private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
+public abstract class BaseSupportThemedActivity extends AccentFragmentActivity implements Constants, IThemedActivity {
 
-	private AccentHelper mAccentHelper;
+    private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
 
-	@Override
-	public void finish() {
-		super.finish();
-		overrideCloseAnimationIfNeeded();
-	}
+    @Override
+    public void finish() {
+        super.finish();
+        overrideCloseAnimationIfNeeded();
+    }
 
-	@Override
-	public final int getCurrentThemeResourceId() {
-		return mCurrentThemeResource;
-	}
+    @Override
+    public final int getCurrentThemeResourceId() {
+        return mCurrentThemeResource;
+    }
 
-	@Override
-	public final Resources getDefaultResources() {
-		return super.getResources();
-	}
+    @Override
+    public final Resources getDefaultResources() {
+        return super.getResources();
+    }
 
-	@Override
-	public Resources getResources() {
-		return getThemedResources();
-	}
+    @Override
+    public int getThemeBackgroundAlpha() {
+        return ThemeUtils.isTransparentBackground(this) ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xff;
+    }
 
-	@Override
-	public int getThemeBackgroundAlpha() {
-		return ThemeUtils.isTransparentBackground(this) ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xff;
-	}
+    @Override
+    public abstract int getThemeColor();
 
-	@Override
-	public abstract int getThemeColor();
 
-	@Override
-	public final Resources getThemedResources() {
-		if (mAccentHelper == null) {
-			mAccentHelper = new TwidereAccentHelper(getThemeResourceId(), getThemeColor());
-		}
-		return mAccentHelper.getResources(this, super.getResources());
-	}
+    @Override
+    public String getThemeFontFamily() {
+        return ThemeUtils.getThemeFontFamily(this);
+    }
 
-	@Override
-	public String getThemeFontFamily() {
-		return ThemeUtils.getThemeFontFamily(this);
-	}
+    @Override
+    public abstract int getThemeResourceId();
 
-	@Override
-	public abstract int getThemeResourceId();
+    @Override
+    public boolean isDarkDrawerEnabled() {
+        return ThemeUtils.isDarkDrawerEnabled(this);
+    }
 
-	@Override
-	public boolean isDarkDrawerEnabled() {
-		return ThemeUtils.isDarkDrawerEnabled(this);
-	}
+    @Override
+    public void navigateUpFromSameTask() {
+        NavUtils.navigateUpFromSameTask(this);
+        overrideCloseAnimationIfNeeded();
+    }
 
-	@Override
-	public void navigateUpFromSameTask() {
-		NavUtils.navigateUpFromSameTask(this);
-		overrideCloseAnimationIfNeeded();
-	}
+    @Override
+    public void overrideCloseAnimationIfNeeded() {
+        if (shouldOverrideActivityAnimation()) {
+            ThemeUtils.overrideActivityCloseAnimation(this);
+        } else {
+            ThemeUtils.overrideNormalActivityCloseAnimation(this);
+        }
+    }
 
-	@Override
-	public void overrideCloseAnimationIfNeeded() {
-		if (shouldOverrideActivityAnimation()) {
-			ThemeUtils.overrideActivityCloseAnimation(this);
-		} else {
-			ThemeUtils.overrideNormalActivityCloseAnimation(this);
-		}
-	}
 
-	@Override
-	public final void restart() {
-		restartActivity(this);
-	}
+    @Override
+    public void onInitAccentResources(AccentResources resources) {
+        super.onInitAccentResources(resources);
+        ThemeUtils.initResourceInterceptors(this, resources);
+    }
 
-	@Override
-	public boolean shouldOverrideActivityAnimation() {
-		return true;
-	}
+    @Override
+    public final void restart() {
+        restartActivity(this);
+    }
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		if (Utils.isDebugBuild()) {
-			StrictModeUtils.detectAllVmPolicy();
-			StrictModeUtils.detectAllThreadPolicy();
-		}
-		if (shouldOverrideActivityAnimation()) {
-			ThemeUtils.overrideActivityOpenAnimation(this);
-		}
-		setTheme();
-		super.onCreate(savedInstanceState);
-		setActionBarBackground();
-	}
+    @Override
+    public boolean shouldOverrideActivityAnimation() {
+        return true;
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
-				mCurrentThemeBackgroundAlpha);
-	}
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        if (Utils.isDebugBuild()) {
+            StrictModeUtils.detectAllVmPolicy();
+            StrictModeUtils.detectAllThreadPolicy();
+        }
+        if (shouldOverrideActivityAnimation()) {
+            ThemeUtils.overrideActivityOpenAnimation(this);
+        }
+        setTheme();
+        super.onCreate(savedInstanceState);
+        setActionBarBackground();
+    }
 
-	protected boolean shouldSetWindowBackground() {
-		return true;
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
+                mCurrentThemeBackgroundAlpha);
+    }
 
-	private final void setActionBarBackground() {
-		ThemeUtils.applyActionBarBackground(getActionBar(), this, mCurrentThemeResource);
-	}
+    protected boolean shouldSetWindowBackground() {
+        return true;
+    }
 
-	private final void setTheme() {
-		mCurrentThemeResource = getThemeResourceId();
-		mCurrentThemeColor = getThemeColor();
-		mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
-		ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
-				mCurrentThemeBackgroundAlpha);
-		setTheme(mCurrentThemeResource);
-		if (shouldSetWindowBackground() && ThemeUtils.isTransparentBackground(mCurrentThemeResource)) {
-			getWindow().setBackgroundDrawable(ThemeUtils.getWindowBackground(this));
-		}
-	}
+    private final void setActionBarBackground() {
+        ThemeUtils.applyActionBarBackground(getActionBar(), this, mCurrentThemeResource);
+    }
+
+    private final void setTheme() {
+        mCurrentThemeResource = getThemeResourceId();
+        mCurrentThemeColor = getThemeColor();
+        mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
+        ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
+                mCurrentThemeBackgroundAlpha);
+        setTheme(mCurrentThemeResource);
+        if (shouldSetWindowBackground() && ThemeUtils.isTransparentBackground(mCurrentThemeResource)) {
+            getWindow().setBackgroundDrawable(ThemeUtils.getWindowBackground(this));
+        }
+    }
 }

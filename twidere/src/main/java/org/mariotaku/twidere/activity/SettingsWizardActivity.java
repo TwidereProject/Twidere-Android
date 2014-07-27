@@ -48,6 +48,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.TabsAdapter;
+import org.mariotaku.twidere.content.res.NoAccentResources;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
@@ -73,7 +74,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SettingsWizardActivity extends Activity implements Constants {
+public class SettingsWizardActivity extends Activity implements Constants, TwidereResourceHelper.OnInitListener {
 
 	public static final String WIZARD_PREFERENCE_KEY_NEXT_PAGE = "next_page";
 	public static final String WIZARD_PREFERENCE_KEY_USE_DEFAULTS = "use_defaults";
@@ -114,7 +115,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
 	@Override
 	public Resources getResources() {
 		if (mResourceHelper == null) {
-			mResourceHelper = new TwidereResourceHelper(ThemeUtils.getSettingsWizardThemeResource(this));
+			mResourceHelper = new TwidereResourceHelper(ThemeUtils.getSettingsWizardThemeResource(this), this);
 		}
 		return mResourceHelper.getResources(this, super.getResources());
 	}
@@ -192,7 +193,12 @@ public class SettingsWizardActivity extends Activity implements Constants {
 		startActivityForResult(intent, REQUEST_IMPORT_SETTINGS);
 	}
 
-	public static abstract class BaseWizardPageFragment extends BasePreferenceFragment implements
+    @Override
+    public void onInitResources(NoAccentResources resources) {
+        ThemeUtils.initResourceInterceptors(this, resources);
+    }
+
+    public static abstract class BaseWizardPageFragment extends BasePreferenceFragment implements
 			OnPreferenceClickListener {
 
 		public void gotoFinishPage() {

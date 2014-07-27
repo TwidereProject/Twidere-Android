@@ -8,6 +8,8 @@ import android.util.SparseArray;
 
 import com.atermenji.android.iconicdroid.IconicFontDrawable;
 import com.atermenji.android.iconicdroid.icon.Icon;
+import com.negusoft.holoaccent.AccentPalette;
+import com.negusoft.holoaccent.AccentResources;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
@@ -15,7 +17,7 @@ import org.mariotaku.twidere.content.res.iface.IThemedResources.DrawableIntercep
 import org.mariotaku.twidere.graphic.icon.TwidereIcon;
 import org.mariotaku.twidere.util.ThemeUtils;
 
-public class ActionIconsInterceptor implements DrawableInterceptor {
+public class ActionIconsInterceptor implements DrawableInterceptor , AccentResources.Interceptor{
 
 	private static final SparseArray<Icon> sIconMap = new SparseArray<Icon>();
 
@@ -112,4 +114,8 @@ public class ActionIconsInterceptor implements DrawableInterceptor {
 		return drawable;
 	}
 
+    @Override
+    public Drawable getDrawable(Resources resources, AccentPalette accentPalette, int resId) {
+        return getDrawable(resources, resId);
+    }
 }

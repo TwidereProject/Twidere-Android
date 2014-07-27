@@ -362,7 +362,8 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
 		linkify.applyAllLinks(mTextView, status.account_id, status.is_possibly_sensitive);
 		mTextView.setMovementMethod(StatusContentMovementMethod.getInstance());
 		mTextView.setCustomSelectionActionModeCallback(this);
-		final String timeString = formatToLongTimeString(getActivity(), status.timestamp);
+        long timestamp = status.retweet_timestamp > 0 ? status.retweet_timestamp : status.timestamp;
+		final String timeString = formatToLongTimeString(getActivity(), timestamp);
 		final String sourceHtml = status.source;
 		if (!isEmpty(timeString) && !isEmpty(sourceHtml)) {
 			mTimeSourceView.setText(Html.fromHtml(getString(R.string.time_source, timeString, sourceHtml)));

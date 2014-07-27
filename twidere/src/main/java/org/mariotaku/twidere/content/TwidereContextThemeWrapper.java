@@ -24,49 +24,56 @@ import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.view.ContextThemeWrapper;
 
+import com.negusoft.holoaccent.AccentHelper;
+import com.negusoft.holoaccent.AccentResources;
+
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
-import org.mariotaku.twidere.util.theme.TwidereAccentHelper;
+import org.mariotaku.twidere.util.ThemeUtils;
 
-public class TwidereContextThemeWrapper extends ContextThemeWrapper implements ITwidereContextWrapper {
+public class TwidereContextThemeWrapper extends ContextThemeWrapper implements ITwidereContextWrapper, AccentHelper.OnInitListener {
 
-	private final TwidereAccentHelper mAccentHelper;
+    private final AccentHelper mAccentHelper;
 
-	private final int mThemeResourceId;
-	private final int mAccentColor;
-	private Theme mTheme;
+    private final int mThemeResourceId;
+    private final int mAccentColor;
+    private Theme mTheme;
 
-	public TwidereContextThemeWrapper(final Context base, final int themeResource, final int accentColor) {
-		super(base, themeResource);
-		mThemeResourceId = themeResource;
-		mAccentColor = accentColor;
-		mAccentHelper = new TwidereAccentHelper(themeResource, accentColor);
-	}
+    public TwidereContextThemeWrapper(final Context base, final int themeResource, final int accentColor) {
+        super(base, themeResource);
+        mThemeResourceId = themeResource;
+        mAccentColor = accentColor;
+        mAccentHelper = new AccentHelper(accentColor, accentColor, accentColor, this);
+    }
 
-	public int getAccentColor() {
-		return mAccentColor;
-	}
+    public int getAccentColor() {
+        return mAccentColor;
+    }
 
-	@Override
-	public Resources getResources() {
-		return mAccentHelper.getResources(this, super.getResources());
-	}
+    @Override
+    public Resources getResources() {
+        return mAccentHelper.getResources(this, super.getResources());
+    }
 
-	@Override
-	public Theme getTheme() {
-		if (mTheme == null) {
-			mTheme = getResources().newTheme();
-			mTheme.setTo(super.getTheme());
-			final int getThemeResourceId = getThemeResourceId();
-			if (getThemeResourceId != 0) {
-				mTheme.applyStyle(getThemeResourceId, true);
-			}
-		}
-		return mTheme;
-	}
+    @Override
+    public Theme getTheme() {
+        if (mTheme == null) {
+            mTheme = getResources().newTheme();
+            mTheme.setTo(super.getTheme());
+            final int getThemeResourceId = getThemeResourceId();
+            if (getThemeResourceId != 0) {
+                mTheme.applyStyle(getThemeResourceId, true);
+            }
+        }
+        return mTheme;
+    }
 
-	@Override
-	public int getThemeResourceId() {
-		return mThemeResourceId;
-	}
+    @Override
+    public int getThemeResourceId() {
+        return mThemeResourceId;
+    }
 
+    @Override
+    public void onInitResources(AccentResources accentResources) {
+        ThemeUtils.initResourceInterceptors(this, accentResources);
+    }
 }
