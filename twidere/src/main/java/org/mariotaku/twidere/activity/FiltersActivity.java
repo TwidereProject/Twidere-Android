@@ -58,6 +58,7 @@ import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredLinksFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredSourcesFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredUsersFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -100,8 +101,8 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_filters, menu);
+    public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
+        inflater.inflate(R.menu.menu_filters, menu);
         return true;
     }
 

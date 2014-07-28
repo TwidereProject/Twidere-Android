@@ -35,6 +35,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -47,11 +49,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -69,6 +73,21 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
 	private LayoutInflater mLayoutInflater;
 
 	private boolean mStoppedPreviously;
+
+
+    @Override
+    public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof IThemedActivity) {
+            onCreateOptionsMenu(menu, ((IThemedActivity) activity).getTwidereMenuInflater());
+        } else {
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+    }
+
+    public void onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
+
+    }
 
 	public final TwidereApplication getApplication() {
 		return TwidereApplication.getInstance(getActivity());

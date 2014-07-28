@@ -19,16 +19,35 @@
 
 package org.mariotaku.twidere.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 
 public class BasePreferenceFragment extends PreferenceFragment implements Constants {
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getPreferenceManager().setSharedPreferencesName(SHARED_PREFERENCES_NAME);
-	}
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPreferenceManager().setSharedPreferencesName(SHARED_PREFERENCES_NAME);
+    }
+
+    @Override
+    public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final Activity activity = getActivity();
+        if (activity instanceof IThemedActivity) {
+            onCreateOptionsMenu(menu, ((IThemedActivity) activity).getTwidereMenuInflater());
+        } else {
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+    }
+
+    public void onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
+
+    }
 }

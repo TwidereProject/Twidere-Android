@@ -27,7 +27,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -92,7 +92,7 @@ public class SearchFragment extends BaseSupportFragment implements Panes.Left, O
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
     }
 

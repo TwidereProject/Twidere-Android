@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:gravity="bottom"
 	android:orientation="horizontal">
 
-	<ImageView
+	<org.mariotaku.twidere.view.ResourceImageView
 		android:id="@+id/add_image"
 		style="?android:borderlessButtonStyle"
 		android:layout_width="?android:actionBarSize"
@@ -13,7 +14,7 @@
 		android:layout_weight="0"
 		android:contentDescription="@string/add_image"
 		android:scaleType="centerInside"
-		android:src="@drawable/ic_menu_gallery"/>
+		app:image="@drawable/ic_iconic_action_gallery"/>
 
 	<org.mariotaku.twidere.view.StatusComposeEditText
 		android:id="@+id/edit_text"
@@ -36,12 +37,12 @@
 		android:layout_height="?android:actionBarSize"
 		android:layout_weight="0">
 
-		<ImageView
+		<org.mariotaku.twidere.view.ResourceImageView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:contentDescription="@string/send"
 			android:scaleType="centerInside"
-			android:src="@drawable/ic_menu_send"/>
+			app:image="@drawable/ic_iconic_action_send"/>
 
 		<org.mariotaku.twidere.view.StatusTextCountView
 			android:id="@+id/text_count"

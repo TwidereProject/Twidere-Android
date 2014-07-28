@@ -34,6 +34,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.iface.IMapFragment;
 import org.mariotaku.twidere.fragment.support.NativeMapFragment;
 import org.mariotaku.twidere.fragment.support.WebMapFragment;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 public class MapViewerActivity extends TwidereSwipeBackActivity implements Constants {
@@ -44,8 +45,8 @@ public class MapViewerActivity extends TwidereSwipeBackActivity implements Const
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_map_viewer, menu);
+	public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
+		inflater.inflate(R.menu.menu_map_viewer, menu);
 		return true;
 	}
 

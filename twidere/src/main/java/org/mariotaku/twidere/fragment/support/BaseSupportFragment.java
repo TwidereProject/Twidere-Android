@@ -26,83 +26,102 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 public class BaseSupportFragment extends Fragment implements Constants {
 
-	private LayoutInflater mLayoutInflater;
+    private LayoutInflater mLayoutInflater;
 
-	public BaseSupportFragment() {
+    public BaseSupportFragment() {
 
-	}
+    }
 
-	public TwidereApplication getApplication() {
-		final Activity activity = getActivity();
-		if (activity != null) return (TwidereApplication) activity.getApplication();
-		return null;
-	}
+    @Override
+    public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof IThemedActivity) {
+            onCreateOptionsMenu(menu, ((IThemedActivity) activity).getTwidereMenuInflater());
+        } else {
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+    }
 
-	public ContentResolver getContentResolver() {
-		final Activity activity = getActivity();
-		if (activity != null) return activity.getContentResolver();
-		return null;
-	}
+    public void onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
 
-	@Override
-	public LayoutInflater getLayoutInflater(final Bundle savedInstanceState) {
-		if (mLayoutInflater != null) return mLayoutInflater;
-		return mLayoutInflater = ThemeUtils.getThemedLayoutInflaterForActionIcons(getActivity());
-	}
+    }
 
-	public MultiSelectManager getMultiSelectManager() {
-		return getApplication() != null ? getApplication().getMultiSelectManager() : null;
-	}
+    public TwidereApplication getApplication() {
+        final Activity activity = getActivity();
+        if (activity != null) return (TwidereApplication) activity.getApplication();
+        return null;
+    }
 
-	public SharedPreferences getSharedPreferences(final String name, final int mode) {
-		final Activity activity = getActivity();
-		if (activity != null) return activity.getSharedPreferences(name, mode);
-		return null;
-	}
+    public ContentResolver getContentResolver() {
+        final Activity activity = getActivity();
+        if (activity != null) return activity.getContentResolver();
+        return null;
+    }
 
-	public Object getSystemService(final String name) {
-		final Activity activity = getActivity();
-		if (activity != null) return activity.getSystemService(name);
-		return null;
-	}
+    @Override
+    public LayoutInflater getLayoutInflater(final Bundle savedInstanceState) {
+        if (mLayoutInflater != null) return mLayoutInflater;
+        return mLayoutInflater = ThemeUtils.getThemedLayoutInflaterForActionIcons(getActivity());
+    }
 
-	public AsyncTwitterWrapper getTwitterWrapper() {
-		return getApplication() != null ? getApplication().getTwitterWrapper() : null;
-	}
+    public MultiSelectManager getMultiSelectManager() {
+        return getApplication() != null ? getApplication().getMultiSelectManager() : null;
+    }
 
-	public void invalidateOptionsMenu() {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.invalidateOptionsMenu();
-	}
+    public SharedPreferences getSharedPreferences(final String name, final int mode) {
+        final Activity activity = getActivity();
+        if (activity != null) return activity.getSharedPreferences(name, mode);
+        return null;
+    }
 
-	public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.registerReceiver(receiver, filter);
-	}
+    public Object getSystemService(final String name) {
+        final Activity activity = getActivity();
+        if (activity != null) return activity.getSystemService(name);
+        return null;
+    }
 
-	public void setProgressBarIndeterminateVisibility(final boolean visible) {
-		final Activity activity = getActivity();
-		if (activity instanceof BaseSupportActivity) {
-			((BaseSupportActivity) activity).setProgressBarIndeterminateVisibility(visible);
-		}
-	}
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return getApplication() != null ? getApplication().getTwitterWrapper() : null;
+    }
 
-	public void unregisterReceiver(final BroadcastReceiver receiver) {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.unregisterReceiver(receiver);
-	}
+    public void invalidateOptionsMenu() {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.invalidateOptionsMenu();
+    }
+
+    public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.registerReceiver(receiver, filter);
+    }
+
+    public void setProgressBarIndeterminateVisibility(final boolean visible) {
+        final Activity activity = getActivity();
+        if (activity instanceof BaseSupportActivity) {
+            ((BaseSupportActivity) activity).setProgressBarIndeterminateVisibility(visible);
+        }
+    }
+
+    public void unregisterReceiver(final BroadcastReceiver receiver) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.unregisterReceiver(receiver);
+    }
 }

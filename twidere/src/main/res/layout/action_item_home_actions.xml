@@ -9,7 +9,7 @@
 		android:layout_gravity="center"
 		android:visibility="gone"/>
 
-	<ImageView
+	<org.mariotaku.twidere.view.ResourceImageView
 		android:id="@android:id/icon"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

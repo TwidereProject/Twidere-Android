@@ -120,7 +120,7 @@
 		<!-- ActionBar styles -->
 		<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Colored</item>
 		<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.ActionBar.Colored.Light</item>
-		<item name="android:actionBarItemBackground">@drawable/list_selector_light_white</item>
+		<!--<item name="android:actionBarItemBackground">@drawable/list_selector_light_white</item>-->
 	</style>
 
 	<style name="Theme.Twidere.Colored.DarkActionBar" parent="Theme.Twidere.Light.DarkActionBar">
@@ -128,7 +128,7 @@
 		<!-- ActionBar styles -->
 		<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Colored.Inverse</item>
 		<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.ActionBar.Colored.Dark</item>
-		<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>
+		<!--<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>-->
 	</style>
 
 	<style name="Theme.Twidere.Colored.DarkActionBar.DarkIcon"/>
@@ -225,12 +225,12 @@
 
 	<style name="Theme.Twidere.ActionBar.Colored.Light" parent="Theme.Twidere.Light">
 		<item name="accentColor">@color/accent_white</item>
-		<item name="android:actionBarItemBackground">@drawable/list_selector_light_white</item>
+		<!--<item name="android:actionBarItemBackground">@drawable/list_selector_light_white</item>-->
 	</style>
 
 	<style name="Theme.Twidere.ActionBar.Colored.Dark" parent="Theme.Twidere.Dark">
 		<item name="accentColor">@color/accent_white</item>
-		<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>
+		<!--<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>-->
 	</style>
 
 	<style name="Theme.Twidere.Dark.Dialog" parent="android:Theme.Holo.Dialog">
@@ -382,6 +382,16 @@
 		<!-- Window attributes -->
 		<item name="android:windowBackground">@color/bg_color_drawer_transparent_dark</item>
 	</style>
+
+    <style name="Theme.Twidere.Drawer.Light" parent="Theme.Twidere.Light">
+
+        <!-- Window attributes -->
+    </style>
+
+    <style name="Theme.Twidere.Drawer.Light.Transparent" parent="Theme.Twidere.Light.Transparent">
+
+        <!-- Window attributes -->
+    </style>
 
 	<style name="Theme.Twidere.Dark.NoDisplay" parent="android:Theme.Holo">
 		<item name="android:windowBackground">@null</item>

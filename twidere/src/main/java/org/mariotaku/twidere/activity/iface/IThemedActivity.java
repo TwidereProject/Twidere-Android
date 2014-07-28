@@ -20,8 +20,10 @@
 package org.mariotaku.twidere.activity.iface;
 
 import android.content.res.Resources;
+import android.view.Menu;
 
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 
 public interface IThemedActivity extends ITwidereContextWrapper {
 
@@ -33,6 +35,8 @@ public interface IThemedActivity extends ITwidereContextWrapper {
 
 	public int getThemeColor();
 
+    public TwidereMenuInflater getTwidereMenuInflater();
+
 	public String getThemeFontFamily();
 
 	public boolean isDarkDrawerEnabled();
@@ -42,6 +46,8 @@ public interface IThemedActivity extends ITwidereContextWrapper {
 	public void overrideCloseAnimationIfNeeded();
 
 	public void restart();
+
+    public boolean onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater);
 
 	public boolean shouldOverrideActivityAnimation();
 }

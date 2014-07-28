@@ -64,6 +64,7 @@ import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.model.Panes;
@@ -176,7 +177,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
 	}
 
 	@Override
-	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+	public void onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
 		inflater.inflate(R.menu.menu_custom_tabs, menu);
 	}
 

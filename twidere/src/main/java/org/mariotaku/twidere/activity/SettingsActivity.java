@@ -42,6 +42,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.DataExportActivity;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.holder.ViewHolder;
@@ -97,9 +98,9 @@ public class SettingsActivity extends BasePreferenceActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
 		if (getIntent().getStringExtra(EXTRA_SHOW_FRAGMENT) != null) return false;
-		getMenuInflater().inflate(R.menu.menu_settings, menu);
+		inflater.inflate(R.menu.menu_settings, menu);
 		return true;
 	}
 

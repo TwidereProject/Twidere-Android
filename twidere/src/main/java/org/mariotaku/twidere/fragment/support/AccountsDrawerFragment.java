@@ -620,7 +620,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
 			final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
 			final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
 			text1.setText(option.name);
-			icon.setImageResource(option.icon);
+			icon.setImageDrawable(getContext().getResources().getDrawable(option.icon));
 			return view;
 		}
 

@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/send"
-	style="?android:actionButtonStyle"
-	android:layout_width="wrap_content"
-	android:layout_height="match_parent"
-	android:contentDescription="@string/send"
-	android:gravity="center"
-	android:orientation="horizontal"
-	android:padding="@dimen/element_spacing_normal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?android:actionButtonStyle"
+    android:id="@+id/send"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/send"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/element_spacing_normal">
 
-	<org.mariotaku.twidere.view.StatusTextCountView
-		android:id="@+id/status_text_count"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:textAppearance="?android:textAppearanceSmall"/>
+    <org.mariotaku.twidere.view.StatusTextCountView
+        android:id="@+id/status_text_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceSmall" />
 
-	<ImageView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/send"
-		android:cropToPadding="false"
-		android:padding="@dimen/element_spacing_extra_small"
-		android:scaleType="centerCrop"
-		android:src="@drawable/ic_menu_send"/>
+    <org.mariotaku.twidere.view.ResourceImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/send"
+        android:cropToPadding="false"
+        android:padding="@dimen/element_spacing_extra_small"
+        android:scaleType="centerCrop"
+        app:image="@drawable/ic_iconic_action_send" />
 
 </LinearLayout>

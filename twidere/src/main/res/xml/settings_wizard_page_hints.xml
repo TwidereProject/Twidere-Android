@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:title="@string/hints">
 
-	<Preference
-		android:icon="@drawable/ic_iconic_action_accounts"
+	<org.mariotaku.twidere.preference.ResourceIconPreference
+		app:image="@drawable/ic_iconic_action_accounts"
 		android:order="11"
 		android:summary="@string/wizard_hint_compose_select_account"
 		android:title="@string/select_account"/>
-	<Preference
-		android:icon="@drawable/ic_iconic_action_quote"
+	<org.mariotaku.twidere.preference.ResourceIconPreference
+		app:image="@drawable/ic_iconic_action_quote"
 		android:order="12"
 		android:summary="@string/wizard_hint_quote_format"
 		android:title="@string/quote_format"/>
-	<Preference
-		android:icon="@drawable/ic_iconic_action_speaker_muted"
+	<org.mariotaku.twidere.preference.ResourceIconPreference
+		app:image="@drawable/ic_iconic_action_speaker_muted"
 		android:order="13"
 		android:summary="@string/wizard_hint_filters"
 		android:title="@string/filters"/>
-	<Preference
-		android:icon="@drawable/ic_iconic_action_refresh"
+	<org.mariotaku.twidere.preference.ResourceIconPreference
+		app:image="@drawable/ic_iconic_action_refresh"
 		android:order="14"
 		android:summary="@string/wizard_hint_rate_limit"
 		android:title="@string/rate_limit"/>

@@ -19,15 +19,18 @@
 
 package org.mariotaku.twidere.activity;
 
+import android.app.ActionBar;
 import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.content.res.NoAccentResources;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 
@@ -39,6 +42,27 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     private TwidereResourceHelper mResourceHelper;
     private int mCurrentThemeResource;
     private Theme mTheme;
+    private TwidereMenuInflater mMenuInflater;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
+        return false;
+    }
+
+    @Override
+    public final boolean onCreateOptionsMenu(Menu menu) {
+        return onCreateOptionsMenu(menu, getTwidereMenuInflater());
+    }
+
+    @Override
+    public TwidereMenuInflater getTwidereMenuInflater() {
+        if (mMenuInflater != null) return mMenuInflater;
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            return mMenuInflater = new TwidereMenuInflater(actionBar.getThemedContext());
+        }
+        return mMenuInflater = new TwidereMenuInflater(this);
+    }
 
     @Override
     public void finish() {

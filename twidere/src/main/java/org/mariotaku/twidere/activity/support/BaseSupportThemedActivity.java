@@ -19,14 +19,16 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.content.res.Resources;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 
 import com.negusoft.holoaccent.AccentResources;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -36,6 +38,7 @@ import static org.mariotaku.twidere.util.Utils.restartActivity;
 public abstract class BaseSupportThemedActivity extends AccentFragmentActivity implements Constants, IThemedActivity {
 
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
+    private TwidereMenuInflater mMenuInflater;
 
     @Override
     public void finish() {
@@ -44,13 +47,28 @@ public abstract class BaseSupportThemedActivity extends AccentFragmentActivity i
     }
 
     @Override
-    public final int getCurrentThemeResourceId() {
-        return mCurrentThemeResource;
+    public boolean onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
+        return false;
     }
 
     @Override
-    public final Resources getDefaultResources() {
-        return super.getResources();
+    public final boolean onCreateOptionsMenu(Menu menu) {
+        return onCreateOptionsMenu(menu, getTwidereMenuInflater());
+    }
+
+    @Override
+    public TwidereMenuInflater getTwidereMenuInflater() {
+        if (mMenuInflater != null) return mMenuInflater;
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            return mMenuInflater = new TwidereMenuInflater(actionBar.getThemedContext());
+        }
+        return mMenuInflater = new TwidereMenuInflater(this);
+    }
+
+    @Override
+    public final int getCurrentThemeResourceId() {
+        return mCurrentThemeResource;
     }
 
     @Override

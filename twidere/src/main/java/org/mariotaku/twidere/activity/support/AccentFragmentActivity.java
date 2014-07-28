@@ -22,7 +22,7 @@ public class AccentFragmentActivity extends FragmentActivity {
         return mAccentHelper.getResources(this, super.getResources());
     }
 
-    public Resources getDefaultResources() {
+    public final Resources getDefaultResources() {
         return super.getResources();
     }
 
