@@ -2,7 +2,7 @@
 <resources>
 
 	<dimen name="element_size_default">48dp</dimen>
-	<dimen name="element_spacing_extra_small">2dp</dimen>
+	<dimen name="element_spacing_xsmall">2dp</dimen>
 	<dimen name="element_spacing_small">4dp</dimen>
 	<dimen name="element_spacing_normal">8dp</dimen>
 	<dimen name="element_spacing_large">16dp</dimen>

@@ -23,7 +23,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -32,6 +31,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -289,8 +289,8 @@ public class ThemeUtils implements Constants {
 
     public static boolean getDarkActionBarOption(final Context context) {
         if (context == null) return true;
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return pref == null || pref.getBoolean(KEY_THEME_DARK_ACTIONBAR, true);
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
+        return pref.getBoolean(KEY_THEME_DARK_ACTIONBAR, true);
     }
 
     public static Context getDialogThemedContext(final Context context) {
@@ -388,7 +388,7 @@ public class ThemeUtils implements Constants {
 
     public static int getNoDisplayThemeResource(final Context context) {
         if (context == null) return R.style.Theme_Twidere_Dark_NoDisplay;
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         final String theme = pref.getString(KEY_THEME, VALUE_THEME_NAME_TWIDERE);
         if (VALUE_THEME_NAME_DARK.equals(theme)) return R.style.Theme_Twidere_Dark_NoDisplay;
         return R.style.Theme_Twidere_Light_NoDisplay;
@@ -396,8 +396,7 @@ public class ThemeUtils implements Constants {
 
     public static Resources getResources(final Context context) {
         if (context instanceof IThemedActivity) {
-            final Resources defRes = ((IThemedActivity) context).getDefaultResources();
-            return defRes;
+            return ((IThemedActivity) context).getDefaultResources();
         }
         return context.getResources();
     }
@@ -473,8 +472,7 @@ public class ThemeUtils implements Constants {
 
     public static String getThemeBackgroundOption(final Context context) {
         if (context == null) return VALUE_THEME_BACKGROUND_DEFAULT;
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        if (pref == null) return VALUE_THEME_BACKGROUND_DEFAULT;
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         return pref.getString(KEY_THEME_BACKGROUND, VALUE_THEME_BACKGROUND_DEFAULT);
     }
 
@@ -501,10 +499,10 @@ public class ThemeUtils implements Constants {
         final int themeRes, accentColor;
         if (context instanceof IThemedActivity) {
             themeRes = ((IThemedActivity) context).getThemeResourceId();
-            accentColor = ((IThemedActivity) context).getThemeColor();
+            accentColor = ((IThemedActivity) context).getOverrideAccentColor();
         } else {
             themeRes = getSettingsThemeResource(context);
-            accentColor = getUserThemeColor(context);
+            accentColor = getUserThemeColor(context, themeRes);
         }
         return new TwidereContextThemeWrapper(context, getThemeResActionIcons(themeRes), accentColor);
     }
@@ -522,7 +520,7 @@ public class ThemeUtils implements Constants {
         final int themeRes, accentColor;
         if (context instanceof IThemedActivity) {
             themeRes = ((IThemedActivity) context).getThemeResourceId();
-            accentColor = ((IThemedActivity) context).getThemeColor();
+            accentColor = ((IThemedActivity) context).getOverrideAccentColor();
         } else {
             themeRes = getSettingsThemeResource(context);
             accentColor = getUserThemeColor(context);
@@ -533,7 +531,7 @@ public class ThemeUtils implements Constants {
 
     public static String getThemeFontFamily(final Context context) {
         if (context == null) return VALUE_THEME_FONT_FAMILY_REGULAR;
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         final String fontFamily = pref.getString(KEY_THEME_FONT_FAMILY, VALUE_THEME_FONT_FAMILY_REGULAR);
         if (!TextUtils.isEmpty(fontFamily)) return fontFamily;
         return VALUE_THEME_FONT_FAMILY_REGULAR;
@@ -550,10 +548,17 @@ public class ThemeUtils implements Constants {
         }
     }
 
+    @NonNull
+    private static SharedPreferencesWrapper getSharedPreferencesWrapper(Context context) {
+        final Context appContext = context.getApplicationContext();
+        return SharedPreferencesWrapper.getInstance(appContext, SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
+    }
+
     public static String getThemeNameOption(final Context context) {
         if (context == null) return VALUE_THEME_NAME_TWIDERE;
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return pref != null ? pref.getString(KEY_THEME, VALUE_THEME_NAME_TWIDERE) : VALUE_THEME_NAME_TWIDERE;
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
+        return pref.getString(KEY_THEME, VALUE_THEME_NAME_TWIDERE);
     }
 
     public static int getThemeResActionIcons(final int baseThemeRes) {
@@ -651,16 +656,23 @@ public class ThemeUtils implements Constants {
 
     public static int getUserThemeBackgroundAlpha(final Context context) {
         if (context == null) return DEFAULT_THEME_BACKGROUND_ALPHA;
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         return pref.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA);
     }
 
     public static int getUserThemeColor(final Context context) {
         if (context == null) return Color.TRANSPARENT;
         final Resources res = getResources(context);
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         final int def = res.getColor(android.R.color.holo_blue_light);
-        return pref != null ? pref.getInt(KEY_THEME_COLOR, def) : def;
+        return pref.getInt(KEY_THEME_COLOR, def);
+    }
+
+    public static int getUserThemeColor(final Context context, int themeRes) {
+        if (context == null) return Color.TRANSPARENT;
+        final int defThemeColor = getThemeColor(context, themeRes);
+        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
+        return pref.getInt(KEY_THEME_COLOR, defThemeColor);
     }
 
     public static Typeface getUserTypeface(final Context context, final Typeface defTypeface) {
@@ -942,5 +954,17 @@ public class ThemeUtils implements Constants {
 
     public static Resources getThemedResourcesForActionIcons(Context context, int themeRes, int accentColor) {
         return getThemedContextForActionIcons(context, themeRes, accentColor).getResources();
+    }
+
+    public static int getThemeColor(Context context, int themeResourceId) {
+        final Context appContext = context.getApplicationContext();
+        final Resources res = appContext.getResources();
+        final TypedArray a = appContext.obtainStyledAttributes(null,
+                new int[]{android.R.attr.colorActivatedHighlight}, 0, themeResourceId);
+        try {
+            return a.getColor(0, res.getColor(android.R.color.holo_blue_light));
+        } finally {
+            a.recycle();
+        }
     }
 }

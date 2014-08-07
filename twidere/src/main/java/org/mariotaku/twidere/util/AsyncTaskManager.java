@@ -107,7 +107,7 @@ public class AsyncTaskManager {
 		return false;
 	}
 
-	public boolean isExcuting(final int hashCode) {
+	public boolean isExecuting(final int hashCode) {
 		final ManagedAsyncTask<?, ?, ?> task = findTask(hashCode);
 		if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) return true;
 		return false;

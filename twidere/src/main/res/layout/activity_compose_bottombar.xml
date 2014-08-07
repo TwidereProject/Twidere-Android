@@ -28,7 +28,7 @@
 		android:layout_height="match_parent"
 		android:layout_weight="0">
 
-		<org.mariotaku.menucomponent.widget.MenuBar
+		<org.mariotaku.twidere.view.TwidereMenuBar
 			android:id="@+id/bottom_menu"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"

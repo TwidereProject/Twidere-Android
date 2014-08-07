@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   Copyright 2013 NEGU Soft
   
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +19,10 @@
     <item android:state_window_focused="false" android:drawable="@android:color/transparent" />
 
     <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
-    <item android:state_focused="true" android:state_enabled="false" android:state_pressed="true" android:drawable="@color/ha__selector_disabled" />
-    <item android:state_focused="true" android:state_enabled="false" android:drawable="@color/ha__selector_disabled" />
-    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/list_selector_white_transition" />
-    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/list_selector_white_transition" />
-    <item android:state_focused="true" android:drawable="@drawable/rect_white_focused_background" />
-
+    <item android:state_focused="true"  android:state_enabled="false" android:state_pressed="true" android:drawable="@color/ha__selector_disabled_light" />
+    <item android:state_focused="true"  android:state_enabled="false"                              android:drawable="@color/ha__selector_disabled_light" />
+    <item android:state_focused="true"                                android:state_pressed="true" android:drawable="@drawable/ha__list_selector_transition" />
+    <item android:state_focused="false"                               android:state_pressed="true" android:drawable="@drawable/ha__list_selector_transition" />
+    <item android:state_focused="true"                                                             android:drawable="@drawable/ha__rect_focused_background" />
+    
 </selector>

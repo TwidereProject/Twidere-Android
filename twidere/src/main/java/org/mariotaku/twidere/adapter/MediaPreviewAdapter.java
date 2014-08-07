@@ -62,6 +62,7 @@ public class MediaPreviewAdapter extends ArrayAdapter<String> implements Constan
 		if (mIsPossiblySensitive && !mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)) {
 			view.findViewById(R.id.image_preview_progress).setVisibility(View.GONE);
 			image_view.setBackgroundResource(R.drawable.image_preview_nsfw);
+            mImageLoader.cancelDisplayTask(image_view);
 		} else if (!link.equals(mImageLoadingHandler.getLoadingUri(image_view))) {
 			image_view.setBackgroundResource(0);
 			mImageLoader.displayPreviewImage(image_view, link, mImageLoadingHandler);

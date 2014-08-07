@@ -63,6 +63,7 @@ public class AccountsAdapter extends SimpleCursorAdapter implements Constants {
 		if (mDisplayProfileImage) {
 			mImageLoader.displayProfileImage(holder.profile_image, cursor.getString(mProfileImageIdx));
 		} else {
+            mImageLoader.cancelDisplayTask(holder.profile_image);
 			holder.profile_image.setImageResource(R.drawable.ic_profile_image_default);
 		}
 		final boolean isMultipleChoice = mChoiceMode == ListView.CHOICE_MODE_MULTIPLE

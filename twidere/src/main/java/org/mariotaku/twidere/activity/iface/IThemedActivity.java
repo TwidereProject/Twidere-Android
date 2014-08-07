@@ -33,7 +33,7 @@ public interface IThemedActivity extends ITwidereContextWrapper {
 
 	public int getThemeBackgroundAlpha();
 
-	public int getThemeColor();
+	public int getOverrideAccentColor();
 
     public TwidereMenuInflater getTwidereMenuInflater();
 

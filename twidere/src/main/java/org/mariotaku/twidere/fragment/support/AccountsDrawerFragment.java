@@ -243,7 +243,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
 					break;
 				}
 				case MENU_SET_AS_DEFAULT: {
-					mPreferences.edit().putLong(KEY_DEFAULT_ACCOUNT_ID, account.account_id).commit();
+					mPreferences.edit().putLong(KEY_DEFAULT_ACCOUNT_ID, account.account_id).apply();
 					break;
 				}
 				case MENU_DELETE: {

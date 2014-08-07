@@ -1,8 +1,8 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/list_header_title"
-	style="?android:attr/listSeparatorTextViewStyle"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:paddingBottom="2dip"
-	android:paddingLeft="5dip"
-	android:paddingTop="2dip"/>
+    android:id="@+id/list_header_title"
+    style="?android:attr/listSeparatorTextViewStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/element_spacing_xsmall"
+    android:paddingLeft="@dimen/element_spacing_small"
+    android:paddingTop="@dimen/element_spacing_xsmall" />

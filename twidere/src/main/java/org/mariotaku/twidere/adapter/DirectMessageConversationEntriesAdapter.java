@@ -52,7 +52,7 @@ import org.mariotaku.twidere.view.holder.DirectMessageEntryViewHolder;
 public class DirectMessageConversationEntriesAdapter extends BaseCursorAdapter implements IBaseCardAdapter,
 		OnClickListener {
 
-	private final ImageLoaderWrapper mLazyImageLoader;
+	private final ImageLoaderWrapper mImageLoader;
 	private final MultiSelectManager mMultiSelectManager;
 
 	private boolean mAnimationEnabled;
@@ -70,7 +70,7 @@ public class DirectMessageConversationEntriesAdapter extends BaseCursorAdapter i
 		mPlainList = plainList;
 		final TwidereApplication app = TwidereApplication.getInstance(context);
 		mMultiSelectManager = app.getMultiSelectManager();
-		mLazyImageLoader = app.getImageLoaderWrapper();
+		mImageLoader = app.getImageLoaderWrapper();
 		configBaseCardAdapter(context, this);
 	}
 
@@ -94,9 +94,6 @@ public class DirectMessageConversationEntriesAdapter extends BaseCursorAdapter i
 			holder.setAccountColor(getAccountColor(mContext, accountId));
 		}
 
-		// Clear images in prder to prevent images in recycled view shown.
-		holder.profile_image.setImageDrawable(null);
-
 		holder.setUserColor(getUserColor(mContext, conversationId));
 
 		holder.setTextSize(getTextSize());
@@ -113,8 +110,10 @@ public class DirectMessageConversationEntriesAdapter extends BaseCursorAdapter i
 		if (displayProfileImage) {
 			holder.profile_image.setTag(position);
 			final String profile_image_url_string = cursor.getString(IDX_PROFILE_IMAGE_URL);
-			mLazyImageLoader.displayProfileImage(holder.profile_image, profile_image_url_string);
-		}
+			mImageLoader.displayProfileImage(holder.profile_image, profile_image_url_string);
+		} else {
+            mImageLoader.cancelDisplayTask(holder.profile_image);
+        }
 		if (position > mMaxAnimationPosition) {
 			if (mAnimationEnabled) {
 				view.startAnimation(holder.item_animation);

@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.adapter;
 
-import static org.mariotaku.twidere.util.Utils.configBaseAdapter;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,65 +32,70 @@ import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
 
+import static org.mariotaku.twidere.util.Utils.configBaseAdapter;
+import static org.mariotaku.twidere.util.Utils.getDisplayName;
+
 public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserList> implements IBaseAdapter {
 
-	private final Context mContext;
-	private final ImageLoaderWrapper mProfileImageLoader;
+    private final Context mContext;
+    private final ImageLoaderWrapper mImageLoader;
 
-	public SimpleParcelableUserListsAdapter(final Context context) {
-		super(context, R.layout.list_item_two_line);
-		mContext = context;
-		final TwidereApplication app = TwidereApplication.getInstance(context);
-		mProfileImageLoader = app.getImageLoaderWrapper();
-		configBaseAdapter(context, this);
-	}
+    public SimpleParcelableUserListsAdapter(final Context context) {
+        super(context, R.layout.list_item_two_line);
+        mContext = context;
+        final TwidereApplication app = TwidereApplication.getInstance(context);
+        mImageLoader = app.getImageLoaderWrapper();
+        configBaseAdapter(context, this);
+    }
 
-	public void appendData(final List<ParcelableUserList> data) {
-		setData(data, false);
-	}
+    public void appendData(final List<ParcelableUserList> data) {
+        setData(data, false);
+    }
 
-	@Override
-	public long getItemId(final int position) {
-		return getItem(position) != null ? getItem(position).id : -1;
-	}
+    @Override
+    public long getItemId(final int position) {
+        return getItem(position) != null ? getItem(position).id : -1;
+    }
 
-	@Override
-	public View getView(final int position, final View convertView, final ViewGroup parent) {
-		final View view = super.getView(position, convertView, parent);
-		final Object tag = view.getTag();
-		final TwoLineWithIconViewHolder holder;
-		if (tag instanceof TwoLineWithIconViewHolder) {
-			holder = (TwoLineWithIconViewHolder) tag;
-		} else {
-			holder = new TwoLineWithIconViewHolder(view);
-			view.setTag(holder);
-		}
+    @Override
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
+        final View view = super.getView(position, convertView, parent);
+        final Object tag = view.getTag();
+        final TwoLineWithIconViewHolder holder;
+        if (tag instanceof TwoLineWithIconViewHolder) {
+            holder = (TwoLineWithIconViewHolder) tag;
+        } else {
+            holder = new TwoLineWithIconViewHolder(view);
+            view.setTag(holder);
+        }
 
-		// Clear images in prder to prevent images in recycled view shown.
-		holder.icon.setImageDrawable(null);
+        // Clear images in prder to prevent images in recycled view shown.
+        holder.icon.setImageDrawable(null);
 
-		final ParcelableUserList user_list = getItem(position);
-		final String display_name = getDisplayName(mContext, user_list.user_id, user_list.user_name,
-				user_list.user_screen_name, isDisplayNameFirst(), isNicknameOnly(), false);
-		holder.text1.setText(user_list.name);
-		holder.text2.setText(mContext.getString(R.string.created_by, display_name));
-		holder.icon.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
-		if (isDisplayProfileImage()) {
-			mProfileImageLoader.displayProfileImage(holder.icon, user_list.user_profile_image_url);
-		}
-		return view;
-	}
+        final ParcelableUserList user_list = getItem(position);
+        final String display_name = getDisplayName(mContext, user_list.user_id, user_list.user_name,
+                user_list.user_screen_name, isDisplayNameFirst(), isNicknameOnly(), false);
+        holder.text1.setText(user_list.name);
+        holder.text2.setText(mContext.getString(R.string.created_by, display_name));
+        holder.icon.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
+        if (isDisplayProfileImage()) {
+            mImageLoader.displayProfileImage(holder.icon, user_list.user_profile_image_url);
+        } else {
+            mImageLoader.cancelDisplayTask(holder.icon);
+        }
+        return view;
+    }
 
-	public void setData(final List<ParcelableUserList> data, final boolean clear_old) {
-		if (clear_old) {
-			clear();
-		}
-		if (data == null) return;
-		for (final ParcelableUserList user : data) {
-			if (clear_old || findItem(user.id) == null) {
-				add(user);
-			}
-		}
-	}
+    public void setData(final List<ParcelableUserList> data, final boolean clear_old) {
+        if (clear_old) {
+            clear();
+        }
+        if (data == null) return;
+        for (final ParcelableUserList user : data) {
+            if (clear_old || findItem(user.id) == null) {
+                add(user);
+            }
+        }
+    }
 
 }

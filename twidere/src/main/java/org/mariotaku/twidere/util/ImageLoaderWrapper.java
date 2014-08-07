@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import static org.mariotaku.twidere.util.Utils.getBestBannerType;
-
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.widget.ImageView;
@@ -33,72 +31,78 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.imageloader.AccountExtra;
 
+import static org.mariotaku.twidere.util.Utils.getBestBannerType;
+
 public class ImageLoaderWrapper implements Constants {
 
-	private final ImageLoader mImageLoader;
-	private final DisplayImageOptions mProfileImageDisplayOptions, mImageDisplayOptions, mBannerDisplayOptions;
+    private final ImageLoader mImageLoader;
+    private final DisplayImageOptions mProfileImageDisplayOptions, mImageDisplayOptions, mBannerDisplayOptions;
 
-	public ImageLoaderWrapper(final ImageLoader loader) {
-		mImageLoader = loader;
-		final DisplayImageOptions.Builder profileOptsNuilder = new DisplayImageOptions.Builder();
-		profileOptsNuilder.cacheInMemory(true);
-		profileOptsNuilder.cacheOnDisk(true);
-		profileOptsNuilder.showImageForEmptyUri(R.drawable.ic_profile_image_default);
-		profileOptsNuilder.showImageOnFail(R.drawable.ic_profile_image_default);
-		profileOptsNuilder.showImageOnLoading(R.drawable.ic_profile_image_default);
-		profileOptsNuilder.bitmapConfig(Bitmap.Config.ARGB_8888);
-		profileOptsNuilder.resetViewBeforeLoading(true);
-		final DisplayImageOptions.Builder imageOptsBuilder = new DisplayImageOptions.Builder();
-		imageOptsBuilder.cacheInMemory(true);
-		imageOptsBuilder.cacheOnDisk(true);
-		imageOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
-		imageOptsBuilder.resetViewBeforeLoading(true);
-		final DisplayImageOptions.Builder bannerOptsBuilder = new DisplayImageOptions.Builder();
-		bannerOptsBuilder.cacheInMemory(true);
-		bannerOptsBuilder.cacheOnDisk(true);
-		bannerOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
-		bannerOptsBuilder.resetViewBeforeLoading(true);
+    public ImageLoaderWrapper(final ImageLoader loader) {
+        mImageLoader = loader;
+        final DisplayImageOptions.Builder profileOptsNuilder = new DisplayImageOptions.Builder();
+        profileOptsNuilder.cacheInMemory(true);
+        profileOptsNuilder.cacheOnDisk(true);
+        profileOptsNuilder.showImageForEmptyUri(R.drawable.ic_profile_image_default);
+        profileOptsNuilder.showImageOnFail(R.drawable.ic_profile_image_default);
+        profileOptsNuilder.showImageOnLoading(R.drawable.ic_profile_image_default);
+        profileOptsNuilder.bitmapConfig(Bitmap.Config.ARGB_8888);
+        profileOptsNuilder.resetViewBeforeLoading(true);
+        final DisplayImageOptions.Builder imageOptsBuilder = new DisplayImageOptions.Builder();
+        imageOptsBuilder.cacheInMemory(true);
+        imageOptsBuilder.cacheOnDisk(true);
+        imageOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
+        imageOptsBuilder.resetViewBeforeLoading(true);
+        final DisplayImageOptions.Builder bannerOptsBuilder = new DisplayImageOptions.Builder();
+        bannerOptsBuilder.cacheInMemory(true);
+        bannerOptsBuilder.cacheOnDisk(true);
+        bannerOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
+        bannerOptsBuilder.resetViewBeforeLoading(true);
 
-		mProfileImageDisplayOptions = profileOptsNuilder.build();
-		mImageDisplayOptions = imageOptsBuilder.build();
-		mBannerDisplayOptions = bannerOptsBuilder.build();
-	}
+        mProfileImageDisplayOptions = profileOptsNuilder.build();
+        mImageDisplayOptions = imageOptsBuilder.build();
+        mBannerDisplayOptions = bannerOptsBuilder.build();
+    }
 
-	public void clearFileCache() {
-		mImageLoader.clearDiskCache();
-	}
+    public void clearFileCache() {
+        mImageLoader.clearDiskCache();
+    }
 
-	public void clearMemoryCache() {
-		mImageLoader.clearMemoryCache();
-	}
+    public void clearMemoryCache() {
+        mImageLoader.clearMemoryCache();
+    }
 
-	public void displayPreviewImage(final ImageView view, final String url) {
-		mImageLoader.displayImage(url, view, mImageDisplayOptions);
-	}
+    public void displayPreviewImage(final ImageView view, final String url) {
+        mImageLoader.displayImage(url, view, mImageDisplayOptions);
+    }
 
-	public void displayPreviewImage(final ImageView view, final String url, final ImageLoadingHandler loadingHandler) {
-		mImageLoader.displayImage(url, view, mImageDisplayOptions, loadingHandler, loadingHandler);
-	}
+    public void displayPreviewImage(final ImageView view, final String url, final ImageLoadingHandler loadingHandler) {
+        mImageLoader.displayImage(url, view, mImageDisplayOptions, loadingHandler, loadingHandler);
+    }
 
-	public void displayPreviewImageWithCredentials(final ImageView view, final String url, final long accountId,
-			final ImageLoadingHandler loadingHandler) {
-		final DisplayImageOptions.Builder b = new DisplayImageOptions.Builder();
-		b.cloneFrom(mImageDisplayOptions);
-		b.extraForDownloader(new AccountExtra(accountId));
-		mImageLoader.displayImage(url, view, b.build(), loadingHandler, loadingHandler);
-	}
+    public void displayPreviewImageWithCredentials(final ImageView view, final String url, final long accountId,
+                                                   final ImageLoadingHandler loadingHandler) {
+        final DisplayImageOptions.Builder b = new DisplayImageOptions.Builder();
+        b.cloneFrom(mImageDisplayOptions);
+        b.extraForDownloader(new AccountExtra(accountId));
+        mImageLoader.displayImage(url, view, b.build(), loadingHandler, loadingHandler);
+    }
 
-	public void displayProfileBanner(final ImageView view, final String base_url, final int width) {
-		final String type = getBestBannerType(width);
-		final String url = TextUtils.isEmpty(base_url) ? null : base_url + "/" + type;
-		mImageLoader.displayImage(url, view, mBannerDisplayOptions);
-	}
+    public void displayProfileBanner(final ImageView view, final String base_url, final int width) {
+        final String type = getBestBannerType(width);
+        final String url = TextUtils.isEmpty(base_url) ? null : base_url + "/" + type;
+        mImageLoader.displayImage(url, view, mBannerDisplayOptions);
+    }
 
-	public void displayProfileImage(final ImageView view, final String url) {
-		mImageLoader.displayImage(url, view, mProfileImageDisplayOptions);
-	}
+    public void displayProfileImage(final ImageView view, final String url) {
+        mImageLoader.displayImage(url, view, mProfileImageDisplayOptions);
+    }
 
-	public void loadProfileImage(final String url, final ImageLoadingListener listener) {
-		mImageLoader.loadImage(url, mProfileImageDisplayOptions, listener);
-	}
+    public void loadProfileImage(final String url, final ImageLoadingListener listener) {
+        mImageLoader.loadImage(url, mProfileImageDisplayOptions, listener);
+    }
+
+    public void cancelDisplayTask(ImageView imageView) {
+        mImageLoader.cancelDisplayTask(imageView);
+    }
 }

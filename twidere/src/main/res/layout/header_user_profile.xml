@@ -13,7 +13,7 @@
 
 	<View
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/element_spacing_extra_small"
+		android:layout_height="@dimen/element_spacing_xsmall"
 		android:layout_above="@+id/profile_name_container"
 		android:background="@drawable/shadow_top"/>
 	<!--

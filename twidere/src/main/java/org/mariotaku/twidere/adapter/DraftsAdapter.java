@@ -68,8 +68,11 @@ public class DraftsAdapter extends SimpleCursorAdapter {
 			holder.image_preview_container.setVisibility(TextUtils.isEmpty(mediaUri) ? View.GONE : View.VISIBLE);
 			if (mediaUri != null && !mediaUri.equals(mImageLoadingHandler.getLoadingUri(holder.image_preview))) {
 				mImageLoader.displayPreviewImage(holder.image_preview, mediaUri, mImageLoadingHandler);
-			}
+			}else {
+                mImageLoader.cancelDisplayTask(holder.image_preview);
+            }
 		} else {
+            mImageLoader.cancelDisplayTask(holder.image_preview);
 			holder.image_preview_container.setVisibility(View.GONE);
 		}
 		holder.content.drawEnd(getAccountColors(context, accountIds));

@@ -36,7 +36,6 @@ import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +103,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
     @Override
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        new MenuInflater(getActivity()).inflate(R.menu.action_multi_select_items, menu);
+        new TwidereMenuInflater(getActivity()).inflate(R.menu.action_multi_select_items, menu);
         return true;
     }
 

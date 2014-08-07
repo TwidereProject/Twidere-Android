@@ -217,6 +217,7 @@ public abstract class BaseParcelableActivitiesAdapter extends BaseArrayAdapter<P
 				view.setVisibility(View.VISIBLE);
 				mImageLoader.displayProfileImage(view, urls[i]);
 			} else {
+                mImageLoader.cancelDisplayTask(view);
 				view.setVisibility(View.GONE);
 			}
 		}

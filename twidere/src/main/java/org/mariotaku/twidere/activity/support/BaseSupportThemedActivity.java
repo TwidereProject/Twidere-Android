@@ -77,7 +77,7 @@ public abstract class BaseSupportThemedActivity extends AccentFragmentActivity i
     }
 
     @Override
-    public abstract int getThemeColor();
+    public abstract int getOverrideAccentColor();
 
 
     @Override
@@ -156,7 +156,7 @@ public abstract class BaseSupportThemedActivity extends AccentFragmentActivity i
 
     private final void setTheme() {
         mCurrentThemeResource = getThemeResourceId();
-        mCurrentThemeColor = getThemeColor();
+        mCurrentThemeColor = getOverrideAccentColor();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
                 mCurrentThemeBackgroundAlpha);

@@ -22,7 +22,7 @@
 			android:layout_alignTop="@+id/status_content"/>
 	</RelativeLayout>
 
-	<org.mariotaku.menucomponent.widget.MenuBar
+	<org.mariotaku.twidere.view.TwidereMenuBar
 		android:id="@+id/actionbar_split"
 		android:layout_width="match_parent"
 		android:layout_height="?android:actionBarSize"

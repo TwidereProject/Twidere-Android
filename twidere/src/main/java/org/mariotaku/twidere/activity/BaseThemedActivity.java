@@ -93,7 +93,7 @@ public abstract class BaseThemedActivity extends AccentActivity implements IThem
     }
 
     @Override
-    public abstract int getThemeColor();
+    public abstract int getOverrideAccentColor();
 
     @Override
     public String getThemeFontFamily() {
@@ -134,7 +134,7 @@ public abstract class BaseThemedActivity extends AccentActivity implements IThem
     }
 
     protected final boolean isThemeChanged() {
-        return getThemeResourceId() != mCurrentThemeResource || getThemeColor() != mCurrentThemeColor
+        return getThemeResourceId() != mCurrentThemeResource || getOverrideAccentColor() != mCurrentThemeColor
                 || !CompareUtils.objectEquals(getThemeFontFamily(), mCurrentThemeFontFamily)
                 || getThemeBackgroundAlpha() != mCurrentThemeBackgroundAlpha;
     }
@@ -178,7 +178,7 @@ public abstract class BaseThemedActivity extends AccentActivity implements IThem
 
     private final void setTheme() {
         mCurrentThemeResource = getThemeResourceId();
-        mCurrentThemeColor = getThemeColor();
+        mCurrentThemeColor = getOverrideAccentColor();
         mCurrentThemeFontFamily = getThemeFontFamily();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,

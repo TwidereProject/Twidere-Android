@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.activity.support;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentActivity;
 
@@ -14,11 +15,20 @@ import com.negusoft.holoaccent.AccentResources;
  */
 public class AccentFragmentActivity extends FragmentActivity {
 
-    private final AccentHelper mAccentHelper = new AccentHelper(getOverrideAccentColor(),
-            getOverrideAccentColorDark(), getOverrideAccentColorActionBar(), new MyInitListener());
+    private AccentHelper mAccentHelper;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        mAccentHelper = new AccentHelper(getOverrideAccentColor(),
+                getOverrideAccentColorDark(), getOverrideAccentColorActionBar(), new MyInitListener());
+    }
 
     @Override
     public Resources getResources() {
+        if (mAccentHelper == null) {
+            return super.getResources();
+        }
         return mAccentHelper.getResources(this, super.getResources());
     }
 

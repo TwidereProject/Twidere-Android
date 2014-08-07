@@ -26,11 +26,11 @@ public class WhiteDrawableInterceptor implements AccentResources.Interceptor {
 
     @Override
     public Drawable getDrawable(final Resources res, final AccentPalette palette, final int resId) {
-        if (resId == R.drawable.solid_pressed_white_intercepted)
+        if (resId == R.drawable.solid_white_pressed)
             return new ColorDrawable(mAccentPalette.getAccentColor(PRESSED_ALPHA));
-        if (resId == R.drawable.solid_focused_white_intercepted)
+        if (resId == R.drawable.solid_white_focused)
             return new ColorDrawable(mAccentPalette.getAccentColor(FOCUSED_ALPHA));
-        if (resId == R.drawable.rect_focused_background_white_intercepted) {
+        if (resId == R.drawable.rect_white_focused_background) {
             final int backColor = mAccentPalette.getAccentColor(0x55);
             final int borderColor = mAccentPalette.getAccentColor(0xAA);
             return new RectDrawable(mResources, backColor, 2f, borderColor);

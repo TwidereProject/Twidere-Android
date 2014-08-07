@@ -1,4 +1,4 @@
-<org.mariotaku.menucomponent.widget.MenuBar xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.TwidereMenuBar xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/menu_bar"
 	style="?android:actionBarSplitStyle"
 	android:layout_width="match_parent"
