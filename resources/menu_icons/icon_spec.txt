@@ -1,0 +1,4 @@
+Content alpha: 60%
+Border alpha: 50%
+Border width: 32px (in 512px icon)
+Content size: 384px without border (in 512px icon)
