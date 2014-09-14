@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:text="- Mea est luna -"
+    android:gravity="center"
+    android:textColor="?android:textColorPrimary"
+    android:alpha="0.2"
+    android:textSize="8sp"
+    android:typeface="serif"
+    android:textStyle="italic"
+    android:layout_height="wrap_content" />

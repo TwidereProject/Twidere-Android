@@ -59,6 +59,7 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
 	public ProfileBannerImageView(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
 		if (isInEditMode()) return;
+        setScaleType(ScaleType.CENTER_CROP);
 		ViewCompat.setLayerType(this, LAYER_TYPE_SOFTWARE, null);
 		final boolean is_dark_theme = ThemeUtils.isDarkTheme(context);
 		COLORS_REVERSED[1] = is_dark_theme ? 0xFF000000 : 0xFFFFFFFF;

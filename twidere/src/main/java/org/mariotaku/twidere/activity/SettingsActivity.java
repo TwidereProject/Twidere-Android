@@ -179,14 +179,16 @@ public class SettingsActivity extends BasePreferenceActivity {
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mCompactCards = mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
         mPlainListStyle = mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false);
-        mCurrentThemeColor = getOverrideAccentColor();
+        mCurrentThemeColor = ThemeUtils.getUserThemeColor(this);
         mCurrentThemeFontFamily = getThemeFontFamily();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mCurrentIsDarkDrawerEnabled = isDarkDrawerEnabled();
         super.onCreate(savedInstanceState);
         setIntent(getIntent().addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
         final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         if (savedInstanceState != null) {
             invalidateHeaders();
         }

@@ -613,7 +613,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         unregisterReceiver(mStateReceiver);
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mAccountChangeObserver);
-        mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).commit();
+        mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).apply();
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONSTOP));
 
         // UCD

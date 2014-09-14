@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="library-1.0.1">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/twidere/build/intermediates/exploded-aar/com.negusoft.holoaccent/library/1.0.1/res" />
+      <root url="jar://$PROJECT_DIR$/twidere/build/intermediates/exploded-aar/com.negusoft.holoaccent/library/1.0.1/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

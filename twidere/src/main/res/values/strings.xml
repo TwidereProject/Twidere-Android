@@ -535,7 +535,7 @@
 	<string name="translate">Translate</string>
 	<string name="sponsored_by">Sponsored by</string>
 	<string name="special_thanks_to">Special thanks to</string>
-	<string name="contributors_list_summary">If you don\'t see your name, please tell our project account.</string>
+	<string name="contributors_list_summary">If you didn\'t find your name, please tell our project account.</string>
 	<string name="account_options">Account options</string>
 	<string name="show_in_timeline">Show in timeline</string>
 	<string name="cards">Cards</string>

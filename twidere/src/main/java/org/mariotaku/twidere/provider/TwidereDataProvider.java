@@ -741,7 +741,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
 	private void displayStatusesNotification(final int notifiedCount, final AccountPreferences accountPreferences,
 			final int notificationType, final int notificationId, final List<ParcelableStatus> statuses,
-			final int titleSingle, final int titleMutiple, final int icon) {
+			final int titleSingle, final int titleMultiple, final int icon) {
 		final NotificationManager nm = getNotificationManager();
 		if (notifiedCount == 0 || accountPreferences == null || statuses.isEmpty()) return;
 		final long accountId = accountPreferences.getAccountId();
@@ -778,7 +778,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 		final String displayName = getDisplayName(context, firstItem.user_id, firstItem.user_name,
 				firstItem.user_screen_name, mNameFirst, mNickOnly);
 		if (usersCount > 1) {
-			title = resources.getString(titleMutiple, displayName, usersCount - 1);
+			title = resources.getString(titleMultiple, displayName, usersCount - 1);
 		} else {
 			title = resources.getString(titleSingle, displayName);
 		}
@@ -818,9 +818,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 			final Intent viewProfileIntent = new Intent(Intent.ACTION_VIEW, viewProfileBuilder.build());
 			viewProfileIntent.setPackage(APP_PACKAGE_NAME);
 			notifBuilder.addAction(R.drawable.ic_action_reply, context.getString(R.string.reply),
-					PendingIntent.getActivity(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    PendingIntent.getActivity(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 			notifBuilder.addAction(R.drawable.ic_action_profile, context.getString(R.string.view_user_profile),
-					PendingIntent.getActivity(context, 0, viewProfileIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    PendingIntent.getActivity(context, 0, viewProfileIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 			final NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle(notifBuilder);
 			bigTextStyle.bigText(stripMentionText(firstItem.text_unescaped,
 					getAccountScreenName(context, firstItem.account_id)));

@@ -35,6 +35,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -433,15 +434,14 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
                 .registerOnSharedPreferenceChangeListener(this);
         mLocale = getResources().getConfiguration().locale;
         final Bundle args = getArguments();
-        long account_id = -1, user_id = -1;
-        String screen_name = null;
-        if (args != null) {
-            if (savedInstanceState != null) {
-                args.putAll(savedInstanceState);
-            }
-            account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            user_id = args.getLong(EXTRA_USER_ID, -1);
-            screen_name = args.getString(EXTRA_SCREEN_NAME);
+        long accountId = -1, userId = -1;
+        String screenName = null;
+        if (savedInstanceState != null) {
+            args.putAll(savedInstanceState);
+        } else {
+            accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            userId = args.getLong(EXTRA_USER_ID, -1);
+            screenName = args.getString(EXTRA_SCREEN_NAME);
         }
         mProfileImageLoader = getApplication().getImageLoaderWrapper();
         mAdapter = new ListActionAdapter(getActivity());
@@ -454,6 +454,11 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         setListAdapter(null);
         mListView = getListView();
         mListView.addHeaderView(mHeaderView, null, false);
+        if (isUucky(userId, screenName, args.getParcelable(EXTRA_USER))) {
+            final View uuckyFooter = View.inflate(getActivity(),
+                    R.layout.list_footer_user_profile_uucky, null);
+            mListView.addFooterView(uuckyFooter, null, false);
+        }
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
 
@@ -465,7 +470,16 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         mProfileBannerSpace.setOnTouchListener(this);
 
         setListAdapter(mAdapter);
-        getUserInfo(account_id, user_id, screen_name, false);
+        getUserInfo(accountId, userId, screenName, false);
+    }
+
+    private boolean isUucky(long userId, String screenName, Parcelable parcelable) {
+        if (userId == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(screenName)) return true;
+        if (parcelable instanceof ParcelableUser) {
+            final ParcelableUser user = (ParcelableUser) parcelable;
+            return user.id == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(user.screen_name);
+        }
+        return false;
     }
 
     @Override

@@ -148,8 +148,10 @@ public interface Constants extends TwidereConstants {
 	public static final String TWIDERE_PREVIEW_TEXT_HTML = "Twidere is an open source twitter client for Android, see <a href='https://github.com/mariotaku/twidere'>github.com/mariotak&#8230;<a/>";
 	public static final String TWIDERE_PREVIEW_SOURCE = "Twidere for Android";
 
-	public static final int HONDAJOJO_ID = 514378421;
-	public static final String HONDAJOJO_SCREEN_NAME = "@HondaJOJO";
+	public static final long HONDAJOJO_ID = 514378421;
+	public static final String HONDAJOJO_SCREEN_NAME = "HondaJOJO";
+    public static final int UUCKY_ID = 1062473329;
+    public static final String UUCKY_SCREEN_NAME = "Uucky_Lee";
 	public static final String EASTER_EGG_TRIGGER_TEXT = "\u718A\u5B69\u5B50";
 	public static final String EASTER_EGG_RESTORE_TEXT_PART1 = "\u5927\u738B";
 	public static final String EASTER_EGG_RESTORE_TEXT_PART2 = "\u5C0F\u7684";

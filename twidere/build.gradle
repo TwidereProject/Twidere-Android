@@ -64,8 +64,8 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v13:20.0.0'
-    compile 'com.google.android.gms:play-services:5.0.77'
-    compile 'com.negusoft.holoaccent:library:+'
+    compile 'com.google.android.gms:play-services:+'
+    compile 'com.negusoft.holoaccent:library:1.0.1'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.sothree.slidinguppanel:library:2.0.0'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
