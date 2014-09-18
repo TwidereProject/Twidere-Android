@@ -1294,8 +1294,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 			if (twitter != null) {
 				try {
 					final User user = twitter.destroyFriendship(user_id);
-					final String where = Statuses.ACCOUNT_ID + " = " + account_id + " AND " + Statuses.USER_ID + " = "
-							+ user_id;
+					// remove user tweets and retweets
+					final String where
+							= Statuses.ACCOUNT_ID + " = " + account_id
+							+ " AND (" + Statuses.USER_ID + " = " + user_id
+							+ " OR " + Statuses.RETWEETED_BY_USER_ID + " = " + user_id
+							+ ")";
 					mResolver.delete(Statuses.CONTENT_URI, where, null);
 					return SingleResponse.getInstance(user, null);
 				} catch (final TwitterException e) {

@@ -1,6 +1,58 @@
-.gradle
-/local.properties
-/.idea/workspace.xml
-.DS_Store
-/build
+# Built application files
+*.apk
+*.ap_
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log Files
+*.log
+
+# Eclipse project files
+proguard/
+.classpath
+.project
+
+# Android Studio
+
+# User-specific configurations
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+*.iml
+
+# Crashlytics configuations
+com_crashlytics_export_strings.xml
+
+# Signing files
+.signing/
 /signing.properties
+
+# OS
+.DS_Store
+
+# gitignore from:
+# * https://github.com/github/gitignore/blob/master/Android.gitignore
+# * https://coderwall.com/p/piwu4w
