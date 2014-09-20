@@ -1,6 +1,28 @@
-.gradle
-/local.properties
-/.idea/workspace.xml
-.DS_Store
+# Built application files
 /build
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Gradle generated files
+/gradle
+.gradle/
+
+# Signing files
+.signing/
+
+# User-specific configurations
+/.idea
+*.iml
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Private files
 /signing.properties
