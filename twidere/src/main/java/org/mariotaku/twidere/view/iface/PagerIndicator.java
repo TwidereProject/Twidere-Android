@@ -17,6 +17,7 @@
 
 package org.mariotaku.twidere.view.iface;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 
 /**
@@ -64,4 +65,39 @@ public interface PagerIndicator extends ViewPager.OnPageChangeListener {
 	 * @param initialPosition
 	 */
 	void setViewPager(ViewPager view, int initialPosition);
+
+    /**
+     * A TitleProvider provides the title to display according to a view.
+     */
+    interface TabProvider {
+
+        public int getCount();
+
+        /**
+         * Returns the icon of the view at position
+         *
+         * @param position
+         * @return
+         */
+        public Drawable getPageIcon(int position);
+
+        /**
+         * Returns the title of the view at position
+         *
+         * @param position
+         * @return
+         */
+        public CharSequence getPageTitle(int position);
+
+        public float getPageWidth(int position);
+    }
+
+    interface TabListener {
+
+        public void onPageReselected(int position);
+
+        public void onPageSelected(int position);
+
+        public boolean onTabLongClick(int position);
+    }
 }

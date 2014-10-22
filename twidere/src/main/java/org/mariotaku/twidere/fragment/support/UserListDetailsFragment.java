@@ -410,10 +410,10 @@ public class UserListDetailsFragment extends BaseSupportListFragment implements 
 		if (followItem != null) {
 			followItem.setVisible(!isMyList);
 			if (isFollowing) {
-				followItem.setIcon(R.drawable.ic_iconic_action_cancel);
+				followItem.setIcon(R.drawable.ic_action_cancel);
 				followItem.setTitle(R.string.unsubscribe);
 			} else {
-				followItem.setIcon(R.drawable.ic_iconic_action_add);
+				followItem.setIcon(R.drawable.ic_action_add);
 				followItem.setTitle(R.string.subscribe);
 			}
 		}

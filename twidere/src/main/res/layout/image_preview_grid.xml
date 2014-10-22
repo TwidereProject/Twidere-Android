@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/image_preview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/image_preview"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/image_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"/>
 
     <LinearLayout
         android:id="@+id/load_images"
@@ -20,11 +20,11 @@
         android:gravity="center"
         android:visibility="gone">
 
-        <org.mariotaku.twidere.view.ResourceImageView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/load_images"
-            app:image="@drawable/ic_iconic_action_gallery" />
+            android:src="@drawable/ic_action_gallery"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:text="@string/load_images"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </FrameLayout>

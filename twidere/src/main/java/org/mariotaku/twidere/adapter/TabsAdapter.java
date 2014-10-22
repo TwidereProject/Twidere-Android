@@ -31,9 +31,9 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.TabSpec;
-import org.mariotaku.twidere.view.TabPageIndicator;
-import org.mariotaku.twidere.view.TabPageIndicator.TabListener;
-import org.mariotaku.twidere.view.TabPageIndicator.TabProvider;
+import org.mariotaku.twidere.view.TabPageIndicator2;
+import org.mariotaku.twidere.view.iface.PagerIndicator.TabListener;
+import org.mariotaku.twidere.view.iface.PagerIndicator.TabProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,9 +43,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements TabProvide
 	private final ArrayList<TabSpec> mTabs = new ArrayList<TabSpec>();
 
 	private final Context mContext;
-	private final TabPageIndicator mIndicator;
+	private final TabPageIndicator2 mIndicator;
 
-	public TabsAdapter(final Context context, final FragmentManager fm, final TabPageIndicator indicator) {
+	public TabsAdapter(final Context context, final FragmentManager fm, final TabPageIndicator2 indicator) {
 		super(fm);
 		mContext = context;
 		mIndicator = indicator;

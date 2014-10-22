@@ -45,7 +45,7 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 
-public class LinkHandlerActivity extends TwidereSwipeBackActivity implements OnClickListener, OnLongClickListener {
+public class LinkHandlerActivity extends BaseSupportActivity implements OnClickListener, OnLongClickListener {
 
 	private MultiSelectEventHandler mMultiSelectHandler;
 
@@ -127,7 +127,6 @@ public class LinkHandlerActivity extends TwidereSwipeBackActivity implements OnC
 		setUiOptions(getWindow(), data);
 		super.onCreate(savedInstanceState);
 		mActionBar = getActionBar();
-		mActionBar.setDisplayHomeAsUpEnabled(true);
 		mActionBar.setDisplayShowTitleEnabled(true);
 		mActionBar.setDisplayShowCustomEnabled(false);
 		mActionBar.setCustomView(R.layout.link_handler_actionbar);

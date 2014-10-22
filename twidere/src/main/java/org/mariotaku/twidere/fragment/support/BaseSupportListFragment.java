@@ -19,25 +19,25 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static android.support.v4.app.ListFragmentTrojan.INTERNAL_EMPTY_ID;
-import static android.support.v4.app.ListFragmentTrojan.INTERNAL_LIST_CONTAINER_ID;
-import static android.support.v4.app.ListFragmentTrojan.INTERNAL_PROGRESS_CONTAINER_ID;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -57,22 +57,31 @@ import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ListScrollDistanceCalculator;
+import org.mariotaku.twidere.util.ListScrollDistanceCalculator.ScrollDistanceListener;
+import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 
+import static android.support.v4.app.ListFragmentTrojan.INTERNAL_EMPTY_ID;
+import static android.support.v4.app.ListFragmentTrojan.INTERNAL_LIST_CONTAINER_ID;
+import static android.support.v4.app.ListFragmentTrojan.INTERNAL_PROGRESS_CONTAINER_ID;
+
 public class BaseSupportListFragment extends ListFragment implements IBaseFragment, Constants, OnScrollListener,
-		RefreshScrollTopInterface {
+        RefreshScrollTopInterface, ScrollDistanceListener {
 
-	private boolean mIsInstanceStateSaved;
+    private ListScrollDistanceCalculator mListScrollCounter = new ListScrollDistanceCalculator();
 
-	private boolean mReachedBottom, mNotReachedBottomBefore;
+    private boolean mIsInstanceStateSaved;
 
-	private boolean mReachedTop, mNotReachedTopBefore;
+    private boolean mReachedBottom, mNotReachedBottomBefore;
 
-	private LayoutInflater mLayoutInflater;
+    private boolean mReachedTop, mNotReachedTopBefore;
 
-	private boolean mStoppedPreviously;
+    private LayoutInflater mLayoutInflater;
+
+    private boolean mStoppedPreviously;
 
 
     @Override
@@ -89,296 +98,346 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
 
     }
 
-	public final TwidereApplication getApplication() {
-		return TwidereApplication.getInstance(getActivity());
-	}
+    public final TwidereApplication getApplication() {
+        return TwidereApplication.getInstance(getActivity());
+    }
 
-	public final ContentResolver getContentResolver() {
-		final Activity activity = getActivity();
-		if (activity != null) return activity.getContentResolver();
-		return null;
-	}
+    public final ContentResolver getContentResolver() {
+        final Activity activity = getActivity();
+        if (activity != null) return activity.getContentResolver();
+        return null;
+    }
 
-	@Override
-	public Bundle getExtraConfiguration() {
-		final Bundle args = getArguments();
-		final Bundle extras = new Bundle();
-		if (args != null && args.containsKey(EXTRA_EXTRAS)) {
-			extras.putAll(args.getBundle(EXTRA_EXTRAS));
-		}
-		return extras;
-	}
+    @Override
+    public Bundle getExtraConfiguration() {
+        final Bundle args = getArguments();
+        final Bundle extras = new Bundle();
+        if (args != null && args.containsKey(EXTRA_EXTRAS)) {
+            extras.putAll(args.getBundle(EXTRA_EXTRAS));
+        }
+        return extras;
+    }
 
-	@Override
-	public LayoutInflater getLayoutInflater(final Bundle savedInstanceState) {
-		if (mLayoutInflater != null) return mLayoutInflater;
-		return mLayoutInflater = ThemeUtils.getThemedLayoutInflaterForActionIcons(getActivity());
-	}
+    @Override
+    public LayoutInflater getLayoutInflater(final Bundle savedInstanceState) {
+        if (mLayoutInflater != null) return mLayoutInflater;
+        return mLayoutInflater = ThemeUtils.getThemedLayoutInflaterForActionIcons(getActivity());
+    }
 
-	public final MultiSelectManager getMultiSelectManager() {
-		return getApplication() != null ? getApplication().getMultiSelectManager() : null;
-	}
+    public final MultiSelectManager getMultiSelectManager() {
+        return getApplication() != null ? getApplication().getMultiSelectManager() : null;
+    }
 
-	public final SharedPreferences getSharedPreferences(final String name, final int mode) {
-		final Activity activity = getActivity();
-		if (activity != null) return activity.getSharedPreferences(name, mode);
-		return null;
-	}
+    public final SharedPreferences getSharedPreferences(final String name, final int mode) {
+        final Activity activity = getActivity();
+        if (activity != null) return activity.getSharedPreferences(name, mode);
+        return null;
+    }
 
-	public final Object getSystemService(final String name) {
-		final Activity activity = getActivity();
-		if (activity != null) return activity.getSystemService(name);
-		return null;
-	}
+    public final Object getSystemService(final String name) {
+        final Activity activity = getActivity();
+        if (activity != null) return activity.getSystemService(name);
+        return null;
+    }
 
-	@Override
-	public final int getTabPosition() {
-		final Bundle args = getArguments();
-		return args != null ? args.getInt(EXTRA_TAB_POSITION, -1) : -1;
-	}
+    @Override
+    public final int getTabPosition() {
+        final Bundle args = getArguments();
+        return args != null ? args.getInt(EXTRA_TAB_POSITION, -1) : -1;
+    }
 
-	public AsyncTwitterWrapper getTwitterWrapper() {
-		return getApplication() != null ? getApplication().getTwitterWrapper() : null;
-	}
+    @Override
+    public void requestFitSystemWindows() {
+        final Activity activity = getActivity();
+        final Rect insets = new Rect();
+        if (activity instanceof SystemWindowsInsetsCallback
+                && ((SystemWindowsInsetsCallback) activity).getSystemWindowsInsets(insets)) {
+            fitSystemWindows(insets);
+        }
+    }
 
-	public void invalidateOptionsMenu() {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.invalidateOptionsMenu();
-	}
+    protected void fitSystemWindows(Rect insets) {
+    }
 
-	public boolean isInstanceStateSaved() {
-		return mIsInstanceStateSaved;
-	}
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return getApplication() != null ? getApplication().getTwitterWrapper() : null;
+    }
 
-	public boolean isReachedBottom() {
-		return mReachedBottom;
-	}
+    public void invalidateOptionsMenu() {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.invalidateOptionsMenu();
+    }
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mNotReachedBottomBefore = true;
-		mStoppedPreviously = false;
-		mIsInstanceStateSaved = savedInstanceState != null;
-		final ListView lv = getListView();
-		lv.setOnScrollListener(this);
-	}
+    public boolean isInstanceStateSaved() {
+        return mIsInstanceStateSaved;
+    }
 
-	@Override
-	public void onAttach(final Activity activity) {
-		super.onAttach(activity);
-	}
+    public boolean isReachedBottom() {
+        return mReachedBottom;
+    }
 
-	/**
-	 * Provide default implementation to return a simple list view. Subclasses
-	 * can override to replace with their own layout. If doing so, the returned
-	 * view hierarchy <em>must</em> have a ListView whose id is
-	 * {@link android.R.id#list android.R.id.list} and can optionally have a
-	 * sibling view id {@link android.R.id#empty android.R.id.empty} that is to
-	 * be shown when the list is empty.
-	 * 
-	 * <p>
-	 * If you are overriding this method with your own custom content, consider
-	 * including the standard layout {@link android.R.layout#list_content} in
-	 * your layout file, so that you continue to retain all of the standard
-	 * behavior of ListFragment. In particular, this is currently the only way
-	 * to have the built-in indeterminant progress state be shown.
-	 */
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		final Context context = getActivity();
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mNotReachedBottomBefore = true;
+        mStoppedPreviously = false;
+        mIsInstanceStateSaved = savedInstanceState != null;
+        mListScrollCounter.setScrollDistanceListener(this);
+        final ListView lv = getListView();
+        lv.setOnScrollListener(this);
+    }
 
-		final FrameLayout root = new FrameLayout(context);
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+    }
 
-		// ------------------------------------------------------------------
 
-		final LinearLayout pframe = new LinearLayout(context);
-		pframe.setId(INTERNAL_PROGRESS_CONTAINER_ID);
-		pframe.setOrientation(LinearLayout.VERTICAL);
-		pframe.setVisibility(View.GONE);
-		pframe.setGravity(Gravity.CENTER);
+    private final OnTouchListener mInternalOnTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    onListTouched();
+                    break;
+                }
+            }
+            return false;
+        }
+    };
 
-		final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
-		pframe.addView(progress, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT));
+    protected void onListTouched() {
 
-		root.addView(pframe, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
+    }
 
-		// ------------------------------------------------------------------
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final ListView listView = getListView();
+        listView.setOnTouchListener(mInternalOnTouchListener);
+        requestFitSystemWindows();
+        if (isActionBarOverlay()) {
+            Utils.makeListFragmentFitsSystemWindows(this);
+        }
+    }
 
-		final FrameLayout lframe = new FrameLayout(context);
-		lframe.setId(INTERNAL_LIST_CONTAINER_ID);
+    protected boolean isActionBarOverlay() {
+        return getTabPosition() >= 0;
+    }
 
-		final TextView tv = new TextView(getActivity());
-		tv.setTextAppearance(context, ThemeUtils.getTextAppearanceLarge(context));
-		tv.setId(INTERNAL_EMPTY_ID);
-		tv.setGravity(Gravity.CENTER);
-		lframe.addView(tv, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
+    /**
+     * Provide default implementation to return a simple list view. Subclasses
+     * can override to replace with their own layout. If doing so, the returned
+     * view hierarchy <em>must</em> have a ListView whose id is
+     * {@link android.R.id#list android.R.id.list} and can optionally have a
+     * sibling view id {@link android.R.id#empty android.R.id.empty} that is to
+     * be shown when the list is empty.
+     * <p/>
+     * <p/>
+     * If you are overriding this method with your own custom content, consider
+     * including the standard layout {@link android.R.layout#list_content} in
+     * your layout file, so that you continue to retain all of the standard
+     * behavior of ListFragment. In particular, this is currently the only way
+     * to have the built-in indeterminant progress state be shown.
+     */
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        final Context context = getActivity();
 
-		final ListView lv = new ListView(getActivity());
-		lv.setId(android.R.id.list);
-		lv.setDrawSelectorOnTop(false);
-		lv.setOnScrollListener(this);
-		lframe.addView(lv, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
+        final FrameLayout root = new FrameLayout(context);
 
-		root.addView(lframe, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
+        // ------------------------------------------------------------------
 
-		// ------------------------------------------------------------------
+        final LinearLayout pframe = new LinearLayout(context);
+        pframe.setId(INTERNAL_PROGRESS_CONTAINER_ID);
+        pframe.setOrientation(LinearLayout.VERTICAL);
+        pframe.setVisibility(View.GONE);
+        pframe.setGravity(Gravity.CENTER);
 
-		root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
+        final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
+        pframe.addView(progress, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
-		return root;
-	}
+        root.addView(pframe, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
-	@Override
-	public void onDestroy() {
-		mStoppedPreviously = false;
-		super.onDestroy();
-	}
+        // ------------------------------------------------------------------
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		final Activity activity = getActivity();
-		if (activity instanceof SupportFragmentCallback) {
-			((SupportFragmentCallback) activity).onDetachFragment(this);
-		}
-		final Fragment fragment = getParentFragment();
-		if (fragment instanceof SupportFragmentCallback) {
-			((SupportFragmentCallback) fragment).onDetachFragment(this);
-		}
-	}
+        final FrameLayout lframe = new FrameLayout(context);
+        lframe.setId(INTERNAL_LIST_CONTAINER_ID);
 
-	public void onPostStart() {
-	}
+        final TextView tv = new TextView(getActivity());
+        tv.setTextAppearance(context, ThemeUtils.getTextAppearanceLarge(context));
+        tv.setId(INTERNAL_EMPTY_ID);
+        tv.setGravity(Gravity.CENTER);
+        lframe.addView(tv, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
-	public void onRestart() {
+        final ListView lv = new ListView(getActivity());
+        lv.setId(android.R.id.list);
+        lv.setDrawSelectorOnTop(false);
+        lv.setOnScrollListener(this);
+        lframe.addView(lv, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
-	}
+        root.addView(lframe, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
-	@Override
-	public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount,
-			final int totalItemCount) {
-		final ListAdapter adapter = getListAdapter();
-		if (adapter == null) return;
-		final boolean reachedTop = firstVisibleItem == 0;
-		final boolean reachedBottom = firstVisibleItem + visibleItemCount >= totalItemCount
-				&& totalItemCount >= visibleItemCount;
+        // ------------------------------------------------------------------
 
-		if (mReachedBottom != reachedBottom) {
-			mReachedBottom = reachedBottom;
-			if (mReachedBottom && mNotReachedBottomBefore) {
-				mNotReachedBottomBefore = false;
-				return;
-			}
-			if (mReachedBottom && adapter.getCount() > visibleItemCount) {
-				onReachedBottom();
-			}
-		}
-		if (mReachedTop != reachedTop) {
-			mReachedTop = reachedTop;
-			if (mReachedTop && mNotReachedTopBefore) {
-				mNotReachedTopBefore = false;
-				return;
-			}
-			if (mReachedTop && adapter.getCount() > visibleItemCount) {
-				onReachedTop();
-			}
-		}
-	}
+        root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
-	@Override
-	public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-		final FragmentActivity a = getActivity();
-		if (a instanceof HomeActivity) {
-			final HomeActivity home = (HomeActivity) a;
-			if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-				home.showControls();
-			} else {
-				home.hideControls();
-			}
-		}
-	}
+        return root;
+    }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		onPostStart();
-		if (mStoppedPreviously) {
-			onRestart();
-		}
-		mStoppedPreviously = false;
-	}
+    @Override
+    public void onDestroy() {
+        mStoppedPreviously = false;
+        super.onDestroy();
+    }
 
-	@Override
-	public void onStop() {
-		mStoppedPreviously = true;
-		super.onStop();
-	}
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        final Activity activity = getActivity();
+        if (activity instanceof SupportFragmentCallback) {
+            ((SupportFragmentCallback) activity).onDetachFragment(this);
+        }
+        final Fragment fragment = getParentFragment();
+        if (fragment instanceof SupportFragmentCallback) {
+            ((SupportFragmentCallback) fragment).onDetachFragment(this);
+        }
+    }
 
-	public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.registerReceiver(receiver, filter);
-	}
+    public void onPostStart() {
+    }
 
-	@Override
-	public boolean scrollToStart() {
-		if (!isAdded() || getActivity() == null) return false;
-		Utils.scrollListToTop(getListView());
-		return true;
-	}
+    public void onRestart() {
 
-	public void setProgressBarIndeterminateVisibility(final boolean visible) {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.setProgressBarIndeterminateVisibility(visible);
-		if (activity instanceof HomeActivity) {
-			((HomeActivity) activity).setHomeProgressBarIndeterminateVisibility(visible);
-		}
-	}
+    }
 
-	@Override
-	public void setSelection(final int position) {
-		if (getView() == null) return;
-		Utils.scrollListToPosition(getListView(), position);
-	}
 
-	@Override
-	public void setUserVisibleHint(final boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		final Activity activity = getActivity();
-		if (activity instanceof SupportFragmentCallback) {
-			((SupportFragmentCallback) activity).onSetUserVisibleHint(this, isVisibleToUser);
-		}
-		final Fragment fragment = getParentFragment();
-		if (fragment instanceof SupportFragmentCallback) {
-			((SupportFragmentCallback) fragment).onSetUserVisibleHint(this, isVisibleToUser);
-		}
-	}
+    @Override
+    public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount,
+                         final int totalItemCount) {
+        mListScrollCounter.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        final ListAdapter adapter = getListAdapter();
+        if (adapter == null) return;
+        final boolean reachedTop = firstVisibleItem == 0;
+        final boolean reachedBottom = firstVisibleItem + visibleItemCount >= totalItemCount
+                && totalItemCount >= visibleItemCount;
 
-	@Override
-	public boolean triggerRefresh() {
-		return false;
-	}
+        if (mReachedBottom != reachedBottom) {
+            mReachedBottom = reachedBottom;
+            if (mReachedBottom && mNotReachedBottomBefore) {
+                mNotReachedBottomBefore = false;
+                return;
+            }
+            if (mReachedBottom && adapter.getCount() > visibleItemCount) {
+                onReachedBottom();
+            }
+        }
+        if (mReachedTop != reachedTop) {
+            mReachedTop = reachedTop;
+            if (mReachedTop && mNotReachedTopBefore) {
+                mNotReachedTopBefore = false;
+                return;
+            }
+            if (mReachedTop && adapter.getCount() > visibleItemCount) {
+                onReachedTop();
+            }
+        }
+    }
 
-	public void unregisterReceiver(final BroadcastReceiver receiver) {
-		final Activity activity = getActivity();
-		if (activity == null) return;
-		activity.unregisterReceiver(receiver);
-	}
+    @Override
+    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+        mListScrollCounter.onScrollStateChanged(view, scrollState);
+    }
 
-	protected void onReachedBottom() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        onPostStart();
+        if (mStoppedPreviously) {
+            onRestart();
+        }
+        mStoppedPreviously = false;
+    }
 
-	}
+    @Override
+    public void onStop() {
+        mStoppedPreviously = true;
+        super.onStop();
+    }
 
-	protected void onReachedTop() {
+    public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.registerReceiver(receiver, filter);
+    }
 
-	}
+    @Override
+    public boolean scrollToStart() {
+        if (!isAdded() || getActivity() == null) return false;
+        Utils.scrollListToTop(getListView());
+        return true;
+    }
+
+    public void setProgressBarIndeterminateVisibility(final boolean visible) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.setProgressBarIndeterminateVisibility(visible);
+        if (activity instanceof HomeActivity) {
+            ((HomeActivity) activity).setHomeProgressBarIndeterminateVisibility(visible);
+        }
+    }
+
+    @Override
+    public void setSelection(final int position) {
+        if (getView() == null) return;
+        Utils.scrollListToPosition(getListView(), position);
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        final Activity activity = getActivity();
+        if (activity instanceof SupportFragmentCallback) {
+            ((SupportFragmentCallback) activity).onSetUserVisibleHint(this, isVisibleToUser);
+        }
+        final Fragment fragment = getParentFragment();
+        if (fragment instanceof SupportFragmentCallback) {
+            ((SupportFragmentCallback) fragment).onSetUserVisibleHint(this, isVisibleToUser);
+        }
+    }
+
+    @Override
+    public boolean triggerRefresh() {
+        return false;
+    }
+
+    public void unregisterReceiver(final BroadcastReceiver receiver) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
+        activity.unregisterReceiver(receiver);
+    }
+
+    protected void onReachedBottom() {
+
+    }
+
+    protected void onReachedTop() {
+
+    }
+
+    @Override
+    public void onScrollDistanceChanged(int delta, int total) {
+        final FragmentActivity a = getActivity();
+        if (a instanceof HomeActivity) {
+            final HomeActivity home = (HomeActivity) a;
+            home.moveControlBarBy(delta);
+        }
+    }
 }

@@ -903,7 +903,7 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         if (shouldShowFollowItem) {
             followItem.setTitle(isFollowing ? R.string.unfollow : isProtected ? R.string.send_follow_request
                     : R.string.follow);
-            followItem.setIcon(isFollowing ? R.drawable.ic_iconic_action_cancel : R.drawable.ic_iconic_action_add);
+            followItem.setIcon(isFollowing ? R.drawable.ic_action_cancel : R.drawable.ic_action_add);
         } else {
             followItem.setTitle(null);
             followItem.setIcon(null);

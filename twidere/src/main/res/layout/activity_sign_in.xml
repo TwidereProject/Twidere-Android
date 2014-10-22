@@ -87,7 +87,7 @@
         </RelativeLayout>
     </ScrollView>
 
-    <org.mariotaku.twidere.view.ResourceImageButton
+    <ImageButton
         android:id="@+id/set_color"
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -95,6 +95,6 @@
         android:layout_weight="0"
         android:contentDescription="@string/set_color"
         android:onClick="onClick"
-        app:image="@drawable/ic_iconic_action_color_palette" />
+        android:src="@drawable/ic_action_color_palette" />
 
 </merge>

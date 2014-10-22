@@ -13,13 +13,6 @@ import org.mariotaku.twidere.R;
 public class ResourceIconPreference extends Preference {
     public ResourceIconPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        final TypedArray array = context.obtainStyledAttributes(attrs,
-                R.styleable.ResourceImageView, defStyle, 0);
-        final int resId = array.getResourceId(R.styleable.ResourceImageView_image, -1);
-        if (resId > 0) {
-            setIcon(context.getResources().getDrawable(resId));
-        }
-        array.recycle();
     }
 
     public ResourceIconPreference(Context context, AttributeSet attrs) {

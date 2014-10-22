@@ -3,7 +3,7 @@
 
 	<item
 		android:id="@id/edit"
-		android:icon="@drawable/ic_iconic_action_edit"
+		android:icon="@drawable/ic_action_edit"
 		android:showAsAction="always"
 		android:title="@string/edit_profile"
 		android:visible="false"/>
@@ -15,12 +15,12 @@
 		android:title="@string/subscribe"/>
 	<item
 		android:id="@id/add"
-		android:icon="@drawable/ic_iconic_action_add"
+		android:icon="@drawable/ic_action_add"
 		android:showAsAction="ifRoom"
 		android:title="@string/add_member"/>
 	<item
 		android:id="@id/delete"
-		android:icon="@drawable/ic_iconic_action_delete"
+		android:icon="@drawable/ic_action_delete"
 		android:showAsAction="ifRoom"
 		android:title="@string/delete"/>
 

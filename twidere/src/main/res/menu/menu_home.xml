@@ -8,7 +8,7 @@
 		android:title="@string/progress"/>
 	<item
 		android:id="@id/actions"
-		android:icon="@drawable/ic_iconic_action_compose"
+		android:icon="@drawable/ic_action_status_compose"
 		android:showAsAction="always"
 		android:title="@string/compose"/>
 

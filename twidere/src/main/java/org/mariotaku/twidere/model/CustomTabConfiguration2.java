@@ -39,37 +39,37 @@ import java.util.Map.Entry;
 
 public enum CustomTabConfiguration2 implements Constants {
 
-	HOME_TIMELINE(HomeTimelineFragment.class, R.string.home, R.drawable.ic_iconic_action_home,
+	HOME_TIMELINE(HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
 			CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false),
 
-	MENTIONS_TIMELINE(MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_iconic_action_mention,
+	MENTIONS_TIMELINE(MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_mention,
 			CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false),
 
-	DIRECT_MESSAGES(DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_iconic_action_message,
+	DIRECT_MESSAGES(DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
 			CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false),
 
-	TRENDS_SUGGESTIONS(TrendsSuggectionsFragment.class, R.string.trends, R.drawable.ic_iconic_action_hashtag,
+	TRENDS_SUGGESTIONS(TrendsSuggectionsFragment.class, R.string.trends, R.drawable.ic_action_hashtag,
 			CustomTabConfiguration.ACCOUNT_NONE, CustomTabConfiguration.FIELD_TYPE_NONE, 3, true),
 
-	FAVORITES(UserFavoritesFragment.class, R.string.favorites, R.drawable.ic_iconic_action_star,
+	FAVORITES(UserFavoritesFragment.class, R.string.favorites, R.drawable.ic_action_star,
 			CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 4),
 
-	USER_TIMELINE(UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_iconic_action_quote,
+	USER_TIMELINE(UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_action_quote,
 			CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 5),
 
-	SEARCH_STATUSES(SearchStatusesFragment.class, R.string.search_statuses, R.drawable.ic_iconic_action_search,
+	SEARCH_STATUSES(SearchStatusesFragment.class, R.string.search_statuses, R.drawable.ic_action_search,
 			CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_TEXT, R.string.query,
 			EXTRA_QUERY, 6),
 
-	LIST_TIMELINE(UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_iconic_action_list,
+	LIST_TIMELINE(UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_action_list,
 			CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7),
 
 	ACTIVITIES_ABOUT_ME(ActivitiesAboutMeFragment.class, R.string.activities_about_me,
-			R.drawable.ic_iconic_action_user, CustomTabConfiguration.ACCOUNT_OPTIONAL,
+			R.drawable.ic_action_user, CustomTabConfiguration.ACCOUNT_OPTIONAL,
 			CustomTabConfiguration.FIELD_TYPE_NONE, 8),
 
 	ACTIVITIES_BY_FRIENDS(ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
-			R.drawable.ic_iconic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
+			R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
 			CustomTabConfiguration.FIELD_TYPE_NONE, 9);
 
 	public static final int FIELD_TYPE_NONE = 0;

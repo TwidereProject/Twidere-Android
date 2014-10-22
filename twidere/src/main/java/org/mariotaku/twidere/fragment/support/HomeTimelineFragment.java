@@ -31,68 +31,68 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
 public class HomeTimelineFragment extends CursorStatusesListFragment {
 
-	private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
 
-		@Override
-		public void onReceive(final Context context, final Intent intent) {
-			if (getActivity() == null || !isAdded() || isDetached()) return;
-			final String action = intent.getAction();
-			if (BROADCAST_HOME_TIMELINE_REFRESHED.equals(action)) {
-				setRefreshComplete();
-			} else if (BROADCAST_TASK_STATE_CHANGED.equals(action)) {
-				updateRefreshState();
-			}
-		}
-	};
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            if (getActivity() == null || !isAdded() || isDetached()) return;
+            final String action = intent.getAction();
+            if (BROADCAST_HOME_TIMELINE_REFRESHED.equals(action)) {
+                setRefreshComplete();
+            } else if (BROADCAST_TASK_STATE_CHANGED.equals(action)) {
+                updateRefreshState();
+            }
+        }
+    };
 
-	@Override
-	public int getStatuses(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-		final AsyncTwitterWrapper twitter = getTwitterWrapper();
-		if (twitter == null) return 0;
-		if (maxIds == null) return twitter.refreshAll(accountIds);
-		return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
-	}
+    @Override
+    public int getStatuses(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter == null) return 0;
+        if (maxIds == null) return twitter.refreshAll(accountIds);
+        return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
+    }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		final IntentFilter filter = new IntentFilter(BROADCAST_HOME_TIMELINE_REFRESHED);
-		filter.addAction(BROADCAST_TASK_STATE_CHANGED);
-		registerReceiver(mStatusReceiver, filter);
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        final IntentFilter filter = new IntentFilter(BROADCAST_HOME_TIMELINE_REFRESHED);
+        filter.addAction(BROADCAST_TASK_STATE_CHANGED);
+        registerReceiver(mStatusReceiver, filter);
+    }
 
-	@Override
-	public void onStop() {
-		unregisterReceiver(mStatusReceiver);
-		super.onStop();
-	}
+    @Override
+    public void onStop() {
+        unregisterReceiver(mStatusReceiver);
+        super.onStop();
+    }
 
-	@Override
-	protected Uri getContentUri() {
-		return Statuses.CONTENT_URI;
-	}
+    @Override
+    protected Uri getContentUri() {
+        return Statuses.CONTENT_URI;
+    }
 
-	@Override
-	protected int getNotificationType() {
-		return NOTIFICATION_ID_HOME_TIMELINE;
-	}
+    @Override
+    protected int getNotificationType() {
+        return NOTIFICATION_ID_HOME_TIMELINE;
+    }
 
-	@Override
-	protected String getPositionKey() {
-		return "home_timeline" + getTabPosition();
-	}
+    @Override
+    protected String getPositionKey() {
+        return "home_timeline" + getTabPosition();
+    }
 
-	@Override
-	protected boolean isFiltersEnabled() {
-		final SharedPreferences pref = getSharedPreferences();
-		return pref != null && pref.getBoolean(KEY_FILTERS_IN_HOME_TIMELINE, true);
-	}
+    @Override
+    protected boolean isFiltersEnabled() {
+        final SharedPreferences pref = getSharedPreferences();
+        return pref != null && pref.getBoolean(KEY_FILTERS_IN_HOME_TIMELINE, true);
+    }
 
-	@Override
-	protected void updateRefreshState() {
-		final AsyncTwitterWrapper twitter = getTwitterWrapper();
-		if (twitter == null || !getUserVisibleHint() || getActivity() == null) return;
-		setRefreshing(twitter.isHomeTimelineRefreshing());
-	}
+    @Override
+    protected void updateRefreshState() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter == null || !getUserVisibleHint() || getActivity() == null) return;
+        setRefreshing(twitter.isHomeTimelineRefreshing());
+    }
 
 }

@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -55,6 +56,20 @@ public class BaseSupportStaggeredGridFragment extends StaggeredGridFragment impl
     private boolean mActivityFirstCreated;
     private boolean mIsInstanceStateSaved;
     private boolean mReachedBottom, mNotReachedBottomBefore = true;
+
+    @Override
+    public void requestFitSystemWindows() {
+        final Activity activity = getActivity();
+        final Rect insets = new Rect();
+        if (activity instanceof SystemWindowsInsetsCallback
+                && ((SystemWindowsInsetsCallback) activity).getSystemWindowsInsets(insets)) {
+            fitSystemWindows(insets);
+        }
+    }
+
+    protected void fitSystemWindows(Rect insets) {
+
+    }
 
     public final TwidereApplication getApplication() {
         return TwidereApplication.getInstance(getActivity());

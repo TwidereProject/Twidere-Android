@@ -21,122 +21,140 @@ package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.view.MainFrameLayout.FitSystemWindowsCallback;
 
 @SuppressLint("Registered")
-public class BaseSupportActivity extends BaseSupportThemedActivity implements Constants {
+public class BaseSupportActivity extends BaseSupportThemedActivity implements Constants,
+        FitSystemWindowsCallback, SystemWindowsInsetsCallback {
 
-	private boolean mInstanceStateSaved, mIsVisible, mIsOnTop;
+    private boolean mInstanceStateSaved, mIsVisible, mIsOnTop;
 
-	public MessagesManager getMessagesManager() {
-		return getTwidereApplication() != null ? getTwidereApplication().getMessagesManager() : null;
-	}
+    private Rect mSystemWindowsInsets;
 
-	@Override
-	public int getOverrideAccentColor() {
-		return ThemeUtils.getUserThemeColor(this, getThemeResourceId());
-	}
+    public MessagesManager getMessagesManager() {
+        return getTwidereApplication() != null ? getTwidereApplication().getMessagesManager() : null;
+    }
 
-	@Override
-	public int getThemeResourceId() {
-		return ThemeUtils.getThemeResource(this);
-	}
+    @Override
+    public int getOverrideAccentColor() {
+        return ThemeUtils.getUserThemeColor(this, getThemeResourceId());
+    }
 
-	public TwidereApplication getTwidereApplication() {
-		return (TwidereApplication) getApplication();
-	}
+    @Override
+    public int getThemeResourceId() {
+        return ThemeUtils.getThemeResource(this);
+    }
 
-	public AsyncTwitterWrapper getTwitterWrapper() {
-		return getTwidereApplication() != null ? getTwidereApplication().getTwitterWrapper() : null;
-	}
+    public TwidereApplication getTwidereApplication() {
+        return (TwidereApplication) getApplication();
+    }
 
-	public boolean isOnTop() {
-		return mIsOnTop;
-	}
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return getTwidereApplication() != null ? getTwidereApplication().getTwitterWrapper() : null;
+    }
 
-	public boolean isVisible() {
-		return mIsVisible;
-	}
+    public boolean isOnTop() {
+        return mIsOnTop;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_BACK: {
-				onBackPressed();
-				return true;
-			}
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    public boolean isVisible() {
+        return mIsVisible;
+    }
 
-	@Override
-	public void startActivity(final Intent intent) {
-		super.startActivity(intent);
-	}
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_BACK: {
+                onBackPressed();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public void startActivityForResult(final Intent intent, final int requestCode) {
-		super.startActivityForResult(intent, requestCode);
-	}
+    @Override
+    public void startActivity(final Intent intent) {
+        super.startActivity(intent);
+    }
 
-	protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
-		return null;
-	}
+    @Override
+    public void startActivityForResult(final Intent intent, final int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+    }
 
-	protected boolean isStateSaved() {
-		return mInstanceStateSaved;
-	}
+    protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
+        return null;
+    }
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+    protected boolean isStateSaved() {
+        return mInstanceStateSaved;
+    }
 
-	@Override
-	protected void onPause() {
-		mIsOnTop = false;
-		super.onPause();
-	}
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mInstanceStateSaved = false;
-		mIsOnTop = true;
-	}
+    @Override
+    protected void onPause() {
+        mIsOnTop = false;
+        super.onPause();
+    }
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		mInstanceStateSaved = true;
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mInstanceStateSaved = false;
+        mIsOnTop = true;
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		mIsVisible = true;
-		final MessagesManager manager = getMessagesManager();
-		if (manager != null) {
-			manager.addMessageCallback(this);
-		}
-	}
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        mInstanceStateSaved = true;
+        super.onSaveInstanceState(outState);
+    }
 
-	@Override
-	protected void onStop() {
-		mIsVisible = false;
-		final MessagesManager manager = getMessagesManager();
-		if (manager != null) {
-			manager.removeMessageCallback(this);
-		}
-		super.onStop();
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mIsVisible = true;
+        final MessagesManager manager = getMessagesManager();
+        if (manager != null) {
+            manager.addMessageCallback(this);
+        }
+    }
 
+    @Override
+    protected void onStop() {
+        mIsVisible = false;
+        final MessagesManager manager = getMessagesManager();
+        if (manager != null) {
+            manager.removeMessageCallback(this);
+        }
+        super.onStop();
+    }
+
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        if (mSystemWindowsInsets == null) return false;
+        insets.set(mSystemWindowsInsets);
+        return true;
+    }
+
+    @Override
+    public void fitSystemWindows(Rect insets) {
+        mSystemWindowsInsets = new Rect(insets);
+    }
 }

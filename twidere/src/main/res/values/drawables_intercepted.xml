@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-	<item name="solid_white_pressed" type="drawable"/>
-	<item name="solid_white_focused" type="drawable"/>
-	<item name="rect_white_focused_background" type="drawable"/>
-
-</resources>

@@ -19,10 +19,17 @@
 
 package org.mariotaku.twidere.fragment.iface;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 
 public interface IBaseFragment {
-	Bundle getExtraConfiguration();
+    Bundle getExtraConfiguration();
 
-	int getTabPosition();
+    int getTabPosition();
+
+    void requestFitSystemWindows();
+
+    public interface SystemWindowsInsetsCallback {
+        boolean getSystemWindowsInsets(Rect insets);
+    }
 }

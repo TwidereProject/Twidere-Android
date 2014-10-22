@@ -24,14 +24,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.model.SupportTabSpec;
-import org.mariotaku.twidere.view.TabPageIndicator;
-import org.mariotaku.twidere.view.TabPageIndicator.TabListener;
-import org.mariotaku.twidere.view.TabPageIndicator.TabProvider;
+import org.mariotaku.twidere.view.iface.PagerIndicator;
+import org.mariotaku.twidere.view.iface.PagerIndicator.TabListener;
+import org.mariotaku.twidere.view.iface.PagerIndicator.TabProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,15 +46,15 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
     private final ArrayList<SupportTabSpec> mTabs = new ArrayList<SupportTabSpec>();
 
     private final Context mContext;
-    private final TabPageIndicator mIndicator;
+    private final PagerIndicator mIndicator;
 
     private final int mColumns;
 
-    public SupportTabsAdapter(final Context context, final FragmentManager fm, final TabPageIndicator indicator) {
+    public SupportTabsAdapter(final Context context, final FragmentManager fm, final PagerIndicator indicator) {
         this(context, fm, indicator, 1);
     }
 
-    public SupportTabsAdapter(final Context context, final FragmentManager fm, final TabPageIndicator indicator,
+    public SupportTabsAdapter(final Context context, final FragmentManager fm, final PagerIndicator indicator,
                               final int columns) {
         super(fm);
         mContext = context;
@@ -133,7 +134,7 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
     @Override
     public void onPageSelected(final int position) {
         if (mIndicator == null) return;
-        announceForAccessibilityCompat(mContext, mIndicator, getPageTitle(position), getClass());
+        announceForAccessibilityCompat(mContext, (View) mIndicator, getPageTitle(position), getClass());
     }
 
     @Override

@@ -344,7 +344,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
             if (icon != null) {
                 ViewAccessor.setBackground(holder.icon, icon);
             } else {
-                holder.icon.setBackgroundResource(R.drawable.ic_iconic_action_list);
+                holder.icon.setBackgroundResource(R.drawable.ic_action_list);
             }
         }
 

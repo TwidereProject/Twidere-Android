@@ -139,7 +139,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 				icon.setImageResource(R.drawable.ic_profile_image_default);
 			}
 		} else {
-			icon.setImageDrawable(mResources.getDrawable(R.drawable.ic_iconic_action_hashtag));
+			icon.setImageDrawable(mResources.getDrawable(R.drawable.ic_action_hashtag));
 		}
 		super.bindView(view, context, cursor);
 	}

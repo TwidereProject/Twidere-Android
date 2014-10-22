@@ -37,9 +37,8 @@ import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 import static org.mariotaku.twidere.util.Utils.restartActivity;
 
 public abstract class BasePreferenceActivity extends PreferenceActivity implements Constants,
-        IThemedActivity, TwidereResourceHelper.OnInitListener {
+        IThemedActivity{
 
-    private TwidereResourceHelper mResourceHelper;
     private int mCurrentThemeResource;
     private Theme mTheme;
     private TwidereMenuInflater mMenuInflater;
@@ -103,13 +102,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
         return 0;
     }
 
-    @Override
-    public Resources getResources() {
-        if (mResourceHelper == null) {
-            mResourceHelper = new TwidereResourceHelper(getThemeResourceId(), this);
-        }
-        return mResourceHelper.getResources(this, super.getResources());
-    }
 
     @Override
     public String getThemeFontFamily() {
@@ -181,8 +173,4 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
         // mCurrentThemeResource);
     }
 
-    @Override
-    public void onInitResources(NoAccentResources resources) {
-        ThemeUtils.initResourceInterceptors(this, resources);
-    }
 }

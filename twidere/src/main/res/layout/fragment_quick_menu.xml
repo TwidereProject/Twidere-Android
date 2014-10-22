@@ -16,7 +16,7 @@
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
+            android:layout_height="match_parent"/>
     </FrameLayout>
 
     <LinearLayout
@@ -43,7 +43,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold" />
 
-            <org.mariotaku.twidere.view.ResourceImageButton
+            <ImageButton
                 android:id="@+id/activities_config_button"
                 android:layout_width="@dimen/element_size_default"
                 android:layout_height="match_parent"
@@ -51,14 +51,14 @@
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/customize"
                 android:text="@string/notifications"
-                app:image="@drawable/ic_iconic_action_preferences" />
+                android:src="@drawable/ic_action_preferences" />
         </LinearLayout>
 
         <FrameLayout
             android:id="@+id/activities_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"></FrameLayout>
+            android:layout_weight="1"/>
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -19,13 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
-import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
-import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
-import static org.mariotaku.twidere.util.Utils.getOldestStatusIdsFromDatabase;
-import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
-import static org.mariotaku.twidere.util.Utils.shouldEnableFiltersForRTs;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -49,178 +42,185 @@ import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 
+import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
+import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
+import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
+import static org.mariotaku.twidere.util.Utils.getOldestStatusIdsFromDatabase;
+import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
+import static org.mariotaku.twidere.util.Utils.shouldEnableFiltersForRTs;
+
 public abstract class CursorStatusesListFragment extends BaseStatusesListFragment<Cursor> {
 
-	private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
-			this, 0, this);
+    private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
+            this, 0, this);
 
-	public HomeActivity getHomeActivity() {
-		final Activity activity = getActivity();
-		if (activity instanceof HomeActivity) return (HomeActivity) activity;
-		return null;
-	}
+    public HomeActivity getHomeActivity() {
+        final Activity activity = getActivity();
+        if (activity instanceof HomeActivity) return (HomeActivity) activity;
+        return null;
+    }
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getListAdapter().setFiltersEnabled(isFiltersEnabled());
-	}
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListAdapter().setFiltersEnabled(isFiltersEnabled());
+    }
 
-	@Override
-	public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-		final Context context = getActivity();
-		final Uri uri = getContentUri();
-		final String table = getTableNameByUri(uri);
-		final String sortOrder = Statuses.DEFAULT_SORT_ORDER;
-		final long account_id = getAccountId();
-		final long[] accountIds = account_id > 0 ? new long[] { account_id } : getActivatedAccountIds(context);
-		final boolean no_account_selected = accountIds.length == 0;
-		setEmptyText(no_account_selected ? getString(R.string.no_account_selected) : null);
-		if (!no_account_selected) {
-			getListView().setEmptyView(null);
-		}
-		final Where accountWhere = Where.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
-		final Where where;
-		if (isFiltersEnabled()) {
-			final Where filterWhere = new Where(buildStatusFilterWhereClause(table, null,
-					shouldEnableFiltersForRTs(context)));
-			where = Where.and(accountWhere, filterWhere);
-		} else {
-			where = accountWhere;
-		}
-		final String selection = processWhere(where).getSQL();
-		return new CursorLoader(context, uri, CursorStatusesAdapter.CURSOR_COLS, selection, null, sortOrder);
-	}
+    @Override
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+        final Context context = getActivity();
+        final Uri uri = getContentUri();
+        final String table = getTableNameByUri(uri);
+        final String sortOrder = Statuses.DEFAULT_SORT_ORDER;
+        final long account_id = getAccountId();
+        final long[] accountIds = account_id > 0 ? new long[]{account_id} : getActivatedAccountIds(context);
+        final boolean no_account_selected = accountIds.length == 0;
+        setEmptyText(no_account_selected ? getString(R.string.no_account_selected) : null);
+        if (!no_account_selected) {
+            getListView().setEmptyView(null);
+        }
+        final Where accountWhere = Where.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
+        final Where where;
+        if (isFiltersEnabled()) {
+            final Where filterWhere = new Where(buildStatusFilterWhereClause(table, null,
+                    shouldEnableFiltersForRTs(context)));
+            where = Where.and(accountWhere, filterWhere);
+        } else {
+            where = accountWhere;
+        }
+        final String selection = processWhere(where).getSQL();
+        return new CursorLoader(context, uri, CursorStatusesAdapter.CURSOR_COLS, selection, null, sortOrder);
+    }
 
-	@Override
-	public void onRefreshFromStart() {
-		if (isRefreshing()) return;
-		savePosition();
-		new AsyncTask<Void, Void, long[][]>() {
+    @Override
+    public void onRefreshFromStart() {
+        if (isRefreshing()) return;
+        savePosition();
+        new AsyncTask<Void, Void, long[][]>() {
 
-			@Override
-			protected long[][] doInBackground(final Void... params) {
-				final long[][] result = new long[3][];
-				final long account_id = getAccountId();
-				result[0] = account_id > 0 ? new long[] { account_id } : getActivatedAccountIds(getActivity());
-				result[2] = getNewestStatusIds();
-				return result;
-			}
+            @Override
+            protected long[][] doInBackground(final Void... params) {
+                final long[][] result = new long[3][];
+                final long account_id = getAccountId();
+                result[0] = account_id > 0 ? new long[]{account_id} : getActivatedAccountIds(getActivity());
+                result[2] = getNewestStatusIds();
+                return result;
+            }
 
-			@Override
-			protected void onPostExecute(final long[][] result) {
-				getStatuses(result[0], result[1], result[2]);
-			}
+            @Override
+            protected void onPostExecute(final long[][] result) {
+                getStatuses(result[0], result[1], result[2]);
+            }
 
-		}.execute();
-	}
+        }.execute();
+    }
 
-	@Override
-	public void onRestart() {
-		super.onRestart();
-		getLoaderManager().restartLoader(0, getArguments(), this);
-	}
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        getLoaderManager().restartLoader(0, getArguments(), this);
+    }
 
-	@Override
-	public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-		super.onScrollStateChanged(view, scrollState);
-		switch (scrollState) {
-			case SCROLL_STATE_FLING:
-			case SCROLL_STATE_TOUCH_SCROLL: {
-				break;
-			}
-			case SCROLL_STATE_IDLE: {
-				savePosition();
-				break;
-			}
-		}
-	}
+    @Override
+    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+        super.onScrollStateChanged(view, scrollState);
+        switch (scrollState) {
+            case SCROLL_STATE_FLING:
+            case SCROLL_STATE_TOUCH_SCROLL: {
+                break;
+            }
+            case SCROLL_STATE_IDLE: {
+                savePosition();
+                break;
+            }
+        }
+    }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		final ContentResolver resolver = getContentResolver();
-		resolver.registerContentObserver(Filters.CONTENT_URI, true, mReloadContentObserver);
-		if (getAccountId() <= 0) {
-			resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
-		}
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        final ContentResolver resolver = getContentResolver();
+        resolver.registerContentObserver(Filters.CONTENT_URI, true, mReloadContentObserver);
+        if (getAccountId() <= 0) {
+            resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
+        }
+    }
 
-	@Override
-	public void onStop() {
-		savePosition();
-		final ContentResolver resolver = getContentResolver();
-		resolver.unregisterContentObserver(mReloadContentObserver);
-		super.onStop();
-	}
+    @Override
+    public void onStop() {
+        savePosition();
+        final ContentResolver resolver = getContentResolver();
+        resolver.unregisterContentObserver(mReloadContentObserver);
+        super.onStop();
+    }
 
-	protected long getAccountId() {
-		final Bundle args = getArguments();
-		return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
-	}
+    protected long getAccountId() {
+        final Bundle args = getArguments();
+        return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
+    }
 
-	protected abstract Uri getContentUri();
+    protected abstract Uri getContentUri();
 
-	@Override
-	protected long[] getNewestStatusIds() {
-		final long account_id = getAccountId();
-		final long[] account_ids = account_id > 0 ? new long[] { account_id } : getActivatedAccountIds(getActivity());
-		return getNewestStatusIdsFromDatabase(getActivity(), getContentUri(), account_ids);
-	}
+    @Override
+    protected long[] getNewestStatusIds() {
+        final long account_id = getAccountId();
+        final long[] account_ids = account_id > 0 ? new long[]{account_id} : getActivatedAccountIds(getActivity());
+        return getNewestStatusIdsFromDatabase(getActivity(), getContentUri(), account_ids);
+    }
 
-	protected abstract int getNotificationType();
+    protected abstract int getNotificationType();
 
-	@Override
-	protected long[] getOldestStatusIds() {
-		final long account_id = getAccountId();
-		final long[] account_ids = account_id > 0 ? new long[] { account_id } : getActivatedAccountIds(getActivity());
-		return getOldestStatusIdsFromDatabase(getActivity(), getContentUri(), account_ids);
-	}
+    @Override
+    protected long[] getOldestStatusIds() {
+        final long account_id = getAccountId();
+        final long[] account_ids = account_id > 0 ? new long[]{account_id} : getActivatedAccountIds(getActivity());
+        return getOldestStatusIdsFromDatabase(getActivity(), getContentUri(), account_ids);
+    }
 
-	protected abstract boolean isFiltersEnabled();
+    protected abstract boolean isFiltersEnabled();
 
-	@Override
-	protected void loadMoreStatuses() {
-		if (isRefreshing()) return;
-		savePosition();
-		new AsyncTask<Void, Void, long[][]>() {
+    @Override
+    protected void loadMoreStatuses() {
+        if (isRefreshing()) return;
+        savePosition();
+        new AsyncTask<Void, Void, long[][]>() {
 
-			@Override
-			protected long[][] doInBackground(final Void... params) {
-				final long[][] result = new long[3][];
-				final long account_id = getAccountId();
-				result[0] = account_id > 0 ? new long[] { account_id } : getActivatedAccountIds(getActivity());
-				result[1] = getOldestStatusIds();
-				return result;
-			}
+            @Override
+            protected long[][] doInBackground(final Void... params) {
+                final long[][] result = new long[3][];
+                final long account_id = getAccountId();
+                result[0] = account_id > 0 ? new long[]{account_id} : getActivatedAccountIds(getActivity());
+                result[1] = getOldestStatusIds();
+                return result;
+            }
 
-			@Override
-			protected void onPostExecute(final long[][] result) {
-				getStatuses(result[0], result[1], result[2]);
-			}
+            @Override
+            protected void onPostExecute(final long[][] result) {
+                getStatuses(result[0], result[1], result[2]);
+            }
 
-		}.execute();
-	}
+        }.execute();
+    }
 
-	@Override
-	protected CursorStatusesAdapter newAdapterInstance(final boolean compact, final boolean plain) {
-		return new CursorStatusesAdapter(getActivity(), compact, plain);
-	}
+    @Override
+    protected CursorStatusesAdapter newAdapterInstance(final boolean compact, final boolean plain) {
+        return new CursorStatusesAdapter(getActivity(), compact, plain);
+    }
 
-	@Override
-	protected void onListTouched() {
-		final AsyncTwitterWrapper twitter = getTwitterWrapper();
-		if (twitter != null) {
-			twitter.clearNotificationAsync(getNotificationType(), getAccountId());
-		}
-	}
+    @Override
+    protected void onListTouched() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter != null) {
+            twitter.clearNotificationAsync(getNotificationType(), getAccountId());
+        }
+    }
 
-	protected Where processWhere(final Where where) {
-		return where;
-	}
+    protected Where processWhere(final Where where) {
+        return where;
+    }
 
-	@Override
-	protected boolean shouldShowAccountColor() {
-		return getAccountId() <= 0 && getActivatedAccountIds(getActivity()).length > 1;
-	}
+    @Override
+    protected boolean shouldShowAccountColor() {
+        return getAccountId() <= 0 && getActivatedAccountIds(getActivity()).length > 1;
+    }
 }

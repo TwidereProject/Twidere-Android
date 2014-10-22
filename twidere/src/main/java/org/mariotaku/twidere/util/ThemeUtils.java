@@ -39,8 +39,6 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.negusoft.holoaccent.AccentResources;
-
 import org.mariotaku.refreshnow.widget.RefreshNowConfig;
 import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConfig;
 import org.mariotaku.twidere.Constants;
@@ -49,10 +47,6 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.content.TwidereContextThemeWrapper;
 import org.mariotaku.twidere.content.TwidereContextWrapper;
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
-import org.mariotaku.twidere.content.res.NoAccentResources;
-import org.mariotaku.twidere.util.theme.ActionIconsInterceptor;
-import org.mariotaku.twidere.util.theme.ActivityIconsInterceptor;
-import org.mariotaku.twidere.util.theme.WhiteDrawableInterceptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -930,18 +924,6 @@ public class ThemeUtils implements Constants {
         final Class<?> viewCls = Class.forName(className);
         final Constructor<?> constructor = viewCls.getConstructor(Context.class, AttributeSet.class);
         return (View) constructor.newInstance(context, attrs);
-    }
-
-    public static void initResourceInterceptors(Context context, AccentResources resources) {
-        resources.addInterceptor(new ActionIconsInterceptor(context, resources.getDisplayMetrics(), 0));
-        resources.addInterceptor(new ActivityIconsInterceptor(context, resources.getDisplayMetrics(), 0));
-        resources.addInterceptor(new WhiteDrawableInterceptor(resources));
-    }
-
-    public static void initResourceInterceptors(Context context, NoAccentResources resources) {
-        resources.addInterceptor(new ActionIconsInterceptor(context, resources.getDisplayMetrics(), 0));
-        resources.addInterceptor(new ActivityIconsInterceptor(context, resources.getDisplayMetrics(), 0));
-        resources.addInterceptor(new WhiteDrawableInterceptor(resources));
     }
 
     public static int findAttributeResourceValue(AttributeSet attrs, String name, int defaultValue) {

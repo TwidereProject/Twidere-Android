@@ -4,22 +4,22 @@
 	android:title="@string/hints">
 
 	<org.mariotaku.twidere.preference.ResourceIconPreference
-		app:image="@drawable/ic_iconic_action_accounts"
+		android:icon="@drawable/ic_action_accounts"
 		android:order="11"
 		android:summary="@string/wizard_hint_compose_select_account"
 		android:title="@string/select_account"/>
 	<org.mariotaku.twidere.preference.ResourceIconPreference
-		app:image="@drawable/ic_iconic_action_quote"
+		android:icon="@drawable/ic_action_quote"
 		android:order="12"
 		android:summary="@string/wizard_hint_quote_format"
 		android:title="@string/quote_format"/>
 	<org.mariotaku.twidere.preference.ResourceIconPreference
-		app:image="@drawable/ic_iconic_action_speaker_muted"
+		android:icon="@drawable/ic_action_speaker_muted"
 		android:order="13"
 		android:summary="@string/wizard_hint_filters"
 		android:title="@string/filters"/>
 	<org.mariotaku.twidere.preference.ResourceIconPreference
-		app:image="@drawable/ic_iconic_action_refresh"
+		android:icon="@drawable/ic_action_refresh"
 		android:order="14"
 		android:summary="@string/wizard_hint_rate_limit"
 		android:title="@string/rate_limit"/>

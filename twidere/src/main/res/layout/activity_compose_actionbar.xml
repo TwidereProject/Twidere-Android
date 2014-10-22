@@ -29,17 +29,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 
-            <org.mariotaku.twidere.view.ResourceImageView
-                android:layout_width="?android:actionBarSize"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="-8dp"
-                android:layout_marginRight="-8dp"
-                android:contentDescription="@string/app_name"
-                android:paddingBottom="6dp"
-                android:paddingTop="6dp"
-                android:scaleType="centerInside"
-                app:image="@drawable/ic_launcher_twidere_iconic" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

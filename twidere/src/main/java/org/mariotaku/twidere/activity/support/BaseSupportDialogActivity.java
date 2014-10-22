@@ -31,18 +31,9 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 
 @SuppressLint("Registered")
-public class BaseSupportDialogActivity extends BaseSupportThemedActivity implements Constants, IThemedActivity, TwidereResourceHelper.OnInitListener {
+public class BaseSupportDialogActivity extends BaseSupportThemedActivity implements Constants, IThemedActivity {
 
-    private TwidereResourceHelper mResourceHelper;
     private boolean mInstanceStateSaved;
-
-    @Override
-    public Resources getResources() {
-        if (mResourceHelper == null) {
-            mResourceHelper = new TwidereResourceHelper(getThemeResourceId(), this);
-        }
-        return mResourceHelper.getResources(this, getDefaultResources());
-    }
 
     @Override
     public int getOverrideAccentColor() {
@@ -78,10 +69,5 @@ public class BaseSupportDialogActivity extends BaseSupportThemedActivity impleme
     protected void onSaveInstanceState(final Bundle outState) {
         mInstanceStateSaved = true;
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onInitResources(NoAccentResources resources) {
-        ThemeUtils.initResourceInterceptors(this, resources);
     }
 }

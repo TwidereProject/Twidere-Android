@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 21
+    buildToolsVersion '21.0.1'
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
-        targetSdkVersion 19
-        versionCode 95
-        versionName "0.2.9.14"
+        targetSdkVersion 21
+        versionCode 96
+        versionName "0.3.0-dev"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -63,9 +63,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:20.0.0'
-    compile 'com.google.android.gms:play-services:+'
-    compile 'com.negusoft.holoaccent:library:1.0.1'
+    compile 'com.android.support:support-v13:21.0.0'
+    compile 'com.android.support:cardview-v7:21.0.0'
+    compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'com.google.android.gms:play-services:6.1.11'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.sothree.slidinguppanel:library:2.0.0'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'

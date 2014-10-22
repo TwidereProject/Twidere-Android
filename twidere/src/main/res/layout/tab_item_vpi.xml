@@ -3,7 +3,7 @@
 	style="?tabItemStyle"
 	android:layout_width="wrap_content"
 	android:layout_height="match_parent"
-	class="org.mariotaku.twidere.view.TabPageIndicator$TabView">
+	class="org.mariotaku.twidere.view.TabPageIndicator2$TabView">
 
 	<LinearLayout
 		android:id="@+id/tab_item_content"

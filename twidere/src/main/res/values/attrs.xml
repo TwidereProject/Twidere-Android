@@ -63,9 +63,6 @@
         <attr name="min" format="integer" />
         <attr name="progressTextSuffix" format="string" />
     </declare-styleable>
-    <declare-styleable name="ResourceImageView">
-        <attr name="image" format="reference" />
-    </declare-styleable>
 
     <attr name="notificationType">
         <flag name="none" value="0" />

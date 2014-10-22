@@ -70,8 +70,8 @@ public class SearchFragment extends BaseSupportFragment implements Panes.Left, O
         final FragmentActivity activity = getActivity();
         mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
         mAdapter.addTab(SearchStatusesFragment.class, args, getString(R.string.statuses),
-                R.drawable.ic_iconic_action_twitter, 0);
-        mAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_iconic_action_user, 1);
+                R.drawable.ic_action_twitter, 0);
+        mAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(2);

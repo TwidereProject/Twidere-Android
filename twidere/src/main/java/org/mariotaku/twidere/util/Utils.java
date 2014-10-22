@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -61,6 +62,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.text.SpannableStringBuilder;
@@ -77,6 +79,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
@@ -103,6 +107,7 @@ import org.mariotaku.querybuilder.Selectable;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.Where;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.refreshnow.widget.RefreshNowListView;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -112,6 +117,7 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.DirectMessagesConversationFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
 import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
@@ -3825,6 +3831,35 @@ public final class Utils implements Constants, TwitterConstants {
                 final URL expandedUrl = url.getExpandedURL();
                 if (expandedUrl != null && start >= 0 && end >= 0) {
                     builder.addLink(ParseUtils.parseString(expandedUrl), url.getDisplayURL(), start, end);
+                }
+            }
+        }
+    }
+
+    public static int getActionBarHeight(Context context) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
+        try {
+            return a.getDimensionPixelSize(0, 0);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static void makeListFragmentFitsSystemWindows(ListFragment fragment) {
+        final FragmentActivity activity = fragment.getActivity();
+        if (!(activity instanceof SystemWindowsInsetsCallback)) return;
+        final SystemWindowsInsetsCallback callback = (SystemWindowsInsetsCallback) activity;
+        final Rect insets = new Rect();
+        if (callback.getSystemWindowsInsets(insets)) {
+            final ListView listView = fragment.getListView();
+            listView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+            listView.setClipToPadding(false);
+            if (listView instanceof RefreshNowListView) {
+                final View indicatorView = ((RefreshNowListView) listView).getRefreshIndicatorView();
+                final LayoutParams lp = indicatorView.getLayoutParams();
+                if (lp instanceof MarginLayoutParams) {
+                    ((MarginLayoutParams) lp).topMargin = insets.top;
+                    indicatorView.setLayoutParams(lp);
                 }
             }
         }

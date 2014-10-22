@@ -17,13 +17,13 @@
         android:gravity="center"
         android:textAppearance="?android:textAppearanceSmall" />
 
-    <org.mariotaku.twidere.view.ResourceImageView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/send"
         android:cropToPadding="false"
         android:padding="@dimen/element_spacing_xsmall"
         android:scaleType="centerCrop"
-        app:image="@drawable/ic_iconic_action_send" />
+        android:src="@drawable/ic_action_send" />
 
 </LinearLayout>

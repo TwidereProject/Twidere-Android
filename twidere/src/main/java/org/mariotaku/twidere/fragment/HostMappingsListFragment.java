@@ -26,10 +26,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnShowListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
@@ -40,6 +42,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -156,10 +162,15 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         mode.setTitle(getResources().getQuantityString(R.plurals.Nitems_selected, count, count));
     }
 
-    public static class AddMappingDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener,
-            OnShowListener, TextWatcher {
+    public static class AddMappingDialogFragment extends BaseDialogFragment implements OnClickListener,
+            OnShowListener, TextWatcher, OnCheckedChangeListener {
+
+        private static final String EXTRA_HOST = "host";
+        private static final String EXTRA_ADDRESS = "address";
+        private static final String EXTRA_EXCLUDED = "excluded";
 
         private EditText mEditHost, mEditAddress;
+        private CheckBox mCheckExclude;
 
         @Override
         public void afterTextChanged(final Editable s) {
@@ -175,13 +186,13 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         public void onClick(final DialogInterface dialog, final int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    final String mHost = ParseUtils.parseString(mEditHost.getText());
-                    final String mAddress = ParseUtils.parseString(mEditAddress.getText());
-                    if (isEmpty(mHost) || isEmpty(mAddress)) return;
+                    final String host = ParseUtils.parseString(mEditHost.getText());
+                    final String address = mCheckExclude.isChecked() ? host : ParseUtils.parseString(mEditAddress.getText());
+                    if (isEmpty(host) || isEmpty(address)) return;
                     final SharedPreferences prefs = getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,
                             Context.MODE_PRIVATE);
                     final SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(mHost, mAddress);
+                    editor.putString(host, address);
                     editor.apply();
                     break;
                 }
@@ -197,12 +208,15 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             builder.setView(view);
             mEditHost = (EditText) view.findViewById(R.id.host);
             mEditAddress = (EditText) view.findViewById(R.id.address);
+            mCheckExclude = (CheckBox) view.findViewById(R.id.exclude);
             mEditHost.addTextChangedListener(this);
             mEditAddress.addTextChangedListener(this);
+            mCheckExclude.setOnCheckedChangeListener(this);
             final Bundle args = getArguments();
             if (savedInstanceState == null && args != null) {
-                mEditHost.setText(args.getCharSequence(EXTRA_TEXT1));
-                mEditAddress.setText(args.getCharSequence(EXTRA_TEXT2));
+                mEditHost.setText(args.getCharSequence(EXTRA_HOST));
+                mEditAddress.setText(args.getCharSequence(EXTRA_ADDRESS));
+                mCheckExclude.setChecked(args.getBoolean(EXTRA_EXCLUDED));
             }
             builder.setTitle(R.string.add_host_mapping);
             builder.setPositiveButton(android.R.string.ok, this);
@@ -213,26 +227,41 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         }
 
         @Override
-        public void onSaveInstanceState(final Bundle outState) {
-            outState.putCharSequence(EXTRA_TEXT1, mEditHost.getText());
-            outState.putCharSequence(EXTRA_TEXT2, mEditAddress.getText());
+        public void onSaveInstanceState(@NonNull final Bundle outState) {
+            outState.putCharSequence(EXTRA_HOST, mEditHost.getText());
+            outState.putCharSequence(EXTRA_ADDRESS, mEditAddress.getText());
+            outState.putCharSequence(EXTRA_EXCLUDED, mEditAddress.getText());
             super.onSaveInstanceState(outState);
         }
 
         @Override
         public void onShow(final DialogInterface dialog) {
-            final boolean text_valid = !isEmpty(mEditHost.getText()) && !isEmpty(mEditAddress.getText());
-            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(text_valid);
+            updateButton();
         }
 
         @Override
         public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-            final AlertDialog dialog = (AlertDialog) getDialog();
-            if (dialog == null) return;
-            final boolean text_valid = !isEmpty(mEditHost.getText()) && !isEmpty(mEditAddress.getText());
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(text_valid);
+            updateButton();
         }
 
+        private void updateButton() {
+            final AlertDialog dialog = (AlertDialog) getDialog();
+            if (dialog == null) return;
+            final boolean hostValid = !isEmpty(mEditHost.getText());
+            final boolean addressValid = !isEmpty(mEditAddress.getText()) || mCheckExclude.isChecked();
+            final Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            positiveButton.setEnabled(hostValid && addressValid);
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateAddressField();
+            updateButton();
+        }
+
+        private void updateAddressField() {
+            mEditAddress.setVisibility(mCheckExclude.isChecked() ? View.GONE : View.VISIBLE);
+        }
     }
 
     static class HostMappingAdapter extends ArrayAdapter<String> {
@@ -251,7 +280,12 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
             final String key = getItem(position);
             text1.setText(key);
-            text2.setText(mPreferences.getString(key, null));
+            final String value = mPreferences.getString(key, null);
+            if (key.equals(value)) {
+                text2.setText(R.string.excluded);
+            } else {
+                text2.setText(value);
+            }
             return view;
         }
 

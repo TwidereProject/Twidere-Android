@@ -9,7 +9,7 @@
 		android:layout_height="0dp"
 		android:layout_weight="1">
 
-		<include layout="@layout/api_editor_content"/>
+		<include layout="@layout/layout_api_editor"/>
 	</FrameLayout>
 
 	<View

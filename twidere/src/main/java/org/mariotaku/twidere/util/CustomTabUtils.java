@@ -65,63 +65,63 @@ public class CustomTabUtils implements Constants {
 
 	static {
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_HOME_TIMELINE, new CustomTabConfiguration(
-				HomeTimelineFragment.class, R.string.home, R.drawable.ic_iconic_action_home,
+				HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
 				CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_MENTIONS_TIMELINE, new CustomTabConfiguration(
-				MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_iconic_action_mention,
+				MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_mention,
 				CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false,
 				ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.my_following_only, false)));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_DIRECT_MESSAGES, new CustomTabConfiguration(
-				DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_iconic_action_message,
+				DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
 				CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_TRENDS_SUGGESTIONS, new CustomTabConfiguration(
-				TrendsSuggectionsFragment.class, R.string.trends, R.drawable.ic_iconic_action_hashtag,
+				TrendsSuggectionsFragment.class, R.string.trends, R.drawable.ic_action_hashtag,
 				CustomTabConfiguration.ACCOUNT_NONE, CustomTabConfiguration.FIELD_TYPE_NONE, 3, true));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_FAVORITES, new CustomTabConfiguration(UserFavoritesFragment.class,
-				R.string.favorites, R.drawable.ic_iconic_action_star, CustomTabConfiguration.ACCOUNT_REQUIRED,
+				R.string.favorites, R.drawable.ic_action_star, CustomTabConfiguration.ACCOUNT_REQUIRED,
 				CustomTabConfiguration.FIELD_TYPE_USER, 4));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_USER_TIMELINE, new CustomTabConfiguration(
-				UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_iconic_action_quote,
+				UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_action_quote,
 				CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 5));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_SEARCH_STATUSES, new CustomTabConfiguration(
-				SearchStatusesFragment.class, R.string.search_statuses, R.drawable.ic_iconic_action_search,
+				SearchStatusesFragment.class, R.string.search_statuses, R.drawable.ic_action_search,
 				CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_TEXT, R.string.query,
 				EXTRA_QUERY, 6));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_LIST_TIMELINE, new CustomTabConfiguration(
-				UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_iconic_action_list,
+				UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_action_list,
 				CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_ABOUT_ME, new CustomTabConfiguration(
-				ActivitiesAboutMeFragment.class, R.string.activities_about_me, R.drawable.ic_iconic_action_user,
+				ActivitiesAboutMeFragment.class, R.string.activities_about_me, R.drawable.ic_action_user,
 				CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 8));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
 				ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
-				R.drawable.ic_iconic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
+				R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
 				CustomTabConfiguration.FIELD_TYPE_NONE, 9));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_RETWEETS_OF_ME, new CustomTabConfiguration(
-				RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_iconic_action_retweet,
+				RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_action_retweet,
 				CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 10));
 		if (Utils.hasStaggeredTimeline()) {
 			CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_STAGGERED_HOME_TIMELINE, new CustomTabConfiguration(
 					StaggeredHomeTimelineFragment.class, R.string.staggered_home_timeline,
-					R.drawable.ic_iconic_action_staggered, CustomTabConfiguration.ACCOUNT_OPTIONAL,
+					R.drawable.ic_action_staggered, CustomTabConfiguration.ACCOUNT_OPTIONAL,
 					CustomTabConfiguration.FIELD_TYPE_NONE, 11, false));
 		}
 
-		CUSTOM_TABS_ICON_NAME_MAP.put("accounts", R.drawable.ic_iconic_action_accounts);
-		CUSTOM_TABS_ICON_NAME_MAP.put("hashtag", R.drawable.ic_iconic_action_hashtag);
-		CUSTOM_TABS_ICON_NAME_MAP.put("heart", R.drawable.ic_iconic_action_heart);
-		CUSTOM_TABS_ICON_NAME_MAP.put("home", R.drawable.ic_iconic_action_home);
-		CUSTOM_TABS_ICON_NAME_MAP.put("list", R.drawable.ic_iconic_action_list);
-		CUSTOM_TABS_ICON_NAME_MAP.put("mention", R.drawable.ic_iconic_action_mention);
-		CUSTOM_TABS_ICON_NAME_MAP.put("message", R.drawable.ic_iconic_action_message);
-		CUSTOM_TABS_ICON_NAME_MAP.put("quote", R.drawable.ic_iconic_action_quote);
-		CUSTOM_TABS_ICON_NAME_MAP.put("search", R.drawable.ic_iconic_action_search);
-		CUSTOM_TABS_ICON_NAME_MAP.put("staggered", R.drawable.ic_iconic_action_staggered);
-		CUSTOM_TABS_ICON_NAME_MAP.put("star", R.drawable.ic_iconic_action_star);
-		CUSTOM_TABS_ICON_NAME_MAP.put("trends", R.drawable.ic_iconic_action_trends);
-		CUSTOM_TABS_ICON_NAME_MAP.put("twidere", R.drawable.ic_iconic_action_twidere);
-		CUSTOM_TABS_ICON_NAME_MAP.put("twitter", R.drawable.ic_iconic_action_twitter);
-		CUSTOM_TABS_ICON_NAME_MAP.put("user", R.drawable.ic_iconic_action_user);
+		CUSTOM_TABS_ICON_NAME_MAP.put("accounts", R.drawable.ic_action_accounts);
+		CUSTOM_TABS_ICON_NAME_MAP.put("hashtag", R.drawable.ic_action_hashtag);
+		CUSTOM_TABS_ICON_NAME_MAP.put("heart", R.drawable.ic_action_heart);
+		CUSTOM_TABS_ICON_NAME_MAP.put("home", R.drawable.ic_action_home);
+		CUSTOM_TABS_ICON_NAME_MAP.put("list", R.drawable.ic_action_list);
+		CUSTOM_TABS_ICON_NAME_MAP.put("mention", R.drawable.ic_action_mention);
+		CUSTOM_TABS_ICON_NAME_MAP.put("message", R.drawable.ic_action_message);
+		CUSTOM_TABS_ICON_NAME_MAP.put("quote", R.drawable.ic_action_quote);
+		CUSTOM_TABS_ICON_NAME_MAP.put("search", R.drawable.ic_action_search);
+		CUSTOM_TABS_ICON_NAME_MAP.put("staggered", R.drawable.ic_action_staggered);
+		CUSTOM_TABS_ICON_NAME_MAP.put("star", R.drawable.ic_action_star);
+		CUSTOM_TABS_ICON_NAME_MAP.put("trends", R.drawable.ic_action_trends);
+		CUSTOM_TABS_ICON_NAME_MAP.put("twidere", R.drawable.ic_action_twidere);
+		CUSTOM_TABS_ICON_NAME_MAP.put("twitter", R.drawable.ic_action_twitter);
+		CUSTOM_TABS_ICON_NAME_MAP.put("user", R.drawable.ic_action_user);
 	}
 
 	public static String findTabIconKey(final int iconRes) {
@@ -276,7 +276,7 @@ public class CustomTabUtils implements Constants {
 			final Bitmap b = getTabIconFromFile((File) iconObj, res);
 			if (b != null) return new BitmapDrawable(res, b);
 		}
-		return res.getDrawable(R.drawable.ic_iconic_action_list);
+		return res.getDrawable(R.drawable.ic_action_list);
 	}
 
 	public static Bitmap getTabIconFromFile(final File file, final Resources res) {
@@ -292,7 +292,7 @@ public class CustomTabUtils implements Constants {
 	}
 
 	public static Object getTabIconObject(final String type) {
-		if (type == null) return R.drawable.ic_iconic_action_list;
+		if (type == null) return R.drawable.ic_action_list;
 		final Integer value = CUSTOM_TABS_ICON_NAME_MAP.get(type);
 		if (value != null)
 			return value;
@@ -301,10 +301,10 @@ public class CustomTabUtils implements Constants {
 				final File file = new File(type);
 				if (file.exists()) return file;
 			} catch (final Exception e) {
-				return R.drawable.ic_iconic_action_list;
+				return R.drawable.ic_action_list;
 			}
 		}
-		return R.drawable.ic_iconic_action_list;
+		return R.drawable.ic_action_list;
 	}
 
 	public static String getTabTypeName(final Context context, final String type) {

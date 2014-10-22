@@ -17,7 +17,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_gravity="left"
-			class="org.mariotaku.twidere.view.TabPageIndicator"/>
+			class="org.mariotaku.twidere.view.TabPageIndicator2"/>
 	</LinearLayout>
 
 	<org.mariotaku.twidere.view.HomeActionsActionView

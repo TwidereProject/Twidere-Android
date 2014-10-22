@@ -4,56 +4,56 @@
 	<item
 		android:id="@id/select_account"
 		android:actionProviderClass="org.mariotaku.twidere.menu.AccountActionProvider"
-		android:icon="@drawable/ic_iconic_action_user"
+		android:icon="@drawable/ic_action_user"
 		android:showAsAction="always"
 		android:title="@string/select_account"/>
 	<item
 		android:id="@id/reply"
-		android:icon="@drawable/ic_iconic_action_reply"
+		android:icon="@drawable/ic_action_reply"
 		android:showAsAction="always"
 		android:title="@string/reply"/>
 	<item
 		android:id="@+id/mute_submenu"
-		android:icon="@drawable/ic_iconic_action_speaker_muted"
+		android:icon="@drawable/ic_action_speaker_muted"
 		android:showAsAction="ifRoom"
 		android:title="@string/add_to_filter">
 		<menu>
 			<item
 				android:id="@id/mute_user"
-				android:icon="@drawable/ic_iconic_action_speaker_muted"
+				android:icon="@drawable/ic_action_speaker_muted"
 				android:title="@string/add_to_filter"/>
 			<item
-				android:icon="@drawable/ic_iconic_action_cancel"
+				android:icon="@drawable/ic_action_cancel"
 				android:title="@android:string/cancel"/>
 		</menu>
 	</item>
 	<item
 		android:id="@+id/block_submenu"
-		android:icon="@drawable/ic_iconic_action_block"
+		android:icon="@drawable/ic_action_ban"
 		android:showAsAction="ifRoom"
 		android:title="@string/block">
 		<menu>
 			<item
 				android:id="@id/block"
-				android:icon="@drawable/ic_iconic_action_block"
+				android:icon="@drawable/ic_action_ban"
 				android:title="@string/block"/>
 			<item
-				android:icon="@drawable/ic_iconic_action_cancel"
+				android:icon="@drawable/ic_action_cancel"
 				android:title="@android:string/cancel"/>
 		</menu>
 	</item>
 	<item
 		android:id="@+id/report_spam_submenu"
-		android:icon="@drawable/ic_iconic_action_warning"
+		android:icon="@drawable/ic_action_warning"
 		android:showAsAction="ifRoom"
 		android:title="@string/report_for_spam">
 		<menu>
 			<item
 				android:id="@id/report_spam"
-				android:icon="@drawable/ic_iconic_action_warning"
+				android:icon="@drawable/ic_action_warning"
 				android:title="@string/report_for_spam"/>
 			<item
-				android:icon="@drawable/ic_iconic_action_cancel"
+				android:icon="@drawable/ic_action_cancel"
 				android:title="@android:string/cancel"/>
 		</menu>
 	</item>
