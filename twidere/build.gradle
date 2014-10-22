@@ -51,10 +51,16 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                signingConfig signingConfigs.debug
+            }
         }
         release {
-            signingConfig signingConfigs.release
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     lintOptions {
