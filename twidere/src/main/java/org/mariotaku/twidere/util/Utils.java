@@ -611,12 +611,20 @@ public final class Utils implements Constants, TwitterConstants {
         final ListAdapter adapter = view.getAdapter();
         if (adapter == null) return;
         view.clearChoices();
-        view.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+        for (int i = 0, j = view.getChildCount(); i < j; i++) {
+            view.setItemChecked(i, false);
+        }
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                view.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+            }
+        });
         // Workaround for Android bug
         // http://stackoverflow.com/questions/9754170/listview-selection-remains-persistent-after-exiting-choice-mode
-        final int position = view.getFirstVisiblePosition(), offset = Utils.getFirstChildOffset(view);
-        view.setAdapter(adapter);
-        Utils.scrollListToPosition(view, position, offset);
+//        final int position = view.getFirstVisiblePosition(), offset = Utils.getFirstChildOffset(view);
+//        view.setAdapter(adapter);
+//        Utils.scrollListToPosition(view, position, offset);
     }
 
     public static void clearListViewChoices(final StaggeredGridView view) {
@@ -1701,7 +1709,11 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int getFirstChildOffset(final AbsListView list) {
         if (list == null || list.getChildCount() == 0) return 0;
-        return list.getChildAt(0).getTop();
+        final View child = list.getChildAt(0);
+        final int[] location = new int[2];
+        child.getLocationOnScreen(location);
+        Log.d(LOGTAG, String.format("getFirstChildOffset %d vs %d", child.getTop(), location[1]));
+        return child.getTop();
     }
 
     public static HttpClientWrapper getHttpClient(final Context context, final int timeoutMillis,

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme" />
+    <style name="Theme"/>
 
-    <style name="Theme.Launcher" parent="android:Theme.NoDisplay" />
+    <style name="Theme.Launcher" parent="android:Theme.NoDisplay"/>
 
     <style name="Theme.Blank" parent="android:Theme.DeviceDefault.NoActionBar">
 
@@ -12,7 +12,7 @@
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
-    <style name="Theme.Blank.Dialog" parent="android:Theme.DeviceDefault.Dialog" />
+    <style name="Theme.Blank.Dialog" parent="android:Theme.DeviceDefault.Dialog"/>
 
     <style name="Theme.Twidere.Dark" parent="android:Theme.DeviceDefault">
 
@@ -23,6 +23,7 @@
         <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
         <item name="android:windowBackground">@color/bg_color_dark</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
         <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Dark</item>
@@ -63,6 +64,7 @@
         <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
         <item name="android:windowBackground">@color/bg_color_light</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
         <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light</item>
@@ -103,6 +105,7 @@
         <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
         <item name="android:windowBackground">@color/bg_color_light</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
         <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light.DarkActionBar
@@ -137,7 +140,7 @@
         <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
     </style>
 
-    <style name="Theme.Twidere.Light.DarkActionBar.DarkIcon" />
+    <style name="Theme.Twidere.Light.DarkActionBar.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored" parent="Theme.Twidere.Light">
 
@@ -156,7 +159,7 @@
         <!--<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>-->
     </style>
 
-    <style name="Theme.Twidere.Colored.DarkActionBar.DarkIcon" />
+    <style name="Theme.Twidere.Colored.DarkActionBar.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored.DarkActionBar.Transparent">
 
@@ -169,7 +172,7 @@
         <item name="android:windowShowWallpaper">true</item>
     </style>
 
-    <style name="Theme.Twidere.Colored.DarkActionBar.Transparent.DarkIcon" />
+    <style name="Theme.Twidere.Colored.DarkActionBar.Transparent.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored.Transparent">
 
@@ -212,7 +215,7 @@
         <item name="android:windowShowWallpaper">true</item>
     </style>
 
-    <style name="Theme.Twidere.Light.DarkActionBar.Transparent.DarkIcon" />
+    <style name="Theme.Twidere.Light.DarkActionBar.Transparent.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored.DarkActionBar.SolidBackground">
 
@@ -220,7 +223,7 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
-    <style name="Theme.Twidere.Colored.DarkActionBar.SolidBackground.DarkIcon" />
+    <style name="Theme.Twidere.Colored.DarkActionBar.SolidBackground.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored.SolidBackground">
 
@@ -246,7 +249,7 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
-    <style name="Theme.Twidere.Light.DarkActionBar.SolidBackground.DarkIcon" />
+    <style name="Theme.Twidere.Light.DarkActionBar.SolidBackground.DarkIcon"/>
 
     <style name="Theme.Twidere.ActionBar.Colored.Light" parent="Theme.Twidere.Light">
         <!--<item name="android:actionBarItemBackground">@drawable/list_selector_white_light</item>-->
@@ -351,7 +354,7 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="Theme.Twidere.Light.DarkActionBar.Compose.DarkIcon" />
+    <style name="Theme.Twidere.Light.DarkActionBar.Compose.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored.DarkActionBar.Compose">
         <item name="android:windowNoTitle">true</item>
@@ -366,7 +369,7 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="Theme.Twidere.Colored.DarkActionBar.Compose.DarkIcon" />
+    <style name="Theme.Twidere.Colored.DarkActionBar.Compose.DarkIcon"/>
 
     <style name="Theme.Twidere.Colored.Compose">
         <item name="android:windowNoTitle">true</item>
@@ -385,6 +388,7 @@
 
         <!-- Window attributes -->
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
         <item name="android:windowBackground">@android:color/black</item>
 
@@ -461,7 +465,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Test" parent="android:Theme.DeviceDefault" />
+    <style name="Theme.Test" parent="android:Theme.DeviceDefault"/>
 
     <style name="Theme.Nyan" parent="android:Theme.DeviceDefault.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>
@@ -572,7 +576,7 @@
         <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
     </style>
 
-    <style name="Theme.Twidere.Settings.Light.DarkActionBar.DarkIcon" />
+    <style name="Theme.Twidere.Settings.Light.DarkActionBar.DarkIcon"/>
 
     <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Settings.Light">
         <item name="android:windowNoTitle">true</item>

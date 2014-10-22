@@ -60,8 +60,7 @@ public class HomeSlidingMenu extends SlidingMenu {
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
-        setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        return super.fitSystemWindows(insets);
+        return false;
     }
 
     private ViewPager getViewPager() {

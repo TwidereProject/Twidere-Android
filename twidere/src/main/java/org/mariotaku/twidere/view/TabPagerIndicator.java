@@ -21,17 +21,20 @@ import org.mariotaku.twidere.view.iface.PagerIndicator;
  */
 public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
-    private final TabPagerIndicatorAdapter mAdapter;
     private final int mStripHeight;
-    private PagerAdapter mTabProvider;
+
     private ViewPager mViewPager;
+
+    private final TabPagerIndicatorAdapter mIndicatorAdapter;
+    private PagerAdapter mPagerProvider;
+
     private OnPageChangeListener mPageChangeListener;
 
     public TabPagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setLayoutManager(new TabLayoutManager(this));
-        mAdapter = new TabPagerIndicatorAdapter(this);
-        setAdapter(mAdapter);
+        mIndicatorAdapter = new TabPagerIndicatorAdapter(this);
+        setAdapter(mIndicatorAdapter);
         mStripHeight = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
     }
 
@@ -45,7 +48,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     @Override
     public void notifyDataSetChanged() {
-        mAdapter.notifyDataSetChanged();
+        mIndicatorAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -70,8 +73,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             throw new IllegalArgumentException();
         }
         mViewPager = view;
+        mPagerProvider = adapter;
         view.setOnPageChangeListener(this);
-        mAdapter.setTabProvider((TabProvider) adapter);
+        mIndicatorAdapter.setTabProvider((TabProvider) adapter);
     }
 
     @Override
@@ -82,7 +86,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     @Override
     public void onPageSelected(int position) {
-        mAdapter.notifyDataSetChanged();
+        mIndicatorAdapter.notifyDataSetChanged();
         if (mPageChangeListener == null) return;
         mPageChangeListener.onPageSelected(position);
     }
@@ -94,7 +98,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
     }
 
     public int getCount() {
-        return mAdapter.getItemCount();
+        return mIndicatorAdapter.getItemCount();
     }
 
     public void setBadge(int position, int count) {
@@ -171,10 +175,21 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
     }
 
     private void dispatchTabClick(int position) {
+        final int currentItem = getCurrentItem();
         setCurrentItem(position);
+        if (mPagerProvider instanceof TabListener) {
+            if (currentItem != position) {
+                ((TabListener) mPagerProvider).onPageSelected(position);
+            } else {
+                ((TabListener) mPagerProvider).onPageReselected(position);
+            }
+        }
     }
 
     private boolean dispatchTabLongClick(int position) {
+        if (mPagerProvider instanceof TabListener) {
+            return ((TabListener) mPagerProvider).onTabLongClick(position);
+        }
         return false;
     }
 

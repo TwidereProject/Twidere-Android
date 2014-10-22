@@ -155,7 +155,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private SupportTabsAdapter mPagerAdapter;
 
     private ExtendedViewPager mViewPager;
-    private TabPagerIndicator mIndicator;
+    private TabPagerIndicator mTabIndicator;
     private HomeSlidingMenu mSlidingMenu;
     private View mEmptyTabHint;
     private ProgressBar mSmartBarProgress;
@@ -189,7 +189,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public void setControlBarOffset(float offset) {
-        mIndicator.setTranslationY(getControlBarHeight() * (offset - 1));
+        mTabIndicator.setTranslationY(getControlBarHeight() * (offset - 1));
         mActionsButton.setTranslationY(mActionsButton.getHeight() * (1 - offset));
     }
 
@@ -244,7 +244,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
         mActionsButton = (HomeActionsActionView) findViewById(R.id.actions_button_bottom);
-        mIndicator = (TabPagerIndicator) findViewById(android.R.id.tabs);
+        mTabIndicator = (TabPagerIndicator) findViewById(android.R.id.tabs);
     }
 
     @Override
@@ -265,7 +265,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
-        final int height = mIndicator.getHeight();
+        final int height = mTabIndicator.getHeight();
         insets.top = height != 0 ? height : Utils.getActionBarHeight(this);
         return true;
     }
@@ -438,12 +438,12 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public float getControlBarOffset() {
         final float totalHeight = getControlBarHeight();
-        return 1 + mIndicator.getTranslationY() / totalHeight;
+        return 1 + mTabIndicator.getTranslationY() / totalHeight;
     }
 
     @Override
     public int getControlBarHeight() {
-        return mIndicator.getHeight() - mIndicator.getStripHeight();
+        return mTabIndicator.getHeight() - mTabIndicator.getStripHeight();
     }
 
     @Override
@@ -454,9 +454,9 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     public void updateUnreadCount() {
-        if (mIndicator == null || mUpdateUnreadCountTask != null
+        if (mTabIndicator == null || mUpdateUnreadCountTask != null
                 && mUpdateUnreadCountTask.getStatus() == AsyncTask.Status.RUNNING) return;
-        mUpdateUnreadCountTask = new UpdateUnreadCountTask(mIndicator, mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
+        mUpdateUnreadCountTask = new UpdateUnreadCountTask(mTabIndicator, mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
         mUpdateUnreadCountTask.execute();
     }
 
@@ -528,18 +528,18 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             actionBar.hide();
         }
 
-        ThemeUtils.applyBackground(mIndicator);
-        mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mIndicator, 1);
+        ThemeUtils.applyBackground(mTabIndicator);
+        mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, 1);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
-        mIndicator.setViewPager(mViewPager);
-        mIndicator.setOnPageChangeListener(this);
+        mTabIndicator.setViewPager(mViewPager);
+        mTabIndicator.setOnPageChangeListener(this);
         if (mTabDisplayOption != 0) {
-            mIndicator.setDisplayLabel((mTabDisplayOption & VALUE_TAB_DIPLAY_OPTION_CODE_LABEL) != 0);
-            mIndicator.setDisplayIcon((mTabDisplayOption & VALUE_TAB_DIPLAY_OPTION_CODE_ICON) != 0);
+            mTabIndicator.setDisplayLabel((mTabDisplayOption & VALUE_TAB_DIPLAY_OPTION_CODE_LABEL) != 0);
+            mTabIndicator.setDisplayIcon((mTabDisplayOption & VALUE_TAB_DIPLAY_OPTION_CODE_ICON) != 0);
         } else {
-            mIndicator.setDisplayLabel(false);
-            mIndicator.setDisplayIcon(true);
+            mTabIndicator.setDisplayLabel(false);
+            mTabIndicator.setDisplayIcon(true);
         }
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
@@ -633,9 +633,9 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     protected void setPagingEnabled(final boolean enabled) {
-        if (mIndicator != null && mViewPager != null) {
+        if (mTabIndicator != null && mViewPager != null) {
             mViewPager.setEnabled(!mPreferences.getBoolean(KEY_DISABLE_TAB_SWIPE, false));
-            mIndicator.setEnabled(enabled);
+            mTabIndicator.setEnabled(enabled);
         }
     }
 
@@ -697,8 +697,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     private void initUnreadCount() {
-        for (int i = 0, j = mIndicator.getCount(); i < j; i++) {
-            mIndicator.setBadge(i, 0);
+        for (int i = 0, j = mTabIndicator.getCount(); i < j; i++) {
+            mTabIndicator.setBadge(i, 0);
         }
     }
 
@@ -867,7 +867,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     public void moveControlBarBy(int delta) {
         final int min = -getControlBarHeight(), max = 0;
-        mIndicator.setTranslationY(MathUtils.clamp(mIndicator.getTranslationY() + delta, max, min));
+        mTabIndicator.setTranslationY(MathUtils.clamp(mTabIndicator.getTranslationY() + delta, max, min));
+        mActionsButton.setTranslationY(MathUtils.clamp(mActionsButton.getTranslationY() - delta, mActionsButton.getHeight(), 0));
     }
 
 
