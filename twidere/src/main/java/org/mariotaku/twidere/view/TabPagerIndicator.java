@@ -22,15 +22,17 @@ import org.mariotaku.twidere.view.iface.PagerIndicator;
 public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     private final TabPagerIndicatorAdapter mAdapter;
+    private final int mStripHeight;
     private PagerAdapter mTabProvider;
     private ViewPager mViewPager;
     private OnPageChangeListener mPageChangeListener;
 
     public TabPagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        setLayoutManager(new TabLayoutManager(this));
         mAdapter = new TabPagerIndicatorAdapter(this);
         setAdapter(mAdapter);
+        mStripHeight = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
     }
 
     public TabPagerIndicator(Context context, AttributeSet attrs) {
@@ -48,7 +50,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     @Override
     public void setCurrentItem(int item) {
-
+        mViewPager.setCurrentItem(item);
     }
 
     @Override
@@ -80,6 +82,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     @Override
     public void onPageSelected(int position) {
+        mAdapter.notifyDataSetChanged();
         if (mPageChangeListener == null) return;
         mPageChangeListener.onPageSelected(position);
     }
@@ -106,7 +109,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     }
 
-    private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> {
+    public int getStripHeight() {
+        return mStripHeight;
+    }
+
+    private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> implements OnClickListener, OnLongClickListener {
 
         private final TabPagerIndicator mIndicator;
         private final LayoutInflater mInflater;
@@ -120,12 +127,21 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         @Override
         public TabItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new TabItemHolder(mInflater.inflate(R.layout.tab_item_home, parent, false));
+            final View view = mInflater.inflate(R.layout.tab_item_home, parent, false);
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+            final View selectedIndicator = view.findViewById(R.id.selected_indicator);
+            final ViewGroup.LayoutParams lp = selectedIndicator.getLayoutParams();
+            lp.height = mIndicator.getStripHeight();
+            selectedIndicator.setLayoutParams(lp);
+            return new TabItemHolder(view);
         }
 
         @Override
         public void onBindViewHolder(TabItemHolder holder, int position) {
-            holder.setTabData(mTabProvider.getPageIcon(position), mTabProvider.getPageTitle(position));
+            final Drawable icon = mTabProvider.getPageIcon(position);
+            final CharSequence title = mTabProvider.getPageTitle(position);
+            holder.setTabData(position, icon, title, mIndicator.getCurrentItem() == position);
         }
 
         @Override
@@ -138,21 +154,75 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             mTabProvider = tabProvider;
             notifyDataSetChanged();
         }
+
+        @Override
+        public void onClick(View v) {
+            final Object tag = v.getTag();
+            if (!(tag instanceof Integer)) return;
+            mIndicator.dispatchTabClick((Integer) tag);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            final Object tag = v.getTag();
+            if (!(tag instanceof Integer)) return false;
+            return mIndicator.dispatchTabLongClick((Integer) tag);
+        }
+    }
+
+    private void dispatchTabClick(int position) {
+        setCurrentItem(position);
+    }
+
+    private boolean dispatchTabLongClick(int position) {
+        return false;
+    }
+
+    private int getCurrentItem() {
+        return mViewPager.getCurrentItem();
     }
 
     private static class TabItemHolder extends ViewHolder {
 
+        private final View itemView;
         private final ImageView iconView;
+        private final View selectedIndicator;
 
         public TabItemHolder(View itemView) {
             super(itemView);
-            iconView = (ImageView) itemView.findViewById(android.R.id.icon);
+            this.itemView = itemView;
+            selectedIndicator = itemView.findViewById(R.id.selected_indicator);
+            iconView = (ImageView) itemView.findViewById(R.id.tab_icon);
         }
 
 
-        public void setTabData(Drawable icon, CharSequence title) {
+        public void setTabData(int position, Drawable icon, CharSequence title, boolean activated) {
+            itemView.setTag(position);
+            itemView.setContentDescription(title);
             iconView.setImageDrawable(icon);
             iconView.setContentDescription(title);
+            selectedIndicator.setActivated(activated);
+        }
+    }
+
+    public static class TabLayoutManager extends LinearLayoutManager {
+
+        private final TabPagerIndicator mIndicator;
+
+        public TabLayoutManager(TabPagerIndicator indicator) {
+            super(indicator.getContext(), HORIZONTAL, false);
+            mIndicator = indicator;
+        }
+
+        @Override
+        public void measureChildWithMargins(View child, int widthUsed, int heightUsed) {
+            final int count = mIndicator.getCount();
+            if (count == 0) return;
+            final int parentHeight = mIndicator.getHeight(), parentWidth = mIndicator.getWidth();
+            final int width = Math.max(parentWidth / count, parentHeight);
+            final int heightMeasureSpec = MeasureSpec.makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY);
+            final int widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+            child.measure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 }

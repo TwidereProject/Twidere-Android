@@ -15,6 +15,7 @@
 
     <org.mariotaku.twidere.view.TabPagerIndicator
         android:id="@android:id/tabs"
+        style="?android:actionBarStyle"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"/>
 

@@ -159,7 +159,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private HomeSlidingMenu mSlidingMenu;
     private View mEmptyTabHint;
     private ProgressBar mSmartBarProgress;
-    private HomeActionsActionView mBottomActionsButton;
+    private HomeActionsActionView mActionsButton;
     private LeftDrawerFrameLayout mLeftDrawerContainer;
     private RightDrawerFrameLayout mRightDrawerContainer;
 
@@ -190,6 +190,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public void setControlBarOffset(float offset) {
         mIndicator.setTranslationY(getControlBarHeight() * (offset - 1));
+        mActionsButton.setTranslationY(mActionsButton.getHeight() * (1 - offset));
     }
 
     public void notifyAccountsChanged() {
@@ -242,7 +243,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
-        mBottomActionsButton = (HomeActionsActionView) findViewById(R.id.actions_button_bottom);
+        mActionsButton = (HomeActionsActionView) findViewById(R.id.actions_button_bottom);
         mIndicator = (TabPagerIndicator) findViewById(android.R.id.tabs);
     }
 
@@ -442,8 +443,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public int getControlBarHeight() {
-        final int height = mIndicator.getHeight();
-        return Math.round(0.8f * (height != 0 ? height : Utils.getActionBarHeight(this)));
+        return mIndicator.getHeight() - mIndicator.getStripHeight();
     }
 
     @Override
@@ -541,8 +541,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             mIndicator.setDisplayLabel(false);
             mIndicator.setDisplayIcon(true);
         }
-        mBottomActionsButton.setOnClickListener(this);
-        mBottomActionsButton.setOnLongClickListener(this);
+        mActionsButton.setOnClickListener(this);
+        mActionsButton.setOnLongClickListener(this);
         initTabs();
         final boolean tabsNotEmpty = mPagerAdapter.getCount() > 0;
         mEmptyTabHint.setVisibility(tabsNotEmpty ? View.GONE : View.VISIBLE);
@@ -825,10 +825,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             }
         }
         final boolean hasActivatedTask = hasActivatedTask();
-        if (mBottomActionsButton != null) {
-            mBottomActionsButton.setIcon(icon);
-            mBottomActionsButton.setTitle(title);
-            mBottomActionsButton.setShowProgress(hasActivatedTask);
+        if (mActionsButton != null) {
+            mActionsButton.setIcon(icon);
+            mActionsButton.setTitle(title);
+            mActionsButton.setShowProgress(hasActivatedTask);
         }
         if (mSmartBarProgress != null) {
             mSmartBarProgress.setVisibility(hasActivatedTask ? View.VISIBLE : View.INVISIBLE);
@@ -836,13 +836,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     private void updateActionsButtonStyle() {
-        if (mBottomActionsButton == null) return;
-        final boolean showBottomActionsButton = !FlymeUtils.hasSmartBar();
         final boolean leftsideComposeButton = mPreferences.getBoolean(KEY_LEFTSIDE_COMPOSE_BUTTON, false);
-        mBottomActionsButton.setVisibility(View.VISIBLE);
-        final FrameLayout.LayoutParams compose_lp = (LayoutParams) mBottomActionsButton.getLayoutParams();
-        compose_lp.gravity = Gravity.BOTTOM | (leftsideComposeButton ? Gravity.LEFT : Gravity.RIGHT);
-        mBottomActionsButton.setLayoutParams(compose_lp);
+        final FrameLayout.LayoutParams lp = (LayoutParams) mActionsButton.getLayoutParams();
+        lp.gravity = Gravity.BOTTOM | (leftsideComposeButton ? Gravity.LEFT : Gravity.RIGHT);
+        mActionsButton.setLayoutParams(lp);
     }
 
     private void updateDrawerPercentOpen(final float percentOpen, final boolean horizontalScroll) {

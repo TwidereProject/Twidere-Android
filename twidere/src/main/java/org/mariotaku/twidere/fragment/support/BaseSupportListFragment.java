@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,7 +58,6 @@ import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ListScrollDistanceCalculator;
 import org.mariotaku.twidere.util.ListScrollDistanceCalculator.ScrollDistanceListener;
-import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -435,7 +433,7 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     @Override
     public void onScrollDistanceChanged(int delta, int total) {
         final FragmentActivity a = getActivity();
-        if (a instanceof HomeActivity) {
+        if (a instanceof HomeActivity && getTabPosition() >= 0) {
             final HomeActivity home = (HomeActivity) a;
             home.moveControlBarBy(delta);
         }
