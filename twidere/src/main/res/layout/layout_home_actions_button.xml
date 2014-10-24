@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.HomeActionButtonCompat
+    android:id="@+id/actions_button_bottom"
+    style="?android:buttonStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/float_action_button_size"
+    android:layout_height="@dimen/float_action_button_size"
+    android:layout_gravity="bottom|right"
+    android:layout_margin="@dimen/element_spacing_large"
+    android:background="@drawable/btn_home_actions_compat"
+    android:visibility="visible"/>

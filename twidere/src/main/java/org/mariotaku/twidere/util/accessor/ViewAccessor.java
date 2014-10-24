@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util.accessor;
 
 import android.annotation.TargetApi;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
@@ -27,26 +28,39 @@ import android.view.View;
 
 public final class ViewAccessor {
 
-	public static void enableHwAccelIfNecessary(final View view) {
-		if (ViewCompat.getLayerType(view) != ViewCompat.LAYER_TYPE_HARDWARE) {
-			ViewCompat.setLayerType(view, ViewCompat.LAYER_TYPE_HARDWARE, null);
-		}
-	}
+    public static void enableHwAccelIfNecessary(final View view) {
+        if (ViewCompat.getLayerType(view) != ViewCompat.LAYER_TYPE_HARDWARE) {
+            ViewCompat.setLayerType(view, ViewCompat.LAYER_TYPE_HARDWARE, null);
+        }
+    }
 
-	@SuppressWarnings("deprecation")
-	public static void setBackground(final View view, final Drawable background) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-			view.setBackgroundDrawable(background);
-		} else {
-			ViewAccessorJB.setBackground(view, background);
-		}
-	}
+    public static void setBackgroundTintList(final View view, final ColorStateList list) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        ViewAccessorL.setBackgroundTintList(view, list);
+    }
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	static class ViewAccessorJB {
-		static void setBackground(final View view, final Drawable background) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
-			view.setBackground(background);
-		}
-	}
+    @SuppressWarnings("deprecation")
+    public static void setBackground(final View view, final Drawable background) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackgroundDrawable(background);
+        } else {
+            ViewAccessorJB.setBackground(view, background);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    static class ViewAccessorJB {
+        static void setBackground(final View view, final Drawable background) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
+            view.setBackground(background);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    static class ViewAccessorL {
+        static void setBackgroundTintList(final View view, final ColorStateList list) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+            view.setBackgroundTintList(list);
+        }
+    }
 }

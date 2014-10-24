@@ -82,7 +82,7 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     }
 
     @Override
-    public abstract int getOverrideAccentColor();
+    public abstract int getThemeColor();
 
 
     @Override
@@ -139,10 +139,13 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
-                mCurrentThemeBackgroundAlpha);
     }
 
     protected boolean shouldSetWindowBackground() {
@@ -155,7 +158,7 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
 
     private final void setTheme() {
         mCurrentThemeResource = getThemeResourceId();
-        mCurrentThemeColor = getOverrideAccentColor();
+        mCurrentThemeColor = getThemeColor();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, mCurrentThemeColor,
                 mCurrentThemeBackgroundAlpha);

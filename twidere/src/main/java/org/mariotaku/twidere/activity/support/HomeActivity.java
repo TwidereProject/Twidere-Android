@@ -33,6 +33,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -52,6 +53,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
@@ -64,7 +67,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.DataProfilingSettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
@@ -90,11 +92,11 @@ import org.mariotaku.twidere.util.UnreadCountUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ExtendedViewPager;
-import org.mariotaku.twidere.view.HomeActionsActionView;
 import org.mariotaku.twidere.view.HomeSlidingMenu;
 import org.mariotaku.twidere.view.LeftDrawerFrameLayout;
 import org.mariotaku.twidere.view.RightDrawerFrameLayout;
 import org.mariotaku.twidere.view.TabPagerIndicator;
+import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +118,7 @@ import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class HomeActivity extends BaseSupportActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener,
-        OnLongClickListener, IControlBarActivity {
+        OnLongClickListener {
 
     private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
 
@@ -159,7 +161,9 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private HomeSlidingMenu mSlidingMenu;
     private View mEmptyTabHint;
     private ProgressBar mSmartBarProgress;
-    private HomeActionsActionView mActionsButton;
+    private View mActionsButton;
+    private View mTabsContainer;
+    private View mActionBarOverlay;
     private LeftDrawerFrameLayout mLeftDrawerContainer;
     private RightDrawerFrameLayout mRightDrawerContainer;
 
@@ -189,8 +193,9 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public void setControlBarOffset(float offset) {
-        mTabIndicator.setTranslationY(getControlBarHeight() * (offset - 1));
+        mTabsContainer.setTranslationY(getControlBarHeight() * (offset - 1));
         mActionsButton.setTranslationY(mActionsButton.getHeight() * (1 - offset));
+        notifyControlBarOffsetChanged();
     }
 
     public void notifyAccountsChanged() {
@@ -243,8 +248,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
-        mActionsButton = (HomeActionsActionView) findViewById(R.id.actions_button_bottom);
-        mTabIndicator = (TabPagerIndicator) findViewById(android.R.id.tabs);
+        mActionsButton = findViewById(R.id.actions_button_bottom);
+        mTabsContainer = findViewById(R.id.tabs_container);
+        mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
+        mActionBarOverlay = findViewById(R.id.actionbar_overlay);
     }
 
     @Override
@@ -438,7 +445,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public float getControlBarOffset() {
         final float totalHeight = getControlBarHeight();
-        return 1 + mTabIndicator.getTranslationY() / totalHeight;
+        return 1 + mTabsContainer.getTranslationY() / totalHeight;
     }
 
     @Override
@@ -564,6 +571,21 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             }
         }
         mPagerPosition = Float.NaN;
+        final int themeColor = getThemeColor(), contrastColor = Utils.getContrastYIQ(themeColor, 192);
+        final int themeResId = getCurrentThemeResourceId();
+        if (ThemeUtils.isColoredActionBar(themeResId)) {
+            mTabIndicator.setBackgroundColor(themeColor);
+            mTabIndicator.setStripColor(contrastColor);
+            mTabIndicator.setIconColor(contrastColor);
+        } else {
+            ViewAccessor.setBackground(mTabIndicator, ThemeUtils.getActionBarBackground(this, themeResId));
+            mTabIndicator.setStripColor(themeColor);
+            mTabIndicator.setIconColor(ThemeUtils.isLightActionBar(themeResId) ? Color.BLACK : Color.WHITE);
+        }
+        if (mActionsButton instanceof IHomeActionButton) {
+            ((IHomeActionButton) mActionsButton).setColor(themeColor);
+        }
+        ViewAccessor.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
     }
 
     @Override
@@ -825,10 +847,11 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             }
         }
         final boolean hasActivatedTask = hasActivatedTask();
-        if (mActionsButton != null) {
-            mActionsButton.setIcon(icon);
-            mActionsButton.setTitle(title);
-            mActionsButton.setShowProgress(hasActivatedTask);
+        if (mActionsButton instanceof IHomeActionButton) {
+            final IHomeActionButton hab = (IHomeActionButton) mActionsButton;
+            hab.setIcon(icon);
+            hab.setTitle(title);
+            hab.setShowProgress(hasActivatedTask);
         }
         if (mSmartBarProgress != null) {
             mSmartBarProgress.setVisibility(hasActivatedTask ? View.VISIBLE : View.INVISIBLE);
@@ -865,10 +888,19 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         }
     }
 
-    public void moveControlBarBy(int delta) {
+    public void moveControlBarBy(float delta) {
         final int min = -getControlBarHeight(), max = 0;
-        mTabIndicator.setTranslationY(MathUtils.clamp(mTabIndicator.getTranslationY() + delta, max, min));
-        mActionsButton.setTranslationY(MathUtils.clamp(mActionsButton.getTranslationY() - delta, mActionsButton.getHeight(), 0));
+        mTabsContainer.setTranslationY(MathUtils.clamp(mTabsContainer.getTranslationY() + delta, max, min));
+        final ViewGroup.LayoutParams ablp = mActionsButton.getLayoutParams();
+        final int totalHeight;
+        if (ablp instanceof MarginLayoutParams) {
+            final MarginLayoutParams mlp = (MarginLayoutParams) ablp;
+            totalHeight = mActionsButton.getHeight() + mlp.topMargin + mlp.bottomMargin;
+        } else {
+            totalHeight = mActionsButton.getHeight();
+        }
+        mActionsButton.setTranslationY(MathUtils.clamp(mActionsButton.getTranslationY() - delta, totalHeight, 0));
+        notifyControlBarOffsetChanged();
     }
 
 
@@ -919,9 +951,9 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
         @Override
         protected int[] doInBackground(final Void... params) {
-            final int tab_count = mIndicator.getCount();
-            final int[] result = new int[tab_count];
-            for (int i = 0, j = tab_count; i < j; i++) {
+            final int tabCount = mIndicator.getCount();
+            final int[] result = new int[tabCount];
+            for (int i = 0, j = tabCount; i < j; i++) {
                 result[i] = UnreadCountUtils.getUnreadCount(mContext, i);
             }
             return result;

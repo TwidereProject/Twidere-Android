@@ -36,7 +36,7 @@ public class BaseSupportDialogActivity extends BaseSupportThemedActivity impleme
     private boolean mInstanceStateSaved;
 
     @Override
-    public int getOverrideAccentColor() {
+    public int getThemeColor() {
         return ThemeUtils.getThemeColor(this, getThemeResourceId());
     }
 

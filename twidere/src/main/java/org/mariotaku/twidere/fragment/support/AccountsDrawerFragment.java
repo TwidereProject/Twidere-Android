@@ -31,6 +31,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -139,6 +140,11 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
         setListAdapter(mAdapter);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    protected void fitSystemWindows(Rect insets) {
+        // No-op
     }
 
     @Override
@@ -260,6 +266,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             if (!(item instanceof OptionItem)) return;
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
+                case MENU_ACCOUNTS:
                 case MENU_ADD_ACCOUNT: {
                     final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
                     intent.setClass(getActivity(), SignInActivity.class);

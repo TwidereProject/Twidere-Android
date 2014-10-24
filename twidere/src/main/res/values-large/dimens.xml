@@ -16,7 +16,6 @@
 	<dimen name="text_size_wizard_nav_item">36sp</dimen>
 	<dimen name="line_indicator_line_width_wizard">32dp</dimen>
 	<dimen name="line_indicator_stroke_width_wizard">4dp</dimen>
-	<dimen name="home_actions_button_size">64dp</dimen>
 
 	<!-- Dimensions for Tab indicator -->
 	<dimen name="tab_item_minwidth_vpi">72dp</dimen>

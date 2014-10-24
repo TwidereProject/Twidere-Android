@@ -38,6 +38,10 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         mStripHeight = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
     }
 
+    public void setStripColor(int color) {
+        mIndicatorAdapter.setStripColor(color);
+    }
+
     public TabPagerIndicator(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -117,12 +121,17 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         return mStripHeight;
     }
 
+    public void setIconColor(int color) {
+        mIndicatorAdapter.setIconColor(color);
+    }
+
     private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> implements OnClickListener, OnLongClickListener {
 
         private final TabPagerIndicator mIndicator;
         private final LayoutInflater mInflater;
 
         private TabProvider mTabProvider;
+        private int mStripColor, mIconColor;
 
         public TabPagerIndicatorAdapter(TabPagerIndicator indicator) {
             mIndicator = indicator;
@@ -146,6 +155,8 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             final Drawable icon = mTabProvider.getPageIcon(position);
             final CharSequence title = mTabProvider.getPageTitle(position);
             holder.setTabData(position, icon, title, mIndicator.getCurrentItem() == position);
+            holder.setStripColor(mStripColor);
+            holder.setIconColor(mIconColor);
         }
 
         @Override
@@ -171,6 +182,16 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             final Object tag = v.getTag();
             if (!(tag instanceof Integer)) return false;
             return mIndicator.dispatchTabLongClick((Integer) tag);
+        }
+
+        public void setStripColor(int color) {
+            mStripColor = color;
+            notifyDataSetChanged();
+        }
+
+        public void setIconColor(int color) {
+            mIconColor = color;
+            notifyDataSetChanged();
         }
     }
 
@@ -216,7 +237,15 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             itemView.setContentDescription(title);
             iconView.setImageDrawable(icon);
             iconView.setContentDescription(title);
-            selectedIndicator.setActivated(activated);
+            selectedIndicator.setVisibility(activated ? VISIBLE : INVISIBLE);
+        }
+
+        public void setStripColor(int color) {
+            selectedIndicator.setBackgroundColor(color);
+        }
+
+        public void setIconColor(int color) {
+            iconView.setColorFilter(color);
         }
     }
 

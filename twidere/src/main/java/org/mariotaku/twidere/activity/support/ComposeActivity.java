@@ -217,7 +217,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     }
 
     @Override
-    public int getOverrideAccentColor() {
+    public int getThemeColor() {
         return ThemeUtils.getUserThemeColor(this);
     }
 

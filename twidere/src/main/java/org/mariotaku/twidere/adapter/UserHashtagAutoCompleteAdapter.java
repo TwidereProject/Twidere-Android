@@ -95,7 +95,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 		final int themeRes, accentColor;
 		if (context instanceof IThemedActivity) {
 			themeRes = ((IThemedActivity) context).getThemeResourceId();
-			accentColor = ((IThemedActivity) context).getOverrideAccentColor();
+			accentColor = ((IThemedActivity) context).getThemeColor();
 		} else {
 			themeRes = ThemeUtils.getThemeResource(context);
 			accentColor = ThemeUtils.getUserThemeColor(context);

@@ -26,8 +26,8 @@
         <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Dark</item>
-        <item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>
+        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Dark</item>-->
+        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>-->
 
         <!-- Custom view styles -->
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
@@ -67,8 +67,8 @@
         <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light</item>
-        <item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Light</item>
+        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light</item>-->
+        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Light</item>-->
 
         <!-- Custom view styles -->
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
@@ -108,9 +108,8 @@
         <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light.DarkActionBar
-        </item>
-        <item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>
+        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light.DarkActionBar</item>-->
+        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>-->
 
         <!-- Custom view styles -->
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
@@ -145,17 +144,16 @@
     <style name="Theme.Twidere.Colored" parent="Theme.Twidere.Light">
 
         <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Colored</item>
-        <item name="android:actionBarWidgetTheme">@style/Theme.Twidere.ActionBar.Colored.Light
-        </item>
+        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Colored</item>-->
+        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.ActionBar.Colored.Light</item>-->
         <!--<item name="android:actionBarItemBackground">@drawable/list_selector_white_light</item>-->
     </style>
 
     <style name="Theme.Twidere.Colored.DarkActionBar" parent="Theme.Twidere.Light.DarkActionBar">
 
         <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Colored.Inverse</item>
-        <item name="android:actionBarWidgetTheme">@style/Theme.Twidere.ActionBar.Colored.Dark</item>
+        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Colored.Inverse</item>-->
+        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.ActionBar.Colored.Dark</item>-->
         <!--<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>-->
     </style>
 
@@ -581,6 +579,7 @@
     <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Settings.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:colorActivatedHighlight">@android:color/holo_blue_light</item>
     </style>
 
 </resources>

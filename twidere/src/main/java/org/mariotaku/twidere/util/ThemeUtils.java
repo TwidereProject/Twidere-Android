@@ -493,7 +493,7 @@ public class ThemeUtils implements Constants {
         final int themeRes, accentColor;
         if (context instanceof IThemedActivity) {
             themeRes = ((IThemedActivity) context).getThemeResourceId();
-            accentColor = ((IThemedActivity) context).getOverrideAccentColor();
+            accentColor = ((IThemedActivity) context).getThemeColor();
         } else {
             themeRes = getSettingsThemeResource(context);
             accentColor = getUserThemeColor(context, themeRes);
@@ -514,7 +514,7 @@ public class ThemeUtils implements Constants {
         final int themeRes, accentColor;
         if (context instanceof IThemedActivity) {
             themeRes = ((IThemedActivity) context).getThemeResourceId();
-            accentColor = ((IThemedActivity) context).getOverrideAccentColor();
+            accentColor = ((IThemedActivity) context).getThemeColor();
         } else {
             themeRes = getSettingsThemeResource(context);
             accentColor = getUserThemeColor(context);

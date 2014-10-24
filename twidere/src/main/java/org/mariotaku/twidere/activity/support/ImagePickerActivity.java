@@ -45,7 +45,7 @@ public class ImagePickerActivity extends BaseSupportThemedActivity {
 	private Runnable mImageSelectedRunnable;
 
 	@Override
-	public int getOverrideAccentColor() {
+	public int getThemeColor() {
 		return 0;
 	}
 

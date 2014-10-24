@@ -26,7 +26,8 @@
     <dimen name="accounts_drawer_default_indicator_size">12sp</dimen>
     <dimen name="accounts_drawer_switch_label_size">16sp</dimen>
     <dimen name="accounts_drawer_child_size">16sp</dimen>
-    <dimen name="home_actions_button_size">64dp</dimen>
+    <dimen name="float_action_button_size">56dp</dimen>
+    <dimen name="float_action_button_icon_size">24dp</dimen>
     <dimen name="action_button_size">56dp</dimen>
     <dimen name="text_size_extra_small">12sp</dimen>
 

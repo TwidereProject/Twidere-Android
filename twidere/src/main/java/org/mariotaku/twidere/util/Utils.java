@@ -3863,16 +3863,42 @@ public final class Utils implements Constants, TwitterConstants {
         final SystemWindowsInsetsCallback callback = (SystemWindowsInsetsCallback) activity;
         final Rect insets = new Rect();
         if (callback.getSystemWindowsInsets(insets)) {
-            final ListView listView = fragment.getListView();
-            listView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-            listView.setClipToPadding(false);
-            if (listView instanceof RefreshNowListView) {
-                final View indicatorView = ((RefreshNowListView) listView).getRefreshIndicatorView();
-                final LayoutParams lp = indicatorView.getLayoutParams();
-                if (lp instanceof MarginLayoutParams) {
-                    ((MarginLayoutParams) lp).topMargin = insets.top;
-                    indicatorView.setLayoutParams(lp);
-                }
+            makeListFragmentFitsSystemWindows(fragment, insets);
+        }
+    }
+
+    public static int getContrastYIQ(int color) {
+        return getContrastYIQ(color, 128);
+    }
+
+
+    public static int getContrastYIQ(int color, int threshold) {
+        return getContrastYIQ(color, threshold, Color.BLACK, Color.WHITE);
+    }
+
+    /**
+     * Get most contrasting color
+     *
+     * @param color
+     * @return {@link Color#WHITE} or {@link Color#BLACK}
+     * @see <a href='http://24ways.org/2010/calculating-color-contrast/'>Calculating Color Contrast</a>
+     */
+    public static int getContrastYIQ(int color, int threshold, int colorDark, int colorLight) {
+        final int r = Color.red(color), g = Color.green(color), b = Color.blue(color);
+        int yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= threshold) ? colorDark : colorLight;
+    }
+
+    public static void makeListFragmentFitsSystemWindows(ListFragment fragment, Rect insets) {
+        final ListView listView = fragment.getListView();
+        listView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        listView.setClipToPadding(false);
+        if (listView instanceof RefreshNowListView) {
+            final View indicatorView = ((RefreshNowListView) listView).getRefreshIndicatorView();
+            final LayoutParams lp = indicatorView.getLayoutParams();
+            if (lp instanceof MarginLayoutParams) {
+                ((MarginLayoutParams) lp).topMargin = insets.top;
+                indicatorView.setLayoutParams(lp);
             }
         }
     }

@@ -19,9 +19,11 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,8 @@ import org.mariotaku.refreshnow.widget.RefreshMode;
 import org.mariotaku.refreshnow.widget.RefreshNowConfig;
 import org.mariotaku.refreshnow.widget.RefreshNowListView;
 import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -46,7 +50,7 @@ import static android.support.v4.app.ListFragmentTrojan.INTERNAL_LIST_CONTAINER_
 import static android.support.v4.app.ListFragmentTrojan.INTERNAL_PROGRESS_CONTAINER_ID;
 
 public abstract class BasePullToRefreshListFragment extends BaseSupportListFragment implements
-        IBasePullToRefreshFragment {
+        IBasePullToRefreshFragment, ControlBarOffsetListener {
 
     @Override
     public RefreshNowListView getListView() {
@@ -63,6 +67,23 @@ public abstract class BasePullToRefreshListFragment extends BaseSupportListFragm
     public boolean isRefreshing() {
         if (getView() == null) return false;
         return getListView().isRefreshing();
+    }
+
+    @Override
+    public void onDetach() {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof IControlBarActivity) {
+            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
+        }
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof IControlBarActivity) {
+            ((IControlBarActivity) activity).registerControlBarOffsetListener(this);
+        }
     }
 
     /**
@@ -211,4 +232,10 @@ public abstract class BasePullToRefreshListFragment extends BaseSupportListFragm
     }
 
 
+    @Override
+    public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
+        final View indicator = getRefreshIndicatorView();
+        if (indicator == null) return;
+        indicator.setTranslationY(activity.getControlBarHeight() * (offset - 1));
+    }
 }
