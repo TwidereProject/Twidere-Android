@@ -1378,18 +1378,27 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 		protected SingleResponse<twitter4j.Status> doInBackground(final Void... params) {
 			final Twitter twitter = getTwitterInstance(mContext, account_id, false);
 			if (twitter == null) return SingleResponse.getInstance();
-			try {
-				final twitter4j.Status status = twitter.destroyStatus(status_id);
-				final ContentValues values = new ContentValues();
-				values.put(Statuses.MY_RETWEET_ID, -1);
-				for (final Uri uri : TweetStore.STATUSES_URIS) {
-					mResolver.delete(uri, Statuses.STATUS_ID + " = " + status_id, null);
-					mResolver.update(uri, values, Statuses.MY_RETWEET_ID + " = " + status_id, null);
-				}
-				return SingleResponse.getInstance(status, null);
-			} catch (final TwitterException e) {
-				return SingleResponse.getInstance(null, e);
-			}
+            TwitterException maybeRemoved = null;
+            twitter4j.Status status = null;
+            try {
+                status = twitter.destroyStatus(status_id);
+            } catch (final TwitterException e) {
+                // In the context of deleting tweets, a status code 404 means
+                // the required resource does not exist,
+                // And we should delete that tweet from Twidere client anyway.
+                // See also: https://dev.twitter.com/overview/api/response-codes
+                if (e.getStatusCode() != 404)
+                    return SingleResponse.getInstance(null, e);
+                else
+                    maybeRemoved = e;
+            }
+            final ContentValues values = new ContentValues();
+            values.put(Statuses.MY_RETWEET_ID, -1);
+            for (final Uri uri : TweetStore.STATUSES_URIS) {
+                mResolver.delete(uri, Statuses.STATUS_ID + " = " + status_id, null);
+                mResolver.update(uri, values, Statuses.MY_RETWEET_ID + " = " + status_id, null);
+            }
+            return SingleResponse.getInstance(status, maybeRemoved);
 		}
 
 		@Override
