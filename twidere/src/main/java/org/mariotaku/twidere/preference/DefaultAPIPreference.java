@@ -51,7 +51,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         OnCheckedChangeListener, OnClickListener {
 
     private EditText mEditAPIUrlFormat;
-    private CheckBox mEditSameOAuthSigningUrl;
+    private CheckBox mEditSameOAuthSigningUrl, mEditNoVersionSuffix;
     private EditText mEditConsumerKey, mEditConsumerSecret;
     private RadioGroup mEditAuthType;
     private RadioButton mButtonOAuth, mButtonxAuth, mButtonBasic, mButtonTwipOMode;
@@ -100,9 +100,10 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         final String apiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_REST_BASE_URL);
         final int authType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean sameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
+        final boolean noVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
         final String consumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_2);
         final String consumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_2);
-        setValues(apiUrlFormat, authType, sameOAuthSigningUrl, consumerKey, consumerSecret);
+        setValues(apiUrlFormat, authType, noVersionSuffix, sameOAuthSigningUrl, consumerKey, consumerSecret);
     }
 
     @Override
@@ -118,6 +119,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         mAdvancedAPIConfigLabel = (TextView) view.findViewById(R.id.advanced_api_config_label);
         mAdvancedAPIConfigView = view.findViewById(R.id.advanced_api_config);
         mEditSameOAuthSigningUrl = (CheckBox) view.findViewById(R.id.same_oauth_signing_url);
+        mEditNoVersionSuffix = (CheckBox) view.findViewById(R.id.no_version_suffix);
         mEditConsumerKey = (EditText) view.findViewById(R.id.consumer_key);
         mEditConsumerSecret = (EditText) view.findViewById(R.id.consumer_secret);
         mAPIFormatHelpButton = view.findViewById(R.id.api_url_format_help);
@@ -135,6 +137,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
         final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
         final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
+        final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
         final String consumerKey = parseString(mEditConsumerKey.getText());
         final String consumerSecret = parseString(mEditConsumerSecret.getText());
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
@@ -148,6 +151,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         editor.putString(KEY_API_URL_FORMAT, apiUrlFormat);
         editor.putInt(KEY_AUTH_TYPE, authType);
         editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
+        editor.putBoolean(KEY_NO_VERSION_SUFFIX, noVersionSuffix);
         editor.apply();
     }
 
@@ -166,9 +170,11 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         final int authType = savedInstanceState.getInt(Accounts.AUTH_TYPE, prefAuthType);
         final boolean sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL,
                 prefSameOAuthSigningUrl);
+        final boolean noVersionSuffix = savedInstanceState.getBoolean(Accounts.NO_VERSION_SUFFIX,
+                prefSameOAuthSigningUrl);
         final String consumerKey = trim(savedInstanceState.getString(Accounts.CONSUMER_KEY, prefConsumerKey));
         final String consumerSecret = trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret));
-        setValues(apiUrlFormat, authType, sameOAuthSigningUrl, consumerKey, consumerSecret);
+        setValues(apiUrlFormat, authType, sameOAuthSigningUrl, noVersionSuffix, consumerKey, consumerSecret);
 
     }
 
@@ -202,9 +208,10 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
     }
 
     private void setValues(final String apiUrlFormat, final int authType, final boolean sameOAuthSigningUrl,
-                           final String consumerKey, final String consumerSecret) {
+                           final boolean noVersionSuffix, final String consumerKey, final String consumerSecret) {
         mEditAPIUrlFormat.setText(apiUrlFormat);
         mEditSameOAuthSigningUrl.setChecked(sameOAuthSigningUrl);
+        mEditNoVersionSuffix.setChecked(noVersionSuffix);
         mEditConsumerKey.setText(consumerKey);
         mEditConsumerSecret.setText(consumerSecret);
 
