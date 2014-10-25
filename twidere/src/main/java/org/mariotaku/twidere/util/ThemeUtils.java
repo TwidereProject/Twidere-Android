@@ -123,13 +123,15 @@ public class ThemeUtils implements Constants {
             final MenuItem item = menu.getItem(i);
             final Drawable icon = item.getIcon();
             final ContextMenuInfo info = item.getMenuInfo();
-            if (ArrayUtils.contains(excludedGroups, item.getGroupId())) {
-                icon.mutate().clearColorFilter();
-            } else if (info instanceof MenuBarMenuInfo) {
-                final boolean inPopup = ((MenuBarMenuInfo) info).isInPopup();
-                icon.mutate().setColorFilter(inPopup ? popupColor : color, mode);
-            } else {
-                icon.mutate().setColorFilter(color, mode);
+            if(icon != null){
+                if (ArrayUtils.contains(excludedGroups, item.getGroupId())) {
+                    icon.mutate().clearColorFilter();
+                } else if (info instanceof MenuBarMenuInfo) {
+                    final boolean inPopup = ((MenuBarMenuInfo) info).isInPopup();
+                    icon.mutate().setColorFilter(inPopup ? popupColor : color, mode);
+                 } else {
+                    icon.mutate().setColorFilter(color, mode);
+                }
             }
             if (item.hasSubMenu()) {
                 applyColorFilterToMenuIcon(item.getSubMenu(), color, popupColor, mode, excludedGroups);
