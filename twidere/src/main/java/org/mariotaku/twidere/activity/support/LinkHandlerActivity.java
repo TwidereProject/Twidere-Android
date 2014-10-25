@@ -120,6 +120,10 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setUiOptions(getWindow(), data);
         super.onCreate(savedInstanceState);
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.layout_link_handler);
         setProgressBarIndeterminateVisibility(false);
         if (data == null || !showFragment(data)) {
@@ -146,11 +150,6 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         if (fragment instanceof IBaseFragment) {
             ((IBaseFragment) fragment).requestFitSystemWindows();
         }
-    }
-
-    @Override
-    protected void onTitleChanged(final CharSequence title, final int color) {
-        super.onTitleChanged(title, color);
     }
 
     private void setUiOptions(final Window window, final Uri data) {

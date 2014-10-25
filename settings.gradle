@@ -1,4 +1,5 @@
-include ':twidere', ':SlidingMenu', ':DragSortListView', ':MenuComponent', ':RefreshNow'
+include ':twidere', ':twidere.wear'
+include ':SlidingMenu', ':DragSortListView', ':MenuComponent', ':RefreshNow'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')
 project(':DragSortListView').projectDir = file('libraries/DragSortListView/library')

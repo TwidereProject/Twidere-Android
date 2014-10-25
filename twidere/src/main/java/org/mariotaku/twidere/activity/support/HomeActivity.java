@@ -35,6 +35,7 @@ import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -228,9 +229,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.actions:
-            case R.id.actions_button:
-            case R.id.actions_button_bottom: {
+            case R.id.actions_button: {
                 triggerActionsClick();
                 break;
             }
@@ -248,7 +247,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
-        mActionsButton = findViewById(R.id.actions_button_bottom);
+        mActionsButton = findViewById(R.id.actions_button);
         mTabsContainer = findViewById(R.id.tabs_container);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mActionBarOverlay = findViewById(R.id.actionbar_overlay);
@@ -297,12 +296,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
-            case R.id.actions:
             case R.id.actions_button: {
-                showMenuItemToast(v, v.getContentDescription());
-                return true;
-            }
-            case R.id.actions_button_bottom: {
                 showMenuItemToast(v, v.getContentDescription(), true);
                 return true;
             }
@@ -574,7 +568,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         final int themeColor = getThemeColor(), contrastColor = Utils.getContrastYIQ(themeColor, 192);
         final int themeResId = getCurrentThemeResourceId();
         if (ThemeUtils.isColoredActionBar(themeResId)) {
-            mTabIndicator.setBackgroundColor(themeColor);
+            ViewAccessor.setBackground(mTabIndicator, new ColorDrawable(themeColor));
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
         } else {

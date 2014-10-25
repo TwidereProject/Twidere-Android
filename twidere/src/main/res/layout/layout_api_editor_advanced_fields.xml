@@ -1,47 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/advanced_api_config"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_below="@+id/advanced_api_config_label"
-	android:orientation="vertical"
-	android:paddingLeft="@dimen/element_spacing_normal">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/advanced_api_config"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/advanced_api_config_label"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/element_spacing_normal">
 
-	<CheckBox
-		android:id="@+id/same_oauth_signing_url"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingBottom="@dimen/element_spacing_normal"
-		android:paddingTop="@dimen/element_spacing_normal"
-		android:text="@string/same_oauth_signing_url"
-		android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <CheckBox
+        android:id="@+id/same_oauth_signing_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal"
+        android:text="@string/same_oauth_signing_url"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/consumer_key"
-		android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <CheckBox
+        android:id="@+id/no_version_suffix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal"
+        android:text="@string/no_version_suffix"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-	<EditText
-		android:id="@+id/consumer_key"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:ems="10"
-		android:inputType="text|textVisiblePassword"
-		android:singleLine="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/consumer_key"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/consumer_secret"
-		android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <EditText
+        android:id="@+id/consumer_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text|textVisiblePassword"
+        android:singleLine="true"/>
 
-	<EditText
-		android:id="@+id/consumer_secret"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:ems="10"
-		android:inputType="text|textVisiblePassword"
-		android:singleLine="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/consumer_secret"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <EditText
+        android:id="@+id/consumer_secret"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text|textVisiblePassword"
+        android:singleLine="true"/>
 
 </LinearLayout>

@@ -1493,7 +1493,8 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static String getApiUrl(final String pattern, final String domain, final String appendPath) {
         final String urlBase = getApiBaseUrl(pattern, domain);
-        if (urlBase == null || appendPath == null) return urlBase;
+        if (urlBase == null) return null;
+        if (appendPath == null) return urlBase.endsWith("/") ? urlBase : urlBase + "/";
         final StringBuilder sb = new StringBuilder(urlBase);
         if (urlBase.endsWith("/")) {
             sb.append(appendPath.startsWith("/") ? appendPath.substring(1) : appendPath);
@@ -2250,9 +2251,10 @@ public final class Utils implements Constants, TwitterConstants {
                 final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
                 final ConfigurationBuilder cb = new ConfigurationBuilder();
                 if (!isEmpty(account.api_url_format)) {
-                    cb.setRestBaseURL(getApiUrl(account.api_url_format, "api", "/1.1/"));
+                    final String versionSuffix = account.no_version_suffix ? null : "/1.1/";
+                    cb.setRestBaseURL(getApiUrl(account.api_url_format, "api", versionSuffix));
                     cb.setOAuthBaseURL(getApiUrl(account.api_url_format, "api", "/oauth/"));
-                    cb.setUploadBaseURL(getApiUrl(account.api_url_format, "upload", "/1.1/"));
+                    cb.setUploadBaseURL(getApiUrl(account.api_url_format, "upload", versionSuffix));
                     if (!account.same_oauth_signing_url) {
                         cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
                         cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
@@ -2291,7 +2293,7 @@ public final class Utils implements Constants, TwitterConstants {
 
         final String where = Where.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
         final Cursor c = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, where.toString(), null, null);
+                Accounts.COLUMNS, where, null, null);
         if (c == null) return null;
         try {
             if (!c.moveToFirst()) return null;
@@ -2416,7 +2418,7 @@ public final class Utils implements Constants, TwitterConstants {
         // versions
         final String where = Where.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
         final Cursor c = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, where.toString(), null, null);
+                Accounts.COLUMNS, where, null, null);
         if (c == null) return null;
         try {
             if (!c.moveToFirst()) return null;
@@ -2793,22 +2795,22 @@ public final class Utils implements Constants, TwitterConstants {
         // SCREENLAYOUT_LAYOUTDIR_RTL;
     }
 
-    public static boolean isSameAccount(final Context context, final long account_id, final long user_id) {
-        if (context == null || account_id <= 0 || user_id <= 0) return false;
-        return account_id == user_id;
+    public static boolean isSameAccount(final Context context, final long accountId, final long userId) {
+        if (context == null || accountId <= 0 || userId <= 0) return false;
+        return accountId == userId;
     }
 
-    public static boolean isSameAccount(final Context context, final long account_id, final String screen_name) {
-        if (context == null || account_id <= 0 || screen_name == null) return false;
-        return screen_name.equalsIgnoreCase(getAccountScreenName(context, account_id));
+    public static boolean isSameAccount(final Context context, final long accountId, final String screenName) {
+        if (context == null || accountId <= 0 || screenName == null) return false;
+        return screenName.equalsIgnoreCase(getAccountScreenName(context, accountId));
     }
 
-    public static boolean isUserLoggedIn(final Context context, final long account_id) {
+    public static boolean isUserLoggedIn(final Context context, final long accountId) {
         if (context == null) return false;
         final long[] ids = getAccountIds(context);
         if (ids == null) return false;
         for (final long id : ids) {
-            if (id == account_id) return true;
+            if (id == accountId) return true;
         }
         return false;
     }
@@ -3483,11 +3485,11 @@ public final class Utils implements Constants, TwitterConstants {
         addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION, INTENT_ACTION_EXTENSION_OPEN_STATUS,
                 EXTRA_STATUS, EXTRA_STATUS_JSON, status);
         final MenuItem shareItem = menu.findItem(R.id.share_submenu);
-        final Menu shareSubmenu = shareItem != null && shareItem.hasSubMenu() ? shareItem.getSubMenu() : null;
-        if (shareSubmenu != null) {
+        final Menu shareSubMenu = shareItem != null && shareItem.hasSubMenu() ? shareItem.getSubMenu() : null;
+        if (shareSubMenu != null) {
             final Intent shareIntent = createStatusShareIntent(context, status);
-            shareSubmenu.removeGroup(MENU_GROUP_STATUS_SHARE);
-            addIntentToMenu(context, shareSubmenu, shareIntent, MENU_GROUP_STATUS_SHARE);
+            shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
+            addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
         }
     }
 
@@ -3813,15 +3815,13 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     private static boolean isExtensionUseJSON(final ResolveInfo info) {
-        if (info == null || info.activityInfo == null) return true;
+        if (info == null || info.activityInfo == null) return false;
         final ActivityInfo activityInfo = info.activityInfo;
         if (activityInfo.metaData != null && activityInfo.metaData.containsKey(METADATA_KEY_EXTENSION_USE_JSON))
             return activityInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON);
         final ApplicationInfo appInfo = activityInfo.applicationInfo;
-        if (appInfo == null) return true;
-        if (appInfo.metaData != null && appInfo.metaData.containsKey(METADATA_KEY_EXTENSION_USE_JSON))
-            return appInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON);
-        return true;
+        if (appInfo == null) return false;
+        return appInfo.metaData != null && appInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON, false);
     }
 
     private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
@@ -3879,7 +3879,7 @@ public final class Utils implements Constants, TwitterConstants {
     /**
      * Get most contrasting color
      *
-     * @param color
+     * @param color Input color, alpha channel will be disposed.
      * @return {@link Color#WHITE} or {@link Color#BLACK}
      * @see <a href='http://24ways.org/2010/calculating-color-contrast/'>Calculating Color Contrast</a>
      */

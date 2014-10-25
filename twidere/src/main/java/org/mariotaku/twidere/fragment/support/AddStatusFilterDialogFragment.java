@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeFilterdUserContentValues;
+import static org.mariotaku.twidere.util.ContentValuesCreator.makeFilteredUserContentValues;
 import static org.mariotaku.twidere.util.Utils.getDisplayName;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
@@ -41,6 +41,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -71,11 +72,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
 			if (value instanceof ParcelableUserMention) {
 				final ParcelableUserMention mention = (ParcelableUserMention) value;
 				user_ids.add(mention.id);
-				user_values.add(makeFilterdUserContentValues(mention));
+				user_values.add(makeFilteredUserContentValues(mention));
 			} else if (value instanceof ParcelableStatus) {
 				final ParcelableStatus status = (ParcelableStatus) value;
 				user_ids.add(status.user_id);
-				user_values.add(makeFilterdUserContentValues(status));
+				user_values.add(ContentValuesCreator.makeFilteredUserContentValues(status));
 			} else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
 				if (value != null) {
 					final String keyword = ParseUtils.parseString(value);

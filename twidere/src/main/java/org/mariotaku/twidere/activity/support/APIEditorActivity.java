@@ -53,7 +53,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         OnClickListener {
 
     private EditText mEditAPIUrlFormat;
-    private CheckBox mEditSameOAuthSigningUrl;
+    private CheckBox mEditSameOAuthSigningUrl, mEditNoVersionSuffix;
     private EditText mEditConsumerKey, mEditConsumerSecret;
     private RadioGroup mEditAuthType;
     private RadioButton mButtonOAuth, mButtonxAuth, mButtonBasic, mButtonTwipOMode;
@@ -111,6 +111,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         mAdvancedAPIConfigLabel = (TextView) findViewById(R.id.advanced_api_config_label);
         mAdvancedAPIConfigView = findViewById(R.id.advanced_api_config);
         mEditSameOAuthSigningUrl = (CheckBox) findViewById(R.id.same_oauth_signing_url);
+        mEditNoVersionSuffix = (CheckBox) findViewById(R.id.no_version_suffix);
         mEditConsumerKey = (EditText) findViewById(R.id.consumer_key);
         mEditConsumerSecret = (EditText) findViewById(R.id.consumer_secret);
         mSaveButton = (Button) findViewById(R.id.save);
@@ -122,11 +123,13 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
         final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
         final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
+        final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
         final String consumerKey = parseString(mEditConsumerKey.getText());
         final String consumerSecret = parseString(mEditConsumerSecret.getText());
         outState.putString(Accounts.API_URL_FORMAT, apiUrlFormat);
         outState.putInt(Accounts.AUTH_TYPE, authType);
         outState.putBoolean(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
+        outState.putBoolean(Accounts.NO_VERSION_SUFFIX, noVersionSuffix);
         outState.putString(Accounts.CONSUMER_KEY, consumerKey);
         outState.putString(Accounts.CONSUMER_SECRET, consumerSecret);
         super.onSaveInstanceState(outState);
@@ -136,12 +139,14 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
         final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
         final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
+        final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
         final String consumerKey = parseString(mEditConsumerKey.getText());
         final String consumerSecret = parseString(mEditConsumerSecret.getText());
         final Intent intent = new Intent();
         intent.putExtra(Accounts.API_URL_FORMAT, apiUrlFormat);
         intent.putExtra(Accounts.AUTH_TYPE, authType);
         intent.putExtra(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
+        intent.putExtra(Accounts.NO_VERSION_SUFFIX, noVersionSuffix);
         intent.putExtra(Accounts.CONSUMER_KEY, consumerKey);
         intent.putExtra(Accounts.CONSUMER_SECRET, consumerSecret);
         setResult(RESULT_OK, intent);
@@ -155,13 +160,14 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
 
         String apiUrlFormat;
         int authType;
-        boolean sameOAuthSigningUrl;
+        boolean sameOAuthSigningUrl, noVersionSuffix;
         String consumerKey, consumerSecret;
 
         final SharedPreferences pref = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_REST_BASE_URL);
         final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean prefSameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
+        final boolean prefNoVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
         final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_2);
         final String prefConsumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_2);
         if (savedInstanceState != null) {
@@ -169,6 +175,8 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
             authType = savedInstanceState.getInt(Accounts.AUTH_TYPE, prefAuthType);
             sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL,
                     prefSameOAuthSigningUrl);
+            noVersionSuffix = savedInstanceState.getBoolean(Accounts.NO_VERSION_SUFFIX,
+                    prefNoVersionSuffix);
             consumerKey = trim(savedInstanceState.getString(Accounts.CONSUMER_KEY, prefConsumerKey));
             consumerSecret = trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret));
         } else {
@@ -177,6 +185,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
             apiUrlFormat = trim(extras.getString(Accounts.API_URL_FORMAT, prefApiUrlFormat));
             authType = extras.getInt(Accounts.AUTH_TYPE, prefAuthType);
             sameOAuthSigningUrl = extras.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL, prefSameOAuthSigningUrl);
+            noVersionSuffix = extras.getBoolean(Accounts.NO_VERSION_SUFFIX, prefNoVersionSuffix);
             consumerKey = trim(extras.getString(Accounts.CONSUMER_KEY, prefConsumerKey));
             consumerSecret = trim(extras.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret));
         }
@@ -188,6 +197,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
 
         mEditAPIUrlFormat.setText(apiUrlFormat);
         mEditSameOAuthSigningUrl.setChecked(sameOAuthSigningUrl);
+        mEditNoVersionSuffix.setChecked(noVersionSuffix);
         mEditConsumerKey.setText(consumerKey);
         mEditConsumerSecret.setText(consumerSecret);
 

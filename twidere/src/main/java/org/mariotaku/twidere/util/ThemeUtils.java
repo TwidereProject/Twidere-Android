@@ -35,10 +35,14 @@ import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import org.mariotaku.menucomponent.widget.MenuBar.MenuBarMenuInfo;
 import org.mariotaku.refreshnow.widget.RefreshNowConfig;
 import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConfig;
 import org.mariotaku.twidere.Constants;
@@ -112,6 +116,25 @@ public class ThemeUtils implements Constants {
     public static void applyThemeBackgroundAlphaToDrawable(final Context context, final Drawable d) {
         if (context == null || d == null) return;
         d.setAlpha(getUserThemeBackgroundAlpha(context));
+    }
+
+    public static void applyColorFilterToMenuIcon(Menu menu, int color, int popupColor, PorterDuff.Mode mode, int... excludedGroups) {
+        for (int i = 0, j = menu.size(); i < j; i++) {
+            final MenuItem item = menu.getItem(i);
+            final Drawable icon = item.getIcon();
+            final ContextMenuInfo info = item.getMenuInfo();
+            if (ArrayUtils.contains(excludedGroups, item.getGroupId())) {
+                icon.mutate().clearColorFilter();
+            } else if (info instanceof MenuBarMenuInfo) {
+                final boolean inPopup = ((MenuBarMenuInfo) info).isInPopup();
+                icon.mutate().setColorFilter(inPopup ? popupColor : color, mode);
+            } else {
+                icon.mutate().setColorFilter(color, mode);
+            }
+            if (item.hasSubMenu()) {
+                applyColorFilterToMenuIcon(item.getSubMenu(), color, popupColor, mode, excludedGroups);
+            }
+        }
     }
 
     public static IndicatorConfig buildRefreshIndicatorConfig(final Context context) {

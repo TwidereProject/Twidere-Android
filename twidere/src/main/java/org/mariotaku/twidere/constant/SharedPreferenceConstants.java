@@ -248,6 +248,8 @@ public interface SharedPreferenceConstants {
 	public static final String KEY_API_URL_FORMAT = "api_url_format";
 	@Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
 	public static final String KEY_SAME_OAUTH_SIGNING_URL = "same_oauth_signing_url";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    public static final String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
 	@Preference(type = INT, hasDefault = true, defaultInt = Accounts.AUTH_TYPE_OAUTH)
 	public static final String KEY_AUTH_TYPE = "auth_type";
 	@Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_KEY_2)

@@ -65,7 +65,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.refreshnow.widget.RefreshMode;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
@@ -98,6 +97,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.StatusTextView;
+import org.mariotaku.twidere.view.TwidereMenuBar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -156,7 +156,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     private boolean mFollowInfoDisplayed, mLocationInfoDisplayed;
     private boolean mStatusLoaderInitialized, mLocationLoaderInitialized;
     private boolean mFollowInfoLoaderInitialized;
-    ;
+
     private boolean mShouldScroll;
     private SharedPreferences mPreferences;
     private AsyncTwitterWrapper mTwitterWrapper;
@@ -171,7 +171,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     private Button mRetryButton;
     private View mMainContent, mFollowIndicator, mImagePreviewContainer, mLocationContainer, mLocationBackgroundView;
     private ColorLabelRelativeLayout mProfileView;
-    private MenuBar mMenuBar;
+    private TwidereMenuBar mMenuBar;
     private ProgressBar mDetailsLoadProgress, mFollowInfoProgress;
     private LinearLayout mImagePreviewGrid;
     private View mHeaderView;
@@ -577,7 +577,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         final View view = inflater.inflate(R.layout.fragment_details_page, null, false);
         mMainContent = view.findViewById(R.id.content);
         mDetailsLoadProgress = (ProgressBar) view.findViewById(R.id.details_load_progress);
-        mMenuBar = (MenuBar) view.findViewById(R.id.menu_bar);
+        mMenuBar = (TwidereMenuBar) view.findViewById(R.id.menu_bar);
         mDetailsContainer = (ExtendedFrameLayout) view.findViewById(R.id.details_container);
         mDetailsContainer.addView(super.onCreateView(inflater, container, savedInstanceState));
         mHeaderView = inflater.inflate(R.layout.header_status, null, false);

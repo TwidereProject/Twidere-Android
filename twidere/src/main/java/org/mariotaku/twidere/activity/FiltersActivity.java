@@ -61,10 +61,10 @@ import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeFilterdUserContentValues;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 
 public class FiltersActivity extends BaseSupportActivity implements TabListener, OnPageChangeListener {
@@ -204,7 +204,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
                 if (resultCode != RESULT_OK || !(filter instanceof FilteredUsersFragment) || !data.hasExtra(EXTRA_USER))
                     return;
                 final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
-                final ContentValues values = makeFilterdUserContentValues(user);
+                final ContentValues values = ContentValuesCreator.makeFilteredUserContentValues(user);
                 final ContentResolver resolver = getContentResolver();
                 resolver.delete(Filters.Users.CONTENT_URI, Where.equals(Filters.Users.USER_ID, user.id).getSQL(), null);
                 resolver.insert(Filters.Users.CONTENT_URI, values);

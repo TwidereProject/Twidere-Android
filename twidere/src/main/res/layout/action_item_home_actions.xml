@@ -3,11 +3,11 @@
 
 	<ProgressBar
 		android:id="@android:id/progress"
-		style="?android:attr/progressBarStyleLarge"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		style="?android:attr/progressBarStyle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
         android:layout_gravity="center"
-		android:layout_margin="@dimen/element_spacing_small"
+		android:layout_margin="@dimen/element_spacing_normal"
 		android:visibility="gone"/>
 
 	<ImageView
