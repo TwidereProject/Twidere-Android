@@ -64,7 +64,7 @@
 	<string name="pick_from_gallery">从图库中选取</string>
 	<string name="statuses">推文</string>
 	<string name="followers">关注者</string>
-	<string name="following">关注</string>
+	<string name="following">正在关注</string>
 	<string name="about">关于</string>
 	<string name="open_source_license">开源许可</string>
 	<string name="api">API</string>

@@ -59,7 +59,6 @@ import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
-import org.mariotaku.twidere.util.SwipebackActivityUtils.SwipebackScreenshotManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
@@ -96,7 +95,6 @@ public class TwidereApplication extends Application implements Constants, OnShar
     private DiskCache mDiskCache, mFullDiskCache;
     private MessagesManager mCroutonsManager;
     private SQLiteOpenHelper mSQLiteOpenHelper;
-    private SwipebackScreenshotManager mSwipebackScreenshotManager;
     private HostAddressResolver mResolver;
     private SQLiteDatabase mDatabase;
 
@@ -174,11 +172,6 @@ public class TwidereApplication extends Application implements Constants, OnShar
     public SQLiteOpenHelper getSQLiteOpenHelper() {
         if (mSQLiteOpenHelper != null) return mSQLiteOpenHelper;
         return mSQLiteOpenHelper = new TwidereSQLiteOpenHelper(this, DATABASES_NAME, DATABASES_VERSION);
-    }
-
-    public SwipebackScreenshotManager getSwipebackScreenshotManager() {
-        if (mSwipebackScreenshotManager != null) return mSwipebackScreenshotManager;
-        return mSwipebackScreenshotManager = new SwipebackScreenshotManager(this);
     }
 
     public AsyncTwitterWrapper getTwitterWrapper() {

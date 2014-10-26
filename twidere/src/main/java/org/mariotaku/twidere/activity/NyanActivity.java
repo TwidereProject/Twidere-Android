@@ -41,88 +41,88 @@ import org.mariotaku.twidere.util.NyanSurfaceHelper;
 
 public class NyanActivity extends Activity implements Constants, OnLongClickListener, OnSharedPreferenceChangeListener {
 
-	private SurfaceView mSurfaceView;
-	private SharedPreferences mPreferences;
-	private NyanSurfaceHelper mHelper;
+    private SurfaceView mSurfaceView;
+    private SharedPreferences mPreferences;
+    private NyanSurfaceHelper mHelper;
 
-	@Override
-	public void onContentChanged() {
-		super.onContentChanged();
-		mSurfaceView = (SurfaceView) findViewById(R.id.surface);
-	}
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        mSurfaceView = (SurfaceView) findViewById(R.id.surface);
+    }
 
-	@Override
-	public boolean onLongClick(final View v) {
-		Toast.makeText(this, R.string.nyan_sakamoto, Toast.LENGTH_SHORT).show();
-		return true;
-	}
+    @Override
+    public boolean onLongClick(final View v) {
+        Toast.makeText(this, R.string.nyan_sakamoto, Toast.LENGTH_SHORT).show();
+        return true;
+    }
 
-	@Override
-	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-		if (KEY_LIVE_WALLPAPER_SCALE.equals(key)) {
-			updateSurface();
-		}
-	}
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        if (KEY_LIVE_WALLPAPER_SCALE.equals(key)) {
+            updateSurface();
+        }
+    }
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-		mPreferences.registerOnSharedPreferenceChangeListener(this);
-		setContentView(R.layout.surface_view);
-		mSurfaceView.setOnLongClickListener(this);
-		final SurfaceHolder holder = mSurfaceView.getHolder();
-		mHelper = new NyanSurfaceHelper(this);
-		holder.addCallback(mHelper);
-		updateSurface();
-		enableWallpaperDaydream();
-	}
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        setContentView(R.layout.surface_view);
+        mSurfaceView.setOnLongClickListener(this);
+        final SurfaceHolder holder = mSurfaceView.getHolder();
+        mHelper = new NyanSurfaceHelper(this);
+        holder.addCallback(mHelper);
+        updateSurface();
+        enableWallpaperDaydream();
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		if (mHelper != null) {
-			mHelper.start();
-		}
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mHelper != null) {
+            mHelper.start();
+        }
+    }
 
-	@Override
-	protected void onStop() {
-		if (mHelper != null) {
-			mHelper.stop();
-		}
-		super.onStop();
-	}
+    @Override
+    protected void onStop() {
+        if (mHelper != null) {
+            mHelper.stop();
+        }
+        super.onStop();
+    }
 
-	private void enableWallpaperDaydream() {
-		final PackageManager pm = getPackageManager();
-		final ComponentName wallpaperComponent = new ComponentName(this, NyanWallpaperService.class);
-		final int wallpaperState = pm.getComponentEnabledSetting(wallpaperComponent);
-		boolean showToast = false;
-		if (wallpaperState != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-			pm.setComponentEnabledSetting(wallpaperComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-					PackageManager.DONT_KILL_APP);
-			showToast = true;
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			final ComponentName daydreamComponent = new ComponentName(this, NyanDaydreamService.class);
-			final int daydreamState = pm.getComponentEnabledSetting(daydreamComponent);
-			if (daydreamState != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-				pm.setComponentEnabledSetting(daydreamComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-						PackageManager.DONT_KILL_APP);
-				showToast = true;
-			}
-		}
-		if (showToast) {
-			Toast.makeText(this, R.string.livewp_daydream_enabled_message, Toast.LENGTH_SHORT).show();
-		}
-	}
+    private void enableWallpaperDaydream() {
+        final PackageManager pm = getPackageManager();
+        final ComponentName wallpaperComponent = new ComponentName(this, NyanWallpaperService.class);
+        final int wallpaperState = pm.getComponentEnabledSetting(wallpaperComponent);
+        boolean showToast = false;
+        if (wallpaperState != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            pm.setComponentEnabledSetting(wallpaperComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+            showToast = true;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            final ComponentName daydreamComponent = new ComponentName(this, NyanDaydreamService.class);
+            final int daydreamState = pm.getComponentEnabledSetting(daydreamComponent);
+            if (daydreamState != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+                pm.setComponentEnabledSetting(daydreamComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP);
+                showToast = true;
+            }
+        }
+        if (showToast) {
+            Toast.makeText(this, R.string.livewp_daydream_enabled_message, Toast.LENGTH_SHORT).show();
+        }
+    }
 
-	private void updateSurface() {
-		if (mPreferences == null) return;
-		final Resources res = getResources();
-		final int def = res.getInteger(R.integer.default_live_wallpaper_scale);
-		mHelper.setScale(mPreferences.getInt(KEY_LIVE_WALLPAPER_SCALE, def));
-	}
+    private void updateSurface() {
+        if (mPreferences == null) return;
+        final Resources res = getResources();
+        final int def = res.getInteger(R.integer.default_live_wallpaper_scale);
+        mHelper.setScale(mPreferences.getInt(KEY_LIVE_WALLPAPER_SCALE, def));
+    }
 
 }

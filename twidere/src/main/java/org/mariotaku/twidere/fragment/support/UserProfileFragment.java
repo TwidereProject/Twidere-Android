@@ -63,7 +63,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
@@ -619,7 +618,7 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
-                openTweetSearch(getActivity(), user.account_id, link);
+                openTweetSearch(getActivity(), user.account_id, "#" + link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LINK: {

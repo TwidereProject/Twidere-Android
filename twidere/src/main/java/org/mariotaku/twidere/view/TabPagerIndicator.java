@@ -3,6 +3,7 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     public TabPagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        ViewCompat.setOverScrollMode(this, ViewCompat.OVER_SCROLL_NEVER);
+        setHorizontalScrollBarEnabled(false);
+        setVerticalScrollBarEnabled(false);
         setLayoutManager(new TabLayoutManager(this));
         mIndicatorAdapter = new TabPagerIndicatorAdapter(this);
         setAdapter(mIndicatorAdapter);

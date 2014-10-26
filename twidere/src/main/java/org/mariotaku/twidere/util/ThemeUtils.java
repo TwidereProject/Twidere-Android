@@ -123,13 +123,15 @@ public class ThemeUtils implements Constants {
             final MenuItem item = menu.getItem(i);
             final Drawable icon = item.getIcon();
             final ContextMenuInfo info = item.getMenuInfo();
-            if (ArrayUtils.contains(excludedGroups, item.getGroupId())) {
-                icon.mutate().clearColorFilter();
-            } else if (info instanceof MenuBarMenuInfo) {
-                final boolean inPopup = ((MenuBarMenuInfo) info).isInPopup();
-                icon.mutate().setColorFilter(inPopup ? popupColor : color, mode);
-            } else {
-                icon.mutate().setColorFilter(color, mode);
+            if (icon != null) {
+                if (ArrayUtils.contains(excludedGroups, item.getGroupId())) {
+                    icon.mutate().clearColorFilter();
+                } else if (info instanceof MenuBarMenuInfo) {
+                    final boolean inPopup = ((MenuBarMenuInfo) info).isInPopup();
+                    icon.mutate().setColorFilter(inPopup ? popupColor : color, mode);
+                } else {
+                    icon.mutate().setColorFilter(color, mode);
+                }
             }
             if (item.hasSubMenu()) {
                 applyColorFilterToMenuIcon(item.getSubMenu(), color, popupColor, mode, excludedGroups);
@@ -191,9 +193,14 @@ public class ThemeUtils implements Constants {
     }
 
     public static Context getActionBarContext(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.actionBarWidgetTheme});
-        final int resId = a.getResourceId(0, 0);
-        a.recycle();
+        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.actionBarTheme,
+                android.R.attr.actionBarWidgetTheme});
+        final int resId;
+        try {
+            resId = a.hasValue(0) ? a.getResourceId(0, 0) : a.getResourceId(1, 0);
+        } finally {
+            a.recycle();
+        }
         if (resId == 0) return new TwidereContextWrapper(context);
         return new TwidereContextThemeWrapper(context, resId, getUserThemeColor(context));
     }

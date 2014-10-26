@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements Constants {
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }
-//        ThemeUtils.overrideActivityOpenAnimation(this);
+        ThemeUtils.overrideActivityOpenAnimation(this);
         super.onCreate(savedInstanceState);
         final Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

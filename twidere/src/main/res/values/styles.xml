@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Widget.Twidere.ActionBar.Colored" parent="android:Widget.Holo.Light.ActionBar.Solid">
+    <style name="Widget.Twidere.ActionBar.Colored" parent="android:Widget.DeviceDefault.Light.ActionBar.Solid">
         <item name="android:background">@drawable/ab_twidere_solid_color_holo</item>
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
-    <style name="Widget.Twidere.ActionBar.Colored.Inverse" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.Twidere.ActionBar.Colored.Inverse" parent="android:Widget.DeviceDefault.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_twidere_solid_color_holo</item>
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
-    <style name="Widget.Twidere.ActionBar.Dark" parent="android:Widget.Holo.ActionBar.Solid">
+    <style name="Widget.Twidere.ActionBar.Dark" parent="android:Widget.DeviceDefault.ActionBar.Solid">
         <item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
-    <style name="Widget.Twidere.ActionBar.Light" parent="android:Widget.Holo.Light.ActionBar.Solid">
+    <style name="Widget.Twidere.ActionBar.Light" parent="android:Widget.DeviceDefault.Light.ActionBar.Solid">
         <item name="android:background">@drawable/ab_twidere_solid_light_holo</item>
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
-    <style name="Widget.Twidere.ActionBar.Light.DarkActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.Twidere.ActionBar.Light.DarkActionBar" parent="android:Widget.DeviceDefault.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
-    <style name="Widget.Twidere.Viewer.ActionBar" parent="android:Widget.Holo.ActionBar">
+    <style name="Widget.Twidere.Viewer.ActionBar" parent="android:Widget.DeviceDefault.ActionBar">
         <item name="android:background">#80000000</item>
         <item name="android:backgroundSplit">#80000000</item>
     </style>
 
-    <style name="Widget.Twidere.ImageButton.Borderless" parent="android:Widget.Holo.ImageButton">
+    <style name="Widget.Twidere.ImageButton.Borderless" parent="android:Widget.DeviceDefault.ImageButton">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.Light.ImageButton.Borderless" parent="android:Widget.Holo.Light.ImageButton">
+    <style name="Widget.Twidere.Light.ImageButton.Borderless" parent="android:Widget.DeviceDefault.Light.ImageButton">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.SelectableView" parent="android:Widget.Holo">
+    <style name="Widget.Twidere.SelectableView" parent="android:Widget.DeviceDefault">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.Light.SelectableView" parent="android:Widget.Holo.Light">
+    <style name="Widget.Twidere.Light.SelectableView" parent="android:Widget.DeviceDefault.Light">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.ActionButton.Colored" parent="android:Widget.Holo.Light.ActionButton">
+    <style name="Widget.Twidere.ActionButton.Colored" parent="android:Widget.DeviceDefault.Light.ActionButton">
         <item name="android:background">?android:actionBarItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.ActionButton.Overflow.Colored" parent="android:Widget.Holo.Light.ActionButton.Overflow">
+    <style name="Widget.Twidere.ActionButton.Overflow.Colored" parent="android:Widget.DeviceDefault.Light.ActionButton.Overflow">
         <item name="android:background">?android:actionBarItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.ActionButton.Colored.DarkActionBar" parent="android:Widget.Holo.ActionButton">
+    <style name="Widget.Twidere.ActionButton.Colored.DarkActionBar" parent="android:Widget.DeviceDefault.ActionButton">
         <item name="android:background">?android:actionBarItemBackground</item>
     </style>
 
-    <style name="Widget.Twidere.ActionButton.Overflow.Colored.DarkActionBar" parent="android:Widget.Holo.ActionButton.Overflow">
+    <style name="Widget.Twidere.ActionButton.Overflow.Colored.DarkActionBar" parent="android:Widget.DeviceDefault.ActionButton.Overflow">
         <item name="android:background">?android:actionBarItemBackground</item>
     </style>
 
@@ -84,7 +84,7 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="Widget.TabPageIndicator.TabItem.TextView" parent="@android:style/Widget.Holo.TextView">
+    <style name="Widget.TabPageIndicator.TabItem.TextView" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:textAppearance">@style/TextAppearance.TabPageIndicator</item>
         <item name="android:textColor">#fff3f3f3</item>
         <item name="android:textStyle">bold</item>
@@ -118,7 +118,7 @@
         <item name="scrimAlpha">0.75</item>
     </style>
 
-    <style name="Widget.CardItemView" parent="android:Widget.Holo">
+    <style name="Widget.CardItemView" parent="android:Widget.DeviceDefault">
         <item name="cardBackground">?cardItemBackground</item>
         <item name="cardBackgroundAlpha">50%p</item>
         <item name="cardSelector">?android:selectableItemBackground</item>
@@ -130,7 +130,7 @@
         <item name="cardGapTextSize">18sp</item>
     </style>
 
-    <style name="Widget.CardItemView.Light" parent="android:Widget.Holo">
+    <style name="Widget.CardItemView.Light" parent="android:Widget.DeviceDefault">
         <item name="cardBackground">?cardItemBackground</item>
         <item name="cardBackgroundAlpha">50%p</item>
         <item name="cardSelector">?android:selectableItemBackground</item>
@@ -142,7 +142,7 @@
         <item name="cardGapTextSize">18sp</item>
     </style>
 
-    <style name="Widget.StaggeredGridView" parent="android:Widget.Holo">
+    <style name="Widget.StaggeredGridView" parent="android:Widget.DeviceDefault">
         <item name="column_count_portrait">@integer/staggered_grid_columns_port</item>
         <item name="column_count_landscape">@integer/staggered_grid_columns_land</item>
     </style>

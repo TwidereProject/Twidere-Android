@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -87,7 +86,6 @@ import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.HotKeyHandler;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
-import org.mariotaku.twidere.util.SwipebackActivityUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UnreadCountUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -271,7 +269,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
-        final int height = mTabIndicator.getHeight();
+        final int height = mTabIndicator != null ? mTabIndicator.getHeight() : 0;
         insets.top = height != 0 ? height : Utils.getActionBarHeight(this);
         return true;
     }
@@ -386,11 +384,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
                     title = R.string.compose;
                 }
             }
-            final ActionBar actionBar = getActionBar();
             final MenuItem actionsItem = menu.findItem(MENU_ACTIONS);
-            if (actionBar != null) {
-                actionsItem.setIcon(actionBar.getThemedContext().getResources().getDrawable(icon));
-            }
+            actionsItem.setIcon(icon);
             actionsItem.setTitle(title);
         }
         return true;
@@ -502,13 +497,11 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mHotKeyHandler = new HotKeyHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
-        final Resources res = getResources();
-        final boolean displayIcon = res.getBoolean(R.bool.home_display_icon);
         final long[] accountIds = getAccountIds(this);
         if (accountIds.length == 0) {
-            final Intent sign_in_intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
-            sign_in_intent.setClass(this, SignInActivity.class);
-            startActivity(sign_in_intent);
+            final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
+            signInIntent.setClass(this, SignInActivity.class);
+            startActivity(signInIntent);
             finish();
             return;
         } else {
@@ -519,15 +512,15 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             finish();
             return;
         }
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
         setContentView(R.layout.activity_home);
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONCREATE));
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         mTabDisplayOption = getTabDisplayOptionInt(this);
         final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
 
         ThemeUtils.applyBackground(mTabIndicator);
         mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, 1);
@@ -567,17 +560,21 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mPagerPosition = Float.NaN;
         final int themeColor = getThemeColor(), contrastColor = Utils.getContrastYIQ(themeColor, 192);
         final int themeResId = getCurrentThemeResourceId();
+        final boolean isTransparent = ThemeUtils.isTransparentBackground(themeResId);
+        final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         if (ThemeUtils.isColoredActionBar(themeResId)) {
             ViewAccessor.setBackground(mTabIndicator, new ColorDrawable(themeColor));
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
         } else {
-            ViewAccessor.setBackground(mTabIndicator, ThemeUtils.getActionBarBackground(this, themeResId));
+            ViewAccessor.setBackground(mTabIndicator, ThemeUtils.getActionBarBackground(this, false));
             mTabIndicator.setStripColor(themeColor);
             mTabIndicator.setIconColor(ThemeUtils.isLightActionBar(themeResId) ? Color.BLACK : Color.WHITE);
         }
+        mTabIndicator.setAlpha(actionBarAlpha / 255f);
         if (mActionsButton instanceof IHomeActionButton) {
             ((IHomeActionButton) mActionsButton).setColor(themeColor);
+            mActionsButton.setAlpha(actionBarAlpha / 255f);
         }
         ViewAccessor.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
     }
@@ -694,7 +691,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         final Intent extraIntent = intent.getParcelableExtra(EXTRA_EXTRA_INTENT);
         if (extraIntent != null && firstCreate) {
             extraIntent.setExtrasClassLoader(getClassLoader());
-            SwipebackActivityUtils.startSwipebackActivity(this, extraIntent);
+            startActivity(extraIntent);
         }
         return initialTab;
     }
@@ -781,11 +778,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         final Window window = getWindow();
         final Drawable windowBackground = ThemeUtils.getWindowBackground(this, getCurrentThemeResourceId());
         ViewAccessor.setBackground(mSlidingMenu.getContent(), windowBackground);
-        if (isTransparentBackground) {
-            window.setBackgroundDrawable(new EmptyDrawable());
-        } else {
-            window.setBackgroundDrawable(null);
-        }
+        window.setBackgroundDrawable(new EmptyDrawable());
     }
 
     private void showDataProfilingRequest() {

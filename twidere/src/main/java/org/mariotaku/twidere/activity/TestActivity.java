@@ -19,19 +19,26 @@
 
 package org.mariotaku.twidere.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 
 public class TestActivity extends Activity implements Constants {
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 		startActivity(new Intent(this, SettingsWizardActivity.class));
 		finish();
-	}
+    }
 
 }

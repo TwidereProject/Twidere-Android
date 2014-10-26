@@ -45,9 +45,5 @@
 		android:defaultValue="false"
 		android:key="long_click_to_open_menu"
 		android:title="@string/long_click_to_open_menu"/>
-	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-		android:defaultValue="false"
-		android:key="swipe_back"
-		android:title="@string/swipe_back"/>
 
 </PreferenceScreen>
