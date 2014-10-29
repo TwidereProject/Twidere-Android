@@ -3,7 +3,7 @@
 
 	<item
 		android:id="@+id/import_emport_submenu"
-		android:icon="@drawable/ic_action_save"
+		android:icon="@drawable/ic_action_import_export"
 		android:showAsAction="always|withText"
 		android:title="@string/import_export">
 		<menu>

@@ -12,11 +12,31 @@
         android:showAsAction="ifRoom"
         android:title="@string/add_image"/>
     <item
-        android:id="@id/add_location"
-        android:checkable="true"
-        android:icon="@drawable/ic_action_mylocation"
+        android:id="@+id/medias_menu"
+        android:icon="@drawable/ic_action_gallery"
         android:showAsAction="ifRoom"
-        android:title="@string/location"/>
+        android:title="@string/medias"
+        android:visible="false">
+        <menu>
+            <item
+                android:id="@+id/take_photo_sub_item"
+                android:icon="@drawable/ic_action_camera"
+                android:title="@string/take_photo"/>
+            <item
+                android:id="@+id/add_image_sub_item"
+                android:icon="@drawable/ic_action_gallery"
+                android:title="@string/add_image"/>
+            <item
+                android:id="@+id/edit_medias"
+                android:icon="@drawable/ic_action_edit"
+                android:title="@string/edit_medias"/>
+            <item
+                android:id="@id/toggle_sensitive"
+                android:checkable="true"
+                android:icon="@drawable/ic_action_warning"
+                android:title="@string/mark_as_sensitive"/>
+        </menu>
+    </item>
     <item
         android:id="@id/view"
         android:icon="@drawable/ic_action_reply"
@@ -24,14 +44,15 @@
         android:title="@string/original_status"
         android:visible="false"/>
     <item
+        android:id="@id/add_location"
+        android:checkable="true"
+        android:icon="@drawable/ic_action_my_location"
+        android:showAsAction="ifRoom"
+        android:title="@string/location"/>
+    <item
         android:id="@id/drafts"
         android:icon="@drawable/ic_action_draft"
         android:showAsAction="ifRoom"
         android:title="@string/drafts"/>
-    <item
-        android:id="@id/toggle_sensitive"
-        android:checkable="true"
-        android:icon="@drawable/ic_action_warning"
-        android:title="@string/mark_as_sensitive"/>
 
 </menu>

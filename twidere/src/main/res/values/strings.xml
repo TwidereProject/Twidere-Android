@@ -647,5 +647,7 @@
     <string name="api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ will be replaced to https://api.twitter.com/.</string>
     <string name="no_version_suffix">No version suffix</string>
     <string name="inverse_selection">Inverse selection</string>
+    <string name="edit_medias">Edit medias</string>
+    <string name="medias">Medias</string>
 
 </resources>

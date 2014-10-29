@@ -103,7 +103,7 @@ public class CustomTabUtils implements Constants {
 		if (Utils.hasStaggeredTimeline()) {
 			CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_STAGGERED_HOME_TIMELINE, new CustomTabConfiguration(
 					StaggeredHomeTimelineFragment.class, R.string.staggered_home_timeline,
-					R.drawable.ic_action_staggered, CustomTabConfiguration.ACCOUNT_OPTIONAL,
+					R.drawable.ic_action_view_quilt, CustomTabConfiguration.ACCOUNT_OPTIONAL,
 					CustomTabConfiguration.FIELD_TYPE_NONE, 11, false));
 		}
 
@@ -116,7 +116,7 @@ public class CustomTabUtils implements Constants {
 		CUSTOM_TABS_ICON_NAME_MAP.put("message", R.drawable.ic_action_message);
 		CUSTOM_TABS_ICON_NAME_MAP.put("quote", R.drawable.ic_action_quote);
 		CUSTOM_TABS_ICON_NAME_MAP.put("search", R.drawable.ic_action_search);
-		CUSTOM_TABS_ICON_NAME_MAP.put("staggered", R.drawable.ic_action_staggered);
+		CUSTOM_TABS_ICON_NAME_MAP.put("staggered", R.drawable.ic_action_view_quilt);
 		CUSTOM_TABS_ICON_NAME_MAP.put("star", R.drawable.ic_action_star);
 		CUSTOM_TABS_ICON_NAME_MAP.put("trends", R.drawable.ic_action_trends);
 		CUSTOM_TABS_ICON_NAME_MAP.put("twidere", R.drawable.ic_action_twidere);

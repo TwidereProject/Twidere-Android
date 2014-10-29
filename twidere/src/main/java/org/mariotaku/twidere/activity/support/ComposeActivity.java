@@ -100,6 +100,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -222,11 +223,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     public boolean handleMenuItem(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_TAKE_PHOTO: {
+            case MENU_TAKE_PHOTO:
+            case R.id.take_photo_sub_item: {
                 takePhoto();
                 break;
             }
-            case MENU_ADD_IMAGE: {
+            case MENU_ADD_IMAGE:
+            case R.id.add_image_sub_item: {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || !openDocument()) {
                     pickImage();
                 }
@@ -647,7 +650,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         final Intent composeExtensionsIntent = new Intent(INTENT_ACTION_EXTENSION_COMPOSE);
         addIntentToMenu(this, menu, composeExtensionsIntent, MENU_GROUP_COMPOSE_EXTENSION);
         final Intent imageExtensionsIntent = new Intent(INTENT_ACTION_EXTENSION_EDIT_IMAGE);
-        addIntentToMenu(this, menu, imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION);
+        final MenuItem mediasMenuItem = menu.findItem(R.id.medias_menu);
+        if (mediasMenuItem != null && mediasMenuItem.hasSubMenu()) {
+            addIntentToMenu(this, mediasMenuItem.getSubMenu(), imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION);
+        }
         setMenu();
         updateAccountSelection();
         updateMediasPreview();
@@ -881,6 +887,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         return !mMediaPreviewAdapter.isEmpty();
     }
 
+    private int getMediaCount() {
+        return mMediaPreviewAdapter.getCount();
+    }
+
     private boolean isQuotingProtectedStatus() {
         if (INTENT_ACTION_QUOTE.equals(getIntent().getAction()) && mInReplyToStatus != null)
             return mInReplyToStatus.user_is_protected && mInReplyToStatus.account_id != mInReplyToStatus.user_id;
@@ -936,29 +946,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         // iconAddImage.clearColorFilter();
         // }
         // }
-        final MenuItem itemAttachLocation = menu.findItem(MENU_ADD_LOCATION);
-        if (itemAttachLocation != null) {
-            final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-            if (attachLocation && getLocation()) {
-                itemAttachLocation.setChecked(true);
-            } else {
-                setProgressVisibility(false);
-                mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, false).apply();
-                itemAttachLocation.setChecked(false);
-            }
-        }
-        final MenuItem viewItem = menu.findItem(MENU_VIEW);
-        if (viewItem != null) {
-            viewItem.setVisible(mInReplyToStatus != null);
-        }
-        menu.setGroupEnabled(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
-        menu.setGroupVisible(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
-        final MenuItem itemToggleSensitive = menu.findItem(MENU_TOGGLE_SENSITIVE);
-        if (itemToggleSensitive != null) {
-            itemToggleSensitive.setVisible(hasMedia);
-            itemToggleSensitive.setEnabled(hasMedia);
-            itemToggleSensitive.setChecked(hasMedia && mIsPossiblySensitive);
-        }
+
     }
 
     private boolean setComposeTitle(final Intent intent) {
@@ -995,8 +983,43 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     private void setMenu() {
         if (mMenuBar == null) return;
-        final Menu bottomMenu = mMenuBar.getMenu();
-        setCommonMenu(bottomMenu);
+        final Menu menu = mMenuBar.getMenu();
+        final MenuItem itemAttachLocation = menu.findItem(MENU_ADD_LOCATION);
+        if (itemAttachLocation != null) {
+            final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+            if (attachLocation && getLocation()) {
+                itemAttachLocation.setChecked(true);
+            } else {
+                setProgressVisibility(false);
+                mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, false).apply();
+                itemAttachLocation.setChecked(false);
+            }
+        }
+        final MenuItem viewItem = menu.findItem(MENU_VIEW);
+        if (viewItem != null) {
+            viewItem.setVisible(mInReplyToStatus != null);
+        }
+        final boolean hasMedia = hasMedia(), hasInReplyTo = mInReplyToStatus != null;
+
+        /*
+         * No media & Not reply: [Take photo][Add image][Attach location][Drafts]
+         * Has media & Not reply: [Take photo][Medias menu][Attach location][Drafts]
+         * Is reply: [Medias menu][View status][Attach location][Drafts]
+         */
+        Utils.setMenuItemAvailability(menu, MENU_TAKE_PHOTO, !hasInReplyTo);
+        Utils.setMenuItemAvailability(menu, R.id.take_photo_sub_item, hasInReplyTo);
+        Utils.setMenuItemAvailability(menu, MENU_ADD_IMAGE, !hasMedia && !hasInReplyTo);
+        Utils.setMenuItemAvailability(menu, MENU_VIEW, hasInReplyTo);
+        Utils.setMenuItemAvailability(menu, R.id.medias_menu, hasMedia || hasInReplyTo);
+        Utils.setMenuItemAvailability(menu, MENU_TOGGLE_SENSITIVE, hasMedia);
+        Utils.setMenuItemAvailability(menu, MENU_EDIT_MEDIAS, hasMedia);
+
+        menu.setGroupEnabled(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
+        menu.setGroupVisible(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
+        final MenuItem itemToggleSensitive = menu.findItem(MENU_TOGGLE_SENSITIVE);
+        if (itemToggleSensitive != null) {
+            itemToggleSensitive.setChecked(hasMedia && mIsPossiblySensitive);
+        }
         mMenuBar.show();
     }
 

@@ -13,7 +13,7 @@
         android:title="@string/edit_api" />
     <item
         android:id="@id/settings"
-        android:icon="@drawable/ic_action_preferences"
+        android:icon="@drawable/ic_action_settings"
         android:showAsAction="always"
         android:title="@string/settings" />
 </menu>

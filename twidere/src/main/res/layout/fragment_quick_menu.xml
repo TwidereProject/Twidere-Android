@@ -51,7 +51,7 @@
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/customize"
                 android:text="@string/notifications"
-                android:src="@drawable/ic_action_preferences" />
+                android:src="@drawable/ic_action_settings" />
         </LinearLayout>
 
         <FrameLayout
