@@ -37,10 +37,7 @@ public class ThemedEditText extends EditText {
 
 	public ThemedEditText(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
-		if (!isInEditMode()) {
-			setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
-			setHighlightColor(ThemeUtils.getUserHighlightColor(context));
-		}
+        ThemeUtils.initTextView(this);
 	}
 
 }

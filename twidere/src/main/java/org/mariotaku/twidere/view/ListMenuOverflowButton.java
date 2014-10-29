@@ -46,7 +46,7 @@ public class ListMenuOverflowButton extends ImageView {
 	public ListMenuOverflowButton(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
 		setScaleType(ScaleType.CENTER_INSIDE);
-		mHighlightColor = isInEditMode() ? 0 : ThemeUtils.getUserThemeColor(context);
+		mHighlightColor = isInEditMode() ? 0 : ThemeUtils.getUserAccentColor(context);
 		mRect = new Rect();
 		final TypedArray a = context.obtainStyledAttributes(attrs, new int[] { android.R.attr.src });
 		if (!a.hasValue(0)) {

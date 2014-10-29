@@ -124,7 +124,7 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.layout_link_handler);
+        setContentView(R.layout.activity_content_fragment);
         setProgressBarIndeterminateVisibility(false);
         if (data == null || !showFragment(data)) {
             finish();

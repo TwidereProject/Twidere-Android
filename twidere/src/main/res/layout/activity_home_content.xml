@@ -11,8 +11,6 @@
 
     <include layout="@layout/empty_tab_hint"/>
 
-    <include layout="@layout/layout_home_actions_button"/>
-
     <LinearLayout
         android:id="@+id/tabs_container"
         android:layout_width="match_parent"
@@ -34,4 +32,6 @@
             android:layout_weight="1"/>
 
     </LinearLayout>
+
+    <include layout="@layout/layout_home_actions_button"/>
 </FrameLayout>

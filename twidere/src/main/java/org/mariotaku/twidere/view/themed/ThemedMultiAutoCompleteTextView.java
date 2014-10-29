@@ -37,10 +37,7 @@ public class ThemedMultiAutoCompleteTextView extends MultiAutoCompleteTextView {
 
 	public ThemedMultiAutoCompleteTextView(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
-		if (!isInEditMode()) {
-			setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
-			setHighlightColor(ThemeUtils.getUserHighlightColor(context));
-		}
+        ThemeUtils.initTextView(this);
 	}
 
 }

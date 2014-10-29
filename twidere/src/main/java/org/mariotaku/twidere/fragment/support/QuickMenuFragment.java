@@ -112,7 +112,7 @@ public class QuickMenuFragment extends BaseSupportFragment {
         } else {
             themeResource = ThemeUtils.getDrawerThemeResource(currentThemeResource);
         }
-        final int accentColor = ThemeUtils.getUserThemeColor(context);
+        final int accentColor = ThemeUtils.getUserAccentColor(context);
         return mThemedContext = new TwidereContextThemeWrapper(context, themeResource, accentColor);
     }
 

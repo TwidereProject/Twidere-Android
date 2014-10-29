@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<ProgressBar
-		android:id="@android:id/progress"
-		style="?android:attr/progressBarStyle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_gravity="center"
-		android:layout_margin="@dimen/element_spacing_normal"
-		android:visibility="gone"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:selectableItemBackground"
+        android:duplicateParentState="true"/>
 
-	<ImageView
-		android:id="@android:id/icon"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+    <ProgressBar
+        android:id="@android:id/progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-		android:layout_margin="@dimen/element_spacing_normal"
-		android:contentDescription="@string/compose"
-		android:scaleType="centerInside"/>
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:contentDescription="@string/compose"
+        android:scaleType="centerInside"/>
 
 </merge>

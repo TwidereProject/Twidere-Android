@@ -129,17 +129,25 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         mIndicatorAdapter.setIconColor(color);
     }
 
+    public Context getItemContext() {
+        return mIndicatorAdapter.getItemContext();
+    }
+
+    public void setItemContext(Context context) {
+        mIndicatorAdapter.setItemContext(context);
+    }
+
     private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> implements OnClickListener, OnLongClickListener {
 
         private final TabPagerIndicator mIndicator;
-        private final LayoutInflater mInflater;
+        private Context mItemContext;
+        private LayoutInflater mInflater;
 
         private TabProvider mTabProvider;
         private int mStripColor, mIconColor;
 
         public TabPagerIndicatorAdapter(TabPagerIndicator indicator) {
             mIndicator = indicator;
-            mInflater = LayoutInflater.from(indicator.getContext());
         }
 
         @Override
@@ -196,6 +204,15 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         public void setIconColor(int color) {
             mIconColor = color;
             notifyDataSetChanged();
+        }
+
+        public void setItemContext(Context itemContext) {
+            mItemContext = itemContext;
+            mInflater = LayoutInflater.from(itemContext);
+        }
+
+        public Context getItemContext() {
+            return mItemContext;
         }
     }
 

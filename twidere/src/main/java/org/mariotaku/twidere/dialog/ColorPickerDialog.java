@@ -30,173 +30,185 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.scvngr.levelup.views.gallery.AdapterView;
-import com.scvngr.levelup.views.gallery.AdapterView.OnItemClickListener;
-import com.scvngr.levelup.views.gallery.Gallery;
-
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.view.ColorPickerView;
 import org.mariotaku.twidere.view.ColorPickerView.OnColorChangedListener;
 import org.mariotaku.twidere.view.ForegroundColorView;
 
-public final class ColorPickerDialog extends AlertDialog implements OnItemClickListener, OnColorChangedListener,
-		Constants {
+public final class ColorPickerDialog extends AlertDialog implements Constants, OnColorChangedListener {
 
-	private final static int[] COLORS = { HOLO_RED_DARK, HOLO_RED_LIGHT, HOLO_ORANGE_DARK, HOLO_ORANGE_LIGHT,
-			HOLO_GREEN_LIGHT, HOLO_GREEN_DARK, HOLO_BLUE_LIGHT, HOLO_BLUE_DARK, HOLO_PURPLE_DARK, HOLO_PURPLE_LIGHT,
-			Color.WHITE };
+    private final static int[] COLORS = {HOLO_RED_DARK, HOLO_RED_LIGHT, HOLO_ORANGE_DARK, HOLO_ORANGE_LIGHT,
+            HOLO_GREEN_LIGHT, HOLO_GREEN_DARK, HOLO_BLUE_LIGHT, HOLO_BLUE_DARK, HOLO_PURPLE_DARK, HOLO_PURPLE_LIGHT,
+            Color.WHITE};
 
-	private final ColorsAdapter mColorsAdapter;
+    private final ColorsAdapter mColorsAdapter;
 
-	private ColorPickerView mColorPicker;
-	private Gallery mColorPresets;
+    private ColorPickerView mColorPicker;
+    private RecyclerView mColorPresets;
 
-	private final Resources mResources;
+    private final Resources mResources;
 
-	private final Bitmap mTempBitmap;
-	private final Canvas mCanvas;
+    private final Bitmap mTempBitmap;
+    private final Canvas mCanvas;
 
-	private final int mIconWidth, mIconHeight;
-	private final int mRectrangleSize, mNumRectanglesHorizontal, mNumRectanglesVertical;
+    private final int mIconWidth, mIconHeight;
+    private final int mRectrangleSize, mNumRectanglesHorizontal, mNumRectanglesVertical;
 
-	public ColorPickerDialog(final Context context, final int initialColor, final boolean showAlphaSlider) {
-		super(context);
-		mColorsAdapter = new ColorsAdapter(context);
-		mResources = context.getResources();
-		final float density = mResources.getDisplayMetrics().density;
-		mIconWidth = (int) (32 * density);
-		mIconHeight = (int) (32 * density);
-		mRectrangleSize = (int) (density * 5);
-		mNumRectanglesHorizontal = (int) Math.ceil(mIconWidth / mRectrangleSize);
-		mNumRectanglesVertical = (int) Math.ceil(mIconHeight / mRectrangleSize);
-		mTempBitmap = Bitmap.createBitmap(mIconWidth, mIconHeight, Config.ARGB_8888);
-		mCanvas = new Canvas(mTempBitmap);
-		init(context, initialColor, showAlphaSlider);
-		initColors();
-		mColorsAdapter.setCurrentColor(initialColor);
-	}
+    public ColorPickerDialog(final Context context, final int initialColor, final boolean showAlphaSlider) {
+        super(context);
+        mColorsAdapter = new ColorsAdapter(context);
+        mResources = context.getResources();
+        final float density = mResources.getDisplayMetrics().density;
+        mIconWidth = (int) (32 * density);
+        mIconHeight = (int) (32 * density);
+        mRectrangleSize = (int) (density * 5);
+        mNumRectanglesHorizontal = (int) Math.ceil(mIconWidth / mRectrangleSize);
+        mNumRectanglesVertical = (int) Math.ceil(mIconHeight / mRectrangleSize);
+        mTempBitmap = Bitmap.createBitmap(mIconWidth, mIconHeight, Config.ARGB_8888);
+        mCanvas = new Canvas(mTempBitmap);
+        init(context, initialColor, showAlphaSlider);
+        initColors();
+        mColorsAdapter.setCurrentColor(initialColor);
+    }
 
-	public int getColor() {
-		return mColorPicker.getColor();
-	}
+    public int getColor() {
+        return mColorPicker.getColor();
+    }
 
-	@Override
-	public void onColorChanged(final int color) {
-		mColorsAdapter.setCurrentColor(color);
-		updateColorPreviewBitmap(color);
-		setIcon(new BitmapDrawable(mResources, mTempBitmap));
-	}
+    @Override
+    public void onColorChanged(final int color) {
+        mColorsAdapter.setCurrentColor(color);
+        updateColorPreviewBitmap(color);
+        setIcon(new BitmapDrawable(mResources, mTempBitmap));
+    }
 
-	@Override
-	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-		final int color = mColorsAdapter.getItem(position);
-		if (mColorPicker == null) return;
-		mColorPicker.setColor(color, true);
-	}
+//    @Override
+//    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+//        final int color = mColorsAdapter.getItem(position);
+//        if (mColorPicker == null) return;
+//        mColorPicker.setColor(color, true);
+//    }
 
-	public final void setAlphaSliderVisible(final boolean visible) {
-		mColorPicker.setAlphaSliderVisible(visible);
-	}
+    public final void setAlphaSliderVisible(final boolean visible) {
+        mColorPicker.setAlphaSliderVisible(visible);
+    }
 
-	public final void setColor(final int color) {
-		mColorPicker.setColor(color);
-	}
+    public final void setColor(final int color) {
+        mColorPicker.setColor(color);
+    }
 
-	public final void setColor(final int color, final boolean callback) {
-		mColorPicker.setColor(color, callback);
-	}
+    public final void setColor(final int color, final boolean callback) {
+        mColorPicker.setColor(color, callback);
+    }
 
-	private void init(final Context context, final int color, final boolean showAlphaSlider) {
+    private void init(final Context context, final int color, final boolean showAlphaSlider) {
 
-		// To fight color branding.
-		getWindow().setFormat(PixelFormat.RGBA_8888);
+        // To fight color branding.
+        getWindow().setFormat(PixelFormat.RGBA_8888);
 
-		final LayoutInflater inflater = LayoutInflater.from(getContext());
-		final View dialogView = inflater.inflate(R.layout.dialog_color_picker, null);
+        final LayoutInflater inflater = LayoutInflater.from(getContext());
+        final View dialogView = inflater.inflate(R.layout.dialog_color_picker, null);
 
-		mColorPicker = (ColorPickerView) dialogView.findViewById(R.id.color_picker);
-		mColorPresets = (Gallery) dialogView.findViewById(R.id.color_presets);
+        mColorPicker = (ColorPickerView) dialogView.findViewById(R.id.color_picker);
+        mColorPresets = (RecyclerView) dialogView.findViewById(R.id.color_presets);
 
-		mColorPicker.setOnColorChangedListener(this);
-		mColorPresets.setAdapter(mColorsAdapter);
-		mColorPresets.setOnItemClickListener(this);
-		mColorPresets.setScrollAfterItemClickEnabled(false);
-		mColorPresets.setScrollRightSpacingEnabled(false);
+        mColorPicker.setOnColorChangedListener(this);
+        mColorPresets.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        mColorPresets.setAdapter(mColorsAdapter);
+//		mColorPresets.setOnItemClickListener(this);
 
-		setColor(color, true);
-		setAlphaSliderVisible(showAlphaSlider);
+        setColor(color, true);
+        setAlphaSliderVisible(showAlphaSlider);
 
-		setView(dialogView);
-		setTitle(R.string.pick_color);
-	}
+        setView(dialogView);
+        setTitle(R.string.pick_color);
+    }
 
-	private void initColors() {
-		for (final int color : COLORS) {
-			mColorsAdapter.add(color);
-		}
-	}
+    private void initColors() {
+        for (final int color : COLORS) {
+            mColorsAdapter.add(color);
+        }
+    }
 
-	private void updateColorPreviewBitmap(final int color) {
-		final Rect r = new Rect();
-		boolean verticalStartWhite = true;
-		for (int i = 0; i <= mNumRectanglesVertical; i++) {
+    private void updateColorPreviewBitmap(final int color) {
+        final Rect r = new Rect();
+        boolean verticalStartWhite = true;
+        for (int i = 0; i <= mNumRectanglesVertical; i++) {
 
-			boolean isWhite = verticalStartWhite;
-			for (int j = 0; j <= mNumRectanglesHorizontal; j++) {
+            boolean isWhite = verticalStartWhite;
+            for (int j = 0; j <= mNumRectanglesHorizontal; j++) {
 
-				r.top = i * mRectrangleSize;
-				r.left = j * mRectrangleSize;
-				r.bottom = r.top + mRectrangleSize;
-				r.right = r.left + mRectrangleSize;
-				final Paint paint = new Paint();
-				paint.setColor(isWhite ? Color.WHITE : Color.GRAY);
+                r.top = i * mRectrangleSize;
+                r.left = j * mRectrangleSize;
+                r.bottom = r.top + mRectrangleSize;
+                r.right = r.left + mRectrangleSize;
+                final Paint paint = new Paint();
+                paint.setColor(isWhite ? Color.WHITE : Color.GRAY);
 
-				mCanvas.drawRect(r, paint);
+                mCanvas.drawRect(r, paint);
 
-				isWhite = !isWhite;
-			}
+                isWhite = !isWhite;
+            }
 
-			verticalStartWhite = !verticalStartWhite;
+            verticalStartWhite = !verticalStartWhite;
 
-		}
-		mCanvas.drawColor(color);
-		final Paint paint = new Paint();
-		paint.setColor(Color.WHITE);
-		paint.setStrokeWidth(2.0f);
-		final float[] points = new float[] { 0, 0, mIconWidth, 0, 0, 0, 0, mIconHeight, mIconWidth, 0, mIconWidth,
-				mIconHeight, 0, mIconHeight, mIconWidth, mIconHeight };
-		mCanvas.drawLines(points, paint);
+        }
+        mCanvas.drawColor(color);
+        final Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(2.0f);
+        final float[] points = new float[]{0, 0, mIconWidth, 0, 0, 0, 0, mIconHeight, mIconWidth, 0, mIconWidth,
+                mIconHeight, 0, mIconHeight, mIconWidth, mIconHeight};
+        mCanvas.drawLines(points, paint);
 
-	}
+    }
 
-	public static class ColorsAdapter extends ArrayAdapter<Integer> {
+    public static class ColorsAdapter extends ArrayRecyclerAdapter<Integer, ColorViewHolder> {
 
-		private int mCurrentColor;
+        private final LayoutInflater mInflater;
+        private int mCurrentColor;
 
-		public ColorsAdapter(final Context context) {
-			super(context, R.layout.gallery_item_color_picker_preset);
-		}
+        public ColorsAdapter(final Context context) {
+            mInflater = LayoutInflater.from(context);
+        }
 
-		@Override
-		public View getView(final int position, final View convertView, final ViewGroup parent) {
-			final View view = super.getView(position, convertView, parent);
-			final ForegroundColorView colorView = (ForegroundColorView) view.findViewById(R.id.color);
-			final int color = getItem(position);
-			colorView.setColor(color);
-			colorView.setActivated(mCurrentColor == color);
-			return view;
-		}
+        public void setCurrentColor(final int color) {
+            mCurrentColor = color;
+            notifyDataSetChanged();
+        }
 
-		public void setCurrentColor(final int color) {
-			mCurrentColor = color;
-			notifyDataSetChanged();
-		}
+        @Override
+        public void onBindViewHolder(ColorViewHolder holder, int position, Integer item) {
+            holder.setColor(item, mCurrentColor == item);
+        }
 
-	}
+        @Override
+        public ColorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ColorViewHolder(mInflater.inflate(R.layout.gallery_item_color_picker_preset, parent, false));
+        }
+    }
+
+    public static class ColorViewHolder extends ViewHolder {
+
+        private final ForegroundColorView colorView;
+
+        public ColorViewHolder(View itemView) {
+            super(itemView);
+            colorView = (ForegroundColorView) itemView.findViewById(R.id.color);
+        }
+
+        public void setColor(int color, boolean activated) {
+            colorView.setColor(color);
+            colorView.setActivated(activated);
+        }
+    }
 }

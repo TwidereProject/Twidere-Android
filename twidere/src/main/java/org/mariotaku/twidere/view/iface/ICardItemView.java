@@ -98,7 +98,7 @@ public interface ICardItemView extends IColorLabelView {
 			mGapTextPaint.setColor(a.getColor(R.styleable.CardItemView_cardGapTextColor, Color.GRAY));
 			mGapTextPaint.setTextSize(a.getDimensionPixelSize(R.styleable.CardItemView_cardGapTextSize, 18));
 			mGapTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
-			mThemeColor = ThemeUtils.getUserThemeColor(context);
+			mThemeColor = ThemeUtils.getUserAccentColor(context);
 			mOverflowIconGestureDetector = new GestureDetector(context, new OverflowIconGestureListener(this));
 			mFakeOverflowButton = new FakeOverflowButton(this);
 			mBackgroundAlpha = a.getFraction(R.styleable.CardItemView_cardBackgroundAlpha, 1, 1, 1.0f);

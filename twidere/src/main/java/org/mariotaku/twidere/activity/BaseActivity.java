@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.activity;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.Constants;
@@ -41,7 +40,7 @@ public class BaseActivity extends BaseThemedActivity implements Constants {
 
     @Override
 	public int getThemeColor() {
-		return ThemeUtils.getUserThemeColor(this);
+		return ThemeUtils.getUserAccentColor(this);
 	}
 
 	@Override

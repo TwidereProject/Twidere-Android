@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements Constants {
     protected void onResume() {
         super.onResume();
         final int themeResource = ThemeUtils.getThemeResource(this);
-        final int accentColor = ThemeUtils.isColoredActionBar(themeResource) ? ThemeUtils.getUserThemeColor(this) : 0;
+        final int accentColor = ThemeUtils.isColoredActionBar(themeResource) ? ThemeUtils.getUserAccentColor(this) : 0;
         final int backgroundAlpha = ThemeUtils.isTransparentBackground(themeResource) ? ThemeUtils
                 .getUserThemeBackgroundAlpha(this) : 0xFF;
         ThemeUtils.notifyStatusBarColorChanged(this, themeResource, accentColor, backgroundAlpha);

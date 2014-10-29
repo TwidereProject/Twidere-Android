@@ -33,9 +33,10 @@ public class TwidereMenuBar extends MenuBar implements MenuBarListener, Constant
 
     @Override
     public void onPreShowMenu(Menu menu) {
-        final int color = ThemeUtils.getTextColorPrimary(getItemViewContext());
-        final int popupColor = ThemeUtils.getTextColorPrimary(getPopupContext());
-        ThemeUtils.applyColorFilterToMenuIcon(menu, color, popupColor, Mode.SRC_ATOP,
+        final int color = ThemeUtils.getThemeForegroundColor(getItemViewContext());
+        final int popupColor = ThemeUtils.getThemeForegroundColor(getPopupContext());
+        final int highlightColor = ThemeUtils.getUserAccentColor(getContext());
+        ThemeUtils.applyColorFilterToMenuIcon(menu, color, popupColor, highlightColor, Mode.SRC_ATOP,
                 MENU_GROUP_STATUS_SHARE, MENU_GROUP_STATUS_EXTENSION);
     }
 

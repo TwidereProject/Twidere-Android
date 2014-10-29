@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
 public class HomeActionButtonCompat extends FrameLayout implements IHomeActionButton {
@@ -49,13 +49,13 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
     public HomeActionButtonCompat(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.action_item_home_actions, this);
+        inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions_compat, this);
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
     }
 
     @Override
-    public void setColor(int color) {
+    public void setButtonColor(int color) {
         final Drawable drawable = getBackground();
         if (drawable instanceof LayerDrawable) {
             final Drawable layer = ((LayerDrawable) drawable).findDrawableByLayerId(R.id.color_layer);
@@ -63,7 +63,11 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
                 layer.setColorFilter(color, Mode.SRC_ATOP);
             }
         }
-        mIconView.setColorFilter(Utils.getContrastYIQ(color), Mode.SRC_ATOP);
+    }
+
+    @Override
+    public void setIconColor(int color, Mode mode) {
+        mIconView.setColorFilter(color, mode);
     }
 
     public void setIcon(final Bitmap bm) {

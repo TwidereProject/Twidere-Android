@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_gravity="center_vertical"
-	android:background="?android:activatedBackgroundIndicator"
-	android:descendantFocusability="blocksDescendants"
-	android:gravity="center_vertical"
-	android:minHeight="?android:attr/listPreferredItemHeight"
-	android:orientation="horizontal">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="?android:activatedBackgroundIndicator"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal">
 
-	<View
-		android:id="@+id/drag_handle"
-		android:layout_width="24dp"
-		android:layout_height="match_parent"
-		android:layout_weight="0"
-		android:background="@drawable/list_drag_handle"/>
+    <View
+        android:id="@+id/drag_handle"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:background="@drawable/list_drag_handle"/>
 
-	<ImageView
-		android:id="@android:id/icon"
-		android:layout_width="48dip"
-		android:layout_height="48dip"
-		android:layout_margin="4dip"
-		android:layout_weight="0"
-		android:contentDescription="@string/icon"
-		android:scaleType="fitCenter"/>
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_margin="4dip"
+        android:layout_weight="0"
+        android:contentDescription="@string/icon"
+        android:scaleType="fitCenter"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="8dp"
-		android:layout_weight="1"
-		android:orientation="vertical"
-		android:padding="8dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-		<TextView
-			android:id="@android:id/text1"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:singleLine="true"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textStyle="bold"/>
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"/>
 
-		<TextView
-			android:id="@android:id/text2"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:singleLine="true"
-			android:textAppearance="?android:attr/textAppearanceSmall"/>
-	</LinearLayout>
+        <TextView
+            android:id="@android:id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+    </LinearLayout>
 
 </LinearLayout>

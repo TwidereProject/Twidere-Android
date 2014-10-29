@@ -33,11 +33,7 @@ public class ThemedSwitch extends Switch {
 
     public ThemedSwitch(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        if (!isInEditMode()) {
-            setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
-            setHighlightColor(ThemeUtils.getUserHighlightColor(context));
-            setTypeface(ThemeUtils.getUserTypeface(context, getTypeface()));
-        }
+        ThemeUtils.initTextView(this);
     }
 
 }

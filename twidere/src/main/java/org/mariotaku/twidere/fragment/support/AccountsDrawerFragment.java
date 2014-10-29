@@ -56,10 +56,10 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.FiltersActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.activity.support.AccountsManagerActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.DraftsActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -266,10 +266,8 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             if (!(item instanceof OptionItem)) return;
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
-                case MENU_ACCOUNTS:
-                case MENU_ADD_ACCOUNT: {
-                    final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
-                    intent.setClass(getActivity(), SignInActivity.class);
+                case MENU_ACCOUNTS: {
+                    final Intent intent = new Intent(getActivity(), AccountsManagerActivity.class);
                     startActivity(intent);
                     break;
                 }
@@ -355,7 +353,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
         if (!ThemeUtils.isDarkDrawerEnabled(context))
             return mThemedContext = ThemeUtils.getThemedContextForActionIcons(context);
         final int themeResource = ThemeUtils.getDrawerThemeResource(context);
-        final int accentColor = ThemeUtils.getUserThemeColor(context);
+        final int accentColor = ThemeUtils.getUserAccentColor(context);
         return mThemedContext = new TwidereContextThemeWrapper(context, themeResource, accentColor);
     }
 
@@ -481,6 +479,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             OnCheckedChangeListener {
 
         private final ImageLoaderWrapper mImageLoader;
+        private final int mActivatedColor;
 
         private Account.Indices mIndices;
         private long mSelectedAccountId, mDefaultAccountId;
@@ -491,6 +490,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             super(context, R.layout.list_item_drawer_accounts, null, new String[0], new int[0], 0);
             final TwidereApplication app = TwidereApplication.getInstance(context);
             mImageLoader = app.getImageLoaderWrapper();
+            mActivatedColor = ThemeUtils.getUserAccentColor(context);
         }
 
         @Override
@@ -498,19 +498,21 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             super.bindView(view, context, cursor);
             final CompoundButton toggle = (CompoundButton) view.findViewById(R.id.toggle);
             final TextView name = (TextView) view.findViewById(R.id.name);
-            final TextView screen_name = (TextView) view.findViewById(R.id.screen_name);
-            final TextView default_indicator = (TextView) view.findViewById(R.id.default_indicator);
-            final ImageView profile_image = (ImageView) view.findViewById(R.id.profile_image);
+            final TextView screenNameView = (TextView) view.findViewById(R.id.screen_name);
+            final TextView defaultIndicatorView = (TextView) view.findViewById(R.id.default_indicator);
+            final ImageView profileImageView = (ImageView) view.findViewById(R.id.profile_image);
             final Account account = new Account(cursor, mIndices);
             name.setText(account.name);
-            screen_name.setText(String.format("@%s", account.screen_name));
-            default_indicator.setVisibility(account.account_id == mDefaultAccountId ? View.VISIBLE : View.GONE);
-            mImageLoader.displayProfileImage(profile_image, account.profile_image_url);
+            screenNameView.setText(String.format("@%s", account.screen_name));
+            defaultIndicatorView.setVisibility(account.account_id == mDefaultAccountId ? View.VISIBLE : View.GONE);
+            mImageLoader.displayProfileImage(profileImageView, account.profile_image_url);
             toggle.setChecked(account.is_activated);
             toggle.setTag(account);
             toggle.setOnCheckedChangeListener(this);
             view.setActivated(account.account_id == mSelectedAccountId);
-            ((IColorLabelView) view).drawEnd(account.color);
+            final IColorLabelView colorLabelView = (IColorLabelView) view;
+            colorLabelView.drawStart(account.account_id == mSelectedAccountId ? mActivatedColor : 0);
+            colorLabelView.drawEnd(account.color);
         }
 
         public long getDefaultAccountId() {
@@ -620,8 +622,11 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
 
     private static abstract class OptionItemsAdapter extends ArrayAdapter<OptionItem> {
 
+        private final int mMenuIconColor;
+
         public OptionItemsAdapter(final Context context) {
             super(context, R.layout.list_item_menu);
+            mMenuIconColor = ThemeUtils.getThemeForegroundColor(context);
         }
 
         @Override
@@ -631,7 +636,8 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             text1.setText(option.name);
-            icon.setImageDrawable(getContext().getResources().getDrawable(option.icon));
+            icon.setImageDrawable(icon.getResources().getDrawable(option.icon));
+            icon.setColorFilter(mMenuIconColor);
             return view;
         }
 

@@ -123,6 +123,8 @@ public interface TweetStore {
 
         public static final String CONSUMER_SECRET = "consumer_secret";
 
+        public static final String SORT_POSITION = "sort_position";
+
         /**
          * User's profile image URL of the status. <br>
          * Type: TEXT
@@ -140,11 +142,11 @@ public interface TweetStore {
         public static final String[] COLUMNS = new String[]{_ID, NAME, SCREEN_NAME, ACCOUNT_ID, AUTH_TYPE,
                 BASIC_AUTH_USERNAME, BASIC_AUTH_PASSWORD, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, CONSUMER_KEY,
                 CONSUMER_SECRET, API_URL_FORMAT, SAME_OAUTH_SIGNING_URL, NO_VERSION_SUFFIX, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, COLOR,
-                IS_ACTIVATED};
+                IS_ACTIVATED, SORT_POSITION};
 
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL,
                 TYPE_INT_UNIQUE, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN};
+                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, TYPE_INT};
 
     }
 

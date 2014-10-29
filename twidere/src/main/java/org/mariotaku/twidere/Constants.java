@@ -28,10 +28,7 @@ package org.mariotaku.twidere;
 public interface Constants extends TwidereConstants {
 
     public static final String DATABASES_NAME = "twidere.sqlite";
-    public static final int DATABASES_VERSION = 67;
-
-    public static final String GOOGLE_MAPS_API_KEY_RELEASE = "0kjPwJOe_zwYjzGc9uYak7vhm_Sf3eob-2L3Xzw";
-    public static final String GOOGLE_MAPS_API_KEY_DEBUG = "0kjPwJOe_zwY9p6kT-kygu4mxwysyOOpfkaXqTA";
+    public static final int DATABASES_VERSION = 68;
 
     public static final int MENU_GROUP_STATUS_EXTENSION = 10;
     public static final int MENU_GROUP_COMPOSE_EXTENSION = 11;

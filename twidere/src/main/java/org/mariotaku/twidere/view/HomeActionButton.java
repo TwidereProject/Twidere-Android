@@ -23,8 +23,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -35,7 +37,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -54,22 +57,23 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
 
     public HomeActionButton(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        inflate(context, R.layout.action_item_home_actions, this);
+        inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions, this);
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
         setOutlineProvider(new HomeActionButtonOutlineProvider());
         setClipToOutline(true);
+        setButtonColor(Color.WHITE);
     }
 
     @Override
-    public void setColor(int color) {
-        final Drawable drawable = getBackground();
-        if (drawable != null) {
-            drawable.setColorFilter(color, Mode.MULTIPLY);
-        }
-        final int contrastColor = Utils.getContrastYIQ(color, 192);
-        mIconView.setColorFilter(contrastColor, Mode.SRC_ATOP);
-        mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(contrastColor));
+    public void setButtonColor(int color) {
+        ViewAccessor.setBackground(this, new ColorDrawable(color));
+    }
+
+    @Override
+    public void setIconColor(int color, Mode mode) {
+        mIconView.setColorFilter(color, mode);
+        mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(color));
     }
 
     @Override

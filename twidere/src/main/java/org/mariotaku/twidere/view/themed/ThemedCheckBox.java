@@ -37,11 +37,7 @@ public class ThemedCheckBox extends CheckBox {
 
 	public ThemedCheckBox(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
-		if (!isInEditMode()) {
-			setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
-			setHighlightColor(ThemeUtils.getUserHighlightColor(context));
-			setTypeface(ThemeUtils.getUserTypeface(context, getTypeface()));
-		}
+        ThemeUtils.initTextView(this);
 	}
 
 }

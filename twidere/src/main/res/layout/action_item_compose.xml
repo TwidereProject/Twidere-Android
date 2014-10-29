@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="?android:actionButtonStyle"
+<LinearLayout
     android:id="@+id/send"
+    style="?android:actionButtonStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:layout_weight="0"
     android:contentDescription="@string/send"
     android:gravity="center"
     android:orientation="horizontal"
@@ -15,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="?android:textAppearanceSmall" />
+        android:textAppearance="?android:textAppearanceSmall"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -24,6 +25,6 @@
         android:cropToPadding="false"
         android:padding="@dimen/element_spacing_xsmall"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_send" />
+        android:src="@drawable/ic_action_send"/>
 
 </LinearLayout>

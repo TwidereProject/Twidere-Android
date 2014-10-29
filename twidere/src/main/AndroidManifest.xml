@@ -355,6 +355,21 @@
                 android:value=".activity.support.HomeActivity"/>
         </activity>
         <activity
+            android:name=".activity.support.AccountsManagerActivity"
+            android:exported="false"
+            android:label="@string/accounts"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.ACCOUNTS"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.support.HomeActivity"/>
+        </activity>
+        <activity
             android:name="org.mariotaku.gallery3d.ImageViewerGLActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"

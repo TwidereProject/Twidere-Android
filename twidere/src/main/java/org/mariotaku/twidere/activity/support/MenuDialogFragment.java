@@ -3,9 +3,9 @@ package org.mariotaku.twidere.activity.support;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -16,28 +16,11 @@ import android.widget.ListView;
 
 import org.mariotaku.menucomponent.internal.menu.MenuAdapter;
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 public abstract class MenuDialogFragment extends BaseSupportDialogFragment implements OnItemClickListener {
-
-    private Context mThemedContext;
-
-    public Context getThemedContext() {
-        if (mThemedContext != null) return mThemedContext;
-        final FragmentActivity activity = getActivity();
-        final int themeRes, accentColor;
-        if (activity instanceof IThemedActivity) {
-            themeRes = ((IThemedActivity) activity).getThemeResourceId();
-            accentColor = ((IThemedActivity) activity).getThemeColor();
-        } else {
-            themeRes = ThemeUtils.getSettingsThemeResource(activity);
-            accentColor = ThemeUtils.getUserThemeColor(activity);
-        }
-        return mThemedContext = ThemeUtils.getThemedContextForActionIcons(activity, themeRes, accentColor);
-    }
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -50,8 +33,15 @@ public abstract class MenuDialogFragment extends BaseSupportDialogFragment imple
         builder.setView(listView);
         final Menu menu = MenuUtils.createMenu(context);
         onCreateMenu(new TwidereMenuInflater(context), menu);
+        final int itemColor = ThemeUtils.getThemeForegroundColor(context);
+        final int highlightColor = ThemeUtils.getUserAccentColor(context);
+        ThemeUtils.applyColorFilterToMenuIcon(menu, itemColor, highlightColor, Mode.SRC_ATOP);
         adapter.setMenu(menu);
         return builder.create();
+    }
+
+    public Context getThemedContext() {
+        return getActivity();
     }
 
     @Override

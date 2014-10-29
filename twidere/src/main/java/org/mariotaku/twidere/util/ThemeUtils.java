@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -41,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarMenuInfo;
 import org.mariotaku.refreshnow.widget.RefreshNowConfig;
@@ -51,6 +53,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.content.TwidereContextThemeWrapper;
 import org.mariotaku.twidere.content.TwidereContextWrapper;
 import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
+import org.mariotaku.twidere.util.menu.StatusMenuInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -91,7 +94,7 @@ public class ThemeUtils implements Constants {
 
     public static void applyBackground(final View view) {
         if (view == null) return;
-        applyBackground(view, getUserThemeColor(view.getContext()));
+        applyBackground(view, getUserAccentColor(view.getContext()));
     }
 
     public static void applyBackground(final View view, final int color) {
@@ -118,23 +121,40 @@ public class ThemeUtils implements Constants {
         d.setAlpha(getUserThemeBackgroundAlpha(context));
     }
 
-    public static void applyColorFilterToMenuIcon(Menu menu, int color, int popupColor, PorterDuff.Mode mode, int... excludedGroups) {
+    public static void applyColorFilterToMenuIcon(final Menu menu, final int color,
+                                                  final int highlightColor, final Mode mode,
+                                                  final int... excludedGroups) {
+        applyColorFilterToMenuIcon(menu, color, color, highlightColor, mode, excludedGroups);
+    }
+
+    public static void applyColorFilterToMenuIcon(final Menu menu, final int color, final int popupColor,
+                                                  final int highlightColor, final Mode mode,
+                                                  final int... excludedGroups) {
         for (int i = 0, j = menu.size(); i < j; i++) {
             final MenuItem item = menu.getItem(i);
             final Drawable icon = item.getIcon();
             final ContextMenuInfo info = item.getMenuInfo();
-            if (icon != null) {
-                if (ArrayUtils.contains(excludedGroups, item.getGroupId())) {
-                    icon.mutate().clearColorFilter();
-                } else if (info instanceof MenuBarMenuInfo) {
-                    final boolean inPopup = ((MenuBarMenuInfo) info).isInPopup();
-                    icon.mutate().setColorFilter(inPopup ? popupColor : color, mode);
+            if (icon != null && !ArrayUtils.contains(excludedGroups, item.getGroupId())) {
+                icon.mutate();
+                if (info instanceof MenuBarMenuInfo) {
+                    final MenuBarMenuInfo mbInfo = (MenuBarMenuInfo) info;
+                    final boolean inPopup = mbInfo.isInPopup();
+                    if (mbInfo.getMenuInfo() instanceof StatusMenuInfo) {
+                        final StatusMenuInfo sInfo = (StatusMenuInfo) mbInfo.getMenuInfo();
+                        icon.setColorFilter(sInfo.isHighlight() ? highlightColor
+                                : (inPopup ? popupColor : color), mode);
+                    } else {
+                        icon.setColorFilter(inPopup ? popupColor : color, mode);
+                    }
+                } else if (info instanceof StatusMenuInfo) {
+                    final StatusMenuInfo sInfo = (StatusMenuInfo) info;
+                    icon.setColorFilter(sInfo.isHighlight() ? highlightColor : color, mode);
                 } else {
-                    icon.mutate().setColorFilter(color, mode);
+                    icon.setColorFilter(color, mode);
                 }
             }
             if (item.hasSubMenu()) {
-                applyColorFilterToMenuIcon(item.getSubMenu(), color, popupColor, mode, excludedGroups);
+                applyColorFilterToMenuIcon(item.getSubMenu(), color, popupColor, highlightColor, mode, excludedGroups);
             }
         }
     }
@@ -143,7 +163,7 @@ public class ThemeUtils implements Constants {
         final IndicatorConfig.Builder builder = new IndicatorConfig.Builder(context);
         final Resources res = context.getResources();
         final float width = 3 * res.getDisplayMetrics().density;
-        final int themeColor = getUserThemeColor(context);
+        final int themeColor = getUserAccentColor(context);
         builder.progressColor(themeColor);
         builder.indeterminateColor(themeColor);
         builder.progressStrokeWidth(width);
@@ -202,7 +222,7 @@ public class ThemeUtils implements Constants {
             a.recycle();
         }
         if (resId == 0) return new TwidereContextWrapper(context);
-        return new TwidereContextThemeWrapper(context, resId, getUserThemeColor(context));
+        return new TwidereContextThemeWrapper(context, resId, getUserAccentColor(context));
     }
 
     @Deprecated
@@ -250,22 +270,10 @@ public class ThemeUtils implements Constants {
             case R.style.Theme_Twidere_Light_Transparent:
             case R.style.Theme_Twidere_Light_Compose:
             case R.style.Theme_Twidere_Light_Dialog:
-            case R.style.Theme_Twidere_Colored:
-            case R.style.Theme_Twidere_Colored_SolidBackground:
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_Compose:
             case R.style.Theme_Twidere_ActionBar_Colored_Light:
             case R.style.Theme_Twidere_Settings_Light:
             case R.style.Theme_Twidere_Drawer_Light:
             case R.style.Theme_Twidere_Drawer_Light_Transparent:
-            case R.style.Theme_Twidere_Light_DarkActionBar_DarkIcon:
-            case R.style.Theme_Twidere_Light_DarkActionBar_SolidBackground_DarkIcon:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent_DarkIcon:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Compose_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Compose_DarkIcon:
             case R.style.Theme_Twidere_Settings_Light_DarkActionBar_DarkIcon:
                 return 0x99333333;
         }
@@ -301,14 +309,8 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getComposeThemeResource(final String name, final boolean darkActionBar) {
-        if (VALUE_THEME_NAME_TWIDERE.equals(name))
-            return darkActionBar ? R.style.Theme_Twidere_Colored_DarkActionBar_Compose
-                    : R.style.Theme_Twidere_Colored_Compose;
-        else if (VALUE_THEME_NAME_LIGHT.equals(name))
-            return darkActionBar ? R.style.Theme_Twidere_Light_DarkActionBar_Compose
-                    : R.style.Theme_Twidere_Light_Compose;
-        else if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_Compose;
-        return R.style.Theme_Twidere_Colored_Compose;
+        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_Compose;
+        return R.style.Theme_Twidere_Light_Compose;
     }
 
     public static boolean getDarkActionBarOption(final Context context) {
@@ -338,9 +340,6 @@ public class ThemeUtils implements Constants {
         switch (themeRes) {
             case R.style.Theme_Twidere_Dark_Transparent:
             case R.style.Theme_Twidere_Light_Transparent:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_Transparent:
                 return R.style.Theme_Twidere_Drawer_Dark_Transparent;
         }
         return R.style.Theme_Twidere_Drawer_Dark;
@@ -353,9 +352,6 @@ public class ThemeUtils implements Constants {
     public static int getLightDrawerThemeResource(final int themeRes) {
         switch (themeRes) {
             case R.style.Theme_Twidere_Light_Transparent:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_Transparent:
                 return R.style.Theme_Twidere_Drawer_Light_Transparent;
         }
         return R.style.Theme_Twidere_Drawer_Light;
@@ -390,20 +386,8 @@ public class ThemeUtils implements Constants {
             case R.style.Theme_Twidere_Light_Transparent:
             case R.style.Theme_Twidere_Light_Compose:
             case R.style.Theme_Twidere_Light_Dialog:
-            case R.style.Theme_Twidere_Colored:
-            case R.style.Theme_Twidere_Colored_SolidBackground:
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_Compose:
             case R.style.Theme_Twidere_ActionBar_Colored_Light:
             case R.style.Theme_Twidere_Settings_Light:
-            case R.style.Theme_Twidere_Light_DarkActionBar_DarkIcon:
-            case R.style.Theme_Twidere_Light_DarkActionBar_SolidBackground_DarkIcon:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent_DarkIcon:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Compose_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent_DarkIcon:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Compose_DarkIcon:
             case R.style.Theme_Twidere_Settings_Light_DarkActionBar_DarkIcon:
                 return 0x99333333;
         }
@@ -486,9 +470,6 @@ public class ThemeUtils implements Constants {
         switch (themeRes) {
             case R.style.Theme_Twidere_Dark_Transparent:
             case R.style.Theme_Twidere_Light_Transparent:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent:
                 return 0xa0;
         }
         return 0xff;
@@ -526,7 +507,7 @@ public class ThemeUtils implements Constants {
             accentColor = ((IThemedActivity) context).getThemeColor();
         } else {
             themeRes = getSettingsThemeResource(context);
-            accentColor = getUserThemeColor(context, themeRes);
+            accentColor = getUserAccentColor(context, themeRes);
         }
         return new TwidereContextThemeWrapper(context, getThemeResActionIcons(themeRes), accentColor);
     }
@@ -547,7 +528,7 @@ public class ThemeUtils implements Constants {
             accentColor = ((IThemedActivity) context).getThemeColor();
         } else {
             themeRes = getSettingsThemeResource(context);
-            accentColor = getUserThemeColor(context);
+            accentColor = getUserAccentColor(context);
         }
         final Context theme = getThemedContextForActionIcons(context, themeRes, accentColor);
         return LayoutInflater.from(theme);
@@ -559,6 +540,17 @@ public class ThemeUtils implements Constants {
         final String fontFamily = pref.getString(KEY_THEME_FONT_FAMILY, VALUE_THEME_FONT_FAMILY_REGULAR);
         if (!TextUtils.isEmpty(fontFamily)) return fontFamily;
         return VALUE_THEME_FONT_FAMILY_REGULAR;
+    }
+
+    public static int getThemeBackgroundColor(final Context context) {
+        final Resources res = getResources(context);
+        final Context wrapped = getThemedContext(context, res);
+        final TypedArray a = wrapped.obtainStyledAttributes(new int[]{android.R.attr.colorBackground});
+        try {
+            return a.getColor(0, Color.GRAY);
+        } finally {
+            a.recycle();
+        }
     }
 
     public static int getThemeForegroundColor(final Context context) {
@@ -587,30 +579,6 @@ public class ThemeUtils implements Constants {
 
     public static int getThemeResActionIcons(final int baseThemeRes) {
         switch (baseThemeRes) {
-            case R.style.Theme_Twidere_Light_DarkActionBar: {
-                return R.style.Theme_Twidere_Light_DarkActionBar_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Light_DarkActionBar_SolidBackground: {
-                return R.style.Theme_Twidere_Light_DarkActionBar_SolidBackground_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent: {
-                return R.style.Theme_Twidere_Light_DarkActionBar_Transparent_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Light_DarkActionBar_Compose: {
-                return R.style.Theme_Twidere_Light_DarkActionBar_Compose_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Colored_DarkActionBar: {
-                return R.style.Theme_Twidere_Colored_DarkActionBar_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground: {
-                return R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent: {
-                return R.style.Theme_Twidere_Colored_DarkActionBar_Transparent_DarkIcon;
-            }
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Compose: {
-                return R.style.Theme_Twidere_Colored_DarkActionBar_Compose_DarkIcon;
-            }
             case R.style.Theme_Twidere_Settings_Light_DarkActionBar: {
                 return R.style.Theme_Twidere_Settings_Light_DarkActionBar_DarkIcon;
             }
@@ -624,22 +592,12 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getThemeResource(final String name, final String background, final boolean darkActionBar) {
-        if (VALUE_THEME_NAME_TWIDERE.equals(name)) {
+        if (VALUE_THEME_NAME_LIGHT.equals(name)) {
             if (VALUE_THEME_BACKGROUND_SOLID.equals(background))
-                return darkActionBar ? R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground
-                        : R.style.Theme_Twidere_Colored_SolidBackground;
+                return R.style.Theme_Twidere_Light_SolidBackground;
             else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(background))
-                return darkActionBar ? R.style.Theme_Twidere_Colored_DarkActionBar_Transparent
-                        : R.style.Theme_Twidere_Colored_Transparent;
-            return darkActionBar ? R.style.Theme_Twidere_Colored_DarkActionBar : R.style.Theme_Twidere_Colored;
-        } else if (VALUE_THEME_NAME_LIGHT.equals(name)) {
-            if (VALUE_THEME_BACKGROUND_SOLID.equals(background))
-                return darkActionBar ? R.style.Theme_Twidere_Light_DarkActionBar_SolidBackground
-                        : R.style.Theme_Twidere_Light_SolidBackground;
-            else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(background))
-                return darkActionBar ? R.style.Theme_Twidere_Light_DarkActionBar_Transparent
-                        : R.style.Theme_Twidere_Light_Transparent;
-            return darkActionBar ? R.style.Theme_Twidere_Light_DarkActionBar : R.style.Theme_Twidere_Light;
+                return R.style.Theme_Twidere_Light_Transparent;
+            return R.style.Theme_Twidere_Light;
 
         } else if (VALUE_THEME_NAME_DARK.equals(name)) {
             if (VALUE_THEME_BACKGROUND_SOLID.equals(background))
@@ -648,7 +606,7 @@ public class ThemeUtils implements Constants {
                 return R.style.Theme_Twidere_Dark_Transparent;
             return R.style.Theme_Twidere_Dark;
         }
-        return R.style.Theme_Twidere_Colored_DarkActionBar;
+        return R.style.Theme_Twidere_Light;
     }
 
     public static int getTitleTextAppearance(final Context context) {
@@ -667,7 +625,7 @@ public class ThemeUtils implements Constants {
 
     public static int getUserLinkTextColor(final Context context) {
         if (context == null) return new TextPaint().linkColor;
-        final int themeColor = getUserThemeColor(context);
+        final int themeColor = getUserAccentColor(context);
         final float[] hsv = new float[3];
         Color.colorToHSV(themeColor, hsv);
         if (isDarkTheme(context)) {
@@ -684,7 +642,7 @@ public class ThemeUtils implements Constants {
         return pref.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA);
     }
 
-    public static int getUserThemeColor(final Context context) {
+    public static int getUserAccentColor(final Context context) {
         if (context == null) return Color.TRANSPARENT;
         final Resources res = getResources(context);
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
@@ -692,7 +650,7 @@ public class ThemeUtils implements Constants {
         return pref.getInt(KEY_THEME_COLOR, def);
     }
 
-    public static int getUserThemeColor(final Context context, int themeRes) {
+    public static int getUserAccentColor(final Context context, int themeRes) {
         if (context == null) return Color.TRANSPARENT;
         final int defThemeColor = getThemeColor(context, themeRes);
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
@@ -747,25 +705,6 @@ public class ThemeUtils implements Constants {
         return getWindowContentOverlay(new ContextThemeWrapper(context, themeRes));
     }
 
-    public static boolean isColoredActionBar(final Context context) {
-        return isColoredActionBar(getThemeResource(context));
-    }
-
-    public static boolean isColoredActionBar(final int themeRes) {
-        switch (themeRes) {
-            case R.style.Theme_Twidere_Colored:
-            case R.style.Theme_Twidere_Colored_SolidBackground:
-            case R.style.Theme_Twidere_Colored_Compose:
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Compose:
-                return true;
-        }
-        return false;
-    }
-
     public static boolean isDarkDrawerEnabled(final Context context) {
         final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
@@ -799,26 +738,6 @@ public class ThemeUtils implements Constants {
         return b;
     }
 
-    public static boolean isLightActionBar(final Context context) {
-        return isLightActionBar(getThemeResource(context));
-    }
-
-    public static boolean isLightActionBar(final int themeRes) {
-        switch (themeRes) {
-            case R.style.Theme_Twidere_Light:
-            case R.style.Theme_Twidere_Light_SolidBackground:
-            case R.style.Theme_Twidere_Light_Transparent:
-            case R.style.Theme_Twidere_Light_Compose:
-            case R.style.Theme_Twidere_Colored:
-            case R.style.Theme_Twidere_Colored_SolidBackground:
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_Compose:
-            case R.style.Theme_Twidere_Settings_Light:
-                return true;
-        }
-        return false;
-    }
-
     public static boolean isSolidBackground(final Context context) {
         return VALUE_THEME_BACKGROUND_SOLID.equals(getThemeBackgroundOption(context));
     }
@@ -829,13 +748,8 @@ public class ThemeUtils implements Constants {
 
     public static boolean isTransparentBackground(final int themeRes) {
         switch (themeRes) {
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent_DarkIcon:
             case R.style.Theme_Twidere_Dark_Transparent:
             case R.style.Theme_Twidere_Light_Transparent:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent:
-            case R.style.Theme_Twidere_Light_DarkActionBar_Transparent_DarkIcon:
             case R.style.Theme_Twidere_Viewer_Transparent:
                 return true;
         }
@@ -845,20 +759,20 @@ public class ThemeUtils implements Constants {
     public static void notifyStatusBarColorChanged(final Context context, final int themeResource,
                                                    final int accentColor, final int backgroundAlpha) {
         final Intent intent = new Intent("com.mohammadag.colouredstatusbar.ChangeStatusBarColor");
-        if (isColoredActionBar(themeResource)) {
-            intent.putExtra("status_bar_color", backgroundAlpha << 24 | accentColor);
-        } else {
-            if (isLightActionBar(themeResource)) {
-                intent.putExtra("status_bar_color", backgroundAlpha << 24 | 0xFFDDDDDD);
-            } else {
-                intent.putExtra("status_bar_color", backgroundAlpha << 24 | 0xFF222222);
-            }
-        }
-        if (isLightActionBar(themeResource)) {
-            intent.putExtra("status_bar_icons_color", Color.DKGRAY);
-        } else {
-            intent.putExtra("status_bar_icons_color", Color.WHITE);
-        }
+//        if (isColoredActionBar(themeResource)) {
+//            intent.putExtra("status_bar_color", backgroundAlpha << 24 | accentColor);
+//        } else {
+//            if (isLightActionBar(themeResource)) {
+//                intent.putExtra("status_bar_color", backgroundAlpha << 24 | 0xFFDDDDDD);
+//            } else {
+//                intent.putExtra("status_bar_color", backgroundAlpha << 24 | 0xFF222222);
+//            }
+//        }
+//        if (isLightActionBar(themeResource)) {
+//            intent.putExtra("status_bar_icons_color", Color.DKGRAY);
+//        } else {
+//            intent.putExtra("status_bar_icons_color", Color.WHITE);
+//        }
         // Please note that these are not yet implemented!!!
         // You're free to include them in your code so that when they
         // are implemented, your app will work out of the box.
@@ -905,24 +819,6 @@ public class ThemeUtils implements Constants {
         activity.overridePendingTransition(activityCloseEnterAnimation, activityCloseExitAnimation);
     }
 
-    public static boolean shouldApplyColorFilter(final Context context) {
-        return shouldApplyColorFilter(getThemeResource(context));
-    }
-
-    public static boolean shouldApplyColorFilter(final int res) {
-        switch (res) {
-            case R.style.Theme_Twidere_Colored:
-            case R.style.Theme_Twidere_Colored_SolidBackground:
-            case R.style.Theme_Twidere_Colored_Compose:
-            case R.style.Theme_Twidere_Colored_Transparent:
-            case R.style.Theme_Twidere_Colored_DarkActionBar:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_SolidBackground:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Compose:
-            case R.style.Theme_Twidere_Colored_DarkActionBar_Transparent:
-                return false;
-        }
-        return true;
-    }
 
     public static boolean shouldApplyColorFilterToActionIcons(final Context context) {
         return false;
@@ -938,7 +834,7 @@ public class ThemeUtils implements Constants {
         if (d instanceof LayerDrawable) {
             final Drawable colorLayer = ((LayerDrawable) d).findDrawableByLayerId(R.id.color_layer);
             if (colorLayer != null) {
-                final int color = getUserThemeColor(context);
+                final int color = getUserAccentColor(context);
                 colorLayer.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
             }
         }
@@ -978,5 +874,17 @@ public class ThemeUtils implements Constants {
         } finally {
             a.recycle();
         }
+    }
+
+    public static boolean isColoredActionBar(int themeRes) {
+        return !isDarkTheme(themeRes);
+    }
+
+    public static void initTextView(TextView view) {
+        if (view.isInEditMode()) return;
+        final Context context = view.getContext();
+        view.setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
+        view.setHighlightColor(ThemeUtils.getUserHighlightColor(context));
+        view.setTypeface(ThemeUtils.getUserTypeface(context, view.getTypeface()));
     }
 }

@@ -1,13 +1,16 @@
 package org.mariotaku.twidere.view.iface;
 
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 
 /**
  * Created by mariotaku on 14/10/23.
  */
 public interface IHomeActionButton {
-    void setColor(int color);
+    void setButtonColor(int color);
+
+    void setIconColor(int color, PorterDuff.Mode mode);
 
     void setIcon(Bitmap bm);
 

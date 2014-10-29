@@ -888,7 +888,7 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         final ParcelableUser user = mUser;
         final Relationship relationship = mRelationship;
         if (twitter == null || user == null) return;
-        final int activatedColor = ThemeUtils.getUserThemeColor(getActivity());
+        final int activatedColor = ThemeUtils.getUserAccentColor(getActivity());
         final boolean isMyself = user.account_id == user.id;
         final boolean isFollowing = relationship != null && relationship.isSourceFollowingTarget();
         final boolean isProtected = user.is_protected;

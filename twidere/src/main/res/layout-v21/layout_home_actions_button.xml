@@ -6,6 +6,5 @@
     android:layout_height="@dimen/float_action_button_size"
     android:layout_gravity="bottom|right"
     android:layout_margin="@dimen/element_spacing_large"
-    android:background="@drawable/btn_home_actions"
     android:elevation="@dimen/element_spacing_small"
     android:visibility="visible"/>

@@ -179,7 +179,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mCompactCards = mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
         mPlainListStyle = mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false);
-        mCurrentThemeColor = ThemeUtils.getUserThemeColor(this);
+        mCurrentThemeColor = ThemeUtils.getUserAccentColor(this);
         mCurrentThemeFontFamily = getThemeFontFamily();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mCurrentIsDarkDrawerEnabled = isDarkDrawerEnabled();
@@ -198,7 +198,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         return mCompactCards != mPreferences.getBoolean(KEY_COMPACT_CARDS, false)
                 || mPlainListStyle != mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false)
                 || getThemeResourceId() != getCurrentThemeResourceId()
-                || ThemeUtils.getUserThemeColor(this) != mCurrentThemeColor
+                || ThemeUtils.getUserAccentColor(this) != mCurrentThemeColor
                 || !CompareUtils.objectEquals(getThemeFontFamily(), mCurrentThemeFontFamily)
                 || getThemeBackgroundAlpha() != mCurrentThemeBackgroundAlpha
                 || isDarkDrawerEnabled() != mCurrentIsDarkDrawerEnabled;
