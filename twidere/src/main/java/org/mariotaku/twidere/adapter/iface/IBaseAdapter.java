@@ -52,9 +52,9 @@ public interface IBaseAdapter extends Constants, ListAdapter {
 
 	public void setLinkHighlightOption(String option);
 
-	public void setNicknameOnly(boolean nickname_only);
+	public void setNicknameOnly(boolean nicknameOnly);
 
 	public void setShowAccountColor(boolean show);
 
-	public void setTextSize(float text_size);
+	public void setTextSize(float textSize);
 }

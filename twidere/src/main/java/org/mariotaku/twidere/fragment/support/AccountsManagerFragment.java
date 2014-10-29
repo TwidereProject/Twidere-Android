@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,16 +15,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.mobeta.android.dslv.DragSortListView;
+import com.mobeta.android.dslv.DragSortListView.DropListener;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
+import org.mariotaku.twidere.util.Utils;
 
 /**
  * Created by mariotaku on 14/10/26.
  */
-public class AccountsManagerFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor> {
+public class AccountsManagerFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor>, DropListener {
 
     private AccountsAdapter mAdapter;
 
@@ -49,8 +54,12 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        mAdapter = new AccountsAdapter(getActivity());
+        final FragmentActivity activity = getActivity();
+        mAdapter = new AccountsAdapter(activity);
+        Utils.configBaseAdapter(activity, mAdapter);
         setListAdapter(mAdapter);
+        final DragSortListView listView = (DragSortListView) getListView();
+        listView.setDropListener(this);
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -79,4 +88,10 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.changeCursor(null);
     }
+
+    @Override
+    public void drop(int from, int to) {
+
+    }
+
 }

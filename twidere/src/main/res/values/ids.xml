@@ -75,4 +75,5 @@
     <item name="progress" type="id"/>
     <item name="open_with_account" type="id"/>
     <item name="accounts" type="id"/>
+    <item name="inverse_selection" type="id"/>
 </resources>

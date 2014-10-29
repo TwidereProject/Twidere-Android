@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.MainFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
 	tools:context=".activity.FiltersActivity">
 
 	<org.mariotaku.twidere.view.ExtendedViewPager
@@ -8,4 +11,4 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 
-</merge>
+</org.mariotaku.twidere.view.MainFrameLayout>

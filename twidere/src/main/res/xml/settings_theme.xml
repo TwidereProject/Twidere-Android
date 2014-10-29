@@ -1,69 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:title="@string/theme">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/theme">
 
-	<PreferenceCategory
-		android:key="cat_theme_preview"
-		android:order="11"
-		android:title="@string/preview">
-		<org.mariotaku.twidere.preference.ThemePreviewPreference android:key="theme_preview"/>
-	</PreferenceCategory>
+    <PreferenceCategory
+        android:key="cat_theme_preview"
+        android:order="11"
+        android:title="@string/preview">
+        <org.mariotaku.twidere.preference.ThemePreviewPreference android:key="theme_preview"/>
+    </PreferenceCategory>
 
-	<org.mariotaku.twidere.preference.AutoInvalidateListPreference
-		android:defaultValue="twidere"
-		android:entries="@array/entries_theme"
-		android:entryValues="@array/values_theme"
-		android:key="theme"
-		android:order="21"
-		android:summary="%s"
-		android:title="@string/theme"/>
-	<org.mariotaku.twidere.preference.AutoInvalidateListPreference
-		android:defaultValue="default"
-		android:entries="@array/entries_theme_background"
-		android:entryValues="@array/values_theme_background"
-		android:key="theme_background"
-		android:order="22"
-		android:summary="%s"
-		android:title="@string/theme_background"/>
+    <org.mariotaku.twidere.preference.SummaryListPreference
+        android:defaultValue="twidere"
+        android:entries="@array/entries_theme"
+        android:entryValues="@array/values_theme"
+        android:key="theme"
+        android:order="21"
+        android:title="@string/theme"/>
+    <org.mariotaku.twidere.preference.SummaryListPreference
+        android:defaultValue="default"
+        android:entries="@array/entries_theme_background"
+        android:entryValues="@array/values_theme_background"
+        android:key="theme_background"
+        android:order="22"
+        android:title="@string/theme_background"/>
 
-	<org.mariotaku.twidere.preference.ValueDependencySeekBarDialogPreference
-		android:defaultValue="160"
-		android:key="theme_background_alpha"
-		android:order="23"
-		android:title="@string/theme_background_alpha"
-		app:dependencyKey="theme_background"
-		app:dependencyValueDefault="default"
-		app:dependencyValues="@array/dependency_values_theme_background_alpha"
-		app:max="255"
-		app:min="0"/>
+    <org.mariotaku.twidere.preference.ValueDependencySeekBarDialogPreference
+        android:defaultValue="160"
+        android:key="theme_background_alpha"
+        android:order="23"
+        android:title="@string/theme_background_alpha"
+        app:dependencyKey="theme_background"
+        app:dependencyValueDefault="default"
+        app:dependencyValues="@array/dependency_values_theme_background_alpha"
+        app:max="255"
+        app:min="0"/>
 
-	<org.mariotaku.twidere.preference.ValueDependencyCheckBoxPreference
-		android:defaultValue="true"
-		android:key="theme_dark_actionbar"
-		android:order="24"
-		android:title="@string/theme_dark_actionbar"
-		app:dependencyKey="theme"
-		app:dependencyValueDefault="twidere"
-		app:dependencyValues="@array/dependency_values_actionbar_theme"/>
+    <org.mariotaku.twidere.preference.ColorPickerPreference
+        android:defaultValue="@android:color/holo_blue_light"
+        android:key="theme_color"
+        android:order="25"
+        android:title="@string/theme_color"/>
 
-	<org.mariotaku.twidere.preference.ColorPickerPreference
-		android:defaultValue="@android:color/holo_blue_light"
-		android:key="theme_color"
-		android:order="25"
-		android:title="@string/theme_color"/>
+    <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
+        android:defaultValue="sans-serif-light"
+        android:enabled="@bool/has_font_family"
+        android:key="theme_font_family"
+        android:order="26"
+        android:title="@string/theme_font_family"/>
 
-	<org.mariotaku.twidere.preference.ThemeFontFamilyPreference
-		android:defaultValue="sans-serif-light"
-		android:enabled="@bool/has_font_family"
-		android:key="theme_font_family"
-		android:order="26"
-		android:title="@string/theme_font_family"/>
-
-	<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-		android:defaultValue="true"
-		android:key="dark_drawer"
-		android:order="27"
-		android:title="@string/dark_drawer"/>
+    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        android:defaultValue="true"
+        android:key="dark_drawer"
+        android:order="27"
+        android:title="@string/dark_drawer"/>
 
 </PreferenceScreen>

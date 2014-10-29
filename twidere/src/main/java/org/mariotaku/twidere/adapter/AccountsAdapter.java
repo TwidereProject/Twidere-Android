@@ -30,12 +30,13 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.view.holder.AccountViewHolder;
 
-public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Constants {
+public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Constants, IBaseAdapter {
 
     private final ImageLoaderWrapper mImageLoader;
     private final SharedPreferences mPreferences;
@@ -95,9 +96,54 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
+    public ImageLoaderWrapper getImageLoader() {
+        return mImageLoader;
+    }
+
+    @Override
+    public int getLinkHighlightColor() {
+        return 0;
+    }
+
+    @Override
+    public int getLinkHighlightOption() {
+        return 0;
+    }
+
+    @Override
+    public float getTextSize() {
+        return 0;
+    }
+
+    @Override
+    public boolean isDisplayNameFirst() {
+        return false;
+    }
+
+    @Override
+    public boolean isDisplayProfileImage() {
+        return mDisplayProfileImage;
+    }
+
+    @Override
+    public boolean isNicknameOnly() {
+        return false;
+    }
+
+    @Override
+    public boolean isShowAccountColor() {
+        return false;
+    }
+
+    @Override
     public void notifyDataSetChanged() {
         mDefaultAccountId = mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
         super.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setDisplayNameFirst(boolean nameFirst) {
+
     }
 
     public void setChoiceMode(final int mode) {
@@ -106,9 +152,35 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         notifyDataSetChanged();
     }
 
+    @Override
     public void setDisplayProfileImage(final boolean display) {
         mDisplayProfileImage = display;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void setLinkHighlightColor(int color) {
+
+    }
+
+    @Override
+    public void setLinkHighlightOption(String option) {
+
+    }
+
+    @Override
+    public void setNicknameOnly(boolean nicknameOnly) {
+
+    }
+
+    @Override
+    public void setShowAccountColor(boolean show) {
+
+    }
+
+    @Override
+    public void setTextSize(float textSize) {
+
     }
 
     @Override
