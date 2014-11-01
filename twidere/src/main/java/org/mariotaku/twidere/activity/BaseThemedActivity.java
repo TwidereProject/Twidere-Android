@@ -19,16 +19,13 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.Menu;
 
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -41,34 +38,12 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
     private String mCurrentThemeFontFamily;
     private Theme mTheme;
-    private TwidereMenuInflater mMenuInflater;
 
     @Override
     public void finish() {
         super.finish();
         overrideCloseAnimationIfNeeded();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
-        return false;
-    }
-
-    @Override
-    public final boolean onCreateOptionsMenu(Menu menu) {
-        return onCreateOptionsMenu(menu, getTwidereMenuInflater());
-    }
-
-    @Override
-    public TwidereMenuInflater getTwidereMenuInflater() {
-        if (mMenuInflater != null) return mMenuInflater;
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            return mMenuInflater = new TwidereMenuInflater(actionBar.getThemedContext());
-        }
-        return mMenuInflater = new TwidereMenuInflater(this);
-    }
-
 
     @Override
     public Resources getDefaultResources() {

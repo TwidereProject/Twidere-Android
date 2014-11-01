@@ -61,18 +61,18 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
     private final Canvas mCanvas;
 
     private final int mIconWidth, mIconHeight;
-    private final int mRectrangleSize, mNumRectanglesHorizontal, mNumRectanglesVertical;
+    private final int mRectangleSize, mNumRectanglesHorizontal, mNumRectanglesVertical;
 
     public ColorPickerDialog(final Context context, final int initialColor, final boolean showAlphaSlider) {
         super(context);
-        mColorsAdapter = new ColorsAdapter(context);
+        mColorsAdapter = new ColorsAdapter(this, context);
         mResources = context.getResources();
         final float density = mResources.getDisplayMetrics().density;
         mIconWidth = (int) (32 * density);
         mIconHeight = (int) (32 * density);
-        mRectrangleSize = (int) (density * 5);
-        mNumRectanglesHorizontal = (int) Math.ceil(mIconWidth / mRectrangleSize);
-        mNumRectanglesVertical = (int) Math.ceil(mIconHeight / mRectrangleSize);
+        mRectangleSize = (int) (density * 5);
+        mNumRectanglesHorizontal = (int) Math.ceil(mIconWidth / mRectangleSize);
+        mNumRectanglesVertical = (int) Math.ceil(mIconHeight / mRectangleSize);
         mTempBitmap = Bitmap.createBitmap(mIconWidth, mIconHeight, Config.ARGB_8888);
         mCanvas = new Canvas(mTempBitmap);
         init(context, initialColor, showAlphaSlider);
@@ -90,13 +90,6 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
         updateColorPreviewBitmap(color);
         setIcon(new BitmapDrawable(mResources, mTempBitmap));
     }
-
-//    @Override
-//    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-//        final int color = mColorsAdapter.getItem(position);
-//        if (mColorPicker == null) return;
-//        mColorPicker.setColor(color, true);
-//    }
 
     public final void setAlphaSliderVisible(final boolean visible) {
         mColorPicker.setAlphaSliderVisible(visible);
@@ -147,10 +140,10 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
             boolean isWhite = verticalStartWhite;
             for (int j = 0; j <= mNumRectanglesHorizontal; j++) {
 
-                r.top = i * mRectrangleSize;
-                r.left = j * mRectrangleSize;
-                r.bottom = r.top + mRectrangleSize;
-                r.right = r.left + mRectrangleSize;
+                r.top = i * mRectangleSize;
+                r.left = j * mRectangleSize;
+                r.bottom = r.top + mRectangleSize;
+                r.right = r.left + mRectangleSize;
                 final Paint paint = new Paint();
                 paint.setColor(isWhite ? Color.WHITE : Color.GRAY);
 
@@ -172,12 +165,14 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
 
     }
 
-    public static class ColorsAdapter extends ArrayRecyclerAdapter<Integer, ColorViewHolder> {
+    private static class ColorsAdapter extends ArrayRecyclerAdapter<Integer, ColorViewHolder> implements View.OnClickListener {
 
+        private final ColorPickerDialog mDialog;
         private final LayoutInflater mInflater;
         private int mCurrentColor;
 
-        public ColorsAdapter(final Context context) {
+        public ColorsAdapter(ColorPickerDialog dialog, final Context context) {
+            mDialog = dialog;
             mInflater = LayoutInflater.from(context);
         }
 
@@ -188,12 +183,21 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
 
         @Override
         public void onBindViewHolder(ColorViewHolder holder, int position, Integer item) {
-            holder.setColor(item, mCurrentColor == item);
+            holder.setItem(position, item, mCurrentColor == item);
         }
 
         @Override
         public ColorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ColorViewHolder(mInflater.inflate(R.layout.gallery_item_color_picker_preset, parent, false));
+            final View view = mInflater.inflate(R.layout.gallery_item_color_picker_preset, parent, false);
+            view.setOnClickListener(this);
+            return new ColorViewHolder(view);
+        }
+
+        @Override
+        public void onClick(View v) {
+            final Object tag = v.getTag();
+            if (!(tag instanceof Integer)) return;
+            mDialog.mColorPicker.setColor(getItem((Integer) tag), true);
         }
     }
 
@@ -206,7 +210,8 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
             colorView = (ForegroundColorView) itemView.findViewById(R.id.color);
         }
 
-        public void setColor(int color, boolean activated) {
+        public void setItem(int position, int color, boolean activated) {
+            itemView.setTag(position);
             colorView.setColor(color);
             colorView.setActivated(activated);
         }

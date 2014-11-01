@@ -9,10 +9,12 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.PagerIndicator;
@@ -110,7 +112,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
     }
 
     public void setBadge(int position, int count) {
-
+        mIndicatorAdapter.setBadge(position, count);
     }
 
     public void setDisplayLabel(boolean display) {
@@ -137,17 +139,24 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         mIndicatorAdapter.setItemContext(context);
     }
 
+    public void setDisplayBadge(boolean display) {
+        mIndicatorAdapter.setDisplayBadge(display);
+    }
+
     private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> implements OnClickListener, OnLongClickListener {
 
         private final TabPagerIndicator mIndicator;
+        private final SparseIntArray mUnreadCounts;
         private Context mItemContext;
         private LayoutInflater mInflater;
 
         private TabProvider mTabProvider;
         private int mStripColor, mIconColor;
+        private boolean mDisplayBadge;
 
         public TabPagerIndicatorAdapter(TabPagerIndicator indicator) {
             mIndicator = indicator;
+            mUnreadCounts = new SparseIntArray();
         }
 
         @Override
@@ -169,6 +178,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             holder.setTabData(position, icon, title, mIndicator.getCurrentItem() == position);
             holder.setStripColor(mStripColor);
             holder.setIconColor(mIconColor);
+            holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge);
         }
 
         @Override
@@ -214,6 +224,16 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         public Context getItemContext() {
             return mItemContext;
         }
+
+        public void setBadge(int position, int count) {
+            mUnreadCounts.put(position, count);
+            notifyDataSetChanged();
+        }
+
+        public void setDisplayBadge(boolean display) {
+            mDisplayBadge = display;
+            notifyDataSetChanged();
+        }
     }
 
     private void dispatchTabClick(int position) {
@@ -244,12 +264,14 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         private final View itemView;
         private final ImageView iconView;
         private final View selectedIndicator;
+        private final TextView badgeView;
 
         public TabItemHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             selectedIndicator = itemView.findViewById(R.id.selected_indicator);
             iconView = (ImageView) itemView.findViewById(R.id.tab_icon);
+            badgeView = (TextView) itemView.findViewById(R.id.unread_indicator);
         }
 
 
@@ -267,6 +289,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         public void setIconColor(int color) {
             iconView.setColorFilter(color);
+        }
+
+        public void setBadge(int count, boolean display) {
+            badgeView.setText(String.valueOf(count));
+            badgeView.setVisibility(display && count > 0 ? VISIBLE : GONE);
         }
     }
 

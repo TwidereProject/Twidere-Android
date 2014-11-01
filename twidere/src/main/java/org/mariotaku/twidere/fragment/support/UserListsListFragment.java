@@ -27,12 +27,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.Loader;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class UserListsListFragment extends BaseUserListsListFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_user_list_created, menu);
     }
 

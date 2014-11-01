@@ -47,7 +47,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.ColorAnalyser;
@@ -86,7 +85,6 @@ import static org.mariotaku.twidere.util.ContentValuesCreator.makeAccountContent
 import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
-import static org.mariotaku.twidere.util.Utils.setUserAgent;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.trim;
 
@@ -223,8 +221,8 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
-        inflater.inflate(R.menu.menu_sign_in, menu);
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sign_in, menu);
         return true;
     }
 
@@ -396,7 +394,11 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         final boolean enable_proxy = mPreferences.getBoolean(KEY_ENABLE_PROXY, false);
         cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
         cb.setHttpClientFactory(new TwidereHttpClientFactory(mApplication));
-        setUserAgent(this, cb);
+        if (Utils.isOfficialConsumerKeySecret(this, mConsumerKey, mConsumerSecret)) {
+            Utils.setMockOfficialUserAgent(this, cb);
+        } else {
+            Utils.setUserAgent(this, cb);
+        }
         if (!isEmpty(mAPIUrlFormat)) {
             final String versionSuffix = mNoVersionSuffix ? null : "/1.1/";
             cb.setRestBaseURL(Utils.getApiUrl(mAPIUrlFormat, "api", versionSuffix));

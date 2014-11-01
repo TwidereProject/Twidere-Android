@@ -2,9 +2,9 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.view.Menu;
+import android.view.MenuInflater;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.Account.AccountWithCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -16,7 +16,7 @@ public class IncomingFriendshipsMenuDialogFragment extends UserMenuDialogFragmen
         final Context context = getThemedContext();
         final AccountWithCredentials account = Account.getAccountWithCredentials(context, user.account_id);
         if (AccountWithCredentials.isOfficialCredentials(context, account)) {
-            final TwidereMenuInflater inflater = new TwidereMenuInflater(context);
+            final MenuInflater inflater = new MenuInflater(context);
             inflater.inflate(R.menu.action_incoming_friendship, menu);
         }
     }

@@ -75,7 +75,6 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
@@ -252,8 +251,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
-        inflater.inflate(R.menu.menu_home, menu);
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         final MenuItem itemProgress = menu.findItem(MENU_PROGRESS);
         mSmartBarProgress = (ProgressBar) itemProgress.getActionView().findViewById(android.R.id.progress);
         updateActionsButton();
@@ -452,7 +451,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     public void updateUnreadCount() {
         if (mTabIndicator == null || mUpdateUnreadCountTask != null
                 && mUpdateUnreadCountTask.getStatus() == AsyncTask.Status.RUNNING) return;
-        mUpdateUnreadCountTask = new UpdateUnreadCountTask(mTabIndicator, mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
+        mUpdateUnreadCountTask = new UpdateUnreadCountTask(mTabIndicator);
         mUpdateUnreadCountTask.execute();
     }
 
@@ -535,6 +534,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             mTabIndicator.setDisplayLabel(false);
             mTabIndicator.setDisplayIcon(true);
         }
+        mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
         setTabPosition(initialTabPosition);
@@ -937,12 +937,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private static class UpdateUnreadCountTask extends AsyncTask<Void, Void, int[]> {
         private final Context mContext;
         private final TabPagerIndicator mIndicator;
-        private final boolean mEnabled;
 
-        UpdateUnreadCountTask(final TabPagerIndicator indicator, final boolean enabled) {
+        UpdateUnreadCountTask(final TabPagerIndicator indicator) {
             mIndicator = indicator;
             mContext = indicator.getContext();
-            mEnabled = enabled;
         }
 
         @Override

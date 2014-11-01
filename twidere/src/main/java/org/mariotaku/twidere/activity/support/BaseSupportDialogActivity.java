@@ -20,15 +20,12 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.content.res.NoAccentResources;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 
 @SuppressLint("Registered")
 public class BaseSupportDialogActivity extends BaseSupportThemedActivity implements Constants, IThemedActivity {

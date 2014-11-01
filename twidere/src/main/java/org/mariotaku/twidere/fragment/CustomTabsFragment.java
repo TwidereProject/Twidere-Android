@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
@@ -53,9 +54,7 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.model.Panes;
@@ -116,13 +115,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
         setHasOptionsMenu(true);
         mResolver = getContentResolver();
         final Activity activity = getActivity();
-        final int themeRes;
-        if (activity instanceof IThemedActivity) {
-            themeRes = ((IThemedActivity) activity).getThemeResourceId();
-        } else {
-            themeRes = ThemeUtils.getSettingsThemeResource(activity);
-        }
-        mAdapter = new CustomTabsAdapter(ThemeUtils.getThemedContextForActionIcons(activity, themeRes));
+        mAdapter = new CustomTabsAdapter(activity);
         setListAdapter(mAdapter);
         setEmptyText(getString(R.string.no_tab_hint));
         mListView = (DragSortListView) getListView();
@@ -166,7 +159,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
 
     @Override
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        new TwidereMenuInflater(getActivity()).inflate(R.menu.action_multi_select_items, menu);
+        mode.getMenuInflater().inflate(R.menu.action_multi_select_items, menu);
         return true;
     }
 
@@ -176,7 +169,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_custom_tabs, menu);
     }
 
@@ -281,6 +274,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
                 subItem.setIntent(intent);
             }
         }
+        ThemeUtils.applyColorFilterToMenuIcon(getActivity(), menu);
     }
 
     @Override

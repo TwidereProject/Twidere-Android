@@ -38,21 +38,18 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.mariotaku.menucomponent.internal.Utils;
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarMenuInfo;
 import org.mariotaku.refreshnow.widget.RefreshNowConfig;
 import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.content.TwidereContextThemeWrapper;
-import org.mariotaku.twidere.content.TwidereContextWrapper;
-import org.mariotaku.twidere.content.iface.ITwidereContextWrapper;
 import org.mariotaku.twidere.util.menu.StatusMenuInfo;
 
 import java.lang.reflect.Constructor;
@@ -121,6 +118,16 @@ public class ThemeUtils implements Constants {
         d.setAlpha(getUserThemeBackgroundAlpha(context));
     }
 
+    public static void applyColorFilterToMenuIcon(Activity activity, Menu menu) {
+        final ActionBar actionBar = activity.getActionBar();
+        final Context context = actionBar != null ? actionBar.getThemedContext() : activity;
+        final int color = getThemeForegroundColor(context);
+        final int popupTheme = Utils.getActionBarPopupThemeRes(context);
+        final int popupColor = ThemeUtils.getThemeForegroundColor(context, popupTheme);
+        final int highlightColor = ThemeUtils.getUserAccentColor(activity);
+        ThemeUtils.applyColorFilterToMenuIcon(menu, color, popupColor, highlightColor, Mode.SRC_ATOP);
+    }
+
     public static void applyColorFilterToMenuIcon(final Menu menu, final int color,
                                                   final int highlightColor, final Mode mode,
                                                   final int... excludedGroups) {
@@ -154,7 +161,8 @@ public class ThemeUtils implements Constants {
                 }
             }
             if (item.hasSubMenu()) {
-                applyColorFilterToMenuIcon(item.getSubMenu(), color, popupColor, highlightColor, mode, excludedGroups);
+                // SubMenu item is always in popup
+                applyColorFilterToMenuIcon(item.getSubMenu(), popupColor, popupColor, highlightColor, mode, excludedGroups);
             }
         }
     }
@@ -221,8 +229,8 @@ public class ThemeUtils implements Constants {
         } finally {
             a.recycle();
         }
-        if (resId == 0) return new TwidereContextWrapper(context);
-        return new TwidereContextThemeWrapper(context, resId, getUserAccentColor(context));
+        if (resId == 0) return context;
+        return new ContextThemeWrapper(context, resId);
     }
 
     @Deprecated
@@ -320,7 +328,7 @@ public class ThemeUtils implements Constants {
     }
 
     public static Context getDialogThemedContext(final Context context) {
-        return new TwidereContextThemeWrapper(context, getDialogThemeResource(context), getThemeColor(context));
+        return new ContextThemeWrapper(context, getDialogThemeResource(context));
     }
 
     public static int getDialogThemeResource(final Context context) {
@@ -493,45 +501,11 @@ public class ThemeUtils implements Constants {
     }
 
     public static Context getThemedContext(final Context context) {
-        return new TwidereContextWrapper(context, getResources(context));
+        return context;
     }
 
     public static Context getThemedContext(final Context context, final Resources res) {
-        return new TwidereContextWrapper(context, res);
-    }
-
-    public static Context getThemedContextForActionIcons(final Context context) {
-        final int themeRes, accentColor;
-        if (context instanceof IThemedActivity) {
-            themeRes = ((IThemedActivity) context).getThemeResourceId();
-            accentColor = ((IThemedActivity) context).getThemeColor();
-        } else {
-            themeRes = getSettingsThemeResource(context);
-            accentColor = getUserAccentColor(context, themeRes);
-        }
-        return new TwidereContextThemeWrapper(context, getThemeResActionIcons(themeRes), accentColor);
-    }
-
-    public static Context getThemedContextForActionIcons(final Context baseContext, final int baseThemeRes) {
-        return new TwidereContextWrapper(baseContext, getThemeResActionIcons(baseThemeRes));
-    }
-
-    public static Context getThemedContextForActionIcons(final Context baseContext, final int baseThemeRes,
-                                                         final int accentColor) {
-        return new TwidereContextThemeWrapper(baseContext, getThemeResActionIcons(baseThemeRes), accentColor);
-    }
-
-    public static LayoutInflater getThemedLayoutInflaterForActionIcons(final Context context) {
-        final int themeRes, accentColor;
-        if (context instanceof IThemedActivity) {
-            themeRes = ((IThemedActivity) context).getThemeResourceId();
-            accentColor = ((IThemedActivity) context).getThemeColor();
-        } else {
-            themeRes = getSettingsThemeResource(context);
-            accentColor = getUserAccentColor(context);
-        }
-        final Context theme = getThemedContextForActionIcons(context, themeRes, accentColor);
-        return LayoutInflater.from(theme);
+        return context;
     }
 
     public static String getThemeFontFamily(final Context context) {
@@ -554,15 +528,19 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getThemeForegroundColor(final Context context) {
-        final Resources res = getResources(context);
-        final Context wrapped = getThemedContext(context, res);
+        return getThemeForegroundColor(context, 0);
+    }
+
+    public static int getThemeForegroundColor(final Context context, int theme) {
+        final Context wrapped = theme != 0 ? new ContextThemeWrapper(context, theme) : context;
         final TypedArray a = wrapped.obtainStyledAttributes(new int[]{android.R.attr.colorForeground});
         try {
-            return a.getColor(0, Color.GRAY);
+            return a.getColor(0, 0);
         } finally {
             a.recycle();
         }
     }
+
 
     @NonNull
     private static SharedPreferencesWrapper getSharedPreferencesWrapper(Context context) {
@@ -575,15 +553,6 @@ public class ThemeUtils implements Constants {
         if (context == null) return VALUE_THEME_NAME_TWIDERE;
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         return pref.getString(KEY_THEME, VALUE_THEME_NAME_TWIDERE);
-    }
-
-    public static int getThemeResActionIcons(final int baseThemeRes) {
-        switch (baseThemeRes) {
-            case R.style.Theme_Twidere_Settings_Light_DarkActionBar: {
-                return R.style.Theme_Twidere_Settings_Light_DarkActionBar_DarkIcon;
-            }
-        }
-        return baseThemeRes;
     }
 
     public static int getThemeResource(final Context context) {
@@ -635,6 +604,7 @@ public class ThemeUtils implements Constants {
         }
         return Color.HSVToColor(hsv);
     }
+
 
     public static int getUserThemeBackgroundAlpha(final Context context) {
         if (context == null) return DEFAULT_THEME_BACKGROUND_ALPHA;
@@ -713,8 +683,6 @@ public class ThemeUtils implements Constants {
     }
 
     public static boolean isDarkTheme(final Context context) {
-        if (context instanceof ITwidereContextWrapper)
-            return isDarkTheme(((ITwidereContextWrapper) context).getThemeResourceId());
         return isDarkTheme(getThemeResource(context));
     }
 
@@ -858,10 +826,6 @@ public class ThemeUtils implements Constants {
                 return attrs.getAttributeResourceValue(i, defaultValue);
         }
         return defaultValue;
-    }
-
-    public static Resources getThemedResourcesForActionIcons(Context context, int themeRes, int accentColor) {
-        return getThemedContextForActionIcons(context, themeRes, accentColor).getResources();
     }
 
     public static int getThemeColor(Context context, int themeResourceId) {

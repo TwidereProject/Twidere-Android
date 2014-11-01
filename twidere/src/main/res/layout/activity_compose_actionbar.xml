@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/compose_actionbar"
-    style="?android:actionBarStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:actionBarSize"
     android:baselineAligned="false"
@@ -64,6 +63,8 @@
         android:padding="2dp"
         android:visibility="gone"/>
 
-    <include layout="@layout/action_item_compose"/>
+    <include layout="@layout/action_item_compose_account"/>
+
+    <include layout="@layout/action_item_compose_send"/>
 
 </LinearLayout>

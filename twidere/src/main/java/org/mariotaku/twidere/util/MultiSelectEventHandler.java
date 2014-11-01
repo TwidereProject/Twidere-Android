@@ -35,7 +35,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.menu.AccountActionProvider;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -194,7 +193,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
 
     @Override
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        new TwidereMenuInflater(mActivity).inflate(R.menu.action_multi_select_contents, menu);
+        mode.getMenuInflater().inflate(R.menu.action_multi_select_contents, menu);
         mAccountActionProvider = (AccountActionProvider) menu.findItem(MENU_SELECT_ACCOUNT).getActionProvider();
         mAccountActionProvider.setAccountId(mMultiSelectManager.getFirstSelectAccountId());
         return true;

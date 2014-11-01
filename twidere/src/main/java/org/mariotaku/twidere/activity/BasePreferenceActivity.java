@@ -19,9 +19,9 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.app.ActionBar;
+import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.Resources.Theme;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
@@ -29,38 +29,18 @@ import android.view.Menu;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.content.res.NoAccentResources;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.theme.TwidereResourceHelper;
 
 import static org.mariotaku.twidere.util.Utils.restartActivity;
 
 public abstract class BasePreferenceActivity extends PreferenceActivity implements Constants,
-        IThemedActivity{
+        IThemedActivity {
 
     private int mCurrentThemeResource;
-    private Theme mTheme;
-    private TwidereMenuInflater mMenuInflater;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
-        return false;
-    }
-
-    @Override
-    public final boolean onCreateOptionsMenu(Menu menu) {
-        return onCreateOptionsMenu(menu, getTwidereMenuInflater());
-    }
-
-    @Override
-    public TwidereMenuInflater getTwidereMenuInflater() {
-        if (mMenuInflater != null) return mMenuInflater;
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            return mMenuInflater = new TwidereMenuInflater(actionBar.getThemedContext());
-        }
-        return mMenuInflater = new TwidereMenuInflater(this);
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        return super.onMenuOpened(featureId, menu);
     }
 
     @Override
@@ -77,19 +57,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     @Override
     public Resources getDefaultResources() {
         return super.getResources();
-    }
-
-    @Override
-    public Theme getTheme() {
-        if (mTheme == null) {
-            mTheme = getResources().newTheme();
-            mTheme.setTo(super.getTheme());
-            final int getThemeResourceId = getThemeResourceId();
-            if (getThemeResourceId != 0) {
-                mTheme.applyStyle(getThemeResourceId, true);
-            }
-        }
-        return mTheme;
     }
 
     @Override

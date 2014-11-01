@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.MenuDialogFragment;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.Utils;
 
@@ -17,7 +17,7 @@ import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 public class UserListMenuDialogFragment extends MenuDialogFragment {
 
     @Override
-    protected void onCreateMenu(final TwidereMenuInflater inflater, final Menu menu) {
+    protected void onCreateMenu(final MenuInflater inflater, final Menu menu) {
         final SharedPreferences prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final Bundle args = getArguments();
         final ParcelableUserList user = args.getParcelable(EXTRA_USER_LIST);

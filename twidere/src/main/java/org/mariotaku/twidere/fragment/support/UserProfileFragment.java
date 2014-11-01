@@ -46,6 +46,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.MotionEvent;
@@ -72,7 +73,6 @@ import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ListActionAdapter;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.model.ListAction;
 import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -567,7 +567,7 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         if (!shouldUseNativeMenu()) return;
         inflater.inflate(R.menu.menu_user_profile, menu);
     }
@@ -633,8 +633,9 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LIST: {
-                final String[] mention_list = link.split("\\/");
-                if (mention_list == null || mention_list.length != 2) {
+                if (link == null) break;
+                final String[] mentionList = link.split("/");
+                if (mentionList.length != 2) {
                     break;
                 }
                 break;

@@ -9,6 +9,7 @@
     <dimen name="element_spacing_mlarge">12dp</dimen>
     <dimen name="element_spacing_large">16dp</dimen>
     <dimen name="element_spacing_xlarge">24dp</dimen>
+    <dimen name="element_spacing_minus_small">-4dp</dimen>
     <dimen name="icon_size_list_item">56dp</dimen>
     <dimen name="icon_size_list_item_small">42dp</dimen>
     <dimen name="icon_size_card_list_item">48dp</dimen>
@@ -67,5 +68,6 @@
 
     <!-- Dimensions for buttons -->
     <dimen name="button_width_content_min">72dp</dimen>
+    <dimen name="action_icon_size">32dp</dimen>
 
 </resources>

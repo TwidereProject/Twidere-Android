@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.content.TwidereContextThemeWrapper;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment.TrendsAdapter;
 import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -112,8 +112,8 @@ public class QuickMenuFragment extends BaseSupportFragment {
         } else {
             themeResource = ThemeUtils.getDrawerThemeResource(currentThemeResource);
         }
-        final int accentColor = ThemeUtils.getUserAccentColor(context);
-        return mThemedContext = new TwidereContextThemeWrapper(context, themeResource, accentColor);
+//        final int accentColor = ThemeUtils.getUserAccentColor(context);
+        return mThemedContext = new ContextThemeWrapper(context, themeResource);
     }
 
 }

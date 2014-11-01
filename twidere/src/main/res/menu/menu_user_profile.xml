@@ -15,7 +15,7 @@
         android:title="@string/follow"/>
     <item
         android:id="@id/mention"
-        android:icon="@drawable/ic_action_mention"
+        android:icon="@drawable/ic_action_at"
         android:showAsAction="ifRoom"
         android:title="@string/mention_this_user"/>
     <item
@@ -45,7 +45,7 @@
         android:title="@string/twitter_mute_user"/>
     <item
         android:id="@id/block"
-        android:icon="@drawable/ic_action_ban"
+        android:icon="@drawable/ic_action_block"
         android:title="@string/block"/>
     <item
         android:id="@id/report_spam"

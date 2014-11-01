@@ -65,6 +65,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.StackView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -77,7 +78,7 @@ import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
 import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
+import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.Account;
@@ -177,9 +178,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     private IColorLabelView mColorIndicator;
     private EditText mEditText;
     private ProgressBar mProgress;
-    //    private RecyclerView mAccountSelector;
+    private StackView mAccountStack;
     private View mSendView, mBottomSendView;
     private StatusTextCountView mSendTextCountView, mBottomSendTextCountView;
+    private View mSelectAccount;
 
     private MediaPreviewAdapter mMediaPreviewAdapter;
     private AccountSelectorAdapter mAccountSelectorAdapter;
@@ -417,6 +419,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 }
                 break;
             }
+            case R.id.select_account: {
+                Toast.makeText(this, "Select account", Toast.LENGTH_SHORT).show();
+                break;
+            }
         }
     }
 
@@ -431,13 +437,14 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mMediasPreviewGrid = (GridView) findViewById(R.id.medias_thumbnail_preview);
         mMenuBar = (MenuBar) findViewById(R.id.menu_bar);
         mProgress = (ProgressBar) findViewById(R.id.actionbar_progress_indeterminate);
-//        mAccountSelector = (RecyclerView) findViewById(R.id.account_selector);
+        mAccountStack = (StackView) findViewById(R.id.accounts_stack);
         final View composeActionBar = findViewById(R.id.compose_actionbar);
         final View composeBottomBar = findViewById(R.id.compose_bottombar);
         mSendView = composeActionBar.findViewById(R.id.send);
         mBottomSendView = composeBottomBar.findViewById(R.id.send);
         mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
         mBottomSendTextCountView = (StatusTextCountView) mBottomSendView.findViewById(R.id.status_text_count);
+        mSelectAccount = composeActionBar.findViewById(R.id.select_account);
         ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
         ViewAccessor.setBackground(composeActionBar, getActionBarBackground(this, getCurrentThemeResourceId()));
     }
@@ -592,8 +599,9 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
         mAccountSelectorAdapter = new AccountSelectorAdapter(this);
-//        mAccountSelector.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        mAccountSelector.setAdapter(mAccountSelectorAdapter);
+        mAccountStack.setAdapter(mAccountSelectorAdapter);
+        mAccountSelectorAdapter.addAll(Account.getAccountsList(this, false));
+        mSelectAccount.setOnClickListener(this);
 //        mAccountSelector.setOnItemClickListener(this);
 //        mAccountSelector.setOnItemLongClickListener(this);
 
@@ -1291,32 +1299,18 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     }
 
-    private static class AccountSelectorAdapter extends ArrayRecyclerAdapter<Account, AccountAvatarHolder> {
+    private static class AccountSelectorAdapter extends BaseArrayAdapter<Account> {
 
         private final LongSparseArray<Boolean> mAccountSelectStates = new LongSparseArray<>();
 
-        private final LayoutInflater mInflater;
-        private final ImageLoaderWrapper mImageLoader;
 
         public AccountSelectorAdapter(final Context context) {
-            mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            super(context, R.layout.adapter_item_compose_account);
         }
 
         public void clearAccountSelection() {
             mAccountSelectStates.clear();
             notifyDataSetChanged();
-        }
-
-        public long[] getSelectedAccountIds() {
-            final ArrayList<Long> list = new ArrayList<Long>();
-            for (int i = 0, j = getItemCount(); i < j; i++) {
-                final Account account = getItem(i);
-                if (mAccountSelectStates.get(account.account_id, false)) {
-                    list.add(account.account_id);
-                }
-            }
-            return ArrayUtils.fromList(list);
         }
 
         public void setAccountSelected(final long accountId, final boolean selected) {
@@ -1325,13 +1319,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         }
 
         @Override
-        public void onBindViewHolder(AccountAvatarHolder holder, int position, Account item) {
-            holder.setAccount(mImageLoader, item, mAccountSelectStates);
-        }
-
-        @Override
-        public AccountAvatarHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new AccountAvatarHolder(mInflater.inflate(R.layout.gallery_item_compose_account, parent, false));
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view = super.getView(position, convertView, parent);
+            final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
+            final Account account = getItem(position);
+            final ImageLoaderWrapper loader = getImageLoader();
+            loader.displayProfileImage(icon, account.profile_image_url);
+            return view;
         }
 
 
@@ -1348,8 +1342,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         }
 
         public void setAccount(ImageLoaderWrapper loader, Account account, LongSparseArray<Boolean> states) {
-            loader.displayProfileImage(icon, account.profile_image_url);
-            states.get(account.account_id, false);
         }
     }
 

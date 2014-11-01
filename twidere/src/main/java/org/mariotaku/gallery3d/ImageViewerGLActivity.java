@@ -49,7 +49,6 @@ import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.SaveImageTask;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -150,8 +149,8 @@ public final class ImageViewerGLActivity extends BaseSupportActivity implements 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu, TwidereMenuInflater inflater) {
-        inflater.inflate(R.menu.menu_image_viewer_action_bar, menu);
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_image_viewer_action_bar, menu);
         return true;
     }
 

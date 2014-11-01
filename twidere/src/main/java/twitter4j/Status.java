@@ -24,7 +24,7 @@ import java.util.Date;
  * 
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public interface Status extends Comparable<Status>, TwitterResponse, EntitySupport, Serializable {
+public interface Status extends Comparable<Status>, TwitterResponse, ExtendedEntitySupport, Serializable {
 
 	/**
 	 * Returns an array of contributors, or null if no contributor is associated

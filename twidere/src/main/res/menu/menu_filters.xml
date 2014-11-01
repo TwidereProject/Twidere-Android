@@ -16,7 +16,7 @@
 		android:id="@+id/enable_in_mentions"
 		android:checkable="true"
 		android:checked="true"
-		android:icon="@drawable/ic_action_mention"
+		android:icon="@drawable/ic_action_at"
 		android:title="@string/enable_in_mentions"/>
 	<item
 		android:id="@+id/enable_for_rts"

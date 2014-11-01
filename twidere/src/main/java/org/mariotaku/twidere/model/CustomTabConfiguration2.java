@@ -42,7 +42,7 @@ public enum CustomTabConfiguration2 implements Constants {
 	HOME_TIMELINE(HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
 			CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false),
 
-	MENTIONS_TIMELINE(MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_mention,
+	MENTIONS_TIMELINE(MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_at,
 			CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false),
 
 	DIRECT_MESSAGES(DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,

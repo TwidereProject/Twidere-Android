@@ -38,6 +38,7 @@ import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.HostsFileParser;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -109,12 +109,12 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
     @Override
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        new TwidereMenuInflater(getActivity()).inflate(R.menu.action_multi_select_items, menu);
+        mode.getMenuInflater().inflate(R.menu.action_multi_select_items, menu);
         return true;
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_host_mapping, menu);
     }
 

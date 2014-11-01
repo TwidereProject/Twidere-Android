@@ -29,14 +29,12 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.MapView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.iface.IMapFragment;
 import org.mariotaku.twidere.fragment.support.GoogleMapFragment;
 import org.mariotaku.twidere.fragment.support.WebMapFragment;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -48,8 +46,8 @@ public class GoogleMapViewerActivity extends BaseSupportActivity implements Cons
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
-        inflater.inflate(R.menu.menu_google_maps_viewer, menu);
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_google_maps_viewer, menu);
         return true;
     }
 

@@ -29,13 +29,13 @@
 	</item>
 	<item
 		android:id="@+id/block_submenu"
-		android:icon="@drawable/ic_action_ban"
+		android:icon="@drawable/ic_action_block"
 		android:showAsAction="ifRoom"
 		android:title="@string/block">
 		<menu>
 			<item
 				android:id="@id/block"
-				android:icon="@drawable/ic_action_ban"
+				android:icon="@drawable/ic_action_block"
 				android:title="@string/block"/>
 			<item
 				android:icon="@drawable/ic_action_cancel"

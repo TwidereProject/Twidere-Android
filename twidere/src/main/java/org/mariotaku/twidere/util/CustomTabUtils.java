@@ -68,7 +68,7 @@ public class CustomTabUtils implements Constants {
 				HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
 				CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_MENTIONS_TIMELINE, new CustomTabConfiguration(
-				MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_mention,
+				MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_at,
 				CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false,
 				ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.my_following_only, false)));
 		CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_DIRECT_MESSAGES, new CustomTabConfiguration(
@@ -112,7 +112,7 @@ public class CustomTabUtils implements Constants {
 		CUSTOM_TABS_ICON_NAME_MAP.put("heart", R.drawable.ic_action_heart);
 		CUSTOM_TABS_ICON_NAME_MAP.put("home", R.drawable.ic_action_home);
 		CUSTOM_TABS_ICON_NAME_MAP.put("list", R.drawable.ic_action_list);
-		CUSTOM_TABS_ICON_NAME_MAP.put("mention", R.drawable.ic_action_mention);
+		CUSTOM_TABS_ICON_NAME_MAP.put("mention", R.drawable.ic_action_at);
 		CUSTOM_TABS_ICON_NAME_MAP.put("message", R.drawable.ic_action_message);
 		CUSTOM_TABS_ICON_NAME_MAP.put("quote", R.drawable.ic_action_quote);
 		CUSTOM_TABS_ICON_NAME_MAP.put("search", R.drawable.ic_action_search);

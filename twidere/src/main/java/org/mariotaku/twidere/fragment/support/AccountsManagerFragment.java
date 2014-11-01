@@ -10,6 +10,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import com.mobeta.android.dslv.DragSortListView.DropListener;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.util.Utils;
 
@@ -46,7 +46,7 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, TwidereMenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_accounts_manager, menu);
     }
 

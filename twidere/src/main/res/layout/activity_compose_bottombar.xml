@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:id="@+id/compose_bottombar"
-    style="?android:actionBarSplitStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:actionBarSize"
@@ -33,6 +32,6 @@
         android:layout_weight="0"
         android:background="#80808080"/>
 
-    <include layout="@layout/action_item_compose"/>
+    <include layout="@layout/action_item_compose_send"/>
 
 </LinearLayout>
