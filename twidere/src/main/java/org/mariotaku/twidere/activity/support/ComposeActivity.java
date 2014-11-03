@@ -102,6 +102,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.view.ColorLabelFrameLayout;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
@@ -179,7 +180,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     private ProgressBar mProgress;
     private View mSendView;
     private StatusTextCountView mSendTextCountView;
-    private View mSelectAccount;
+    private ColorLabelFrameLayout mSelectAccount;
 
     private MediaPreviewAdapter mMediaPreviewAdapter;
     private AccountSelectorAdapter mAccountSelectorAdapter;
@@ -437,7 +438,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         final View composeBottomBar = findViewById(R.id.compose_bottombar);
         mSendView = composeBottomBar.findViewById(R.id.send);
         mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
-        mSelectAccount = composeActionBar.findViewById(R.id.select_account);
+        mSelectAccount = (ColorLabelFrameLayout) composeActionBar.findViewById(R.id.select_account);
         ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
         ViewAccessor.setBackground(composeActionBar, getActionBarBackground(this, getCurrentThemeResourceId()));
     }
@@ -1049,7 +1050,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         for (final long accountId : mSendAccountIds) {
             mAccountSelectorAdapter.setAccountSelected(accountId, true);
         }
-        mColorIndicator.drawEnd(getAccountColors(this, mSendAccountIds));
+        mSelectAccount.drawEnd(getAccountColors(this, mSendAccountIds));
     }
 
     private void updateMediasPreview() {

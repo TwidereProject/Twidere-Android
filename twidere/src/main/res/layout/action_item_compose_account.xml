@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.SquareFrameLayout
+<org.mariotaku.twidere.view.ColorLabelFrameLayout
     android:id="@+id/select_account"
+    style="?android:actionButtonStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    style="?android:actionButtonStyle">
-
-</org.mariotaku.twidere.view.SquareFrameLayout>
+    app:ignorePadding="true"/>
