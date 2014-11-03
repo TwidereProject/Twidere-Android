@@ -49,7 +49,7 @@ public class UserListsListFragment extends BaseUserListsListFragment {
             final String action = intent.getAction();
             if (BROADCAST_USER_LIST_DELETED.equals(action)) {
                 final ParcelableUserList list = intent.getParcelableExtra(EXTRA_USER_LIST);
-                if (list != null && intent.getBooleanExtra(EXTRA_SUCCEED, false)) {
+                if (list != null) {
                     removeUserList(list.id);
                 }
             }

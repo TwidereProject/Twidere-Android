@@ -5,10 +5,10 @@ import android.view.ContextMenu.ContextMenuInfo;
 /**
  * Created by mariotaku on 14/10/27.
  */
-public class StatusMenuInfo implements ContextMenuInfo {
+public class TwidereMenuInfo implements ContextMenuInfo {
     private final boolean highlight;
 
-    public StatusMenuInfo(boolean highlight) {
+    public TwidereMenuInfo(boolean highlight) {
         this.highlight = highlight;
     }
 

@@ -50,7 +50,7 @@ import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConf
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.util.menu.StatusMenuInfo;
+import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -146,15 +146,15 @@ public class ThemeUtils implements Constants {
                 if (info instanceof MenuBarMenuInfo) {
                     final MenuBarMenuInfo mbInfo = (MenuBarMenuInfo) info;
                     final boolean inPopup = mbInfo.isInPopup();
-                    if (mbInfo.getMenuInfo() instanceof StatusMenuInfo) {
-                        final StatusMenuInfo sInfo = (StatusMenuInfo) mbInfo.getMenuInfo();
+                    if (mbInfo.getMenuInfo() instanceof TwidereMenuInfo) {
+                        final TwidereMenuInfo sInfo = (TwidereMenuInfo) mbInfo.getMenuInfo();
                         icon.setColorFilter(sInfo.isHighlight() ? highlightColor
                                 : (inPopup ? popupColor : color), mode);
                     } else {
                         icon.setColorFilter(inPopup ? popupColor : color, mode);
                     }
-                } else if (info instanceof StatusMenuInfo) {
-                    final StatusMenuInfo sInfo = (StatusMenuInfo) info;
+                } else if (info instanceof TwidereMenuInfo) {
+                    final TwidereMenuInfo sInfo = (TwidereMenuInfo) info;
                     icon.setColorFilter(sInfo.isHighlight() ? highlightColor : color, mode);
                 } else {
                     icon.setColorFilter(color, mode);

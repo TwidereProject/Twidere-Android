@@ -166,6 +166,7 @@
     <string name="twitter_muted_users">Muted users</string>
     <string name="message_user_muted">Added this user to filter list. You will not see tweets from this user in your home timeline/mentions list.</string>
     <string name="message_users_muted">Added users to filter list. You will not see tweets from these users in your home timeline/mentions list.</string>
+    <string name="message_user_unmuted">Removed this user from filter list.</string>
     <string name="inbox">Inbox</string>
     <string name="load_images">Load images</string>
     <string name="other_settings">Other settings</string>
@@ -649,5 +650,15 @@
     <string name="inverse_selection">Inverse selection</string>
     <string name="edit_medias">Edit medias</string>
     <string name="medias">Medias</string>
+    <string name="mute_user">Mute <xliff:g id="name">%s</xliff:g></string>
+    <string name="muted_user">Muted <xliff:g id="name">%s</xliff:g></string>
+    <string name="unmute_user">Unmute <xliff:g id="name">%s</xliff:g></string>
+    <string name="unmuted_user">Unmuted <xliff:g id="name">%s</xliff:g></string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="action_muting">muting</string>
+    <string name="action_unmuting">unmuting</string>
+    <string name="mute_user_confirm_message">Mute <xliff:g id="name">%s</xliff:g>? You will no longer see tweets from this user while keep following this user.</string>
+    <string name="remove_from_filter">Remove from filter</string>
 
 </resources>

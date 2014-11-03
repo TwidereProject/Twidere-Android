@@ -25,7 +25,7 @@
         android:visible="false"/>
     <item
         android:id="@id/add_to_list"
-        android:icon="@drawable/ic_action_list"
+        android:icon="@drawable/ic_action_add_to_list"
         android:title="@string/add_to_list"/>
     <item
         android:id="@id/set_color"

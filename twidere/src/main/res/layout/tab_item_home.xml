@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:selectableItemBackground">
@@ -21,13 +22,16 @@
         android:layout_centerInParent="true"
         android:scaleType="centerInside"/>
 
-    <TextView
+    <me.grantland.widget.AutofitTextView
         android:id="@+id/unread_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/unread_indicator_size"
+        app:sizeToFit="true"
+        android:layout_height="@dimen/unread_indicator_size"
         android:layout_alignRight="@+id/tab_icon"
         android:layout_alignTop="@+id/tab_icon"
+        android:singleLine="true"
         android:layout_marginRight="@dimen/element_spacing_minus_small"
+        android:textSize="8sp"
         android:layout_marginTop="@dimen/element_spacing_minus_small"/>
 
 

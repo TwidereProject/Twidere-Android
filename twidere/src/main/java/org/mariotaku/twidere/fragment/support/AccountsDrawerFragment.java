@@ -175,7 +175,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        return new CursorLoader(getActivity(), Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, null);
+        return new CursorLoader(getActivity(), Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION);
     }
 
     @Override
@@ -426,7 +426,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
         private static final ArrayList<OptionItem> sOptionsDefault = new ArrayList<>();
 
         static {
-            sOptions.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_user, MENU_VIEW_PROFILE));
+            sOptions.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_profile, MENU_VIEW_PROFILE));
             sOptions.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
             sOptions.add(new OptionItem(R.string.statuses, R.drawable.ic_action_quote, MENU_STATUSES));
             sOptions.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
@@ -437,7 +437,7 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             sOptions.add(new OptionItem(R.string.set_as_default, R.drawable.ic_action_ok, MENU_SET_AS_DEFAULT));
             sOptions.add(new OptionItem(R.string.delete, R.drawable.ic_action_delete, MENU_DELETE));
 
-            sOptionsDefault.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_user,
+            sOptionsDefault.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_profile,
                     MENU_VIEW_PROFILE));
             sOptionsDefault.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search,
                     MENU_SEARCH));

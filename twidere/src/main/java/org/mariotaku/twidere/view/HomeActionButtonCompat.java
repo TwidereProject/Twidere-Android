@@ -22,8 +22,8 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -32,10 +32,12 @@ import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
 public class HomeActionButtonCompat extends FrameLayout implements IHomeActionButton {
 
+    private final ImageView mBackgroundView;
     private final ImageView mIconView;
     private final ProgressBar mProgressBar;
 
@@ -49,19 +51,31 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
     public HomeActionButtonCompat(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+        ViewAccessor.setBackground(this, null);
         inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions_compat, this);
+        mBackgroundView = (ImageView) findViewById(R.id.background);
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
     }
 
     @Override
     public void setButtonColor(int color) {
-        final Drawable drawable = getBackground();
-        if (drawable instanceof LayerDrawable) {
-            final Drawable layer = ((LayerDrawable) drawable).findDrawableByLayerId(R.id.color_layer);
-            if (layer != null) {
-                layer.setColorFilter(color, Mode.SRC_ATOP);
-            }
+        mBackgroundView.setImageDrawable(new MyColorDrawable(color));
+    }
+
+    private static class MyColorDrawable extends ColorDrawable {
+        public MyColorDrawable(int color) {
+            super(color);
+        }
+
+        @Override
+        public int getIntrinsicHeight() {
+            return 16;
+        }
+
+        @Override
+        public int getIntrinsicWidth() {
+            return 16;
         }
     }
 

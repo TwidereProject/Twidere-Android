@@ -76,7 +76,6 @@ public interface IntentConstants {
 	public static final String BROADCAST_TASK_STATE_CHANGED = INTENT_PACKAGE_PREFIX + "TASK_STATE_CHANGED";
 	public static final String BROADCAST_NOTIFICATION_DELETED = INTENT_PACKAGE_PREFIX + "NOTIFICATION_DELETED";
 	public static final String BROADCAST_FRIENDSHIP_CHANGED = INTENT_PACKAGE_PREFIX + "FRIENDSHIP_CHANGED";
-	public static final String BROADCAST_BLOCKSTATE_CHANGED = INTENT_PACKAGE_PREFIX + "BLOCKSTATE_CHANGED";
 	public static final String BROADCAST_PROFILE_UPDATED = INTENT_PACKAGE_PREFIX + "PROFILE_UPDATED";
 	public static final String BROADCAST_PROFILE_IMAGE_UPDATED = INTENT_PACKAGE_PREFIX + "PROFILE_IMAGE_UPDATED";
 	public static final String BROADCAST_PROFILE_BANNER_UPDATED = INTENT_PACKAGE_PREFIX + "PROFILE_BANNER_UPDATED";
@@ -147,7 +146,7 @@ public interface IntentConstants {
 	public static final String EXTRA_TEXT = "text";
 	public static final String EXTRA_TITLE = "title";
 	public static final String EXTRA_TYPE = "type";
-	public static final String EXTRA_SUCCEED = "succeed";
+//	public static final String EXTRA_SUCCEED = "succeed";
 	public static final String EXTRA_IDS = "ids";
 	public static final String EXTRA_IS_SHARE = "is_share";
 	public static final String EXTRA_STATUS = "status";

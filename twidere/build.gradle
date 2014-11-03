@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.0.2'
+    buildToolsVersion '21.1'
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
@@ -10,6 +10,7 @@ android {
         targetSdkVersion 21
         versionCode 96
         versionName "0.3.0-dev"
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -67,8 +68,12 @@ android {
         abortOnError false
     }
     productFlavors {
-        google {}
-        fdroid {}
+        google {
+            versionName = android.defaultConfig.versionName + '-google'
+        }
+        fdroid {
+            versionName = android.defaultConfig.versionName + '-fdroid'
+        }
     }
 }
 
@@ -79,14 +84,16 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.sothree.slidinguppanel:library:2.0.0'
-    compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:1.0.5'
     compile 'com.twitter:twitter-text:1.9.9'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
     compile 'org.apache.httpcomponents:httpmime:4.3.5'
     compile 'ch.acra:acra:4.5.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
-    googleCompile 'com.google.android.gms:play-services:6.1.11'
+    compile 'me.grantland:autofittextview:0.2.0'
+    compile 'com.pkmmte.view:circularimageview:1.1'
+    googleCompile 'com.google.android.gms:play-services:6.1.71'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.2'
     fdroidCompile 'org.slf4j:slf4j-simple:1.6.1'
     compile project(':SlidingMenu')

@@ -69,5 +69,6 @@
     <!-- Dimensions for buttons -->
     <dimen name="button_width_content_min">72dp</dimen>
     <dimen name="action_icon_size">32dp</dimen>
+    <dimen name="unread_indicator_size">16dp</dimen>
 
 </resources>

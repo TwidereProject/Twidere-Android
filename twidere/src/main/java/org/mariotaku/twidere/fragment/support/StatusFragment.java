@@ -188,21 +188,27 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         public void onReceive(final Context context, final Intent intent) {
             if (getActivity() == null || !isAdded() || isDetached()) return;
             final String action = intent.getAction();
-            if (BROADCAST_FRIENDSHIP_CHANGED.equals(action)) {
-                if (mStatus != null && mStatus.user_id == intent.getLongExtra(EXTRA_USER_ID, -1)
-                        && intent.getBooleanExtra(EXTRA_SUCCEED, false)) {
-                    showFollowInfo(true);
+            switch (action) {
+                case BROADCAST_FRIENDSHIP_CHANGED: {
+                    if (mStatus != null && mStatus.user_id == intent.getLongExtra(EXTRA_USER_ID, -1)) {
+                        showFollowInfo(true);
+                    }
+                    break;
                 }
-            } else if (BROADCAST_FAVORITE_CHANGED.equals(action)) {
-                final ParcelableStatus status = intent.getParcelableExtra(EXTRA_STATUS);
-                if (mStatus != null && status != null && isSameAccount(context, status.account_id, mStatus.account_id)
-                        && status.id == getStatusId()) {
-                    getStatus(true);
+                case BROADCAST_FAVORITE_CHANGED: {
+                    final ParcelableStatus status = intent.getParcelableExtra(EXTRA_STATUS);
+                    if (mStatus != null && status != null && isSameAccount(context, status.account_id, mStatus.account_id)
+                            && status.id == getStatusId()) {
+                        getStatus(true);
+                    }
+                    break;
                 }
-            } else if (BROADCAST_RETWEET_CHANGED.equals(action)) {
-                final long status_id = intent.getLongExtra(EXTRA_STATUS_ID, -1);
-                if (status_id > 0 && status_id == getStatusId()) {
-                    getStatus(true);
+                case BROADCAST_RETWEET_CHANGED: {
+                    final long status_id = intent.getLongExtra(EXTRA_STATUS_ID, -1);
+                    if (status_id > 0 && status_id == getStatusId()) {
+                        getStatus(true);
+                    }
+                    break;
                 }
             }
         }

@@ -65,6 +65,4 @@
 
     <include layout="@layout/action_item_compose_account"/>
 
-    <include layout="@layout/action_item_compose_send"/>
-
 </LinearLayout>

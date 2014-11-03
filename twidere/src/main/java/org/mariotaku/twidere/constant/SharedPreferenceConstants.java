@@ -141,11 +141,7 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_DISPLAY_IMAGE_PREVIEW = "display_image_preview";
     @Preference(type = BOOLEAN)
-    public static final String KEY_BOTTOM_COMPOSE_BUTTON = "bottom_compose_button";
-    @Preference(type = BOOLEAN)
     public static final String KEY_LEFTSIDE_COMPOSE_BUTTON = "leftside_compose_button";
-    @Preference(type = BOOLEAN)
-    public static final String KEY_BOTTOM_SEND_BUTTON = "bottom_send_button";
     @Preference(type = BOOLEAN)
     public static final String KEY_ATTACH_LOCATION = "attach_location";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)

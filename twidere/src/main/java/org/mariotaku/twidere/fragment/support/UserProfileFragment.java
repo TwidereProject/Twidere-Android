@@ -31,8 +31,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -64,6 +62,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mariotaku.menucomponent.internal.menu.MenuUtils;
 import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
@@ -89,6 +88,8 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
+import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.ColorLabelLinearLayout;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.ProfileImageView;
@@ -180,27 +181,31 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
             if (getActivity() == null || !isAdded() || isDetached()) return;
             if (mUser == null) return;
             final String action = intent.getAction();
-            if (BROADCAST_FRIENDSHIP_CHANGED.equals(action)) {
-                if (intent.getLongExtra(EXTRA_USER_ID, -1) == mUser.id && intent.getBooleanExtra(EXTRA_SUCCEED, false)) {
-                    getFriendship();
+            switch (action) {
+                case BROADCAST_FRIENDSHIP_CHANGED: {
+                    if (intent.getLongExtra(EXTRA_USER_ID, -1) == mUser.id) {
+                        getFriendship();
+                    }
+                    break;
                 }
-            } else if (BROADCAST_BLOCKSTATE_CHANGED.equals(action)) {
-                if (intent.getLongExtra(EXTRA_USER_ID, -1) == mUser.id && intent.getBooleanExtra(EXTRA_SUCCEED, false)) {
-                    getFriendship();
+                case BROADCAST_PROFILE_UPDATED:
+                case BROADCAST_PROFILE_IMAGE_UPDATED:
+                case BROADCAST_PROFILE_BANNER_UPDATED: {
+                    if (intent.getLongExtra(EXTRA_USER_ID, -1) == mUser.id) {
+                        getUserInfo(true);
+                    }
+                    break;
                 }
-            } else if (BROADCAST_PROFILE_UPDATED.equals(action) || BROADCAST_PROFILE_IMAGE_UPDATED.equals(action)
-                    || BROADCAST_PROFILE_BANNER_UPDATED.equals(action)) {
-                if (intent.getLongExtra(EXTRA_USER_ID, -1) == mUser.id && intent.getBooleanExtra(EXTRA_SUCCEED, false)) {
-                    getUserInfo(true);
+                case BROADCAST_TASK_STATE_CHANGED: {
+                    final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                    final boolean is_creating_friendship = twitter != null
+                            && twitter.isCreatingFriendship(mUser.account_id, mUser.id);
+                    final boolean is_destroying_friendship = twitter != null
+                            && twitter.isDestroyingFriendship(mUser.account_id, mUser.id);
+                    setProgressBarIndeterminateVisibility(is_creating_friendship || is_destroying_friendship);
+                    invalidateOptionsMenu();
+                    break;
                 }
-            } else if (BROADCAST_TASK_STATE_CHANGED.equals(action)) {
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
-                final boolean is_creating_friendship = twitter != null
-                        && twitter.isCreatingFriendship(mUser.account_id, mUser.id);
-                final boolean is_destroying_friendship = twitter != null
-                        && twitter.isDestroyingFriendship(mUser.account_id, mUser.id);
-                setProgressBarIndeterminateVisibility(is_creating_friendship || is_destroying_friendship);
-                invalidateOptionsMenu();
             }
         }
     };
@@ -697,7 +702,6 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         super.onStart();
         final IntentFilter filter = new IntentFilter(BROADCAST_TASK_STATE_CHANGED);
         filter.addAction(BROADCAST_FRIENDSHIP_CHANGED);
-        filter.addAction(BROADCAST_BLOCKSTATE_CHANGED);
         filter.addAction(BROADCAST_PROFILE_UPDATED);
         filter.addAction(BROADCAST_PROFILE_IMAGE_UPDATED);
         filter.addAction(BROADCAST_PROFILE_BANNER_UPDATED);
@@ -791,10 +795,27 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
                 break;
             }
             case MENU_ADD_TO_FILTER: {
-                final ContentResolver resolver = getContentResolver();
-                resolver.delete(Filters.Users.CONTENT_URI, Where.equals(Filters.Users.USER_ID, user.id).getSQL(), null);
-                resolver.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.makeFilteredUserContentValues(user));
-                showInfoMessage(getActivity(), R.string.message_user_muted, false);
+                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
+                final ContentResolver cr = getContentResolver();
+                if (filtering) {
+                    final Where where = Where.equals(Filters.Users.USER_ID, user.id);
+                    cr.delete(Filters.Users.CONTENT_URI, where.getSQL(), null);
+                    showInfoMessage(getActivity(), R.string.message_user_unmuted, false);
+                } else {
+                    cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.makeFilteredUserContentValues(user));
+                    showInfoMessage(getActivity(), R.string.message_user_muted, false);
+                }
+                setMenu(mMenuBar.getMenu());
+                break;
+            }
+            case MENU_MUTE_USER: {
+                if (mRelationship != null) {
+                    if (mRelationship.isSourceMutingTarget()) {
+                        twitter.destroyMuteAsync(user.account_id, user.id);
+                    } else {
+                        CreateUserMuteDialogFragment.show(getFragmentManager(), user);
+                    }
+                }
                 break;
             }
             case MENU_MENTION: {
@@ -889,7 +910,6 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         final ParcelableUser user = mUser;
         final Relationship relationship = mRelationship;
         if (twitter == null || user == null) return;
-        final int activatedColor = ThemeUtils.getUserAccentColor(getActivity());
         final boolean isMyself = user.account_id == user.id;
         final boolean isFollowing = relationship != null && relationship.isSourceFollowingTarget();
         final boolean isProtected = user.is_protected;
@@ -912,17 +932,24 @@ public class UserProfileFragment extends BaseSupportListFragment implements OnCl
         if (user.id != user.account_id && relationship != null) {
             setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, relationship.canSourceDMTarget());
             setMenuItemAvailability(menu, MENU_BLOCK, true);
+            setMenuItemAvailability(menu, MENU_MUTE_USER, true);
             final MenuItem blockItem = menu.findItem(MENU_BLOCK);
             if (blockItem != null) {
-                final Drawable blockIcon = blockItem.getIcon();
-                if (relationship.isSourceBlockingTarget()) {
-                    blockItem.setTitle(R.string.unblock);
-                    blockIcon.mutate();
-                    blockIcon.setColorFilter(activatedColor, PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    blockItem.setTitle(R.string.block);
-                    blockIcon.clearColorFilter();
-                }
+                final boolean blocking = relationship.isSourceBlockingTarget();
+                MenuUtils.setMenuInfo(blockItem, new TwidereMenuInfo(blocking));
+                blockItem.setTitle(blocking ? R.string.unblock : R.string.block);
+            }
+            final MenuItem muteItem = menu.findItem(MENU_MUTE_USER);
+            if (muteItem != null) {
+                final boolean muting = relationship.isSourceMutingTarget();
+                MenuUtils.setMenuInfo(muteItem, new TwidereMenuInfo(muting));
+                muteItem.setTitle(muting ? R.string.unmute : R.string.mute);
+            }
+            final MenuItem filterItem = menu.findItem(MENU_ADD_TO_FILTER);
+            if (filterItem != null) {
+                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
+                MenuUtils.setMenuInfo(filterItem, new TwidereMenuInfo(filtering));
+                filterItem.setTitle(filtering ? R.string.remove_from_filter : R.string.add_to_filter);
             }
         } else {
             setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, false);

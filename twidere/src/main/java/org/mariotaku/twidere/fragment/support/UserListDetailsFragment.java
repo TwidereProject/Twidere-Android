@@ -54,8 +54,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.mariotaku.menucomponent.widget.MenuBar;
-import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.ListActionAdapter;
@@ -121,15 +119,15 @@ public class UserListDetailsFragment extends BaseSupportListFragment implements 
         public void onReceive(final Context context, final Intent intent) {
             if (getActivity() == null || !isAdded() || isDetached()) return;
             final String action = intent.getAction();
-            final ParcelableUserList user_list = intent.getParcelableExtra(EXTRA_USER_LIST);
-            if (user_list == null || mUserList == null || !intent.getBooleanExtra(EXTRA_SUCCEED, false))
+            final ParcelableUserList userList = intent.getParcelableExtra(EXTRA_USER_LIST);
+            if (userList == null || mUserList == null)
                 return;
             if (BROADCAST_USER_LIST_DETAILS_UPDATED.equals(action)) {
-                if (user_list.id == mUserList.id) {
+                if (userList.id == mUserList.id) {
                     getUserListInfo(true);
                 }
             } else if (BROADCAST_USER_LIST_SUBSCRIBED.equals(action) || BROADCAST_USER_LIST_UNSUBSCRIBED.equals(action)) {
-                if (user_list.id == mUserList.id) {
+                if (userList.id == mUserList.id) {
                     getUserListInfo(true);
                 }
             }
