@@ -116,7 +116,7 @@ public class UserListsListFragment extends BaseUserListsListFragment {
         final ParcelableUserListsAdapter adapter = getListAdapter();
         final int listsIdx = adapter.findItemPosition(id);
         if (listsIdx >= 0) {
-            adapter.remove(listsIdx);
+            adapter.removeAt(listsIdx);
         }
     }
 

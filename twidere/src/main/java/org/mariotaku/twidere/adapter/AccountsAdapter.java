@@ -75,19 +75,6 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
-    public long getItemId(final int position) {
-        final Cursor c = getCursor();
-        if (c == null || c.isClosed()) return -1;
-        c.moveToPosition(position);
-        return c.getLong(mAccountIdIdx);
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    @Override
     public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
         final View view = super.newView(context, cursor, parent);
         final AccountViewHolder holder = new AccountViewHolder(view);

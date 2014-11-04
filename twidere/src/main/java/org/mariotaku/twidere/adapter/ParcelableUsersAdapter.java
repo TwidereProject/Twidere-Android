@@ -166,7 +166,7 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         }
         if (data == null) return;
         for (final ParcelableUser user : data) {
-            if (clear_old || findItem(user.id) == null) {
+            if (clear_old || findItemPosition(user.id) < 0) {
                 add(user);
             }
         }

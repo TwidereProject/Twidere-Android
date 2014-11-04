@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.RawItemArray;
@@ -180,27 +181,27 @@ public class Account implements Parcelable {
     public static List<Account> getAccountsList(final Context context, final boolean activatedOnly,
                                                 final boolean officialKeyOnly) {
         if (context == null) return Collections.emptyList();
-        final ArrayList<Account> accounts = new ArrayList<Account>();
-        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS_NO_CREDENTIALS, activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, null);
-        if (cur != null) {
-            final Indices indices = new Indices(cur);
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                if (!officialKeyOnly) {
+        final ArrayList<Account> accounts = new ArrayList<>();
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
+                Accounts.CONTENT_URI, Accounts.COLUMNS_NO_CREDENTIALS,
+                activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, Accounts.SORT_POSITION);
+        if (cur == null) return accounts;
+        final Indices indices = new Indices(cur);
+        cur.moveToFirst();
+        while (!cur.isAfterLast()) {
+            if (!officialKeyOnly) {
+                accounts.add(new Account(cur, indices));
+            } else {
+                final String consumerKey = cur.getString(indices.consumer_key);
+                final String consumerSecret = cur.getString(indices.consumer_secret);
+                if (shouldForceUsingPrivateAPIs(context)
+                        || isOfficialConsumerKeySecret(context, consumerKey, consumerSecret)) {
                     accounts.add(new Account(cur, indices));
-                } else {
-                    final String consumerKey = cur.getString(indices.consumer_key);
-                    final String consumerSecret = cur.getString(indices.consumer_secret);
-                    if (shouldForceUsingPrivateAPIs(context)
-                            || isOfficialConsumerKeySecret(context, consumerKey, consumerSecret)) {
-                        accounts.add(new Account(cur, indices));
-                    }
                 }
-                cur.moveToNext();
             }
-            cur.close();
+            cur.moveToNext();
         }
+        cur.close();
         return accounts;
     }
 
@@ -253,7 +254,7 @@ public class Account implements Parcelable {
                     + ", api_url_format=" + api_url_format + ", same_oauth_signing_url=" + same_oauth_signing_url + "}";
         }
 
-        public static final boolean isOfficialCredentials(final Context context, final AccountWithCredentials account) {
+        public static boolean isOfficialCredentials(final Context context, final AccountWithCredentials account) {
             if (account == null) return false;
             final boolean isOAuth = account.auth_type == Accounts.AUTH_TYPE_OAUTH
                     || account.auth_type == Accounts.AUTH_TYPE_XAUTH;
@@ -268,7 +269,7 @@ public class Account implements Parcelable {
                 auth_type, consumer_key, consumer_secret, basic_auth_username, basic_auth_password, oauth_token,
                 oauth_token_secret, api_url_format, same_oauth_signing_url, no_version_suffix;
 
-        public Indices(final Cursor cursor) {
+        public Indices(@NonNull final Cursor cursor) {
             screen_name = cursor.getColumnIndex(Accounts.SCREEN_NAME);
             name = cursor.getColumnIndex(Accounts.NAME);
             account_id = cursor.getColumnIndex(Accounts.ACCOUNT_ID);

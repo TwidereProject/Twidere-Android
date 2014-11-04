@@ -25,14 +25,18 @@
     <me.grantland.widget.AutofitTextView
         android:id="@+id/unread_indicator"
         android:layout_width="@dimen/unread_indicator_size"
-        app:sizeToFit="true"
         android:layout_height="@dimen/unread_indicator_size"
         android:layout_alignRight="@+id/tab_icon"
         android:layout_alignTop="@+id/tab_icon"
-        android:singleLine="true"
         android:layout_marginRight="@dimen/element_spacing_minus_small"
-        android:textSize="8sp"
-        android:layout_marginTop="@dimen/element_spacing_minus_small"/>
+        android:layout_marginTop="@dimen/element_spacing_minus_small"
+        android:background="@drawable/bg_unread_indicator"
+        android:ellipsize="none"
+        android:gravity="center"
+        android:padding="@dimen/element_spacing_xsmall"
+        android:singleLine="true"
+        app:minTextSize="0.5sp"
+        app:sizeToFit="true"/>
 
 
 </RelativeLayout>

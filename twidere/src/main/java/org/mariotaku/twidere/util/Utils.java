@@ -1259,20 +1259,18 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
-    public static int[] getAccountColors(final Context context, final long[] account_ids) {
-        if (context == null || account_ids == null) return new int[0];
-        final String[] cols = new String[]{Accounts.COLOR};
-        final String where = Where.in(new Column(Accounts.ACCOUNT_ID), new RawItemArray(account_ids)).getSQL();
+    public static int[] getAccountColors(final Context context, final long[] accountIds) {
+        if (context == null || accountIds == null) return new int[0];
+        final String[] cols = new String[]{Accounts.ACCOUNT_ID, Accounts.COLOR};
+        final String where = Where.in(new Column(Accounts.ACCOUNT_ID), new RawItemArray(accountIds)).getSQL();
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, cols, where,
                 null, null);
         if (cur == null) return new int[0];
         try {
-            cur.moveToFirst();
             final int[] colors = new int[cur.getCount()];
-            int i = 0;
-            while (!cur.isAfterLast()) {
-                colors[i++] = cur.getInt(0);
-                cur.moveToNext();
+            for (int i = 0, j = cur.getCount(); i < j; i++) {
+                cur.moveToPosition(i);
+                colors[ArrayUtils.indexOf(accountIds, cur.getLong(0))] = cur.getInt(1);
             }
             return colors;
         } finally {
@@ -1653,10 +1651,10 @@ public final class Utils implements Constants, TwitterConstants {
                                         final String screen_name, final boolean ignore_cache) {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final boolean name_first = prefs.getBoolean(KEY_NAME_FIRST, true);
-        final boolean nickname_only = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
+        final boolean nicknameOnly = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getBoolean(KEY_NICKNAME_ONLY, false);
-        return getDisplayName(context, user_id, name, screen_name, name_first, nickname_only, ignore_cache);
+        return getDisplayName(context, user_id, name, screen_name, nameFirst, nicknameOnly, ignore_cache);
     }
 
     public static String getDisplayName(final Context context, final long user_id, final String name,

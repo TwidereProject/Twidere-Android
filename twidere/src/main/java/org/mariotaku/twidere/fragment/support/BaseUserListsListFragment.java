@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
-import static org.mariotaku.twidere.util.Utils.openUserListDetails;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -48,204 +45,207 @@ import org.mariotaku.twidere.util.MultiSelectManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
+import static org.mariotaku.twidere.util.Utils.openUserListDetails;
+
 abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment implements
-		LoaderCallbacks<List<ParcelableUserList>>, Panes.Left, OnMenuItemClickListener, MenuButtonClickListener {
+        LoaderCallbacks<List<ParcelableUserList>>, Panes.Left, OnMenuItemClickListener, MenuButtonClickListener {
 
-	private ParcelableUserListsAdapter mAdapter;
+    private ParcelableUserListsAdapter mAdapter;
 
-	private SharedPreferences mPreferences;
-	private ListView mListView;
+    private SharedPreferences mPreferences;
+    private ListView mListView;
 
-	private long mAccountId, mUserId;
-	private String mScreenName;
-	private final ArrayList<ParcelableUserList> mData = new ArrayList<ParcelableUserList>();
-	private ParcelableUserList mSelectedUserList;
-	private long mCursor = -1;
-	private boolean mLoadMoreAutomatically;
+    private long mAccountId, mUserId;
+    private String mScreenName;
+    private final ArrayList<ParcelableUserList> mData = new ArrayList<>();
+    private ParcelableUserList mSelectedUserList;
+    private long mCursor = -1;
+    private boolean mLoadMoreAutomatically;
 
-	private AsyncTwitterWrapper mTwitterWrapper;
-	private MultiSelectManager mMultiSelectManager;
+    private AsyncTwitterWrapper mTwitterWrapper;
+    private MultiSelectManager mMultiSelectManager;
 
-	public long getAccountId() {
-		return mAccountId;
-	}
+    public long getAccountId() {
+        return mAccountId;
+    }
 
-	public long getCursor() {
-		return mCursor;
-	}
+    public long getCursor() {
+        return mCursor;
+    }
 
-	public final ArrayList<ParcelableUserList> getData() {
-		return mData;
-	}
+    public final ArrayList<ParcelableUserList> getData() {
+        return mData;
+    }
 
-	@Override
-	public ParcelableUserListsAdapter getListAdapter() {
-		return mAdapter;
-	}
+    @Override
+    public ParcelableUserListsAdapter getListAdapter() {
+        return mAdapter;
+    }
 
-	public String getScreenName() {
-		return mScreenName;
-	}
+    public String getScreenName() {
+        return mScreenName;
+    }
 
-	public long getUserId() {
-		return mUserId;
-	}
+    public long getUserId() {
+        return mUserId;
+    }
 
-	public void loadMoreUserLists() {
-		final int count = mAdapter.getCount();
-		if (count - 1 > 0) {
-			final Bundle args = getArguments();
-			if (args != null) {
-				args.putLong(EXTRA_MAX_ID, mAdapter.getItem(count - 1).user_id);
-			}
-			if (!getLoaderManager().hasRunningLoaders()) {
-				getLoaderManager().restartLoader(0, args, this);
-			}
-		}
-	}
+    public void loadMoreUserLists() {
+        final int count = mAdapter.getCount();
+        if (count - 1 > 0) {
+            final Bundle args = getArguments();
+            if (args != null) {
+                args.putLong(EXTRA_MAX_ID, mAdapter.getItem(count - 1).user_id);
+            }
+            if (!getLoaderManager().hasRunningLoaders()) {
+                getLoaderManager().restartLoader(0, args, this);
+            }
+        }
+    }
 
-	public abstract Loader<List<ParcelableUserList>> newLoaderInstance(long accountId, long userId, String screen_name);
+    public abstract Loader<List<ParcelableUserList>> newLoaderInstance(long accountId, long userId, String screen_name);
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mTwitterWrapper = getTwitterWrapper();
-		mMultiSelectManager = getMultiSelectManager();
-		mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-		final Bundle args = getArguments();
-		if (args != null) {
-			mAccountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-			mUserId = args.getLong(EXTRA_USER_ID, -1);
-			mScreenName = args.getString(EXTRA_SCREEN_NAME);
-		}
-		mAdapter = new ParcelableUserListsAdapter(getActivity());
-		mListView = getListView();
-		mListView.setDivider(null);
-		mListView.setSelector(android.R.color.transparent);
-		mListView.setFastScrollEnabled(mPreferences.getBoolean(KEY_FAST_SCROLL_THUMB, false));
-		// final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		// if (mAccountId != account_id) {
-		// mAdapter.clear();
-		// mData.clear();
-		// }
-		// mAccountId = account_id;
-		setListAdapter(mAdapter);
-		mAdapter.setMenuButtonClickListener(this);
-		getLoaderManager().initLoader(0, getArguments(), this);
-		setListShown(false);
-		setRefreshMode(RefreshMode.NONE);
-	}
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mTwitterWrapper = getTwitterWrapper();
+        mMultiSelectManager = getMultiSelectManager();
+        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final Bundle args = getArguments();
+        if (args != null) {
+            mAccountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            mUserId = args.getLong(EXTRA_USER_ID, -1);
+            mScreenName = args.getString(EXTRA_SCREEN_NAME);
+        }
+        mAdapter = new ParcelableUserListsAdapter(getActivity());
+        mListView = getListView();
+        mListView.setDivider(null);
+        mListView.setSelector(android.R.color.transparent);
+        mListView.setFastScrollEnabled(mPreferences.getBoolean(KEY_FAST_SCROLL_THUMB, false));
+        // final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        // if (mAccountId != account_id) {
+        // mAdapter.clear();
+        // mData.clear();
+        // }
+        // mAccountId = account_id;
+        setListAdapter(mAdapter);
+        mAdapter.setMenuButtonClickListener(this);
+        getLoaderManager().initLoader(0, getArguments(), this);
+        setListShown(false);
+        setRefreshMode(RefreshMode.NONE);
+    }
 
-	@Override
-	public Loader<List<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
-		setProgressBarIndeterminateVisibility(true);
-		return newLoaderInstance(mAccountId, mUserId, mScreenName);
-	}
+    @Override
+    public Loader<List<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
+        setProgressBarIndeterminateVisibility(true);
+        return newLoaderInstance(mAccountId, mUserId, mScreenName);
+    }
 
-	@Override
-	public final void onListItemClick(final ListView view, final View child, final int position, final long id) {
-		if (mMultiSelectManager.isActive()) return;
-		final ParcelableUserList userList = mAdapter.findItem(id);
-		if (userList == null) return;
-		openUserListDetails(getActivity(), userList);
-	}
+    @Override
+    public final void onListItemClick(final ListView view, final View child, final int position, final long id) {
+        if (mMultiSelectManager.isActive()) return;
+        final int userListPosition = mAdapter.findItemPosition(id);
+        if (userListPosition < 0) return;
+        openUserListDetails(getActivity(), mAdapter.getItem(userListPosition));
+    }
 
-	@Override
-	public void onLoaderReset(final Loader<List<ParcelableUserList>> loader) {
-		setProgressBarIndeterminateVisibility(false);
-	}
+    @Override
+    public void onLoaderReset(final Loader<List<ParcelableUserList>> loader) {
+        setProgressBarIndeterminateVisibility(false);
+    }
 
-	@Override
-	public void onLoadFinished(final Loader<List<ParcelableUserList>> loader, final List<ParcelableUserList> data) {
-		setProgressBarIndeterminateVisibility(false);
-		mAdapter.appendData(data);
-		if (loader instanceof BaseUserListsLoader) {
-			final long cursor = ((BaseUserListsLoader) loader).getNextCursor();
-			if (cursor != -2) {
-				mCursor = cursor;
-			}
-		}
-		setRefreshComplete();
-		setListShown(true);
-	}
+    @Override
+    public void onLoadFinished(final Loader<List<ParcelableUserList>> loader, final List<ParcelableUserList> data) {
+        setProgressBarIndeterminateVisibility(false);
+        mAdapter.appendData(data);
+        if (loader instanceof BaseUserListsLoader) {
+            final long cursor = ((BaseUserListsLoader) loader).getNextCursor();
+            if (cursor != -2) {
+                mCursor = cursor;
+            }
+        }
+        setRefreshComplete();
+        setListShown(true);
+    }
 
-	@Override
-	public void onMenuButtonClick(final View button, final int position, final long id) {
-		final ParcelableUserList userList = mAdapter.getItem(position - mListView.getHeaderViewsCount());
-		if (userList == null) return;
-		showMenu(button, userList);
-	}
+    @Override
+    public void onMenuButtonClick(final View button, final int position, final long id) {
+        final ParcelableUserList userList = mAdapter.getItem(position - mListView.getHeaderViewsCount());
+        if (userList == null) return;
+        showMenu(button, userList);
+    }
 
-	@Override
-	public boolean onMenuItemClick(final MenuItem item) {
-		if (mSelectedUserList == null) return false;
-		switch (item.getItemId()) {
-			case MENU_ADD: {
-				AddUserListMemberDialogFragment.show(getFragmentManager(), mSelectedUserList.account_id,
-						mSelectedUserList.id);
-				break;
-			}
-			case MENU_DELETE: {
-				mTwitterWrapper.destroyUserListAsync(mSelectedUserList.account_id, mSelectedUserList.id);
-				break;
-			}
-			default: {
-				if (item.getIntent() != null) {
-					try {
-						startActivity(item.getIntent());
-					} catch (final ActivityNotFoundException e) {
-						Log.w(LOGTAG, e);
-						return false;
-					}
-				}
-				break;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean onMenuItemClick(final MenuItem item) {
+        if (mSelectedUserList == null) return false;
+        switch (item.getItemId()) {
+            case MENU_ADD: {
+                AddUserListMemberDialogFragment.show(getFragmentManager(), mSelectedUserList.account_id,
+                        mSelectedUserList.id);
+                break;
+            }
+            case MENU_DELETE: {
+                mTwitterWrapper.destroyUserListAsync(mSelectedUserList.account_id, mSelectedUserList.id);
+                break;
+            }
+            default: {
+                if (item.getIntent() != null) {
+                    try {
+                        startActivity(item.getIntent());
+                    } catch (final ActivityNotFoundException e) {
+                        Log.w(LOGTAG, e);
+                        return false;
+                    }
+                }
+                break;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public void onRefreshFromEnd() {
-		if (mLoadMoreAutomatically) return;
-		loadMoreUserLists();
-	}
+    @Override
+    public void onRefreshFromEnd() {
+        if (mLoadMoreAutomatically) return;
+        loadMoreUserLists();
+    }
 
-	@Override
-	public void onRefreshFromStart() {
-		if (isRefreshing()) return;
-		getLoaderManager().restartLoader(0, getArguments(), this);
-	}
+    @Override
+    public void onRefreshFromStart() {
+        if (isRefreshing()) return;
+        getLoaderManager().restartLoader(0, getArguments(), this);
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mLoadMoreAutomatically = mPreferences.getBoolean(KEY_LOAD_MORE_AUTOMATICALLY, false);
-		configBaseCardAdapter(getActivity(), mAdapter);
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+        mLoadMoreAutomatically = mPreferences.getBoolean(KEY_LOAD_MORE_AUTOMATICALLY, false);
+        configBaseCardAdapter(getActivity(), mAdapter);
+    }
 
-	@Override
-	public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-	}
+    @Override
+    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+    }
 
-	protected UserListMenuDialogFragment createMenuDialog() {
-		return new UserListMenuDialogFragment();
-	}
+    protected UserListMenuDialogFragment createMenuDialog() {
+        return new UserListMenuDialogFragment();
+    }
 
-	@Override
-	protected void onReachedBottom() {
-		if (!mLoadMoreAutomatically) return;
-		loadMoreUserLists();
-	}
+    @Override
+    protected void onReachedBottom() {
+        if (!mLoadMoreAutomatically) return;
+        loadMoreUserLists();
+    }
 
-	private void showMenu(final View view, final ParcelableUserList userList) {
-		mSelectedUserList = userList;
-		final FragmentActivity activity = getActivity();
-		if (activity == null || activity.isFinishing() || view == null || userList == null) return;
-		final UserListMenuDialogFragment df = createMenuDialog();
-		final Bundle args = new Bundle();
-		args.putParcelable(EXTRA_USER_LIST, userList);
-		df.setArguments(args);
-		df.show(getChildFragmentManager(), "user_list_menu");
-	}
+    private void showMenu(final View view, final ParcelableUserList userList) {
+        mSelectedUserList = userList;
+        final FragmentActivity activity = getActivity();
+        if (activity == null || activity.isFinishing() || view == null || userList == null) return;
+        final UserListMenuDialogFragment df = createMenuDialog();
+        final Bundle args = new Bundle();
+        args.putParcelable(EXTRA_USER_LIST, userList);
+        df.setArguments(args);
+        df.show(getChildFragmentManager(), "user_list_menu");
+    }
 
 }

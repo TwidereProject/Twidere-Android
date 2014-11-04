@@ -45,12 +45,11 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.util.LongSparseArray;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,9 +59,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -73,9 +76,9 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
+import org.mariotaku.menucomponent.internal.widget.IListPopupWindow;
 import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
-import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -105,7 +108,6 @@ import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ColorLabelFrameLayout;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
-import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -115,6 +117,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -147,7 +150,7 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class ComposeActivity extends BaseSupportDialogActivity implements TextWatcher, LocationListener,
-        MenuBarListener, OnClickListener, OnEditorActionListener, OnLongClickListener {
+        MenuBarListener, OnClickListener, OnEditorActionListener, OnLongClickListener, OnItemClickListener {
 
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
 
@@ -170,20 +173,18 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     private ContentResolver mResolver;
     private AsyncTask<Void, Void, ?> mTask;
-    private PopupMenu mPopupMenu;
+    private IListPopupWindow mAccountSelectorPopup;
     private TextView mTitleView, mSubtitleView;
     private GridView mMediasPreviewGrid;
 
     private MenuBar mMenuBar;
-    private IColorLabelView mColorIndicator;
     private EditText mEditText;
     private ProgressBar mProgress;
     private View mSendView;
     private StatusTextCountView mSendTextCountView;
-    private ColorLabelFrameLayout mSelectAccount;
+    private ColorLabelFrameLayout mSelectAccountButton;
 
     private MediaPreviewAdapter mMediaPreviewAdapter;
-    private AccountSelectorAdapter mAccountSelectorAdapter;
 
     private boolean mIsPossiblySensitive, mShouldSaveAccounts;
 
@@ -417,7 +418,16 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 break;
             }
             case R.id.select_account: {
-                Toast.makeText(this, "Select account", Toast.LENGTH_SHORT).show();
+                if (!mAccountSelectorPopup.isShowing()) {
+                    mAccountSelectorPopup.show();
+                }
+                final ListView listView = mAccountSelectorPopup.getListView();
+                listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+                listView.setOnItemClickListener(this);
+                for (int i = 0, j = listView.getCount(); i < j; i++) {
+                    final long itemId = listView.getItemIdAtPosition(i);
+                    listView.setItemChecked(i, ArrayUtils.contains(mSendAccountIds, itemId));
+                }
                 break;
             }
         }
@@ -427,7 +437,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     public void onContentChanged() {
         super.onContentChanged();
         findViewById(R.id.close).setOnClickListener(this);
-        mColorIndicator = (IColorLabelView) findViewById(R.id.accounts_color);
         mEditText = (EditText) findViewById(R.id.edit_text);
         mTitleView = (TextView) findViewById(R.id.actionbar_title);
         mSubtitleView = (TextView) findViewById(R.id.actionbar_subtitle);
@@ -438,7 +447,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         final View composeBottomBar = findViewById(R.id.compose_bottombar);
         mSendView = composeBottomBar.findViewById(R.id.send);
         mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
-        mSelectAccount = (ColorLabelFrameLayout) composeActionBar.findViewById(R.id.select_account);
+        mSelectAccountButton = (ColorLabelFrameLayout) composeActionBar.findViewById(R.id.select_account);
         ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
         ViewAccessor.setBackground(composeActionBar, getActionBarBackground(this, getCurrentThemeResourceId()));
     }
@@ -454,24 +463,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         }
         return false;
     }
-
-//    @Override
-//    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-//        if (isSingleAccount()) return;
-//        final boolean selected = !view.isActivated();
-//        final Account account = mAccountSelectorAdapter.getItem(position);
-//        mAccountSelectorAdapter.setAccountSelected(account.account_id, selected);
-//        mSendAccountIds = mAccountSelectorAdapter.getSelectedAccountIds();
-//        updateAccountSelection();
-//    }
-//
-//    @Override
-//    public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-//        final Account account = mAccountSelectorAdapter.getItem(position);
-//        final String displayName = getDisplayName(this, account.account_id, account.name, account.screen_name);
-//        showMenuItemToast(view, displayName, true);
-//        return true;
-//    }
 
     @Override
     public void onLocationChanged(final Location location) {
@@ -576,7 +567,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mTwitterWrapper = getTwidereApplication().getTwitterWrapper();
         mResolver = getContentResolver();
         mValidator = new TwidereValidator(this);
-        setContentView(getLayoutInflater().inflate(R.layout.activity_compose, null));
+        setContentView(R.layout.activity_compose);
         setProgressBarIndeterminateVisibility(false);
         setFinishOnTouchOutside(false);
         mAccountIds = getAccountIds(this);
@@ -591,11 +582,16 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mMenuBar.setMenuBarListener(this);
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
-        mAccountSelectorAdapter = new AccountSelectorAdapter(this);
-        mAccountSelectorAdapter.addAll(Account.getAccountsList(this, false));
-        mSelectAccount.setOnClickListener(this);
-//        mAccountSelector.setOnItemClickListener(this);
-//        mAccountSelector.setOnItemLongClickListener(this);
+        final AccountSelectorAdapter accountAdapter = new AccountSelectorAdapter(this);
+        accountAdapter.addAll(Account.getAccountsList(this, false));
+        mAccountSelectorPopup = IListPopupWindow.InstanceHelper.getInstance(mMenuBar.getPopupContext());
+        mAccountSelectorPopup.setModal(true);
+        mAccountSelectorPopup.setContentWidth(getResources().getDimensionPixelSize(R.dimen.mc__popup_window_width));
+        mAccountSelectorPopup.setAdapter(accountAdapter);
+        mAccountSelectorPopup.setAnchorView(mSelectAccountButton);
+
+        mSelectAccountButton.setOnClickListener(this);
+        mSelectAccountButton.setOnLongClickListener(this);
 
         mMediaPreviewAdapter = new MediaPreviewAdapter(this);
         mMediasPreviewGrid.setAdapter(mMediaPreviewAdapter);
@@ -668,8 +664,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     @Override
     protected void onStop() {
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
+        if (mAccountSelectorPopup != null && mAccountSelectorPopup.isShowing()) {
+            mAccountSelectorPopup.dismiss();
         }
         mLocationManager.removeUpdates(this);
         super.onStop();
@@ -929,22 +925,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         return true;
     }
 
-    private void setCommonMenu(final Menu menu) {
-        final boolean hasMedia = hasMedia();
-        // final MenuItem itemAddImageSubmenu =
-        // menu.findItem(R.id.add_image_submenu);
-        // if (itemAddImageSubmenu != null) {
-        // final Drawable iconAddImage = itemAddImageSubmenu.getIcon();
-        // iconAddImage.mutate();
-        // if (hasMedia) {
-        // iconAddImage.setColorFilter(activatedColor, Mode.SRC_ATOP);
-        // } else {
-        // iconAddImage.clearColorFilter();
-        // }
-        // }
-
-    }
-
     private boolean setComposeTitle(final Intent intent) {
         final String action = intent.getAction();
         if (INTENT_ACTION_REPLY.equals(action)) {
@@ -1046,11 +1026,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             editor.putString(KEY_COMPOSE_ACCOUNTS, ArrayUtils.toString(mSendAccountIds, ',', false));
             editor.apply();
         }
-        mAccountSelectorAdapter.clearAccountSelection();
-        for (final long accountId : mSendAccountIds) {
-            mAccountSelectorAdapter.setAccountSelected(accountId, true);
-        }
-        mSelectAccount.drawEnd(getAccountColors(this, mSendAccountIds));
+        mSelectAccountButton.drawEnd(getAccountColors(this, mSendAccountIds));
     }
 
     private void updateMediasPreview() {
@@ -1127,6 +1103,19 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     @Override
     public void onPreShowMenu(Menu menu) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final ListView listView = (ListView) parent;
+        final SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
+        mSendAccountIds = new long[listView.getCheckedItemCount()];
+        for (int i = 0, j = listView.getCount(), k = 0; i < j; i++) {
+            if (checkedPositions.get(i)) {
+                mSendAccountIds[k++] = listView.getItemIdAtPosition(i);
+            }
+        }
+        updateAccountSelection();
     }
 
     public static class RetweetProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
@@ -1287,48 +1276,29 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     private static class AccountSelectorAdapter extends BaseArrayAdapter<Account> {
 
-        private final LongSparseArray<Boolean> mAccountSelectStates = new LongSparseArray<>();
-
-
         public AccountSelectorAdapter(final Context context) {
-            super(context, R.layout.adapter_item_compose_account);
+            super(context, android.R.layout.simple_list_item_multiple_choice);
         }
 
-        public void clearAccountSelection() {
-            mAccountSelectStates.clear();
-            notifyDataSetChanged();
+        @Override
+        public long getItemId(int position) {
+            return super.getItem(position).account_id;
         }
 
-        public void setAccountSelected(final long accountId, final boolean selected) {
-            mAccountSelectStates.put(accountId, selected);
-            notifyDataSetChanged();
+        @Override
+        public boolean hasStableIds() {
+            return true;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
-            final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             final Account account = getItem(position);
-            final ImageLoaderWrapper loader = getImageLoader();
-            loader.displayProfileImage(icon, account.profile_image_url);
+            final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+            text1.setText(Utils.getAccountDisplayName(getContext(), account.account_id, isDisplayNameFirst()));
             return view;
         }
 
-
-    }
-
-
-    private static class AccountAvatarHolder extends ViewHolder {
-
-        private final ImageView icon;
-
-        public AccountAvatarHolder(View itemView) {
-            super(itemView);
-            icon = (ImageView) itemView.findViewById(android.R.id.icon);
-        }
-
-        public void setAccount(ImageLoaderWrapper loader, Account account, LongSparseArray<Boolean> states) {
-        }
     }
 
     private static class AddBitmapTask extends AddMediaTask {
@@ -1516,5 +1486,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             return view;
         }
 
+        public List<ParcelableMediaUpdate> getAsList() {
+            return Collections.unmodifiableList(getObjects());
+        }
     }
 }

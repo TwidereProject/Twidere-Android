@@ -169,7 +169,7 @@ public class ParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserL
         }
         if (data == null) return;
         for (final ParcelableUserList user : data) {
-            if (clear_old || findItem(user.id) == null) {
+            if (clear_old || findItemPosition(user.id) < 0) {
                 add(user);
             }
         }

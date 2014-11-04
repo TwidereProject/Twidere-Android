@@ -120,11 +120,6 @@ public class BaseListFragment extends ListFragment implements Constants, OnScrol
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         mActivityFirstCreated = true;

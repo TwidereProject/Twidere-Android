@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,14 +70,16 @@ public abstract class CursorStatusesListFragment extends BaseStatusesListFragmen
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         final Context context = getActivity();
+        final SharedPreferences preferences = getSharedPreferences();
+        final boolean sortById = preferences.getBoolean(KEY_SORT_TIMELINE_BY_ID, false);
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
-        final String sortOrder = Statuses.DEFAULT_SORT_ORDER;
-        final long account_id = getAccountId();
-        final long[] accountIds = account_id > 0 ? new long[]{account_id} : getActivatedAccountIds(context);
-        final boolean no_account_selected = accountIds.length == 0;
-        setEmptyText(no_account_selected ? getString(R.string.no_account_selected) : null);
-        if (!no_account_selected) {
+        final String sortOrder = sortById ? Statuses.SORT_ORDER_STATUS_ID_DESC : Statuses.SORT_ORDER_TIMESTAMP_DESC;
+        final long accountId = getAccountId();
+        final long[] accountIds = accountId > 0 ? new long[]{accountId} : getActivatedAccountIds(context);
+        final boolean noAccountSelected = accountIds.length == 0;
+        setEmptyText(noAccountSelected ? getString(R.string.no_account_selected) : null);
+        if (!noAccountSelected) {
             getListView().setEmptyView(null);
         }
         final Where accountWhere = Where.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));

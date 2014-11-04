@@ -34,7 +34,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -58,6 +57,8 @@ import org.mariotaku.twidere.util.ListScrollDistanceCalculator.ScrollDistanceLis
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.ExtendedFrameLayout;
+import org.mariotaku.twidere.view.iface.IExtendedView.TouchInterceptor;
 
 import static android.support.v4.app.ListFragmentTrojan.INTERNAL_EMPTY_ID;
 import static android.support.v4.app.ListFragmentTrojan.INTERNAL_LIST_CONTAINER_ID;
@@ -169,15 +170,26 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     }
 
 
-    private final OnTouchListener mInternalOnTouchListener = new OnTouchListener() {
+    private final TouchInterceptor mInternalOnTouchListener = new TouchInterceptor() {
+
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
+        public boolean dispatchTouchEvent(View view, MotionEvent event) {
+            return false;
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(View view, MotionEvent event) {
+            switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN: {
                     onListTouched();
                     break;
                 }
             }
+            return false;
+        }
+
+        @Override
+        public boolean onTouchEvent(View view, MotionEvent event) {
             return false;
         }
     };
@@ -189,8 +201,6 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final ListView listView = getListView();
-        listView.setOnTouchListener(mInternalOnTouchListener);
         requestFitSystemWindows();
     }
 
@@ -232,8 +242,9 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
 
         // ------------------------------------------------------------------
 
-        final FrameLayout lframe = new FrameLayout(context);
+        final ExtendedFrameLayout lframe = new ExtendedFrameLayout(context);
         lframe.setId(INTERNAL_LIST_CONTAINER_ID);
+        lframe.setTouchInterceptor(mInternalOnTouchListener);
 
         final TextView tv = new TextView(getActivity());
         tv.setTextAppearance(context, ThemeUtils.getTextAppearanceLarge(context));
