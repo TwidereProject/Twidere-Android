@@ -137,8 +137,9 @@ import org.mariotaku.twidere.fragment.support.UserListMembershipsListFragment;
 import org.mariotaku.twidere.fragment.support.UserListSubscribersFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserListsListFragment;
+import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
-import org.mariotaku.twidere.fragment.support.UserProfileFragment;
+import org.mariotaku.twidere.fragment.support.UserProfileFragmentOld;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
@@ -310,6 +311,7 @@ public final class Utils implements Constants, TwitterConstants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS, null, LINK_ID_STATUS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER, null, LINK_ID_USER);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_TIMELINE, null, LINK_ID_USER_TIMELINE);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_MEDIA_TIMELINE, null, LINK_ID_USER_MEDIA_TIMELINE);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_FOLLOWERS, null, LINK_ID_USER_FOLLOWERS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_FRIENDS, null, LINK_ID_USER_FRIENDS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_FAVORITES, null, LINK_ID_USER_FAVORITES);
@@ -696,7 +698,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER: {
-                fragment = new UserProfileFragment();
+                fragment = new UserProfileFragmentOld();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
@@ -710,26 +712,39 @@ public final class Utils implements Constants, TwitterConstants {
             case LINK_ID_USER_LIST_MEMBERSHIPS: {
                 fragment = new UserListMembershipsListFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 }
                 break;
             }
             case LINK_ID_USER_TIMELINE: {
                 fragment = new UserTimelineFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 }
-                if (isEmpty(paramScreenName) && isEmpty(param_user_id)) return null;
+                if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
+                break;
+            }
+            case LINK_ID_USER_MEDIA_TIMELINE: {
+                fragment = new UserMediaTimelineFragment();
+                final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
+                    args.putString(EXTRA_SCREEN_NAME, paramScreenName);
+                }
+                if (!args.containsKey(EXTRA_USER_ID)) {
+                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                }
+                if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
             }
             case LINK_ID_USER_FAVORITES: {
@@ -1647,14 +1662,22 @@ public final class Utils implements Constants, TwitterConstants {
         return getDisplayName(context, userId, name, screenName, false);
     }
 
-    public static String getDisplayName(final Context context, final long user_id, final String name,
-                                        final String screen_name, final boolean ignore_cache) {
+    public static String getDisplayName(final Context context, final ParcelableUser user) {
+        return getDisplayName(context, user, false);
+    }
+
+    public static String getDisplayName(final Context context, final ParcelableUser user, final boolean ignoreCache) {
+        return getDisplayName(context, user.id, user.name, user.screen_name, ignoreCache);
+    }
+
+    public static String getDisplayName(final Context context, final long userId, final String name,
+                                        final String screenName, final boolean ignoreCache) {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
         final boolean nicknameOnly = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getBoolean(KEY_NICKNAME_ONLY, false);
-        return getDisplayName(context, user_id, name, screen_name, nameFirst, nicknameOnly, ignore_cache);
+        return getDisplayName(context, userId, name, screenName, nameFirst, nicknameOnly, ignoreCache);
     }
 
     public static String getDisplayName(final Context context, final long user_id, final String name,
@@ -3346,7 +3369,23 @@ public final class Utils implements Constants, TwitterConstants {
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         activity.startActivity(intent);
+    }
 
+    public static void openUserMediaTimeline(final Activity activity, final long account_id, final long user_id,
+                                             final String screen_name) {
+        if (activity == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_MEDIA_TIMELINE);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
+        if (user_id > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
+        }
+        if (screen_name != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        activity.startActivity(intent);
     }
 
     public static String replaceLast(final String text, final String regex, final String replacement) {

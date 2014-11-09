@@ -27,69 +27,69 @@ import android.graphics.drawable.Drawable;
  * This drawable that draws a simple white and gray chessboard pattern. It's
  * pattern you will often see as a background behind a partly transparent image
  * in many applications.
- * 
+ *
  * @author Daniel Nilsson
  */
 public class AlphaPatternDrawable extends Drawable {
 
-	private final int mAlphaPatternSize;
+    private final int mAlphaPatternSize;
 
-	private int mNumRectanglesHorizontal;
-	private int mNumRectanglesVertical;
+    private int mNumRectanglesHorizontal;
+    private int mNumRectanglesVertical;
 
-	private final Rect mRect = new Rect(), mBounds = new Rect();
-	private final Paint mPaint = new Paint();
+    private final Rect mRect = new Rect(), mBounds = new Rect();
+    private final Paint mPaint = new Paint();
 
-	public AlphaPatternDrawable(final int alphaPatternSize) {
-		mAlphaPatternSize = alphaPatternSize;
-	}
+    public AlphaPatternDrawable(final int alphaPatternSize) {
+        mAlphaPatternSize = alphaPatternSize;
+    }
 
-	@Override
-	public void draw(final Canvas canvas) {
+    @Override
+    public void draw(final Canvas canvas) {
 
-		boolean verticalStartWhite = true;
-		for (int i = 0; i <= mNumRectanglesVertical; i++) {
-			boolean horizontalStartWhite = verticalStartWhite;
-			for (int j = 0; j <= mNumRectanglesHorizontal; j++) {
-				mRect.setEmpty();
-				mRect.top = i * mAlphaPatternSize + mBounds.top;
-				mRect.left = j * mAlphaPatternSize + mBounds.left;
-				mRect.bottom = Math.min(mRect.top + mAlphaPatternSize, mBounds.bottom);
-				mRect.right = Math.min(mRect.left + mAlphaPatternSize, mBounds.right);
+        boolean verticalStartWhite = true;
+        for (int i = 0; i <= mNumRectanglesVertical; i++) {
+            boolean horizontalStartWhite = verticalStartWhite;
+            for (int j = 0; j <= mNumRectanglesHorizontal; j++) {
+                mRect.setEmpty();
+                mRect.top = i * mAlphaPatternSize + mBounds.top;
+                mRect.left = j * mAlphaPatternSize + mBounds.left;
+                mRect.bottom = Math.min(mRect.top + mAlphaPatternSize, mBounds.bottom);
+                mRect.right = Math.min(mRect.left + mAlphaPatternSize, mBounds.right);
 
-				mPaint.setColor(horizontalStartWhite ? Color.WHITE : Color.GRAY);
-				canvas.drawRect(mRect, mPaint);
+                mPaint.setColor(horizontalStartWhite ? Color.WHITE : Color.LTGRAY);
+                canvas.drawRect(mRect, mPaint);
 
-				horizontalStartWhite = !horizontalStartWhite;
-			}
-			verticalStartWhite = !verticalStartWhite;
-		}
-	}
+                horizontalStartWhite = !horizontalStartWhite;
+            }
+            verticalStartWhite = !verticalStartWhite;
+        }
+    }
 
-	@Override
-	public int getOpacity() {
-		return 0;
-	}
+    @Override
+    public int getOpacity() {
+        return 0;
+    }
 
-	@Override
-	public void setAlpha(final int alpha) {
+    @Override
+    public void setAlpha(final int alpha) {
 
-	}
+    }
 
-	@Override
-	public void setColorFilter(final ColorFilter cf) {
+    @Override
+    public void setColorFilter(final ColorFilter cf) {
 
-	}
+    }
 
-	@Override
-	protected void onBoundsChange(final Rect bounds) {
-		super.onBoundsChange(bounds);
-		mBounds.set(bounds);
-		final int height = bounds.height();
-		final int width = bounds.width();
-		mNumRectanglesHorizontal = (int) Math.ceil(width / mAlphaPatternSize);
-		mNumRectanglesVertical = (int) Math.ceil(height / mAlphaPatternSize);
-		invalidateSelf();
-	}
+    @Override
+    protected void onBoundsChange(final Rect bounds) {
+        super.onBoundsChange(bounds);
+        mBounds.set(bounds);
+        final int height = bounds.height();
+        final int width = bounds.width();
+        mNumRectanglesHorizontal = (int) Math.ceil(width / mAlphaPatternSize);
+        mNumRectanglesVertical = (int) Math.ceil(height / mAlphaPatternSize);
+        invalidateSelf();
+    }
 
 }

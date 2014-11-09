@@ -45,6 +45,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.ListPopupWindowCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -54,11 +55,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -77,8 +80,6 @@ import com.twitter.Extractor;
 
 import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
 import org.mariotaku.menucomponent.internal.widget.IListPopupWindow;
-import org.mariotaku.menucomponent.widget.MenuBar;
-import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -107,6 +108,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ColorLabelFrameLayout;
 import org.mariotaku.twidere.view.StatusTextCountView;
+import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import java.io.File;
@@ -150,7 +152,7 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class ComposeActivity extends BaseSupportDialogActivity implements TextWatcher, LocationListener,
-        MenuBarListener, OnClickListener, OnEditorActionListener, OnLongClickListener, OnItemClickListener {
+        OnMenuItemClickListener, OnClickListener, OnEditorActionListener, OnLongClickListener, OnItemClickListener {
 
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
 
@@ -177,7 +179,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     private TextView mTitleView, mSubtitleView;
     private GridView mMediasPreviewGrid;
 
-    private MenuBar mMenuBar;
+    private TwidereMenuBar mMenuBar;
     private EditText mEditText;
     private ProgressBar mProgress;
     private View mSendView;
@@ -441,7 +443,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mTitleView = (TextView) findViewById(R.id.actionbar_title);
         mSubtitleView = (TextView) findViewById(R.id.actionbar_subtitle);
         mMediasPreviewGrid = (GridView) findViewById(R.id.medias_thumbnail_preview);
-        mMenuBar = (MenuBar) findViewById(R.id.menu_bar);
+        mMenuBar = (TwidereMenuBar) findViewById(R.id.menu_bar);
         mProgress = (ProgressBar) findViewById(R.id.actionbar_progress_indeterminate);
         final View composeActionBar = findViewById(R.id.compose_actionbar);
         final View composeBottomBar = findViewById(R.id.compose_bottombar);
@@ -579,16 +581,20 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             return;
         }
         mMenuBar.setIsBottomBar(true);
-        mMenuBar.setMenuBarListener(this);
+        mMenuBar.setOnMenuItemClickListener(this);
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
         final AccountSelectorAdapter accountAdapter = new AccountSelectorAdapter(this);
         accountAdapter.addAll(Account.getAccountsList(this, false));
         mAccountSelectorPopup = IListPopupWindow.InstanceHelper.getInstance(mMenuBar.getPopupContext());
+        mAccountSelectorPopup.setInputMethodMode(IListPopupWindow.INPUT_METHOD_NOT_NEEDED);
+        mAccountSelectorPopup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mAccountSelectorPopup.setModal(true);
-        mAccountSelectorPopup.setContentWidth(getResources().getDimensionPixelSize(R.dimen.mc__popup_window_width));
+        mAccountSelectorPopup.setContentWidth(getResources().getDimensionPixelSize(R.dimen.account_selector_popup_width));
         mAccountSelectorPopup.setAdapter(accountAdapter);
         mAccountSelectorPopup.setAnchorView(mSelectAccountButton);
+//        mSelectAccountButton.setOnTouchListener(ListPopupWindowCompat.createDragToOpenListener(
+//                mAccountSelectorPopup, mSelectAccountButton));
 
         mSelectAccountButton.setOnClickListener(this);
         mSelectAccountButton.setOnLongClickListener(this);
@@ -1098,11 +1104,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 new String[]{FAKE_IMAGE_LINK}, textOrig) : textOrig + " " + FAKE_IMAGE_LINK : textOrig;
         final int validatedCount = text != null ? mValidator.getTweetLength(text) : 0;
         mSendTextCountView.setTextCount(validatedCount);
-    }
-
-    @Override
-    public void onPreShowMenu(Menu menu) {
-
     }
 
     @Override

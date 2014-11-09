@@ -4,9 +4,11 @@
 
     <com.pkmmte.view.CircularImageView
         android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/float_action_button_size"
+        android:layout_height="@dimen/float_action_button_size"
+        android:layout_gravity="center"
         app:border="false"
+        app:selector="true"
         app:shadow="true"/>
 
     <ProgressBar
@@ -19,8 +21,8 @@
 
     <ImageView
         android:id="@android:id/icon"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/element_spacing_normal"
         android:contentDescription="@string/compose"

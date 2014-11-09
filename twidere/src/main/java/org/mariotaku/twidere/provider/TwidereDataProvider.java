@@ -1024,7 +1024,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 			final ParcelableStatus status = new ParcelableStatus(value);
 			if (!enabled || !isFiltered(mDatabaseWrapper.getSQLiteDatabase(), status, filtersForRts)) {
 				final AccountPreferences pref = AccountPreferences.getAccountPreferences(prefs, status.account_id);
-				if (pref == null || status.user_is_following || !pref.isMyFollowingOnly()) {
+				if (pref == null || status.user_is_following || !pref.isNotificationFollowingOnly()) {
 					mNewMentions.add(status);
 				}
 				if (mUnreadMentions.add(new UnreadItem(status.id, status.account_id))) {

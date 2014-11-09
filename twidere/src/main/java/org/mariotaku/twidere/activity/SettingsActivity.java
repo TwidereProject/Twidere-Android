@@ -64,8 +64,6 @@ public class SettingsActivity extends BasePreferenceActivity {
 
     private String mCurrentThemeFontFamily;
 
-    private boolean mCurrentIsDarkDrawerEnabled;
-
     @Override
     public void finish() {
         if (shouldNotifyThemeChange()) {
@@ -183,7 +181,6 @@ public class SettingsActivity extends BasePreferenceActivity {
         mCurrentThemeColor = ThemeUtils.getUserAccentColor(this);
         mCurrentThemeFontFamily = getThemeFontFamily();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
-        mCurrentIsDarkDrawerEnabled = isDarkDrawerEnabled();
         super.onCreate(savedInstanceState);
         setIntent(getIntent().addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
         final ActionBar actionBar = getActionBar();
@@ -201,8 +198,7 @@ public class SettingsActivity extends BasePreferenceActivity {
                 || getThemeResourceId() != getCurrentThemeResourceId()
                 || ThemeUtils.getUserAccentColor(this) != mCurrentThemeColor
                 || !CompareUtils.objectEquals(getThemeFontFamily(), mCurrentThemeFontFamily)
-                || getThemeBackgroundAlpha() != mCurrentThemeBackgroundAlpha
-                || isDarkDrawerEnabled() != mCurrentIsDarkDrawerEnabled;
+                || getThemeBackgroundAlpha() != mCurrentThemeBackgroundAlpha;
     }
 
     private static class HeaderAdapter extends ArrayAdapter<Header> {

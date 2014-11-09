@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu>
 
-	<item
-		android:id="@+id/import_emport_submenu"
-		android:icon="@drawable/ic_action_import_export"
-		android:showAsAction="always|withText"
-		android:title="@string/import_export">
-		<menu>
-			<item
-				android:id="@id/import_settings"
-				android:icon="@drawable/ic_action_import"
-				android:title="@string/import_settings"/>
-			<item
-				android:id="@id/export_settings"
-				android:icon="@drawable/ic_action_export"
-				android:title="@string/export_settings"/>
-		</menu>
-	</item>
 
 </menu>

@@ -85,11 +85,6 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     public abstract int getThemeResourceId();
 
     @Override
-    public boolean isDarkDrawerEnabled() {
-        return false;
-    }
-
-    @Override
     public void navigateUpFromSameTask() {
         NavUtils.navigateUpFromSameTask(this);
         overrideCloseAnimationIfNeeded();

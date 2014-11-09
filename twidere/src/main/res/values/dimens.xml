@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="element_size_default">48dp</dimen>
+    <dimen name="element_size_normal">48dp</dimen>
     <dimen name="element_size_small">24dp</dimen>
     <dimen name="element_spacing_xsmall">2dp</dimen>
     <dimen name="element_spacing_small">4dp</dimen>
+    <dimen name="element_spacing_msmall">6dp</dimen>
     <dimen name="element_spacing_normal">8dp</dimen>
     <dimen name="element_spacing_mlarge">12dp</dimen>
     <dimen name="element_spacing_large">16dp</dimen>
@@ -64,11 +65,12 @@
     <dimen name="icon_size_alert_dialog">32dp</dimen>
 
     <!-- Dimensions for quick menu -->
-    <dimen name="header_height_quick_menu">@dimen/element_size_default</dimen>
+    <dimen name="header_height_quick_menu">@dimen/element_size_normal</dimen>
 
     <!-- Dimensions for buttons -->
     <dimen name="button_width_content_min">72dp</dimen>
     <dimen name="action_icon_size">32dp</dimen>
     <dimen name="unread_indicator_size">16dp</dimen>
+    <dimen name="account_selector_popup_width">180dp</dimen>
 
 </resources>

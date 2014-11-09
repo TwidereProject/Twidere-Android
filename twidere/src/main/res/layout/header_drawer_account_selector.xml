@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.DrawerAccountHeaderContainer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/profile_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.33"
+        android:scaleType="centerCrop"
+        android:src="@drawable/twidere_feature_graphic"/>
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="@dimen/icon_size_user_profile"
+        android:layout_height="@dimen/icon_size_user_profile"
+        android:src="@drawable/ic_launcher"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/profile_image"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/profile_image"
+        android:layout_toRightOf="@+id/profile_image"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_image"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:textAppearanceMedium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Screen name"
+            android:textAppearance="?android:textAppearanceSmall"/>
+
+    </LinearLayout>
+
+</org.mariotaku.twidere.view.DrawerAccountHeaderContainer>

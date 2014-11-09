@@ -106,6 +106,13 @@
 				android:action="android.intent.action.VIEW"
 				android:data="twidere://user?user_id=218536728&amp;finish_only=true"/>
 		</Preference>
+        <Preference
+            android:summary="Redesigned interface, polished settings &amp; writing style"
+            android:title="Uucky Lee">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="twidere://user?user_id=1062473329&amp;finish_only=true"/>
+        </Preference>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/sponsored_by">
 		<Preference

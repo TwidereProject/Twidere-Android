@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="bottom"
-              android:orientation="horizontal">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="horizontal">
 
-    <ImageView
+    <org.mariotaku.twidere.view.ActionIconView
         android:id="@+id/add_image"
         style="?android:borderlessButtonStyle"
         android:layout_width="?android:actionBarSize"
@@ -36,7 +37,7 @@
         android:layout_height="?android:actionBarSize"
         android:layout_weight="0">
 
-        <ImageView
+        <org.mariotaku.twidere.view.ActionIconView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/send"

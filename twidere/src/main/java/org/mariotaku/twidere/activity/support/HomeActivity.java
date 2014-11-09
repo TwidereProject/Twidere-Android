@@ -79,6 +79,8 @@ import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.util.ActivityAccessor;
+import org.mariotaku.twidere.util.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.ArrayUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.FlymeUtils;
@@ -572,6 +574,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             homeActionButton.setIconColor(contrastColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
+            ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null, themeColor));
         } else {
             final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
             final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());

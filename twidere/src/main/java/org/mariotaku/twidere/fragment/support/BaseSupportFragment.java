@@ -24,15 +24,26 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 
-public class BaseSupportFragment extends Fragment implements Constants {
+public class BaseSupportFragment extends Fragment implements IBaseFragment, Constants {
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requestFitSystemWindows();
+    }
 
     public BaseSupportFragment() {
 
@@ -94,4 +105,29 @@ public class BaseSupportFragment extends Fragment implements Constants {
         if (activity == null) return;
         activity.unregisterReceiver(receiver);
     }
+
+    @Override
+    public Bundle getExtraConfiguration() {
+        return null;
+    }
+
+    @Override
+    public int getTabPosition() {
+        return 0;
+    }
+
+    @Override
+    public void requestFitSystemWindows() {
+        final Activity activity = getActivity();
+        if (!(activity instanceof SystemWindowsInsetsCallback)) return;
+        final SystemWindowsInsetsCallback callback = (SystemWindowsInsetsCallback) activity;
+        final Rect insets = new Rect();
+        if (callback.getSystemWindowsInsets(insets)) {
+            fitSystemWindows(insets);
+        }
+    }
+
+    protected void fitSystemWindows(Rect insets) {
+    }
+
 }

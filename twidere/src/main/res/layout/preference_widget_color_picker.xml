@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pkmmte.view.CircularImageView
+    android:id="@+id/color"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/element_size_small"
+    android:layout_height="@dimen/element_size_small"
+    android:layout_gravity="center"
+    android:adjustViewBounds="true"
+    android:scaleType="centerCrop"
+    app:border="true"
+    app:border_color="@android:color/white"
+    app:border_width="1dp"/>

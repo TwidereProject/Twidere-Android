@@ -65,6 +65,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final String AUTHORITY_USER = "user";
     public static final String AUTHORITY_USERS = "users";
     public static final String AUTHORITY_USER_TIMELINE = "user_timeline";
+    public static final String AUTHORITY_USER_MEDIA_TIMELINE = "user_media_timeline";
     public static final String AUTHORITY_USER_FAVORITES = "user_favorites";
     public static final String AUTHORITY_USER_FOLLOWERS = "user_followers";
     public static final String AUTHORITY_USER_FRIENDS = "user_friends";

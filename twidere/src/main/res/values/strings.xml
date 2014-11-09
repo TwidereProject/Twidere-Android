@@ -210,6 +210,7 @@
     <string name="accounts">Accounts</string>
     <string name="account">Account</string>
     <string name="mention_this_user">Mention this user</string>
+    <string name="mention_user_name">Mention <xliff:g id="name">%1$s</xliff:g></string>
     <string name="signing_in_please_wait">Signing in, please wait or press BACK to quit.</string>
     <string name="connectivity">Connectivity</string>
     <string name="add_member">Add member</string>
@@ -548,7 +549,7 @@
     <string name="general">General</string>
     <string name="hints">Hints</string>
     <string name="finish">Finish</string>
-    <string name="theme_background">Theme background</string>
+    <string name="background">Background</string>
     <string name="theme_background_default">Default</string>
     <string name="theme_background_solid">Pure white/black</string>
     <string name="theme_background_transparent">Transparent</string>
@@ -627,8 +628,8 @@
     <string name="image_preview_scale_type_fit_center">Fit center</string>
     <string name="quote_protected_status_warning_message">This tweet is protected.\n\nProtected users usually don\'t want their tweets to be shared publicly.</string>
     <string name="send_anyway">Send anyway</string>
-    <string name="my_following_only">My following only</string>
-    <string name="my_following_only_summary">Display notifications from users you follow only.</string>
+    <string name="following_only">Your following only</string>
+    <string name="following_only_summary">Display notifications from users you follow only.</string>
     <string name="new_direct_message">New direct message</string>
     <string name="plain_list_style">Plain list style</string>
     <string name="want_old_icon_back">Want old icon back?</string>
@@ -660,6 +661,6 @@
     <string name="action_unmuting">unmuting</string>
     <string name="mute_user_confirm_message">Mute <xliff:g id="name">%s</xliff:g>? You will no longer see tweets from this user while keep following this user.</string>
     <string name="remove_from_filter">Remove from filter</string>
-    <string name="sort_timeline_by_id">Sort timeline by id</string>
+    <string name="sort_timeline_by_id">Sort timeline by ID</string>
 
 </resources>

@@ -118,6 +118,7 @@ public interface Constants extends TwidereConstants {
     public static final int LINK_ID_USER_FOLLOWERS = 5;
     public static final int LINK_ID_USER_FRIENDS = 6;
     public static final int LINK_ID_USER_BLOCKS = 7;
+    public static final int LINK_ID_USER_MEDIA_TIMELINE = 8;
     public static final int LINK_ID_DIRECT_MESSAGES_CONVERSATION = 9;
     public static final int LINK_ID_USER_LIST = 10;
     public static final int LINK_ID_USER_LISTS = 11;

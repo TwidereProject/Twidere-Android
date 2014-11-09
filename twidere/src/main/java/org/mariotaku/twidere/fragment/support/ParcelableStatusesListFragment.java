@@ -89,13 +89,13 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
     }
 
     @Override
-    public final int getStatuses(final long[] account_ids, final long[] max_ids, final long[] since_ids) {
+    public final int getStatuses(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
         mStatusesRestored = true;
-        final long max_id = max_ids != null && max_ids.length == 1 ? max_ids[0] : -1;
-        final long since_id = since_ids != null && since_ids.length == 1 ? since_ids[0] : -1;
+        final long maxId = maxIds != null && maxIds.length == 1 ? maxIds[0] : -1;
+        final long sinceId = sinceIds != null && sinceIds.length == 1 ? sinceIds[0] : -1;
         final Bundle args = new Bundle(getArguments());
-        args.putLong(EXTRA_MAX_ID, max_id);
-        args.putLong(EXTRA_SINCE_ID, since_id);
+        args.putLong(EXTRA_MAX_ID, maxId);
+        args.putLong(EXTRA_SINCE_ID, sinceId);
         getLoaderManager().restartLoader(0, args, this);
         return -1;
     }

@@ -103,16 +103,7 @@ public class QuickMenuFragment extends BaseSupportFragment {
         if (mThemedContext != null) return mThemedContext;
         final Context context = getActivity();
         final int currentThemeResource = ThemeUtils.getThemeResource(context);
-        final int themeResource;
-        if (!ThemeUtils.isDarkDrawerEnabled(context)) {
-            if (ThemeUtils.isDarkTheme(currentThemeResource)) {
-                return mThemedContext = context;
-            }
-            themeResource = ThemeUtils.getLightDrawerThemeResource(currentThemeResource);
-        } else {
-            themeResource = ThemeUtils.getDrawerThemeResource(currentThemeResource);
-        }
-//        final int accentColor = ThemeUtils.getUserAccentColor(context);
+        final int themeResource = ThemeUtils.getDrawerThemeResource(currentThemeResource);
         return mThemedContext = new ContextThemeWrapper(context, themeResource);
     }
 

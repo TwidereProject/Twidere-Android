@@ -265,7 +265,7 @@ public interface SharedPreferenceConstants {
     public static final String KEY_NOTIFICATION_TYPE_HOME = "notification_type_home";
     public static final String KEY_NOTIFICATION_TYPE_MENTIONS = "notification_type_mentions";
     public static final String KEY_NOTIFICATION_TYPE_DIRECT_MESSAGES = "notification_type_direct_messages";
-    public static final String KEY_MY_FOLLOWING_ONLY = "my_following_only";
+    public static final String KEY_NOTIFICATION_FOLLOWING_ONLY = "notification_following_only";
 
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_COMPACT_CARDS = "compact_cards";
@@ -282,8 +282,6 @@ public interface SharedPreferenceConstants {
     public static final String KEY_IMAGE_PREVIEW_SCALE_TYPE = "image_preview_scale_type";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_PLAIN_LIST_STYLE = "plain_list_style";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    public static final String KEY_DARK_DRAWER = "dark_drawer";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_SORT_TIMELINE_BY_ID = "sort_timeline_by_id";
 

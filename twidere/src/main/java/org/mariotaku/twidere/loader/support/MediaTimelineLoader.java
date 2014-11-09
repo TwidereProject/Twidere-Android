@@ -35,15 +35,15 @@ import twitter4j.TwitterException;
 import static org.mariotaku.twidere.util.Utils.getAccountId;
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
-public class UserTimelineLoader extends Twitter4JStatusesLoader {
+public class MediaTimelineLoader extends Twitter4JStatusesLoader {
 
     private final long mUserId;
     private final String mUserScreenName;
     private final boolean mIsMyTimeline;
 
-    public UserTimelineLoader(final Context context, final long accountId, final long userId, final String screenName,
-                              final long maxId, final long sinceId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-                              final int tabPosition) {
+    public MediaTimelineLoader(final Context context, final long accountId, final long userId, final String screenName,
+                               final long maxId, final long sinceId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+                               final int tabPosition) {
         super(context, accountId, maxId, sinceId, data, savedStatusesArgs, tabPosition);
         mUserId = userId;
         mUserScreenName = screenName;
@@ -54,9 +54,9 @@ public class UserTimelineLoader extends Twitter4JStatusesLoader {
     protected ResponseList<Status> getStatuses(final Twitter twitter, final Paging paging) throws TwitterException {
         if (twitter == null) return null;
         if (mUserId != -1)
-            return twitter.getUserTimeline(mUserId, paging);
+            return twitter.getMediaTimeline(mUserId, paging);
         else if (mUserScreenName != null)
-            return twitter.getUserTimeline(mUserScreenName, paging);
+            return twitter.getMediaTimeline(mUserScreenName, paging);
         else
             return null;
     }

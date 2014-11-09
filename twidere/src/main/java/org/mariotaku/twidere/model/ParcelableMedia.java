@@ -19,6 +19,7 @@ import java.util.List;
 import twitter4j.EntitySupport;
 import twitter4j.ExtendedEntitySupport;
 import twitter4j.MediaEntity;
+import twitter4j.MediaEntity.Size;
 import twitter4j.URLEntity;
 
 public class ParcelableMedia implements Parcelable, JSONParcelable {
@@ -51,6 +52,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
 
     public final String url, media_url;
     public final int start, end, type;
+    public final int width, height;
 
     public ParcelableMedia(final JSONParcel in) {
         url = in.readString("url");
@@ -58,6 +60,8 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         start = in.readInt("start");
         end = in.readInt("end");
         type = in.readInt("type");
+        width = in.readInt("width");
+        height = in.readInt("height");
     }
 
     public ParcelableMedia(final MediaEntity entity) {
@@ -66,6 +70,9 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         start = entity.getStart();
         end = entity.getEnd();
         type = TYPE_IMAGE;
+        final Size size = entity.getSizes().get(Size.LARGE);
+        width = size != null ? size.getWidth() : 0;
+        height = size != null ? size.getHeight() : 0;
     }
 
     public ParcelableMedia(final Parcel in) {
@@ -74,6 +81,8 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         start = in.readInt();
         end = in.readInt();
         type = in.readInt();
+        width = in.readInt();
+        height = in.readInt();
     }
 
     private ParcelableMedia(final String url, final String media_url, final int start, final int end, final int type) {
@@ -82,6 +91,8 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         this.start = start;
         this.end = end;
         this.type = type;
+        this.width = 0;
+        this.height = 0;
     }
 
     @Override
@@ -96,6 +107,8 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         out.writeInt("start", start);
         out.writeInt("end", end);
         out.writeInt("type", type);
+        out.writeInt("width", width);
+        out.writeInt("height", height);
     }
 
     @Override
@@ -105,6 +118,8 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         dest.writeInt(start);
         dest.writeInt(end);
         dest.writeInt(type);
+        dest.writeInt(width);
+        dest.writeInt(height);
     }
 
     public static ParcelableMedia[] fromEntities(final EntitySupport entities) {
@@ -119,8 +134,8 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         }
         if (medias != null) {
             for (final MediaEntity media : medias) {
-                final URL media_url = media.getMediaURL();
-                if (media_url != null) {
+                final URL mediaURL = media.getMediaURL();
+                if (mediaURL != null) {
                     list.add(new ParcelableMedia(media));
                 }
             }
@@ -150,6 +165,16 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
 
     public static ParcelableMedia newImage(final String media_url, final String url) {
         return new ParcelableMedia(url, media_url, 0, 0, TYPE_IMAGE);
+    }
+
+    public static class MediaSize {
+
+        public static final int LARGE = 1;
+        public static final int MEDIUM = 2;
+        public static final int SMALL = 3;
+        public static final int THUMB = 4;
+
+
     }
 
 }

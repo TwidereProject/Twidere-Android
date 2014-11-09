@@ -19,7 +19,7 @@
         android:minWidth="@dimen/element_size_small"
         android:textAppearance="?android:textAppearanceSmall"/>
 
-    <ImageView
+    <org.mariotaku.twidere.view.ActionIconView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/send"

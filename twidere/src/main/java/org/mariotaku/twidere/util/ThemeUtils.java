@@ -675,13 +675,6 @@ public class ThemeUtils implements Constants {
         return getWindowContentOverlay(new ContextThemeWrapper(context, themeRes));
     }
 
-    public static boolean isDarkDrawerEnabled(final Context context) {
-        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-        if (prefs == null) return false;
-        return prefs.getBoolean(KEY_DARK_DRAWER, true);
-    }
-
     public static boolean isDarkTheme(final Context context) {
         return isDarkTheme(getThemeResource(context));
     }

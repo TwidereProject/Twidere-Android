@@ -351,8 +351,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
     private Context getThemedContext() {
         if (mThemedContext != null) return mThemedContext;
         final Context context = getActivity();
-        if (!ThemeUtils.isDarkDrawerEnabled(context))
-            return mThemedContext = context;
         final int themeResource = ThemeUtils.getDrawerThemeResource(context);
         return mThemedContext = new ContextThemeWrapper(context, themeResource);
     }
