@@ -2780,6 +2780,20 @@ public final class Utils implements Constants, TwitterConstants {
         return false;
     }
 
+    public static boolean isOfficialKeyAccount(final Context context, final long accountId) {
+        if (context == null) return false;
+        final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
+        final String selection = Where.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
+        final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
+        try {
+            if (c.moveToPosition(0))
+                return isOfficialConsumerKeySecret(context, c.getString(0), c.getString(1));
+        } finally {
+            c.close();
+        }
+        return false;
+    }
+
     public static boolean isOfficialTwitterInstance(final Context context, final Twitter twitter) {
         if (context == null || twitter == null) return false;
         final Configuration conf = twitter.getConfiguration();

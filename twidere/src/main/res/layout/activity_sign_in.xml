@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,7 +27,7 @@
                     android:hint="@string/username"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
-                    android:typeface="normal" />
+                    android:typeface="normal"/>
 
                 <EditText
                     android:id="@+id/password"
@@ -39,7 +38,7 @@
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:singleLine="true"
-                    android:typeface="normal" />
+                    android:typeface="normal"/>
             </LinearLayout>
 
             <LinearLayout
@@ -58,7 +57,7 @@
                     android:layout_weight="1"
                     android:minHeight="48dp"
                     android:onClick="onClick"
-                    android:text="@string/sign_in" />
+                    android:text="@string/sign_in"/>
 
                 <Button
                     android:id="@+id/sign_up"
@@ -68,7 +67,7 @@
                     android:layout_weight="1"
                     android:minHeight="48dp"
                     android:onClick="onClick"
-                    android:text="@string/sign_up" />
+                    android:text="@string/sign_up"/>
             </LinearLayout>
 
             <Button
@@ -83,18 +82,8 @@
                 android:minHeight="36dp"
                 android:onClick="onClick"
                 android:text="@string/sign_in_method_introduction_title"
-                android:textAppearance="?android:textAppearanceSmall" />
+                android:textAppearance="?android:textAppearanceSmall"/>
         </RelativeLayout>
     </ScrollView>
-
-    <ImageButton
-        android:id="@+id/set_color"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|right"
-        android:layout_weight="0"
-        android:contentDescription="@string/set_color"
-        android:onClick="onClick"
-        android:src="@drawable/ic_action_color_palette" />
 
 </merge>

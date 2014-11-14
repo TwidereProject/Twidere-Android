@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/set_as_default"
+        android:icon="@drawable/ic_action_checked"
+        android:title="@string/set_as_default"/>
+    <item
+        android:id="@id/set_color"
+        android:icon="@drawable/ic_action_color_palette"
+        android:title="@string/set_color"/>
+    <item
+        android:id="@id/delete"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/delete"/>
+</menu>

@@ -20,17 +20,13 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -59,7 +55,6 @@ import org.mariotaku.twidere.activity.FiltersActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountsManagerActivity;
-import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.DraftsActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
@@ -67,11 +62,6 @@ import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Inbox;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Outbox;
-import org.mariotaku.twidere.provider.TweetStore.Mentions;
-import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -86,13 +76,11 @@ import static org.mariotaku.twidere.util.Utils.openUserLists;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.openUserTimeline;
 
-public class AccountsDrawerFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor>,
+public class AccountsDashboardFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor>,
         OnSharedPreferenceChangeListener, OnAccountActivateStateChangeListener {
 
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
-
-    private static final String FRAGMENT_TAG_ACCOUNT_DELETION = "account_deletion";
 
     private ContentResolver mResolver;
     private SharedPreferences mPreferences;
@@ -105,10 +93,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
     private TextView mAccountsSectionView, mAccountOptionsSectionView, mAppMenuSectionView;
 
     private Context mThemedContext;
-
-    public Account getSelectedAccount() {
-        return mAccountsAdapter.getSelectedAccount();
-    }
 
     @Override
     public void onAccountActivateStateChanged(final Account account, final boolean activated) {
@@ -151,16 +135,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
-            case REQUEST_SET_COLOR: {
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data == null) return;
-                    final ContentValues values = new ContentValues();
-                    values.put(Accounts.COLOR, data.getIntExtra(EXTRA_COLOR, Color.WHITE));
-                    final String where = Accounts.ACCOUNT_ID + " = " + mAccountsAdapter.getSelectedAccountId();
-                    mResolver.update(Accounts.CONTENT_URI, values, where, null);
-                }
-                return;
-            }
             case REQUEST_SETTINGS: {
                 if (data == null) return;
                 final FragmentActivity activity = getActivity();
@@ -241,25 +215,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
                     intent.putExtras(bundle);
                     startActivity(intent);
                     closeAccountsDrawer();
-                    break;
-                }
-                case MENU_SET_COLOR: {
-                    final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
-                    intent.putExtra(EXTRA_COLOR, account.color);
-                    intent.putExtra(EXTRA_ALPHA_SLIDER, false);
-                    startActivityForResult(intent, REQUEST_SET_COLOR);
-                    break;
-                }
-                case MENU_SET_AS_DEFAULT: {
-                    mPreferences.edit().putLong(KEY_DEFAULT_ACCOUNT_ID, account.account_id).apply();
-                    break;
-                }
-                case MENU_DELETE: {
-                    final AccountDeletionDialogFragment f = new AccountDeletionDialogFragment();
-                    final Bundle args = new Bundle();
-                    args.putLong(EXTRA_ACCOUNT_ID, account.account_id);
-                    f.setArguments(args);
-                    f.show(getChildFragmentManager(), FRAGMENT_TAG_ACCOUNT_DELETION);
                     break;
                 }
             }
@@ -370,7 +325,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
     private void updateDefaultAccountState() {
         final long defaultAccountId = mAccountsAdapter.getDefaultAccountId();
         final long selectedAccountId = mAccountsAdapter.getSelectedAccountId();
-        mAccountOptionsAdapter.setDefault(defaultAccountId == selectedAccountId);
     }
 
     private static TextView newSectionView(final Context context, final int titleRes) {
@@ -381,47 +335,10 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
         return textView;
     }
 
-    public static final class AccountDeletionDialogFragment extends BaseSupportDialogFragment implements
-            DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            final Bundle args = getArguments();
-            final long account_id = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
-            if (account_id < 0) return;
-            final ContentResolver resolver = getContentResolver();
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE: {
-                    resolver.delete(Accounts.CONTENT_URI, Accounts.ACCOUNT_ID + " = " + account_id, null);
-                    // Also delete tweets related to the account we previously
-                    // deleted.
-                    resolver.delete(Statuses.CONTENT_URI, Statuses.ACCOUNT_ID + " = " + account_id, null);
-                    resolver.delete(Mentions.CONTENT_URI, Mentions.ACCOUNT_ID + " = " + account_id, null);
-                    resolver.delete(Inbox.CONTENT_URI, DirectMessages.ACCOUNT_ID + " = " + account_id, null);
-                    resolver.delete(Outbox.CONTENT_URI, DirectMessages.ACCOUNT_ID + " = " + account_id, null);
-                    break;
-                }
-            }
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            builder.setNegativeButton(android.R.string.cancel, null);
-            builder.setPositiveButton(android.R.string.ok, this);
-            builder.setTitle(R.string.account_delete_confirm_title);
-            builder.setMessage(R.string.account_delete_confirm_message);
-            return builder.create();
-        }
-
-    }
 
     private static final class AccountOptionsAdapter extends OptionItemsAdapter {
 
         private static final ArrayList<OptionItem> sOptions = new ArrayList<>();
-        private static final ArrayList<OptionItem> sOptionsDefault = new ArrayList<>();
 
         static {
             sOptions.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_profile, MENU_VIEW_PROFILE));
@@ -431,22 +348,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             sOptions.add(new OptionItem(R.string.users_lists, R.drawable.ic_action_list, MENU_LISTS));
             sOptions.add(new OptionItem(R.string.lists_following_me, R.drawable.ic_action_list,
                     MENU_LIST_MEMBERSHIPS));
-            sOptions.add(new OptionItem(R.string.set_color, R.drawable.ic_action_color_palette, MENU_SET_COLOR));
-            sOptions.add(new OptionItem(R.string.set_as_default, R.drawable.ic_action_ok, MENU_SET_AS_DEFAULT));
-            sOptions.add(new OptionItem(R.string.delete, R.drawable.ic_action_delete, MENU_DELETE));
-
-            sOptionsDefault.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_profile,
-                    MENU_VIEW_PROFILE));
-            sOptionsDefault.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search,
-                    MENU_SEARCH));
-            sOptionsDefault.add(new OptionItem(R.string.statuses, R.drawable.ic_action_quote, MENU_STATUSES));
-            sOptionsDefault.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
-            sOptionsDefault.add(new OptionItem(R.string.users_lists, R.drawable.ic_action_list, MENU_LISTS));
-            sOptionsDefault.add(new OptionItem(R.string.lists_following_me, R.drawable.ic_action_list,
-                    MENU_LIST_MEMBERSHIPS));
-            sOptionsDefault.add(new OptionItem(R.string.set_color, R.drawable.ic_action_color_palette,
-                    MENU_SET_COLOR));
-            sOptionsDefault.add(new OptionItem(R.string.delete, R.drawable.ic_action_delete, MENU_DELETE));
         }
 
         public AccountOptionsAdapter(final Context context) {
@@ -455,10 +356,6 @@ public class AccountsDrawerFragment extends BaseSupportListFragment implements L
             addAll(sOptions);
         }
 
-        public void setDefault(final boolean isDefault) {
-            clear();
-            addAll(isDefault ? sOptionsDefault : sOptions);
-        }
     }
 
     private static final class AppMenuAdapter extends OptionItemsAdapter {

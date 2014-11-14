@@ -26,10 +26,11 @@
                 android:text="@string/api_url_format"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-            <ImageButton
+            <org.mariotaku.twidere.view.ActionIconView
                 android:id="@+id/api_url_format_help"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
+                android:src="@drawable/ic_action_info"
                 android:layout_weight="0"
                 android:background="?android:selectableItemBackground"/>
         </LinearLayout>

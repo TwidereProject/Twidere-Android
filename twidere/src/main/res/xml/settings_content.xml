@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  android:key="settings_content"
-                  android:title="@string/content_and_storage">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="settings_content"
+    android:title="@string/content_and_storage">
 
     <PreferenceCategory
         android:key="category_multimedia_contents"
@@ -72,7 +73,8 @@
             android:summary="@string/load_item_limit_summary"
             android:title="@string/load_item_limit"
             app:max="200"
-            app:min="10"/>
+            app:min="10"
+            app:step="5"/>
 
         <org.mariotaku.twidere.preference.TimelineSyncPreference
             android:defaultValue=""

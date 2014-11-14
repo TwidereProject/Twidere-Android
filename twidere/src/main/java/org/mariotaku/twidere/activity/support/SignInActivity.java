@@ -31,6 +31,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.graphics.Palette;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -40,7 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import org.mariotaku.twidere.R;
@@ -49,7 +50,6 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.task.AsyncTask;
-import org.mariotaku.twidere.util.ColorAnalyser;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
@@ -59,7 +59,6 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
-import org.mariotaku.twidere.view.ColorPickerView;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.CroutonLifecycleCallback;
@@ -98,15 +97,12 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
     private int mAuthType;
     private String mConsumerKey, mConsumerSecret;
     private String mUsername, mPassword;
-    private Integer mUserColor;
-    private long mLoggedId;
     private boolean mBackPressed;
     private long mAPIChangeTimestamp;
 
     private EditText mEditUsername, mEditPassword;
     private Button mSignInButton, mSignUpButton;
     private LinearLayout mSigninSignupContainer, mUsernamePasswordContainer;
-    private ImageButton mSetColorButton;
 
     private TwidereApplication mApplication;
     private SharedPreferences mPreferences;
@@ -142,15 +138,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 }
                 setSignInButton();
                 invalidateOptionsMenu();
-                break;
-            }
-            case REQUEST_SET_COLOR: {
-                if (resultCode == BaseSupportActivity.RESULT_OK) {
-                    mUserColor = data != null ? data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT) : null;
-                } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    mUserColor = null;
-                }
-                setUserColorButton();
                 break;
             }
             case REQUEST_BROWSER_SIGN_IN: {
@@ -190,16 +177,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 doLogin();
                 break;
             }
-            case R.id.set_color: {
-                final Intent intent = new Intent(this, ColorPickerDialogActivity.class);
-                if (mUserColor != null) {
-                    intent.putExtra(EXTRA_COLOR, mUserColor);
-                }
-                intent.putExtra(EXTRA_ALPHA_SLIDER, false);
-                intent.putExtra(EXTRA_CLEAR_BUTTON, true);
-                startActivityForResult(intent, REQUEST_SET_COLOR);
-                break;
-            }
             case R.id.sign_in_method_introduction: {
                 new SignInMethodIntroductionDialogFragment().show(getSupportFragmentManager(),
                         "sign_in_method_introduction");
@@ -217,7 +194,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         mSignUpButton = (Button) findViewById(R.id.sign_up);
         mSigninSignupContainer = (LinearLayout) findViewById(R.id.sign_in_sign_up);
         mUsernamePasswordContainer = (LinearLayout) findViewById(R.id.username_password);
-        mSetColorButton = (ImageButton) findViewById(R.id.set_color);
     }
 
     @Override
@@ -309,9 +285,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         outState.putString(Accounts.SCREEN_NAME, mUsername);
         outState.putString(Accounts.PASSWORD, mPassword);
         outState.putLong(EXTRA_API_LAST_CHANGE, mAPIChangeTimestamp);
-        if (mUserColor != null) {
-            outState.putInt(Accounts.COLOR, mUserColor);
-        }
         super.onSaveInstanceState(outState);
     }
 
@@ -340,9 +313,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             mConsumerSecret = trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET));
             mUsername = savedInstanceState.getString(Accounts.SCREEN_NAME);
             mPassword = savedInstanceState.getString(Accounts.PASSWORD);
-            if (savedInstanceState.containsKey(Accounts.COLOR)) {
-                mUserColor = savedInstanceState.getInt(Accounts.COLOR, Color.TRANSPARENT);
-            }
             mAPIChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE);
         }
 
@@ -356,7 +326,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         mEditPassword.setText(mPassword);
         mEditPassword.addTextChangedListener(this);
         setSignInButton();
-        setUserColorButton();
     }
 
     private void doLogin() {
@@ -366,7 +335,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         saveEditedText();
         setDefaultAPI();
         final Configuration conf = getConfiguration();
-        mTask = new SignInTask(this, conf, mUsername, mPassword, mAuthType, mUserColor, mAPIUrlFormat,
+        mTask = new SignInTask(this, conf, mUsername, mPassword, mAuthType, mAPIUrlFormat,
                 mSameOAuthSigningUrl, mNoVersionSuffix);
         mTask.execute();
     }
@@ -382,7 +351,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         final String token = intent.getStringExtra(EXTRA_REQUEST_TOKEN);
         final String secret = intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET);
         final String verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER);
-        mTask = new BrowserSignInTask(this, conf, token, secret, verifier, mUserColor, mAPIUrlFormat,
+        mTask = new BrowserSignInTask(this, conf, token, secret, verifier, mAPIUrlFormat,
                 mSameOAuthSigningUrl, mNoVersionSuffix);
         mTask.execute();
     }
@@ -472,14 +441,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 || mAuthType == Accounts.AUTH_TYPE_TWIP_O_MODE);
     }
 
-    private void setUserColorButton() {
-        if (mUserColor != null) {
-            mSetColorButton.setImageBitmap(ColorPickerView.getColorPreviewBitmap(this, mUserColor));
-        } else {
-            mSetColorButton.setImageResource(R.drawable.ic_action_color_palette);
-        }
-    }
-
     void onSignInResult(final SignInResponse result) {
         if (result != null) {
             if (result.succeed) {
@@ -510,10 +471,10 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 if (values != null) {
                     mResolver.insert(Accounts.CONTENT_URI, values);
                 }
-                mLoggedId = result.user.getId();
+                final long loggedId = result.user.getId();
                 final Intent intent = new Intent(this, HomeActivity.class);
                 final Bundle bundle = new Bundle();
-                bundle.putLongArray(EXTRA_IDS, new long[]{mLoggedId});
+                bundle.putLongArray(EXTRA_IDS, new long[]{loggedId});
                 intent.putExtras(bundle);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
@@ -537,7 +498,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         mEditUsername.setEnabled(true);
         mSignInButton.setEnabled(true);
         mSignUpButton.setEnabled(true);
-        mSetColorButton.setEnabled(true);
         setSignInButton();
     }
 
@@ -547,7 +507,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         mEditUsername.setEnabled(false);
         mSignInButton.setEnabled(false);
         mSignUpButton.setEnabled(false);
-        mSetColorButton.setEnabled(false);
     }
 
     public static abstract class AbstractSignInTask extends AsyncTask<Void, Void, SignInResponse> {
@@ -574,24 +533,25 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             }
         }
 
+        int getProfileBackgroundColor(String color) {
+            if (isEmpty(color)) return Color.TRANSPARENT;
+            try {
+                return Color.parseColor(color);
+            } catch (IllegalArgumentException e) {
+                return Color.TRANSPARENT;
+            }
+        }
+
         int analyseUserProfileColor(final User user) throws TwitterException {
             if (user == null) throw new TwitterException("Unable to get user info");
             final HttpClientWrapper client = new HttpClientWrapper(conf);
             final String profileImageUrl = ParseUtils.parseString(user.getProfileImageURL());
             final HttpResponse conn = profileImageUrl != null ? client.get(profileImageUrl, null) : null;
             final Bitmap bm = conn != null ? BitmapFactory.decodeStream(conn.asStream()) : null;
-            if (bm == null) {
-                try {
-                    final String profileBackgroundColor = user.getProfileBackgroundColor();
-                    if (isEmpty(profileBackgroundColor))
-                        throw new TwitterException("Can't get profile image");
-                    return Color.parseColor(profileBackgroundColor);
-                } catch (final IllegalArgumentException e) {
-                    throw new TwitterException("Can't get profile image");
-                }
-            }
+            final int profileBackgroundColor = getProfileBackgroundColor(user.getProfileBackgroundColor());
+            if (bm == null) return profileBackgroundColor;
             try {
-                return ColorAnalyser.analyse(bm);
+                return Palette.generate(bm).getVibrantColor(profileBackgroundColor);
             } finally {
                 bm.recycle();
             }
@@ -603,22 +563,21 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
 
         private final Configuration conf;
         private final String request_token, request_token_secret, oauth_verifier;
-        private final Integer user_color;
 
         private final Context context;
         private final String api_url_format;
         private final boolean same_oauth_signing_url, no_version_suffix;
 
-        public BrowserSignInTask(final SignInActivity context, final Configuration conf, final String request_token,
-                                 final String request_token_secret, final String oauth_verifier, final Integer user_color,
-                                 final String api_url_format, final boolean same_oauth_signing_url, final boolean no_version_suffix) {
+        public BrowserSignInTask(final SignInActivity context, final Configuration conf,
+                                 final String request_token, final String request_token_secret,
+                                 final String oauth_verifier, final String api_url_format,
+                                 final boolean same_oauth_signing_url, final boolean no_version_suffix) {
             super(context, conf);
             this.context = context;
             this.conf = conf;
             this.request_token = request_token;
             this.request_token_secret = request_token_secret;
             this.oauth_verifier = oauth_verifier;
-            this.user_color = user_color;
             this.api_url_format = api_url_format;
             this.same_oauth_signing_url = same_oauth_signing_url;
             this.no_version_suffix = no_version_suffix;
@@ -634,7 +593,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 if (userId <= 0) return new SignInResponse(false, false, null);
                 final User user = twitter.verifyCredentials();
                 if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
-                final int color = user_color != null ? user_color : analyseUserProfileColor(user);
+                final int color = analyseUserProfileColor(user);
                 return new SignInResponse(conf, access_token, user, Accounts.AUTH_TYPE_OAUTH, color,
                         api_url_format, same_oauth_signing_url, no_version_suffix);
             } catch (final TwitterException e) {
@@ -645,6 +604,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
 
     public static class SignInMethodIntroductionDialogFragment extends BaseSupportDialogFragment {
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
@@ -662,22 +622,21 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         private final Configuration conf;
         private final String username, password;
         private final int auth_type;
-        private final Integer user_color;
 
         private final Context context;
         private final String api_url_format;
         private final boolean same_oauth_signing_url, no_version_suffix;
 
-        public SignInTask(final SignInActivity context, final Configuration conf, final String username,
-                          final String password, final int auth_type, final Integer user_color, final String api_url_format,
-                          final boolean same_oauth_signing_url, final boolean no_version_suffix) {
+        public SignInTask(final SignInActivity context, final Configuration conf,
+                          final String username, final String password, final int auth_type,
+                          final String api_url_format, final boolean same_oauth_signing_url,
+                          final boolean no_version_suffix) {
             super(context, conf);
             this.context = context;
             this.conf = conf;
             this.username = username;
             this.password = password;
             this.auth_type = auth_type;
-            this.user_color = user_color;
             this.api_url_format = api_url_format;
             this.same_oauth_signing_url = same_oauth_signing_url;
             this.no_version_suffix = no_version_suffix;
@@ -712,7 +671,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             final long user_id = user.getId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
-            final int color = user_color != null ? user_color : analyseUserProfileColor(user);
+            final int color = analyseUserProfileColor(user);
             return new SignInResponse(conf, username, password, user, color, api_url_format,
                     no_version_suffix);
         }
@@ -725,7 +684,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             if (user_id <= 0) return new SignInResponse(false, false, null);
             final User user = twitter.verifyCredentials();
             if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
-            final int color = user_color != null ? user_color : analyseUserProfileColor(user);
+            final int color = analyseUserProfileColor(user);
             return new SignInResponse(conf, access_token, user, Accounts.AUTH_TYPE_OAUTH, color,
                     api_url_format, same_oauth_signing_url, no_version_suffix);
         }
@@ -736,7 +695,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             final long user_id = user.getId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
-            final int color = user_color != null ? user_color : analyseUserProfileColor(user);
+            final int color = analyseUserProfileColor(user);
             return new SignInResponse(conf, user, color, api_url_format, no_version_suffix);
         }
 
@@ -747,7 +706,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             final long user_id = user.getId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
-            final int color = user_color != null ? user_color : analyseUserProfileColor(user);
+            final int color = analyseUserProfileColor(user);
             return new SignInResponse(conf, access_token, user, Accounts.AUTH_TYPE_XAUTH, color,
                     api_url_format, same_oauth_signing_url, no_version_suffix);
         }
@@ -757,12 +716,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
     @Override
     public int getThemeResourceId() {
         return ThemeUtils.getSettingsThemeResource(this);
-    }
-
-    static interface SigninCallback {
-        void onSigninResult(SignInResponse response);
-
-        void onSigninStart();
     }
 
     static class SignInResponse {

@@ -36,219 +36,238 @@ import org.mariotaku.twidere.R;
 /**
  * A {@link DialogPreference} that provides a user with the means to select an
  * integer from a {@link SeekBar}, and persist it.
- * 
+ *
  * @author lukehorvat
  */
 public class SeekBarDialogPreference extends DialogPreference {
-	private static final int DEFAULT_MIN_PROGRESS = 0;
-	private static final int DEFAULT_MAX_PROGRESS = 100;
-	private static final int DEFAULT_PROGRESS = 0;
+    private static final int DEFAULT_MIN_PROGRESS = 0;
+    private static final int DEFAULT_MAX_PROGRESS = 100;
+    private static final int DEFAULT_PROGRESS = 0;
+    private static final int DEFAULT_STEP = 1;
 
-	private int mMinProgress;
-	private int mMaxProgress;
-	private int mProgress;
-	private CharSequence mProgressTextSuffix;
-	private TextView mProgressText;
-	private SeekBar mSeekBar;
+    private int mMinProgress;
+    private int mMaxProgress;
+    private int mProgress;
+    private int mStep;
 
-	public SeekBarDialogPreference(final Context context) {
-		this(context, null);
-	}
+    private CharSequence mProgressTextSuffix;
+    private TextView mProgressText;
+    private SeekBar mSeekBar;
 
-	public SeekBarDialogPreference(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.dialogPreferenceStyle);
-	}
+    public SeekBarDialogPreference(final Context context) {
+        this(context, null);
+    }
 
-	public SeekBarDialogPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
+    public SeekBarDialogPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.dialogPreferenceStyle);
+    }
 
-		// get attributes specified in XML
-		final TypedArray a = context.getTheme()
-				.obtainStyledAttributes(attrs, R.styleable.SeekBarDialogPreference, 0, 0);
-		try {
-			setMinProgress(a.getInteger(R.styleable.SeekBarDialogPreference_min, DEFAULT_MIN_PROGRESS));
-			setMaxProgress(a.getInteger(R.styleable.SeekBarDialogPreference_max, DEFAULT_MAX_PROGRESS));
-			setProgressTextSuffix(a.getString(R.styleable.SeekBarDialogPreference_progressTextSuffix));
-		} finally {
-			a.recycle();
-		}
+    public SeekBarDialogPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
 
-		// set layout
-		setDialogLayoutResource(R.layout.preference_seek_bar_dialog);
-		setPositiveButtonText(android.R.string.ok);
-		setNegativeButtonText(android.R.string.cancel);
-		setDialogIcon(null);
-	}
+        // get attributes specified in XML
+        final TypedArray a = context.getTheme()
+                .obtainStyledAttributes(attrs, R.styleable.SeekBarDialogPreference, 0, 0);
+        try {
+            setMinProgress(a.getInteger(R.styleable.SeekBarDialogPreference_min, DEFAULT_MIN_PROGRESS));
+            setMaxProgress(a.getInteger(R.styleable.SeekBarDialogPreference_max, DEFAULT_MAX_PROGRESS));
+            setStep(a.getInteger(R.styleable.SeekBarDialogPreference_step, DEFAULT_STEP));
+            setProgressTextSuffix(a.getString(R.styleable.SeekBarDialogPreference_progressTextSuffix));
+        } finally {
+            a.recycle();
+        }
 
-	public int getMaxProgress() {
-		return mMaxProgress;
-	}
+        // set layout
+        setDialogLayoutResource(R.layout.preference_seek_bar_dialog);
+        setPositiveButtonText(android.R.string.ok);
+        setNegativeButtonText(android.R.string.cancel);
+        setDialogIcon(null);
+    }
 
-	public int getMinProgress() {
-		return mMinProgress;
-	}
+    public void setStep(int step) {
+        mStep = step;
+    }
 
-	public int getProgress() {
-		return mProgress;
-	}
+    public int getMaxProgress() {
+        return mMaxProgress;
+    }
 
-	public CharSequence getProgressTextSuffix() {
-		return mProgressTextSuffix;
-	}
+    public int getMinProgress() {
+        return mMinProgress;
+    }
 
-	public void setMaxProgress(final int maxProgress) {
-		mMaxProgress = maxProgress;
-		setProgress(Math.min(mProgress, mMaxProgress));
-	}
+    public int getProgress() {
+        return mProgress;
+    }
 
-	public void setMinProgress(final int minProgress) {
-		mMinProgress = minProgress;
-		setProgress(Math.max(mProgress, mMinProgress));
-	}
+    public CharSequence getProgressTextSuffix() {
+        return mProgressTextSuffix;
+    }
 
-	public void setProgress(int progress) {
-		progress = Math.max(Math.min(progress, mMaxProgress), mMinProgress);
+    public void setMaxProgress(final int maxProgress) {
+        mMaxProgress = maxProgress;
+        setProgress(Math.min(mProgress, mMaxProgress));
+    }
 
-		if (progress != mProgress) {
-			mProgress = progress;
-			persistInt(progress);
-			notifyChanged();
-		}
-	}
+    public void setMinProgress(final int minProgress) {
+        mMinProgress = minProgress;
+        setProgress(Math.max(mProgress, mMinProgress));
+    }
 
-	public void setProgressTextSuffix(final CharSequence progressTextSuffix) {
-		mProgressTextSuffix = progressTextSuffix;
-	}
+    /**
+     * @param progress Real progress multiplied by steps
+     */
+    public void setProgress(int progress) {
+        progress = Math.max(Math.min(progress, mMaxProgress), mMinProgress);
 
-	@Override
-	protected void onBindDialogView(final View view) {
-		super.onBindDialogView(view);
+        if (progress != mProgress) {
+            mProgress = progress;
+            persistInt(progress);
+            notifyChanged();
+        }
+    }
 
-		final CharSequence message = getDialogMessage();
-		final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
-		dialogMessageText.setText(message);
-		dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
+    public void setProgressTextSuffix(final CharSequence progressTextSuffix) {
+        mProgressTextSuffix = progressTextSuffix;
+    }
 
-		mProgressText = (TextView) view.findViewById(R.id.text_progress);
+    @Override
+    protected void onBindDialogView(final View view) {
+        super.onBindDialogView(view);
 
-		mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
-				// update text that displays the current SeekBar progress value
-				// note: this does not persist the progress value. that is only
-				// ever done in setProgress()
-				final String progressStr = String.valueOf(progress + mMinProgress);
-				mProgressText.setText(mProgressTextSuffix == null ? progressStr : progressStr
-						.concat(mProgressTextSuffix.toString()));
-			}
+        final CharSequence message = getDialogMessage();
+        final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
+        dialogMessageText.setText(message);
+        dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
 
-			@Override
-			public void onStartTrackingTouch(final SeekBar seekBar) {
-			}
+        mProgressText = (TextView) view.findViewById(R.id.text_progress);
 
-			@Override
-			public void onStopTrackingTouch(final SeekBar seekBar) {
-			}
-		});
-		mSeekBar.setMax(mMaxProgress - mMinProgress);
-		mSeekBar.setProgress(mProgress - mMinProgress);
-	}
+        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+        mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
+                // update text that displays the current SeekBar progress value
+                // note: this does not persist the progress value. that is only
+                // ever done in setProgress()
+                final String progressStr = String.valueOf(progress * mStep + mMinProgress);
+                mProgressText.setText(mProgressTextSuffix == null ? progressStr : progressStr
+                        .concat(mProgressTextSuffix.toString()));
+            }
 
-	@Override
-	protected void onDialogClosed(final boolean positiveResult) {
-		super.onDialogClosed(positiveResult);
+            @Override
+            public void onStartTrackingTouch(final SeekBar seekBar) {
+            }
 
-		// when the user selects "OK", persist the new value
-		if (positiveResult) {
-			final int seekBarProgress = mSeekBar.getProgress() + mMinProgress;
-			if (callChangeListener(seekBarProgress)) {
-				setProgress(seekBarProgress);
-			}
-		}
-	}
+            @Override
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+            }
+        });
+        mSeekBar.setMax((int) Math.ceil((mMaxProgress - mMinProgress) / (double) mStep));
+        mSeekBar.setProgress((int) Math.ceil((mProgress - mMinProgress) / (double) mStep));
+    }
 
-	@Override
-	protected Object onGetDefaultValue(final TypedArray a, final int index) {
-		return a.getInt(index, DEFAULT_PROGRESS);
-	}
+    @Override
+    protected void onDialogClosed(final boolean positiveResult) {
+        super.onDialogClosed(positiveResult);
 
-	@Override
-	protected void onRestoreInstanceState(final Parcelable state) {
-		// check whether we saved the state in onSaveInstanceState()
-		if (state == null || !state.getClass().equals(SavedState.class)) {
-			// didn't save the state, so call superclass
-			super.onRestoreInstanceState(state);
-			return;
-		}
+        // when the user selects "OK", persist the new value
+        if (positiveResult) {
+            final int realProgress = mSeekBar.getProgress() * mStep + mMinProgress;
+            if (callChangeListener(realProgress)) {
+                setProgress(realProgress);
+            }
+        }
+    }
 
-		// restore the state
-		final SavedState myState = (SavedState) state;
-		setMinProgress(myState.minProgress);
-		setMaxProgress(myState.maxProgress);
-		setProgress(myState.progress);
+    @Override
+    protected Object onGetDefaultValue(final TypedArray a, final int index) {
+        return a.getInt(index, DEFAULT_PROGRESS);
+    }
 
-		super.onRestoreInstanceState(myState.getSuperState());
-	}
+    @Override
+    protected void onRestoreInstanceState(final Parcelable state) {
+        // check whether we saved the state in onSaveInstanceState()
+        if (state == null || !state.getClass().equals(SavedState.class)) {
+            // didn't save the state, so call superclass
+            super.onRestoreInstanceState(state);
+            return;
+        }
 
-	@Override
-	protected Parcelable onSaveInstanceState() {
-		// save the instance state so that it will survive screen orientation
-		// changes and other events that may temporarily destroy it
-		final Parcelable superState = super.onSaveInstanceState();
+        // restore the state
+        final SavedState myState = (SavedState) state;
+        setMinProgress(myState.minProgress);
+        setMaxProgress(myState.maxProgress);
+        setProgress(myState.progress);
+        setStep(myState.step);
 
-		// set the state's value with the class member that holds current
-		// setting value
-		final SavedState myState = new SavedState(superState);
-		myState.minProgress = getMinProgress();
-		myState.maxProgress = getMaxProgress();
-		myState.progress = getProgress();
+        super.onRestoreInstanceState(myState.getSuperState());
+    }
 
-		return myState;
-	}
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        // save the instance state so that it will survive screen orientation
+        // changes and other events that may temporarily destroy it
+        final Parcelable superState = super.onSaveInstanceState();
 
-	@Override
-	protected void onSetInitialValue(final boolean restore, final Object defaultValue) {
-		setProgress(restore ? getPersistedInt(DEFAULT_PROGRESS) : (Integer) defaultValue);
-	}
+        // set the state's value with the class member that holds current
+        // setting value
+        final SavedState myState = new SavedState(superState);
+        myState.minProgress = getMinProgress();
+        myState.maxProgress = getMaxProgress();
+        myState.progress = getProgress();
+        myState.step = getStep();
+        return myState;
+    }
 
-	private static class SavedState extends BaseSavedState {
-		int minProgress;
-		int maxProgress;
-		int progress;
+    private int getStep() {
+        return mStep;
+    }
 
-		@SuppressWarnings("unused")
-		public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
-			@Override
-			public SavedState createFromParcel(final Parcel in) {
-				return new SavedState(in);
-			}
+    @Override
+    protected void onSetInitialValue(final boolean restore, final Object defaultValue) {
+        setProgress(restore ? getPersistedInt(DEFAULT_PROGRESS) : (Integer) defaultValue);
+    }
 
-			@Override
-			public SavedState[] newArray(final int size) {
-				return new SavedState[size];
-			}
-		};
+    private static class SavedState extends BaseSavedState {
+        int minProgress;
+        int maxProgress;
+        int progress;
+        int step;
 
-		public SavedState(final Parcel source) {
-			super(source);
+        @SuppressWarnings("unused")
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(final Parcel in) {
+                return new SavedState(in);
+            }
 
-			minProgress = source.readInt();
-			maxProgress = source.readInt();
-			progress = source.readInt();
-		}
+            @Override
+            public SavedState[] newArray(final int size) {
+                return new SavedState[size];
+            }
+        };
 
-		public SavedState(final Parcelable superState) {
-			super(superState);
-		}
+        public SavedState(final Parcel source) {
+            super(source);
 
-		@Override
-		public void writeToParcel(final Parcel dest, final int flags) {
-			super.writeToParcel(dest, flags);
+            minProgress = source.readInt();
+            maxProgress = source.readInt();
+            progress = source.readInt();
+            step = source.readInt();
+        }
 
-			dest.writeInt(minProgress);
-			dest.writeInt(maxProgress);
-			dest.writeInt(progress);
-		}
-	}
+        public SavedState(final Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            super.writeToParcel(dest, flags);
+
+            dest.writeInt(minProgress);
+            dest.writeInt(maxProgress);
+            dest.writeInt(progress);
+            dest.writeInt(step);
+        }
+    }
 }

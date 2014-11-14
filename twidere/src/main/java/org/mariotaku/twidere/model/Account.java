@@ -68,7 +68,7 @@ public class Account implements Parcelable {
         profile_image_url = indices.profile_image_url != -1 ? cursor.getString(indices.profile_image_url) : null;
         profile_banner_url = indices.profile_banner_url != -1 ? cursor.getString(indices.profile_banner_url) : null;
         color = indices.color != -1 ? cursor.getInt(indices.color) : Color.TRANSPARENT;
-        is_activated = indices.is_activated != -1 ? cursor.getInt(indices.is_activated) == 1 : false;
+        is_activated = indices.is_activated != -1 && cursor.getInt(indices.is_activated) == 1;
     }
 
     public Account(final Parcel source) {

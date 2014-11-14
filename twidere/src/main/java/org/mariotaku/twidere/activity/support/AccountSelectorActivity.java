@@ -136,6 +136,7 @@ public class AccountSelectorActivity extends BaseSupportDialogActivity implement
 		final boolean isSingleSelection = isSingleSelection();
 		mListView.setChoiceMode(isSingleSelection ? ListView.CHOICE_MODE_NONE : ListView.CHOICE_MODE_MULTIPLE);
 		mAdapter.setChoiceMode(mListView.getChoiceMode());
+        mAdapter.setSortEnabled(false);
 		if (isSingleSelection) {
 			mListView.setOnItemClickListener(this);
 		}

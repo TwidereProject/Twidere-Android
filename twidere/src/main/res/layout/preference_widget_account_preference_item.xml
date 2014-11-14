@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <Switch
+        android:id="@android:id/toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_marginLeft="@dimen/element_spacing_small"
+        android:layout_marginRight="@dimen/element_spacing_small"
+        android:background="?android:dividerHorizontal"/>
+
+    <org.mariotaku.twidere.view.ActionIconButton
+        android:id="@+id/settings"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/ic_action_settings"/>
+
+
+</LinearLayout>

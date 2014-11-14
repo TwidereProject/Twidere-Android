@@ -18,8 +18,10 @@
         android:layout_weight="0"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/element_spacing_normal">
-
+        android:paddingLeft="@dimen/element_spacing_large"
+        android:paddingRight="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal"
+        android:paddingBottom="@dimen/element_spacing_normal">
 
         <SeekBar
             android:id="@+id/alpha_slider"

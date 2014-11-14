@@ -81,6 +81,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         setValue(restorePersistedValue ? getPersistedString(mValue) : (String) defaultValue);
+        updateSummary();
     }
 
     private void updateSummary() {
@@ -90,7 +91,6 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
 
     private void setValue(String value) {
         mValue = value;
-        updateSummary();
         updateAlphaVisibility();
     }
 

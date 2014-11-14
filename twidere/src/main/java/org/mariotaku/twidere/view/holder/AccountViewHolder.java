@@ -29,26 +29,32 @@ import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 
 public class AccountViewHolder {
 
-	public final ImageView profile_image;
-	public final TextView name, screen_name;
-	public final CheckBox checkbox;
-	private final ColorLabelRelativeLayout content;
-	private final View default_indicator;
+    public final ImageView profile_image;
+    public final TextView name, screen_name;
+    public final CheckBox checkbox;
+    private final ColorLabelRelativeLayout content;
+    private final View default_indicator;
+    private final View drag_handle;
 
-	public AccountViewHolder(final View view) {
-		content = (ColorLabelRelativeLayout) view;
-		name = (TextView) view.findViewById(android.R.id.text1);
-		screen_name = (TextView) view.findViewById(android.R.id.text2);
-		profile_image = (ImageView) view.findViewById(android.R.id.icon);
-		default_indicator = view.findViewById(R.id.default_indicator);
-		checkbox = (CheckBox) view.findViewById(android.R.id.checkbox);
-	}
+    public AccountViewHolder(final View view) {
+        content = (ColorLabelRelativeLayout) view;
+        name = (TextView) view.findViewById(android.R.id.text1);
+        screen_name = (TextView) view.findViewById(android.R.id.text2);
+        profile_image = (ImageView) view.findViewById(android.R.id.icon);
+        default_indicator = view.findViewById(R.id.default_indicator);
+        checkbox = (CheckBox) view.findViewById(android.R.id.checkbox);
+        drag_handle = view.findViewById(R.id.drag_handle);
+    }
 
-	public void setAccountColor(final int color) {
-		content.drawEnd(color);
-	}
+    public void setAccountColor(final int color) {
+        content.drawEnd(color);
+    }
 
-	public void setIsDefault(final boolean is_default) {
-		default_indicator.setVisibility(is_default ? View.VISIBLE : View.GONE);
-	}
+    public void setSortEnabled(boolean enabled) {
+        drag_handle.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    }
+
+    public void setIsDefault(final boolean is_default) {
+        default_indicator.setVisibility(is_default ? View.VISIBLE : View.GONE);
+    }
 }
