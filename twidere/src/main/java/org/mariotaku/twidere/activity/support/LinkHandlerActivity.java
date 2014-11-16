@@ -247,7 +247,7 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
                 break;
             }
             case LINK_ID_USER_MEDIA_TIMELINE: {
-                setTitle(R.string.medias);
+                setTitle(R.string.media);
                 break;
             }
             case LINK_ID_STATUS_RETWEETERS: {

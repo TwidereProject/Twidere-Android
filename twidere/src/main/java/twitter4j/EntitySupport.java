@@ -33,7 +33,7 @@ public interface EntitySupport extends Serializable {
 	HashtagEntity[] getHashtagEntities();
 
 	/**
-	 * Returns an array of MediaEntities if medias are available in the tweet,
+	 * Returns an array of MediaEntities if media are available in the tweet,
 	 * or null if no media is included in the tweet.
 	 * 
 	 * @return an array of MediaEntities.

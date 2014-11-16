@@ -26,7 +26,7 @@
             android:animateLayoutChanges="true">
 
             <org.mariotaku.dynamicgridview.DynamicGridView
-                android:id="@+id/medias_thumbnail_preview"
+                android:id="@+id/media_thumbnail_preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignBottom="@+id/edit_text_container"

@@ -142,7 +142,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
 		final String retweeted_by_screen_name = status.retweeted_by_screen_name;
 
 		final boolean isMyStatus = status.account_id == status.user_id;
-		final boolean hasMedia = status.medias != null && status.medias.length > 0;
+		final boolean hasMedia = status.media != null && status.media.length > 0;
 		mHolder.setUserColor(getUserColor(getActivity(), status.user_id, true));
 		mHolder.setHighlightColor(getCardHighlightColor(false, status.is_favorite, status.is_retweet));
 

@@ -395,12 +395,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int updateStatusAsync(final long[] accountIds, final String text, final ParcelableLocation location,
-                                 final ParcelableMediaUpdate[] medias, final long inReplyToStatusId, final boolean isPossiblySensitive) {
+                                 final ParcelableMediaUpdate[] media, final long inReplyToStatusId,
+                                 final boolean isPossiblySensitive) {
         final ParcelableStatusUpdate.Builder builder = new ParcelableStatusUpdate.Builder();
         builder.accounts(Account.getAccounts(mContext, accountIds));
         builder.text(text);
         builder.location(location);
-        builder.medias(medias);
+        builder.media(media);
         builder.inReplyToStatusId(inReplyToStatusId);
         builder.isPossiblySensitive(isPossiblySensitive);
         return updateStatusesAsync(builder.build());

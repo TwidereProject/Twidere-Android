@@ -8,7 +8,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 96
+        versionCode 98
         versionName "0.3.0-dev"
 
     }
@@ -78,7 +78,7 @@ android {
 }
 
 dependencies {
-    wearApp project(':twidere.wear')
+//    wearApp project(':twidere.wear')
     compile 'com.android.support:support-v13:21.0.0'
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'

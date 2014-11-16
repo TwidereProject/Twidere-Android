@@ -28,8 +28,8 @@
         <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
-        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Dark</item>-->
-        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>-->
+        <item name="android:actionBarStyle">@android:style/Widget.DeviceDefault.ActionBar.Solid
+        </item>
 
         <!-- Custom view styles -->
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>

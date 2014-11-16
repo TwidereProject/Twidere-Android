@@ -305,8 +305,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
             } else {
                 showOkMessage(R.string.status_updated, false);
-                if (item.medias != null) {
-                    for (final ParcelableMediaUpdate media : item.medias) {
+                if (item.media != null) {
+                    for (final ParcelableMediaUpdate media : item.media) {
                         final String path = getImagePathFromUri(this, Uri.parse(media.uri));
                         if (path != null) {
                             new File(path).delete();
@@ -393,7 +393,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             if (mUseUploader && mUploader == null) throw new UploaderNotFoundException(this);
             if (mUseShortener && mShortener == null) throw new ShortenerNotFoundException(this);
 
-            final boolean hasMedia = statusUpdate.medias != null && statusUpdate.medias.length > 0;
+            final boolean hasMedia = statusUpdate.media != null && statusUpdate.media.length > 0;
 
             final String overrideStatusText;
             if (mUseUploader && hasMedia) {
@@ -437,8 +437,8 @@ public class BackgroundOperationService extends IntentService implements Constan
             } else {
                 shortenedText = unshortenedText;
             }
-            if (statusUpdate.medias != null) {
-                for (final ParcelableMediaUpdate media : statusUpdate.medias) {
+            if (statusUpdate.media != null) {
+                for (final ParcelableMediaUpdate media : statusUpdate.media) {
                     final String path = getImagePathFromUri(this, Uri.parse(media.uri));
                     final File file = path != null ? new File(path) : null;
                     if (!mUseUploader && file != null && file.exists()) {
@@ -456,8 +456,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (!mUseUploader && hasMedia) {
                     final BitmapFactory.Options o = new BitmapFactory.Options();
                     o.inJustDecodeBounds = true;
-                    if (statusUpdate.medias.length == 1) {
-                        final ParcelableMediaUpdate media = statusUpdate.medias[0];
+                    if (statusUpdate.media.length == 1) {
+                        final ParcelableMediaUpdate media = statusUpdate.media[0];
                         final String path = getImagePathFromUri(this, Uri.parse(media.uri));
                         try {
                             if (path == null) throw new FileNotFoundException();
@@ -470,10 +470,10 @@ public class BackgroundOperationService extends IntentService implements Constan
                         } catch (final FileNotFoundException e) {
                         }
                     } else {
-                        final long[] mediaIds = new long[statusUpdate.medias.length];
+                        final long[] mediaIds = new long[statusUpdate.media.length];
                         try {
                             for (int i = 0, j = mediaIds.length; i < j; i++) {
-                                final ParcelableMediaUpdate media = statusUpdate.medias[i];
+                                final ParcelableMediaUpdate media = statusUpdate.media[i];
                                 final String path = getImagePathFromUri(this, Uri.parse(media.uri));
                                 if (path == null) throw new FileNotFoundException();
                                 BitmapFactory.decodeFile(path, o);

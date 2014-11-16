@@ -28,7 +28,7 @@ package org.mariotaku.twidere;
 public interface Constants extends TwidereConstants {
 
     public static final String DATABASES_NAME = "twidere.sqlite";
-    public static final int DATABASES_VERSION = 68;
+    public static final int DATABASES_VERSION = 69;
 
     public static final int MENU_GROUP_STATUS_EXTENSION = 10;
     public static final int MENU_GROUP_COMPOSE_EXTENSION = 11;
@@ -109,7 +109,7 @@ public interface Constants extends TwidereConstants {
     public static final int MENU_OPEN_WITH_ACCOUNT = R.id.open_with_account;
     public static final int MENU_ACCOUNTS = R.id.accounts;
     public static final int MENU_INVERSE_SELECTION = R.id.inverse_selection;
-    public static final int MENU_EDIT_MEDIAS = R.id.edit_medias;
+    public static final int MENU_EDIT_MEDIA = R.id.edit_media;
 
     public static final int LINK_ID_STATUS = 1;
     public static final int LINK_ID_USER = 2;

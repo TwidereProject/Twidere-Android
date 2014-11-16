@@ -175,10 +175,10 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.RECIPIENT_SCREEN_NAME, recipient.getScreenName());
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
-        final ParcelableMedia[] medias = ParcelableMedia.fromEntities(message);
-        if (medias != null) {
-            values.put(DirectMessages.MEDIAS, JSONSerializer.toJSONArrayString(medias));
-            values.put(DirectMessages.FIRST_MEDIA, medias[0].url);
+        final ParcelableMedia[] mediaArray = ParcelableMedia.fromEntities(message);
+        if (mediaArray != null) {
+            values.put(DirectMessages.MEDIA, JSONSerializer.toJSONArrayString(mediaArray));
+            values.put(DirectMessages.FIRST_MEDIA, mediaArray[0].url);
         }
         return values;
     }
@@ -200,9 +200,9 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.RECIPIENT_SCREEN_NAME, message.recipient_screen_name);
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, message.sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, message.recipient_profile_image_url);
-        if (message.medias != null) {
-            values.put(Statuses.MEDIAS, JSONSerializer.toJSONArrayString(message.medias));
-            values.put(Statuses.FIRST_MEDIA, message.medias[0].url);
+        if (message.media != null) {
+            values.put(Statuses.MEDIA, JSONSerializer.toJSONArrayString(message.media));
+            values.put(Statuses.FIRST_MEDIA, message.media[0].url);
         }
         return values;
     }
@@ -215,8 +215,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Drafts.ACCOUNT_IDS, ArrayUtils.toString(new long[]{accountId}, ',', false));
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
         if (imageUri != null) {
-            final ParcelableMediaUpdate[] medias = {new ParcelableMediaUpdate(imageUri, 0)};
-            values.put(Drafts.MEDIAS, JSONSerializer.toJSONArrayString(medias));
+            final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};
+            values.put(Drafts.MEDIA, JSONSerializer.toJSONArrayString(mediaArray));
         }
         final JSONObject extras = new JSONObject();
         try {
@@ -306,10 +306,10 @@ public final class ContentValuesCreator implements TwidereConstants {
         }
         values.put(Statuses.IS_RETWEET, isRetweet);
         values.put(Statuses.IS_FAVORITE, status.isFavorited());
-        final ParcelableMedia[] medias = ParcelableMedia.fromEntities(status);
-        if (medias != null) {
-            values.put(Statuses.MEDIAS, JSONSerializer.toJSONArrayString(medias));
-            values.put(Statuses.FIRST_MEDIA, medias[0].url);
+        final ParcelableMedia[] media = ParcelableMedia.fromEntities(status);
+        if (media != null) {
+            values.put(Statuses.MEDIA, JSONSerializer.toJSONArrayString(media));
+            values.put(Statuses.FIRST_MEDIA, media[0].url);
         }
         final ParcelableUserMention[] mentions = ParcelableUserMention.fromStatus(status);
         if (mentions != null) {
@@ -332,8 +332,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Drafts.LOCATION, ParcelableLocation.toString(status.location));
         values.put(Drafts.IS_POSSIBLY_SENSITIVE, status.is_possibly_sensitive);
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
-        if (status.medias != null) {
-            values.put(Drafts.MEDIAS, JSONSerializer.toJSONArrayString(status.medias));
+        if (status.media != null) {
+            values.put(Drafts.MEDIA, JSONSerializer.toJSONArrayString(status.media));
         }
         return values;
     }

@@ -1035,7 +1035,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
 
         @Override
         public String getName() {
-            return getString(R.string.medias);
+            return getString(R.string.media);
         }
 
 

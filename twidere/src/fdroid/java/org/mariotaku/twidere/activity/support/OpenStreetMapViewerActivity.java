@@ -29,7 +29,6 @@ import android.view.MenuItem;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.menu.TwidereMenuInflater;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.osmdroid.ResourceProxy;
@@ -55,8 +54,8 @@ public class OpenStreetMapViewerActivity extends BaseSupportActivity implements 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu, final TwidereMenuInflater inflater) {
-        inflater.inflate(R.menu.menu_osm_viewer, menu);
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_osm_viewer, menu);
         return true;
     }
 

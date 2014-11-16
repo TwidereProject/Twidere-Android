@@ -253,7 +253,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
                     continue;
                 }
                 final long accountId = item.account_ids[0];
-                final String imageUri = item.medias != null && item.medias.length > 0 ? item.medias[0].uri : null;
+                final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
                 twitter.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri);
             }
         }
@@ -308,14 +308,14 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
         protected Integer doInBackground(final Void... params) {
             final ContentResolver resolver = mActivity.getContentResolver();
             final Where where = Where.in(new Column(Drafts._ID), new RawItemArray(mIds));
-            final String[] projection = {Drafts.MEDIAS};
+            final String[] projection = {Drafts.MEDIA};
             final Cursor c = resolver.query(Drafts.CONTENT_URI, projection, where.getSQL(), null, null);
-            final int idxMedias = c.getColumnIndex(Drafts.MEDIAS);
+            final int idxMedia = c.getColumnIndex(Drafts.MEDIA);
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                final ParcelableMediaUpdate[] medias = ParcelableMediaUpdate.fromJSONString(c.getString(idxMedias));
-                if (medias != null) {
-                    for (final ParcelableMediaUpdate media : medias) {
+                final ParcelableMediaUpdate[] mediaArray = ParcelableMediaUpdate.fromJSONString(c.getString(idxMedia));
+                if (mediaArray != null) {
+                    for (final ParcelableMediaUpdate media : mediaArray) {
                         final Uri uri = Uri.parse(media.uri);
                         if ("file".equals(uri.getScheme())) {
                             final File file = new File(uri.getPath());

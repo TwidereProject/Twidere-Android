@@ -12,10 +12,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/add_image"/>
     <item
-        android:id="@+id/medias_menu"
+        android:id="@+id/media_menu"
         android:icon="@drawable/ic_action_gallery"
         android:showAsAction="ifRoom"
-        android:title="@string/medias"
+        android:title="@string/media"
         android:visible="false">
         <menu>
             <item
@@ -27,9 +27,9 @@
                 android:icon="@drawable/ic_action_gallery"
                 android:title="@string/add_image"/>
             <item
-                android:id="@+id/edit_medias"
+                android:id="@id/edit_media"
                 android:icon="@drawable/ic_action_edit"
-                android:title="@string/edit_medias"/>
+                android:title="@string/edit_media"/>
             <item
                 android:id="@id/toggle_sensitive"
                 android:checkable="true"

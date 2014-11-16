@@ -264,14 +264,14 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         private final View itemView;
         private final ImageView iconView;
         private final View selectedIndicator;
-        private final TextView badgeView;
+        private final BadgeView badgeView;
 
         public TabItemHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             selectedIndicator = itemView.findViewById(R.id.selected_indicator);
             iconView = (ImageView) itemView.findViewById(R.id.tab_icon);
-            badgeView = (TextView) itemView.findViewById(R.id.unread_indicator);
+            badgeView = (BadgeView) itemView.findViewById(R.id.unread_indicator);
         }
 
 

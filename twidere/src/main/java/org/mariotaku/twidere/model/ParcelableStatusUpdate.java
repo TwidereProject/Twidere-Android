@@ -27,136 +27,136 @@ import java.util.Arrays;
 
 public class ParcelableStatusUpdate implements Parcelable {
 
-	public static final Parcelable.Creator<ParcelableStatusUpdate> CREATOR = new Parcelable.Creator<ParcelableStatusUpdate>() {
-		@Override
-		public ParcelableStatusUpdate createFromParcel(final Parcel in) {
-			return new ParcelableStatusUpdate(in);
-		}
+    public static final Parcelable.Creator<ParcelableStatusUpdate> CREATOR = new Parcelable.Creator<ParcelableStatusUpdate>() {
+        @Override
+        public ParcelableStatusUpdate createFromParcel(final Parcel in) {
+            return new ParcelableStatusUpdate(in);
+        }
 
-		@Override
-		public ParcelableStatusUpdate[] newArray(final int size) {
-			return new ParcelableStatusUpdate[size];
-		}
-	};
+        @Override
+        public ParcelableStatusUpdate[] newArray(final int size) {
+            return new ParcelableStatusUpdate[size];
+        }
+    };
 
-	public final Account[] accounts;
-	public final ParcelableMediaUpdate[] medias;
-	public final String text;
-	public final ParcelableLocation location;
-	public final long in_reply_to_status_id;
-	public final boolean is_possibly_sensitive;
+    public final Account[] accounts;
+    public final ParcelableMediaUpdate[] media;
+    public final String text;
+    public final ParcelableLocation location;
+    public final long in_reply_to_status_id;
+    public final boolean is_possibly_sensitive;
 
-	/**
-	 * @deprecated It has too much arguments to call, use
-	 *             <b>ParcelableStatusUpdate.Builder</b> instead.
-	 */
-	@Deprecated
-	public ParcelableStatusUpdate(final Account[] accounts, final String text, final ParcelableLocation location,
-			final ParcelableMediaUpdate[] medias, final long in_reply_to_status_id, final boolean is_possibly_sensitive) {
-		this.accounts = accounts;
-		this.text = text;
-		this.location = location;
-		this.medias = medias;
-		this.in_reply_to_status_id = in_reply_to_status_id;
-		this.is_possibly_sensitive = is_possibly_sensitive;
-	}
+    /**
+     * @deprecated It has too much arguments to call, use
+     * <b>ParcelableStatusUpdate.Builder</b> instead.
+     */
+    @Deprecated
+    public ParcelableStatusUpdate(final Account[] accounts, final String text, final ParcelableLocation location,
+                                  final ParcelableMediaUpdate[] media, final long in_reply_to_status_id, final boolean is_possibly_sensitive) {
+        this.accounts = accounts;
+        this.text = text;
+        this.location = location;
+        this.media = media;
+        this.in_reply_to_status_id = in_reply_to_status_id;
+        this.is_possibly_sensitive = is_possibly_sensitive;
+    }
 
-	public ParcelableStatusUpdate(final Context context, final DraftItem draft) {
-		accounts = Account.getAccounts(context, draft.account_ids);
-		text = draft.text;
-		location = draft.location;
-		medias = draft.medias;
-		in_reply_to_status_id = draft.in_reply_to_status_id;
-		is_possibly_sensitive = draft.is_possibly_sensitive;
-	}
+    public ParcelableStatusUpdate(final Context context, final DraftItem draft) {
+        accounts = Account.getAccounts(context, draft.account_ids);
+        text = draft.text;
+        location = draft.location;
+        media = draft.media;
+        in_reply_to_status_id = draft.in_reply_to_status_id;
+        is_possibly_sensitive = draft.is_possibly_sensitive;
+    }
 
-	public ParcelableStatusUpdate(final Parcel in) {
-		accounts = in.createTypedArray(Account.CREATOR);
-		text = in.readString();
-		location = in.readParcelable(ParcelableLocation.class.getClassLoader());
-		medias = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
-		in_reply_to_status_id = in.readLong();
-		is_possibly_sensitive = in.readInt() == 1;
-	}
+    public ParcelableStatusUpdate(final Parcel in) {
+        accounts = in.createTypedArray(Account.CREATOR);
+        text = in.readString();
+        location = in.readParcelable(ParcelableLocation.class.getClassLoader());
+        media = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
+        in_reply_to_status_id = in.readLong();
+        is_possibly_sensitive = in.readInt() == 1;
+    }
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-	@Override
-	public String toString() {
-		return "ParcelableStatusUpdate{accounts=" + Arrays.toString(accounts) + ", medias=" + Arrays.toString(medias)
-				+ ", text=" + text + ", location=" + location + ", in_reply_to_status_id=" + in_reply_to_status_id
-				+ ", is_possibly_sensitive=" + is_possibly_sensitive + "}";
-	}
+    @Override
+    public String toString() {
+        return "ParcelableStatusUpdate{accounts=" + Arrays.toString(accounts) + ", media=" + Arrays.toString(media)
+                + ", text=" + text + ", location=" + location + ", in_reply_to_status_id=" + in_reply_to_status_id
+                + ", is_possibly_sensitive=" + is_possibly_sensitive + "}";
+    }
 
-	@Override
-	public void writeToParcel(final Parcel dest, final int flags) {
-		dest.writeTypedArray(accounts, flags);
-		dest.writeString(text);
-		dest.writeParcelable(location, flags);
-		dest.writeTypedArray(medias, flags);
-		dest.writeLong(in_reply_to_status_id);
-		dest.writeInt(is_possibly_sensitive ? 1 : 0);
-	}
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeTypedArray(accounts, flags);
+        dest.writeString(text);
+        dest.writeParcelable(location, flags);
+        dest.writeTypedArray(media, flags);
+        dest.writeLong(in_reply_to_status_id);
+        dest.writeInt(is_possibly_sensitive ? 1 : 0);
+    }
 
-	public static final class Builder {
+    public static final class Builder {
 
-		private Account[] accounts;
-		private String text;
-		private ParcelableLocation location;
-		private ParcelableMediaUpdate[] medias;
-		private long in_reply_to_status_id;
-		private boolean is_possibly_sensitive;
+        private Account[] accounts;
+        private String text;
+        private ParcelableLocation location;
+        private ParcelableMediaUpdate[] media;
+        private long in_reply_to_status_id;
+        private boolean is_possibly_sensitive;
 
-		public Builder() {
+        public Builder() {
 
-		}
+        }
 
-		public Builder(final ParcelableStatusUpdate base) {
-			accounts(base.accounts);
-			text(base.text);
-			medias(base.medias);
-			location(base.location);
-			inReplyToStatusId(base.in_reply_to_status_id);
-			isPossiblySensitive(base.is_possibly_sensitive);
-		}
+        public Builder(final ParcelableStatusUpdate base) {
+            accounts(base.accounts);
+            text(base.text);
+            media(base.media);
+            location(base.location);
+            inReplyToStatusId(base.in_reply_to_status_id);
+            isPossiblySensitive(base.is_possibly_sensitive);
+        }
 
-		public Builder accounts(final Account[] accounts) {
-			this.accounts = accounts;
-			return this;
-		}
+        public Builder accounts(final Account[] accounts) {
+            this.accounts = accounts;
+            return this;
+        }
 
-		public ParcelableStatusUpdate build() {
-			return new ParcelableStatusUpdate(accounts, text, location, medias, in_reply_to_status_id,
-					is_possibly_sensitive);
-		}
+        public ParcelableStatusUpdate build() {
+            return new ParcelableStatusUpdate(accounts, text, location, media, in_reply_to_status_id,
+                    is_possibly_sensitive);
+        }
 
-		public Builder inReplyToStatusId(final long in_reply_to_status_id) {
-			this.in_reply_to_status_id = in_reply_to_status_id;
-			return this;
-		}
+        public Builder inReplyToStatusId(final long in_reply_to_status_id) {
+            this.in_reply_to_status_id = in_reply_to_status_id;
+            return this;
+        }
 
-		public Builder isPossiblySensitive(final boolean is_possibly_sensitive) {
-			this.is_possibly_sensitive = is_possibly_sensitive;
-			return this;
-		}
+        public Builder isPossiblySensitive(final boolean is_possibly_sensitive) {
+            this.is_possibly_sensitive = is_possibly_sensitive;
+            return this;
+        }
 
-		public Builder location(final ParcelableLocation location) {
-			this.location = location;
-			return this;
-		}
+        public Builder location(final ParcelableLocation location) {
+            this.location = location;
+            return this;
+        }
 
-		public Builder medias(final ParcelableMediaUpdate... medias) {
-			this.medias = medias;
-			return this;
-		}
+        public Builder media(final ParcelableMediaUpdate... media) {
+            this.media = media;
+            return this;
+        }
 
-		public Builder text(final String text) {
-			this.text = text;
-			return this;
-		}
-	}
+        public Builder text(final String text) {
+            this.text = text;
+            return this;
+        }
+    }
 
 }

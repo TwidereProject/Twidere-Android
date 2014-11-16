@@ -274,8 +274,8 @@ public class ParcelableStatusesAdapter extends BaseArrayAdapter<ParcelableStatus
                     loader.displayPreviewImage(holder.image_preview, status.first_media, mImageLoadingHandler);
                 }
                 final Resources res = mContext.getResources();
-                final int count = status.medias.length;
-                holder.image_preview_count.setText(res.getQuantityString(R.plurals.N_medias, count, count));
+                final int count = status.media.length;
+                holder.image_preview_count.setText(res.getQuantityString(R.plurals.N_media, count, count));
                 holder.image_preview.setTag(position);
             } else {
                 loader.cancelDisplayTask(holder.image_preview);

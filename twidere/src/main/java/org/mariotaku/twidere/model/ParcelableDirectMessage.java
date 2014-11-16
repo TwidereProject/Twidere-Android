@@ -79,7 +79,7 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 
 	public final String first_media;
 
-	public final ParcelableMedia[] medias;
+	public final ParcelableMedia[] media;
 
 	public ParcelableDirectMessage(final ContentValues values) {
 		text_plain = values.getAsString(DirectMessages.TEXT_PLAIN);
@@ -97,7 +97,7 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 		id = getAsLong(values, DirectMessages.MESSAGE_ID, -1);
 		is_outgoing = getAsBoolean(values, DirectMessages.IS_OUTGOING, false);
 		account_id = getAsLong(values, DirectMessages.ACCOUNT_ID, -1);
-		medias = ParcelableMedia.fromJSONString(values.getAsString(DirectMessages.MEDIAS));
+		media = ParcelableMedia.fromJSONString(values.getAsString(DirectMessages.MEDIA));
 		first_media = values.getAsString(DirectMessages.FIRST_MEDIA);
 	}
 
@@ -119,7 +119,7 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 				: null;
 		recipient_profile_image_url = idx.recipient_profile_image_url != -1 ? c
 				.getString(idx.recipient_profile_image_url) : null;
-		medias = ParcelableMedia.fromJSONString(idx.medias != -1 ? c.getString(idx.medias) : null);
+		media = ParcelableMedia.fromJSONString(idx.media != -1 ? c.getString(idx.media) : null);
 		first_media = idx.first_media != -1 ? c.getString(idx.first_media) : null;
 	}
 
@@ -144,8 +144,8 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 		sender_profile_image_url = sender_profile_image_url_string;
 		recipient_profile_image_url = recipient_profile_image_url_string;
 		text_unescaped = toPlainText(text_html);
-		medias = ParcelableMedia.fromEntities(message);
-		first_media = medias != null && medias.length > 0 ? medias[0].url : null;
+		media = ParcelableMedia.fromEntities(message);
+		first_media = media != null && media.length > 0 ? media[0].url : null;
 	}
 
 	public ParcelableDirectMessage(final Parcel in) {
@@ -164,8 +164,8 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 		sender_profile_image_url = in.readString();
 		recipient_profile_image_url = in.readString();
 		text_unescaped = in.readString();
-		medias = in.createTypedArray(ParcelableMedia.CREATOR);
-		first_media = medias != null && medias.length > 0 ? medias[0].url : null;
+		media = in.createTypedArray(ParcelableMedia.CREATOR);
+		first_media = media != null && media.length > 0 ? media[0].url : null;
 	}
 
 	@Override
@@ -230,7 +230,7 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 		out.writeString(sender_profile_image_url);
 		out.writeString(recipient_profile_image_url);
 		out.writeString(text_unescaped);
-		out.writeTypedArray(medias, flags);
+		out.writeTypedArray(media, flags);
 	}
 
 	private static long getTime(final Date date) {
@@ -241,7 +241,7 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 
 		public final int account_id, message_id, message_timestamp, sender_name, sender_screen_name, text, text_plain,
 				recipient_name, recipient_screen_name, sender_profile_image_url, is_outgoing,
-				recipient_profile_image_url, sender_id, recipient_id, medias, first_media;
+				recipient_profile_image_url, sender_id, recipient_id, media, first_media;
 
 		public CursorIndices(final Cursor cursor) {
 			account_id = cursor.getColumnIndex(DirectMessages.ACCOUNT_ID);
@@ -258,7 +258,7 @@ public class ParcelableDirectMessage implements Parcelable, Serializable, Compar
 			recipient_screen_name = cursor.getColumnIndex(DirectMessages.RECIPIENT_SCREEN_NAME);
 			sender_profile_image_url = cursor.getColumnIndex(DirectMessages.SENDER_PROFILE_IMAGE_URL);
 			recipient_profile_image_url = cursor.getColumnIndex(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL);
-			medias = cursor.getColumnIndex(DirectMessages.MEDIAS);
+			media = cursor.getColumnIndex(DirectMessages.MEDIA);
 			first_media = cursor.getColumnIndex(DirectMessages.FIRST_MEDIA);
 		}
 	}

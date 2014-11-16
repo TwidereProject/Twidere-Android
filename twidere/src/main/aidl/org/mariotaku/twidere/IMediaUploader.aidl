@@ -24,6 +24,6 @@ import org.mariotaku.twidere.model.UploaderMediaItem;
 
 interface IMediaUploader {
 	
-	MediaUploadResult upload(in ParcelableStatusUpdate status, in UploaderMediaItem[] medias);
+	MediaUploadResult upload(in ParcelableStatusUpdate status, in UploaderMediaItem[] media);
 	
 }

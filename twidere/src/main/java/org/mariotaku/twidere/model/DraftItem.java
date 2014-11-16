@@ -31,113 +31,113 @@ import org.mariotaku.twidere.util.ArrayUtils;
 
 public class DraftItem implements Parcelable {
 
-	public static final Parcelable.Creator<DraftItem> CREATOR = new Parcelable.Creator<DraftItem>() {
-		@Override
-		public DraftItem createFromParcel(final Parcel in) {
-			return new DraftItem(in);
-		}
+    public static final Parcelable.Creator<DraftItem> CREATOR = new Parcelable.Creator<DraftItem>() {
+        @Override
+        public DraftItem createFromParcel(final Parcel in) {
+            return new DraftItem(in);
+        }
 
-		@Override
-		public DraftItem[] newArray(final int size) {
-			return new DraftItem[size];
-		}
-	};
+        @Override
+        public DraftItem[] newArray(final int size) {
+            return new DraftItem[size];
+        }
+    };
 
-	public final long[] account_ids;
-	public final long _id, in_reply_to_status_id, timestamp;
-	public final String text;
-	public final ParcelableMediaUpdate[] medias;
-	public final boolean is_possibly_sensitive;
-	public final ParcelableLocation location;
-	public final int action_type;
-	public final JSONObject action_extras;
+    public final long[] account_ids;
+    public final long _id, in_reply_to_status_id, timestamp;
+    public final String text;
+    public final ParcelableMediaUpdate[] media;
+    public final boolean is_possibly_sensitive;
+    public final ParcelableLocation location;
+    public final int action_type;
+    public final JSONObject action_extras;
 
-	public DraftItem(final Cursor cursor, final CursorIndices indices) {
-		_id = cursor.getLong(indices._id);
-		text = cursor.getString(indices.text);
-		medias = ParcelableMediaUpdate.fromJSONString(cursor.getString(indices.medias));
-		account_ids = ArrayUtils.parseLongArray(cursor.getString(indices.account_ids), ',');
-		in_reply_to_status_id = cursor.getLong(indices.in_reply_to_status_id);
-		is_possibly_sensitive = cursor.getShort(indices.is_possibly_sensitive) == 1;
-		location = new ParcelableLocation(cursor.getString(indices.location));
-		timestamp = cursor.getLong(indices.timestamp);
-		action_type = cursor.getInt(indices.action_type);
-		action_extras = createJSONObject(cursor.getString(indices.action_extras));
-	}
+    public DraftItem(final Cursor cursor, final CursorIndices indices) {
+        _id = cursor.getLong(indices._id);
+        text = cursor.getString(indices.text);
+        media = ParcelableMediaUpdate.fromJSONString(cursor.getString(indices.media));
+        account_ids = ArrayUtils.parseLongArray(cursor.getString(indices.account_ids), ',');
+        in_reply_to_status_id = cursor.getLong(indices.in_reply_to_status_id);
+        is_possibly_sensitive = cursor.getShort(indices.is_possibly_sensitive) == 1;
+        location = new ParcelableLocation(cursor.getString(indices.location));
+        timestamp = cursor.getLong(indices.timestamp);
+        action_type = cursor.getInt(indices.action_type);
+        action_extras = createJSONObject(cursor.getString(indices.action_extras));
+    }
 
-	public DraftItem(final Parcel in) {
-		account_ids = in.createLongArray();
-		_id = in.readLong();
-		in_reply_to_status_id = in.readLong();
-		text = in.readString();
-		medias = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
-		is_possibly_sensitive = in.readInt() == 1;
-		location = ParcelableLocation.fromString(in.readString());
-		timestamp = in.readLong();
-		action_type = in.readInt();
-		action_extras = createJSONObject(in.readString());
-	}
+    public DraftItem(final Parcel in) {
+        account_ids = in.createLongArray();
+        _id = in.readLong();
+        in_reply_to_status_id = in.readLong();
+        text = in.readString();
+        media = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
+        is_possibly_sensitive = in.readInt() == 1;
+        location = ParcelableLocation.fromString(in.readString());
+        timestamp = in.readLong();
+        action_type = in.readInt();
+        action_extras = createJSONObject(in.readString());
+    }
 
-	public DraftItem(final ParcelableStatusUpdate status) {
-		_id = 0;
-		account_ids = Account.getAccountIds(status.accounts);
-		in_reply_to_status_id = status.in_reply_to_status_id;
-		text = status.text;
-		medias = status.medias;
-		is_possibly_sensitive = status.is_possibly_sensitive;
-		location = status.location;
-		timestamp = System.currentTimeMillis();
-		action_type = Drafts.ACTION_UPDATE_STATUS;
-		action_extras = createJSONObject(null);
-	}
+    public DraftItem(final ParcelableStatusUpdate status) {
+        _id = 0;
+        account_ids = Account.getAccountIds(status.accounts);
+        in_reply_to_status_id = status.in_reply_to_status_id;
+        text = status.text;
+        media = status.media;
+        is_possibly_sensitive = status.is_possibly_sensitive;
+        location = status.location;
+        timestamp = System.currentTimeMillis();
+        action_type = Drafts.ACTION_UPDATE_STATUS;
+        action_extras = createJSONObject(null);
+    }
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-	@Override
-	public void writeToParcel(final Parcel out, final int flags) {
-		out.writeLongArray(account_ids);
-		out.writeLong(_id);
-		out.writeLong(in_reply_to_status_id);
-		out.writeString(text);
-		out.writeTypedArray(medias, flags);
-		out.writeInt(is_possibly_sensitive ? 1 : 0);
-		out.writeString(ParcelableLocation.toString(location));
-		out.writeLong(timestamp);
-		out.writeInt(action_type);
-		out.writeString(action_extras.toString());
-	}
+    @Override
+    public void writeToParcel(final Parcel out, final int flags) {
+        out.writeLongArray(account_ids);
+        out.writeLong(_id);
+        out.writeLong(in_reply_to_status_id);
+        out.writeString(text);
+        out.writeTypedArray(media, flags);
+        out.writeInt(is_possibly_sensitive ? 1 : 0);
+        out.writeString(ParcelableLocation.toString(location));
+        out.writeLong(timestamp);
+        out.writeInt(action_type);
+        out.writeString(action_extras.toString());
+    }
 
-	private static JSONObject createJSONObject(final String json) {
-		if (TextUtils.isEmpty(json)) return new JSONObject();
-		try {
-			return new JSONObject(json);
-		} catch (final JSONException e) {
-			e.printStackTrace();
-		}
-		return new JSONObject();
-	}
+    private static JSONObject createJSONObject(final String json) {
+        if (TextUtils.isEmpty(json)) return new JSONObject();
+        try {
+            return new JSONObject(json);
+        } catch (final JSONException e) {
+            e.printStackTrace();
+        }
+        return new JSONObject();
+    }
 
-	public static final class CursorIndices {
+    public static final class CursorIndices {
 
-		public final int _id, account_ids, in_reply_to_status_id, text, location, medias, is_possibly_sensitive,
-				timestamp, action_type, action_extras;
+        public final int _id, account_ids, in_reply_to_status_id, text, location, media, is_possibly_sensitive,
+                timestamp, action_type, action_extras;
 
-		public CursorIndices(final Cursor cursor) {
-			_id = cursor.getColumnIndex(Drafts._ID);
-			account_ids = cursor.getColumnIndex(Drafts.ACCOUNT_IDS);
-			in_reply_to_status_id = cursor.getColumnIndex(Drafts.IN_REPLY_TO_STATUS_ID);
-			timestamp = cursor.getColumnIndex(Drafts.TIMESTAMP);
-			text = cursor.getColumnIndex(Drafts.TEXT);
-			medias = cursor.getColumnIndex(Drafts.MEDIAS);
-			is_possibly_sensitive = cursor.getColumnIndex(Drafts.IS_POSSIBLY_SENSITIVE);
-			location = cursor.getColumnIndex(Drafts.LOCATION);
-			action_type = cursor.getColumnIndex(Drafts.ACTION_TYPE);
-			action_extras = cursor.getColumnIndex(Drafts.ACTION_EXTRAS);
-		}
+        public CursorIndices(final Cursor cursor) {
+            _id = cursor.getColumnIndex(Drafts._ID);
+            account_ids = cursor.getColumnIndex(Drafts.ACCOUNT_IDS);
+            in_reply_to_status_id = cursor.getColumnIndex(Drafts.IN_REPLY_TO_STATUS_ID);
+            timestamp = cursor.getColumnIndex(Drafts.TIMESTAMP);
+            text = cursor.getColumnIndex(Drafts.TEXT);
+            media = cursor.getColumnIndex(Drafts.MEDIA);
+            is_possibly_sensitive = cursor.getColumnIndex(Drafts.IS_POSSIBLY_SENSITIVE);
+            location = cursor.getColumnIndex(Drafts.LOCATION);
+            action_type = cursor.getColumnIndex(Drafts.ACTION_TYPE);
+            action_extras = cursor.getColumnIndex(Drafts.ACTION_EXTRAS);
+        }
 
-	}
+    }
 
 }

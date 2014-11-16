@@ -124,25 +124,25 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
 
     public static ParcelableMedia[] fromEntities(final EntitySupport entities) {
         final List<ParcelableMedia> list = new ArrayList<>();
-        final MediaEntity[] medias;
+        final MediaEntity[] mediaEntities;
         if (entities instanceof ExtendedEntitySupport) {
             final ExtendedEntitySupport extendedEntities = (ExtendedEntitySupport) entities;
-            final MediaEntity[] extendedMedias = extendedEntities.getExtendedMediaEntities();
-            medias = extendedMedias != null ? extendedMedias : entities.getMediaEntities();
+            final MediaEntity[] extendedMediaEntities = extendedEntities.getExtendedMediaEntities();
+            mediaEntities = extendedMediaEntities != null ? extendedMediaEntities : entities.getMediaEntities();
         } else {
-            medias = entities.getMediaEntities();
+            mediaEntities = entities.getMediaEntities();
         }
-        if (medias != null) {
-            for (final MediaEntity media : medias) {
+        if (mediaEntities != null) {
+            for (final MediaEntity media : mediaEntities) {
                 final URL mediaURL = media.getMediaURL();
                 if (mediaURL != null) {
                     list.add(new ParcelableMedia(media));
                 }
             }
         }
-        final URLEntity[] urls = entities.getURLEntities();
-        if (urls != null) {
-            for (final URLEntity url : urls) {
+        final URLEntity[] urlEntities = entities.getURLEntities();
+        if (urlEntities != null) {
+            for (final URLEntity url : urlEntities) {
                 final String expanded = ParseUtils.parseString(url.getExpandedURL());
                 final String media_url = MediaPreviewUtils.getSupportedLink(expanded);
                 if (expanded != null && media_url != null) {

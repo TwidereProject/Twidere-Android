@@ -389,7 +389,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         } else {
             mProfileImageView.setImageResource(R.drawable.ic_profile_image_default);
         }
-        mImagePreviewContainer.setVisibility(status.medias == null || status.medias.length == 0 ? View.GONE
+        mImagePreviewContainer.setVisibility(status.media == null || status.media.length == 0 ? View.GONE
                 : View.VISIBLE);
         if (display_image_preview) {
             loadPreviewImages();
@@ -924,9 +924,9 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         mLoadImagesIndicator.setVisibility(View.GONE);
         mImagePreviewGrid.setVisibility(View.VISIBLE);
         mImagePreviewGrid.removeAllViews();
-        if (mStatus.medias != null) {
+        if (mStatus.media != null) {
             final int maxColumns = getResources().getInteger(R.integer.grid_column_image_preview);
-            MediaPreviewUtils.addToLinearLayout(mImagePreviewGrid, mImageLoader, mStatus.medias, maxColumns, this);
+            MediaPreviewUtils.addToLinearLayout(mImagePreviewGrid, mImageLoader, mStatus.media, maxColumns, this);
         }
     }
 

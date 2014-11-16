@@ -3869,23 +3869,25 @@ public final class Utils implements Constants, TwitterConstants {
 
     private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
         // Format media.
-        final MediaEntity[] medias = entities.getMediaEntities();
-        if (medias != null) {
-            for (final MediaEntity media : medias) {
-                final int start = media.getStart(), end = media.getEnd();
-                final URL mediaUrl = media.getMediaURL();
+        final MediaEntity[] mediaEntities = entities.getMediaEntities();
+        if (mediaEntities != null) {
+            for (final MediaEntity mediaEntity : mediaEntities) {
+                final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
+                final URL mediaUrl = mediaEntity.getMediaURL();
                 if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(ParseUtils.parseString(mediaUrl), media.getDisplayURL(), start, end);
+                    builder.addLink(ParseUtils.parseString(mediaUrl), mediaEntity.getDisplayURL(),
+                            start, end);
                 }
             }
         }
-        final URLEntity[] urls = entities.getURLEntities();
-        if (urls != null) {
-            for (final URLEntity url : urls) {
-                final int start = url.getStart(), end = url.getEnd();
-                final URL expandedUrl = url.getExpandedURL();
+        final URLEntity[] urlEntities = entities.getURLEntities();
+        if (urlEntities != null) {
+            for (final URLEntity urlEntity : urlEntities) {
+                final int start = urlEntity.getStart(), end = urlEntity.getEnd();
+                final URL expandedUrl = urlEntity.getExpandedURL();
                 if (expandedUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(ParseUtils.parseString(expandedUrl), url.getDisplayURL(), start, end);
+                    builder.addLink(ParseUtils.parseString(expandedUrl), urlEntity.getDisplayURL(),
+                            start, end);
                 }
             }
         }

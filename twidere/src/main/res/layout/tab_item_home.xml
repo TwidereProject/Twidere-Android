@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:selectableItemBackground">
@@ -22,7 +21,7 @@
         android:layout_centerInParent="true"
         android:scaleType="centerInside"/>
 
-    <me.grantland.widget.AutofitTextView
+    <org.mariotaku.twidere.view.BadgeView
         android:id="@+id/unread_indicator"
         android:layout_width="@dimen/unread_indicator_size"
         android:layout_height="@dimen/unread_indicator_size"
@@ -35,8 +34,7 @@
         android:gravity="center"
         android:padding="@dimen/element_spacing_xsmall"
         android:singleLine="true"
-        app:minTextSize="0.5sp"
-        app:sizeToFit="true"/>
+        android:textColor="?android:textColorPrimary"/>
 
 
 </RelativeLayout>

@@ -1,0 +1,79 @@
+package org.mariotaku.twidere.view;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
+import android.graphics.Rect;
+import android.text.TextPaint;
+import android.util.AttributeSet;
+import android.view.View;
+
+/**
+ * Created by mariotaku on 14/11/16.
+ */
+public class BadgeView extends View {
+
+    private final TextPaint mTextPaint;
+    private String mText;
+    private float mTextX, mTextY;
+    private Rect mTextBounds;
+
+    public BadgeView(Context context) {
+        this(context, null);
+    }
+
+    public BadgeView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public BadgeView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        mTextPaint.setColor(Color.WHITE);
+        mTextPaint.setTextAlign(Align.CENTER);
+        mTextBounds = new Rect();
+    }
+
+    public void setText(String text) {
+        mText = text;
+        updateTextPosition();
+        invalidate();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        final int hPadding = (int) (Math.round(w * (Math.pow(2, 0.5f) - 1)) / 2);
+        final int vPadding = (int) (Math.round(h * (Math.pow(2, 0.5f) - 1)) / 2);
+        setPadding(hPadding, vPadding, hPadding, vPadding);
+        updateTextPosition();
+        invalidate();
+    }
+
+    private void updateTextPosition() {
+        final int width = getWidth(), height = getHeight();
+        if (width == 0 || height == 0) return;
+        final float contentWidth = width - getPaddingLeft() - getPaddingRight();
+        final float contentHeight = height - getPaddingTop() - getPaddingBottom();
+
+        if (mText != null) {
+            mTextPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
+            final float scale = Math.min(contentWidth / mTextBounds.width(), contentHeight / mTextBounds.height());
+            mTextPaint.setTextSize(Math.min(height / 2, mTextPaint.getTextSize() * scale));
+            mTextPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
+            mTextX = contentWidth / 2 + getPaddingLeft();
+            mTextY = contentHeight / 2 + getPaddingTop() + mTextBounds.height() / 2;
+        } else {
+            mTextBounds.setEmpty();
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (!mTextBounds.isEmpty()) {
+            canvas.drawText(mText, mTextX, mTextY, mTextPaint);
+        }
+    }
+}

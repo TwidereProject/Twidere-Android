@@ -8,7 +8,7 @@
     app:fontPath="fonts/LibreBaskerville-Italic.ttf"
     android:gravity="center"
     android:padding="@dimen/element_spacing_small"
-    android:text="- Mea est luna -"
+    android:text="- Luna meae es -"
     android:textColor="?android:textColorPrimary"
     android:textSize="10sp"
     android:textStyle="italic"

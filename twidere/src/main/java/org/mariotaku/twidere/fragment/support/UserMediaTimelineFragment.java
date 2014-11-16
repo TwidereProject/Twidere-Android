@@ -167,9 +167,9 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
         }
 
         public void setMedia(ImageLoaderWrapper loader, ImageLoadingHandler loadingHandler, ParcelableStatus status) {
-            final ParcelableMedia[] medias = status.medias;
-            if (medias == null || medias.length < 1) return;
-            final ParcelableMedia firstMedia = medias[0];
+            final ParcelableMedia[] media = status.media;
+            if (media == null || media.length < 1) return;
+            final ParcelableMedia firstMedia = media[0];
             if (status.text_plain.codePointCount(0, status.text_plain.length()) == firstMedia.end) {
                 mediaTextView.setText(status.text_unescaped.substring(0, firstMedia.start));
             } else {

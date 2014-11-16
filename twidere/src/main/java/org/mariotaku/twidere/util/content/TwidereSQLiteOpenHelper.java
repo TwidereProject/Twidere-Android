@@ -121,17 +121,19 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     }
 
     private void handleVersionChange(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-        final HashMap<String, String> accountsAlias = new HashMap<String, String>();
-        final HashMap<String, String> filtersAlias = new HashMap<String, String>();
+        final HashMap<String, String> accountsAlias = new HashMap<>();
+        final HashMap<String, String> filtersAlias = new HashMap<>();
+        final HashMap<String, String> draftsAlias = new HashMap<>();
         accountsAlias.put(Accounts.SCREEN_NAME, "username");
         accountsAlias.put(Accounts.NAME, "username");
         accountsAlias.put(Accounts.ACCOUNT_ID, "user_id");
         accountsAlias.put(Accounts.COLOR, "user_color");
         accountsAlias.put(Accounts.OAUTH_TOKEN_SECRET, "token_secret");
+        draftsAlias.put(Drafts.MEDIA, "medias");
         safeUpgrade(db, Accounts.TABLE_NAME, Accounts.COLUMNS, Accounts.TYPES, false, accountsAlias);
         safeUpgrade(db, Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null);
         safeUpgrade(db, Mentions.TABLE_NAME, Mentions.COLUMNS, Mentions.TYPES, true, null);
-        safeUpgrade(db, Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, false, null);
+        safeUpgrade(db, Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, false, draftsAlias);
         safeUpgrade(db, CachedUsers.TABLE_NAME, CachedUsers.COLUMNS, CachedUsers.TYPES, true, null);
         safeUpgrade(db, CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, false, null);
         safeUpgrade(db, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, false, null);
