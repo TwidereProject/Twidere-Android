@@ -93,7 +93,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
     };
 
     public final long id, account_id, timestamp, user_id, retweet_id, retweeted_by_id, retweet_timestamp,
-            retweet_count, favorite_count, in_reply_to_status_id, in_reply_to_user_id, my_retweet_id;
+            retweet_count, favorite_count, reply_count, descendent_reply_count, in_reply_to_status_id,
+            in_reply_to_user_id, my_retweet_id;
 
     public final boolean is_gap, is_retweet, is_favorite, is_possibly_sensitive, user_is_following, user_is_protected,
             user_is_verified;
@@ -137,6 +138,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         source = values.getAsString(Statuses.SOURCE);
         retweet_count = getAsInteger(values, Statuses.RETWEET_COUNT, 0);
         favorite_count = getAsInteger(values, Statuses.FAVORITE_COUNT, 0);
+        reply_count = getAsInteger(values, Statuses.REPLY_COUNT, 0);
+        descendent_reply_count = getAsInteger(values, Statuses.DESCENDENT_REPLY_COUNT, 0);
         text_unescaped = values.getAsString(Statuses.TEXT_UNESCAPED);
         media = ParcelableMedia.fromJSONString(values.getAsString(Statuses.MEDIA));
         is_possibly_sensitive = getAsBoolean(values, Statuses.IS_POSSIBLY_SENSITIVE, false);
@@ -155,6 +158,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         retweeted_by_id = idx.retweeted_by_user_id != -1 ? c.getLong(idx.retweeted_by_user_id) : -1;
         retweet_count = idx.retweet_count != -1 ? c.getLong(idx.retweet_count) : -1;
         favorite_count = idx.favorite_count != -1 ? c.getLong(idx.favorite_count) : -1;
+        reply_count = idx.reply_count != -1 ? c.getLong(idx.reply_count) : -1;
+        descendent_reply_count = idx.descendent_reply_count != -1 ? c.getLong(idx.descendent_reply_count) : -1;
         in_reply_to_status_id = idx.in_reply_to_status_id != -1 ? c.getLong(idx.in_reply_to_status_id) : -1;
         in_reply_to_user_id = idx.in_reply_to_user_id != -1 ? c.getLong(idx.in_reply_to_user_id) : -1;
         is_gap = idx.is_gap != -1 && c.getInt(idx.is_gap) == 1;
@@ -194,6 +199,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         retweeted_by_id = in.readLong("retweeted_by_id");
         retweet_count = in.readLong("retweet_count");
         favorite_count = in.readLong("favorite_count");
+        reply_count = in.readLong("reply_count");
+        descendent_reply_count = in.readLong("descendent_reply_count");
         in_reply_to_status_id = in.readLong("in_reply_to_status_id");
         in_reply_to_user_id = in.readLong("in_reply_to_user_id");
         is_gap = in.readBoolean("is_gap");
@@ -231,6 +238,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         retweeted_by_id = in.readLong();
         retweet_count = in.readLong();
         favorite_count = in.readLong();
+        reply_count = in.readLong();
+        descendent_reply_count = in.readLong();
         in_reply_to_status_id = in.readLong();
         is_gap = in.readInt() == 1;
         is_retweet = in.readInt() == 1;
@@ -285,6 +294,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         text_plain = status.getText();
         retweet_count = status.getRetweetCount();
         favorite_count = status.getFavoriteCount();
+        reply_count = status.getReplyCount();
+        descendent_reply_count = status.getDescendentReplyCount();
         in_reply_to_name = getInReplyToName(status);
         in_reply_to_screen_name = status.getInReplyToScreenName();
         in_reply_to_status_id = status.getInReplyToStatusId();
@@ -359,6 +370,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeLong("retweeted_by_id", retweeted_by_id);
         out.writeLong("retweet_count", retweet_count);
         out.writeLong("favorite_count", favorite_count);
+        out.writeLong("reply_count", reply_count);
+        out.writeLong("descendent_reply_count", descendent_reply_count);
         out.writeLong("in_reply_to_status_id", in_reply_to_status_id);
         out.writeLong("in_reply_to_user_id", in_reply_to_user_id);
         out.writeBoolean("is_gap", is_gap);
@@ -396,6 +409,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeLong(retweeted_by_id);
         out.writeLong(retweet_count);
         out.writeLong(favorite_count);
+        out.writeLong(reply_count);
+        out.writeLong(descendent_reply_count);
         out.writeLong(in_reply_to_status_id);
         out.writeInt(is_gap ? 1 : 0);
         out.writeInt(is_retweet ? 1 : 0);
@@ -428,12 +443,56 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
 
     public static final class CursorIndices {
 
-        public final int _id, account_id, status_id, status_timestamp, user_name, user_screen_name, text_html,
-                text_plain, text_unescaped, user_profile_image_url, is_favorite, is_retweet, is_gap, location,
-                is_protected, is_verified, in_reply_to_status_id, in_reply_to_user_id, in_reply_to_user_name,
-                in_reply_to_user_screen_name, my_retweet_id, retweeted_by_user_name, retweeted_by_user_screen_name,
-                retweet_id, retweet_timestamp, retweeted_by_user_id, user_id, source, retweet_count, favorite_count,
+        public final int _id, account_id, status_id, status_timestamp, user_name, user_screen_name,
+                text_html, text_plain, text_unescaped, user_profile_image_url, is_favorite, is_retweet,
+                is_gap, location, is_protected, is_verified, in_reply_to_status_id, in_reply_to_user_id,
+                in_reply_to_user_name, in_reply_to_user_screen_name, my_retweet_id, retweeted_by_user_name,
+                retweeted_by_user_screen_name, retweet_id, retweet_timestamp, retweeted_by_user_id,
+                user_id, source, retweet_count, favorite_count, reply_count, descendent_reply_count,
                 is_possibly_sensitive, is_following, media, first_media, mentions;
+
+        @Override
+        public String toString() {
+            return "CursorIndices{" +
+                    "_id=" + _id +
+                    ", account_id=" + account_id +
+                    ", status_id=" + status_id +
+                    ", status_timestamp=" + status_timestamp +
+                    ", user_name=" + user_name +
+                    ", user_screen_name=" + user_screen_name +
+                    ", text_html=" + text_html +
+                    ", text_plain=" + text_plain +
+                    ", text_unescaped=" + text_unescaped +
+                    ", user_profile_image_url=" + user_profile_image_url +
+                    ", is_favorite=" + is_favorite +
+                    ", is_retweet=" + is_retweet +
+                    ", is_gap=" + is_gap +
+                    ", location=" + location +
+                    ", is_protected=" + is_protected +
+                    ", is_verified=" + is_verified +
+                    ", in_reply_to_status_id=" + in_reply_to_status_id +
+                    ", in_reply_to_user_id=" + in_reply_to_user_id +
+                    ", in_reply_to_user_name=" + in_reply_to_user_name +
+                    ", in_reply_to_user_screen_name=" + in_reply_to_user_screen_name +
+                    ", my_retweet_id=" + my_retweet_id +
+                    ", retweeted_by_user_name=" + retweeted_by_user_name +
+                    ", retweeted_by_user_screen_name=" + retweeted_by_user_screen_name +
+                    ", retweet_id=" + retweet_id +
+                    ", retweet_timestamp=" + retweet_timestamp +
+                    ", retweeted_by_user_id=" + retweeted_by_user_id +
+                    ", user_id=" + user_id +
+                    ", source=" + source +
+                    ", retweet_count=" + retweet_count +
+                    ", favorite_count=" + favorite_count +
+                    ", reply_count=" + reply_count +
+                    ", descendent_reply_count=" + descendent_reply_count +
+                    ", is_possibly_sensitive=" + is_possibly_sensitive +
+                    ", is_following=" + is_following +
+                    ", media=" + media +
+                    ", first_media=" + first_media +
+                    ", mentions=" + mentions +
+                    '}';
+        }
 
         public CursorIndices(final Cursor cursor) {
             _id = cursor.getColumnIndex(Statuses._ID);
@@ -466,6 +525,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             source = cursor.getColumnIndex(Statuses.SOURCE);
             retweet_count = cursor.getColumnIndex(Statuses.RETWEET_COUNT);
             favorite_count = cursor.getColumnIndex(Statuses.FAVORITE_COUNT);
+            reply_count = cursor.getColumnIndex(Statuses.REPLY_COUNT);
+            descendent_reply_count = cursor.getColumnIndex(Statuses.DESCENDENT_REPLY_COUNT);
             is_possibly_sensitive = cursor.getColumnIndex(Statuses.IS_POSSIBLY_SENSITIVE);
             is_following = cursor.getColumnIndex(Statuses.IS_FOLLOWING);
             media = cursor.getColumnIndex(Statuses.MEDIA);
@@ -473,24 +534,5 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             mentions = cursor.getColumnIndex(Statuses.MENTIONS);
         }
 
-        @Override
-        public String toString() {
-            return "CursorIndices{_id=" + _id + ", account_id=" + account_id + ", status_id=" + status_id
-                    + ", status_timestamp=" + status_timestamp + ", user_name=" + user_name + ", user_screen_name="
-                    + user_screen_name + ", text_html=" + text_html + ", text_plain=" + text_plain
-                    + ", text_unescaped=" + text_unescaped + ", user_profile_image_url=" + user_profile_image_url
-                    + ", is_favorite=" + is_favorite + ", is_retweet=" + is_retweet + ", is_gap=" + is_gap
-                    + ", location=" + location + ", is_protected=" + is_protected + ", is_verified=" + is_verified
-                    + ", in_reply_to_status_id=" + in_reply_to_status_id + ", in_reply_to_user_id="
-                    + in_reply_to_user_id + ", in_reply_to_user_name=" + in_reply_to_user_name
-                    + ", in_reply_to_user_screen_name=" + in_reply_to_user_screen_name + ", my_retweet_id="
-                    + my_retweet_id + ", retweeted_by_user_name=" + retweeted_by_user_name
-                    + ", retweeted_by_user_screen_name=" + retweeted_by_user_screen_name + ", retweet_id=" + retweet_id
-                    + ", retweet_timestamp=" + retweet_timestamp + ", retweeted_by_user_id=" + retweeted_by_user_id
-                    + ", user_id=" + user_id + ", source=" + source + ", retweet_count=" + retweet_count
-                    + ", favorite_count=" + favorite_count + ", is_possibly_sensitive=" + is_possibly_sensitive
-                    + ", is_following=" + is_following + ", media=" + media + ", first_media=" + first_media
-                    + ", mentions=" + mentions + "}";
-        }
     }
 }

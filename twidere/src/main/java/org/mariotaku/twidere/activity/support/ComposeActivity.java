@@ -583,7 +583,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mMenuBar.setOnMenuItemClickListener(this);
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
-        final AccountSelectorAdapter accountAdapter = new AccountSelectorAdapter(this);
+        final AccountSelectorAdapter accountAdapter = new AccountSelectorAdapter(mMenuBar.getPopupContext());
         accountAdapter.addAll(Account.getAccountsList(this, false));
         mAccountSelectorPopup = IListPopupWindow.InstanceHelper.getInstance(mMenuBar.getPopupContext());
         mAccountSelectorPopup.setInputMethodMode(IListPopupWindow.INPUT_METHOD_NOT_NEEDED);

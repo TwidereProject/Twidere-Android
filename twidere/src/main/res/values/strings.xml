@@ -662,5 +662,11 @@
     <string name="mute_user_confirm_message">Mute <xliff:g id="name">%s</xliff:g>? You will no longer see tweets from this user while keep following this user.</string>
     <string name="remove_from_filter">Remove from filter</string>
     <string name="sort_timeline_by_id">Sort timeline by ID</string>
+    <string name="style">Style</string>
+    <string name="color">Color</string>
+    <string name="font_family">Font family</string>
+    <string name="appearance">Appearance</string>
+    <string name="function">Function</string>
+    <string name="replies">Replies</string>
 
 </resources>

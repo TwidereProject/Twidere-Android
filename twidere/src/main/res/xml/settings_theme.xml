@@ -16,7 +16,7 @@
         android:entryValues="@array/values_theme"
         android:key="theme"
         android:order="21"
-        android:title="@string/theme"/>
+        android:title="@string/style"/>
 
     <org.mariotaku.twidere.preference.ThemeBackgroundPreference
         android:defaultValue="default"
@@ -27,13 +27,13 @@
         android:defaultValue="@android:color/holo_blue_light"
         android:key="theme_color"
         android:order="25"
-        android:title="@string/theme_color"/>
+        android:title="@string/color"/>
 
     <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
         android:defaultValue="sans-serif-light"
         android:enabled="@bool/has_font_family"
         android:key="theme_font_family"
         android:order="26"
-        android:title="@string/theme_font_family"/>
+        android:title="@string/font_family"/>
 
 </PreferenceScreen>

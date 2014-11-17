@@ -294,6 +294,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.TEXT_PLAIN, status.getText());
         values.put(Statuses.TEXT_UNESCAPED, toPlainText(text_html));
         values.put(Statuses.RETWEET_COUNT, status.getRetweetCount());
+        values.put(Statuses.REPLY_COUNT, status.getReplyCount());
+        values.put(Statuses.DESCENDENT_REPLY_COUNT, status.getDescendentReplyCount());
         values.put(Statuses.IN_REPLY_TO_STATUS_ID, status.getInReplyToStatusId());
         values.put(Statuses.IN_REPLY_TO_USER_ID, status.getInReplyToUserId());
         values.put(Statuses.IN_REPLY_TO_USER_NAME, Utils.getInReplyToName(status));

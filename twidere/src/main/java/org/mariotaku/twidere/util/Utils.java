@@ -84,7 +84,6 @@ import android.view.Window;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -2421,7 +2420,8 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static Twitter getTwitterInstance(final Context context, final long accountId,
-                                             final boolean includeEntities, final boolean includeRetweets, final boolean apacheHttp) {
+                                             final boolean includeEntities,
+                                             final boolean includeRetweets, final boolean apacheHttp) {
         if (context == null) return null;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -2459,10 +2459,12 @@ public final class Utils implements Constants, TwitterConstants {
             final String consumerKey = trim(c.getString(c.getColumnIndex(Accounts.CONSUMER_KEY)));
             final String consumerSecret = trim(c.getString(c.getColumnIndex(Accounts.CONSUMER_SECRET)));
             final boolean sameOAuthSigningUrl = c.getInt(c.getColumnIndex(Accounts.SAME_OAUTH_SIGNING_URL)) == 1;
+            final boolean noVersionSuffix = c.getInt(c.getColumnIndex(Accounts.NO_VERSION_SUFFIX)) == 1;
             if (!isEmpty(apiUrlFormat)) {
-                cb.setRestBaseURL(getApiUrl(apiUrlFormat, "api", "/1.1/"));
+                final String versionSuffix = noVersionSuffix ? null : "/1.1/";
+                cb.setRestBaseURL(getApiUrl(apiUrlFormat, "api", versionSuffix));
                 cb.setOAuthBaseURL(getApiUrl(apiUrlFormat, "api", "/oauth/"));
-                cb.setUploadBaseURL(getApiUrl(apiUrlFormat, "upload", "/1.1/"));
+                cb.setUploadBaseURL(getApiUrl(apiUrlFormat, "upload", versionSuffix));
                 if (!sameOAuthSigningUrl) {
                     cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
                     cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
@@ -2477,6 +2479,8 @@ public final class Utils implements Constants, TwitterConstants {
 
             cb.setIncludeEntitiesEnabled(includeEntities);
             cb.setIncludeRTsEnabled(includeRetweets);
+            cb.setIncludeReplyCountEnabled(true);
+            cb.setIncludeDescendentReplyCountEnabled(true);
             switch (c.getInt(c.getColumnIndexOrThrow(Accounts.AUTH_TYPE))) {
                 case Accounts.AUTH_TYPE_OAUTH:
                 case Accounts.AUTH_TYPE_XAUTH: {
@@ -2847,27 +2851,6 @@ public final class Utils implements Constants, TwitterConstants {
             if (id == accountId) return true;
         }
         return false;
-    }
-
-    public static boolean isValidImage(final File image) {
-        if (image == null) return false;
-        final BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(image.getPath(), o);
-        return o.outHeight > 0 && o.outWidth > 0;
-    }
-
-    public static boolean isValidImage(final InputStream is) {
-        if (is == null) return false;
-        final BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(is, new Rect(), o);
-        return o.outHeight > 0 && o.outWidth > 0;
-    }
-
-    public static boolean isValidUrl(final CharSequence text) {
-        if (TextUtils.isEmpty(text)) return false;
-        return URLUtil.isValidUrl(text.toString());
     }
 
     public static final int matcherEnd(final Matcher matcher, final int group) {

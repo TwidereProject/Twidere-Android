@@ -16,7 +16,7 @@
     <dimen name="icon_size_card_list_item">48dp</dimen>
     <dimen name="icon_size_card_details">56dp</dimen>
     <dimen name="icon_size_wizard_large">240dp</dimen>
-    <dimen name="icon_size_user_profile">64dp</dimen>
+    <dimen name="icon_size_user_profile">84dp</dimen>
     <dimen name="profile_image_size_activity_small">32dp</dimen>
     <dimen name="default_sliding_menu_shadow_width">8dp</dimen>
     <dimen name="default_sliding_menu_margin_threshold">16dp</dimen>

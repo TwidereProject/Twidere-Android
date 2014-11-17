@@ -226,6 +226,7 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
                     holder.image_preview.setImageDrawable(null);
                     holder.image_preview.setBackgroundResource(R.drawable.image_preview_nsfw);
                     holder.image_preview_progress.setVisibility(View.GONE);
+                    mImageLoader.cancelDisplayTask(holder.image_preview);
                 } else if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.image_preview))) {
                     holder.image_preview.setBackgroundResource(0);
                     mImageLoader.displayPreviewImage(holder.image_preview, firstMedia, mImageLoadingHandler);

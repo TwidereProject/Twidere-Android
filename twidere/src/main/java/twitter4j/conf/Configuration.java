@@ -24,48 +24,52 @@ import twitter4j.http.HttpClientWrapperConfiguration;
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
 public interface Configuration extends HttpClientConfiguration, HttpClientWrapperConfiguration,
-		AuthorizationConfiguration {
+        AuthorizationConfiguration {
 
-	String getClientName();
+    String getClientName();
 
-	String getClientURL();
+    String getClientURL();
 
-	String getClientVersion();
+    String getClientVersion();
 
-	String getOAuthAccessTokenURL();
+    String getOAuthAccessTokenURL();
 
-	String getOAuthAuthenticationURL();
+    String getOAuthAuthenticationURL();
 
-	String getOAuthAuthorizationURL();
+    String getOAuthAuthorizationURL();
 
-	String getOAuthBaseURL();
+    String getOAuthBaseURL();
 
-	String getOAuthRequestTokenURL();
+    String getOAuthRequestTokenURL();
 
-	String getRestBaseURL();
+    String getRestBaseURL();
 
-	String getSigningOAuthAccessTokenURL();
+    String getSigningOAuthAccessTokenURL();
 
-	String getSigningOAuthAuthenticationURL();
+    String getSigningOAuthAuthenticationURL();
 
-	String getSigningOAuthAuthorizationURL();
+    String getSigningOAuthAuthorizationURL();
 
-	String getSigningOAuthBaseURL();
+    String getSigningOAuthBaseURL();
 
-	String getSigningOAuthRequestTokenURL();
+    String getSigningOAuthRequestTokenURL();
 
-	String getSigningRestBaseURL();
+    String getSigningRestBaseURL();
 
-	String getSigningUploadBaseURL();
+    String getSigningUploadBaseURL();
 
-	String getUploadBaseURL();
+    String getUploadBaseURL();
 
-	boolean isDebugEnabled();
+    boolean isDebugEnabled();
 
-	boolean isIncludeEntitiesEnabled();
+    boolean isIncludeEntitiesEnabled();
 
-	boolean isIncludeRTsEnabled();
+    boolean isIncludeRTsEnabled();
 
-	boolean isTwitterClientHeaderIncluded();
+    boolean isIncludeReplyCountEnabled();
+
+    boolean isIncludeDescendentReplyCountEnabled();
+
+    boolean isTwitterClientHeaderIncluded();
 
 }

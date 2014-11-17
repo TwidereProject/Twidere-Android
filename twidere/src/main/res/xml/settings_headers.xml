@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <header android:title="@string/look_and_feel"/>
+    <header android:title="@string/appearance"/>
     <header
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:icon="@drawable/ic_action_color_palette"
@@ -26,7 +26,7 @@
             android:name="resid"
             android:value="@xml/settings_cards"/>
     </header>
-    <header android:title="@string/settings"/>
+    <header android:title="@string/function"/>
     <header
         android:fragment="org.mariotaku.twidere.fragment.CustomTabsFragment"
         android:icon="@drawable/ic_action_tab"

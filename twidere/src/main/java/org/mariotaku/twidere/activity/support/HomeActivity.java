@@ -455,6 +455,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
                 && mUpdateUnreadCountTask.getStatus() == AsyncTask.Status.RUNNING) return;
         mUpdateUnreadCountTask = new UpdateUnreadCountTask(mTabIndicator);
         mUpdateUnreadCountTask.execute();
+        mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
     }
 
     @Override
@@ -536,7 +537,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             mTabIndicator.setDisplayLabel(false);
             mTabIndicator.setDisplayIcon(true);
         }
-        mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
+//        mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
         setTabPosition(initialTabPosition);

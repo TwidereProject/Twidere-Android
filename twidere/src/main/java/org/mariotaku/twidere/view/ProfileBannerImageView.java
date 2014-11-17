@@ -19,18 +19,22 @@
 
 package org.mariotaku.twidere.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 
 public class ProfileBannerImageView extends ForegroundImageView implements IExtendedView, Constants {
@@ -52,15 +56,19 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
     public ProfileBannerImageView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         if (isInEditMode()) return;
-        ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, null);
         setScaleType(ScaleType.CENTER_CROP);
-//        setForeground(ThemeUtils.getImageHighlightDrawable(context));
         mClipPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, null);
+        } else {
+            setOutlineProvider(new CropOutlineProvider(this));
+            setClipToOutline(true);
+        }
     }
 
     @Override
     public boolean hasOverlappingRendering() {
-        return true;
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
     }
 
     @Override
@@ -109,7 +117,7 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
     @Override
     protected void dispatchDraw(final Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (mBottomClip != 0) {
+        if (mBottomClip != 0 && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             canvas.drawRect(getLeft(), getBottom() - mBottomClip - getTranslationY(), getRight(), getBottom(), mClipPaint);
         }
     }
@@ -117,5 +125,27 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
     public void setBottomClip(int bottom) {
         mBottomClip = bottom;
         invalidate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            invalidateOutline();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static class CropOutlineProvider extends ViewOutlineProvider {
+
+        private final ProfileBannerImageView mImageView;
+
+        CropOutlineProvider(ProfileBannerImageView imageView) {
+            mImageView = imageView;
+        }
+
+        @Override
+        public void getOutline(View view, Outline outline) {
+            final int left = view.getLeft();
+            final int top = view.getTop();
+            final int right = view.getRight();
+            final int bottom = Math.round(view.getBottom() - mImageView.mBottomClip - view.getTranslationY());
+            outline.setRect(left, top, right, bottom);
+        }
     }
 }

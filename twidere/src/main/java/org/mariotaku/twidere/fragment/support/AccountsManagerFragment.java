@@ -201,6 +201,7 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new AccountsAdapter(activity);
         Utils.configBaseAdapter(activity, mAdapter);
+        mAdapter.setSortEnabled(true);
         setListAdapter(mAdapter);
         final DragSortListView listView = (DragSortListView) getListView();
         listView.setDragEnabled(true);

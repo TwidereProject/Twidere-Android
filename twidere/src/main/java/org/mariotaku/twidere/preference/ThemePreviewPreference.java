@@ -115,8 +115,6 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
             final TextView timeSourceView = (TextView) statusContentView.findViewById(R.id.time_source);
             // final TextView retweetView = (TextView)
             // statusContentView.findViewById(R.id.retweet_view);
-            final TextView repliesView = (TextView) statusContentView.findViewById(R.id.replies_view);
-
             cardView.setItemSelector(null);
 
             nameView.setTextSize(defaultTextSize * 1.25f);
@@ -124,11 +122,9 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
             screenNameView.setTextSize(defaultTextSize * 0.85f);
             timeSourceView.setTextSize(defaultTextSize * 0.85f);
             // retweetView.setTextSize(defaultTextSize * 0.85f);
-            repliesView.setTextSize(defaultTextSize * 0.85f);
 
             profileView.setBackgroundResource(0);
             // retweetView.setBackgroundResource(0);
-            repliesView.setBackgroundResource(0);
             textView.setTextIsSelectable(false);
 
             profileImageView.setImageResource(R.drawable.ic_launcher);

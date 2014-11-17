@@ -72,6 +72,17 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
     private Place place = null;
     private long retweetCount;
     private long favoriteCount;
+
+    public long getReplyCount() {
+        return replyCount;
+    }
+
+    public long getDescendentReplyCount() {
+        return descendentReplyCount;
+    }
+
+    private long replyCount;
+    private long descendentReplyCount;
     private boolean wasRetweetedByMe;
     private boolean isPossiblySensitive;
 
@@ -350,6 +361,8 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
         isPossiblySensitive = getBoolean("possibly_sensitive", json);
         retweetCount = getLong("retweet_count", json);
         favoriteCount = getLong("favorite_count", json);
+        replyCount = getLong("reply_count", json);
+        descendentReplyCount = getLong("descendent_reply_count", json);
         try {
             if (!json.isNull("user")) {
                 user = new UserJSONImpl(json.getJSONObject("user"));
