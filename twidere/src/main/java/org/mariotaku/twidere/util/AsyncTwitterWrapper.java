@@ -1446,18 +1446,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected SingleResponse<twitter4j.Status> doInBackground(final Void... params) {
             final Twitter twitter = getTwitterInstance(mContext, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
+            twitter4j.Status status = null;
+            TwitterException exception = null;
             try {
-                final twitter4j.Status status = twitter.destroyStatus(status_id);
+                status = twitter.destroyStatus(status_id);
+            } catch (final TwitterException e) {
+                exception = e;
+            }
+            if (status != null || (exception != null && exception.getErrorCode() == HttpResponseCode.NOT_FOUND)) {
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.MY_RETWEET_ID, -1);
                 for (final Uri uri : TweetStore.STATUSES_URIS) {
                     mResolver.delete(uri, Statuses.STATUS_ID + " = " + status_id, null);
                     mResolver.update(uri, values, Statuses.MY_RETWEET_ID + " = " + status_id, null);
                 }
-                return SingleResponse.getInstance(status, null);
-            } catch (final TwitterException e) {
-                return SingleResponse.getInstance(null, e);
             }
+            return SingleResponse.getInstance(status, exception);
         }
 
         @Override
