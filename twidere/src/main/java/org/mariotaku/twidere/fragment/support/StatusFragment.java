@@ -72,7 +72,7 @@ import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.Account.AccountWithCredentials;
@@ -718,7 +718,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     @Override
     public boolean scrollToStart() {
         if (mListView == null) return false;
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         scrollListToPosition(mListView, adapter.getCount() + mListView.getFooterViewsCount() - 1, 0);
         return true;
     }
@@ -773,17 +773,13 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
             }
             case MENU_QUOTE: {
                 final Intent intent = new Intent(INTENT_ACTION_QUOTE);
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable(EXTRA_STATUS, status);
-                intent.putExtras(bundle);
+                intent.putExtra(EXTRA_STATUS, status);
                 startActivity(intent);
                 break;
             }
             case MENU_REPLY: {
                 final Intent intent = new Intent(INTENT_ACTION_REPLY);
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable(EXTRA_STATUS, status);
-                intent.putExtras(bundle);
+                intent.putExtra(EXTRA_STATUS, status);
                 startActivity(intent);
                 break;
             }
@@ -940,7 +936,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
             mConversationTask.cancel(true);
             return;
         }
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         final int count = adapter.getCount();
         final ParcelableStatus status;
         if (count == 0) {
@@ -980,7 +976,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
 
     private void updateConversationInfo() {
         final boolean has_converstion = mStatus != null && mStatus.in_reply_to_status_id > 0;
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         final boolean load_not_finished = adapter.isEmpty()
                 || adapter.getStatus(adapter.getCount() - 1).in_reply_to_status_id > 0;
         final boolean enable = has_converstion && load_not_finished;
@@ -1037,7 +1033,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         @Override
         public void run() {
             final String uri = getMapStaticImageUri(mLocation.latitude, mLocation.longitude, mView);
-            mLoader.displayPreviewImage(mView, uri);
+            mLoader.displayPreviewImage(uri, mView);
         }
     }
 

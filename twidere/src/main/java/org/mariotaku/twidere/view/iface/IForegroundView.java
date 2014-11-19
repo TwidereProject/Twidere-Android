@@ -19,13 +19,12 @@
 
 package org.mariotaku.twidere.view.iface;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -226,10 +225,9 @@ public interface IForegroundView {
             return who == mForeground;
         }
 
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public void dispatchDrawableHotspotChanged(float x, float y) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-            mForeground.setHotspot(x, y);
+            if (mForeground == null) return;
+            DrawableCompat.setHotspot(mForeground, x, y);
         }
     }
 }

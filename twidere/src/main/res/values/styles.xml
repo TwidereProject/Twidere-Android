@@ -147,4 +147,11 @@
         <item name="column_count_landscape">@integer/staggered_grid_columns_land</item>
     </style>
 
+    <style name="Widget.CardActionButton" parent="android:Widget.DeviceDefault.ImageButton">
+        <item name="android:background">?android:selectableItemBackground</item>
+    </style>
+
+    <style name="Widget.Light.CardActionButton" parent="android:Widget.DeviceDefault.ImageButton">
+        <item name="android:background">?android:selectableItemBackground</item>
+    </style>
 </resources>

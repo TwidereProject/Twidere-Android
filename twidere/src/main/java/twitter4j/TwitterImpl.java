@@ -1372,6 +1372,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         final String sign_url = conf.getSigningRestBaseURL() + ENDPOINT_CONVERSATION_SHOW;
         final List<HttpParameter> paramsList = new ArrayList<HttpParameter>();
         paramsList.add(INCLUDE_ENTITIES);
+        paramsList.add(INCLUDE_REPLY_COUNT);
+        paramsList.add(INCLUDE_DESCENDENT_REPLY_COUNT);
         paramsList.add(INCLUDE_MY_RETWEET);
         paramsList.add(new HttpParameter("id", statusId));
         if (paging != null) {

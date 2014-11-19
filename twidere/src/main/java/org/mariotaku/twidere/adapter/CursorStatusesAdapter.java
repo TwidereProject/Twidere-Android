@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView.ScaleType;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -59,7 +59,7 @@ import static org.mariotaku.twidere.util.Utils.isFiltered;
 import static org.mariotaku.twidere.util.Utils.openImage;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
-public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatusesAdapter<Cursor>, OnClickListener,
+public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatusesListAdapter<Cursor>, OnClickListener,
         OnOverflowIconClickListener {
 
     public static final String[] CURSOR_COLS = Statuses.COLUMNS;

@@ -29,7 +29,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.loader.support.UserFavoritesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
@@ -82,7 +82,7 @@ public class UserFavoritesFragment extends ParcelableStatusesListFragment {
 		final String screen_name = args != null ? args.getString(EXTRA_SCREEN_NAME) : null;
 		final boolean is_my_timeline = user_id > 0 ? account_id == user_id : account_id == getAccountId(getActivity(),
 				screen_name);
-		final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+		final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
 		adapter.setFavoritesHightlightDisabled(is_my_timeline);
 		adapter.setFiltersEnabled(false);
 	}

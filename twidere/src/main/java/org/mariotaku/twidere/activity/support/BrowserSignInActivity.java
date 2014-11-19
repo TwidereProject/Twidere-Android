@@ -274,8 +274,10 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
             mActivity.setLoadProgressShown(false);
             mActivity.setRequestToken(data);
             if (data == null) {
-                Toast.makeText(mActivity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
-                mActivity.finish();
+                if (!mActivity.isFinishing()) {
+                    Toast.makeText(mActivity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+                    mActivity.finish();
+                }
                 return;
             }
             mActivity.loadUrl(data.getAuthorizationURL());

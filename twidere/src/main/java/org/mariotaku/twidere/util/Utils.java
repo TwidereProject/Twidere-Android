@@ -41,8 +41,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -139,7 +143,7 @@ import org.mariotaku.twidere.fragment.support.UserListsListFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserProfileFragmentOld;
-import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
+import org.mariotaku.twidere.fragment.support.UserTimelineFragment2;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.Account;
@@ -676,6 +680,27 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
+    public static Bitmap getCircleBitmap(Bitmap bitmap) {
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+
+        final int color = Color.RED;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawOval(rectF, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
     public static Fragment createFragmentForIntent(final Context context, final Intent intent) {
         final long start = System.currentTimeMillis();
         intent.setExtrasClassLoader(context.getClassLoader());
@@ -721,7 +746,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_TIMELINE: {
-                fragment = new UserTimelineFragment();
+                fragment = new UserTimelineFragment2();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
@@ -2990,8 +3015,8 @@ public final class Utils implements Constants, TwitterConstants {
         activity.startActivity(intent);
     }
 
-    public static void openStatus(final Activity activity, final ParcelableStatus status) {
-        if (activity == null || status == null) return;
+    public static void openStatus(final Context context, final ParcelableStatus status) {
+        if (context == null || status == null) return;
         final long account_id = status.account_id, status_id = status.id;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_STATUS, status);
@@ -3001,9 +3026,9 @@ public final class Utils implements Constants, TwitterConstants {
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(status_id));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setExtrasClassLoader(activity.getClassLoader());
+        intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openStatuses(final Activity activity, final List<ParcelableStatus> statuses) {
@@ -3302,21 +3327,21 @@ public final class Utils implements Constants, TwitterConstants {
         activity.startActivity(intent);
     }
 
-    public static void openUserProfile(final Activity activity, final long account_id, final long user_id,
-                                       final String screen_name) {
-        if (activity == null || account_id <= 0 || user_id <= 0 && isEmpty(screen_name)) return;
+    public static void openUserProfile(final Context context, final long accountId, final long userId,
+                                       final String screenName) {
+        if (context == null || accountId <= 0 || userId <= 0 && isEmpty(screenName)) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
         }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openUserProfile(final Activity activity, final ParcelableUser user) {

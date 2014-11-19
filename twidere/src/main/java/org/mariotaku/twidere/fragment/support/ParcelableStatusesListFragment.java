@@ -29,7 +29,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.loader.support.DummyParcelableStatusesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ArrayUtils;
@@ -135,7 +135,7 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
     @Override
     public void onRefreshFromStart() {
         if (isRefreshing()) return;
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         final int count = adapter.getCount();
         final ParcelableStatus status = count > 0 ? adapter.getStatus(0) : null;
         if (status != null) {
@@ -170,14 +170,14 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
 
     @Override
     protected final long[] getNewestStatusIds() {
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         final long last_id = adapter.getCount() > 0 ? adapter.getStatus(0).id : -1;
         return last_id > 0 ? new long[]{last_id} : null;
     }
 
     @Override
     protected final long[] getOldestStatusIds() {
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         final ParcelableStatus status = adapter.getLastStatus();
         final long last_id = status != null ? status.id : -1;
         return last_id > 0 ? new long[]{last_id} : null;
@@ -200,7 +200,7 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
     @Override
     protected void loadMoreStatuses() {
         if (isRefreshing()) return;
-        final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+        final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
         final ParcelableStatus status = adapter.getLastStatus();
         if (status != null) {
             getStatuses(new long[]{status.account_id}, new long[]{status.id}, null);

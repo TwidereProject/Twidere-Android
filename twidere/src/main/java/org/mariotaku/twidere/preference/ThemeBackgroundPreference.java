@@ -175,6 +175,13 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             ViewAccessor.setBackground(mAlphaPreview, new AlphaPatternDrawable(patternSize));
             updateAlphaVisibility();
             updateAlphaPreview();
+
+            final int checkedIdx = findIndexOfValue(getPersistedString(mValue));
+            if (checkedIdx < 0) {
+                listView.clearChoices();
+            } else {
+                listView.setItemChecked(checkedIdx, true);
+            }
         }
     }
 

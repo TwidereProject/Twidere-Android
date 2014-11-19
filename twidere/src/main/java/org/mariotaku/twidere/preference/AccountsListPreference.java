@@ -21,7 +21,6 @@ package org.mariotaku.twidere.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -51,6 +50,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -102,8 +102,11 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         private final Account mAccount;
         private final SharedPreferences mSwitchPreference;
+        private final ImageLoaderWrapper mImageLoader;
+
         private final String mSwitchKey;
         private final boolean mSwitchDefault;
+        private Switch mToggle;
 
         public AccountItemPreference(final Context context, final Account account, final String switchKey,
                                      final boolean switchDefault) {
@@ -113,6 +116,8 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_id;
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
+            final TwidereApplication app = TwidereApplication.getInstance(context);
+            mImageLoader = app.getImageLoaderWrapper();
             mSwitchKey = switchKey;
             mSwitchDefault = switchDefault;
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
@@ -133,7 +138,8 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         @Override
         public void onLoadingComplete(final String imageUri, final View view, final Bitmap loadedImage) {
-            setIcon(new BitmapDrawable(getContext().getResources(), loadedImage));
+            final Bitmap roundedBitmap = Utils.getCircleBitmap(loadedImage);
+            setIcon(new BitmapDrawable(getContext().getResources(), roundedBitmap));
         }
 
         @Override
@@ -157,9 +163,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             setTitle(mAccount.name);
             setSummary(String.format("@%s", mAccount.screen_name));
             setIcon(R.drawable.ic_profile_image_default);
-            final TwidereApplication app = TwidereApplication.getInstance(getContext());
-            final ImageLoaderWrapper loader = app.getImageLoaderWrapper();
-            loader.loadProfileImage(mAccount.profile_image_url, this);
+            mImageLoader.loadProfileImage(mAccount.profile_image_url, this);
         }
 
         @Override
@@ -168,6 +172,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             view.findViewById(R.id.settings).setOnClickListener(this);
             final Switch toggle = (Switch) view.findViewById(android.R.id.toggle);
             toggle.setOnCheckedChangeListener(this);
+            mToggle = toggle;
             return view;
         }
 
@@ -176,7 +181,8 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             super.onBindView(view);
             final View iconView = view.findViewById(android.R.id.icon);
             if (iconView instanceof ImageView) {
-                ((ImageView) iconView).setScaleType(ScaleType.FIT_CENTER);
+                final ImageView imageView = (ImageView) iconView;
+                imageView.setScaleType(ScaleType.CENTER_CROP);
             }
             final View titleView = view.findViewById(android.R.id.title);
             if (titleView instanceof TextView) {
@@ -194,7 +200,9 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-
+            if (mToggle != null) {
+                mToggle.toggle();
+            }
             return true;
         }
 

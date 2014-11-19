@@ -38,6 +38,7 @@
         <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
         <item name="cardItemMessageIncomingBackground">
@@ -81,6 +82,7 @@
         <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
         <item name="cardItemMessageIncomingBackground">
@@ -150,6 +152,7 @@
         <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
         <item name="cardItemMessageIncomingBackground">
@@ -178,6 +181,7 @@
         <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
         <item name="cardItemMessageIncomingBackground">
@@ -235,6 +239,7 @@
         <item name="android:actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
         <item name="cardItemMessageIncomingBackground">
@@ -332,6 +337,7 @@
         <item name="tabItemTextStyle">@style/Widget.TabPageIndicator.TabItem.TextView.Dark</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
         <item name="cardItemMessageIncomingBackground">
@@ -366,6 +372,7 @@
         <item name="tabItemTextStyle">@style/Widget.TabPageIndicator.TabItem.TextView.Light</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
         <item name="cardItemMessageIncomingBackground">
@@ -400,6 +407,7 @@
         <item name="tabItemTextStyle">@style/Widget.TabPageIndicator.TabItem.TextView.Light</item>
 
         <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
         <item name="cardItemMessageIncomingBackground">

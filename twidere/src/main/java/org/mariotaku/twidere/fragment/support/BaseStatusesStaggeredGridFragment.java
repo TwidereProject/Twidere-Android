@@ -50,7 +50,7 @@ import com.etsy.android.grid.StaggeredGridView;
 import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.task.AsyncTask;
@@ -79,7 +79,7 @@ abstract class BaseStatusesStaggeredGridFragment<Data> extends BasePullToRefresh
 	private SharedPreferences mPreferences;
 
 	private StaggeredGridView mListView;
-	private IStatusesAdapter<Data> mAdapter;
+	private IStatusesListAdapter<Data> mAdapter;
 	private PopupMenu mPopupMenu;
 
 	private Data mData;
@@ -109,7 +109,7 @@ abstract class BaseStatusesStaggeredGridFragment<Data> extends BasePullToRefresh
 	}
 
 	@Override
-	public IStatusesAdapter<Data> getListAdapter() {
+	public IStatusesListAdapter<Data> getListAdapter() {
 		return mAdapter;
 	}
 
@@ -456,7 +456,7 @@ abstract class BaseStatusesStaggeredGridFragment<Data> extends BasePullToRefresh
 
 	protected abstract void loadMoreStatuses();
 
-	protected abstract IStatusesAdapter<Data> newAdapterInstance();
+	protected abstract IStatusesListAdapter<Data> newAdapterInstance();
 
 	@Override
 	protected void onReachedBottom() {
@@ -548,7 +548,7 @@ abstract class BaseStatusesStaggeredGridFragment<Data> extends BasePullToRefresh
 
 	static class RemoveUnreadCountsTask<T> extends AsyncTask<Void, Void, Void> {
 		private final List<Integer> read_positions;
-		private final IStatusesAdapter<T> adapter;
+		private final IStatusesListAdapter<T> adapter;
 		private final BaseStatusesStaggeredGridFragment<T> fragment;
 
 		RemoveUnreadCountsTask(final List<Integer> read_positions, final BaseStatusesStaggeredGridFragment<T> fragment) {

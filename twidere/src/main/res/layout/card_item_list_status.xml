@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/element_spacing_small"
+    android:layout_marginLeft="@dimen/element_spacing_normal"
+    android:layout_marginRight="@dimen/element_spacing_normal"
+    android:layout_marginTop="@dimen/element_spacing_small"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:id="@+id/item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_normal"
+            android:paddingTop="@dimen/element_spacing_normal">
+
+
+            <com.pkmmte.view.CircularImageView
+                android:id="@+id/profile_image"
+                android:layout_width="@dimen/icon_size_status_profile_image"
+                android:layout_height="@dimen/icon_size_status_profile_image"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:layout_weight="0"
+                android:contentDescription="@string/profile_image"
+                android:scaleType="centerCrop"
+                app:border="false"
+                app:selector="true"
+                app:selector_stroke_color="@android:color/transparent"
+                app:selector_stroke_width="0dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/element_spacing_xsmall"
+                    android:paddingTop="@dimen/element_spacing_small"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"/>
+
+                <org.mariotaku.twidere.view.ShortTimeView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/element_spacing_small"
+                    android:paddingTop="@dimen/element_spacing_xsmall"
+                    android:textAppearance="?android:textAppearanceSmall"/>
+
+            </LinearLayout>
+
+            <org.mariotaku.twidere.view.ActionIconButton
+                style="?cardActionButtonStyle"
+                android:layout_width="@dimen/element_size_normal"
+                android:layout_height="@dimen/element_size_normal"
+                android:layout_weight="0"
+                android:src="@drawable/ic_action_more_vertical"/>
+
+        </LinearLayout>
+
+        <org.mariotaku.twidere.view.ImagePreviewContainer
+            android:id="@+id/media_preview_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:foreground="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/media_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/media"
+                android:scaleType="centerCrop"/>
+
+            <ProgressBar
+                android:id="@+id/media_preview_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/element_spacing_large"/>
+
+        </org.mariotaku.twidere.view.ImagePreviewContainer>
+
+        <org.mariotaku.twidere.view.HandleSpanClickTextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginRight="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/reply_indicator"
+                style="?cardActionButtonStyle"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:layout_weight="0"
+                android:padding="@dimen/element_spacing_small"
+                android:src="@drawable/ic_action_reply"
+                app:activatedColor="@android:color/holo_blue_light"
+                app:color="?android:textColorSecondary"/>
+
+            <TextView
+                android:id="@+id/reply_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:minWidth="@dimen/element_spacing_mlarge"/>
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/retweet_indicator"
+                style="?cardActionButtonStyle"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:layout_weight="0"
+                android:padding="@dimen/element_spacing_small"
+                android:src="@drawable/ic_action_retweet"
+                app:activatedColor="@android:color/holo_green_light"
+                app:color="?android:textColorSecondary"/>
+
+            <TextView
+                android:id="@+id/retweet_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:minWidth="@dimen/element_spacing_mlarge"/>
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/favorite_indicator"
+                style="?cardActionButtonStyle"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:layout_weight="0"
+                android:padding="@dimen/element_spacing_small"
+                android:src="@drawable/ic_action_star"
+                app:activatedColor="@android:color/holo_orange_light"
+                app:color="?android:textColorSecondary"/>
+
+            <TextView
+                android:id="@+id/favorite_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:minWidth="@dimen/element_spacing_mlarge"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

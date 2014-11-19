@@ -23,7 +23,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.loader.support.RetweetsOfMeLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
@@ -45,7 +45,7 @@ public class RetweetsOfMeFragment extends ParcelableStatusesListFragment {
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		final IStatusesAdapter<List<ParcelableStatus>> adapter = getListAdapter();
+		final IStatusesListAdapter<List<ParcelableStatus>> adapter = getListAdapter();
 		adapter.setIndicateMyStatusDisabled(false);
 		adapter.setFiltersEnabled(true);
 		adapter.setIgnoredFilterFields(true, false, false, false, false);

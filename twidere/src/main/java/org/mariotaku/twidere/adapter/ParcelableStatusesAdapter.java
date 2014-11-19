@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView.ScaleType;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -58,7 +58,7 @@ import static org.mariotaku.twidere.util.Utils.openImage;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 public class ParcelableStatusesAdapter extends BaseArrayAdapter<ParcelableStatus> implements
-        IStatusesAdapter<List<ParcelableStatus>>, OnClickListener, OnOverflowIconClickListener {
+        IStatusesListAdapter<List<ParcelableStatus>>, OnClickListener, OnOverflowIconClickListener {
 
     private final Context mContext;
     private final MultiSelectManager mMultiSelectManager;

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.CardActionButton" parent="android:Widget.DeviceDefault.ImageButton">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Widget.Light.CardActionButton" parent="android:Widget.DeviceDefault.ImageButton">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+    </style>
+</resources>

@@ -1482,7 +1482,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             final View view = super.getView(position, convertView, parent);
             final ParcelableMediaUpdate media = getItem(position);
             final ImageView image = (ImageView) view.findViewById(R.id.image);
-            mImageLoader.displayPreviewImage(image, media.uri);
+            mImageLoader.displayPreviewImage(media.uri, image);
             return view;
         }
 
