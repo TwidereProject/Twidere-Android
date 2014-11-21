@@ -3,6 +3,7 @@
 
     <declare-styleable name="Twidere">
         <attr name="cardActionButtonStyle" format="reference"/>
+        <attr name="profileImageStyleLarge" format="reference"/>
         <attr name="cardItemBackground" format="reference"/>
         <attr name="cardItemBackgroundColor" format="color"/>
         <attr name="cardItemMessageIncomingBackground" format="reference"/>
@@ -71,6 +72,12 @@
     <declare-styleable name="IconActionButton">
         <attr name="color" format="color"/>
         <attr name="activatedColor" format="color"/>
+    </declare-styleable>
+    <declare-styleable name="CircularImageView">
+        <attr name="border" format="boolean"/>
+        <attr name="borderWidth" format="dimension"/>
+        <attr name="borderColor" format="color"/>
+        <attr name="elevation" format="dimension"/>
     </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>

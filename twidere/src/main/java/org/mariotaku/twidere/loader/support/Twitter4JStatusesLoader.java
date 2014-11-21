@@ -55,16 +55,16 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
     private final Object[] mSavedStatusesFileArgs;
 
     public Twitter4JStatusesLoader(final Context context, final long account_id, final long max_id,
-                                   final long since_id, final List<ParcelableStatus> data, final String[] saved_statuses_args,
-                                   final int tab_position) {
-        super(context, data, tab_position);
+                                   final long since_id, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+                                   final int tabPosition) {
+        super(context, data, tabPosition);
         mContext = context;
         mAccountId = account_id;
         mMaxId = max_id;
         mSinceId = since_id;
         mDatabase = TwidereApplication.getInstance(context).getSQLiteDatabase();
         mHandler = new Handler();
-        mSavedStatusesFileArgs = saved_statuses_args;
+        mSavedStatusesFileArgs = savedStatusesArgs;
     }
 
     @SuppressWarnings("unchecked")
@@ -118,7 +118,7 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
             }
         }
         saveCachedData(serializationFile, data);
-        return new CopyOnWriteArrayList<ParcelableStatus>(data);
+        return new CopyOnWriteArrayList<>(data);
     }
 
     protected abstract List<Status> getStatuses(Twitter twitter, Paging paging) throws TwitterException;

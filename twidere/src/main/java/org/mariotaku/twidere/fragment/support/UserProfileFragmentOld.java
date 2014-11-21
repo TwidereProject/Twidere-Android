@@ -1,24 +1,25 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
+ * Twidere - Twitter client for Android
+ *
  *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -32,10 +33,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
@@ -94,10 +99,10 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.ColorLabelLinearLayout;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.ProfileBannerImageView;
-import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
@@ -153,7 +158,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
     private ImageLoaderWrapper mProfileImageLoader;
     private SharedPreferences mPreferences;
 
-    private ProfileImageView mProfileImageView;
+    private CircularImageView mProfileImageView;
     private ProfileBannerImageView mProfileBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
             mTweetCount, mFollowersCount, mFriendsCount, mErrorMessageView;
@@ -180,6 +185,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
 
     private int mBannerWidth;
 
+    private Drawable mActionBarShadow;
     private Drawable mActionBarBackground;
 
     private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
@@ -344,7 +350,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         final String nick = getUserNickname(getActivity(), user.id, true);
         mNameView
                 .setText(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick));
-        mProfileImageView.setUserType(user.is_verified, user.is_protected);
+//        mProfileImageView.setUserType(user.is_verified, user.is_protected);
         mScreenNameView.setText("@" + user.screen_name);
         mDescriptionContainer.setVisibility(userIsMe || !isEmpty(user.description_html) ? View.VISIBLE : View.GONE);
         mDescriptionView.setText(user.description_html != null ? Html.fromHtml(user.description_html) : null);
@@ -501,11 +507,18 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         final int themeResId = linkHandler.getCurrentThemeResourceId();
         final boolean isTransparent = ThemeUtils.isTransparentBackground(themeResId);
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(linkHandler) : 0xFF;
-        if (ThemeUtils.isColoredActionBar(themeResId) && useUserActionBar()) {
-            actionBar.setBackgroundDrawable(mActionBarBackground = new ColorDrawable(themeColor));
-        } else {
-            actionBar.setBackgroundDrawable(mActionBarBackground = ThemeUtils.getActionBarBackground(activity, themeResId));
+        mActionBarShadow = activity.getResources().getDrawable(R.drawable.shadow_user_banner_action_bar);
+        if (mActionBarShadow instanceof ShapeDrawable) {
+            final ShapeDrawable sd = (ShapeDrawable) mActionBarBackground;
+            sd.setIntrinsicHeight(actionBar.getHeight());
+            sd.setIntrinsicWidth(activity.getWindowManager().getDefaultDisplay().getWidth());
         }
+        if (ThemeUtils.isColoredActionBar(themeResId) && useUserActionBar()) {
+            mActionBarBackground = new ColorDrawable(themeColor);
+        } else {
+            mActionBarBackground = ThemeUtils.getActionBarBackground(activity, themeResId);
+        }
+        actionBar.setBackgroundDrawable(new ActionBarDrawable(mActionBarShadow, mActionBarBackground));
     }
 
     private boolean useUserActionBar() {
@@ -722,8 +735,9 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         profileBannerView.setTranslationY((headerView.getTop() - listView.getListPaddingTop()) / 2);
         profileBannerView.setBottomClip(headerScroll);
 
-        if (mActionBarBackground != null) {
+        if (mActionBarShadow != null && mActionBarBackground != null) {
             final float f = headerScroll / (float) mProfileBannerSpace.getHeight();
+            mActionBarShadow.setAlpha(Math.round(0xFF * MathUtils.clamp(1 - f, 0, 1)));
             mActionBarBackground.setAlpha(Math.round(0xFF * MathUtils.clamp(f, 0, 1)));
         }
     }
@@ -797,7 +811,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         mFriendsContainer = mHeaderView.findViewById(R.id.friends_container);
         mFriendsCount = (TextView) mHeaderView.findViewById(R.id.friends_count);
         mProfileNameContainer = (ColorLabelLinearLayout) mHeaderView.findViewById(R.id.profile_name_container);
-        mProfileImageView = (ProfileImageView) mHeaderView.findViewById(R.id.profile_image);
+        mProfileImageView = (CircularImageView) mHeaderView.findViewById(R.id.profile_image);
         mDescriptionContainer = mHeaderView.findViewById(R.id.description_container);
         mLocationContainer = mHeaderView.findViewById(R.id.location_container);
         mURLContainer = mHeaderView.findViewById(R.id.url_container);
@@ -1247,4 +1261,28 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         }
     }
 
+    private static class ActionBarDrawable extends LayerDrawable {
+        private final Drawable mBackgroundDrawable;
+
+        public ActionBarDrawable(Drawable shadow, Drawable background) {
+            super(new Drawable[]{shadow, background});
+            mBackgroundDrawable = background;
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void getOutline(Outline outline) {
+            mBackgroundDrawable.getOutline(outline);
+        }
+
+        @Override
+        public int getIntrinsicWidth() {
+            return mBackgroundDrawable.getIntrinsicWidth();
+        }
+
+        @Override
+        public int getIntrinsicHeight() {
+            return mBackgroundDrawable.getIntrinsicHeight();
+        }
+    }
 }

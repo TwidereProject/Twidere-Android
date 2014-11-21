@@ -61,6 +61,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -143,7 +144,7 @@ import org.mariotaku.twidere.fragment.support.UserListsListFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserProfileFragmentOld;
-import org.mariotaku.twidere.fragment.support.UserTimelineFragment2;
+import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.Account;
@@ -746,7 +747,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_TIMELINE: {
-                fragment = new UserTimelineFragment2();
+                fragment = new UserTimelineFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
@@ -1841,14 +1842,14 @@ public final class Utils implements Constants, TwitterConstants {
                 FORMAT_PATTERN_TEXT, text);
     }
 
-    public static String getInReplyToName(final Status status) {
-        if (status == null) return null;
+    @NonNull
+    public static String getInReplyToName(@NonNull final Status status) {
         final Status orig = status.isRetweet() ? status.getRetweetedStatus() : status;
-        final long in_reply_to_user_id = status.getInReplyToUserId();
+        final long inReplyToUserId = status.getInReplyToUserId();
         final UserMentionEntity[] entities = status.getUserMentionEntities();
         if (entities == null) return orig.getInReplyToScreenName();
         for (final UserMentionEntity entity : entities) {
-            if (in_reply_to_user_id == entity.getId()) return entity.getName();
+            if (inReplyToUserId == entity.getId()) return entity.getName();
         }
         return orig.getInReplyToScreenName();
     }

@@ -12,6 +12,7 @@
     <dimen name="element_spacing_large">16dp</dimen>
     <dimen name="element_spacing_xlarge">24dp</dimen>
     <dimen name="element_spacing_minus_small">-4dp</dimen>
+    <dimen name="element_spacing_minus_normal">-8dp</dimen>
     <dimen name="icon_size_list_item">56dp</dimen>
     <dimen name="icon_size_list_item_small">42dp</dimen>
     <dimen name="icon_size_card_list_item">48dp</dimen>
@@ -74,5 +75,10 @@
     <dimen name="unread_indicator_size">16dp</dimen>
     <dimen name="account_selector_popup_width">180dp</dimen>
     <dimen name="icon_size_status_profile_image">48dp</dimen>
+    <dimen name="icon_size_profile_type">24dp</dimen>
+
+    <!-- Elevation values -->
+    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="corner_radius_card">2dp</dimen>
 
 </resources>

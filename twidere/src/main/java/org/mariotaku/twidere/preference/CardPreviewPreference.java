@@ -40,14 +40,14 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.CardItemLinearLayout;
 import org.mariotaku.twidere.view.ForegroundImageView;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 
 public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
 
 	private final LayoutInflater mInflater;
 	private final SharedPreferences mPreferences;
 	private final TwidereLinkify mLinkify;
-	private StatusViewHolder mHolder;
+	private StatusListViewHolder mHolder;
 	private boolean mCompactModeChanged;
 
 	public CardPreviewPreference(final Context context) {
@@ -92,7 +92,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 		final boolean display_image_preview = mPreferences.getBoolean(KEY_DISPLAY_IMAGE_PREVIEW, false);
 		final boolean display_profile_image = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
 		final boolean nickname_only = mPreferences.getBoolean(KEY_NICKNAME_ONLY, false);
-		mHolder = new StatusViewHolder(view);
+		mHolder = new StatusListViewHolder(view);
 		mLinkify.setHighlightOption(highlightOption);
 		mHolder.setDisplayNameFirst(nameFirst);
 		mHolder.setNicknameOnly(nickname_only);

@@ -62,7 +62,7 @@ public class ThemeUtils implements Constants {
     private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
             android.R.attr.activityCloseExitAnimation};
 
-    private static final String[] sClassPrefixList = {"android.widget.", "android.webkit."};
+    private static final String[] sClassPrefixList = {"android.widget.", "android.webkit.", "org.mariotaku.twidere.view"};
 
     private ThemeUtils() {
         throw new AssertionError();
@@ -181,6 +181,9 @@ public class ThemeUtils implements Constants {
 
     public static RefreshNowConfig buildRefreshNowConfig(final Context context) {
         final RefreshNowConfig.Builder builder = new RefreshNowConfig.Builder(context);
+        builder.minPullDivisor(2);
+        builder.extraPullDivisor(1);
+        builder.maxOverScrollDistance(72);
         return builder.build();
     }
 

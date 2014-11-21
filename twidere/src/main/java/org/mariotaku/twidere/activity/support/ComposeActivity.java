@@ -108,7 +108,7 @@ import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ColorLabelFrameLayout;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1187,7 +1187,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     public static class ViewStatusDialogFragment extends BaseSupportDialogFragment {
 
-        private StatusViewHolder mHolder;
+        private StatusListViewHolder mHolder;
 
         public ViewStatusDialogFragment() {
             setStyle(STYLE_NO_TITLE, 0);
@@ -1268,7 +1268,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         @Override
         public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
             final ScrollView view = (ScrollView) inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
-            mHolder = new StatusViewHolder(view.getChildAt(0));
+            mHolder = new StatusListViewHolder(view.getChildAt(0));
             return view;
         }
 

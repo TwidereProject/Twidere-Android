@@ -28,7 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableStatusesListAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.loader.support.DummyParcelableStatusesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -149,7 +149,7 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
     public void onSaveInstanceState(final Bundle outState) {
         final List<ParcelableStatus> data = getData();
         if (data != null) {
-            outState.putParcelableArrayList(EXTRA_DATA, new ArrayList<ParcelableStatus>(data));
+            outState.putParcelableArrayList(EXTRA_DATA, new ArrayList<>(data));
         }
         super.onSaveInstanceState(outState);
     }
@@ -208,8 +208,8 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
     }
 
     @Override
-    protected ParcelableStatusesAdapter newAdapterInstance(final boolean compact, final boolean plain) {
-        return new ParcelableStatusesAdapter(getActivity(), compact, plain);
+    protected ParcelableStatusesListAdapter newAdapterInstance(final boolean compact, final boolean plain) {
+        return new ParcelableStatusesListAdapter(getActivity(), compact, plain);
     }
 
     protected abstract Loader<List<ParcelableStatus>> newLoaderInstance(Context context, Bundle args);

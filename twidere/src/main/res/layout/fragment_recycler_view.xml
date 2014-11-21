@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:id="@+id/fragment_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:clipToPadding="false"
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@android:id/list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@android:id/progress"
-        style="?android:progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:scrollbars="vertical"
+            android:clipToPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

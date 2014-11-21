@@ -87,10 +87,10 @@
     <string name="look_and_feel">Look and feel</string>
     <string name="display_profile_image">Display profile image</string>
     <string name="image_load_summary">Disabling this will increase list scroll speed and reduce data usage.</string>
-    <string name="in_reply_to">In reply to <xliff:g id="user_name">%s</xliff:g></string>
-    <string name="retweeted_by"><xliff:g id="user_name">%s</xliff:g> retweeted this</string>
-    <string name="retweeted_by_with_count"><xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others retweeted this</string>
-    <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> users retweeted this</string>
+    <string name="in_reply_to_name">In reply to <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="retweeted_by_name_with_count">Retweeted by <xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
+    <string name="retweeted_by_count">Retweeted by <xliff:g id="retweet_count">%d</xliff:g> users</string>
     <string name="users_retweeted_this">Users retweeted this</string>
     <string name="users_favorited_this">Users favorited this</string>
     <string name="reply_to">Reply to <xliff:g id="user_name">%s</xliff:g></string>

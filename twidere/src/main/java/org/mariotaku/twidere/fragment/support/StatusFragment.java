@@ -71,7 +71,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableStatusesListAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
@@ -882,7 +882,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         final List<ParcelableStatus> data = getData();
         if (data == null) return;
         data.add(status);
-        final ParcelableStatusesAdapter adapter = (ParcelableStatusesAdapter) getListAdapter();
+        final ParcelableStatusesListAdapter adapter = (ParcelableStatusesListAdapter) getListAdapter();
         adapter.setData(data);
         if (!mLoadMoreAutomatically && mShouldScroll) {
             setSelection(0);

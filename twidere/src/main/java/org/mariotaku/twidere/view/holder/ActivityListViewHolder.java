@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 
-public class ActivityViewHolder extends StatusViewHolder {
+public class ActivityListViewHolder extends StatusListViewHolder {
 
 	public final ImageView activity_profile_image_1, activity_profile_image_2, activity_profile_image_3,
 			activity_profile_image_4, activity_profile_image_5;
@@ -35,7 +35,7 @@ public class ActivityViewHolder extends StatusViewHolder {
 	public final TextView activity_profile_image_more_number;
 	public final View divider;
 
-	public ActivityViewHolder(final View view) {
+	public ActivityListViewHolder(final View view) {
 		super(view);
 		divider = findViewById(R.id.divider);
 		activity_profile_images_container = (ViewGroup) findViewById(R.id.activity_profile_image_container);

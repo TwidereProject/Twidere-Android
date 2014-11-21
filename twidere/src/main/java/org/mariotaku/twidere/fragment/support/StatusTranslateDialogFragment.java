@@ -47,7 +47,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 
 import twitter4j.TranslationResult;
 import twitter4j.Twitter;
@@ -56,7 +56,7 @@ import twitter4j.TwitterException;
 public class StatusTranslateDialogFragment extends BaseSupportDialogFragment implements
 		LoaderCallbacks<SingleResponse<TranslationResult>> {
 
-	private StatusViewHolder mHolder;
+	private StatusListViewHolder mHolder;
 	private ProgressBar mProgressBar;
 	private TextView mMessageView;
 	private View mProgressContainer;
@@ -95,7 +95,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
 		mProgressBar = (ProgressBar) mProgressContainer.findViewById(android.R.id.progress);
 		mMessageView = (TextView) mProgressContainer.findViewById(android.R.id.message);
 		mStatusContainer = view.findViewById(R.id.status_container);
-		mHolder = new StatusViewHolder(mStatusContainer);
+		mHolder = new StatusListViewHolder(mStatusContainer);
 		mHolder.setShowAsGap(false);
 		mHolder.setAccountColorEnabled(true);
 		((View) mHolder.content).setPadding(0, 0, 0, 0);

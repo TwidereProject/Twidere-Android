@@ -8,55 +8,107 @@
     android:layout_marginLeft="@dimen/element_spacing_normal"
     android:layout_marginRight="@dimen/element_spacing_normal"
     android:layout_marginTop="@dimen/element_spacing_small"
+    app:cardBackgroundColor="?cardItemBackgroundColor"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
-        <LinearLayout
+        <org.mariotaku.twidere.view.CircularImageView
+            android:id="@+id/retweet_profile_image"
+            android:layout_width="@dimen/element_size_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/reply_retweet_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginRight="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_toRightOf="@id/retweet_profile_image"
+            android:drawablePadding="@dimen/element_spacing_small"
+            android:ellipsize="end"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_normal"
-            android:paddingTop="@dimen/element_spacing_normal">
+            android:minHeight="@dimen/element_size_small"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="10sp"/>
 
+        <RelativeLayout
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/retweet_profile_image"
+            android:layout_below="@id/reply_retweet_status"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_normal">
 
-            <com.pkmmte.view.CircularImageView
+            <org.mariotaku.twidere.view.CircularImageView
                 android:id="@+id/profile_image"
                 android:layout_width="@dimen/icon_size_status_profile_image"
                 android:layout_height="@dimen/icon_size_status_profile_image"
-                android:layout_margin="@dimen/element_spacing_small"
-                android:layout_weight="0"
+                android:layout_centerVertical="true"
                 android:contentDescription="@string/profile_image"
-                android:scaleType="centerCrop"
-                app:border="false"
-                app:selector="true"
-                app:selector_stroke_color="@android:color/transparent"
-                app:selector_stroke_width="0dp"/>
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:id="@+id/profile_type"
+                android:layout_width="@dimen/icon_size_profile_type"
+                android:layout_height="@dimen/icon_size_profile_type"
+                android:layout_alignBottom="@+id/profile_image"
+                android:layout_alignRight="@+id/profile_image"
+                android:layout_marginBottom="@dimen/element_spacing_minus_small"
+                android:layout_marginRight="@dimen/element_spacing_minus_normal"
+                android:scaleType="centerInside"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_toLeftOf="@+id/menu"
+                android:layout_toRightOf="@+id/profile_image"
                 android:orientation="vertical">
 
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/element_spacing_xsmall"
-                    android:paddingTop="@dimen/element_spacing_small"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="?android:textColorPrimary"
-                    android:textStyle="bold"/>
+                    android:layout_marginBottom="@dimen/element_spacing_xsmall"
+                    android:layout_marginTop="@dimen/element_spacing_small"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorPrimary"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/screen_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/element_spacing_small"
+                        android:singleLine="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="10sp"/>
+                </LinearLayout>
 
                 <org.mariotaku.twidere.view.ShortTimeView
                     android:id="@+id/time"
@@ -64,24 +116,30 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/element_spacing_small"
                     android:paddingTop="@dimen/element_spacing_xsmall"
-                    android:textAppearance="?android:textAppearanceSmall"/>
+                    android:singleLine="true"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textSize="10sp"/>
 
             </LinearLayout>
 
             <org.mariotaku.twidere.view.ActionIconButton
+                android:id="@+id/menu"
                 style="?cardActionButtonStyle"
                 android:layout_width="@dimen/element_size_normal"
                 android:layout_height="@dimen/element_size_normal"
-                android:layout_weight="0"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_action_more_vertical"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <org.mariotaku.twidere.view.ImagePreviewContainer
             android:id="@+id/media_preview_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@id/profile_container"
+            android:layout_marginTop="@dimen/element_spacing_normal"
             android:foreground="?android:selectableItemBackground">
 
             <ImageView
@@ -105,75 +163,70 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/element_spacing_normal"
-            android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@id/media_preview_container"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_normal"
+            android:paddingRight="@dimen/element_spacing_normal"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@+id/text"
             android:layout_marginTop="@dimen/element_spacing_small"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:overScrollMode="never"
+            android:scrollbars="none">
 
-            <org.mariotaku.twidere.view.IconActionButton
-                android:id="@+id/reply_indicator"
-                style="?cardActionButtonStyle"
-                android:layout_width="@dimen/button_size_content_card"
-                android:layout_height="@dimen/button_size_content_card"
-                android:layout_weight="0"
-                android:padding="@dimen/element_spacing_small"
-                android:src="@drawable/ic_action_reply"
-                app:activatedColor="@android:color/holo_blue_light"
-                app:color="?android:textColorSecondary"/>
-
-            <TextView
-                android:id="@+id/reply_count"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:minWidth="@dimen/element_spacing_mlarge"/>
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <org.mariotaku.twidere.view.IconActionButton
-                android:id="@+id/retweet_indicator"
-                style="?cardActionButtonStyle"
-                android:layout_width="@dimen/button_size_content_card"
-                android:layout_height="@dimen/button_size_content_card"
-                android:layout_weight="0"
-                android:padding="@dimen/element_spacing_small"
-                android:src="@drawable/ic_action_retweet"
-                app:activatedColor="@android:color/holo_green_light"
-                app:color="?android:textColorSecondary"/>
+                <org.mariotaku.twidere.view.CardActionTextView
+                    android:id="@+id/reply_count"
+                    style="?cardActionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_size_content_card"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_action_reply"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    app:activatedColor="@android:color/holo_blue_light"/>
 
-            <TextView
-                android:id="@+id/retweet_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:minWidth="@dimen/element_spacing_mlarge"/>
+                <org.mariotaku.twidere.view.CardActionTextView
+                    android:id="@+id/retweet_count"
+                    style="?cardActionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_size_content_card"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_action_retweet"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    app:activatedColor="@android:color/holo_green_light"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
-                android:id="@+id/favorite_indicator"
-                style="?cardActionButtonStyle"
-                android:layout_width="@dimen/button_size_content_card"
-                android:layout_height="@dimen/button_size_content_card"
-                android:layout_weight="0"
-                android:padding="@dimen/element_spacing_small"
-                android:src="@drawable/ic_action_star"
-                app:activatedColor="@android:color/holo_orange_light"
-                app:color="?android:textColorSecondary"/>
+                <org.mariotaku.twidere.view.CardActionTextView
+                    android:id="@+id/favorite_count"
+                    style="?cardActionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_size_content_card"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_action_star"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    app:activatedColor="@android:color/holo_orange_light"/>
 
-            <TextView
-                android:id="@+id/favorite_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:minWidth="@dimen/element_spacing_mlarge"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

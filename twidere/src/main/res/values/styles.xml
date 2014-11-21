@@ -151,7 +151,28 @@
         <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
-    <style name="Widget.Light.CardActionButton" parent="android:Widget.DeviceDefault.ImageButton">
+    <style name="Widget.Light.CardActionButton" parent="android:Widget.DeviceDefault.Light.ImageButton">
         <item name="android:background">?android:selectableItemBackground</item>
+    </style>
+
+
+    <style name="Widget.ProfileImage" parent="android:Widget.DeviceDefault">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="borderWidth">1dp</item>
+    </style>
+
+    <style name="Widget.Light.ProfileImage" parent="android:Widget.DeviceDefault">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="borderWidth">1dp</item>
+    </style>
+
+    <style name="Widget.ProfileImage.Large">
+        <item name="android:background">@drawable/bg_oval_black</item>
+        <item name="borderWidth">2dp</item>
+    </style>
+
+    <style name="Widget.Light.ProfileImage.Large">
+        <item name="android:background">@drawable/bg_oval_white</item>
+        <item name="borderWidth">2dp</item>
     </style>
 </resources>

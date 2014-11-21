@@ -10,3 +10,6 @@
 [submodule "libraries/RefreshNow"]
 	path = libraries/RefreshNow
 	url = https://github.com/mariotaku/RefreshNow-Android
+[submodule "libraries/PullToRefresh"]
+	path = libraries/PullToRefresh
+	url = https://github.com/mariotaku/Android-PullToRefresh-Gradle.git

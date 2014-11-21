@@ -43,7 +43,7 @@ import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 import org.mariotaku.twidere.view.iface.ICardItemView.OnOverflowIconClickListener;
 
 import java.util.Locale;
@@ -105,7 +105,7 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final int position = cursor.getPosition();
-        final StatusViewHolder holder = (StatusViewHolder) view.getTag();
+        final StatusListViewHolder holder = (StatusListViewHolder) view.getTag();
 
         final boolean isGap = cursor.getShort(mIndices.is_gap) == 1;
         final boolean showGap = isGap && !mGapDisallowed && position != getCount() - 1;
@@ -263,7 +263,7 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
     }
 
     @Override
-    public int getActualCount() {
+    public int getStatusCount() {
         return super.getCount();
     }
 
@@ -294,6 +294,16 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
+    public ImageLoadingHandler getImageLoadingHandler() {
+        return mImageLoadingHandler;
+    }
+
+    @Override
     public ParcelableStatus getStatus(final int position) {
         final Cursor c = getCursor();
         if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
@@ -312,9 +322,9 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
         final View view = super.getView(position, convertView, parent);
         final Object tag = view.getTag();
         // animate the item
-        if (tag instanceof StatusViewHolder && position > mMaxAnimationPosition) {
+        if (tag instanceof StatusListViewHolder && position > mMaxAnimationPosition) {
             if (mAnimationEnabled) {
-                view.startAnimation(((StatusViewHolder) tag).item_animation);
+                view.startAnimation(((StatusListViewHolder) tag).item_animation);
             }
             mMaxAnimationPosition = position;
         }
@@ -330,8 +340,8 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
     public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
         final View view = super.newView(context, cursor, parent);
         final Object tag = view.getTag();
-        if (!(tag instanceof StatusViewHolder)) {
-            final StatusViewHolder holder = new StatusViewHolder(view);
+        if (!(tag instanceof StatusListViewHolder)) {
+            final StatusListViewHolder holder = new StatusListViewHolder(view);
             holder.profile_image.setOnClickListener(this);
             holder.my_profile_image.setOnClickListener(this);
             holder.image_preview.setOnClickListener(this);
@@ -374,8 +384,8 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
     public void onOverflowIconClick(final View view) {
         if (mMultiSelectManager.isActive()) return;
         final Object tag = view.getTag();
-        if (tag instanceof StatusViewHolder) {
-            final StatusViewHolder holder = (StatusViewHolder) tag;
+        if (tag instanceof StatusListViewHolder) {
+            final StatusListViewHolder holder = (StatusListViewHolder) tag;
             final int position = holder.position;
             if (position == -1 || mListener == null) return;
             mListener.onMenuButtonClick(view, position, getItemId(position));
