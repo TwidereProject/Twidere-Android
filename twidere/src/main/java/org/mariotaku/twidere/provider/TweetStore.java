@@ -349,11 +349,14 @@ public interface TweetStore {
             public static final Uri CONTENT_URI = Uri
                     .withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
-            public static final String MESSAGE_TIMESTAMP = "message_timestamp";
+            public static final String MESSAGE_ID = DirectMessages.MESSAGE_ID;
+            public static final String ACCOUNT_ID = DirectMessages.ACCOUNT_ID;
+            public static final String IS_OUTGOING = DirectMessages.IS_OUTGOING;
+            public static final String MESSAGE_TIMESTAMP = DirectMessages.MESSAGE_TIMESTAMP;
             public static final String NAME = "name";
             public static final String SCREEN_NAME = "screen_name";
             public static final String PROFILE_IMAGE_URL = "profile_image_url";
-            public static final String TEXT_HTML = "text_html";
+            public static final String TEXT_HTML = DirectMessages.TEXT_HTML;
             public static final String CONVERSATION_ID = "conversation_id";
 
             public static final int IDX__ID = 0;

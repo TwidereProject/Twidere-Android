@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
@@ -43,7 +42,6 @@ import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.findDirectMessageInDatabases;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.openImage;
-import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 public class DirectMessagesConversationAdapter extends BaseCursorAdapter implements IDirectMessagesAdapter,
         OnClickListener {
@@ -78,7 +76,6 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
 
         final String firstMedia = cursor.getString(mIndices.first_media);
 
-        final boolean displayProfileImage = isDisplayProfileImage();
         final long accountId = cursor.getLong(mIndices.account_id);
         final long timestamp = cursor.getLong(mIndices.message_timestamp);
         final boolean is_outgoing = cursor.getInt(mIndices.is_outgoing) == 1;
@@ -94,26 +91,12 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         holder.outgoing_text.setMovementMethod(null);
         holder.incoming_time.setText(formatToLongTimeString(mContext, timestamp));
         holder.outgoing_time.setText(formatToLongTimeString(mContext, timestamp));
-        holder.incoming_profile_image_container.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
-        holder.outgoing_profile_image_container.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
-        if (displayProfileImage) {
-            final String profile_image_url_string = cursor.getString(mIndices.sender_profile_image_url);
-            mImageLoader.displayProfileImage(holder.incoming_profile_image, profile_image_url_string);
-            mImageLoader.displayProfileImage(holder.outgoing_profile_image, profile_image_url_string);
-            holder.incoming_profile_image.setTag(position);
-            holder.outgoing_profile_image.setTag(position);
-        } else {
-            mImageLoader.cancelDisplayTask(holder.incoming_profile_image);
-            mImageLoader.cancelDisplayTask(holder.outgoing_profile_image);
-        }
         if (position > mMaxAnimationPosition) {
             if (mAnimationEnabled) {
                 view.startAnimation(holder.item_animation);
             }
             mMaxAnimationPosition = position;
         }
-        holder.incoming_item_menu.setTag(position);
-        holder.outgoing_item_menu.setTag(position);
 
         if (firstMedia == null) {
             mImageLoader.cancelDisplayTask(holder.incoming_image_preview);
@@ -173,10 +156,6 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final Object tag = view.getTag();
         if (!(tag instanceof DirectMessageConversationViewHolder)) {
             final DirectMessageConversationViewHolder holder = new DirectMessageConversationViewHolder(view);
-            holder.incoming_profile_image.setOnClickListener(this);
-            holder.outgoing_profile_image.setOnClickListener(this);
-            holder.incoming_item_menu.setOnClickListener(this);
-            holder.outgoing_item_menu.setOnClickListener(this);
             holder.incoming_image_preview.setOnClickListener(this);
             holder.outgoing_image_preview.setOnClickListener(this);
             view.setTag(holder);
@@ -191,25 +170,8 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final int position = tag instanceof Integer ? (Integer) tag : -1;
         if (position == -1) return;
         switch (view.getId()) {
-            case R.id.incoming_profile_image:
-            case R.id.outgoing_profile_image: {
-                final ParcelableDirectMessage message = getDirectMessage(position);
-                if (message == null) return;
-                if (mContext instanceof Activity) {
-                    openUserProfile((Activity) mContext, message.account_id, message.sender_id,
-                            message.sender_screen_name);
-                }
-                break;
-            }
-            case R.id.incoming_item_menu:
-            case R.id.outgoing_item_menu: {
-                if (position == -1 || mListener == null) return;
-                mListener.onMenuButtonClick(view, position, getItemId(position));
-                break;
-            }
             case R.id.incoming_image_preview:
             case R.id.outgoing_image_preview: {
-                if (position == -1) return;
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.first_media == null) return;
                 openImage(mContext, message.account_id, message.first_media, false);

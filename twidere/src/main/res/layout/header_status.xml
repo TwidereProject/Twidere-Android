@@ -141,7 +141,10 @@
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginBottom="@dimen/element_spacing_normal"
+                android:layout_marginLeft="@dimen/element_spacing_large"
+                android:layout_marginRight="@dimen/element_spacing_large"
+                android:layout_marginTop="@dimen/element_spacing_normal"
                 android:singleLine="false"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textIsSelectable="true"/>
@@ -190,26 +193,30 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_bar_height"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_marginRight="@dimen/element_spacing_normal"
+                android:orientation="horizontal"
+                android:splitMotionEvents="false">
 
                 <LinearLayout
                     android:id="@+id/replies_container"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
+                    android:baselineAligned="true"
                     android:clickable="true"
                     android:gravity="center"
-                    android:minWidth="@dimen/button_width_content_min"
-                    android:orientation="vertical"
-                    android:padding="@dimen/element_spacing_small">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/element_spacing_normal">
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/replies_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/element_spacing_small"
                         android:singleLine="true"
-                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorPrimary"/>
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
@@ -224,20 +231,21 @@
                 <LinearLayout
                     android:id="@+id/retweets_container"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
+                    android:baselineAligned="true"
                     android:clickable="true"
                     android:gravity="center"
-                    android:minWidth="@dimen/button_width_content_min"
-                    android:orientation="vertical"
-                    android:padding="@dimen/element_spacing_small">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/element_spacing_normal">
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/retweets_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/element_spacing_small"
                         android:singleLine="true"
-                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorPrimary"/>
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
@@ -252,20 +260,21 @@
                 <LinearLayout
                     android:id="@+id/favorites_container"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
+                    android:baselineAligned="true"
                     android:clickable="true"
                     android:gravity="center"
-                    android:minWidth="@dimen/button_width_content_min"
-                    android:orientation="vertical"
-                    android:padding="@dimen/element_spacing_small">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/element_spacing_normal">
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/favorites_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/element_spacing_small"
                         android:singleLine="true"
-                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorPrimary"/>
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
@@ -283,6 +292,7 @@
                 android:id="@+id/menu_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize"
+                android:splitMotionEvents="false"
                 app:maxActionItems="@integer/max_action_buttons_bottom"/>
 
         </LinearLayout>

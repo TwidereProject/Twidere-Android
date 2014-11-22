@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.ShortTimeView;
 
 import static org.mariotaku.twidere.util.Utils.getDisplayName;
@@ -62,7 +61,7 @@ public class StatusListViewHolder extends CardViewHolder {
         super(view);
         final Context context = getContext();
         profile_image = (ImageView) findViewById(R.id.profile_image);
-        my_profile_image = (ProfileImageView) findViewById(R.id.my_profile_image);
+        my_profile_image = (ImageView) findViewById(R.id.my_profile_image);
         image_preview = (ImageView) findViewById(R.id.image_preview);
         image_preview_progress = (ProgressBar) findViewById(R.id.image_preview_progress);
         image_preview_container = (ViewGroup) findViewById(R.id.image_preview_container);

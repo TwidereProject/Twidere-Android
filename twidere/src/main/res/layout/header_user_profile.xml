@@ -25,23 +25,6 @@
     <!--android:layout_alignBottom="@+id/card"-->
     <!--android:layout_alignTop="@+id/profile_name_container"/>-->
 
-    <!--<FrameLayout-->
-    <!--android:id="@+id/profile_image_container"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignBottom="@+id/profile_name_container"-->
-    <!--android:layout_marginLeft="@dimen/element_spacing_normal"-->
-    <!--android:background="?cardItemBackground">-->
-
-    <!--<org.mariotaku.twidere.view.ProfileImageView-->
-    <!--android:id="@+id/profile_image"-->
-    <!--android:layout_width="@dimen/icon_size_user_profile"-->
-    <!--android:layout_height="@dimen/icon_size_user_profile"-->
-    <!--android:contentDescription="@string/profile_image"-->
-    <!--android:scaleType="centerCrop"-->
-    <!--android:src="@drawable/ic_profile_image_default"/>-->
-    <!--</FrameLayout>-->
-
     <org.mariotaku.twidere.view.CircularImageView
         android:id="@+id/profile_image"
         style="?profileImageStyleLarge"

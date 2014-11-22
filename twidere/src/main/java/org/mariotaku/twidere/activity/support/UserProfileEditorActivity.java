@@ -60,7 +60,6 @@ import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.view.ProfileImageBannerLayout;
-import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.io.File;
@@ -88,7 +87,7 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     private AsyncTask<Void, Void, ?> mTask;
 
     private ProfileImageBannerLayout mProfileImageBannerLayout;
-    private ProfileImageView mProfileImageView;
+    private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
     private EditText mEditName, mEditDescription, mEditLocation, mEditUrl;
     private View mProgress, mContent;

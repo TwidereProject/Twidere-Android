@@ -166,6 +166,7 @@ import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.DNS;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
+import org.mariotaku.twidere.provider.TweetStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.provider.TweetStore.Drafts;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
 import org.mariotaku.twidere.provider.TweetStore.Filters.Users;
@@ -3970,5 +3971,20 @@ public final class Utils implements Constants, TwitterConstants {
         } finally {
             c.close();
         }
+    }
+
+    public static ParcelableUser getUserForConversation(Context context, long accountId,
+                                                        long conversationId) {
+        final ContentResolver cr = context.getContentResolver();
+        final Where where = Where.and(Where.equals(ConversationEntries.ACCOUNT_ID, accountId),
+                Where.equals(ConversationEntries.CONVERSATION_ID, conversationId));
+        final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
+        try {
+            if (c.moveToFirst()) return ParcelableUser.fromDirectMessageConversationEntry(c);
+
+        } finally {
+            c.close();
+        }
+        return null;
     }
 }
