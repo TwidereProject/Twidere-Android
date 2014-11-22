@@ -94,6 +94,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.StatusTextView;
@@ -164,7 +165,8 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     private TextView mRepliesCountView, mRetweetsCountView, mFavoritesCountView;
     private StatusTextView mTextView;
 
-    private ImageView mProfileImageView, mMapView;
+    private CircularImageView mProfileImageView;
+    private ImageView mProfileTypeView, mMapView;
     private Button mFollowButton;
     private Button mRetryButton;
     private View mMainContent, mFollowIndicator, mImagePreviewContainer, mLocationContainer, mLocationBackgroundView;
@@ -356,14 +358,22 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         final String nick = getUserNickname(getActivity(), status.user_id, true);
         mNameView.setText(TextUtils.isEmpty(nick) ? status.user_name : nickname_only ? nick : getString(
                 R.string.name_with_nickname, status.user_name, nick));
-        mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-                getUserTypeIconRes(status.user_is_verified, status.user_is_protected), 0);
+        final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
+        if (typeIconRes != 0) {
+            mProfileTypeView.setImageResource(typeIconRes);
+            mProfileTypeView.setVisibility(View.VISIBLE);
+        } else {
+            mProfileTypeView.setImageDrawable(null);
+            mProfileTypeView.setVisibility(View.GONE);
+        }
         mScreenNameView.setText("@" + status.user_screen_name);
         mTextView.setText(Html.fromHtml(status.text_html));
         final TwidereLinkify linkify = new TwidereLinkify(
                 new OnLinkClickHandler(getActivity(), getMultiSelectManager()));
         linkify.setLinkTextColor(ThemeUtils.getUserLinkTextColor(getActivity()));
         linkify.applyAllLinks(mTextView, status.account_id, status.is_possibly_sensitive);
+        ThemeUtils.applyParagraphSpacing(mTextView, 1.1f);
+
         mTextView.setMovementMethod(StatusContentMovementMethod.getInstance());
         mTextView.setCustomSelectionActionModeCallback(this);
         long timestamp = status.retweet_timestamp > 0 ? status.retweet_timestamp : status.timestamp;
@@ -581,12 +591,13 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_details_page, container, false);
+        view.findViewById(R.id.menu_bar).setVisibility(View.GONE);
         mMainContent = view.findViewById(R.id.content);
         mDetailsLoadProgress = (ProgressBar) view.findViewById(R.id.details_load_progress);
-        mMenuBar = (TwidereMenuBar) view.findViewById(R.id.menu_bar);
         mDetailsContainer = (ExtendedFrameLayout) view.findViewById(R.id.details_container);
         mDetailsContainer.addView(super.onCreateView(inflater, mDetailsContainer, savedInstanceState));
         mHeaderView = inflater.inflate(R.layout.header_status, null, false);
+        mMenuBar = (TwidereMenuBar) mHeaderView.findViewById(R.id.menu_bar);
         mImagePreviewContainer = mHeaderView.findViewById(R.id.image_preview);
         mLocationContainer = mHeaderView.findViewById(R.id.location_container);
         mLocationView = (TextView) mHeaderView.findViewById(R.id.location_view);
@@ -595,7 +606,8 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         mNameView = (TextView) mHeaderView.findViewById(R.id.name);
         mScreenNameView = (TextView) mHeaderView.findViewById(R.id.screen_name);
         mTextView = (StatusTextView) mHeaderView.findViewById(R.id.text);
-        mProfileImageView = (ImageView) mHeaderView.findViewById(R.id.profile_image);
+        mProfileImageView = (CircularImageView) mHeaderView.findViewById(R.id.profile_image);
+        mProfileTypeView = (ImageView) mHeaderView.findViewById(R.id.profile_type);
         mTimeSourceView = (TextView) mHeaderView.findViewById(R.id.time_source);
         mInReplyToView = (TextView) mHeaderView.findViewById(R.id.in_reply_to);
         mFollowButton = (Button) mHeaderView.findViewById(R.id.follow);
@@ -986,7 +998,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
 
     private void updateUserColor() {
         if (mStatus == null) return;
-        mProfileView.drawStart(getUserColor(getActivity(), mStatus.user_id, true));
+        mProfileImageView.setBorderColor(getUserColor(getActivity(), mStatus.user_id, true));
     }
 
     public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements

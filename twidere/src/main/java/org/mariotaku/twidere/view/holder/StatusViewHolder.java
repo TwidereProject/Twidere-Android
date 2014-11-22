@@ -23,6 +23,8 @@ import org.mariotaku.twidere.view.ShortTimeView;
 
 import java.util.Locale;
 
+import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
+
 /**
  * Created by mariotaku on 14/11/19.
  */
@@ -78,31 +80,37 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final ParcelableMedia[] media = status.media;
 
         if (status.retweet_id > 0) {
-            replyRetweetView.setText(context.getString(R.string.retweeted_by_name, status.retweeted_by_name));
+            if (status.retweet_count == 2) {
+                replyRetweetView.setText(context.getString(R.string.name_and_another_retweeted,
+                        status.retweeted_by_name));
+            } else if (status.retweet_count > 2) {
+                replyRetweetView.setText(context.getString(R.string.name_and_count_retweeted,
+                        status.retweeted_by_name, status.retweet_count - 1));
+            } else {
+                replyRetweetView.setText(context.getString(R.string.name_retweeted, status.retweeted_by_name));
+            }
             replyRetweetView.setVisibility(View.VISIBLE);
-            replyRetweetView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            retweetProfileImageView.setVisibility(View.VISIBLE);
-            loader.displayProfileImage(retweetProfileImageView, status.retweeted_by_profile_image);
-        } else if (status.in_reply_to_user_id > 0) {
+//            replyRetweetView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_retweet, 0, 0, 0);
+            retweetProfileImageView.setVisibility(View.GONE);
+        } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0) {
             replyRetweetView.setText(context.getString(R.string.in_reply_to_name, status.in_reply_to_name));
             replyRetweetView.setVisibility(View.VISIBLE);
-            replyRetweetView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_reply, 0, 0, 0);
+//            replyRetweetView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_reply, 0, 0, 0);
             retweetProfileImageView.setVisibility(View.GONE);
-            loader.cancelDisplayTask(retweetProfileImageView);
         } else {
             replyRetweetView.setText(null);
             replyRetweetView.setVisibility(View.GONE);
             replyRetweetView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             retweetProfileImageView.setVisibility(View.GONE);
-            loader.cancelDisplayTask(retweetProfileImageView);
         }
 
-        if (status.user_is_protected) {
-            profileTypeView.setImageResource(R.drawable.ic_user_type_protected);
-        } else if (status.user_is_verified) {
-            profileTypeView.setImageResource(R.drawable.ic_user_type_verified);
+        final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
+        if (typeIconRes != 0) {
+            profileTypeView.setImageResource(typeIconRes);
+            profileTypeView.setVisibility(View.VISIBLE);
         } else {
             profileTypeView.setImageDrawable(null);
+            profileTypeView.setVisibility(View.GONE);
         }
 
         nameView.setText(status.user_name);

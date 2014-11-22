@@ -28,16 +28,15 @@
             android:layout_marginTop="@dimen/element_spacing_small"
             android:scaleType="centerCrop"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.CardActionTextView
             android:id="@+id/reply_retweet_status"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_marginBottom="@dimen/element_spacing_minus_normal"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_small"
             android:layout_toRightOf="@id/retweet_profile_image"
-            android:drawablePadding="@dimen/element_spacing_small"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:minHeight="@dimen/element_size_small"
@@ -52,14 +51,15 @@
             android:layout_alignLeft="@id/retweet_profile_image"
             android:layout_below="@id/reply_retweet_status"
             android:layout_marginTop="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_normal">
+            android:paddingLeft="@dimen/element_spacing_mlarge">
 
             <org.mariotaku.twidere.view.CircularImageView
                 android:id="@+id/profile_image"
-                android:layout_width="@dimen/icon_size_status_profile_image"
-                android:layout_height="@dimen/icon_size_status_profile_image"
+                android:layout_width="@dimen/element_size_normal"
+                android:layout_height="@dimen/element_size_normal"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/profile_image"
+                android:padding="@dimen/padding_profile_image_list_item"
                 android:scaleType="centerCrop"/>
 
             <ImageView
@@ -68,9 +68,7 @@
                 android:layout_height="@dimen/icon_size_profile_type"
                 android:layout_alignBottom="@+id/profile_image"
                 android:layout_alignRight="@+id/profile_image"
-                android:layout_marginBottom="@dimen/element_spacing_minus_small"
-                android:layout_marginRight="@dimen/element_spacing_minus_normal"
-                android:scaleType="centerInside"/>
+                android:scaleType="fitCenter"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -166,6 +164,7 @@
             android:layout_alignLeft="@+id/profile_container"
             android:layout_below="@id/media_preview_container"
             android:layout_marginTop="@dimen/element_spacing_normal"
+            android:layout_marginBottom="@dimen/element_spacing_normal"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -176,7 +175,6 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/profile_container"
             android:layout_below="@+id/text"
-            android:layout_marginTop="@dimen/element_spacing_small"
             android:overScrollMode="never"
             android:scrollbars="none">
 

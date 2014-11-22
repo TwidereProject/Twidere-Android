@@ -28,7 +28,7 @@ import android.util.AttributeSet;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.graphic.DropShadowDrawable;
 
-public class ProfileImageView extends HighlightImageView {
+public class ProfileImageView extends CircularImageView {
 
 	private final Drawable mVerifiedDrawable, mProtectedDrawable;
 

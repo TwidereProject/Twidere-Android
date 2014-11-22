@@ -17,7 +17,7 @@
         android:layout_height="@dimen/element_size_small"
         android:layout_marginLeft="@dimen/element_spacing_normal"/>
 
-    <TextView
+    <org.mariotaku.twidere.view.CardActionTextView
         android:id="@+id/reply_retweet_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

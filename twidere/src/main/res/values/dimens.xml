@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="element_size_normal">48dp</dimen>
-    <dimen name="button_size_content_card">42dp</dimen>
     <dimen name="element_size_small">24dp</dimen>
+    <dimen name="element_size_normal">48dp</dimen>
+    <dimen name="element_size_mlarge">64dp</dimen>
+
+
+    <dimen name="button_size_content_card">42dp</dimen>
     <dimen name="element_spacing_xsmall">2dp</dimen>
     <dimen name="element_spacing_small">4dp</dimen>
     <dimen name="element_spacing_msmall">6dp</dimen>
@@ -74,11 +77,17 @@
     <dimen name="action_icon_size">32dp</dimen>
     <dimen name="unread_indicator_size">16dp</dimen>
     <dimen name="account_selector_popup_width">180dp</dimen>
-    <dimen name="icon_size_status_profile_image">48dp</dimen>
-    <dimen name="icon_size_profile_type">24dp</dimen>
+    <dimen name="icon_size_status_profile_image">40dp</dimen>
+    <dimen name="icon_size_profile_type">18dp</dimen>
+    <dimen name="icon_size_profile_type_detail">24dp</dimen>
+    <dimen name="icon_size_profile_type_user_profile">32dp</dimen>
 
     <!-- Elevation values -->
     <dimen name="elevation_card">2dp</dimen>
     <dimen name="corner_radius_card">2dp</dimen>
+
+
+    <dimen name="padding_profile_image_detail_page">@dimen/element_spacing_small</dimen>
+    <dimen name="padding_profile_image_list_item">@dimen/element_spacing_small</dimen>
 
 </resources>

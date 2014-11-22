@@ -57,6 +57,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
     </style>
 
     <style name="Theme.Twidere.Light" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
@@ -102,6 +106,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorActionBar">@color/action_icon_light</item>
     </style>
 
     <style name="Theme.Twidere.Dark.Transparent">
@@ -173,6 +181,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
     </style>
 
     <style name="Theme.Twidere.Light.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog">
@@ -203,6 +215,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
     </style>
 
     <style name="Theme.Twidere.Dark.Compose">
@@ -262,6 +278,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
     </style>
 
     <style name="Theme.Twidere.Viewer.Transparent">
@@ -361,6 +381,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
     </style>
 
     <style name="Theme.Twidere.Settings.Light" parent="android:Theme.DeviceDefault.Light">
@@ -397,6 +421,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
     </style>
 
     <style name="Theme.Twidere.Settings.Light.DarkActionBar" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
@@ -433,6 +461,10 @@
         <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
         </item>
         <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorActionBar">@color/action_icon_light</item>
     </style>
 
     <style name="Theme.Twidere.Settings.Light.DarkActionBar.DarkIcon"/>

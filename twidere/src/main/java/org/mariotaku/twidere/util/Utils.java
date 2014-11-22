@@ -2572,10 +2572,10 @@ public final class Utils implements Constants, TwitterConstants {
         return getDisplayName(context, user.getId(), user.getName(), user.getScreenName());
     }
 
-    public static int getUserTypeIconRes(final boolean is_verified, final boolean is_protected) {
-        if (is_verified)
-            return R.drawable.ic_indicator_verified;
-        else if (is_protected) return R.drawable.ic_indicator_protected;
+    public static int getUserTypeIconRes(final boolean isVerified, final boolean isProtected) {
+        if (isVerified)
+            return R.drawable.ic_user_type_verified;
+        else if (isProtected) return R.drawable.ic_user_type_protected;
         return 0;
     }
 
@@ -3928,6 +3928,10 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int getContrastYIQ(int color, int threshold) {
         return getContrastYIQ(color, threshold, Color.BLACK, Color.WHITE);
+    }
+
+    public static int getContrastYIQ(int color, int colorDark, int colorLight) {
+        return getContrastYIQ(color, 128, colorDark, colorLight);
     }
 
     /**

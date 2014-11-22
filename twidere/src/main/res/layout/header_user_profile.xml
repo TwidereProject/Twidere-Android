@@ -45,13 +45,21 @@
     <org.mariotaku.twidere.view.CircularImageView
         android:id="@+id/profile_image"
         style="?profileImageStyleLarge"
-        android:elevation="0dp"
         android:layout_width="@dimen/icon_size_user_profile"
         android:layout_height="@dimen/icon_size_user_profile"
         android:layout_alignBottom="@+id/profile_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
         android:src="@drawable/ic_profile_image_default"/>
+
+    <ImageView
+        android:id="@+id/profile_type"
+        style="@style/Widget.ProfileType"
+        android:layout_width="@dimen/icon_size_profile_type_user_profile"
+        android:layout_height="@dimen/icon_size_profile_type_user_profile"
+        android:layout_alignBottom="@+id/profile_image"
+        android:layout_alignRight="@+id/profile_image"
+        android:scaleType="fitCenter"/>
 
     <org.mariotaku.twidere.view.ColorLabelLinearLayout
         android:id="@+id/profile_name_container"

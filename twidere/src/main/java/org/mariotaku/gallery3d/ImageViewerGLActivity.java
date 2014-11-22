@@ -519,6 +519,11 @@ public final class ImageViewerGLActivity extends BaseSupportActivity implements 
 
     }
 
+    @Override
+    public void onPostShowMenu(Menu menu) {
+
+    }
+
     private static class MyHandler extends SynchronizedHandler {
         ImageViewerGLActivity activity;
 

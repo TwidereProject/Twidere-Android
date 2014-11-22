@@ -88,6 +88,11 @@
     <string name="display_profile_image">Display profile image</string>
     <string name="image_load_summary">Disabling this will increase list scroll speed and reduce data usage.</string>
     <string name="in_reply_to_name">In reply to <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweeted</string>
+    <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> and another retweeted</string>
+    <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others retweeted</string>
+    <string name="N_retweeted_quantity_one"><xliff:g id="retweet_count">%d</xliff:g> retweet</string>
+    <string name="N_retweeted_quantity_other"><xliff:g id="retweet_count">%d</xliff:g> retweets</string>
     <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g></string>
     <string name="retweeted_by_name_with_count">Retweeted by <xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
     <string name="retweeted_by_count">Retweeted by <xliff:g id="retweet_count">%d</xliff:g> users</string>

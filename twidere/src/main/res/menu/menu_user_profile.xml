@@ -10,6 +10,7 @@
     <item
         android:id="@id/follow"
         android:enabled="false"
+        android:visible="false"
         android:icon="@android:color/transparent"
         android:showAsAction="always"
         android:title="@string/follow"/>

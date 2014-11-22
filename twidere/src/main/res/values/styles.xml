@@ -168,11 +168,24 @@
 
     <style name="Widget.ProfileImage.Large">
         <item name="android:background">@drawable/bg_oval_black</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="elevation">@dimen/elevation_card</item>
         <item name="borderWidth">2dp</item>
     </style>
 
     <style name="Widget.Light.ProfileImage.Large">
         <item name="android:background">@drawable/bg_oval_white</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="elevation">@dimen/elevation_card</item>
         <item name="borderWidth">2dp</item>
+    </style>
+
+    <style name="Widget.ProfileType" parent="android:Widget.DeviceDefault">
     </style>
 </resources>

@@ -6,7 +6,8 @@
     android:layout_height="?android:actionBarSize"
     android:baselineAligned="false"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <HorizontalScrollView
         android:id="@+id/bottom_menu_container"
@@ -21,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@null"
-            android:max="@integer/max_action_buttons_bottom"/>
+            app:maxActionItems="@integer/max_action_buttons_bottom"/>
     </HorizontalScrollView>
 
     <View

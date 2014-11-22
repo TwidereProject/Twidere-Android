@@ -3,7 +3,10 @@
 
     <declare-styleable name="Twidere">
         <attr name="cardActionButtonStyle" format="reference"/>
+        <attr name="profileImageStyle" format="reference"/>
         <attr name="profileImageStyleLarge" format="reference"/>
+        <attr name="menuIconColor" format="color"/>
+        <attr name="menuIconColorActionBar" format="color"/>
         <attr name="cardItemBackground" format="reference"/>
         <attr name="cardItemBackgroundColor" format="color"/>
         <attr name="cardItemMessageIncomingBackground" format="reference"/>
