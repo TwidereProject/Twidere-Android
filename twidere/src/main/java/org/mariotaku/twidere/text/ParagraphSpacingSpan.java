@@ -24,8 +24,8 @@ import android.text.Spanned;
 import android.text.style.LineHeightSpan;
 
 /**
-* Created by mariotaku on 14/11/22.
-*/
+ * Created by mariotaku on 14/11/22.
+ */
 public class ParagraphSpacingSpan implements LineHeightSpan {
 
     private final float spacingMultiplier;

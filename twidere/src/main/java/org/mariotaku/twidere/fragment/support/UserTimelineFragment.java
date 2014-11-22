@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +22,7 @@ import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.loader.support.UserTimelineLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public class UserTimelineFragment extends BaseSupportFragment
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
+        mSwipeRefreshLayout.setColorSchemeResources(ThemeUtils.getUserAccentColor(context));
         mAdapter = new ParcelableStatusesAdapter(context, compact);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
