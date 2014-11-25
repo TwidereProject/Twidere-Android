@@ -19,55 +19,56 @@
 
 package org.mariotaku.twidere.view.holder;
 
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
+import android.graphics.LightingColorFilter;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mariotaku.messagebubbleview.library.MessageBubbleView;
 import org.mariotaku.twidere.R;
 
 public class DirectMessageConversationViewHolder extends CardViewHolder {
 
-    public final View incoming_message_container, outgoing_message_container;
-    public final TextView incoming_text, incoming_time, outgoing_text, outgoing_time;
+    public final TextView text, time;
 
-    public final ImageView incoming_image_preview, outgoing_image_preview;
-    public final ViewGroup incoming_image_preview_container, outgoing_image_preview_container;
-    public final ProgressBar incoming_image_preview_progress, outgoing_image_preview_progress;
+    public final ImageView media_preview;
+    public final ViewGroup media_preview_container;
+    public final ProgressBar media_preview_progress;
+    private final MessageBubbleView message_content;
 
     private float text_size;
 
     public DirectMessageConversationViewHolder(final View view) {
         super(view);
-        incoming_message_container = findViewById(R.id.incoming_message_container);
-        outgoing_message_container = findViewById(R.id.outgoing_message_container);
-        incoming_text = (TextView) findViewById(R.id.incoming_text);
-        incoming_time = (TextView) findViewById(R.id.incoming_time);
-        outgoing_text = (TextView) findViewById(R.id.outgoing_text);
-        outgoing_time = (TextView) findViewById(R.id.outgoing_time);
-        outgoing_image_preview = (ImageView) findViewById(R.id.outgoing_image_preview);
-        outgoing_image_preview_progress = (ProgressBar) findViewById(R.id.outgoing_image_preview_progress);
-        outgoing_image_preview_container = (ViewGroup) findViewById(R.id.outgoing_image_preview_container);
-        incoming_image_preview = (ImageView) findViewById(R.id.incoming_image_preview);
-        incoming_image_preview_progress = (ProgressBar) findViewById(R.id.incoming_image_preview_progress);
-        incoming_image_preview_container = (ViewGroup) findViewById(R.id.incoming_image_preview_container);
-
-        final Drawable drawable = outgoing_message_container.getBackground();
-        if (drawable != null) {
-            drawable.setColorFilter(0x20009900, Mode.MULTIPLY);
-        }
+        message_content = (MessageBubbleView) findViewById(R.id.message_content);
+        text = (TextView) findViewById(R.id.text);
+        time = (TextView) findViewById(R.id.time);
+        media_preview = (ImageView) findViewById(R.id.media_preview);
+        media_preview_progress = (ProgressBar) findViewById(R.id.media_preview_progress);
+        media_preview_container = (ViewGroup) findViewById(R.id.media_preview_container);
     }
 
     public void setTextSize(final float text_size) {
         if (this.text_size != text_size) {
             this.text_size = text_size;
-            incoming_text.setTextSize(text_size);
-            incoming_time.setTextSize(text_size * 0.75f);
-            outgoing_text.setTextSize(text_size);
-            outgoing_time.setTextSize(text_size * 0.75f);
+            text.setTextSize(text_size);
+            time.setTextSize(text_size * 0.75f);
+        }
+    }
+
+    public void setOutgoing(boolean isOutgoing) {
+        message_content.setCaretPosition(isOutgoing ? MessageBubbleView.BOTTOM_RIGHT : MessageBubbleView.TOP_LEFT);
+        final FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) message_content.getLayoutParams();
+        lp.gravity = isOutgoing ? Gravity.RIGHT : Gravity.LEFT;
+        message_content.setLayoutParams(lp);
+        if (isOutgoing) {
+            message_content.setBubbleColorFilter(new LightingColorFilter(0xFFC0FFC4, 0x00102015));
+        } else {
+            message_content.clearBubbleColorFilter();
         }
     }
 }

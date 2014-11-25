@@ -13,3 +13,6 @@
 [submodule "libraries/PullToRefresh"]
 	path = libraries/PullToRefresh
 	url = https://github.com/mariotaku/Android-PullToRefresh-Gradle.git
+[submodule "libraries/MessageBubbleView"]
+	path = libraries/MessageBubbleView
+	url = https://github.com/mariotaku/MessageBubbleView.git

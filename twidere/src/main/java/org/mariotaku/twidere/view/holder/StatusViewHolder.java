@@ -156,7 +156,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         retweetCountView.setEnabled(!status.user_is_protected);
 
-        retweetCountView.setActivated(status.is_retweet);
+        retweetCountView.setActivated(Utils.isMyRetweet(status));
         favoriteCountView.setActivated(status.is_favorite);
     }
 

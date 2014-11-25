@@ -533,22 +533,13 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             }
         }
 
-        int getProfileBackgroundColor(String color) {
-            if (isEmpty(color)) return Color.TRANSPARENT;
-            try {
-                return Color.parseColor(color);
-            } catch (IllegalArgumentException e) {
-                return Color.TRANSPARENT;
-            }
-        }
-
         int analyseUserProfileColor(final User user) throws TwitterException {
             if (user == null) throw new TwitterException("Unable to get user info");
             final HttpClientWrapper client = new HttpClientWrapper(conf);
             final String profileImageUrl = ParseUtils.parseString(user.getProfileImageURL());
             final HttpResponse conn = profileImageUrl != null ? client.get(profileImageUrl, null) : null;
             final Bitmap bm = conn != null ? BitmapFactory.decodeStream(conn.asStream()) : null;
-            final int profileBackgroundColor = getProfileBackgroundColor(user.getProfileBackgroundColor());
+            final int profileBackgroundColor = ParseUtils.parseColor(user.getProfileBackgroundColor(), Color.TRANSPARENT);
             if (bm == null) return profileBackgroundColor;
             try {
                 return Palette.generate(bm).getVibrantColor(profileBackgroundColor);

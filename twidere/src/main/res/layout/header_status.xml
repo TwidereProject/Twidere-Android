@@ -102,6 +102,7 @@
                         android:id="@+id/time_source"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:gravity="center_vertical"
                         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
@@ -141,10 +142,7 @@
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/element_spacing_normal"
-                android:layout_marginLeft="@dimen/element_spacing_large"
-                android:layout_marginRight="@dimen/element_spacing_large"
-                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:layout_margin="@dimen/element_spacing_normal"
                 android:singleLine="false"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textIsSelectable="true"/>
@@ -194,8 +192,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_normal"
-                android:layout_marginRight="@dimen/element_spacing_normal"
+                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_marginRight="@dimen/element_spacing_small"
                 android:orientation="horizontal"
                 android:splitMotionEvents="false">
 

@@ -390,7 +390,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
 
         final String in_reply_to = getDisplayName(getActivity(), status.in_reply_to_user_id, status.in_reply_to_name,
                 status.in_reply_to_screen_name, name_first, nickname_only, true);
-        mInReplyToView.setText(getString(R.string.in_reply_to, in_reply_to));
+        mInReplyToView.setText(getString(R.string.in_reply_to_name, in_reply_to));
 
         if (mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)) {
             mImageLoader.displayProfileImage(mProfileImageView, status.user_profile_image_url);

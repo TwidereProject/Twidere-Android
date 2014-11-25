@@ -673,5 +673,6 @@
     <string name="appearance">Appearance</string>
     <string name="function">Function</string>
     <string name="replies">Replies</string>
+    <string name="profile_banner">Profile banner</string>
 
 </resources>

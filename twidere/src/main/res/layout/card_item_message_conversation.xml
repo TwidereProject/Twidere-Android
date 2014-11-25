@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants"
     android:padding="8dp">
 
-    <org.mariotaku.twidere.view.MessageCardItemFrameLayout
-        android:id="@+id/incoming_message_container"
+    <org.mariotaku.messagebubbleview.library.MessageBubbleView
+        android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:background="?cardItemMessageIncomingBackground">
+        android:clickable="true"
+        app:bubbleColor="?messageBubbleColor"
+        app:caretHeight="8dp"
+        app:caretWidth="8dp"
+        app:cornerRadius="2dp">
 
         <LinearLayout
-            android:id="@+id/incoming_message_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/icon_size_card_list_item"
@@ -22,14 +25,14 @@
             android:padding="@dimen/element_spacing_normal">
 
             <org.mariotaku.twidere.view.HandleSpanClickTextView
-                android:id="@+id/incoming_text"
+                android:id="@+id/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorSecondary"/>
 
             <org.mariotaku.twidere.view.SquareFrameLayout
-                android:id="@+id/incoming_image_preview_container"
+                android:id="@+id/media_preview_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/element_spacing_small"
@@ -37,13 +40,13 @@
                 android:visibility="gone">
 
                 <org.mariotaku.twidere.view.HighlightImageView
-                    android:id="@+id/incoming_image_preview"
+                    android:id="@+id/media_preview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"/>
 
                 <ProgressBar
-                    android:id="@+id/incoming_image_preview_progress"
+                    android:id="@+id/media_preview_progress"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,64 +55,11 @@
             </org.mariotaku.twidere.view.SquareFrameLayout>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/incoming_time"
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"/>
         </LinearLayout>
-    </org.mariotaku.twidere.view.MessageCardItemFrameLayout>
-
-    <org.mariotaku.twidere.view.MessageCardItemFrameLayout
-        android:id="@+id/outgoing_message_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:background="?cardItemMessageOutgoingBackground">
-
-        <LinearLayout
-            android:id="@+id/outgoing_message_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/icon_size_card_list_item"
-            android:orientation="vertical"
-            android:padding="@dimen/element_spacing_normal">
-
-            <org.mariotaku.twidere.view.HandleSpanClickTextView
-                android:id="@+id/outgoing_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorSecondary"/>
-
-            <org.mariotaku.twidere.view.SquareFrameLayout
-                android:id="@+id/outgoing_image_preview_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/element_spacing_small"
-                android:paddingTop="@dimen/element_spacing_small"
-                android:visibility="gone">
-
-                <org.mariotaku.twidere.view.HighlightImageView
-                    android:id="@+id/outgoing_image_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"/>
-
-                <ProgressBar
-                    android:id="@+id/outgoing_image_preview_progress"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/element_spacing_large"/>
-            </org.mariotaku.twidere.view.SquareFrameLayout>
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/outgoing_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorSecondary"/>
-        </LinearLayout>
-    </org.mariotaku.twidere.view.MessageCardItemFrameLayout>
+    </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
 </FrameLayout>

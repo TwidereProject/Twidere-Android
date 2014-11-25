@@ -64,8 +64,7 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
         mImageLoader = app.getImageLoaderWrapper();
-        mImageLoadingHandler = new ImageLoadingHandler(R.id.incoming_image_preview_progress,
-                R.id.outgoing_image_preview_progress);
+        mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         configBaseCardAdapter(context, this);
     }
 
@@ -80,17 +79,12 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final long timestamp = cursor.getLong(mIndices.message_timestamp);
         final boolean is_outgoing = cursor.getInt(mIndices.is_outgoing) == 1;
 
-        holder.incoming_message_container.setVisibility(is_outgoing ? View.GONE : View.VISIBLE);
-        holder.outgoing_message_container.setVisibility(is_outgoing ? View.VISIBLE : View.GONE);
+        holder.setOutgoing(is_outgoing);
         holder.setTextSize(getTextSize());
-        holder.incoming_text.setText(Html.fromHtml(cursor.getString(mIndices.text)));
-        holder.outgoing_text.setText(Html.fromHtml(cursor.getString(mIndices.text)));
-        getLinkify().applyAllLinks(holder.incoming_text, accountId, false);
-        getLinkify().applyAllLinks(holder.outgoing_text, accountId, false);
-        holder.incoming_text.setMovementMethod(null);
-        holder.outgoing_text.setMovementMethod(null);
-        holder.incoming_time.setText(formatToLongTimeString(mContext, timestamp));
-        holder.outgoing_time.setText(formatToLongTimeString(mContext, timestamp));
+        holder.text.setText(Html.fromHtml(cursor.getString(mIndices.text)));
+        getLinkify().applyAllLinks(holder.text, accountId, false);
+        holder.text.setMovementMethod(null);
+        holder.time.setText(formatToLongTimeString(mContext, timestamp));
         if (position > mMaxAnimationPosition) {
             if (mAnimationEnabled) {
                 view.startAnimation(holder.item_animation);
@@ -99,36 +93,20 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         }
 
         if (firstMedia == null) {
-            mImageLoader.cancelDisplayTask(holder.incoming_image_preview);
-            mImageLoader.cancelDisplayTask(holder.outgoing_image_preview);
-            holder.outgoing_image_preview_container.setVisibility(View.GONE);
-            holder.incoming_image_preview_container.setVisibility(View.GONE);
-        } else if (is_outgoing) {
-            mImageLoader.cancelDisplayTask(holder.incoming_image_preview);
-            holder.outgoing_image_preview_container.setVisibility(View.VISIBLE);
-            holder.incoming_image_preview_container.setVisibility(View.GONE);
-            if (mImagePreviewScaleType != null) {
-                holder.outgoing_image_preview.setScaleType(mImagePreviewScaleType);
-            }
-            if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.outgoing_image_preview))) {
-                holder.outgoing_image_preview.setBackgroundResource(0);
-                mImageLoader.displayPreviewImageWithCredentials(holder.outgoing_image_preview, firstMedia, accountId,
-                        mImageLoadingHandler);
-            }
-            holder.outgoing_image_preview.setTag(position);
+            mImageLoader.cancelDisplayTask(holder.media_preview);
+            holder.media_preview_container.setVisibility(View.GONE);
         } else {
-            mImageLoader.cancelDisplayTask(holder.outgoing_image_preview);
-            holder.outgoing_image_preview_container.setVisibility(View.GONE);
-            holder.incoming_image_preview_container.setVisibility(View.VISIBLE);
+            mImageLoader.cancelDisplayTask(holder.media_preview);
+            holder.media_preview_container.setVisibility(View.VISIBLE);
             if (mImagePreviewScaleType != null) {
-                holder.incoming_image_preview.setScaleType(mImagePreviewScaleType);
+                holder.media_preview.setScaleType(mImagePreviewScaleType);
             }
-            if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.incoming_image_preview))) {
-                holder.incoming_image_preview.setBackgroundResource(0);
-                mImageLoader.displayPreviewImageWithCredentials(holder.incoming_image_preview, firstMedia, accountId,
-                        mImageLoadingHandler);
+            if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.media_preview))) {
+                holder.media_preview.setBackgroundResource(0);
+                mImageLoader.displayPreviewImageWithCredentials(holder.media_preview, firstMedia,
+                        accountId, mImageLoadingHandler);
             }
-            holder.incoming_image_preview.setTag(position);
+            holder.media_preview.setTag(position);
         }
         super.bindView(view, context, cursor);
     }
@@ -156,8 +134,7 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final Object tag = view.getTag();
         if (!(tag instanceof DirectMessageConversationViewHolder)) {
             final DirectMessageConversationViewHolder holder = new DirectMessageConversationViewHolder(view);
-            holder.incoming_image_preview.setOnClickListener(this);
-            holder.outgoing_image_preview.setOnClickListener(this);
+            holder.media_preview.setOnClickListener(this);
             view.setTag(holder);
         }
         return view;
@@ -170,8 +147,7 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final int position = tag instanceof Integer ? (Integer) tag : -1;
         if (position == -1) return;
         switch (view.getId()) {
-            case R.id.incoming_image_preview:
-            case R.id.outgoing_image_preview: {
+            case R.id.media_preview: {
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.first_media == null) return;
                 openImage(mContext, message.account_id, message.first_media, false);

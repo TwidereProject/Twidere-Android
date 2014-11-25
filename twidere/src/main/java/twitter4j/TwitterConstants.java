@@ -121,7 +121,6 @@ public interface TwitterConstants {
 	public static final String ENDPOINT_STATUSES_RETWEETERS_IDS = "statuses/retweeters/ids.json";
 	public static final String ENDPOINT_STATUSES_SHOW = "statuses/show.json";
 	public static final String ENDPOINT_STATUSES_UPDATE = "statuses/update.json";
-	public static final String ENDPOINT_STATUSES_UPDATE_WITH_MEDIA = "statuses/update_with_media.json";
 	public static final String ENDPOINT_STATUSES_USER_TIMELINE = "statuses/user_timeline.json";
 	public static final String ENDPOINT_STATUSES_MEDIA_TIMELINE = "statuses/media_timeline.json";
 	public static final String ENDPOINT_STATUSES_REPORT_SPAM = "statuses/report_spam.json";

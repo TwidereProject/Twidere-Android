@@ -151,14 +151,15 @@ public class ThemeUtils implements Constants {
                     final boolean inPopup = mbInfo.isInPopup();
                     if (mbInfo.getMenuInfo() instanceof TwidereMenuInfo) {
                         final TwidereMenuInfo sInfo = (TwidereMenuInfo) mbInfo.getMenuInfo();
-                        icon.setColorFilter(sInfo.isHighlight() ? highlightColor
+                        icon.setColorFilter(sInfo.isHighlight() ? sInfo.getHighlightColor(highlightColor)
                                 : (inPopup ? popupColor : color), mode);
                     } else {
                         icon.setColorFilter(inPopup ? popupColor : color, mode);
                     }
                 } else if (info instanceof TwidereMenuInfo) {
                     final TwidereMenuInfo sInfo = (TwidereMenuInfo) info;
-                    icon.setColorFilter(sInfo.isHighlight() ? highlightColor : color, mode);
+                    icon.setColorFilter(sInfo.isHighlight() ?
+                            sInfo.getHighlightColor(highlightColor) : color, mode);
                 } else {
                     icon.setColorFilter(color, mode);
                 }

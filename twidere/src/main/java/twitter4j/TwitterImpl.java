@@ -1639,10 +1639,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     @Override
     public Status updateStatus(final StatusUpdate status) throws TwitterException {
         ensureAuthorizationEnabled();
-        final String url = conf.getRestBaseURL()
-                + (status.isWithMedia() ? ENDPOINT_STATUSES_UPDATE_WITH_MEDIA : ENDPOINT_STATUSES_UPDATE);
-        final String signUrl = conf.getSigningRestBaseURL()
-                + (status.isWithMedia() ? ENDPOINT_STATUSES_UPDATE_WITH_MEDIA : ENDPOINT_STATUSES_UPDATE);
+        final String url = conf.getRestBaseURL() + ENDPOINT_STATUSES_UPDATE;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_STATUSES_UPDATE;
         return factory.createStatus(post(url, signUrl, status.asHttpParameterArray(INCLUDE_ENTITIES)));
     }
 

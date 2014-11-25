@@ -383,20 +383,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     @Override
     public void onBackPressed() {
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
-        final String option = mPreferences.getString(KEY_COMPOSE_QUIT_ACTION, VALUE_COMPOSE_QUIT_ACTION_ASK);
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final boolean textChanged = text != null && !text.isEmpty() && !text.equals(mOriginalText);
         final boolean isEditingDraft = INTENT_ACTION_EDIT_DRAFT.equals(getIntent().getAction());
-        if (VALUE_COMPOSE_QUIT_ACTION_DISCARD.equals(option)) {
-            mTask = new DiscardTweetTask(this).execute();
-        } else if (textChanged || hasMedia() || isEditingDraft) {
-            if (VALUE_COMPOSE_QUIT_ACTION_SAVE.equals(option)) {
-                saveToDrafts();
-                Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                new UnsavedTweetDialogFragment().show(getSupportFragmentManager(), "unsaved_tweet");
-            }
+        if (textChanged || hasMedia() || isEditingDraft) {
+            saveToDrafts();
+            Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
+            finish();
         } else {
             mTask = new DiscardTweetTask(this).execute();
         }
@@ -1238,20 +1231,20 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                     && !TextUtils.isEmpty(retweeted_by_screen_name)) {
                 if (!prefs.getBoolean(KEY_NAME_FIRST, true)) {
                     mHolder.reply_retweet_status.setText(status.retweet_count > 1 ? getString(
-                            R.string.retweeted_by_with_count, retweeted_by_screen_name, status.retweet_count - 1)
-                            : getString(R.string.retweeted_by, retweeted_by_screen_name));
+                            R.string.retweeted_by_name_with_count, retweeted_by_screen_name, status.retweet_count - 1)
+                            : getString(R.string.retweeted_by_name, retweeted_by_screen_name));
                 } else {
                     mHolder.reply_retweet_status.setText(status.retweet_count > 1 ? getString(
-                            R.string.retweeted_by_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
-                            R.string.retweeted_by, retweeted_by_name));
+                            R.string.retweeted_by_name_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
+                            R.string.retweeted_by_name, retweeted_by_name));
                 }
                 mHolder.reply_retweet_status.setText(status.retweet_count > 1 ? getString(
-                        R.string.retweeted_by_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
-                        R.string.retweeted_by, retweeted_by_name));
+                        R.string.retweeted_by_name_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
+                        R.string.retweeted_by_name, retweeted_by_name));
                 mHolder.reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_indicator_retweet,
                         0, 0, 0);
             } else if (status.in_reply_to_status_id > 0 && !TextUtils.isEmpty(status.in_reply_to_screen_name)) {
-                mHolder.reply_retweet_status.setText(getString(R.string.in_reply_to, status.in_reply_to_screen_name));
+                mHolder.reply_retweet_status.setText(getString(R.string.in_reply_to_name, status.in_reply_to_screen_name));
                 mHolder.reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_indicator_conversation, 0, 0, 0);
             }

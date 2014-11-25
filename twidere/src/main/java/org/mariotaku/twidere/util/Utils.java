@@ -3489,7 +3489,9 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status) {
         if (context == null || menu == null || status == null) return;
-        final int activatedColor = ThemeUtils.getUserAccentColor(context);
+        final Resources resources = context.getResources();
+        final int retweetHighlight = resources.getColor(android.R.color.holo_green_light);
+        final int favoriteHighlight = resources.getColor(android.R.color.holo_orange_light);
         final boolean isMyRetweet = isMyRetweet(status);
         final MenuItem delete = menu.findItem(MENU_DELETE);
         if (delete != null) {
@@ -3498,16 +3500,17 @@ public final class Utils implements Constants, TwitterConstants {
         final MenuItem retweet = menu.findItem(MENU_RETWEET);
         if (retweet != null) {
             retweet.setVisible(!status.user_is_protected || isMyRetweet);
-            MenuUtils.setMenuInfo(retweet, new TwidereMenuInfo(isMyRetweet));
+            MenuUtils.setMenuInfo(retweet, new TwidereMenuInfo(isMyRetweet, retweetHighlight));
             retweet.setTitle(isMyRetweet ? R.string.cancel_retweet : R.string.retweet);
         }
         final MenuItem retweetSubItem = menu.findItem(R.id.retweet_submenu);
         if (retweetSubItem != null) {
-            MenuUtils.setMenuInfo(retweetSubItem, new TwidereMenuInfo(isMyRetweet));
+            MenuUtils.setMenuInfo(retweetSubItem, new TwidereMenuInfo(isMyRetweet,
+                    retweetHighlight));
         }
         final MenuItem favorite = menu.findItem(MENU_FAVORITE);
         if (favorite != null) {
-            MenuUtils.setMenuInfo(favorite, new TwidereMenuInfo(status.is_favorite));
+            MenuUtils.setMenuInfo(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));
             favorite.setTitle(status.is_favorite ? R.string.unfavorite : R.string.favorite);
         }
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);

@@ -61,6 +61,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
     <style name="Theme.Twidere.Light" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
@@ -110,6 +111,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorActionBar">@color/action_icon_light</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
     <style name="Theme.Twidere.Dark.Transparent">
@@ -185,6 +187,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
     <style name="Theme.Twidere.Light.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog">
@@ -219,6 +222,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
     <style name="Theme.Twidere.Dark.Compose">
@@ -282,6 +286,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
     <style name="Theme.Twidere.Viewer.Transparent">
@@ -385,6 +390,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
     <style name="Theme.Twidere.Settings.Light" parent="android:Theme.DeviceDefault.Light">
@@ -425,6 +431,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
     <style name="Theme.Twidere.Settings.Light.DarkActionBar" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
@@ -465,6 +472,7 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorActionBar">@color/action_icon_light</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
     <style name="Theme.Twidere.Settings.Light.DarkActionBar.DarkIcon"/>

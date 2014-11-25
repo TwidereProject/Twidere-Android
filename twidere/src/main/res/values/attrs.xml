@@ -7,6 +7,7 @@
         <attr name="profileImageStyleLarge" format="reference"/>
         <attr name="menuIconColor" format="color"/>
         <attr name="menuIconColorActionBar" format="color"/>
+        <attr name="messageBubbleColor" format="color"/>
         <attr name="cardItemBackground" format="reference"/>
         <attr name="cardItemBackgroundColor" format="color"/>
         <attr name="cardItemMessageIncomingBackground" format="reference"/>

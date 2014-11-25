@@ -63,7 +63,7 @@ public class UserTimelineFragment extends BaseSupportFragment
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(ThemeUtils.getUserAccentColor(context));
+        mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
         mAdapter = new ParcelableStatusesAdapter(context, compact);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

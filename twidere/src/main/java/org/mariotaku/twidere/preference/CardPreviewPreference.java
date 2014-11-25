@@ -126,7 +126,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 			mHolder.text.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
 		}
 		final String display_name = getSampleDisplayName(context, nameFirst, nickname_only);
-		mHolder.reply_retweet_status.setText(context.getString(R.string.retweeted_by, display_name));
+		mHolder.reply_retweet_status.setText(context.getString(R.string.retweeted_by_name, display_name));
 		mHolder.reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_indicator_retweet, 0, 0, 0);
 		mHolder.time.setTime(System.currentTimeMillis() - 360000);
 		mHolder.time.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_indicator_media, 0);
