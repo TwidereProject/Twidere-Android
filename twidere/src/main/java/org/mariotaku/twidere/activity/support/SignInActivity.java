@@ -43,6 +43,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
@@ -60,9 +61,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.CroutonLifecycleCallback;
-import de.keyboardsurfer.android.widget.crouton.CroutonStyle;
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
@@ -87,8 +85,8 @@ import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.trim;
 
-public class SignInActivity extends BaseSupportActivity implements TwitterConstants, OnClickListener, TextWatcher,
-        CroutonLifecycleCallback {
+public class SignInActivity extends BaseSupportActivity implements TwitterConstants, OnClickListener,
+        TextWatcher {
 
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
     private static final String EXTRA_API_LAST_CHANGE = "api_last_change";
@@ -153,10 +151,8 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
     @Override
     public void onBackPressed() {
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING && !mBackPressed) {
-            final CroutonStyle.Builder builder = new CroutonStyle.Builder(CroutonStyle.INFO);
-            final Crouton crouton = Crouton.makeText(this, R.string.signing_in_please_wait, builder.build());
-            crouton.setLifecycleCallback(this);
-            crouton.show();
+            final Toast toast = Toast.makeText(this, R.string.signing_in_please_wait, Toast.LENGTH_SHORT);
+            toast.show();
             return;
         }
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
@@ -206,11 +202,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
     public void onDestroy() {
         getLoaderManager().destroyLoader(0);
         super.onDestroy();
-    }
-
-    @Override
-    public void onDisplayed() {
-        mBackPressed = true;
     }
 
     @Override
@@ -265,11 +256,6 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             itemBrowser.setEnabled(is_oauth);
         }
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void onRemoved() {
-        mBackPressed = false;
     }
 
     @Override
@@ -480,12 +466,12 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 startActivity(intent);
                 finish();
             } else if (result.already_logged_in) {
-                Crouton.makeText(this, R.string.error_already_logged_in, CroutonStyle.ALERT).show();
+                Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show();
             } else {
                 if (result.exception instanceof AuthenticityTokenException) {
-                    Crouton.makeText(this, R.string.wrong_api_key, CroutonStyle.ALERT).show();
+                    Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof WrongUserPassException) {
-                    Crouton.makeText(this, R.string.wrong_username_password, CroutonStyle.ALERT).show();
+                    Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof AuthenticationException) {
                     showErrorMessage(this, getString(R.string.action_signing_in), result.exception.getCause(), true);
                 } else {

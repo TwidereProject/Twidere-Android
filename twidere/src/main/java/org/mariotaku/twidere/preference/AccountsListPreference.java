@@ -179,11 +179,11 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         @Override
         protected void onBindView(@NonNull final View view) {
             super.onBindView(view);
-            final View iconView = view.findViewById(android.R.id.icon);
-            if (iconView instanceof ImageView) {
-                final ImageView imageView = (ImageView) iconView;
-                imageView.setScaleType(ScaleType.CENTER_CROP);
-            }
+//            final View iconView = view.findViewById(android.R.id.icon);
+//            if (iconView instanceof ImageView) {
+//                final ImageView imageView = (ImageView) iconView;
+//                imageView.setScaleType(ScaleType.CENTER_CROP);
+//            }
             final View titleView = view.findViewById(android.R.id.title);
             if (titleView instanceof TextView) {
                 ((TextView) titleView).setSingleLine(true);

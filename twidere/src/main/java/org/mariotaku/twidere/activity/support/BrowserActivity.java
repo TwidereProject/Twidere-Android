@@ -25,44 +25,42 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.CroutonStyle;
+import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.BaseWebViewFragment;
 
 public class BrowserActivity extends BaseSupportActivity {
 
-	private Uri mUri = Uri.parse("about:blank");
+    private Uri mUri = Uri.parse("about:blank");
 
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_HOME:
-				finish();
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_HOME:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		super.onCreate(savedInstanceState);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		mUri = getIntent().getData();
-		if (mUri == null) {
-			Crouton.showText(this, R.string.error_occurred, CroutonStyle.ALERT);
-			finish();
-			return;
-		}
-		final FragmentTransaction ft = getFragmentManager().beginTransaction();
-		final Fragment fragment = Fragment.instantiate(this, BaseWebViewFragment.class.getName());
-		final Bundle bundle = new Bundle();
-		bundle.putString(EXTRA_URI, mUri.toString());
-		fragment.setArguments(bundle);
-		ft.replace(android.R.id.content, fragment);
-		ft.commit();
-	}
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        mUri = getIntent().getData();
+        if (mUri == null) {
+            Toast.makeText(this, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        final Fragment fragment = Fragment.instantiate(this, BaseWebViewFragment.class.getName());
+        final Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_URI, mUri.toString());
+        fragment.setArguments(bundle);
+        ft.replace(android.R.id.content, fragment);
+        ft.commit();
+    }
 }

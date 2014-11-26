@@ -56,6 +56,7 @@ public class HomeSlidingMenu extends SlidingMenu implements Constants {
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
+        mActivity.setSystemWindowInsets(insets);
         return false;
     }
 

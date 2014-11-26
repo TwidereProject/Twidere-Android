@@ -152,11 +152,13 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
     }
 
-    private void setUiOptions(final Window window, final Uri data) {
-        if (FlymeUtils.hasSmartBar()) {
-            window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
-        } else {
-            window.setUiOptions(0);
+    private void setUiOptions(final Window window, final Uri uri) {
+        if (!FlymeUtils.hasSmartBar()) return;
+        switch (matchLinkId(uri)) {
+            case LINK_ID_USER: {
+                window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
+                break;
+            }
         }
     }
 

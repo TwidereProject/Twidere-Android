@@ -46,9 +46,12 @@ import org.mariotaku.twidere.view.ForegroundColorView;
 
 public final class ColorPickerDialog extends AlertDialog implements Constants, OnColorChangedListener {
 
-    private final static int[] COLORS = {HOLO_RED_DARK, HOLO_RED_LIGHT, HOLO_ORANGE_DARK, HOLO_ORANGE_LIGHT,
-            HOLO_GREEN_LIGHT, HOLO_GREEN_DARK, HOLO_BLUE_LIGHT, HOLO_BLUE_DARK, HOLO_PURPLE_DARK, HOLO_PURPLE_LIGHT,
-            Color.WHITE};
+    private final static int[] COLORS = {R.color.material_red, R.color.material_pink,
+            R.color.material_purple, R.color.material_deep_purple, R.color.material_indigo,
+            R.color.material_blue, R.color.material_light_blue, R.color.material_cyan,
+            R.color.material_teal, R.color.material_green, R.color.material_light_green,
+            R.color.material_lime, R.color.material_yellow, R.color.material_amber,
+            R.color.material_orange, R.color.material_deep_orange};
 
     private final ColorsAdapter mColorsAdapter;
 
@@ -127,8 +130,9 @@ public final class ColorPickerDialog extends AlertDialog implements Constants, O
     }
 
     private void initColors() {
-        for (final int color : COLORS) {
-            mColorsAdapter.add(color);
+        final Resources resources = getContext().getResources();
+        for (final int colorRes : COLORS) {
+            mColorsAdapter.add(resources.getColor(colorRes));
         }
     }
 

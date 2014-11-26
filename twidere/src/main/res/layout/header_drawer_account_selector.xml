@@ -10,72 +10,77 @@
         android:layout_height="match_parent"
         android:layout_alignBottom="@id/profile_container"
         android:layout_alignTop="@id/profile_container"
-        android:alpha="0.33"
+        android:alpha="0.5"
         android:contentDescription="@string/profile_banner"
         android:scaleType="centerCrop"/>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/profile_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/element_spacing_normal"
-        android:paddingLeft="@dimen/element_spacing_large"
-        android:paddingRight="@dimen/element_spacing_large"
-        android:paddingTop="@dimen/element_spacing_normal">
+        android:layout_height="wrap_content">
 
-        <org.mariotaku.twidere.view.CircularImageView
-            android:id="@+id/profile_image"
-            android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
-            android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
-            android:layout_marginBottom="@dimen/element_spacing_mlarge"
-            android:layout_marginTop="@dimen/element_spacing_mlarge"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/account_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/profile_image"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/profile_image"
-            android:layout_marginBottom="@dimen/element_spacing_large"
-            android:layout_toRightOf="@id/profile_image"/>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/profile_image"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_large"
+            android:paddingRight="@dimen/element_spacing_large"
+            android:paddingTop="@dimen/element_spacing_normal">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+            <org.mariotaku.twidere.view.CircularImageView
+                android:id="@+id/profile_image"
+                android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
+                android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
+                android:layout_marginBottom="@dimen/element_spacing_mlarge"
+                android:layout_marginTop="@dimen/element_spacing_mlarge"/>
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="?android:textColorPrimary"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/screen_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceSmall"/>
-
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/toggle"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/account_selector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"/>
-        </LinearLayout>
-    </RelativeLayout>
+                android:layout_alignBottom="@id/profile_image"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/profile_image"
+                android:layout_marginBottom="@dimen/element_spacing_large"
+                android:layout_toRightOf="@id/profile_image"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/profile_image"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorPrimary"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/screen_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:textAppearanceSmall"/>
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
 </RelativeLayout>

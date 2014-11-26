@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.twitter.Extractor;
 
@@ -47,9 +48,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.CroutonStyle;
 
 import static org.mariotaku.twidere.util.Utils.getAccountScreenNames;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
@@ -154,7 +152,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 }
                 bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userIds, null, false);
                 bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList);
-                Crouton.showText(mActivity, R.string.message_users_muted, CroutonStyle.INFO);
+                Toast.makeText(mActivity, R.string.message_users_muted, Toast.LENGTH_SHORT).show();
                 mode.finish();
                 mActivity.sendBroadcast(new Intent(BROADCAST_MULTI_MUTESTATE_CHANGED));
                 break;

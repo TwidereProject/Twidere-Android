@@ -51,7 +51,6 @@ import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
@@ -70,7 +69,6 @@ import org.mariotaku.refreshnow.widget.RefreshMode;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
-import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.ParcelableStatusesListAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -84,7 +82,6 @@ import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
-import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.MediaPreviewUtils.OnMediaClickListener;
@@ -342,12 +339,8 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         args.putLong(EXTRA_ACCOUNT_ID, status.account_id);
         args.putLong(EXTRA_STATUS_ID, status.id);
         args.putParcelable(EXTRA_STATUS, status);
-        if (shouldUseNativeMenu()) {
-            getActivity().supportInvalidateOptionsMenu();
-        } else {
-            setMenuForStatus(getActivity(), mMenuBar.getMenu(), status);
-            mMenuBar.show();
-        }
+        setMenuForStatus(getActivity(), mMenuBar.getMenu(), status);
+        mMenuBar.show();
 
         updateUserColor();
         mProfileView.drawEnd(getAccountColor(getActivity(), status.account_id));
@@ -461,7 +454,6 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         super.onActivityCreated(savedInstanceState);
         mLocale = getResources().getConfiguration().locale;
         setRefreshMode(shouldEnablePullToRefresh() ? RefreshMode.BOTH : RefreshMode.NONE);
-        setHasOptionsMenu(shouldUseNativeMenu());
         setListShownNoAnimation(true);
         mHandler = new Handler();
         mListView = getListView();
@@ -483,7 +475,6 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         mRepliesContainer.setOnClickListener(this);
         mRetweetsContainer.setOnClickListener(this);
         mFavoritesContainer.setOnClickListener(this);
-        mMenuBar.setVisibility(shouldUseNativeMenu() ? View.GONE : View.VISIBLE);
         mMenuBar.inflate(R.menu.menu_status);
         mMenuBar.setIsBottomBar(true);
         mMenuBar.setOnMenuItemClickListener(mMenuItemClickListener);
@@ -582,12 +573,6 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        if (!shouldUseNativeMenu()) return;
-        inflater.inflate(R.menu.menu_status, menu);
-    }
-
-    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_details_page, container, false);
         view.findViewById(R.id.menu_bar).setVisibility(View.GONE);
@@ -663,12 +648,6 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (!shouldUseNativeMenu() || mStatus == null) return false;
-        return handleMenuItemClick(item);
-    }
-
-    @Override
     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
         final int start = mTextView.getSelectionStart(), end = mTextView.getSelectionEnd();
         final SpannableString string = SpannableString.valueOf(mTextView.getText());
@@ -676,12 +655,6 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
         Utils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
         return false;
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(final Menu menu) {
-        if (!shouldUseNativeMenu() || mStatus == null) return;
-        setMenuForStatus(getActivity(), menu, mStatus);
     }
 
     @Override
@@ -935,11 +908,6 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
             final int maxColumns = getResources().getInteger(R.integer.grid_column_image_preview);
             MediaPreviewUtils.addToLinearLayout(mImagePreviewGrid, mImageLoader, mStatus.media, maxColumns, this);
         }
-    }
-
-    private boolean shouldUseNativeMenu() {
-        final boolean isInLinkHandler = getActivity() instanceof LinkHandlerActivity;
-        return isInLinkHandler && FlymeUtils.hasSmartBar();
     }
 
     private void showConversation() {

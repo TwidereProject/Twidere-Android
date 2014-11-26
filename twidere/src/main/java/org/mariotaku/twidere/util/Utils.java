@@ -207,9 +207,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLException;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.CroutonConfiguration;
-import de.keyboardsurfer.android.widget.crouton.CroutonStyle;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.DirectMessage;
 import twitter4j.EntitySupport;
@@ -1604,11 +1601,11 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int getCardHighlightColor(final boolean is_mention, final boolean is_favorite,
                                             final boolean is_retweet) {
-        if (is_mention)
-            return HOLO_BLUE_LIGHT;
-        else if (is_favorite)
-            return HOLO_ORANGE_LIGHT;
-        else if (is_retweet) return HOLO_GREEN_LIGHT;
+//        if (is_mention)
+//            return HOLO_BLUE_LIGHT;
+//        else if (is_favorite)
+//            return HOLO_ORANGE_LIGHT;
+//        else if (is_retweet) return HOLO_GREEN_LIGHT;
         return Color.TRANSPARENT;
     }
 
@@ -3606,34 +3603,26 @@ public final class Utils implements Constants, TwitterConstants {
         return mPreferences.getBoolean(KEY_STOP_AUTO_REFRESH_WHEN_BATTERY_LOW, true);
     }
 
-    public static void showErrorMessage(final Context context, final CharSequence message, final boolean long_message) {
+    public static void showErrorMessage(final Context context, final CharSequence message, final boolean longMessage) {
         if (context == null) return;
-        if (context instanceof Activity) {
-            final Crouton crouton = Crouton.makeText((Activity) context, message, CroutonStyle.ALERT);
-            final CroutonConfiguration.Builder cb = new CroutonConfiguration.Builder();
-            cb.setDuration(long_message ? CroutonConfiguration.DURATION_LONG : CroutonConfiguration.DURATION_SHORT);
-            crouton.setConfiguration(cb.build());
-            crouton.show();
-        } else {
-            final Toast toast = Toast.makeText(context, message, long_message ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
-            toast.show();
-        }
+        final Toast toast = Toast.makeText(context, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+        toast.show();
     }
 
-    public static void showErrorMessage(final Context context, final CharSequence action, final CharSequence message,
-                                        final boolean long_message) {
+    public static void showErrorMessage(final Context context, final CharSequence action,
+                                        final CharSequence message, final boolean longMessage) {
         if (context == null) return;
-        showErrorMessage(context, getErrorMessage(context, message), long_message);
+        showErrorMessage(context, getErrorMessage(context, message), longMessage);
     }
 
-    public static void showErrorMessage(final Context context, final CharSequence action, final Throwable t,
-                                        final boolean long_message) {
+    public static void showErrorMessage(final Context context, final CharSequence action,
+                                        final Throwable t, final boolean longMessage) {
         if (context == null) return;
         if (t instanceof TwitterException) {
-            showTwitterErrorMessage(context, action, (TwitterException) t, long_message);
+            showTwitterErrorMessage(context, action, (TwitterException) t, longMessage);
             return;
         }
-        showErrorMessage(context, getErrorMessage(context, action, t), long_message);
+        showErrorMessage(context, getErrorMessage(context, action, t), longMessage);
     }
 
     public static void showErrorMessage(final Context context, final int action, final String desc,
@@ -3650,16 +3639,8 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void showInfoMessage(final Context context, final CharSequence message, final boolean long_message) {
         if (context == null || isEmpty(message)) return;
-//        if (context instanceof Activity) {
-//            final Crouton crouton = Crouton.makeText((Activity) context, message, CroutonStyle.INFO);
-//            final CroutonConfiguration.Builder cb = new CroutonConfiguration.Builder();
-//            cb.setDuration(long_message ? CroutonConfiguration.DURATION_LONG : CroutonConfiguration.DURATION_SHORT);
-//            crouton.setConfiguration(cb.build());
-//            crouton.show();
-//        } else {
         final Toast toast = Toast.makeText(context, message, long_message ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
         toast.show();
-//        }
     }
 
     public static void showInfoMessage(final Context context, final int resId, final boolean long_message) {
@@ -3696,18 +3677,10 @@ public final class Utils implements Constants, TwitterConstants {
         cheatSheet.show();
     }
 
-    public static void showOkMessage(final Context context, final CharSequence message, final boolean long_message) {
+    public static void showOkMessage(final Context context, final CharSequence message, final boolean longMessage) {
         if (context == null || isEmpty(message)) return;
-        if (context instanceof Activity) {
-            final Crouton crouton = Crouton.makeText((Activity) context, message, CroutonStyle.CONFIRM);
-            final CroutonConfiguration.Builder cb = new CroutonConfiguration.Builder();
-            cb.setDuration(long_message ? CroutonConfiguration.DURATION_LONG : CroutonConfiguration.DURATION_SHORT);
-            crouton.setConfiguration(cb.build());
-            crouton.show();
-        } else {
-            final Toast toast = Toast.makeText(context, message, long_message ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
-            toast.show();
-        }
+        final Toast toast = Toast.makeText(context, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public static void showOkMessage(final Context context, final int resId, final boolean long_message) {
@@ -3758,18 +3731,10 @@ public final class Utils implements Constants, TwitterConstants {
         showErrorMessage(context, message, long_message);
     }
 
-    public static void showWarnMessage(final Context context, final CharSequence message, final boolean long_message) {
+    public static void showWarnMessage(final Context context, final CharSequence message, final boolean longMessage) {
         if (context == null || isEmpty(message)) return;
-        if (context instanceof Activity) {
-            final Crouton crouton = Crouton.makeText((Activity) context, message, CroutonStyle.WARN);
-            final CroutonConfiguration.Builder cb = new CroutonConfiguration.Builder();
-            cb.setDuration(long_message ? CroutonConfiguration.DURATION_LONG : CroutonConfiguration.DURATION_SHORT);
-            crouton.setConfiguration(cb.build());
-            crouton.show();
-        } else {
-            final Toast toast = Toast.makeText(context, message, long_message ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
-            toast.show();
-        }
+        final Toast toast = Toast.makeText(context, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public static void showWarnMessage(final Context context, final int resId, final boolean long_message) {

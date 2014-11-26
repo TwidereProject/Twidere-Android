@@ -99,6 +99,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private ImageView mAccountProfileBannerView, mAccountProfileImageView;
     private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
     private Switch mAccountsToggle;
+    private View mAccountProfileContainer;
 
     private Context mThemedContext;
     private ImageLoaderWrapper mImageLoader;
@@ -124,6 +125,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         layoutManager.setStackFromEnd(true);
         mAccountsSelector.setLayoutManager(layoutManager);
         mAccountsSelector.setAdapter(mAccountsAdapter);
+        mAccountProfileContainer = mAccountSelectorView.findViewById(R.id.profile_container);
         mAccountProfileImageView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_image);
         mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_banner);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
@@ -258,8 +260,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        //TODO
-//        mAccountsAdapter.changeCursor(null);
         mAccountsAdapter.changeCursor(null);
     }
 
@@ -269,8 +269,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             data.moveToFirst();
             mAccountsAdapter.setSelectedAccountId(data.getLong(data.getColumnIndex(Accounts.ACCOUNT_ID)));
         }
-        //TODO
-//        mAccountsAdapter.changeCursor(data);
         mAccountsAdapter.changeCursor(data);
         updateAccountOptionsSeparatorLabel();
         updateDefaultAccountState();
@@ -355,6 +353,10 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mResolver.update(Accounts.CONTENT_URI, values, where, null);
     }
 
+    public void setStatusBarHeight(int height) {
+        mAccountProfileContainer.setPadding(0, height, 0, 0);
+    }
+
 
     private static final class AccountOptionsAdapter extends OptionItemsAdapter {
 
@@ -434,6 +436,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             if (c.getLong(mIndices.account_id) == mSelectedAccountId) {
                 c.moveToNext();
             }
+            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
             mImageLoader.displayProfileImage(holder.icon, c.getString(mIndices.profile_image_url));
         }
 

@@ -56,6 +56,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ProgressBar;
@@ -72,6 +73,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
@@ -92,6 +94,7 @@ import org.mariotaku.twidere.util.UnreadCountUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ExtendedViewPager;
+import org.mariotaku.twidere.view.HomeContentFrameLayout;
 import org.mariotaku.twidere.view.HomeSlidingMenu;
 import org.mariotaku.twidere.view.LeftDrawerFrameLayout;
 import org.mariotaku.twidere.view.RightDrawerFrameLayout;
@@ -166,6 +169,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private View mActionBarOverlay;
     private LeftDrawerFrameLayout mLeftDrawerContainer;
     private RightDrawerFrameLayout mRightDrawerContainer;
+    private HomeContentFrameLayout mHomeContentFrameLayout;
 
     private Fragment mCurrentVisibleFragment;
     private UpdateUnreadCountTask mUpdateUnreadCountTask;
@@ -250,6 +254,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mTabsContainer = findViewById(R.id.tabs_container);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mActionBarOverlay = findViewById(R.id.actionbar_overlay);
+        mHomeContentFrameLayout = (HomeContentFrameLayout) findViewById(R.id.home_content);
     }
 
     @Override
@@ -487,6 +492,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         setUiOptions(getWindow());
+        final Window window = getWindow();
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.requestFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         if (!isDatabaseReady(this)) {
             Toast.makeText(this, R.string.preparing_database_toast, Toast.LENGTH_SHORT).show();
@@ -576,6 +585,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
             ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null, themeColor));
+            mHomeContentFrameLayout.setColor(themeColor, actionBarAlpha);
         } else {
             final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
             final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());
@@ -584,6 +594,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             homeActionButton.setIconColor(foregroundColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);
             mTabIndicator.setIconColor(foregroundColor);
+            mHomeContentFrameLayout.setColor(backgroundColor, actionBarAlpha);
         }
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);
@@ -902,6 +913,14 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         }
         mActionsButton.setTranslationY(MathUtils.clamp(mActionsButton.getTranslationY() - delta, totalHeight, 0));
         notifyControlBarOffsetChanged();
+    }
+
+    public void setSystemWindowInsets(Rect insets) {
+        mHomeContentFrameLayout.setStatusBarHeight(insets.top);
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.left_drawer);
+        if (fragment instanceof AccountsDashboardFragment) {
+            ((AccountsDashboardFragment) fragment).setStatusBarHeight(insets.top);
+        }
     }
 
 

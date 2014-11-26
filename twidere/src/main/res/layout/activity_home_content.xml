@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<org.mariotaku.twidere.view.HomeContentFrameLayout
+    android:id="@+id/home_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,8 +23,7 @@
             style="?android:actionBarStyle"
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
-            android:layout_weight="0"
-            android:theme="?android:actionBarWidgetTheme"/>
+            android:layout_weight="0"/>
 
         <View
             android:id="@+id/actionbar_overlay"
@@ -34,4 +34,4 @@
     </LinearLayout>
 
     <include layout="@layout/layout_home_actions_button"/>
-</FrameLayout>
+</org.mariotaku.twidere.view.HomeContentFrameLayout>
