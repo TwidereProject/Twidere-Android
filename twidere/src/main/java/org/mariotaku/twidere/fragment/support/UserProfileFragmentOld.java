@@ -91,7 +91,6 @@ import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ListActionAdapter;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ListAction;
-import org.mariotaku.twidere.model.Panes.Right;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -149,7 +148,6 @@ import static org.mariotaku.twidere.util.Utils.openUserBlocks;
 import static org.mariotaku.twidere.util.Utils.openUserFavorites;
 import static org.mariotaku.twidere.util.Utils.openUserFollowers;
 import static org.mariotaku.twidere.util.Utils.openUserFriends;
-import static org.mariotaku.twidere.util.Utils.openUserListMemberships;
 import static org.mariotaku.twidere.util.Utils.openUserLists;
 import static org.mariotaku.twidere.util.Utils.openUserMediaTimeline;
 import static org.mariotaku.twidere.util.Utils.openUserMentions;
@@ -159,7 +157,7 @@ import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserProfileFragmentOld extends BaseSupportListFragment implements OnClickListener, OnItemClickListener,
-        OnItemLongClickListener, OnMenuItemClickListener, OnLinkClickListener, Right, OnSizeChangedListener,
+        OnItemLongClickListener, OnMenuItemClickListener, OnLinkClickListener, OnSizeChangedListener,
         OnSharedPreferenceChangeListener, OnTouchListener, ImageLoadingListener {
 
     private static final int LOADER_ID_USER = 1;
@@ -416,7 +414,6 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         mAdapter.add(new FavoritesAction(2));
         mAdapter.add(new UserMentionsAction(3));
         mAdapter.add(new UserListsAction(4));
-        mAdapter.add(new UserListMembershipsAction(5));
         if (userIsMe) {
             mAdapter.add(new SavedSearchesAction(11));
             if (user.is_protected) {
@@ -1204,26 +1201,6 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
 
     }
 
-    private final class UserListMembershipsAction extends ListAction {
-        public UserListMembershipsAction(final int order) {
-            super(order);
-        }
-
-        @Override
-        public String getName() {
-            if (mUser == null) return getString(R.string.lists_following_user);
-            final String display_name = getDisplayName(getActivity(), mUser.id, mUser.name, mUser.screen_name);
-            return getString(R.string.lists_following_user_with_name, display_name);
-        }
-
-        @Override
-        public void onClick() {
-            final ParcelableUser user = mUser;
-            if (user == null) return;
-            openUserListMemberships(getActivity(), user.account_id, user.id, user.screen_name);
-        }
-    }
-
     private final class UserListsAction extends ListAction {
 
         public UserListsAction(final int order) {
@@ -1232,9 +1209,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
 
         @Override
         public String getName() {
-            if (mUser == null) return getString(R.string.users_lists);
-            final String display_name = getDisplayName(getActivity(), mUser.id, mUser.name, mUser.screen_name);
-            return getString(R.string.users_lists_with_name, display_name);
+            return getString(R.string.lists);
         }
 
         @Override

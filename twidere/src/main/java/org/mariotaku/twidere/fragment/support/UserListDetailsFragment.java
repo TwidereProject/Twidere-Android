@@ -58,7 +58,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.ListActionAdapter;
 import org.mariotaku.twidere.model.ListAction;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -90,8 +89,7 @@ import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 
 public class UserListDetailsFragment extends BaseSupportListFragment implements OnClickListener, OnItemClickListener,
-        OnItemLongClickListener, OnMenuItemClickListener, LoaderCallbacks<SingleResponse<ParcelableUserList>>,
-        Panes.Right {
+        OnItemLongClickListener, OnMenuItemClickListener, LoaderCallbacks<SingleResponse<ParcelableUserList>> {
 
     private ImageLoaderWrapper mProfileImageLoader;
     private AsyncTwitterWrapper mTwitterWrapper;

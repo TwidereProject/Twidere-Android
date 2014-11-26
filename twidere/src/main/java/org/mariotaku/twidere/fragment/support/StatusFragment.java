@@ -76,7 +76,6 @@ import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.Account.AccountWithCredentials;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -140,7 +139,7 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
 import static org.mariotaku.twidere.util.Utils.startStatusShareChooser;
 
-public class StatusFragment extends ParcelableStatusesListFragment implements OnClickListener, Panes.Right,
+public class StatusFragment extends ParcelableStatusesListFragment implements OnClickListener,
         OnMediaClickListener, OnSharedPreferenceChangeListener, ActionMode.Callback {
 
     private static final int LOADER_ID_STATUS = 1;

@@ -123,11 +123,11 @@
     <string name="load_item_limit">Load item limit</string>
     <string name="load_item_limit_summary">Set items limit per load.</string>
     <string name="load_more_automatically">Load more content automatically</string>
-    <string name="load_more_automatically_summary">Load more content (e.g. photos, maps, statuses) automatically</string>
+    <string name="load_more_automatically_summary">Load more content (e.g. photos, maps, tweets) automatically</string>
     <string name="quote">Quote</string>
     <string name="add_rule">Add rule</string>
     <string name="text_size">Text size</string>
-    <string name="text_size_summary">Text size of statuses.</string>
+    <string name="text_size_summary">Text size of tweets.</string>
     <string name="cannot_get_location">Can\'t get your location.</string>
     <string name="drafts">Drafts</string>
     <string name="description">Description</string>
@@ -194,9 +194,10 @@
     <string name="list_members">List members</string>
     <string name="list_subscribers">List subscribers</string>
     <string name="type_to_compose">Type to compose</string>
+    <string name="lists">Lists</string>
     <string name="users_lists">User\'s lists</string>
     <string name="lists_following_user">Lists following this user</string>
-    <string name="lists_following_me">Lists following me</string>
+    <string name="lists_following_you">Lists following you</string>
     <string name="item_3_minutes">3 minutes</string>
     <string name="item_5_minutes">5 minutes</string>
     <string name="item_10_minutes">10 minutes</string>
@@ -387,7 +388,7 @@
     <string name="no_thanks">No, thanks</string>
     <string name="revoke_permissions">Revoke permissions</string>
     <string name="fast_scroll_thumb">Fast scroll thumb</string>
-    <string name="indicate_my_status">Indicate my tweet</string>
+    <string name="indicate_your_status">Indicate your tweet</string>
     <string name="default_ringtone">Default ringtone</string>
     <string name="phishing_link_warning">Phishing link warning</string>
     <string name="phishing_link_warning_summary">Warn you when are trying to open a possibly phishing link in a direct message.</string>
@@ -403,7 +404,7 @@
     <string name="quote_protected_status_notice">It\'s not recommended to quote protected tweets.</string>
     <string name="edit_draft">Edit draft</string>
     <string name="profile_image">Profile image</string>
-    <string name="my_profile_image">My profile image</string>
+    <string name="your_profile_image">Your profile image</string>
     <string name="mention_user">Mention <xliff:g id="user">%s</xliff:g></string>
     <string name="theme_color">Theme color</string>
     <string name="wrong_url_format">Wrong URL format.</string>
@@ -674,5 +675,6 @@
     <string name="function">Function</string>
     <string name="replies">Replies</string>
     <string name="profile_banner">Profile banner</string>
+    <string name="profile">Profile</string>
 
 </resources>

@@ -42,7 +42,7 @@
         android:layout_height="@dimen/icon_size_list_item"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/drag_handle"
-        android:contentDescription="@string/my_profile_image"
+        android:contentDescription="@string/your_profile_image"
         android:scaleType="fitCenter"/>
 
     <LinearLayout

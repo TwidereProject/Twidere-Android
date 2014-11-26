@@ -140,7 +140,7 @@ import org.mariotaku.twidere.fragment.support.UserListMembersFragment;
 import org.mariotaku.twidere.fragment.support.UserListMembershipsListFragment;
 import org.mariotaku.twidere.fragment.support.UserListSubscribersFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
-import org.mariotaku.twidere.fragment.support.UserListsListFragment;
+import org.mariotaku.twidere.fragment.support.UserListsFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserProfileFragmentOld;
@@ -849,29 +849,29 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_LISTS: {
-                fragment = new UserListsListFragment();
+                fragment = new UserListsFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 }
-                if (isEmpty(paramScreenName) && isEmpty(param_user_id)) return null;
+                if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
             }
             case LINK_ID_USER_LIST_TIMELINE: {
                 fragment = new UserListTimelineFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
-                final String param_list_id = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if (isEmpty(param_list_id)
-                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(param_user_id)))
+                if (isEmpty(paramListId)
+                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(param_list_id));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(paramListId));
+                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -879,14 +879,14 @@ public final class Utils implements Constants, TwitterConstants {
             case LINK_ID_USER_LIST_MEMBERS: {
                 fragment = new UserListMembersFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
-                final String param_list_id = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if (isEmpty(param_list_id)
-                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(param_user_id)))
+                if (isEmpty(paramListId)
+                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(param_list_id));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(paramListId));
+                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -894,14 +894,14 @@ public final class Utils implements Constants, TwitterConstants {
             case LINK_ID_USER_LIST_SUBSCRIBERS: {
                 fragment = new UserListSubscribersFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
-                final String param_list_id = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if (isEmpty(param_list_id)
-                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(param_user_id)))
+                if (isEmpty(paramListId)
+                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(param_list_id));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(paramListId));
+                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -934,16 +934,16 @@ public final class Utils implements Constants, TwitterConstants {
             case LINK_ID_STATUS_RETWEETERS: {
                 fragment = new StatusRetweetersListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
-                    final String param_status_id = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(param_status_id));
+                    final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
+                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(paramStatusId));
                 }
                 break;
             }
             case LINK_ID_STATUS_FAVORITERS: {
                 fragment = new StatusFavoritersListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
-                    final String param_status_id = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(param_status_id));
+                    final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
+                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(paramStatusId));
                 }
                 break;
             }
@@ -970,17 +970,17 @@ public final class Utils implements Constants, TwitterConstants {
                 return null;
             }
         }
-        final String param_account_id = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID);
-        if (param_account_id != null) {
-            args.putLong(EXTRA_ACCOUNT_ID, ParseUtils.parseLong(param_account_id));
+        final String paramAccountId = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID);
+        if (paramAccountId != null) {
+            args.putLong(EXTRA_ACCOUNT_ID, ParseUtils.parseLong(paramAccountId));
         } else {
-            final String param_account_name = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
-            if (param_account_name != null) {
-                args.putLong(EXTRA_ACCOUNT_ID, getAccountId(context, param_account_name));
+            final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
+            if (paramAccountName != null) {
+                args.putLong(EXTRA_ACCOUNT_ID, getAccountId(context, paramAccountName));
             } else {
-                final long account_id = getDefaultAccountId(context);
-                if (isMyAccount(context, account_id)) {
-                    args.putLong(EXTRA_ACCOUNT_ID, account_id);
+                final long accountId = getDefaultAccountId(context);
+                if (isMyAccount(context, accountId)) {
+                    args.putLong(EXTRA_ACCOUNT_ID, accountId);
                 }
             }
         }

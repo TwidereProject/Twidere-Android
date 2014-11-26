@@ -58,7 +58,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.provider.TweetStore.Tabs;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -78,7 +77,7 @@ import static org.mariotaku.twidere.util.CustomTabUtils.isTabAdded;
 import static org.mariotaku.twidere.util.CustomTabUtils.isTabTypeValid;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 
-public class CustomTabsFragment extends BaseListFragment implements LoaderCallbacks<Cursor>, Panes.Right,
+public class CustomTabsFragment extends BaseListFragment implements LoaderCallbacks<Cursor>,
         MultiChoiceModeListener, DropListener {
 
     private ContentResolver mResolver;

@@ -41,124 +41,123 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ExtensionsAdapter;
 import org.mariotaku.twidere.loader.ExtensionsListLoader;
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.util.PermissionsManager;
 
 import java.util.List;
 
 public class ExtensionsListFragment extends BaseListFragment implements Constants,
-		LoaderCallbacks<List<ExtensionInfo>>, OnItemClickListener, OnItemLongClickListener, OnMenuItemClickListener,
-		Panes.Right {
+        LoaderCallbacks<List<ExtensionInfo>>, OnItemClickListener, OnItemLongClickListener,
+        OnMenuItemClickListener {
 
-	private ExtensionsAdapter mAdapter;
-	private PackageManager mPackageManager;
-	private PermissionsManager mPermissionsManager;
-	private ExtensionInfo mSelectedExtension;
-	private ListView mListView;
-	private PopupMenu mPopupMenu;
+    private ExtensionsAdapter mAdapter;
+    private PackageManager mPackageManager;
+    private PermissionsManager mPermissionsManager;
+    private ExtensionInfo mSelectedExtension;
+    private ListView mListView;
+    private PopupMenu mPopupMenu;
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mPackageManager = getActivity().getPackageManager();
-		mPermissionsManager = new PermissionsManager(getActivity());
-		mAdapter = new ExtensionsAdapter(getActivity());
-		setListAdapter(mAdapter);
-		mListView = getListView();
-		mListView.setOnItemClickListener(this);
-		mListView.setOnItemLongClickListener(this);
-		getLoaderManager().initLoader(0, null, this);
-		setListShown(false);
-	}
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPackageManager = getActivity().getPackageManager();
+        mPermissionsManager = new PermissionsManager(getActivity());
+        mAdapter = new ExtensionsAdapter(getActivity());
+        setListAdapter(mAdapter);
+        mListView = getListView();
+        mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
+        getLoaderManager().initLoader(0, null, this);
+        setListShown(false);
+    }
 
-	@Override
-	public Loader<List<ExtensionInfo>> onCreateLoader(final int id, final Bundle args) {
-		return new ExtensionsListLoader(getActivity(), mPackageManager);
-	}
+    @Override
+    public Loader<List<ExtensionInfo>> onCreateLoader(final int id, final Bundle args) {
+        return new ExtensionsListLoader(getActivity(), mPackageManager);
+    }
 
-	@Override
-	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-		openSettings(mAdapter.getItem(position));
-	}
+    @Override
+    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+        openSettings(mAdapter.getItem(position));
+    }
 
-	@Override
-	public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-		mSelectedExtension = mAdapter.getItem(position);
-		if (mSelectedExtension == null) return false;
-		mPopupMenu = PopupMenu.getInstance(getActivity(), view);
-		mPopupMenu.inflate(R.menu.action_extension);
-		final Menu menu = mPopupMenu.getMenu();
-		final MenuItem settings = menu.findItem(MENU_SETTINGS);
-		final Intent intent = mSelectedExtension.pname != null && mSelectedExtension.settings != null ? new Intent(
-				INTENT_ACTION_EXTENSION_SETTINGS) : null;
-		if (intent != null) {
-			intent.setClassName(mSelectedExtension.pname, mSelectedExtension.settings);
-		}
-		settings.setVisible(intent != null && mPackageManager.queryIntentActivities(intent, 0).size() == 1);
-		mPopupMenu.setOnMenuItemClickListener(this);
-		mPopupMenu.show();
-		return true;
-	}
+    @Override
+    public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+        mSelectedExtension = mAdapter.getItem(position);
+        if (mSelectedExtension == null) return false;
+        mPopupMenu = PopupMenu.getInstance(getActivity(), view);
+        mPopupMenu.inflate(R.menu.action_extension);
+        final Menu menu = mPopupMenu.getMenu();
+        final MenuItem settings = menu.findItem(MENU_SETTINGS);
+        final Intent intent = mSelectedExtension.pname != null && mSelectedExtension.settings != null ? new Intent(
+                INTENT_ACTION_EXTENSION_SETTINGS) : null;
+        if (intent != null) {
+            intent.setClassName(mSelectedExtension.pname, mSelectedExtension.settings);
+        }
+        settings.setVisible(intent != null && mPackageManager.queryIntentActivities(intent, 0).size() == 1);
+        mPopupMenu.setOnMenuItemClickListener(this);
+        mPopupMenu.show();
+        return true;
+    }
 
-	@Override
-	public void onLoaderReset(final Loader<List<ExtensionInfo>> loader) {
-		mAdapter.setData(null);
-	}
+    @Override
+    public void onLoaderReset(final Loader<List<ExtensionInfo>> loader) {
+        mAdapter.setData(null);
+    }
 
-	@Override
-	public void onLoadFinished(final Loader<List<ExtensionInfo>> loader, final List<ExtensionInfo> data) {
-		mAdapter.setData(data);
-		setListShown(true);
-	}
+    @Override
+    public void onLoadFinished(final Loader<List<ExtensionInfo>> loader, final List<ExtensionInfo> data) {
+        mAdapter.setData(data);
+        setListShown(true);
+    }
 
-	@Override
-	public boolean onMenuItemClick(final MenuItem item) {
-		if (mSelectedExtension == null) return false;
-		switch (item.getItemId()) {
-			case MENU_SETTINGS: {
-				openSettings(mSelectedExtension);
-				break;
-			}
-			case MENU_DELETE: {
-				final Uri packageUri = Uri.parse("package:" + mSelectedExtension.pname);
-				final Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-				startActivity(uninstallIntent);
-				break;
-			}
-			case MENU_REVOKE: {
-				mPermissionsManager.revoke(mSelectedExtension.pname);
-				mAdapter.notifyDataSetChanged();
-				break;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onMenuItemClick(final MenuItem item) {
+        if (mSelectedExtension == null) return false;
+        switch (item.getItemId()) {
+            case MENU_SETTINGS: {
+                openSettings(mSelectedExtension);
+                break;
+            }
+            case MENU_DELETE: {
+                final Uri packageUri = Uri.parse("package:" + mSelectedExtension.pname);
+                final Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+                startActivity(uninstallIntent);
+                break;
+            }
+            case MENU_REVOKE: {
+                mPermissionsManager.revoke(mSelectedExtension.pname);
+                mAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mAdapter.notifyDataSetChanged();
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
 
-	@Override
-	public void onStop() {
-		if (mPopupMenu != null) {
-			mPopupMenu.dismiss();
-		}
-		super.onStop();
-	}
+    @Override
+    public void onStop() {
+        if (mPopupMenu != null) {
+            mPopupMenu.dismiss();
+        }
+        super.onStop();
+    }
 
-	private boolean openSettings(final ExtensionInfo info) {
-		if (info == null || info.settings == null) return false;
-		final Intent intent = new Intent(INTENT_ACTION_EXTENSIONS);
-		intent.setClassName(info.pname, info.settings);
-		try {
-			startActivity(intent);
-		} catch (final Exception e) {
-			Log.w(LOGTAG, e);
-			return false;
-		}
-		return true;
-	}
+    private boolean openSettings(final ExtensionInfo info) {
+        if (info == null || info.settings == null) return false;
+        final Intent intent = new Intent(INTENT_ACTION_EXTENSIONS);
+        intent.setClassName(info.pname, info.settings);
+        try {
+            startActivity(intent);
+        } catch (final Exception e) {
+            Log.w(LOGTAG, e);
+            return false;
+        }
+        return true;
+    }
 
 }

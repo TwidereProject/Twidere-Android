@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.CardItemLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:id="@+id/content"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="wrap_content"
-                                                 android:orientation="vertical"
-                                                 android:paddingBottom="@dimen/element_spacing_small"
-                                                 android:paddingLeft="@dimen/element_spacing_normal"
-                                                 android:paddingRight="@dimen/element_spacing_normal"
-                                                 android:paddingTop="@dimen/element_spacing_small"
-                                                 tools:context=".adapter.CursorStatusesAdapter">
+<org.mariotaku.twidere.view.CardItemLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/element_spacing_small"
+    android:paddingLeft="@dimen/element_spacing_normal"
+    android:paddingRight="@dimen/element_spacing_normal"
+    android:paddingTop="@dimen/element_spacing_small"
+    tools:context=".adapter.CursorStatusesAdapter">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,7 +86,7 @@
             android:layout_height="@dimen/icon_size_card_list_item"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_weight="0"
-            android:contentDescription="@string/my_profile_image"
+            android:contentDescription="@string/your_profile_image"
             android:scaleType="fitCenter"/>
     </LinearLayout>
 

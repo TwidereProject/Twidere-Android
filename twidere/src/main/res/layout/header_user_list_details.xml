@@ -25,7 +25,7 @@
 			android:padding="@dimen/element_spacing_normal"
 			app:ignorePadding="true">
 
-			<org.mariotaku.twidere.view.ForegroundImageView
+			<org.mariotaku.twidere.view.CircularImageView
 				android:id="@+id/profile_image"
 				android:layout_width="@dimen/icon_size_card_details"
 				android:layout_height="@dimen/icon_size_card_details"
@@ -41,7 +41,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_centerVertical="true"
-				android:layout_toRightOf="@+id/profile_image"
+				android:layout_toRightOf="@id/profile_image"
 				android:gravity="center_vertical"
 				android:orientation="vertical"
 				android:paddingLeft="@dimen/element_spacing_normal">

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.CardItemFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                android:id="@+id/content"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:paddingBottom="@dimen/element_spacing_small"
-                                                android:paddingLeft="@dimen/element_spacing_normal"
-                                                android:paddingRight="@dimen/element_spacing_normal"
-                                                android:paddingTop="@dimen/element_spacing_small">
+<org.mariotaku.twidere.view.CardItemFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/element_spacing_small"
+    android:paddingLeft="@dimen/element_spacing_normal"
+    android:paddingRight="@dimen/element_spacing_normal"
+    android:paddingTop="@dimen/element_spacing_small">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,7 +33,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/element_spacing_normal"
-            android:contentDescription="@string/my_profile_image"
+            android:contentDescription="@string/your_profile_image"
             android:scaleType="fitCenter"/>
 
         <FrameLayout
@@ -42,7 +43,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignWithParentIfMissing="true"
             android:layout_toLeftOf="@+id/time_frame"
-            android:layout_toRightOf="@+id/profile_image">
+            android:layout_toRightOf="@id/profile_image">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -150,7 +151,7 @@
             android:layout_alignRight="@+id/time_frame"
             android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/reply_retweet_status"
-            android:layout_toRightOf="@+id/profile_image"
+            android:layout_toRightOf="@id/profile_image"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingTop="@dimen/element_spacing_small">

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
+<org.mariotaku.twidere.view.SquareFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/icon"
-    android:layout_width="32dp"
-    android:layout_height="32dp"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentTop="true"/>
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/element_spacing_msmall">
+
+    <org.mariotaku.twidere.view.CircularImageView
+        android:id="@android:id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</org.mariotaku.twidere.view.SquareFrameLayout>

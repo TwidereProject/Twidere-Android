@@ -65,7 +65,6 @@ import org.mariotaku.twidere.adapter.DirectMessagesConversationAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TweetStore;
@@ -95,7 +94,7 @@ import static org.mariotaku.twidere.util.Utils.getOldestMessageIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 public class DirectMessagesConversationFragment extends BasePullToRefreshListFragment implements
-        LoaderCallbacks<Cursor>, OnMenuItemClickListener, TextWatcher, OnClickListener, Panes.Right,
+        LoaderCallbacks<Cursor>, OnMenuItemClickListener, TextWatcher, OnClickListener,
         OnItemSelectedListener, OnEditorActionListener, MenuButtonClickListener {
 
     private TwidereValidator mValidator;

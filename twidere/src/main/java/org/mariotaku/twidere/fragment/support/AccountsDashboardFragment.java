@@ -31,7 +31,6 @@ import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -43,18 +42,18 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.FiltersActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
@@ -66,11 +65,11 @@ import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.Account.Indices;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
-import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.ArrayList;
 
@@ -81,7 +80,7 @@ import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.openUserTimeline;
 
 public class AccountsDashboardFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor>,
-        OnSharedPreferenceChangeListener, OnAccountActivateStateChangeListener {
+        OnSharedPreferenceChangeListener, OnCheckedChangeListener {
 
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
@@ -90,7 +89,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private SharedPreferences mPreferences;
     private MergeAdapter mAdapter;
 
-    private DrawerAccountsAdapter mAccountsAdapter;
+    private AccountSelectorAdapter mAccountsAdapter;
     private AccountOptionsAdapter mAccountOptionsAdapter;
     private AppMenuAdapter mAppMenuAdapter;
 
@@ -99,17 +98,11 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private RecyclerView mAccountsSelector;
     private ImageView mAccountProfileBannerView, mAccountProfileImageView;
     private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
+    private Switch mAccountsToggle;
 
     private Context mThemedContext;
     private ImageLoaderWrapper mImageLoader;
 
-    @Override
-    public void onAccountActivateStateChanged(final Account account, final boolean activated) {
-        final ContentValues values = new ContentValues();
-        values.put(Accounts.IS_ACTIVATED, activated);
-        final String where = Accounts.ACCOUNT_ID + " = " + account.account_id;
-        mResolver.update(Accounts.CONTENT_URI, values, where, null);
-    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -121,21 +114,23 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final LayoutInflater inflater = LayoutInflater.from(context);
         final ListView listView = getListView();
         mAdapter = new MergeAdapter();
-        mAccountsAdapter = new DrawerAccountsAdapter(context);
+        mAccountsAdapter = new AccountSelectorAdapter(context, this);
         mAccountOptionsAdapter = new AccountOptionsAdapter(context);
         mAppMenuAdapter = new AppMenuAdapter(context);
         mAppMenuSectionView = newSectionView(context, R.string.more);
         mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, listView, false);
         mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.account_selector);
-        mAccountsSelector.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-//        mAccountsSelector.setAdapter(mAccountsAdapter);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager.setStackFromEnd(true);
+        mAccountsSelector.setLayoutManager(layoutManager);
+        mAccountsSelector.setAdapter(mAccountsAdapter);
         mAccountProfileImageView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_image);
         mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_banner);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
         mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
-        mAccountsAdapter.setOnAccountActivateStateChangeListener(this);
+        mAccountsToggle = (Switch) mAccountSelectorView.findViewById(R.id.toggle);
+        mAccountsToggle.setOnCheckedChangeListener(this);
         mAdapter.addView(mAccountSelectorView, false);
-        mAdapter.addAdapter(mAccountsAdapter);
         mAdapter.addAdapter(mAccountOptionsAdapter);
         mAdapter.addView(mAppMenuSectionView, false);
         mAdapter.addAdapter(mAppMenuAdapter);
@@ -178,13 +173,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     public void onListItemClick(final ListView l, final View v, final int position, final long id) {
         final ListAdapter adapter = mAdapter.getAdapter(position);
         final Object item = mAdapter.getItem(position);
-        if (adapter instanceof DrawerAccountsAdapter) {
-            if (!(item instanceof Account)) return;
-            final Account account = (Account) item;
-            mAccountsAdapter.setSelectedAccountId(account.account_id);
-            updateAccountOptionsSeparatorLabel();
-            updateDefaultAccountState();
-        } else if (adapter instanceof AccountOptionsAdapter) {
+        if (adapter instanceof AccountOptionsAdapter) {
             final Account account = mAccountsAdapter.getSelectedAccount();
             if (account == null || !(item instanceof OptionItem)) return;
             final OptionItem option = (OptionItem) item;
@@ -269,6 +258,8 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
+        //TODO
+//        mAccountsAdapter.changeCursor(null);
         mAccountsAdapter.changeCursor(null);
     }
 
@@ -278,6 +269,8 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             data.moveToFirst();
             mAccountsAdapter.setSelectedAccountId(data.getLong(data.getColumnIndex(Accounts.ACCOUNT_ID)));
         }
+        //TODO
+//        mAccountsAdapter.changeCursor(data);
         mAccountsAdapter.changeCursor(data);
         updateAccountOptionsSeparatorLabel();
         updateDefaultAccountState();
@@ -286,14 +279,12 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     @Override
     public void onResume() {
         super.onResume();
-        mAccountsAdapter.setDefaultAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1));
         updateDefaultAccountState();
     }
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
         if (KEY_DEFAULT_ACCOUNT_ID.equals(key)) {
-            mAccountsAdapter.setDefaultAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1));
             updateDefaultAccountState();
         }
     }
@@ -334,6 +325,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         }
         mAccountProfileNameView.setText(account.name);
         mAccountProfileScreenNameView.setText("@" + account.screen_name);
+        mAccountsToggle.setChecked(account.is_activated);
         mImageLoader.displayProfileImage(mAccountProfileImageView, account.profile_image_url);
         final int bannerWidth = mAccountProfileBannerView.getWidth();
         final Resources res = getResources();
@@ -343,8 +335,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     }
 
     private void updateDefaultAccountState() {
-        final long defaultAccountId = mAccountsAdapter.getDefaultAccountId();
-        final long selectedAccountId = mAccountsAdapter.getSelectedAccountId();
     }
 
     private static TextView newSectionView(final Context context, final int titleRes) {
@@ -355,19 +345,27 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         return textView;
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        final Account account = mAccountsAdapter.getSelectedAccount();
+        if (account == null) return;
+        final ContentValues values = new ContentValues();
+        values.put(Accounts.IS_ACTIVATED, isChecked);
+        final String where = Accounts.ACCOUNT_ID + " = " + account.account_id;
+        mResolver.update(Accounts.CONTENT_URI, values, where, null);
+    }
+
 
     private static final class AccountOptionsAdapter extends OptionItemsAdapter {
 
         private static final ArrayList<OptionItem> sOptions = new ArrayList<>();
 
         static {
-            sOptions.add(new OptionItem(R.string.view_user_profile, R.drawable.ic_action_profile, MENU_VIEW_PROFILE));
+            sOptions.add(new OptionItem(R.string.profile, R.drawable.ic_action_profile, MENU_VIEW_PROFILE));
             sOptions.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
             sOptions.add(new OptionItem(R.string.statuses, R.drawable.ic_action_quote, MENU_STATUSES));
             sOptions.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
-            sOptions.add(new OptionItem(R.string.users_lists, R.drawable.ic_action_list, MENU_LISTS));
-            sOptions.add(new OptionItem(R.string.lists_following_me, R.drawable.ic_action_list,
-                    MENU_LIST_MEMBERSHIPS));
+            sOptions.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));
         }
 
         public AccountOptionsAdapter(final Context context) {
@@ -390,64 +388,83 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     }
 
-    private static class DrawerAccountsAdapter extends SimpleCursorAdapter implements Constants,
-            OnCheckedChangeListener {
+    static class AccountProfileImageViewHolder extends ViewHolder implements OnClickListener {
 
+        private final AccountSelectorAdapter adapter;
+        private final ImageView icon;
+
+        public AccountProfileImageViewHolder(AccountSelectorAdapter adapter, View itemView) {
+            super(itemView);
+            this.adapter = adapter;
+            itemView.setOnClickListener(this);
+            icon = (ImageView) itemView.findViewById(android.R.id.icon);
+        }
+
+        @Override
+        public void onClick(View v) {
+            adapter.dispatchItemSelected(getPosition());
+        }
+    }
+
+    private static class AccountSelectorAdapter extends Adapter<AccountProfileImageViewHolder> {
+
+        private final LayoutInflater mInflater;
         private final ImageLoaderWrapper mImageLoader;
-        private final int mActivatedColor;
+        private final AccountsDashboardFragment mFragment;
+        private Cursor mCursor;
+        private Indices mIndices;
+        private long mSelectedAccountId;
 
-        private Account.Indices mIndices;
-        private long mSelectedAccountId, mDefaultAccountId;
-
-        private OnAccountActivateStateChangeListener mOnAccountActivateStateChangeListener;
-
-        public DrawerAccountsAdapter(final Context context) {
-            super(context, R.layout.list_item_drawer_account, null, new String[0], new int[0], 0);
-            final TwidereApplication app = TwidereApplication.getInstance(context);
-            mImageLoader = app.getImageLoaderWrapper();
-            mActivatedColor = ThemeUtils.getUserAccentColor(context);
+        AccountSelectorAdapter(Context context, AccountsDashboardFragment fragment) {
+            mInflater = LayoutInflater.from(context);
+            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mFragment = fragment;
         }
 
         @Override
-        public void bindView(@NonNull final View view, final Context context, @NonNull final Cursor cursor) {
-            super.bindView(view, context, cursor);
-            final CompoundButton toggle = (CompoundButton) view.findViewById(R.id.toggle);
-            final TextView name = (TextView) view.findViewById(R.id.name);
-            final TextView screenNameView = (TextView) view.findViewById(R.id.screen_name);
-            final TextView defaultIndicatorView = (TextView) view.findViewById(R.id.default_indicator);
-            final ImageView profileImageView = (ImageView) view.findViewById(R.id.profile_image);
-            final Account account = new Account(cursor, mIndices);
-            name.setText(account.name);
-            screenNameView.setText(String.format("@%s", account.screen_name));
-            defaultIndicatorView.setVisibility(account.account_id == mDefaultAccountId ? View.VISIBLE : View.GONE);
-            mImageLoader.displayProfileImage(profileImageView, account.profile_image_url);
-            toggle.setChecked(account.is_activated);
-            toggle.setTag(account);
-            toggle.setOnCheckedChangeListener(this);
-            view.setActivated(account.account_id == mSelectedAccountId);
-            final IColorLabelView colorLabelView = (IColorLabelView) view;
-            colorLabelView.drawStart(account.account_id == mSelectedAccountId ? mActivatedColor : 0);
-            colorLabelView.drawEnd(account.color);
-        }
-
-        public long getDefaultAccountId() {
-            return mDefaultAccountId;
+        public AccountProfileImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            final View view = mInflater.inflate(R.layout.adapter_item_compose_account, parent, false);
+            return new AccountProfileImageViewHolder(this, view);
         }
 
         @Override
-        public Account getItem(final int position) {
-            final Cursor c = getCursor();
-            if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
-            return new Account(c, mIndices);
+        public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
+            final Cursor c = mCursor;
+            c.moveToPosition(position);
+            if (c.getLong(mIndices.account_id) == mSelectedAccountId) {
+                c.moveToNext();
+            }
+            mImageLoader.displayProfileImage(holder.icon, c.getString(mIndices.profile_image_url));
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mCursor == null) return 0;
+            return Math.max(mCursor.getCount() - 1, 0);
+        }
+
+        public void changeCursor(Cursor cursor) {
+            mCursor = cursor;
+            if (cursor != null) {
+                mIndices = new Indices(cursor);
+            }
+            notifyDataSetChanged();
+        }
+
+        public void setSelectedAccountId(long accountId) {
+            mSelectedAccountId = accountId;
+            notifyDataSetChanged();
         }
 
         public Account getSelectedAccount() {
-            final Cursor c = getCursor();
-            if (c == null || c.isClosed() || !c.moveToFirst() || mIndices == null) return null;
-            while (!c.isAfterLast()) {
-                if (mSelectedAccountId == c.getLong(mIndices.account_id))
-                    return new Account(c, mIndices);
-                c.moveToNext();
+            final Cursor c = mCursor;
+            final Indices i = mIndices;
+            if (c != null && i != null && c.moveToFirst()) {
+                while (!c.isAfterLast()) {
+                    if (c.getLong(mIndices.account_id) == mSelectedAccountId)
+                        return new Account(c, mIndices);
+                    c.moveToNext();
+                }
             }
             return null;
         }
@@ -456,70 +473,18 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             return mSelectedAccountId;
         }
 
-        @Override
-        public boolean isEnabled(final int position) {
-            final Cursor c = getCursor();
-            if (c == null || c.isClosed() || !c.moveToPosition(position)) return false;
-            return c.getLong(mIndices.account_id) != mSelectedAccountId;
-        }
-
-        @Override
-        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-            final Account account = (Account) buttonView.getTag();
-            if (mOnAccountActivateStateChangeListener != null) {
-                mOnAccountActivateStateChangeListener.onAccountActivateStateChanged(account, isChecked);
+        private void dispatchItemSelected(int position) {
+            final Cursor c = mCursor;
+            c.moveToPosition(position);
+            if (c.getLong(mIndices.account_id) != mSelectedAccountId || c.moveToNext()) {
+                mFragment.onAccountSelected(new Account(c, mIndices));
             }
         }
-
-        public void setDefaultAccountId(final long account_id) {
-            if (mDefaultAccountId == account_id) return;
-            mDefaultAccountId = account_id;
-            notifyDataSetChanged();
-        }
-
-        public void setOnAccountActivateStateChangeListener(final OnAccountActivateStateChangeListener listener) {
-            mOnAccountActivateStateChangeListener = listener;
-        }
-
-        public void setSelectedAccountId(final long account_id) {
-            if (mSelectedAccountId == account_id) return;
-            mSelectedAccountId = account_id;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public Cursor swapCursor(final Cursor c) {
-            final Cursor old = super.swapCursor(c);
-            mIndices = c != null ? new Account.Indices(c) : null;
-            return old;
-        }
-
     }
 
-    static class AccountProfileImageViewHolder extends ViewHolder {
-
-        public AccountProfileImageViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    private static class DrawerAccountsAdapter2 extends Adapter<AccountProfileImageViewHolder> {
-
-
-        @Override
-        public AccountProfileImageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(AccountProfileImageViewHolder accountProfileImageViewHolder, int i) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 0;
-        }
+    private void onAccountSelected(Account account) {
+        mAccountsAdapter.setSelectedAccountId(account.account_id);
+        updateAccountOptionsSeparatorLabel();
     }
 
     private static class OptionItem {
@@ -583,8 +548,4 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         }
 
     }
-}
-
-interface OnAccountActivateStateChangeListener {
-    void onAccountActivateStateChanged(Account account, boolean activated);
 }

@@ -42,7 +42,6 @@ import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListe
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.Account.AccountWithCredentials;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.AsyncTaskManager;
@@ -71,8 +70,7 @@ import static org.mariotaku.twidere.util.Utils.showOkMessage;
 import static org.mariotaku.twidere.util.Utils.startStatusShareChooser;
 
 abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragment implements LoaderCallbacks<Data>,
-        OnItemLongClickListener, OnMenuItemClickListener, Panes.Left, MultiSelectManager.Callback,
-        MenuButtonClickListener {
+        OnItemLongClickListener, OnMenuItemClickListener, MultiSelectManager.Callback, MenuButtonClickListener {
 
     private AsyncTaskManager mAsyncTaskManager;
     private SharedPreferences mPreferences;

@@ -91,6 +91,6 @@
 
     <dimen name="padding_profile_image_detail_page">@dimen/element_spacing_small</dimen>
     <dimen name="padding_profile_image_list_item">@dimen/element_spacing_small</dimen>
-    <dimen name="icon_size_profile_image_dashboard_current">64dp</dimen>
+    <dimen name="icon_size_profile_image_dashboard_current">72dp</dimen>
 
 </resources>

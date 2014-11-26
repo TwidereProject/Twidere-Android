@@ -37,7 +37,6 @@ import android.widget.ListView;
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.loader.support.DummyParcelableUsersLoader;
-import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.Utils;
@@ -52,7 +51,7 @@ import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 abstract class BaseUsersListFragment extends BasePullToRefreshListFragment implements
-        LoaderCallbacks<List<ParcelableUser>>, OnItemLongClickListener, Panes.Left, OnMenuItemClickListener,
+        LoaderCallbacks<List<ParcelableUser>>, OnItemLongClickListener, OnMenuItemClickListener,
         MultiSelectManager.Callback, MenuButtonClickListener {
 
     private SharedPreferences mPreferences;

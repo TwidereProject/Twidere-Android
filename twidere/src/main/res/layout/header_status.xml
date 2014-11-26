@@ -58,18 +58,18 @@
                     android:id="@+id/profile_type"
                     android:layout_width="@dimen/icon_size_profile_type_detail"
                     android:layout_height="@dimen/icon_size_profile_type_detail"
-                    android:layout_alignBottom="@+id/profile_image"
-                    android:layout_alignRight="@+id/profile_image"
+                    android:layout_alignBottom="@id/profile_image"
+                    android:layout_alignRight="@id/profile_image"
                     android:scaleType="fitCenter"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/profile_image"
-                    android:layout_alignTop="@+id/profile_image"
+                    android:layout_alignBottom="@id/profile_image"
+                    android:layout_alignTop="@id/profile_image"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/follow_indicator"
-                    android:layout_toRightOf="@+id/profile_image"
+                    android:layout_toRightOf="@id/profile_image"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:paddingLeft="8dp"

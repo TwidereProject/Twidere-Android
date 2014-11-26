@@ -22,7 +22,7 @@
 		android:paddingRight="@dimen/element_spacing_xlarge"
 		android:paddingTop="@dimen/element_spacing_normal">
 
-		<ImageView
+		<org.mariotaku.twidere.view.CircularImageView
 			android:id="@+id/profile_image"
 			android:layout_width="@dimen/icon_size_card_list_item"
 			android:layout_height="@dimen/icon_size_card_list_item"
