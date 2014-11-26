@@ -40,14 +40,14 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.CardItemLinearLayout;
 import org.mariotaku.twidere.view.ForegroundImageView;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 
 public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
 
 	private final LayoutInflater mInflater;
 	private final SharedPreferences mPreferences;
 	private final TwidereLinkify mLinkify;
-	private StatusViewHolder mHolder;
+	private StatusListViewHolder mHolder;
 	private boolean mCompactModeChanged;
 
 	public CardPreviewPreference(final Context context) {
@@ -92,7 +92,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 		final boolean display_image_preview = mPreferences.getBoolean(KEY_DISPLAY_IMAGE_PREVIEW, false);
 		final boolean display_profile_image = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
 		final boolean nickname_only = mPreferences.getBoolean(KEY_NICKNAME_ONLY, false);
-		mHolder = new StatusViewHolder(view);
+		mHolder = new StatusListViewHolder(view);
 		mLinkify.setHighlightOption(highlightOption);
 		mHolder.setDisplayNameFirst(nameFirst);
 		mHolder.setNicknameOnly(nickname_only);
@@ -126,7 +126,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 			mHolder.text.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
 		}
 		final String display_name = getSampleDisplayName(context, nameFirst, nickname_only);
-		mHolder.reply_retweet_status.setText(context.getString(R.string.retweeted_by, display_name));
+		mHolder.reply_retweet_status.setText(context.getString(R.string.retweeted_by_name, display_name));
 		mHolder.reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_indicator_retweet, 0, 0, 0);
 		mHolder.time.setTime(System.currentTimeMillis() - 360000);
 		mHolder.time.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_indicator_media, 0);

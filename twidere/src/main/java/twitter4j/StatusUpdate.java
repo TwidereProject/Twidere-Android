@@ -16,14 +16,13 @@
 
 package twitter4j;
 
-import twitter4j.http.HttpParameter;
-import twitter4j.internal.util.InternalStringUtil;
-
-import java.io.File;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import twitter4j.http.HttpParameter;
+import twitter4j.internal.util.InternalStringUtil;
 
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
@@ -31,245 +30,191 @@ import java.util.List;
  */
 public final class StatusUpdate implements Serializable {
 
-	private static final long serialVersionUID = -2522880289943829826L;
-	private final String status;
-	private long inReplyToStatusId = -1l;
-	private GeoLocation location = null;
-	private String placeId = null;
-	private boolean displayCoordinates = true;
-	private boolean possiblySensitive;
-	private String mediaName;
-	private transient InputStream mediaBody;
-	private File mediaFile;
-	private String overrideContentType;
-	private long[] mediaIds;
+    private static final long serialVersionUID = -2522880289943829826L;
+    private final String status;
+    private long inReplyToStatusId = -1l;
+    private GeoLocation location = null;
+    private String placeId = null;
+    private boolean displayCoordinates = true;
+    private boolean possiblySensitive;
+    private long[] mediaIds;
 
-	public StatusUpdate(final String status) {
-		this.status = status;
-	}
+    public StatusUpdate(final String status) {
+        this.status = status;
+    }
 
-	public StatusUpdate displayCoordinates(final boolean displayCoordinates) {
-		setDisplayCoordinates(displayCoordinates);
-		return this;
-	}
+    public StatusUpdate displayCoordinates(final boolean displayCoordinates) {
+        setDisplayCoordinates(displayCoordinates);
+        return this;
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (!(obj instanceof StatusUpdate)) return false;
-		final StatusUpdate other = (StatusUpdate) obj;
-		if (displayCoordinates != other.displayCoordinates) return false;
-		if (inReplyToStatusId != other.inReplyToStatusId) return false;
-		if (location == null) {
-			if (other.location != null) return false;
-		} else if (!location.equals(other.location)) return false;
-		if (mediaFile == null) {
-			if (other.mediaFile != null) return false;
-		} else if (!mediaFile.equals(other.mediaFile)) return false;
-		if (mediaName == null) {
-			if (other.mediaName != null) return false;
-		} else if (!mediaName.equals(other.mediaName)) return false;
-		if (overrideContentType == null) {
-			if (other.overrideContentType != null) return false;
-		} else if (!overrideContentType.equals(other.overrideContentType)) return false;
-		if (placeId == null) {
-			if (other.placeId != null) return false;
-		} else if (!placeId.equals(other.placeId)) return false;
-		if (possiblySensitive != other.possiblySensitive) return false;
-		if (status == null) {
-			if (other.status != null) return false;
-		} else if (!status.equals(other.status)) return false;
-		return true;
-	}
+    public long getInReplyToStatusId() {
+        return inReplyToStatusId;
+    }
 
-	public long getInReplyToStatusId() {
-		return inReplyToStatusId;
-	}
+    public GeoLocation getLocation() {
+        return location;
+    }
 
-	public GeoLocation getLocation() {
-		return location;
-	}
+    public long[] getMediaIds() {
+        return mediaIds;
+    }
 
-	public long[] getMediaIds() {
-		return mediaIds;
-	}
+    public String getPlaceId() {
+        return placeId;
+    }
 
-	public String getPlaceId() {
-		return placeId;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public StatusUpdate inReplyToStatusId(final long inReplyToStatusId) {
+        setInReplyToStatusId(inReplyToStatusId);
+        return this;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (displayCoordinates ? 1231 : 1237);
-		result = prime * result + (int) (inReplyToStatusId ^ inReplyToStatusId >>> 32);
-		result = prime * result + (location == null ? 0 : location.hashCode());
-		result = prime * result + (mediaFile == null ? 0 : mediaFile.hashCode());
-		result = prime * result + (mediaName == null ? 0 : mediaName.hashCode());
-		result = prime * result + (overrideContentType == null ? 0 : overrideContentType.hashCode());
-		result = prime * result + (placeId == null ? 0 : placeId.hashCode());
-		result = prime * result + (possiblySensitive ? 1231 : 1237);
-		result = prime * result + (status == null ? 0 : status.hashCode());
-		return result;
-	}
+    public boolean isDisplayCoordinates() {
+        return displayCoordinates;
+    }
 
-	public StatusUpdate inReplyToStatusId(final long inReplyToStatusId) {
-		setInReplyToStatusId(inReplyToStatusId);
-		return this;
-	}
+    /**
+     * @since Twitter4J 2.2.5
+     */
+    public boolean isPossiblySensitive() {
+        return possiblySensitive;
+    }
 
-	public boolean isDisplayCoordinates() {
-		return displayCoordinates;
-	}
+    public StatusUpdate location(final GeoLocation location) {
+        setLocation(location);
+        return this;
+    }
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public boolean isPossiblySensitive() {
-		return possiblySensitive;
-	}
+    public StatusUpdate mediaIds(final long... mediaIds) {
+        setMediaIds(mediaIds);
+        return this;
+    }
 
-	public StatusUpdate location(final GeoLocation location) {
-		setLocation(location);
-		return this;
-	}
+    public StatusUpdate placeId(final String placeId) {
+        setPlaceId(placeId);
+        return this;
+    }
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public StatusUpdate media(final File file, final String type) {
-		setMedia(file, type);
-		return this;
-	}
+    /**
+     * @since Twitter4J 2.2.5
+     */
+    public StatusUpdate possiblySensitive(final boolean possiblySensitive) {
+        setPossiblySensitive(possiblySensitive);
+        return this;
+    }
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public StatusUpdate media(final String name, final InputStream body, final String type) {
-		setMedia(name, body, type);
-		return this;
-	}
+    public void setDisplayCoordinates(final boolean displayCoordinates) {
+        this.displayCoordinates = displayCoordinates;
+    }
 
-	public StatusUpdate mediaIds(final long... mediaIds) {
-		setMediaIds(mediaIds);
-		return this;
-	}
+    public void setInReplyToStatusId(final long inReplyToStatusId) {
+        this.inReplyToStatusId = inReplyToStatusId;
+    }
 
-	public StatusUpdate placeId(final String placeId) {
-		setPlaceId(placeId);
-		return this;
-	}
+    public void setLocation(final GeoLocation location) {
+        this.location = location;
+    }
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public StatusUpdate possiblySensitive(final boolean possiblySensitive) {
-		setPossiblySensitive(possiblySensitive);
-		return this;
-	}
 
-	public void setDisplayCoordinates(final boolean displayCoordinates) {
-		this.displayCoordinates = displayCoordinates;
-	}
+    public void setMediaIds(final long... mediaIds) {
+        this.mediaIds = mediaIds;
+    }
 
-	public void setInReplyToStatusId(final long inReplyToStatusId) {
-		this.inReplyToStatusId = inReplyToStatusId;
-	}
+    public void setPlaceId(final String placeId) {
+        this.placeId = placeId;
+    }
 
-	public void setLocation(final GeoLocation location) {
-		this.location = location;
-	}
+    /**
+     * @since Twitter4J 2.2.5
+     */
+    public void setPossiblySensitive(final boolean possiblySensitive) {
+        this.possiblySensitive = possiblySensitive;
+    }
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public void setMedia(final File file, final String type) {
-		mediaFile = file;
-		overrideContentType = type;
-	}
+    private void appendParameter(final String name, final double value, final List<HttpParameter> params) {
+        params.add(new HttpParameter(name, String.valueOf(value)));
+    }
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public void setMedia(final String name, final InputStream body, final String type) {
-		mediaName = name;
-		mediaBody = body;
-		overrideContentType = type;
-	}
+    private void appendParameter(final String name, final long value, final List<HttpParameter> params) {
+        params.add(new HttpParameter(name, String.valueOf(value)));
+    }
 
-	public void setMediaIds(final long... mediaIds) {
-		this.mediaIds = mediaIds;
-	}
+    private void appendParameter(final String name, final String value, final List<HttpParameter> params) {
+        if (value != null) {
+            params.add(new HttpParameter(name, value));
+        }
+    }
 
-	public void setPlaceId(final String placeId) {
-		this.placeId = placeId;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	/**
-	 * @since Twitter4J 2.2.5
-	 */
-	public void setPossiblySensitive(final boolean possiblySensitive) {
-		this.possiblySensitive = possiblySensitive;
-	}
+        StatusUpdate that = (StatusUpdate) o;
 
-	@Override
-	public String toString() {
-		return "StatusUpdate{status=" + status + ", inReplyToStatusId=" + inReplyToStatusId + ", location=" + location
-				+ ", placeId=" + placeId + ", displayCoordinates=" + displayCoordinates + ", possiblySensitive="
-				+ possiblySensitive + ", mediaName=" + mediaName + ", mediaFile=" + mediaFile
-				+ ", overrideContentType=" + overrideContentType + "}";
-	}
+        if (displayCoordinates != that.displayCoordinates) return false;
+        if (inReplyToStatusId != that.inReplyToStatusId) return false;
+        if (possiblySensitive != that.possiblySensitive) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null)
+            return false;
+        if (!Arrays.equals(mediaIds, that.mediaIds)) return false;
+        if (placeId != null ? !placeId.equals(that.placeId) : that.placeId != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
 
-	private void appendParameter(final String name, final double value, final List<HttpParameter> params) {
-		params.add(new HttpParameter(name, String.valueOf(value)));
-	}
+        return true;
+    }
 
-	private void appendParameter(final String name, final long value, final List<HttpParameter> params) {
-		params.add(new HttpParameter(name, String.valueOf(value)));
-	}
+    @Override
+    public int hashCode() {
+        int result = status != null ? status.hashCode() : 0;
+        result = 31 * result + (int) (inReplyToStatusId ^ (inReplyToStatusId >>> 32));
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (placeId != null ? placeId.hashCode() : 0);
+        result = 31 * result + (displayCoordinates ? 1 : 0);
+        result = 31 * result + (possiblySensitive ? 1 : 0);
+        result = 31 * result + (mediaIds != null ? Arrays.hashCode(mediaIds) : 0);
+        return result;
+    }
 
-	private void appendParameter(final String name, final String value, final List<HttpParameter> params) {
-		if (value != null) {
-			params.add(new HttpParameter(name, value));
-		}
-	}
+    @Override
+    public String toString() {
+        return "StatusUpdate{" +
+                "status='" + status + '\'' +
+                ", inReplyToStatusId=" + inReplyToStatusId +
+                ", location=" + location +
+                ", placeId='" + placeId + '\'' +
+                ", displayCoordinates=" + displayCoordinates +
+                ", possiblySensitive=" + possiblySensitive +
+                ", mediaIds=" + Arrays.toString(mediaIds) +
+                '}';
+    }
 
-	/* package */HttpParameter[] asHttpParameterArray(final HttpParameter includeEntities) {
-		final ArrayList<HttpParameter> params = new ArrayList<HttpParameter>();
-		appendParameter("status", status, params);
-		if (-1 != inReplyToStatusId) {
-			appendParameter("in_reply_to_status_id", inReplyToStatusId, params);
-		}
-		if (location != null) {
-			appendParameter("lat", location.getLatitude(), params);
-			appendParameter("long", location.getLongitude(), params);
-		}
-		appendParameter("place_id", placeId, params);
-		if (!displayCoordinates) {
-			appendParameter("display_coordinates", "false", params);
-		}
-		params.add(includeEntities);
-		if (null != mediaFile) {
-			params.add(new HttpParameter("media[]", mediaFile, overrideContentType));
-			params.add(new HttpParameter("possibly_sensitive", possiblySensitive));
-		} else if (mediaName != null && mediaBody != null) {
-			params.add(new HttpParameter("media[]", mediaName, mediaBody, overrideContentType));
-			params.add(new HttpParameter("possibly_sensitive", possiblySensitive));
-		} else if (mediaIds != null) {
-			params.add(new HttpParameter("media_ids", InternalStringUtil.join(mediaIds)));
-		}
+    /* package */HttpParameter[] asHttpParameterArray(final HttpParameter includeEntities) {
+        final ArrayList<HttpParameter> params = new ArrayList<HttpParameter>();
+        appendParameter("status", status, params);
+        if (-1 != inReplyToStatusId) {
+            appendParameter("in_reply_to_status_id", inReplyToStatusId, params);
+        }
+        if (location != null) {
+            appendParameter("lat", location.getLatitude(), params);
+            appendParameter("long", location.getLongitude(), params);
+        }
+        appendParameter("place_id", placeId, params);
+        if (!displayCoordinates) {
+            appendParameter("display_coordinates", "false", params);
+        }
+        params.add(includeEntities);
+        if (mediaIds != null) {
+            params.add(new HttpParameter("media_ids", InternalStringUtil.join(mediaIds)));
+        }
 
-		final HttpParameter[] paramArray = new HttpParameter[params.size()];
-		return params.toArray(paramArray);
-	}
+        final HttpParameter[] paramArray = new HttpParameter[params.size()];
+        return params.toArray(paramArray);
+    }
 
-	/* package */boolean isWithMedia() {
-		return mediaFile != null || mediaName != null && mediaBody != null;
-	}
+
 }

@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<color name="nyan_background">#003366</color>
-	<color name="bg_color_light">#e5e5e5</color>
-	<color name="bg_color_dark">#101010</color>
-	<color name="bg_color_transparent_dark">#ff000000</color>
-	<color name="bg_color_transparent_light">#ffffffff</color>
-	<color name="bg_color_drawer_dark">#1a1a1a</color>
-	<color name="bg_color_drawer_transparent_dark">#c01a1a1a</color>
-	<color name="highlighted_text_holo_dark">#66b0b0b0</color>
-	<color name="highlighted_text_holo_light">#66b0b0b0</color>
-	<color name="text_link_holo_dark">#909090</color>
-	<color name="text_link_holo_light">#707070</color>
-	<color name="accent_white">#ffffff</color>
-	<color name="divider_color">#40808080</color>
+    <color name="nyan_background">#003366</color>
+    <color name="bg_color_light">#e5e5e5</color>
+    <color name="bg_color_dark">#101010</color>
+    <color name="bg_color_transparent_dark">#ff000000</color>
+    <color name="bg_color_transparent_light">#ffffffff</color>
+    <color name="bg_color_drawer_dark">#1a1a1a</color>
+    <color name="bg_color_drawer_transparent_dark">#c01a1a1a</color>
+    <color name="highlighted_text_holo_dark">#66b0b0b0</color>
+    <color name="highlighted_text_holo_light">#66b0b0b0</color>
+    <color name="text_link_holo_dark">#909090</color>
+    <color name="text_link_holo_light">#707070</color>
+    <color name="accent_white">#ffffff</color>
+    <color name="divider_color">#40808080</color>
+    <color name="action_icon_dark">#99333333</color>
+    <color name="action_icon_dark_disabled">#4D333333</color>
+    <color name="action_icon_light">#CCFFFFFF</color>
+    <color name="action_icon_light_disabled">#4DFFFFFF</color>
 
 </resources>

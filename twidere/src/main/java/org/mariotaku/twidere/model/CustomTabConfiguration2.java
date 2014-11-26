@@ -32,7 +32,7 @@ import org.mariotaku.twidere.fragment.support.SearchStatusesFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
-import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
+import org.mariotaku.twidere.fragment.support.UserTimelineFragmentOld;
 
 import java.util.Comparator;
 import java.util.Map.Entry;
@@ -54,7 +54,7 @@ public enum CustomTabConfiguration2 implements Constants {
 	FAVORITES(UserFavoritesFragment.class, R.string.favorites, R.drawable.ic_action_star,
 			CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 4),
 
-	USER_TIMELINE(UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_action_quote,
+	USER_TIMELINE(UserTimelineFragmentOld.class, R.string.users_statuses, R.drawable.ic_action_quote,
 			CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 5),
 
 	SEARCH_STATUSES(SearchStatusesFragment.class, R.string.search_statuses, R.drawable.ic_action_search,

@@ -8,4 +8,21 @@
     <style name="Widget.Light.CardActionButton" parent="android:Widget.DeviceDefault.ImageButton">
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
     </style>
+
+    <style name="Widget.ProfileImage.Large">
+        <item name="android:background">@drawable/bg_oval_white</item>
+        <item name="elevation">@dimen/elevation_card</item>
+        <item name="borderWidth">2dp</item>
+    </style>
+
+    <style name="Widget.Light.ProfileImage.Large">
+        <item name="android:background">@drawable/bg_oval_white</item>
+        <item name="elevation">@dimen/elevation_card</item>
+        <item name="borderWidth">2dp</item>
+    </style>
+
+    <style name="Widget.ProfileType" parent="android:Widget.DeviceDefault">
+        <item name="android:elevation">@dimen/elevation_card</item>
+        <item name="android:outlineProvider">none</item>
+    </style>
 </resources>

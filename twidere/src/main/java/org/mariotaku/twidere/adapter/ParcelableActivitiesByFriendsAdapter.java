@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.view.holder.ActivityViewHolder;
+import org.mariotaku.twidere.view.holder.ActivityListViewHolder;
 
 public class ParcelableActivitiesByFriendsAdapter extends BaseParcelableActivitiesAdapter {
 
@@ -40,7 +40,7 @@ public class ParcelableActivitiesByFriendsAdapter extends BaseParcelableActiviti
 	}
 
 	@Override
-	public void bindView(final int position, final ActivityViewHolder holder, final ParcelableActivity item) {
+	public void bindView(final int position, final ActivityListViewHolder holder, final ParcelableActivity item) {
 		if (item == null) return;
 		final ParcelableUser[] sources = item.sources;
 		final ParcelableStatus[] targetStatuses = item.target_statuses;

@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
@@ -43,7 +42,6 @@ import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.findDirectMessageInDatabases;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.openImage;
-import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 public class DirectMessagesConversationAdapter extends BaseCursorAdapter implements IDirectMessagesAdapter,
         OnClickListener {
@@ -66,8 +64,7 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
         mImageLoader = app.getImageLoaderWrapper();
-        mImageLoadingHandler = new ImageLoadingHandler(R.id.incoming_image_preview_progress,
-                R.id.outgoing_image_preview_progress);
+        mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         configBaseCardAdapter(context, this);
     }
 
@@ -78,74 +75,38 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
 
         final String firstMedia = cursor.getString(mIndices.first_media);
 
-        final boolean displayProfileImage = isDisplayProfileImage();
         final long accountId = cursor.getLong(mIndices.account_id);
         final long timestamp = cursor.getLong(mIndices.message_timestamp);
         final boolean is_outgoing = cursor.getInt(mIndices.is_outgoing) == 1;
 
-        holder.incoming_message_container.setVisibility(is_outgoing ? View.GONE : View.VISIBLE);
-        holder.outgoing_message_container.setVisibility(is_outgoing ? View.VISIBLE : View.GONE);
+        holder.setOutgoing(is_outgoing);
         holder.setTextSize(getTextSize());
-        holder.incoming_text.setText(Html.fromHtml(cursor.getString(mIndices.text)));
-        holder.outgoing_text.setText(Html.fromHtml(cursor.getString(mIndices.text)));
-        getLinkify().applyAllLinks(holder.incoming_text, accountId, false);
-        getLinkify().applyAllLinks(holder.outgoing_text, accountId, false);
-        holder.incoming_text.setMovementMethod(null);
-        holder.outgoing_text.setMovementMethod(null);
-        holder.incoming_time.setText(formatToLongTimeString(mContext, timestamp));
-        holder.outgoing_time.setText(formatToLongTimeString(mContext, timestamp));
-        holder.incoming_profile_image_container.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
-        holder.outgoing_profile_image_container.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
-        if (displayProfileImage) {
-            final String profile_image_url_string = cursor.getString(mIndices.sender_profile_image_url);
-            mImageLoader.displayProfileImage(holder.incoming_profile_image, profile_image_url_string);
-            mImageLoader.displayProfileImage(holder.outgoing_profile_image, profile_image_url_string);
-            holder.incoming_profile_image.setTag(position);
-            holder.outgoing_profile_image.setTag(position);
-        } else {
-            mImageLoader.cancelDisplayTask(holder.incoming_profile_image);
-            mImageLoader.cancelDisplayTask(holder.outgoing_profile_image);
-        }
+        holder.text.setText(Html.fromHtml(cursor.getString(mIndices.text)));
+        getLinkify().applyAllLinks(holder.text, accountId, false);
+        holder.text.setMovementMethod(null);
+        holder.time.setText(formatToLongTimeString(mContext, timestamp));
         if (position > mMaxAnimationPosition) {
             if (mAnimationEnabled) {
                 view.startAnimation(holder.item_animation);
             }
             mMaxAnimationPosition = position;
         }
-        holder.incoming_item_menu.setTag(position);
-        holder.outgoing_item_menu.setTag(position);
 
         if (firstMedia == null) {
-            mImageLoader.cancelDisplayTask(holder.incoming_image_preview);
-            mImageLoader.cancelDisplayTask(holder.outgoing_image_preview);
-            holder.outgoing_image_preview_container.setVisibility(View.GONE);
-            holder.incoming_image_preview_container.setVisibility(View.GONE);
-        } else if (is_outgoing) {
-            mImageLoader.cancelDisplayTask(holder.incoming_image_preview);
-            holder.outgoing_image_preview_container.setVisibility(View.VISIBLE);
-            holder.incoming_image_preview_container.setVisibility(View.GONE);
-            if (mImagePreviewScaleType != null) {
-                holder.outgoing_image_preview.setScaleType(mImagePreviewScaleType);
-            }
-            if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.outgoing_image_preview))) {
-                holder.outgoing_image_preview.setBackgroundResource(0);
-                mImageLoader.displayPreviewImageWithCredentials(holder.outgoing_image_preview, firstMedia, accountId,
-                        mImageLoadingHandler);
-            }
-            holder.outgoing_image_preview.setTag(position);
+            mImageLoader.cancelDisplayTask(holder.media_preview);
+            holder.media_preview_container.setVisibility(View.GONE);
         } else {
-            mImageLoader.cancelDisplayTask(holder.outgoing_image_preview);
-            holder.outgoing_image_preview_container.setVisibility(View.GONE);
-            holder.incoming_image_preview_container.setVisibility(View.VISIBLE);
+            mImageLoader.cancelDisplayTask(holder.media_preview);
+            holder.media_preview_container.setVisibility(View.VISIBLE);
             if (mImagePreviewScaleType != null) {
-                holder.incoming_image_preview.setScaleType(mImagePreviewScaleType);
+                holder.media_preview.setScaleType(mImagePreviewScaleType);
             }
-            if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.incoming_image_preview))) {
-                holder.incoming_image_preview.setBackgroundResource(0);
-                mImageLoader.displayPreviewImageWithCredentials(holder.incoming_image_preview, firstMedia, accountId,
-                        mImageLoadingHandler);
+            if (!firstMedia.equals(mImageLoadingHandler.getLoadingUri(holder.media_preview))) {
+                holder.media_preview.setBackgroundResource(0);
+                mImageLoader.displayPreviewImageWithCredentials(holder.media_preview, firstMedia,
+                        accountId, mImageLoadingHandler);
             }
-            holder.incoming_image_preview.setTag(position);
+            holder.media_preview.setTag(position);
         }
         super.bindView(view, context, cursor);
     }
@@ -173,12 +134,7 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final Object tag = view.getTag();
         if (!(tag instanceof DirectMessageConversationViewHolder)) {
             final DirectMessageConversationViewHolder holder = new DirectMessageConversationViewHolder(view);
-            holder.incoming_profile_image.setOnClickListener(this);
-            holder.outgoing_profile_image.setOnClickListener(this);
-            holder.incoming_item_menu.setOnClickListener(this);
-            holder.outgoing_item_menu.setOnClickListener(this);
-            holder.incoming_image_preview.setOnClickListener(this);
-            holder.outgoing_image_preview.setOnClickListener(this);
+            holder.media_preview.setOnClickListener(this);
             view.setTag(holder);
         }
         return view;
@@ -191,25 +147,7 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
         final int position = tag instanceof Integer ? (Integer) tag : -1;
         if (position == -1) return;
         switch (view.getId()) {
-            case R.id.incoming_profile_image:
-            case R.id.outgoing_profile_image: {
-                final ParcelableDirectMessage message = getDirectMessage(position);
-                if (message == null) return;
-                if (mContext instanceof Activity) {
-                    openUserProfile((Activity) mContext, message.account_id, message.sender_id,
-                            message.sender_screen_name);
-                }
-                break;
-            }
-            case R.id.incoming_item_menu:
-            case R.id.outgoing_item_menu: {
-                if (position == -1 || mListener == null) return;
-                mListener.onMenuButtonClick(view, position, getItemId(position));
-                break;
-            }
-            case R.id.incoming_image_preview:
-            case R.id.outgoing_image_preview: {
-                if (position == -1) return;
+            case R.id.media_preview: {
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.first_media == null) return;
                 openImage(mContext, message.account_id, message.first_media, false);

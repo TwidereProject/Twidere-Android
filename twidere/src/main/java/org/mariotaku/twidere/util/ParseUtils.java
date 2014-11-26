@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -32,6 +33,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
+
+import static android.text.TextUtils.isEmpty;
 
 public final class ParseUtils implements Constants {
 
@@ -190,4 +193,12 @@ public final class ParseUtils implements Constants {
 				|| EXTRA_LIST_ID.equals(key);
 	}
 
+    public static int parseColor(String str, int def) {
+        if (isEmpty(str)) return def;
+        try {
+            return Color.parseColor(str);
+        } catch (IllegalArgumentException e) {
+            return def;
+        }
+    }
 }

@@ -255,10 +255,10 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues makeStatusContentValues(final Status orig, final long account_id) {
+    public static ContentValues makeStatusContentValues(final Status orig, final long accountId) {
         if (orig == null || orig.getId() <= 0) return null;
         final ContentValues values = new ContentValues();
-        values.put(Statuses.ACCOUNT_ID, account_id);
+        values.put(Statuses.ACCOUNT_ID, accountId);
         values.put(Statuses.STATUS_ID, orig.getId());
         values.put(Statuses.STATUS_TIMESTAMP, orig.getCreatedAt().getTime());
         values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
@@ -272,6 +272,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.RETWEETED_BY_USER_ID, retweetUser.getId());
             values.put(Statuses.RETWEETED_BY_USER_NAME, retweetUser.getName());
             values.put(Statuses.RETWEETED_BY_USER_SCREEN_NAME, retweetUser.getScreenName());
+            values.put(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE, ParseUtils.parseString(retweetUser.getProfileImageUrlHttps()));
             status = retweetedStatus;
         } else {
             status = orig;

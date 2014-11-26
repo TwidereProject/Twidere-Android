@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
@@ -35,6 +36,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +74,6 @@ import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.ArrayList;
 
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.openUserFavorites;
 import static org.mariotaku.twidere.util.Utils.openUserListMemberships;
 import static org.mariotaku.twidere.util.Utils.openUserLists;
@@ -90,9 +94,14 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private AccountOptionsAdapter mAccountOptionsAdapter;
     private AppMenuAdapter mAppMenuAdapter;
 
-    private TextView mAccountsSectionView, mAccountOptionsSectionView, mAppMenuSectionView;
+    private TextView mAppMenuSectionView;
+    private View mAccountSelectorView;
+    private RecyclerView mAccountsSelector;
+    private ImageView mAccountProfileBannerView, mAccountProfileImageView;
+    private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
 
     private Context mThemedContext;
+    private ImageLoaderWrapper mImageLoader;
 
     @Override
     public void onAccountActivateStateChanged(final Account account, final boolean activated) {
@@ -108,17 +117,25 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mResolver = getContentResolver();
         final Context context = getView().getContext();
+        mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        final ListView listView = getListView();
         mAdapter = new MergeAdapter();
         mAccountsAdapter = new DrawerAccountsAdapter(context);
         mAccountOptionsAdapter = new AccountOptionsAdapter(context);
         mAppMenuAdapter = new AppMenuAdapter(context);
-        mAccountsSectionView = newSectionView(context, R.string.accounts);
-        mAccountOptionsSectionView = newSectionView(context, 0);
         mAppMenuSectionView = newSectionView(context, R.string.more);
+        mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, listView, false);
+        mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.account_selector);
+        mAccountsSelector.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+//        mAccountsSelector.setAdapter(mAccountsAdapter);
+        mAccountProfileImageView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_image);
+        mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_banner);
+        mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
+        mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
         mAccountsAdapter.setOnAccountActivateStateChangeListener(this);
-        mAdapter.addView(mAccountsSectionView, false);
+        mAdapter.addView(mAccountSelectorView, false);
         mAdapter.addAdapter(mAccountsAdapter);
-        mAdapter.addView(mAccountOptionsSectionView, false);
         mAdapter.addAdapter(mAccountOptionsAdapter);
         mAdapter.addView(mAppMenuSectionView, false);
         mAdapter.addAdapter(mAppMenuAdapter);
@@ -312,14 +329,17 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     private void updateAccountOptionsSeparatorLabel() {
         final Account account = mAccountsAdapter.getSelectedAccount();
-        if (account != null) {
-
-            final String displayName = getDisplayName(getActivity(), account.account_id, account.name,
-                    account.screen_name);
-            mAccountOptionsSectionView.setText(displayName);
-        } else {
-            mAccountOptionsSectionView.setText(null);
+        if (account == null) {
+            return;
         }
+        mAccountProfileNameView.setText(account.name);
+        mAccountProfileScreenNameView.setText("@" + account.screen_name);
+        mImageLoader.displayProfileImage(mAccountProfileImageView, account.profile_image_url);
+        final int bannerWidth = mAccountProfileBannerView.getWidth();
+        final Resources res = getResources();
+        final int defWidth = res.getDisplayMetrics().widthPixels;
+        final int width = bannerWidth > 0 ? bannerWidth : defWidth;
+        mImageLoader.displayProfileBanner(mAccountProfileBannerView, account.profile_banner_url, width);
     }
 
     private void updateDefaultAccountState() {
@@ -474,6 +494,32 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             return old;
         }
 
+    }
+
+    static class AccountProfileImageViewHolder extends ViewHolder {
+
+        public AccountProfileImageViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    private static class DrawerAccountsAdapter2 extends Adapter<AccountProfileImageViewHolder> {
+
+
+        @Override
+        public AccountProfileImageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(AccountProfileImageViewHolder accountProfileImageViewHolder, int i) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
     }
 
     private static class OptionItem {

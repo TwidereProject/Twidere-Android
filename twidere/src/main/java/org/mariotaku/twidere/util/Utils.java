@@ -61,6 +61,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -143,7 +144,7 @@ import org.mariotaku.twidere.fragment.support.UserListsListFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserProfileFragmentOld;
-import org.mariotaku.twidere.fragment.support.UserTimelineFragment2;
+import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.Account;
@@ -165,6 +166,7 @@ import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.DNS;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
+import org.mariotaku.twidere.provider.TweetStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.provider.TweetStore.Drafts;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
 import org.mariotaku.twidere.provider.TweetStore.Filters.Users;
@@ -746,7 +748,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_TIMELINE: {
-                fragment = new UserTimelineFragment2();
+                fragment = new UserTimelineFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
@@ -1841,14 +1843,14 @@ public final class Utils implements Constants, TwitterConstants {
                 FORMAT_PATTERN_TEXT, text);
     }
 
-    public static String getInReplyToName(final Status status) {
-        if (status == null) return null;
+    @NonNull
+    public static String getInReplyToName(@NonNull final Status status) {
         final Status orig = status.isRetweet() ? status.getRetweetedStatus() : status;
-        final long in_reply_to_user_id = status.getInReplyToUserId();
+        final long inReplyToUserId = status.getInReplyToUserId();
         final UserMentionEntity[] entities = status.getUserMentionEntities();
         if (entities == null) return orig.getInReplyToScreenName();
         for (final UserMentionEntity entity : entities) {
-            if (in_reply_to_user_id == entity.getId()) return entity.getName();
+            if (inReplyToUserId == entity.getId()) return entity.getName();
         }
         return orig.getInReplyToScreenName();
     }
@@ -2571,10 +2573,10 @@ public final class Utils implements Constants, TwitterConstants {
         return getDisplayName(context, user.getId(), user.getName(), user.getScreenName());
     }
 
-    public static int getUserTypeIconRes(final boolean is_verified, final boolean is_protected) {
-        if (is_verified)
-            return R.drawable.ic_indicator_verified;
-        else if (is_protected) return R.drawable.ic_indicator_protected;
+    public static int getUserTypeIconRes(final boolean isVerified, final boolean isProtected) {
+        if (isVerified)
+            return R.drawable.ic_user_type_verified;
+        else if (isProtected) return R.drawable.ic_user_type_protected;
         return 0;
     }
 
@@ -3487,7 +3489,9 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status) {
         if (context == null || menu == null || status == null) return;
-        final int activatedColor = ThemeUtils.getUserAccentColor(context);
+        final Resources resources = context.getResources();
+        final int retweetHighlight = resources.getColor(android.R.color.holo_green_light);
+        final int favoriteHighlight = resources.getColor(android.R.color.holo_orange_light);
         final boolean isMyRetweet = isMyRetweet(status);
         final MenuItem delete = menu.findItem(MENU_DELETE);
         if (delete != null) {
@@ -3496,16 +3500,17 @@ public final class Utils implements Constants, TwitterConstants {
         final MenuItem retweet = menu.findItem(MENU_RETWEET);
         if (retweet != null) {
             retweet.setVisible(!status.user_is_protected || isMyRetweet);
-            MenuUtils.setMenuInfo(retweet, new TwidereMenuInfo(isMyRetweet));
+            MenuUtils.setMenuInfo(retweet, new TwidereMenuInfo(isMyRetweet, retweetHighlight));
             retweet.setTitle(isMyRetweet ? R.string.cancel_retweet : R.string.retweet);
         }
         final MenuItem retweetSubItem = menu.findItem(R.id.retweet_submenu);
         if (retweetSubItem != null) {
-            MenuUtils.setMenuInfo(retweetSubItem, new TwidereMenuInfo(isMyRetweet));
+            MenuUtils.setMenuInfo(retweetSubItem, new TwidereMenuInfo(isMyRetweet,
+                    retweetHighlight));
         }
         final MenuItem favorite = menu.findItem(MENU_FAVORITE);
         if (favorite != null) {
-            MenuUtils.setMenuInfo(favorite, new TwidereMenuInfo(status.is_favorite));
+            MenuUtils.setMenuInfo(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));
             favorite.setTitle(status.is_favorite ? R.string.unfavorite : R.string.favorite);
         }
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);
@@ -3929,6 +3934,10 @@ public final class Utils implements Constants, TwitterConstants {
         return getContrastYIQ(color, threshold, Color.BLACK, Color.WHITE);
     }
 
+    public static int getContrastYIQ(int color, int colorDark, int colorLight) {
+        return getContrastYIQ(color, 128, colorDark, colorLight);
+    }
+
     /**
      * Get most contrasting color
      *
@@ -3965,5 +3974,20 @@ public final class Utils implements Constants, TwitterConstants {
         } finally {
             c.close();
         }
+    }
+
+    public static ParcelableUser getUserForConversation(Context context, long accountId,
+                                                        long conversationId) {
+        final ContentResolver cr = context.getContentResolver();
+        final Where where = Where.and(Where.equals(ConversationEntries.ACCOUNT_ID, accountId),
+                Where.equals(ConversationEntries.CONVERSATION_ID, conversationId));
+        final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
+        try {
+            if (c.moveToFirst()) return ParcelableUser.fromDirectMessageConversationEntry(c);
+
+        } finally {
+            c.close();
+        }
+        return null;
     }
 }

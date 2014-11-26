@@ -349,11 +349,14 @@ public interface TweetStore {
             public static final Uri CONTENT_URI = Uri
                     .withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
-            public static final String MESSAGE_TIMESTAMP = "message_timestamp";
+            public static final String MESSAGE_ID = DirectMessages.MESSAGE_ID;
+            public static final String ACCOUNT_ID = DirectMessages.ACCOUNT_ID;
+            public static final String IS_OUTGOING = DirectMessages.IS_OUTGOING;
+            public static final String MESSAGE_TIMESTAMP = DirectMessages.MESSAGE_TIMESTAMP;
             public static final String NAME = "name";
             public static final String SCREEN_NAME = "screen_name";
             public static final String PROFILE_IMAGE_URL = "profile_image_url";
-            public static final String TEXT_HTML = "text_html";
+            public static final String TEXT_HTML = DirectMessages.TEXT_HTML;
             public static final String CONVERSATION_ID = "conversation_id";
 
             public static final int IDX__ID = 0;
@@ -700,6 +703,8 @@ public interface TweetStore {
 
         public static final String RETWEETED_BY_USER_SCREEN_NAME = "retweeted_by_user_screen_name";
 
+        public static final String RETWEETED_BY_USER_PROFILE_IMAGE = "retweeted_by_user_profile_image";
+
         /**
          * Timestamp of the status.<br>
          * Type: INTEGER (long)
@@ -723,18 +728,18 @@ public interface TweetStore {
         public static final String[] COLUMNS = new String[]{_ID, ACCOUNT_ID, STATUS_ID, USER_ID,
                 STATUS_TIMESTAMP, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, USER_NAME, USER_SCREEN_NAME,
                 USER_PROFILE_IMAGE_URL, IN_REPLY_TO_STATUS_ID, IN_REPLY_TO_USER_ID, IN_REPLY_TO_USER_NAME,
-                IN_REPLY_TO_USER_SCREEN_NAME, SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT,
-                REPLY_COUNT, DESCENDENT_REPLY_COUNT, RETWEET_ID, RETWEET_TIMESTAMP,
-                RETWEETED_BY_USER_ID, RETWEETED_BY_USER_NAME, RETWEETED_BY_USER_SCREEN_NAME,
-                MY_RETWEET_ID, IS_RETWEET, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING,
-                IS_GAP, IS_POSSIBLY_SENSITIVE, MEDIA, FIRST_MEDIA, MENTIONS};
+                IN_REPLY_TO_USER_SCREEN_NAME, SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT, REPLY_COUNT,
+                DESCENDENT_REPLY_COUNT, RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID,
+                RETWEETED_BY_USER_NAME, RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE,
+                MY_RETWEET_ID, IS_RETWEET, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
+                IS_POSSIBLY_SENSITIVE, MEDIA, FIRST_MEDIA, MENTIONS};
 
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT,
-                TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_INT,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+                TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT,
+                TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
+                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
     }
 

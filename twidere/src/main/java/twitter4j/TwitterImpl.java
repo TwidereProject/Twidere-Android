@@ -1286,8 +1286,10 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     @Override
     public Status retweetStatus(final long statusId) throws TwitterException {
         ensureAuthorizationEnabled();
-        return factory.createStatus(post(conf.getRestBaseURL() + "statuses/retweet/" + statusId + ".json",
-                conf.getSigningRestBaseURL() + "statuses/retweet/" + statusId + ".json", INCLUDE_ENTITIES));
+        final String url = conf.getRestBaseURL() + "statuses/retweet/" + statusId + ".json";
+        final String signUrl = conf.getSigningRestBaseURL() + "statuses/retweet/" + statusId + ".json";
+        return factory.createStatus(post(url, signUrl, INCLUDE_ENTITIES, INCLUDE_REPLY_COUNT,
+                INCLUDE_DESCENDENT_REPLY_COUNT));
     }
 
     @Override
@@ -1307,7 +1309,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public QueryResult search(final Query query) throws TwitterException {
         return factory.createQueryResult(
                 get(conf.getRestBaseURL() + ENDPOINT_SEARCH_TWEETS, conf.getSigningRestBaseURL()
-                        + ENDPOINT_SEARCH_TWEETS, query.asHttpParameterArray(INCLUDE_ENTITIES, INCLUDE_RTS)), query);
+                        + ENDPOINT_SEARCH_TWEETS, query.asHttpParameterArray(INCLUDE_ENTITIES,
+                        INCLUDE_RTS, INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT)), query);
     }
 
     @Override
@@ -1636,10 +1639,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     @Override
     public Status updateStatus(final StatusUpdate status) throws TwitterException {
         ensureAuthorizationEnabled();
-        final String url = conf.getRestBaseURL()
-                + (status.isWithMedia() ? ENDPOINT_STATUSES_UPDATE_WITH_MEDIA : ENDPOINT_STATUSES_UPDATE);
-        final String signUrl = conf.getSigningRestBaseURL()
-                + (status.isWithMedia() ? ENDPOINT_STATUSES_UPDATE_WITH_MEDIA : ENDPOINT_STATUSES_UPDATE);
+        final String url = conf.getRestBaseURL() + ENDPOINT_STATUSES_UPDATE;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_STATUSES_UPDATE;
         return factory.createStatus(post(url, signUrl, status.asHttpParameterArray(INCLUDE_ENTITIES)));
     }
 

@@ -38,7 +38,7 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.view.holder.ActivityViewHolder;
+import org.mariotaku.twidere.view.holder.ActivityListViewHolder;
 
 public class ParcelableActivitiesAboutMeAdapter extends BaseParcelableActivitiesAdapter {
 
@@ -56,7 +56,7 @@ public class ParcelableActivitiesAboutMeAdapter extends BaseParcelableActivities
 	}
 
 	@Override
-	public void bindView(final int position, final ActivityViewHolder holder, final ParcelableActivity item) {
+	public void bindView(final int position, final ActivityListViewHolder holder, final ParcelableActivity item) {
 		if (item == null) return;
 		final ParcelableUser[] sources = item.sources;
 		if (sources == null || sources.length == 0) return;
@@ -196,7 +196,7 @@ public class ParcelableActivitiesAboutMeAdapter extends BaseParcelableActivities
 		}
 	}
 
-	private void displayStatus(final ParcelableStatus status, final ActivityViewHolder holder, final int position) {
+	private void displayStatus(final ParcelableStatus status, final ActivityListViewHolder holder, final int position) {
 
 		final boolean showGap = status.is_gap && !mGapDisallowed && position != getCount() - 1;
 		final boolean displayProfileImage = isDisplayProfileImage();

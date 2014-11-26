@@ -1,24 +1,25 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
+ * Twidere - Twitter client for Android
+ *
  *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -31,11 +32,19 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Outline;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
@@ -43,6 +52,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.graphics.Palette;
+import android.support.v7.graphics.Palette.PaletteAsyncListener;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -61,9 +72,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
 import org.mariotaku.querybuilder.Where;
@@ -76,7 +91,7 @@ import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ListActionAdapter;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ListAction;
-import org.mariotaku.twidere.model.Panes;
+import org.mariotaku.twidere.model.Panes.Right;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -85,7 +100,6 @@ import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -94,10 +108,10 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.ColorLabelLinearLayout;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.ProfileBannerImageView;
-import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
@@ -123,6 +137,7 @@ import static org.mariotaku.twidere.util.Utils.getErrorMessage;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 import static org.mariotaku.twidere.util.Utils.openImage;
 import static org.mariotaku.twidere.util.Utils.openIncomingFriendships;
@@ -144,16 +159,16 @@ import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserProfileFragmentOld extends BaseSupportListFragment implements OnClickListener, OnItemClickListener,
-        OnItemLongClickListener, OnMenuItemClickListener, OnLinkClickListener, Panes.Right, OnSizeChangedListener,
-        OnSharedPreferenceChangeListener, OnTouchListener {
+        OnItemLongClickListener, OnMenuItemClickListener, OnLinkClickListener, Right, OnSizeChangedListener,
+        OnSharedPreferenceChangeListener, OnTouchListener, ImageLoadingListener {
 
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
 
     private ImageLoaderWrapper mProfileImageLoader;
-    private SharedPreferences mPreferences;
 
-    private ProfileImageView mProfileImageView;
+    private CircularImageView mProfileImageView;
+    private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
             mTweetCount, mFollowersCount, mFriendsCount, mErrorMessageView;
@@ -180,7 +195,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
 
     private int mBannerWidth;
 
-    private Drawable mActionBarBackground;
+    private ActionBarDrawable mActionBarBackground;
 
     private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
 
@@ -339,12 +354,20 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         final boolean userIsMe = user.account_id == user.id;
         mErrorRetryContainer.setVisibility(View.GONE);
         mUser = user;
-        mProfileNameContainer.drawStart(getUserColor(getActivity(), user.id, true));
+        final int userColor = getUserColor(getActivity(), user.id, true);
+        mProfileImageView.setBorderColor(userColor);
         mProfileNameContainer.drawEnd(getAccountColor(getActivity(), user.account_id));
         final String nick = getUserNickname(getActivity(), user.id, true);
         mNameView
                 .setText(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick));
-        mProfileImageView.setUserType(user.is_verified, user.is_protected);
+        final int typeIconRes = getUserTypeIconRes(user.is_verified, user.is_protected);
+        if (typeIconRes != 0) {
+            mProfileTypeView.setImageResource(typeIconRes);
+            mProfileTypeView.setVisibility(View.VISIBLE);
+        } else {
+            mProfileTypeView.setImageDrawable(null);
+            mProfileTypeView.setVisibility(View.GONE);
+        }
         mScreenNameView.setText("@" + user.screen_name);
         mDescriptionContainer.setVisibility(userIsMe || !isEmpty(user.description_html) ? View.VISIBLE : View.GONE);
         mDescriptionView.setText(user.description_html != null ? Html.fromHtml(user.description_html) : null);
@@ -366,17 +389,17 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         mTweetCount.setText(getLocalizedNumber(mLocale, user.statuses_count));
         mFollowersCount.setText(getLocalizedNumber(mLocale, user.followers_count));
         mFriendsCount.setText(getLocalizedNumber(mLocale, user.friends_count));
-        if (mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)) {
+        if (userColor != 0) {
             mProfileImageLoader.displayProfileImage(mProfileImageView,
                     getOriginalTwitterProfileImage(user.profile_image_url));
-            final int def_width = res.getDisplayMetrics().widthPixels;
-            final int width = mBannerWidth > 0 ? mBannerWidth : def_width;
-            mProfileBannerView.setImageBitmap(null);
-            mProfileImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
+            setupUserColorActionBar(userColor);
         } else {
-            mProfileImageView.setImageResource(R.drawable.ic_profile_image_default);
-            mProfileBannerView.setImageResource(android.R.color.transparent);
+            mProfileImageLoader.displayProfileImage(mProfileImageView,
+                    getOriginalTwitterProfileImage(user.profile_image_url), this);
         }
+        final int defWidth = res.getDisplayMetrics().widthPixels;
+        final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
+        mProfileImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
         if (isMyAccount(getActivity(), user.id)) {
             final ContentResolver resolver = getContentResolver();
             final ContentValues values = new ContentValues();
@@ -443,7 +466,6 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
         getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -488,28 +510,27 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         setListAdapter(mAdapter);
         getUserInfo(accountId, userId, screenName, false);
 
-        setupBars();
+        setupBaseActionBar();
     }
 
-    private void setupBars() {
+    private void setupBaseActionBar() {
         final FragmentActivity activity = getActivity();
         if (!(activity instanceof LinkHandlerActivity)) return;
         final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
         final ActionBar actionBar = linkHandler.getActionBar();
         if (actionBar == null) return;
-        final int themeColor = linkHandler.getThemeColor();
         final int themeResId = linkHandler.getCurrentThemeResourceId();
-        final boolean isTransparent = ThemeUtils.isTransparentBackground(themeResId);
-        final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(linkHandler) : 0xFF;
-        if (ThemeUtils.isColoredActionBar(themeResId) && useUserActionBar()) {
-            actionBar.setBackgroundDrawable(mActionBarBackground = new ColorDrawable(themeColor));
-        } else {
-            actionBar.setBackgroundDrawable(mActionBarBackground = ThemeUtils.getActionBarBackground(activity, themeResId));
-        }
+        final Drawable shadow = activity.getResources().getDrawable(R.drawable.shadow_user_banner_action_bar);
+        final Drawable background = ThemeUtils.getActionBarBackground(activity, themeResId);
+        actionBar.setBackgroundDrawable(mActionBarBackground = new ActionBarDrawable(getResources(),
+                shadow, background, ThemeUtils.isDarkTheme(themeResId)));
     }
 
-    private boolean useUserActionBar() {
-        return false;
+    private void setupUserColorActionBar(int color) {
+        if (mActionBarBackground == null) {
+            setupBaseActionBar();
+        }
+        mActionBarBackground.setColor(color);
     }
 
     private boolean isUucky(long userId, String screenName, Parcelable parcelable) {
@@ -724,7 +745,7 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
 
         if (mActionBarBackground != null) {
             final float f = headerScroll / (float) mProfileBannerSpace.getHeight();
-            mActionBarBackground.setAlpha(Math.round(0xFF * MathUtils.clamp(f, 0, 1)));
+            mActionBarBackground.setFactor(f);
         }
     }
 
@@ -797,7 +818,8 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         mFriendsContainer = mHeaderView.findViewById(R.id.friends_container);
         mFriendsCount = (TextView) mHeaderView.findViewById(R.id.friends_count);
         mProfileNameContainer = (ColorLabelLinearLayout) mHeaderView.findViewById(R.id.profile_name_container);
-        mProfileImageView = (ProfileImageView) mHeaderView.findViewById(R.id.profile_image);
+        mProfileImageView = (CircularImageView) mHeaderView.findViewById(R.id.profile_image);
+        mProfileTypeView = (ImageView) mHeaderView.findViewById(R.id.profile_type);
         mDescriptionContainer = mHeaderView.findViewById(R.id.description_container);
         mLocationContainer = mHeaderView.findViewById(R.id.location_container);
         mURLContainer = mHeaderView.findViewById(R.id.url_container);
@@ -974,19 +996,20 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         if (mentionItem != null) {
             mentionItem.setTitle(getString(R.string.mention_user_name, getDisplayName(getActivity(), user)));
         }
-        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
-        followItem.setVisible(!isMyself);
-        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
-                && relationship != null;
-        followItem.setEnabled(shouldShowFollowItem);
-        if (shouldShowFollowItem) {
-            followItem.setTitle(isFollowing ? R.string.unfollow : isProtected ? R.string.send_follow_request
-                    : R.string.follow);
-            followItem.setIcon(isFollowing ? R.drawable.ic_action_cancel : R.drawable.ic_action_add);
-        } else {
-            followItem.setTitle(null);
-            followItem.setIcon(null);
-        }
+        Utils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
+//        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
+//        followItem.setVisible(!isMyself);
+//        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
+//                && relationship != null;
+//        followItem.setEnabled(shouldShowFollowItem);
+//        if (shouldShowFollowItem) {
+//            followItem.setTitle(isFollowing ? R.string.unfollow : isProtected ? R.string.send_follow_request
+//                    : R.string.follow);
+//            followItem.setIcon(isFollowing ? R.drawable.ic_action_cancel : R.drawable.ic_action_add);
+//        } else {
+//            followItem.setTitle(null);
+//            followItem.setIcon(null);
+//        }
         if (user.id != user.account_id && relationship != null) {
             setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, relationship.canSourceDMTarget());
             setMenuItemAvailability(menu, MENU_BLOCK, true);
@@ -1023,8 +1046,35 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
     }
 
     private boolean shouldUseNativeMenu() {
-        final boolean isInLinkHandler = getActivity() instanceof LinkHandlerActivity;
-        return isInLinkHandler && FlymeUtils.hasSmartBar();
+        return getActivity() instanceof LinkHandlerActivity;
+    }
+
+    @Override
+    public void onLoadingStarted(String imageUri, View view) {
+
+    }
+
+    @Override
+    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+    }
+
+    @Override
+    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+        Palette.generateAsync(loadedImage, new PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                final ParcelableUser user = mUser;
+                if (user == null) return;
+                final int color = palette.getVibrantColor(0);
+                setupUserColorActionBar(color);
+            }
+        });
+    }
+
+    @Override
+    public void onLoadingCancelled(String imageUri, View view) {
+
     }
 
     private final class MediaTimelineAction extends ListAction {
@@ -1247,4 +1297,146 @@ public class UserProfileFragmentOld extends BaseSupportListFragment implements O
         }
     }
 
+    private static class ActionBarDrawable extends LayerDrawable {
+
+        private final Drawable mShadowDrawable;
+        private final Drawable mBackgroundDrawable;
+        private final LineBackgroundDrawable mLineDrawable;
+        private final ColorDrawable mColorDrawable;
+        private final boolean mColorLineOnly;
+
+        private float mFactor;
+        private int mColor;
+
+        public ActionBarDrawable(Resources resources, Drawable shadow, Drawable background,
+                                 boolean colorLineOnly) {
+            super(new Drawable[]{shadow, background, new LineBackgroundDrawable(resources, 2.0f),
+                    new ColorDrawable()});
+            mShadowDrawable = shadow;
+            mBackgroundDrawable = getDrawable(1);
+            mLineDrawable = (LineBackgroundDrawable) getDrawable(2);
+            mColorDrawable = (ColorDrawable) getDrawable(3);
+            mColorLineOnly = colorLineOnly;
+        }
+
+        public void setColor(int color) {
+            mColor = color;
+            final float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            hsv[2] = Math.min(hsv[2], 0.8f);
+            final int processedColor = Color.HSVToColor(hsv);
+            mColorDrawable.setColor(processedColor);
+            mLineDrawable.setColor(color);
+            setFactor(mFactor);
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void getOutline(Outline outline) {
+            final boolean showColor = !mColorLineOnly && mColor != 0;
+            if (showColor) {
+                mColorDrawable.getOutline(outline);
+            } else {
+                mBackgroundDrawable.getOutline(outline);
+            }
+        }
+
+        @Override
+        public int getIntrinsicWidth() {
+            final boolean showColor = !mColorLineOnly && mColor != 0;
+            if (showColor) {
+                return mColorDrawable.getIntrinsicWidth();
+            } else {
+                return mBackgroundDrawable.getIntrinsicWidth();
+            }
+        }
+
+        @Override
+        public int getIntrinsicHeight() {
+            final boolean showColor = !mColorLineOnly && mColor != 0;
+            if (showColor) {
+                return mColorDrawable.getIntrinsicHeight();
+            } else {
+                return mBackgroundDrawable.getIntrinsicHeight();
+            }
+        }
+
+        public void setFactor(float f) {
+            mFactor = f;
+            mShadowDrawable.setAlpha(Math.round(0xFF * MathUtils.clamp(1 - f, 0, 1)));
+            final boolean hasColor = mColor != 0;
+            final boolean showBackground = mColorLineOnly || !hasColor;
+            final boolean showLine = mColorLineOnly && hasColor;
+            final boolean showColor = !mColorLineOnly && hasColor;
+            mBackgroundDrawable.setAlpha(showBackground ? Math.round(0xFF * MathUtils.clamp(f, 0, 1)) : 0);
+            mLineDrawable.setAlpha(showLine ? Math.round(0xFF * MathUtils.clamp(f, 0, 1)) : 0);
+            mColorDrawable.setAlpha(showColor ? Math.round(0xFF * MathUtils.clamp(f, 0, 1)) : 0);
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private static class LineBackgroundDrawable extends Drawable {
+
+            private final Rect mBounds;
+            private final Paint mPaint;
+            private final float mLineSize;
+
+            private int mAlpha;
+            private int mColor;
+
+            LineBackgroundDrawable(Resources resources, float lineSizeDp) {
+                mBounds = new Rect();
+                mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mLineSize = resources.getDisplayMetrics().density * lineSizeDp;
+                setColor(Color.TRANSPARENT);
+            }
+
+            @Override
+            protected void onBoundsChange(Rect bounds) {
+                super.onBoundsChange(bounds);
+                mBounds.set(bounds);
+            }
+
+            @Override
+            public void draw(Canvas canvas) {
+                canvas.drawRect(mBounds.left, mBounds.bottom - mLineSize, mBounds.right,
+                        mBounds.bottom, mPaint);
+            }
+
+            @Override
+            public int getAlpha() {
+                return mAlpha;
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+                mAlpha = alpha;
+                updatePaint();
+            }
+
+            @Override
+            public void setColorFilter(ColorFilter cf) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.TRANSLUCENT;
+            }
+
+            public void setColor(int color) {
+                mColor = color;
+                updatePaint();
+            }
+
+            private void updatePaint() {
+                mPaint.setColor(mColor);
+                mPaint.setAlpha(Color.alpha(mColor) * mAlpha / 0xFF);
+                invalidateSelf();
+            }
+
+            public int getColor() {
+                return mColor;
+            }
+        }
+    }
 }

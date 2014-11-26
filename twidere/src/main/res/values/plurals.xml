@@ -38,5 +38,9 @@
 		<item quantity="one">@string/created_at_with_N_tweets_per_day_quantity_one</item>
 		<item quantity="other">@string/created_at_with_N_tweets_per_day_quantity_other</item>
 	</plurals>
+    <plurals name="N_retweeted">
+        <item quantity="one">@string/N_retweeted_quantity_one</item>
+        <item quantity="other">@string/N_retweeted_quantity_other</item>
+    </plurals>
 
 </resources>

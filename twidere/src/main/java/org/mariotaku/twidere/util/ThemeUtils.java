@@ -33,6 +33,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -50,6 +52,7 @@ import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConf
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 
 import java.lang.reflect.Constructor;
@@ -62,7 +65,7 @@ public class ThemeUtils implements Constants {
     private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
             android.R.attr.activityCloseExitAnimation};
 
-    private static final String[] sClassPrefixList = {"android.widget.", "android.webkit."};
+    private static final String[] sClassPrefixList = {"android.widget.", "android.webkit.", "org.mariotaku.twidere.view"};
 
     private ThemeUtils() {
         throw new AssertionError();
@@ -148,14 +151,15 @@ public class ThemeUtils implements Constants {
                     final boolean inPopup = mbInfo.isInPopup();
                     if (mbInfo.getMenuInfo() instanceof TwidereMenuInfo) {
                         final TwidereMenuInfo sInfo = (TwidereMenuInfo) mbInfo.getMenuInfo();
-                        icon.setColorFilter(sInfo.isHighlight() ? highlightColor
+                        icon.setColorFilter(sInfo.isHighlight() ? sInfo.getHighlightColor(highlightColor)
                                 : (inPopup ? popupColor : color), mode);
                     } else {
                         icon.setColorFilter(inPopup ? popupColor : color, mode);
                     }
                 } else if (info instanceof TwidereMenuInfo) {
                     final TwidereMenuInfo sInfo = (TwidereMenuInfo) info;
-                    icon.setColorFilter(sInfo.isHighlight() ? highlightColor : color, mode);
+                    icon.setColorFilter(sInfo.isHighlight() ?
+                            sInfo.getHighlightColor(highlightColor) : color, mode);
                 } else {
                     icon.setColorFilter(color, mode);
                 }
@@ -181,6 +185,9 @@ public class ThemeUtils implements Constants {
 
     public static RefreshNowConfig buildRefreshNowConfig(final Context context) {
         final RefreshNowConfig.Builder builder = new RefreshNowConfig.Builder(context);
+        builder.minPullDivisor(2);
+        builder.extraPullDivisor(1);
+        builder.maxOverScrollDistance(72);
         return builder.build();
     }
 
@@ -844,4 +851,21 @@ public class ThemeUtils implements Constants {
         view.setHighlightColor(ThemeUtils.getUserHighlightColor(context));
         view.setTypeface(ThemeUtils.getUserTypeface(context, view.getTypeface()));
     }
+
+    public static void applyParagraphSpacing(TextView textView, float multiplier) {
+        final SpannableStringBuilder builder = SpannableStringBuilder.valueOf(textView.getText());
+        int prevLineBreak, currLineBreak = 0;
+        for (int i = 0, j = builder.length(); i < j; i++) {
+            if (builder.charAt(i) == '\n') {
+                prevLineBreak = currLineBreak;
+                currLineBreak = i;
+                if (currLineBreak > 0) {
+                    builder.setSpan(new ParagraphSpacingSpan(multiplier), prevLineBreak, currLineBreak,
+                            Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                }
+            }
+        }
+        textView.setText(builder);
+    }
+
 }

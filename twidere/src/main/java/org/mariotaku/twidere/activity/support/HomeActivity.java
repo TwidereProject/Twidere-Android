@@ -772,7 +772,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mSlidingMenu.setShadowWidthRes(R.dimen.default_sliding_menu_shadow_width);
         mSlidingMenu.setShadowDrawable(R.drawable.shadow_left);
         mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
-        mSlidingMenu.setBehindWidthRes(R.dimen.drawer_width_home);
+//        mSlidingMenu.setBehindWidthRes(R.dimen.drawer_width_home);
+        mSlidingMenu.setBehindOffsetRes(R.dimen.drawer_offset_home);
         mSlidingMenu.setTouchmodeMarginThreshold(marginThreshold);
         mSlidingMenu.setFadeDegree(0.5f);
         mSlidingMenu.setMenu(R.layout.drawer_home_accounts);

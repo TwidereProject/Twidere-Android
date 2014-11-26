@@ -67,10 +67,12 @@ public class ImageLoaderWrapper implements Constants {
         imageOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
         imageOptsBuilder.resetViewBeforeLoading(true);
         final DisplayImageOptions.Builder bannerOptsBuilder = new DisplayImageOptions.Builder();
+        bannerOptsBuilder.resetViewBeforeLoading(true);
+        bannerOptsBuilder.showImageOnLoading(android.R.color.transparent);
         bannerOptsBuilder.cacheInMemory(true);
         bannerOptsBuilder.cacheOnDisk(true);
         bannerOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
-        bannerOptsBuilder.displayer(new FadeInBitmapDisplayer(200, true, true, false));
+        bannerOptsBuilder.displayer(new FadeInBitmapDisplayer(200, true, true, true));
 
         mProfileImageDisplayOptions = profileOptsBuilder.build();
         mOvalProfileImageDisplayOptions = ovalProfileOptsBuilder.build();
@@ -110,6 +112,10 @@ public class ImageLoaderWrapper implements Constants {
 
     public void displayProfileImage(final ImageView view, final String url) {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions);
+    }
+
+    public void displayProfileImage(final ImageView view, final String url, final ImageLoadingListener listener) {
+        mImageLoader.displayImage(url, view, mProfileImageDisplayOptions, listener);
     }
 
     public void loadProfileImage(final String url, final ImageLoadingListener listener) {

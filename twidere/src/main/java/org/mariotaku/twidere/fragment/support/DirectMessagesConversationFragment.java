@@ -39,6 +39,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
@@ -62,6 +63,7 @@ import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.DirectMessagesConversationAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.Panes;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -72,12 +74,14 @@ import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Conversation;
 import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
+import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.StatusTextCountView;
+import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.List;
 import java.util.Locale;
@@ -105,6 +109,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
     private ImageView mAddImageButton;
     private View mConversationContainer, mRecipientSelectorContainer, mRecipientSelector;
     private Spinner mAccountSpinner;
+    private ImageView mSenderProfileImageView, mRecipientProfileImageView;
 
     private PopupMenu mPopupMenu;
 
@@ -130,6 +135,11 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
         }
     };
 
+    private Account mSender;
+    private ParcelableUser mRecipient;
+    private ImageLoaderWrapper mImageLoader;
+    private IColorLabelView mProfileImageContainer;
+
     @Override
     public void afterTextChanged(final Editable s) {
 
@@ -143,7 +153,9 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mImageLoader = TwidereApplication.getInstance(getActivity()).getImageLoaderWrapper();
         mTwitterWrapper = getTwitterWrapper();
         mValidator = new TwidereValidator(getActivity());
         mLocale = getResources().getConfiguration().locale;
@@ -198,7 +210,9 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
                 final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
                 if (user != null && mAccountId > 0) {
                     mRecipientId = user.id;
+                    mRecipient = user;
                     showConversation(mAccountId, mRecipientId);
+                    updateProfileImage();
                 }
                 break;
             }
@@ -212,6 +226,37 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        updateProfileImage();
+    }
+
+    private void updateProfileImage() {
+        if (mProfileImageContainer == null || mRecipientProfileImageView == null
+                || mSenderProfileImageView == null) {
+            return;
+        }
+        if (mSender != null && mRecipient != null) {
+            mImageLoader.displayProfileImage(mSenderProfileImageView, mSender.profile_image_url);
+            mImageLoader.displayProfileImage(mRecipientProfileImageView, mRecipient.profile_image_url);
+            mProfileImageContainer.drawEnd(mSender.color);
+        } else {
+            mImageLoader.cancelDisplayTask(mSenderProfileImageView);
+            mImageLoader.cancelDisplayTask(mRecipientProfileImageView);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_direct_messages_conversation, menu);
+        final View profileImageItemView = menu.findItem(R.id.item_profile_image).getActionView();
+        profileImageItemView.setOnClickListener(this);
+        mProfileImageContainer = (IColorLabelView) profileImageItemView;
+        mRecipientProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.recipient_profile_image);
+        mSenderProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.sender_profile_image);
     }
 
     @Override
@@ -232,6 +277,13 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
             case R.id.add_image: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
                 startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                break;
+            }
+            case R.id.item_profile_image: {
+                final ParcelableUser recipient = mRecipient;
+                if (recipient == null) return;
+                Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
+                        recipient.screen_name);
                 break;
             }
         }
@@ -283,6 +335,8 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
         final Account account = (Account) mAccountSpinner.getSelectedItem();
         if (account != null) {
             mAccountId = account.account_id;
+            mSender = account;
+            updateProfileImage();
         }
     }
 
@@ -433,6 +487,9 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
     public void showConversation(final long accountId, final long recipientId) {
         mAccountId = accountId;
         mRecipientId = recipientId;
+        final Context context = getActivity();
+        mSender = Account.getAccount(context, accountId);
+        mRecipient = Utils.getUserForConversation(context, accountId, recipientId);
         final LoaderManager lm = getLoaderManager();
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, accountId);
@@ -443,6 +500,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
             mLoaderInitialized = true;
             lm.initLoader(0, args, this);
         }
+        updateProfileImage();
     }
 
     @Override

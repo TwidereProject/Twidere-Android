@@ -108,7 +108,7 @@ import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ColorLabelFrameLayout;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -383,20 +383,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     @Override
     public void onBackPressed() {
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
-        final String option = mPreferences.getString(KEY_COMPOSE_QUIT_ACTION, VALUE_COMPOSE_QUIT_ACTION_ASK);
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final boolean textChanged = text != null && !text.isEmpty() && !text.equals(mOriginalText);
         final boolean isEditingDraft = INTENT_ACTION_EDIT_DRAFT.equals(getIntent().getAction());
-        if (VALUE_COMPOSE_QUIT_ACTION_DISCARD.equals(option)) {
-            mTask = new DiscardTweetTask(this).execute();
-        } else if (textChanged || hasMedia() || isEditingDraft) {
-            if (VALUE_COMPOSE_QUIT_ACTION_SAVE.equals(option)) {
-                saveToDrafts();
-                Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                new UnsavedTweetDialogFragment().show(getSupportFragmentManager(), "unsaved_tweet");
-            }
+        if (textChanged || hasMedia() || isEditingDraft) {
+            saveToDrafts();
+            Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
+            finish();
         } else {
             mTask = new DiscardTweetTask(this).execute();
         }
@@ -1187,7 +1180,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     public static class ViewStatusDialogFragment extends BaseSupportDialogFragment {
 
-        private StatusViewHolder mHolder;
+        private StatusListViewHolder mHolder;
 
         public ViewStatusDialogFragment() {
             setStyle(STYLE_NO_TITLE, 0);
@@ -1238,20 +1231,20 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                     && !TextUtils.isEmpty(retweeted_by_screen_name)) {
                 if (!prefs.getBoolean(KEY_NAME_FIRST, true)) {
                     mHolder.reply_retweet_status.setText(status.retweet_count > 1 ? getString(
-                            R.string.retweeted_by_with_count, retweeted_by_screen_name, status.retweet_count - 1)
-                            : getString(R.string.retweeted_by, retweeted_by_screen_name));
+                            R.string.retweeted_by_name_with_count, retweeted_by_screen_name, status.retweet_count - 1)
+                            : getString(R.string.retweeted_by_name, retweeted_by_screen_name));
                 } else {
                     mHolder.reply_retweet_status.setText(status.retweet_count > 1 ? getString(
-                            R.string.retweeted_by_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
-                            R.string.retweeted_by, retweeted_by_name));
+                            R.string.retweeted_by_name_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
+                            R.string.retweeted_by_name, retweeted_by_name));
                 }
                 mHolder.reply_retweet_status.setText(status.retweet_count > 1 ? getString(
-                        R.string.retweeted_by_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
-                        R.string.retweeted_by, retweeted_by_name));
+                        R.string.retweeted_by_name_with_count, retweeted_by_name, status.retweet_count - 1) : getString(
+                        R.string.retweeted_by_name, retweeted_by_name));
                 mHolder.reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_indicator_retweet,
                         0, 0, 0);
             } else if (status.in_reply_to_status_id > 0 && !TextUtils.isEmpty(status.in_reply_to_screen_name)) {
-                mHolder.reply_retweet_status.setText(getString(R.string.in_reply_to, status.in_reply_to_screen_name));
+                mHolder.reply_retweet_status.setText(getString(R.string.in_reply_to_name, status.in_reply_to_screen_name));
                 mHolder.reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_indicator_conversation, 0, 0, 0);
             }
@@ -1268,7 +1261,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         @Override
         public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
             final ScrollView view = (ScrollView) inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
-            mHolder = new StatusViewHolder(view.getChildAt(0));
+            mHolder = new StatusListViewHolder(view.getChildAt(0));
             return view;
         }
 
