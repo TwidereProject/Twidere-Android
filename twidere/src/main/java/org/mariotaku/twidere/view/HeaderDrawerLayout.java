@@ -1,3 +1,22 @@
+/*
+ * Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.mariotaku.twidere.view;
 
 import android.annotation.SuppressLint;
@@ -20,11 +39,11 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.MathUtils;
 
 /**
- * Created by mariotaku on 14/11/27.
+ * Custom ViewGroup for user profile page like Google+ but with tab swipe
+ *
+ * @author mariotaku
  */
-public class UserProfileDrawer extends ViewGroup {
-
-    static final String LOGTAG = "UserProfileDrawer";
+public class HeaderDrawerLayout extends ViewGroup {
 
     private final ViewDragHelper mDragHelper;
     private final ScrollerCompat mScroller;
@@ -40,11 +59,11 @@ public class UserProfileDrawer extends ViewGroup {
 
     private int mHeaderOffset;
 
-    public UserProfileDrawer(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HeaderDrawerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.UserProfileDrawer);
-        final int headerLayoutId = a.getResourceId(R.styleable.UserProfileDrawer_headerLayout, 0);
-        final int contentLayoutId = a.getResourceId(R.styleable.UserProfileDrawer_contentLayout, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HeaderDrawerLayout);
+        final int headerLayoutId = a.getResourceId(R.styleable.HeaderDrawerLayout_headerLayout, 0);
+        final int contentLayoutId = a.getResourceId(R.styleable.HeaderDrawerLayout_contentLayout, 0);
         addView(mContainer = new InternalContainer(this, context, headerLayoutId, contentLayoutId),
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         a.recycle();
@@ -53,11 +72,11 @@ public class UserProfileDrawer extends ViewGroup {
         mScroller = ScrollerCompat.create(context);
     }
 
-    public UserProfileDrawer(Context context, AttributeSet attrs) {
+    public HeaderDrawerLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public UserProfileDrawer(Context context) {
+    public HeaderDrawerLayout(Context context) {
         this(context, null);
     }
 
@@ -270,12 +289,12 @@ public class UserProfileDrawer extends ViewGroup {
 
     private static class DragCallback extends ViewDragHelper.Callback {
 
-        private final UserProfileDrawer mDrawer;
+        private final HeaderDrawerLayout mDrawer;
         private long mTime;
         private float mDx, mDy, mVelocity;
         private boolean mScrollingHeaderByHelper;
 
-        public DragCallback(UserProfileDrawer drawer) {
+        public DragCallback(HeaderDrawerLayout drawer) {
             mDrawer = drawer;
             mTime = -1;
             mDx = Float.NaN;
@@ -376,9 +395,9 @@ public class UserProfileDrawer extends ViewGroup {
 
     private static class GestureListener extends SimpleOnGestureListener {
 
-        private final UserProfileDrawer mDrawer;
+        private final HeaderDrawerLayout mDrawer;
 
-        public GestureListener(UserProfileDrawer drawer) {
+        public GestureListener(HeaderDrawerLayout drawer) {
             mDrawer = drawer;
         }
 
@@ -434,10 +453,10 @@ public class UserProfileDrawer extends ViewGroup {
     @SuppressLint("ViewConstructor")
     private static class InternalContainer extends ViewGroup {
 
-        private final UserProfileDrawer mParent;
+        private final HeaderDrawerLayout mParent;
         private final View mHeaderView, mContentView;
 
-        public InternalContainer(UserProfileDrawer parent, Context context, int headerLayoutId, int contentLayoutId) {
+        public InternalContainer(HeaderDrawerLayout parent, Context context, int headerLayoutId, int contentLayoutId) {
             super(context);
             mParent = parent;
             final LayoutInflater inflater = LayoutInflater.from(context);

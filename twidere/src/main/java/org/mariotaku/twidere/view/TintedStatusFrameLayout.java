@@ -30,11 +30,12 @@ import android.widget.FrameLayout;
 
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.MainFrameLayout.FitSystemWindowsCallback;
 
 /**
  * Created by mariotaku on 14/11/26.
  */
-public class UserProfileContentFrameLayout extends FrameLayout {
+public class TintedStatusFrameLayout extends FrameLayout {
 
     private final Paint mBlackPaint, mShadowPaint, mColorPaint;
 
@@ -43,15 +44,15 @@ public class UserProfileContentFrameLayout extends FrameLayout {
     private int mColorAlpha, mShadowAlpha;
     private boolean mDrawShadow, mDrawColor;
 
-    public UserProfileContentFrameLayout(Context context) {
+    public TintedStatusFrameLayout(Context context) {
         this(context, null);
     }
 
-    public UserProfileContentFrameLayout(Context context, AttributeSet attrs) {
+    public TintedStatusFrameLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public UserProfileContentFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TintedStatusFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mBlackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBlackPaint.setColor(Color.BLACK);
@@ -60,9 +61,14 @@ public class UserProfileContentFrameLayout extends FrameLayout {
         setWillNotDraw(false);
     }
 
+
     public void setColor(int color) {
+        setColor(color, Color.alpha(color));
+    }
+
+    public void setColor(int color, int alpha) {
         mColorPaint.setColor(color);
-        mColorAlpha = Color.alpha(color);
+        mColorAlpha = alpha;
         updateAlpha();
     }
 
@@ -75,6 +81,10 @@ public class UserProfileContentFrameLayout extends FrameLayout {
     @Override
     protected boolean fitSystemWindows(Rect insets) {
         setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
+        final Context context = getContext();
+        if (context instanceof FitSystemWindowsCallback) {
+            ((FitSystemWindowsCallback) context).fitSystemWindows(insets);
+        }
         return false;
     }
 
@@ -89,7 +99,7 @@ public class UserProfileContentFrameLayout extends FrameLayout {
         canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mDrawColor ? mColorPaint : mBlackPaint);
     }
 
-    private void setStatusBarHeight(int height) {
+    protected void setStatusBarHeight(int height) {
         mStatusBarHeight = height;
         invalidate();
     }

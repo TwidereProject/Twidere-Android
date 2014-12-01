@@ -83,7 +83,7 @@
         <attr name="borderColor" format="color"/>
         <attr name="elevation" format="dimension"/>
     </declare-styleable>
-    <declare-styleable name="UserProfileDrawer">
+    <declare-styleable name="HeaderDrawerLayout">
         <attr name="headerLayout" format="reference"/>
         <attr name="contentLayout" format="reference"/>
     </declare-styleable>

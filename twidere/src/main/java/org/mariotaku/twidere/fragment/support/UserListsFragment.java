@@ -19,29 +19,30 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.view.ExtendedViewPager;
-import org.mariotaku.twidere.view.LinePageIndicator;
 
-public class UserListsFragment extends BaseSupportFragment implements OnPageChangeListener,
-        RefreshScrollTopInterface, SupportFragmentCallback {
+public class UserListsFragment extends BaseSupportFragment implements RefreshScrollTopInterface,
+        SupportFragmentCallback, SystemWindowsInsetsCallback {
 
-    private ExtendedViewPager mViewPager;
+    private ViewPager mViewPager;
 
     private SupportTabsAdapter mAdapter;
-    private LinePageIndicator mPagerIndicator;
+    private PagerSlidingTabStrip mPagerIndicator;
 
     private Fragment mCurrentVisibleFragment;
 
@@ -59,38 +60,23 @@ public class UserListsFragment extends BaseSupportFragment implements OnPageChan
         final Bundle args = getArguments();
         final FragmentActivity activity = getActivity();
         mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
-        mAdapter.addTab(UserListsListFragment.class, args, getString(R.string.lists),
-                R.drawable.ic_action_twitter, 0);
+        mAdapter.addTab(UserListsListFragment.class, args, getString(R.string.lists), null, 0);
         mAdapter.addTab(UserListMembershipsListFragment.class, args,
-                getString(R.string.lists_following_user), R.drawable.ic_action_user, 1);
+                getString(R.string.lists_following_user), 0, 1);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(2);
-        mPagerIndicator.setSelectedColor(ThemeUtils.getThemeColor(activity));
         mPagerIndicator.setViewPager(mViewPager);
     }
 
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_content_pages, container, false);
     }
 
     @Override
     public void onDetachFragment(final Fragment fragment) {
 
-    }
-
-    @Override
-    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageScrollStateChanged(final int state) {
-    }
-
-    @Override
-    public void onPageSelected(final int position) {
     }
 
     @Override
@@ -103,8 +89,8 @@ public class UserListsFragment extends BaseSupportFragment implements OnPageChan
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewPager = (ExtendedViewPager) view.findViewById(R.id.search_pager);
-        mPagerIndicator = (LinePageIndicator) view.findViewById(R.id.search_pager_indicator);
+        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        mPagerIndicator = (PagerSlidingTabStrip) view.findViewById(R.id.view_pager_tabs);
     }
 
     @Override
@@ -124,9 +110,24 @@ public class UserListsFragment extends BaseSupportFragment implements OnPageChan
         return true;
     }
 
+
+    @Override
+    protected void fitSystemWindows(Rect insets) {
+        super.fitSystemWindows(insets);
+        final View view = getView();
+        if (view == null) {
+            return;
+        }
+        view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+    }
+
     @Override
     public boolean triggerRefresh(final int position) {
         return false;
     }
 
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        return false;
+    }
 }

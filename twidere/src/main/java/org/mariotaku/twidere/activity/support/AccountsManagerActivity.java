@@ -38,7 +38,7 @@ public class AccountsManagerActivity extends BaseSupportActivity {
         setContentView(R.layout.activity_content_fragment);
         final FragmentManager fm = getSupportFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_fragment, new AccountsManagerFragment());
+        ft.replace(R.id.main_content, new AccountsManagerFragment());
         ft.commit();
     }
 
@@ -46,7 +46,7 @@ public class AccountsManagerActivity extends BaseSupportActivity {
     public void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
         final FragmentManager fm = getSupportFragmentManager();
-        final Fragment f = fm.findFragmentById(R.id.content_fragment);
+        final Fragment f = fm.findFragmentById(R.id.main_content);
         if (f instanceof IBaseFragment) {
             ((IBaseFragment) f).requestFitSystemWindows();
         }

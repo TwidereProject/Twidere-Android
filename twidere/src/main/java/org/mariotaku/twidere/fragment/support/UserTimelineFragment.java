@@ -26,7 +26,7 @@ import org.mariotaku.twidere.loader.support.UserTimelineLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.UserProfileDrawer.DrawerCallback;
+import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 
 import java.util.List;
 

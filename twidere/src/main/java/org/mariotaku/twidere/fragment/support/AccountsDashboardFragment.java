@@ -31,7 +31,6 @@ import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -71,6 +70,7 @@ import org.mariotaku.twidere.model.Account.Indices;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 
 import java.util.ArrayList;
@@ -184,10 +184,10 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             switch (option.id) {
                 case MENU_VIEW_PROFILE: {
                     final FragmentActivity activity = getActivity();
-                    final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                            new Pair<View, String>(mAccountProfileImageView, UserProfileFragment.TRANSITION_NAME_PROFILE_IMAGE));
-                    openUserProfile(activity, account.account_id, account.account_id, account.screen_name,
-                            options.toBundle());
+                    final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
+                            new Pair<View, String>(mAccountProfileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
+                    openUserProfile(activity, account.account_id, account.account_id,
+                            account.screen_name, activityOption);
                     break;
                 }
                 case MENU_SEARCH: {

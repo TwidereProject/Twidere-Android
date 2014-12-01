@@ -18,8 +18,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.UserProfileContentFrameLayout
-    android:id="@+id/user_profile_fragment"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -39,51 +38,14 @@
             android:layout_gravity="top"
             android:scaleType="centerCrop"/>
 
-        <org.mariotaku.twidere.view.UserProfileDrawer
+        <org.mariotaku.twidere.view.HeaderDrawerLayout
             android:id="@+id/user_profile_drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentLayout="@layout/fragment_user_profile_pages"
-            app:headerLayout="@layout/header_user_profile"/>
+            app:contentLayout="@layout/fragment_content_pages"
+            app:headerLayout="@layout/header_user"/>
     </org.mariotaku.twidere.view.ExtendedFrameLayout>
 
-    <FrameLayout
-        android:id="@+id/progress_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include layout="@layout/layout_content_fragment_common"/>
 
-        <ProgressBar
-            style="?android:progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/error_retry_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/error_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/retry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:minWidth="84dp"
-            android:text="@string/retry"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-    </LinearLayout>
-
-
-</org.mariotaku.twidere.view.UserProfileContentFrameLayout>
+</FrameLayout>

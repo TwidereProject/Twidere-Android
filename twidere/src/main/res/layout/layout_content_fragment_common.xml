@@ -18,25 +18,19 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <org.mariotaku.twidere.view.ExtendedFrameLayout
-        android:id="@+id/details_container"
+    <FrameLayout
+        android:id="@+id/progress_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-
-    <ProgressBar
-        android:id="@+id/details_load_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        <ProgressBar
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/error_retry_container"
@@ -64,4 +58,5 @@
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 
-</FrameLayout>
+
+</merge>

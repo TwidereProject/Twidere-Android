@@ -55,6 +55,16 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     }
 
     @Override
+    public int getCurrentThemeBackgroundAlpha() {
+        return mCurrentThemeBackgroundAlpha;
+    }
+
+    @Override
+    public int getCurrentThemeColor() {
+        return mCurrentThemeColor;
+    }
+
+    @Override
     public String getThemeFontFamily() {
         return ThemeUtils.getThemeFontFamily(this);
     }
@@ -77,7 +87,6 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
         }
         setTheme();
         super.onCreate(savedInstanceState);
-        setActionBarBackground();
     }
 
     @Override
@@ -103,10 +112,6 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
 
     protected boolean shouldSetWindowBackground() {
         return true;
-    }
-
-    private final void setActionBarBackground() {
-        ThemeUtils.applyActionBarBackground(getActionBar(), this, mCurrentThemeResource);
     }
 
     private final void setTheme() {

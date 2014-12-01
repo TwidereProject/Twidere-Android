@@ -95,6 +95,16 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     }
 
     @Override
+    public int getCurrentThemeBackgroundAlpha() {
+        return mCurrentThemeBackgroundAlpha;
+    }
+
+    @Override
+    public int getCurrentThemeColor() {
+        return mCurrentThemeColor;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();

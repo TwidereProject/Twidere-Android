@@ -306,4 +306,21 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <org.mariotaku.twidere.view.AssetFontTextView
+        android:id="@+id/uucky_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/card"
+        android:alpha="0.2"
+        android:gravity="center"
+        android:padding="@dimen/element_spacing_small"
+        android:text="- Luna meae es -"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="10sp"
+        android:textStyle="italic"
+        android:typeface="serif"
+        android:visibility="gone"
+        app:fontPath="fonts/LibreBaskerville-Italic.ttf"/>
+
+
 </RelativeLayout>

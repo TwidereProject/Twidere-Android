@@ -36,7 +36,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -516,11 +515,11 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         switch (view.getId()) {
             case R.id.profile: {
                 final FragmentActivity activity = getActivity();
-                final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                        new Pair<View, String>(mProfileImageView, UserProfileFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                        new Pair<View, String>(mProfileTypeView, UserProfileFragment.TRANSITION_NAME_PROFILE_TYPE));
+                final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
+                        new Pair<View, String>(mProfileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                        new Pair<View, String>(mProfileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
                 openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name,
-                        options.toBundle());
+                        activityOption);
                 break;
             }
             case R.id.follow: {
@@ -581,7 +580,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_details_page, container, false);
+        final View view = inflater.inflate(R.layout.fragment_details_page_with_menubar, container, false);
         view.findViewById(R.id.menu_bar).setVisibility(View.GONE);
         mMainContent = view.findViewById(R.id.content);
         mDetailsLoadProgress = (ProgressBar) view.findViewById(R.id.details_load_progress);

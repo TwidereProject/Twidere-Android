@@ -24,7 +24,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -35,6 +36,7 @@ import android.widget.ImageView.ScaleType;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -374,10 +376,10 @@ public class CursorStatusesAdapter extends BaseCursorAdapter implements IStatuse
                 final ParcelableStatus status = getStatus(position);
                 if (status == null) return;
                 final Activity activity = (Activity) getContext();
-                final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                        view, "profile_image");
+                final Bundle options = Utils.makeSceneTransitionOption(activity,
+                        new Pair<>(view, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
                 openUserProfile(mContext, status.account_id, status.user_id,
-                        status.user_screen_name, options.toBundle());
+                        status.user_screen_name, options);
                 break;
             }
         }

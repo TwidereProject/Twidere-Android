@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.HomeContentFrameLayout
+<org.mariotaku.twidere.view.MainFrameLayout
     android:id="@+id/home_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -34,4 +34,4 @@
     </LinearLayout>
 
     <include layout="@layout/layout_home_actions_button"/>
-</org.mariotaku.twidere.view.HomeContentFrameLayout>
+</org.mariotaku.twidere.view.MainFrameLayout>

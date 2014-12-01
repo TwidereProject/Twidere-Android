@@ -108,10 +108,10 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.ColorLabelLinearLayout;
+import org.mariotaku.twidere.view.HeaderDrawerLayout;
+import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.ProfileBannerImageView;
-import org.mariotaku.twidere.view.UserProfileContentFrameLayout;
-import org.mariotaku.twidere.view.UserProfileDrawer;
-import org.mariotaku.twidere.view.UserProfileDrawer.DrawerCallback;
+import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.util.Locale;
@@ -148,7 +148,7 @@ import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
-public class UserProfileFragment extends BaseSupportFragment implements OnClickListener,
+public class UserFragment extends BaseSupportFragment implements OnClickListener,
         OnMenuItemClickListener, OnLinkClickListener, OnSizeChangedListener,
         OnSharedPreferenceChangeListener, OnTouchListener, ImageLoadingListener, DrawerCallback,
         SupportFragmentCallback, SystemWindowsInsetsCallback {
@@ -174,8 +174,8 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
     private View mFollowingYouIndicator;
     private View mMainContent;
     private View mProfileBannerSpace;
-    private UserProfileContentFrameLayout mUserProfileContent;
-    private UserProfileDrawer mUserProfileDrawer;
+    private TintedStatusFrameLayout mTintedStatusContent;
+    private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private PagerSlidingTabStrip mPagerIndicator;
 
@@ -332,6 +332,7 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
     private int mBannerWidth;
     private ActionBarDrawable mActionBarBackground;
     private Fragment mCurrentVisibleFragment;
+    private View mUuckyFooter;
 
     public void displayUser(final ParcelableUser user) {
         mRelationship = null;
@@ -401,10 +402,88 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             final String where = Accounts.ACCOUNT_ID + " = " + user.id;
             resolver.update(Accounts.CONTENT_URI, values, where, null);
         }
+        mUuckyFooter.setVisibility(isUucky(user.id, user.screen_name, user) ? View.VISIBLE : View.GONE);
         if (!user.is_cache) {
             getFriendship();
         }
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void fling(float velocity) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).fling(velocity);
+        }
+    }
+
+    @Override
+    public void scrollBy(float dy) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).scrollBy(dy);
+        }
+    }
+
+    @Override
+    public boolean canScroll(float dy) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
+    }
+
+    @Override
+    public boolean isScrollContent(float x, float y) {
+        final ViewPager v = mViewPager;
+        final int[] location = new int[2];
+        v.getLocationOnScreen(location);
+        return x >= location[0] && x <= location[0] + v.getWidth()
+                && y >= location[1] && y <= location[1] + v.getHeight();
+    }
+
+    @Override
+    public void cancelTouch() {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).cancelTouch();
+        }
+    }
+
+    @Override
+    public void topChanged(int top) {
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        if (drawer == null) return;
+        final int offset = drawer.getPaddingTop() - top;
+        updateScrollOffset(offset);
+
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).topChanged(top);
+        }
+    }
+
+    @Override
+    public Fragment getCurrentVisibleFragment() {
+        return mCurrentVisibleFragment;
+    }
+
+    @Override
+    public void onDetachFragment(Fragment fragment) {
+
+    }
+
+    @Override
+    public void onSetUserVisibleHint(Fragment fragment, boolean isVisibleToUser) {
+        mCurrentVisibleFragment = isVisibleToUser ? fragment : null;
+    }
+
+    @Override
+    public boolean triggerRefresh(int position) {
+        return false;
+    }
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        return false;
     }
 
     public void getUserInfo(final long accountId, final long userId, final String screenName,
@@ -433,74 +512,6 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             mErrorRetryContainer.setVisibility(View.GONE);
             return;
         }
-    }
-
-    public void setListShown(boolean shown) {
-        final boolean drawColor;
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof LinkHandlerActivity) {
-            final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
-            drawColor = !ThemeUtils.isDarkTheme(linkHandler.getCurrentThemeResourceId());
-        } else {
-            drawColor = false;
-        }
-        mUserProfileContent.setDrawShadow(shown);
-        mUserProfileContent.setDrawColor(drawColor);
-    }
-
-    private void setupUserPages() {
-        final Context context = getActivity();
-        final Bundle args = getArguments(), tabArgs = new Bundle();
-        final long accountId;
-        if (args.containsKey(EXTRA_USER)) {
-            final ParcelableUser user = args.getParcelable(EXTRA_USER);
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId = user.account_id);
-            tabArgs.putLong(EXTRA_USER_ID, user.id);
-            tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
-        } else {
-            accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId);
-            tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
-            tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
-        }
-        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0);
-        if (Utils.isOfficialKeyAccount(context, accountId)) {
-            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), null, 1);
-        }
-        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), null, 2);
-        mPagerIndicator.notifyDataSetChanged();
-    }
-
-    private void setupBaseActionBar() {
-        final FragmentActivity activity = getActivity();
-        if (!(activity instanceof LinkHandlerActivity)) return;
-        final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
-        final ActionBar actionBar = linkHandler.getActionBar();
-        if (actionBar == null) return;
-        final int themeResId = linkHandler.getCurrentThemeResourceId();
-        final Drawable shadow = activity.getResources().getDrawable(R.drawable.shadow_user_banner_action_bar);
-        final Drawable background = ThemeUtils.getActionBarBackground(activity, themeResId);
-        actionBar.setBackgroundDrawable(mActionBarBackground = new ActionBarDrawable(getResources(),
-                shadow, background, ThemeUtils.isDarkTheme(themeResId)));
-        mUserProfileContent.setShadowColor(0xA0000000);
-    }
-
-    private void setupUserColorActionBar(int color) {
-        if (mActionBarBackground == null) {
-            setupBaseActionBar();
-        }
-        mActionBarBackground.setColor(color);
-        mUserProfileContent.setColor(color);
-        mPagerIndicator.setIndicatorColor(color);
-    }
-
-    private boolean isUucky(long userId, String screenName, Parcelable parcelable) {
-        if (userId == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(screenName)) return true;
-        if (parcelable instanceof ParcelableUser) {
-            final ParcelableUser user = (ParcelableUser) parcelable;
-            return user.id == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(user.screen_name);
-        }
-        return false;
     }
 
     @Override
@@ -542,8 +553,14 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mTintedStatusContent = (TintedStatusFrameLayout) activity.findViewById(R.id.main_content);
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
@@ -571,7 +588,7 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
         ViewCompat.setTransitionName(mProfileImageView, TRANSITION_NAME_PROFILE_IMAGE);
         ViewCompat.setTransitionName(mProfileTypeView, TRANSITION_NAME_PROFILE_TYPE);
 
-        mUserProfileDrawer.setDrawerCallback(this);
+        mHeaderDrawerLayout.setDrawerCallback(this);
 
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager());
 
@@ -590,8 +607,6 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
         getUserInfo(accountId, userId, screenName, false);
 
         setupBaseActionBar();
-
-//        updateScrollOffset(0);
 
         setupUserPages();
     }
@@ -729,6 +744,34 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
     }
 
     @Override
+    public void onLoadingStarted(String imageUri, View view) {
+
+    }
+
+    @Override
+    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+    }
+
+    @Override
+    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+        Palette.generateAsync(loadedImage, new PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                final ParcelableUser user = mUser;
+                if (user == null) return;
+                final int color = palette.getVibrantColor(0);
+                setupUserColorActionBar(color);
+            }
+        });
+    }
+
+    @Override
+    public void onLoadingCancelled(String imageUri, View view) {
+
+    }
+
+    @Override
     public boolean onMenuItemClick(final MenuItem item) {
         return handleMenuItemClick(item);
 
@@ -757,16 +800,15 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         final Context context = view.getContext();
         super.onViewCreated(view, savedInstanceState);
-        mUserProfileContent = (UserProfileContentFrameLayout) view.findViewById(R.id.user_profile_fragment);
         mMainContent = view.findViewById(R.id.details_container);
-        mUserProfileDrawer = (UserProfileDrawer) view.findViewById(R.id.user_profile_drawer);
+        mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.user_profile_drawer);
         mErrorRetryContainer = view.findViewById(R.id.error_retry_container);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mRetryButton = (Button) view.findViewById(R.id.retry);
         mErrorMessageView = (TextView) view.findViewById(R.id.error_message);
         mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
-        final View headerView = mUserProfileDrawer.getHeader();
-        final View contentView = mUserProfileDrawer.getContent();
+        final View headerView = mHeaderDrawerLayout.getHeader();
+        final View contentView = mHeaderDrawerLayout.getContent();
         mNameView = (TextView) headerView.findViewById(R.id.name);
         mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);
@@ -789,8 +831,7 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
         mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (PagerSlidingTabStrip) contentView.findViewById(R.id.view_pager_tabs);
-        final View cardView = headerView.findViewById(R.id.card);
-        ThemeUtils.applyThemeAlphaToDrawable(context, cardView.getBackground());
+        mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
     }
 
     @Override
@@ -802,8 +843,8 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             progress.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         }
         mErrorRetryContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        mUserProfileDrawer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        mUserProfileDrawer.setClipToPadding(false);
+        mHeaderDrawerLayout.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        mHeaderDrawerLayout.setClipToPadding(ThemeUtils.isTransparentBackground(getActivity()));
         final int bannerHeight = mProfileBannerView.getHeight();
         if (bannerHeight != 0) {
             final ViewGroup.LayoutParams params = mProfileBannerSpace.getLayoutParams();
@@ -811,6 +852,16 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             mProfileBannerSpace.setLayoutParams(params);
             mProfileBannerSpace.requestLayout();
         }
+    }
+
+    public void setListShown(boolean shown) {
+        final TintedStatusFrameLayout tintedStatus = mTintedStatusContent;
+        if (tintedStatus == null) return;
+        final FragmentActivity activity = getActivity();
+        final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
+        final boolean drawColor = !ThemeUtils.isDarkTheme(linkHandler.getCurrentThemeResourceId());
+        tintedStatus.setDrawShadow(shown);
+        tintedStatus.setDrawColor(drawColor);
     }
 
     private void getFriendship() {
@@ -964,6 +1015,15 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
         return true;
     }
 
+    private boolean isUucky(long userId, String screenName, Parcelable parcelable) {
+        if (userId == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(screenName)) return true;
+        if (parcelable instanceof ParcelableUser) {
+            final ParcelableUser user = (ParcelableUser) parcelable;
+            return user.id == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(user.screen_name);
+        }
+        return false;
+    }
+
     private void setMenu(final Menu menu) {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final ParcelableUser user = mUser;
@@ -1028,130 +1088,71 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
         addIntentToMenu(getActivity(), menu, intent, MENU_GROUP_USER_EXTENSION);
     }
 
+    private void setupBaseActionBar() {
+        final FragmentActivity activity = getActivity();
+        if (!(activity instanceof LinkHandlerActivity)) return;
+        final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
+        final ActionBar actionBar = linkHandler.getActionBar();
+        if (actionBar == null) return;
+        final int themeResId = linkHandler.getCurrentThemeResourceId();
+        final Drawable shadow = activity.getResources().getDrawable(R.drawable.shadow_user_banner_action_bar);
+        final Drawable background = ThemeUtils.getActionBarBackground(activity, themeResId);
+        mActionBarBackground = new ActionBarDrawable(getResources(), shadow, background, ThemeUtils.isDarkTheme(themeResId));
+        mActionBarBackground.setAlpha(ThemeUtils.getThemeAlpha(activity));
+        actionBar.setBackgroundDrawable(mActionBarBackground);
+    }
+
+    private void setupUserColorActionBar(int color) {
+        if (mActionBarBackground == null) {
+            setupBaseActionBar();
+        }
+        mActionBarBackground.setColor(color);
+        mTintedStatusContent.setColor(color, ThemeUtils.getThemeAlpha(getActivity()));
+        mPagerIndicator.setIndicatorColor(color);
+    }
+
+    private void setupUserPages() {
+        final Context context = getActivity();
+        final Bundle args = getArguments(), tabArgs = new Bundle();
+        final long accountId;
+        if (args.containsKey(EXTRA_USER)) {
+            final ParcelableUser user = args.getParcelable(EXTRA_USER);
+            tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId = user.account_id);
+            tabArgs.putLong(EXTRA_USER_ID, user.id);
+            tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
+        } else {
+            accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId);
+            tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
+            tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
+        }
+        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0);
+        if (Utils.isOfficialKeyAccount(context, accountId)) {
+            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), null, 1);
+        }
+        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), null, 2);
+        mPagerIndicator.notifyDataSetChanged();
+    }
+
     private boolean shouldUseNativeMenu() {
         return getActivity() instanceof LinkHandlerActivity;
-    }
-
-    @Override
-    public void onLoadingStarted(String imageUri, View view) {
-
-    }
-
-    @Override
-    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-    }
-
-    @Override
-    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-        Palette.generateAsync(loadedImage, new PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                final ParcelableUser user = mUser;
-                if (user == null) return;
-                final int color = palette.getVibrantColor(0);
-                setupUserColorActionBar(color);
-            }
-        });
-    }
-
-    @Override
-    public void onLoadingCancelled(String imageUri, View view) {
-
-    }
-
-    @Override
-    public void fling(float velocity) {
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).fling(velocity);
-        }
-    }
-
-    @Override
-    public void scrollBy(float dy) {
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).scrollBy(dy);
-        }
-    }
-
-    @Override
-    public boolean canScroll(float dy) {
-        final Fragment fragment = mCurrentVisibleFragment;
-        return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        final ViewPager v = mViewPager;
-        final int[] location = new int[2];
-        v.getLocationOnScreen(location);
-        return x >= location[0] && x <= location[0] + v.getWidth()
-                && y >= location[1] && y <= location[1] + v.getHeight();
-    }
-
-    @Override
-    public void cancelTouch() {
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).cancelTouch();
-        }
-    }
-
-    @Override
-    public void topChanged(int top) {
-        final UserProfileDrawer drawer = mUserProfileDrawer;
-        if (drawer == null) return;
-        final int offset = drawer.getPaddingTop() - top;
-        updateScrollOffset(offset);
-
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).topChanged(top);
-        }
     }
 
     private void updateScrollOffset(int offset) {
         final View space = mProfileBannerSpace;
         if (space == null) return;
-        final float factor = offset / (float) space.getHeight();
+        final int spaceHeight = space.getHeight();
+        final float factor = MathUtils.clamp(offset / (float) spaceHeight, 0, 1);
         final ProfileBannerImageView profileBannerView = mProfileBannerView;
         profileBannerView.setAlpha(1.0f - factor / 8f);
-        profileBannerView.setTranslationY(offset / -2f);
-        profileBannerView.setBottomClip(offset);
+        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / -2);
+        profileBannerView.setBottomClip(Math.min(offset, spaceHeight));
 
-        if (mActionBarBackground != null) {
+        if (mActionBarBackground != null && mTintedStatusContent != null) {
             mActionBarBackground.setFactor(factor);
-            mUserProfileContent.setFactor(factor);
+            mTintedStatusContent.setFactor(factor);
         }
     }
-
-    @Override
-    public Fragment getCurrentVisibleFragment() {
-        return mCurrentVisibleFragment;
-    }
-
-    @Override
-    public void onDetachFragment(Fragment fragment) {
-
-    }
-
-    @Override
-    public void onSetUserVisibleHint(Fragment fragment, boolean isVisibleToUser) {
-        mCurrentVisibleFragment = isVisibleToUser ? fragment : null;
-    }
-
-    @Override
-    public boolean triggerRefresh(int position) {
-        return false;
-    }
-
-    @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        return false;
-    }
-
 
     static class FriendshipLoader extends AsyncTaskLoader<SingleResponse<Relationship>> {
 
@@ -1194,6 +1195,7 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
 
         private float mFactor;
         private int mColor;
+        private int mAlpha;
 
         public ActionBarDrawable(Resources resources, Drawable shadow, Drawable background,
                                  boolean colorLineOnly) {
@@ -1204,17 +1206,7 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             mLineDrawable = (LineBackgroundDrawable) getDrawable(2);
             mColorDrawable = (ColorDrawable) getDrawable(3);
             mColorLineOnly = colorLineOnly;
-        }
-
-        public void setColor(int color) {
-            mColor = color;
-            final float[] hsv = new float[3];
-            Color.colorToHSV(color, hsv);
-            hsv[2] = Math.min(hsv[2], 0.8f);
-            final int processedColor = Color.HSVToColor(hsv);
-            mColorDrawable.setColor(processedColor);
-            mLineDrawable.setColor(color);
-            setFactor(mFactor);
+            setAlpha(0xFF);
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -1226,6 +1218,13 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             } else {
                 mBackgroundDrawable.getOutline(outline);
             }
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+            super.setAlpha(alpha);
+            mAlpha = alpha;
+            setFactor(mFactor);
         }
 
         @Override
@@ -1248,16 +1247,27 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
             }
         }
 
+        public void setColor(int color) {
+            mColor = color;
+            final float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            hsv[2] = Math.min(hsv[2], 0.8f);
+            final int processedColor = Color.HSVToColor(hsv);
+            mColorDrawable.setColor(processedColor);
+            mLineDrawable.setColor(color);
+            setFactor(mFactor);
+        }
+
         public void setFactor(float f) {
             mFactor = f;
-            mShadowDrawable.setAlpha(Math.round(0xFF * MathUtils.clamp(1 - f, 0, 1)));
+            mShadowDrawable.setAlpha(Math.round(mAlpha * MathUtils.clamp(1 - f, 0, 1)));
             final boolean hasColor = mColor != 0;
             final boolean showBackground = mColorLineOnly || !hasColor;
             final boolean showLine = mColorLineOnly && hasColor;
             final boolean showColor = !mColorLineOnly && hasColor;
-            mBackgroundDrawable.setAlpha(showBackground ? Math.round(0xFF * MathUtils.clamp(f, 0, 1)) : 0);
-            mLineDrawable.setAlpha(showLine ? Math.round(0xFF * MathUtils.clamp(f, 0, 1)) : 0);
-            mColorDrawable.setAlpha(showColor ? Math.round(0xFF * MathUtils.clamp(f, 0, 1)) : 0);
+            mBackgroundDrawable.setAlpha(showBackground ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
+            mLineDrawable.setAlpha(showLine ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
+            mColorDrawable.setAlpha(showColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -1283,10 +1293,19 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
                         mBounds.bottom, mPaint);
             }
 
+            public int getColor() {
+                return mColor;
+            }
+
             @Override
             protected void onBoundsChange(Rect bounds) {
                 super.onBoundsChange(bounds);
                 mBounds.set(bounds);
+            }
+
+            public void setColor(int color) {
+                mColor = color;
+                updatePaint();
             }
 
             private void updatePaint() {
@@ -1295,19 +1314,11 @@ public class UserProfileFragment extends BaseSupportFragment implements OnClickL
                 invalidateSelf();
             }
 
-            public int getColor() {
-                return mColor;
-            }
-
             @Override
             public int getAlpha() {
                 return mAlpha;
             }
 
-            public void setColor(int color) {
-                mColor = color;
-                updatePaint();
-            }
 
             @Override
             public void setAlpha(int alpha) {

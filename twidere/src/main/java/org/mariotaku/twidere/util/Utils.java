@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -63,12 +64,14 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.Pair;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -77,6 +80,8 @@ import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -136,8 +141,9 @@ import org.mariotaku.twidere.fragment.support.StatusesListFragment;
 import org.mariotaku.twidere.fragment.support.UserBlocksListFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.support.UserFollowersFragment;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.fragment.support.UserFriendsFragment;
-import org.mariotaku.twidere.fragment.support.UserListDetailsFragment;
+import org.mariotaku.twidere.fragment.support.UserListFragment;
 import org.mariotaku.twidere.fragment.support.UserListMembersFragment;
 import org.mariotaku.twidere.fragment.support.UserListMembershipsListFragment;
 import org.mariotaku.twidere.fragment.support.UserListSubscribersFragment;
@@ -145,7 +151,6 @@ import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserListsFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
-import org.mariotaku.twidere.fragment.support.UserProfileFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
@@ -729,7 +734,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER: {
-                fragment = new UserProfileFragment();
+                fragment = new UserFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
@@ -839,7 +844,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_LIST: {
-                fragment = new UserListDetailsFragment();
+                fragment = new UserListFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 final String param_list_id = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
@@ -3990,5 +3995,31 @@ public final class Utils implements Constants, TwitterConstants {
             c.close();
         }
         return null;
+    }
+
+    @SafeVarargs
+    public static Bundle makeSceneTransitionOption(final Activity activity,
+                                                      final Pair<View, String>... sharedElements) {
+        if (ThemeUtils.isTransparentBackground(activity)) return null;
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElements).toBundle();
+    }
+
+
+    public static void setSharedElementTransition(Context context, Window window, int transitionRes) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        UtilsL.setSharedElementTransition(context, window, transitionRes);
+    }
+
+    static class UtilsL {
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        static void setSharedElementTransition(Context context, Window window, int transitionRes) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+            window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+            final TransitionInflater inflater = TransitionInflater.from(context);
+            final Transition transition = inflater.inflateTransition(transitionRes);
+            window.setSharedElementEnterTransition(transition);
+            window.setSharedElementExitTransition(transition);
+        }
     }
 }

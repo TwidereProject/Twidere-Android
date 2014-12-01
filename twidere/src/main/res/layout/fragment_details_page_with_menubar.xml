@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:id="@+id/content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<org.mariotaku.twidere.view.ExtendedFrameLayout
+			android:id="@+id/details_container"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"/>
+
+		<org.mariotaku.twidere.view.ActionBarSplitThemedContainer
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout="@layout/fragment_details_bottombar"/>
+	</LinearLayout>
+
+	<ProgressBar
+		android:id="@+id/details_load_progress"
+		style="?android:attr/progressBarStyleLarge"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:visibility="gone"/>
+
+	<LinearLayout
+		android:id="@+id/error_retry_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:padding="16dp"
+		android:visibility="gone">
+
+		<TextView
+			android:id="@+id/error_message"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:visibility="gone"/>
+
+		<Button
+			android:id="@+id/retry"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minHeight="48dp"
+			android:minWidth="84dp"
+			android:text="@string/retry"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+	</LinearLayout>
+
+</FrameLayout>

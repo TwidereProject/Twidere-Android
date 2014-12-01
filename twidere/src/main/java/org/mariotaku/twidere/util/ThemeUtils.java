@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
@@ -88,6 +89,15 @@ public class ThemeUtils implements Constants {
     public static void applyActionBarBackground(final ActionBar actionBar, final Context context, final int themeRes) {
         if (actionBar == null || context == null) return;
         actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes));
+        actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
+        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes));
+    }
+
+
+    public static void applyActionBarBackground(final ActionBar actionBar, final Context context,
+                                                final int themeRes, final int accentColor) {
+        if (actionBar == null || context == null) return;
+        actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor));
         actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
         actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes));
     }
@@ -220,6 +230,19 @@ public class ThemeUtils implements Constants {
     }
 
     public static Drawable getActionBarBackground(final Context context, final int themeRes) {
+        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
+                android.R.attr.actionBarStyle, themeRes);
+        final Drawable d = a.getDrawable(0);
+        a.recycle();
+        return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
+    }
+
+    public static Drawable getActionBarBackground(final Context context, final int themeRes,
+                                                  final int accentColor) {
+        if (!isDarkTheme(themeRes)) {
+            final ColorDrawable d = new ColorDrawable(accentColor);
+            return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
+        }
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
                 android.R.attr.actionBarStyle, themeRes);
         final Drawable d = a.getDrawable(0);
