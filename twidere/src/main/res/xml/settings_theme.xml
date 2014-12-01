@@ -24,7 +24,7 @@
         android:title="@string/background"/>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
-        android:defaultValue="@android:color/holo_blue_light"
+        android:defaultValue="@color/branding_color"
         android:key="theme_color"
         android:order="25"
         android:title="@string/color"/>

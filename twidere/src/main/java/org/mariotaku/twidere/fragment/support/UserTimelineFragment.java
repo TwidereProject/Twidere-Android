@@ -3,6 +3,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -24,6 +26,7 @@ import org.mariotaku.twidere.loader.support.UserTimelineLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.UserProfileDrawer.DrawerCallback;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ import java.util.List;
  * Created by mariotaku on 14/11/5.
  */
 public class UserTimelineFragment extends BaseSupportFragment
-        implements LoaderCallbacks<List<ParcelableStatus>>, OnRefreshListener {
+        implements LoaderCallbacks<List<ParcelableStatus>>, OnRefreshListener, DrawerCallback {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -113,7 +116,7 @@ public class UserTimelineFragment extends BaseSupportFragment
 
     @Override
     public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
-        mSwipeRefreshLayout.setRefreshing(true);
+//        mSwipeRefreshLayout.setRefreshing(true);
         final List<ParcelableStatus> data = mAdapter.getData();
         final Context context = getActivity();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
@@ -145,5 +148,38 @@ public class UserTimelineFragment extends BaseSupportFragment
         } else {
             getStatuses(0, 0);
         }
+    }
+
+    @Override
+    public void fling(float velocity) {
+        mRecyclerView.fling(0, (int) velocity);
+    }
+
+    @Override
+    public void scrollBy(float dy) {
+        mRecyclerView.scrollBy(0, (int) dy);
+    }
+
+    @Override
+    public boolean canScroll(float dy) {
+        return mRecyclerView.canScrollVertically((int) dy);
+    }
+
+    @Override
+    public boolean isScrollContent(float x, float y) {
+        final int[] location = new int[2];
+        mRecyclerView.getLocationOnScreen(location);
+        return x >= location[0] && x <= location[0] && y >= location[1] && y <= location[1];
+    }
+
+    @Override
+    public void cancelTouch() {
+        mRecyclerView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+    }
+
+    @Override
+    public void topChanged(int offset) {
+
     }
 }

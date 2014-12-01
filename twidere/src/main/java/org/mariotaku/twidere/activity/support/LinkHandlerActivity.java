@@ -24,15 +24,19 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
@@ -117,8 +121,9 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         mMultiSelectHandler.dispatchOnCreate();
         final Intent intent = getIntent();
         final Uri data = intent.getData();
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setUiOptions(getWindow(), data);
+        final int linkId = matchLinkId(data);
+        requestWindowFeatures(getWindow(), linkId, data);
+        setUiOptions(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -126,8 +131,26 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
         setContentView(R.layout.activity_content_fragment);
         setProgressBarIndeterminateVisibility(false);
-        if (data == null || !showFragment(data)) {
+        if (data == null || !showFragment(linkId, data)) {
             finish();
+        }
+    }
+
+    private void requestWindowFeatures(Window window, int linkId, Uri uri) {
+        switch (linkId) {
+            case LINK_ID_USER: {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+                    final TransitionInflater inflater = TransitionInflater.from(this);
+                    final Transition transition = inflater.inflateTransition(R.transition.transition_user_profile);
+                    window.setSharedElementEnterTransition(transition);
+                    window.setSharedElementExitTransition(transition);
+                }
+                break;
+            }
         }
     }
 
@@ -152,9 +175,9 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
     }
 
-    private void setUiOptions(final Window window, final Uri uri) {
+    private void setUiOptions(final Window window, int linkId, final Uri uri) {
         if (!FlymeUtils.hasSmartBar()) return;
-        switch (matchLinkId(uri)) {
+        switch (linkId) {
             case LINK_ID_USER: {
                 window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
                 break;
@@ -162,12 +185,12 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
     }
 
-    private boolean showFragment(final Uri uri) {
+    private boolean showFragment(final int linkId, final Uri uri) {
         final Intent intent = getIntent();
         intent.setExtrasClassLoader(getClassLoader());
-        final Fragment fragment = createFragmentForIntent(this, intent);
+        final Fragment fragment = createFragmentForIntent(this, linkId, intent);
         if (uri == null || fragment == null) return false;
-        switch (matchLinkId(uri)) {
+        switch (linkId) {
             case LINK_ID_STATUS: {
                 setTitle(R.string.status);
                 break;

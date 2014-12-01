@@ -282,7 +282,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
                 final ParcelableUser recipient = mRecipient;
                 if (recipient == null) return;
                 Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
-                        recipient.screen_name);
+                        recipient.screen_name, null);
                 break;
             }
         }

@@ -163,13 +163,13 @@ public class BaseSupportStaggeredGridFragment extends StaggeredGridFragment impl
     @Override
     public void onDetach() {
         super.onDetach();
-        final Activity activity = getActivity();
-        if (activity instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) activity).onDetachFragment(this);
-        }
         final Fragment fragment = getParentFragment();
         if (fragment instanceof SupportFragmentCallback) {
             ((SupportFragmentCallback) fragment).onDetachFragment(this);
+        }
+        final Activity activity = getActivity();
+        if (activity instanceof SupportFragmentCallback) {
+            ((SupportFragmentCallback) activity).onDetachFragment(this);
         }
     }
 
@@ -243,12 +243,12 @@ public class BaseSupportStaggeredGridFragment extends StaggeredGridFragment impl
     public void setUserVisibleHint(final boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         final Activity activity = getActivity();
-        if (activity instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) activity).onSetUserVisibleHint(this, isVisibleToUser);
-        }
         final Fragment fragment = getParentFragment();
         if (fragment instanceof SupportFragmentCallback) {
             ((SupportFragmentCallback) fragment).onSetUserVisibleHint(this, isVisibleToUser);
+        }
+        if (activity instanceof SupportFragmentCallback) {
+            ((SupportFragmentCallback) activity).onSetUserVisibleHint(this, isVisibleToUser);
         }
     }
 

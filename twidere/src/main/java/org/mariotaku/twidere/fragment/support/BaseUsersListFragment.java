@@ -165,7 +165,7 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
             setItemSelected(user, position, !mMultiSelectManager.isSelected(user));
             return;
         }
-        openUserProfile(getActivity(), user);
+        openUserProfile(getActivity(), user, null);
     }
 
     @Override

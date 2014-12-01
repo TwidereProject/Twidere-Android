@@ -83,6 +83,10 @@
         <attr name="borderColor" format="color"/>
         <attr name="elevation" format="dimension"/>
     </declare-styleable>
+    <declare-styleable name="UserProfileDrawer">
+        <attr name="headerLayout" format="reference"/>
+        <attr name="contentLayout" format="reference"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

@@ -2,6 +2,7 @@
 <RelativeLayout
     android:id="@+id/item_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
@@ -11,11 +12,11 @@
     android:paddingTop="@dimen/element_spacing_normal">
 
     <org.mariotaku.twidere.view.CircularImageView
-        android:scaleType="centerCrop"
         android:id="@+id/retweet_profile_image"
         android:layout_width="@dimen/element_size_small"
         android:layout_height="@dimen/element_size_small"
-        android:layout_marginLeft="@dimen/element_spacing_normal"/>
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:scaleType="centerCrop"/>
 
     <org.mariotaku.twidere.view.CardActionTextView
         android:id="@+id/reply_retweet_status"
@@ -47,9 +48,9 @@
         android:layout_width="@dimen/icon_size_profile_type"
         android:layout_height="@dimen/icon_size_profile_type"
         android:layout_alignBottom="@id/profile_image"
-        android:layout_marginRight="@dimen/element_spacing_minus_normal"
-        android:layout_marginBottom="@dimen/element_spacing_minus_small"
         android:layout_alignRight="@id/profile_image"
+        android:layout_marginBottom="@dimen/element_spacing_minus_small"
+        android:layout_marginRight="@dimen/element_spacing_minus_normal"
         android:scaleType="centerInside"/>
 
     <LinearLayout
@@ -151,7 +152,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+
+            <org.mariotaku.twidere.view.CardActionTextView
                 android:id="@+id/reply_count"
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"
@@ -161,9 +163,10 @@
                 android:gravity="center"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
-                android:textAppearance="?android:textAppearanceSmall"/>
+                android:textAppearance="?android:textAppearanceSmall"
+                app:activatedColor="@color/highlight_reply"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.CardActionTextView
                 android:id="@+id/retweet_count"
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"
@@ -173,9 +176,10 @@
                 android:gravity="center"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
-                android:textAppearance="?android:textAppearanceSmall"/>
+                android:textAppearance="?android:textAppearanceSmall"
+                app:activatedColor="@color/highlight_retweet"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.CardActionTextView
                 android:id="@+id/favorite_count"
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"
@@ -185,7 +189,8 @@
                 android:gravity="center"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
-                android:textAppearance="?android:textAppearanceSmall"/>
+                android:textAppearance="?android:textAppearanceSmall"
+                app:activatedColor="@color/highlight_favorite"/>
 
         </LinearLayout>
 
@@ -193,9 +198,9 @@
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_toRightOf="@+id/actions_scroller"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/menu"
-        android:layout_height="wrap_content"/>
+        android:layout_toRightOf="@+id/actions_scroller"/>
 
     <org.mariotaku.twidere.view.ActionIconButton
         android:id="@+id/menu"

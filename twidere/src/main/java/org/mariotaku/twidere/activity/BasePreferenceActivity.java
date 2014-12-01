@@ -19,9 +19,7 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
@@ -41,12 +39,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         return super.onMenuOpened(featureId, menu);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overrideCloseAnimationIfNeeded();
     }
 
     @Override
@@ -83,26 +75,11 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     @Override
     public void navigateUpFromSameTask() {
         NavUtils.navigateUpFromSameTask(this);
-        overrideCloseAnimationIfNeeded();
-    }
-
-    @Override
-    public void overrideCloseAnimationIfNeeded() {
-        if (shouldOverrideActivityAnimation()) {
-            ThemeUtils.overrideActivityCloseAnimation(this);
-        } else {
-            ThemeUtils.overrideNormalActivityCloseAnimation(this);
-        }
     }
 
     @Override
     public final void restart() {
         restartActivity(this);
-    }
-
-    @Override
-    public boolean shouldOverrideActivityAnimation() {
-        return true;
     }
 
     protected final boolean isThemeChanged() {
@@ -111,9 +88,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        if (shouldOverrideActivityAnimation()) {
-            ThemeUtils.overrideActivityOpenAnimation(this);
-        }
         ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, 0, 0xFF);
         setTheme(mCurrentThemeResource = getThemeResourceId());
         super.onCreate(savedInstanceState);

@@ -164,6 +164,7 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
         final View view = super.getView(position, convertView, parent);
         final Object tag = view.getTag();
         final StatusListViewHolder holder;
+        final Resources res = mContext.getResources();
 
         if (tag instanceof StatusListViewHolder) {
             holder = (StatusListViewHolder) tag;
@@ -222,7 +223,8 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
             } else {
                 holder.setUserColor(getUserColor(mContext, status.user_id));
             }
-            holder.setHighlightColor(getCardHighlightColor(!mMentionsHighlightDisabled && isMention,
+            holder.setHighlightColor(getCardHighlightColor(res,
+                    !mMentionsHighlightDisabled && isMention,
                     !mFavoritesHighlightDisabled && status.is_favorite, status.is_retweet));
             holder.setTextSize(getTextSize());
 
@@ -278,7 +280,6 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
                     holder.image_preview.setBackgroundResource(0);
                     loader.displayPreviewImage(holder.image_preview, status.first_media, mImageLoadingHandler);
                 }
-                final Resources res = mContext.getResources();
                 final int count = status.media.length;
                 holder.image_preview_count.setText(res.getQuantityString(R.plurals.N_media, count, count));
                 holder.image_preview.setTag(position);
@@ -322,7 +323,8 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
                 final ParcelableStatus status = getStatus(position);
                 if (status == null) return;
                 if (mContext instanceof Activity) {
-                    openUserProfile((Activity) mContext, status.account_id, status.user_id, status.user_screen_name);
+                    openUserProfile(mContext, status.account_id, status.user_id,
+                            status.user_screen_name, null);
                 }
                 break;
             }

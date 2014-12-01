@@ -53,10 +53,9 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         // UCD
         ProfilingUtil.profile(activity, account_id, "Click, " + link + ", " + type);
 
-        if (activity == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                openUserProfile(activity, account_id, -1, link);
+                openUserProfile(activity, account_id, -1, link, null);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
@@ -72,11 +71,11 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LIST: {
-                final String[] mention_list = link.split("\\/");
-                if (mention_list == null || mention_list.length != 2) {
+                final String[] mentionList = link.split("/");
+                if (mentionList.length != 2) {
                     break;
                 }
-                openUserListDetails(activity, account_id, -1, -1, mention_list[0], mention_list[1]);
+                openUserListDetails(activity, account_id, -1, -1, mentionList[0], mentionList[1]);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_CASHTAG: {
@@ -84,7 +83,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                openUserProfile(activity, account_id, ParseUtils.parseLong(link), null);
+                openUserProfile(activity, account_id, ParseUtils.parseLong(link), null, null);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {

@@ -55,6 +55,7 @@
 
             <org.mariotaku.twidere.view.CircularImageView
                 android:id="@+id/profile_image"
+                style="?profileImageStyle"
                 android:layout_width="@dimen/element_size_normal"
                 android:layout_height="@dimen/element_size_normal"
                 android:layout_centerVertical="true"
@@ -163,8 +164,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/profile_container"
             android:layout_below="@id/media_preview_container"
-            android:layout_marginTop="@dimen/element_spacing_normal"
             android:layout_marginBottom="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_normal"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -195,7 +196,7 @@
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
                     android:textAppearance="?android:textAppearanceSmall"
-                    app:activatedColor="@android:color/holo_blue_light"/>
+                    app:activatedColor="@color/highlight_reply"/>
 
                 <org.mariotaku.twidere.view.CardActionTextView
                     android:id="@+id/retweet_count"
@@ -208,7 +209,7 @@
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
                     android:textAppearance="?android:textAppearanceSmall"
-                    app:activatedColor="@android:color/holo_green_light"/>
+                    app:activatedColor="@color/highlight_retweet"/>
 
                 <org.mariotaku.twidere.view.CardActionTextView
                     android:id="@+id/favorite_count"
@@ -221,7 +222,7 @@
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
                     android:textAppearance="?android:textAppearanceSmall"
-                    app:activatedColor="@android:color/holo_orange_light"/>
+                    app:activatedColor="@color/highlight_favorite"/>
 
             </LinearLayout>
         </HorizontalScrollView>

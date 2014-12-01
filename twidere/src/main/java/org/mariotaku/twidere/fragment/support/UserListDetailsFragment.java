@@ -222,7 +222,8 @@ public class UserListDetailsFragment extends BaseSupportListFragment implements 
             }
             case R.id.profile_image: {
                 if (mUserList == null) return;
-                openUserProfile(getActivity(), mUserList.account_id, mUserList.user_id, mUserList.user_screen_name);
+                openUserProfile(getActivity(), mUserList.account_id,
+                        mUserList.user_id, mUserList.user_screen_name, null);
                 break;
             }
         }

@@ -10,7 +10,7 @@
     <style name="Theme.Blank" parent="android:Theme.DeviceDefault.NoActionBar">
 
         <!-- Window attributes -->
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
@@ -22,7 +22,7 @@
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>-->
 
         <!-- Window attributes -->
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_dark</item>-->
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
@@ -70,7 +70,7 @@
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
 
         <!-- Window attributes -->
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_light</item>-->
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
@@ -256,7 +256,7 @@
         <!-- Window attributes -->
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@android:color/black</item>
 
         <!-- ActionBar styles -->
@@ -354,7 +354,7 @@
         <item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>
 
         <!-- Window attributes -->
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_dark</item>-->
 
         <!-- ActionBar styles -->
@@ -399,7 +399,7 @@
         <item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>
 
         <!-- Window attributes -->
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_light</item>-->
 
         <!-- Custom view styles -->
@@ -440,7 +440,7 @@
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
 
         <!-- Window attributes -->
-        <item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_light</item>-->
 
         <!-- Custom view styles -->
@@ -480,7 +480,7 @@
     <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Settings.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:colorActivatedHighlight">@android:color/holo_blue_light</item>
+        <item name="android:colorActivatedHighlight">@color/branding_color</item>
     </style>
 
 </resources>

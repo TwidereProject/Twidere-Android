@@ -76,15 +76,17 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
-        mProgress = (ProgressBar) view.findViewById(android.R.id.progress);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mProgress = (ProgressBar) view.findViewById(R.id.progress);
     }
 
     @Override
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-        mRecyclerView.setClipToPadding(false);
-        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        if (mRecyclerView != null) {
+            mRecyclerView.setClipToPadding(false);
+            mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
     }
 
     @Override

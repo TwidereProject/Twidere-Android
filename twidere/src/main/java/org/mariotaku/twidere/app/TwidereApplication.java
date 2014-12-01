@@ -59,6 +59,7 @@ import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
@@ -184,6 +185,7 @@ public class TwidereApplication extends Application implements Constants, OnShar
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();
         }
+        setTheme(ThemeUtils.getThemeResource(this));
         super.onCreate();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mHandler = new Handler();

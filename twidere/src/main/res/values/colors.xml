@@ -18,5 +18,10 @@
     <color name="action_icon_dark_disabled">#4D333333</color>
     <color name="action_icon_light">#CCFFFFFF</color>
     <color name="action_icon_light_disabled">#4DFFFFFF</color>
+    <color name="highlight_retweet">@color/material_light_green</color>
+    <color name="highlight_favorite">@color/material_amber</color>
+    <color name="highlight_reply">@color/material_light_blue</color>
+    <color name="unread_color">@color/material_red</color>
+    <color name="branding_color">@color/material_light_blue</color>
 
 </resources>

@@ -501,7 +501,7 @@ public class ThemeUtils implements Constants {
         final Context wrapped = getThemedContext(context, res);
         final TypedArray a = wrapped.obtainStyledAttributes(new int[]{android.R.attr.colorActivatedHighlight});
         try {
-            return a.getColor(0, res.getColor(android.R.color.holo_blue_light));
+            return a.getColor(0, res.getColor(R.color.material_light_blue));
         } finally {
             a.recycle();
         }
@@ -623,7 +623,7 @@ public class ThemeUtils implements Constants {
         if (context == null) return Color.TRANSPARENT;
         final Resources res = getResources(context);
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        final int def = res.getColor(android.R.color.holo_blue_light);
+        final int def = res.getColor(R.color.material_light_blue);
         return pref.getInt(KEY_THEME_COLOR, def);
     }
 
@@ -834,7 +834,7 @@ public class ThemeUtils implements Constants {
         final TypedArray a = appContext.obtainStyledAttributes(null,
                 new int[]{android.R.attr.colorActivatedHighlight}, 0, themeResourceId);
         try {
-            return a.getColor(0, res.getColor(android.R.color.holo_blue_light));
+            return a.getColor(0, res.getColor(R.color.material_light_blue));
         } finally {
             a.recycle();
         }

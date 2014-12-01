@@ -36,12 +36,14 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -513,7 +515,12 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         final ParcelableStatus status = mStatus;
         switch (view.getId()) {
             case R.id.profile: {
-                openUserProfile(getActivity(), status.account_id, status.user_id, null);
+                final FragmentActivity activity = getActivity();
+                final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                        new Pair<View, String>(mProfileImageView, UserProfileFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                        new Pair<View, String>(mProfileTypeView, UserProfileFragment.TRANSITION_NAME_PROFILE_TYPE));
+                openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name,
+                        options.toBundle());
                 break;
             }
             case R.id.follow: {

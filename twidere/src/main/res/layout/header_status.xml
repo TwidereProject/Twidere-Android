@@ -49,7 +49,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/profile_image"
-                    android:padding="@dimen/padding_profile_image_detail_page"
+                    android:layout_margin="@dimen/padding_profile_image_detail_page"
                     android:scaleType="centerCrop"
                     app:border="true"
                     app:borderWidth="1dp"/>

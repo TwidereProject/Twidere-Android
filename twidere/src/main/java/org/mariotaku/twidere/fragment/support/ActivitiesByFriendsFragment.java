@@ -79,7 +79,7 @@ public class ActivitiesByFriendsFragment extends BaseActivitiesListFragment {
 			case ParcelableActivity.ACTION_FOLLOW: {
 				if (targetUsers == null || targetUsers.length == 0) return;
 				if (targetUsers.length == 1) {
-					openUserProfile(getActivity(), targetUsers[0]);
+					openUserProfile(getActivity(), targetUsers[0], null);
 				} else {
 					final List<ParcelableUser> users = Arrays.asList(targetUsers);
 					openUsers(getActivity(), users);

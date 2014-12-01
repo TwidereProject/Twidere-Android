@@ -40,12 +40,6 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
 
     @Override
-    public void finish() {
-        super.finish();
-        overrideCloseAnimationIfNeeded();
-    }
-
-    @Override
     public Resources getDefaultResources() {
         return super.getResources();
     }
@@ -68,18 +62,7 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     @Override
     public void navigateUpFromSameTask() {
         NavUtils.navigateUpFromSameTask(this);
-        overrideCloseAnimationIfNeeded();
     }
-
-    @Override
-    public void overrideCloseAnimationIfNeeded() {
-        if (shouldOverrideActivityAnimation()) {
-            ThemeUtils.overrideActivityCloseAnimation(this);
-        } else {
-            ThemeUtils.overrideNormalActivityCloseAnimation(this);
-        }
-    }
-
 
     @Override
     public final void restart() {
@@ -87,18 +70,10 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     }
 
     @Override
-    public boolean shouldOverrideActivityAnimation() {
-        return true;
-    }
-
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
-        }
-        if (shouldOverrideActivityAnimation()) {
-            ThemeUtils.overrideActivityOpenAnimation(this);
         }
         setTheme();
         super.onCreate(savedInstanceState);

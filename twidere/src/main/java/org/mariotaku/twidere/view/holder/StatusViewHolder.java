@@ -180,7 +180,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
                 break;
             }
             case R.id.profile_image: {
-                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name);
+                Utils.openUserProfile(context, status.account_id, status.user_id,
+                        status.user_screen_name, null);
                 break;
             }
             case R.id.reply_count: {

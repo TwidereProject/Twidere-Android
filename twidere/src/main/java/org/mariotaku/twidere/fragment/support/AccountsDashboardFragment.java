@@ -181,7 +181,8 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
                 case MENU_VIEW_PROFILE: {
-                    openUserProfile(getActivity(), account.account_id, account.account_id, account.screen_name);
+                    openUserProfile(getActivity(), account.account_id, account.account_id,
+                            account.screen_name, null);
                     closeAccountsDrawer();
                     break;
                 }
