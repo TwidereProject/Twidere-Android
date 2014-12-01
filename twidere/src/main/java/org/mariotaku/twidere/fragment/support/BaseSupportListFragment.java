@@ -123,8 +123,15 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     @Override
     public void requestFitSystemWindows() {
         final Activity activity = getActivity();
-        if (!(activity instanceof SystemWindowsInsetsCallback)) return;
-        final SystemWindowsInsetsCallback callback = (SystemWindowsInsetsCallback) activity;
+        final Fragment parentFragment = getParentFragment();
+        final SystemWindowsInsetsCallback callback;
+        if (parentFragment instanceof SystemWindowsInsetsCallback) {
+            callback = (SystemWindowsInsetsCallback) parentFragment;
+        } else if (activity instanceof SystemWindowsInsetsCallback) {
+            callback = (SystemWindowsInsetsCallback) activity;
+        } else {
+            return;
+        }
         final Rect insets = new Rect();
         if (callback.getSystemWindowsInsets(insets)) {
             fitSystemWindows(insets);

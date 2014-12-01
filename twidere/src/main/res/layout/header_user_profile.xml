@@ -220,34 +220,6 @@
                 android:splitMotionEvents="false">
 
                 <LinearLayout
-                    android:id="@+id/tweets_container"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="@dimen/element_spacing_small">
-
-                    <org.mariotaku.twidere.view.themed.ThemedTextView
-                        android:id="@+id/statuses_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="?android:textColorPrimary"/>
-
-                    <org.mariotaku.twidere.view.themed.ThemedTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:text="@string/statuses"
-                        android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorSecondary"/>
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/followers_container"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -299,6 +271,34 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:text="@string/following"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorSecondary"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/listed_container"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/element_spacing_small">
+
+                    <org.mariotaku.twidere.view.themed.ThemedTextView
+                        android:id="@+id/listed_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="?android:textColorPrimary"/>
+
+                    <org.mariotaku.twidere.view.themed.ThemedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text="@string/listed"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorSecondary"/>
                 </LinearLayout>

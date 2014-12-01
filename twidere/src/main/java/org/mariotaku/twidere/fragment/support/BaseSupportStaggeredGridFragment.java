@@ -55,9 +55,17 @@ public class BaseSupportStaggeredGridFragment extends StaggeredGridFragment impl
     @Override
     public void requestFitSystemWindows() {
         final Activity activity = getActivity();
+        final Fragment parentFragment = getParentFragment();
+        final SystemWindowsInsetsCallback callback;
+        if (parentFragment instanceof SystemWindowsInsetsCallback) {
+            callback = (SystemWindowsInsetsCallback) parentFragment;
+        } else if (activity instanceof SystemWindowsInsetsCallback) {
+            callback = (SystemWindowsInsetsCallback) activity;
+        } else {
+            return;
+        }
         final Rect insets = new Rect();
-        if (activity instanceof SystemWindowsInsetsCallback
-                && ((SystemWindowsInsetsCallback) activity).getSystemWindowsInsets(insets)) {
+        if (callback.getSystemWindowsInsets(insets)) {
             fitSystemWindows(insets);
         }
     }

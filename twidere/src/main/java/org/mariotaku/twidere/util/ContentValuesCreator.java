@@ -139,6 +139,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(CachedUsers.FOLLOWERS_COUNT, user.getFollowersCount());
         values.put(CachedUsers.FRIENDS_COUNT, user.getFriendsCount());
         values.put(CachedUsers.STATUSES_COUNT, user.getStatusesCount());
+        values.put(CachedUsers.LISTED_COUNT, user.getListedCount());
         values.put(CachedUsers.LOCATION, user.getLocation());
         values.put(CachedUsers.DESCRIPTION_PLAIN, user.getDescription());
         values.put(CachedUsers.DESCRIPTION_HTML, Utils.formatUserDescription(user));

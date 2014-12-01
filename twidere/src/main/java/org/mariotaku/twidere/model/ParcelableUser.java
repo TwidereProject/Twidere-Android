@@ -72,7 +72,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
     public final String description_plain, name, screen_name, location, profile_image_url, profile_banner_url, url,
             url_expanded, description_html, description_unescaped, description_expanded;
 
-    public final int followers_count, friends_count, statuses_count, favorites_count;
+    public final int followers_count, friends_count, statuses_count, favorites_count, listed_count;
 
     public final boolean is_cache;
 
@@ -101,6 +101,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         friends_count = 0;
         statuses_count = 0;
         favorites_count = 0;
+        listed_count = 0;
         is_cache = true;
     }
 
@@ -125,6 +126,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         is_protected = cursor.getInt(cursor.getColumnIndex(CachedUsers.IS_PROTECTED)) == 1;
         is_verified = cursor.getInt(cursor.getColumnIndex(CachedUsers.IS_VERIFIED)) == 1;
         favorites_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.FAVORITES_COUNT));
+        listed_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.LISTED_COUNT));
         followers_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.FOLLOWERS_COUNT));
         friends_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.FRIENDS_COUNT));
         statuses_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.STATUSES_COUNT));
@@ -159,6 +161,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         friends_count = in.readInt("friends_count");
         statuses_count = in.readInt("statuses_count");
         favorites_count = in.readInt("favorites_count");
+        listed_count = in.readInt("listed_count");
         is_cache = in.readBoolean("is_cache");
         description_html = in.readString("description_html");
         description_expanded = in.readString("description_expanded");
@@ -186,6 +189,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         friends_count = in.readInt();
         statuses_count = in.readInt();
         favorites_count = in.readInt();
+        listed_count = in.readInt();
         is_cache = in.readInt() == 1;
         description_html = in.readString();
         description_expanded = in.readString();
@@ -222,6 +226,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         friends_count = user.getFriendsCount();
         statuses_count = user.getStatusesCount();
         favorites_count = user.getFavouritesCount();
+        listed_count = user.getListedCount();
         is_cache = false;
         is_following = user.isFollowing();
         description_unescaped = toPlainText(description_html);
@@ -294,6 +299,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeInt("friends_count", friends_count);
         out.writeInt("statuses_count", statuses_count);
         out.writeInt("favorites_count", favorites_count);
+        out.writeInt("listed_count", listed_count);
         out.writeBoolean("is_cache", is_cache);
         out.writeString("description_html", description_html);
         out.writeString("description_expanded", description_expanded);
@@ -322,6 +328,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeInt(friends_count);
         out.writeInt(statuses_count);
         out.writeInt(favorites_count);
+        out.writeInt(listed_count);
         out.writeInt(is_cache ? 1 : 0);
         out.writeString(description_html);
         out.writeString(description_expanded);
@@ -340,6 +347,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         values.put(CachedUsers.CREATED_AT, user.created_at);
         values.put(CachedUsers.IS_PROTECTED, user.is_protected);
         values.put(CachedUsers.IS_VERIFIED, user.is_verified);
+        values.put(CachedUsers.LISTED_COUNT, user.listed_count);
         values.put(CachedUsers.FAVORITES_COUNT, user.favorites_count);
         values.put(CachedUsers.FOLLOWERS_COUNT, user.followers_count);
         values.put(CachedUsers.FRIENDS_COUNT, user.friends_count);

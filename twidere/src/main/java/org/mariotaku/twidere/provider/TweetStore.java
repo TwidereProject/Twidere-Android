@@ -239,6 +239,8 @@ public interface TweetStore {
 
         public static final String FAVORITES_COUNT = "favorites_count";
 
+        public static final String LISTED_COUNT = "listed_count";
+
         /**
          * User's screen name of the status.<br>
          * Type: TEXT
@@ -253,12 +255,12 @@ public interface TweetStore {
 
         public static final String[] COLUMNS = new String[]{_ID, USER_ID, CREATED_AT, NAME, SCREEN_NAME,
                 DESCRIPTION_PLAIN, LOCATION, URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, IS_PROTECTED, IS_VERIFIED,
-                IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT, DESCRIPTION_HTML,
+                IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT, LISTED_COUNT, DESCRIPTION_HTML,
                 DESCRIPTION_EXPANDED, URL_EXPANDED};
 
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT_UNIQUE, TYPE_INT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+                TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
     }
 
