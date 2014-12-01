@@ -248,8 +248,8 @@ public class TwidereApplication extends Application implements Constants, OnShar
     }
 
     private void configACRA() {
-        ACRA.init(this);
-        ACRA.getErrorReporter().setReportSender(new EmailIntentSender(this));
+//        ACRA.init(this);
+//        ACRA.getErrorReporter().setReportSender(new EmailIntentSender(this));
     }
 
     private DiskCache createDiskCache(final String dirName) {

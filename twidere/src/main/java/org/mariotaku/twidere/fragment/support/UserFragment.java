@@ -57,6 +57,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.graphics.Palette.PaletteAsyncListener;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -155,6 +156,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
+    public static final String TRANSITION_NAME_CARD = "card";
 
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
@@ -178,11 +180,20 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private PagerSlidingTabStrip mPagerIndicator;
+    private CardView mCardView;
+    private View mUuckyFooter;
 
     private SupportTabsAdapter mPagerAdapter;
 
     private Relationship mRelationship;
     private ParcelableUser mUser = null;
+
+    private Locale mLocale;
+    private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
+    private int mBannerWidth;
+    private ActionBarDrawable mActionBarBackground;
+    private Fragment mCurrentVisibleFragment;
+
     private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
 
         @Override
@@ -327,12 +338,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
     };
-    private Locale mLocale;
-    private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
-    private int mBannerWidth;
-    private ActionBarDrawable mActionBarBackground;
-    private Fragment mCurrentVisibleFragment;
-    private View mUuckyFooter;
 
     public void displayUser(final ParcelableUser user) {
         mRelationship = null;
@@ -544,7 +549,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
                     final long accountId = data.getLongExtra(EXTRA_ID, -1);
-                    openUserProfile(getActivity(), accountId, user.id, null, null);
+                    openUserProfile(getActivity(), accountId, user.id, user.screen_name, null);
                 }
                 break;
             }
@@ -587,6 +592,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         ViewCompat.setTransitionName(mProfileImageView, TRANSITION_NAME_PROFILE_IMAGE);
         ViewCompat.setTransitionName(mProfileTypeView, TRANSITION_NAME_PROFILE_TYPE);
+        ViewCompat.setTransitionName(mCardView, TRANSITION_NAME_CARD);
 
         mHeaderDrawerLayout.setDrawerCallback(this);
 
@@ -809,6 +815,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
         final View headerView = mHeaderDrawerLayout.getHeader();
         final View contentView = mHeaderDrawerLayout.getContent();
+        mCardView = (CardView) headerView.findViewById(R.id.card);
         mNameView = (TextView) headerView.findViewById(R.id.name);
         mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);
@@ -1297,15 +1304,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return mColor;
             }
 
+            public void setColor(int color) {
+                mColor = color;
+                updatePaint();
+            }
+
             @Override
             protected void onBoundsChange(Rect bounds) {
                 super.onBoundsChange(bounds);
                 mBounds.set(bounds);
-            }
-
-            public void setColor(int color) {
-                mColor = color;
-                updatePaint();
             }
 
             private void updatePaint() {
@@ -1313,6 +1320,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mPaint.setAlpha(Color.alpha(mColor) * mAlpha / 0xFF);
                 invalidateSelf();
             }
+
 
             @Override
             public int getAlpha() {

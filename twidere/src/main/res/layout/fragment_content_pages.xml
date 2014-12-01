@@ -29,6 +29,7 @@
         android:id="@+id/view_pager_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_size_normal"
+        android:textColor="?android:textColorSecondary"
         app:pstsTabBackground="?android:selectableItemBackground"/>
 
     <android.support.v4.view.ViewPager
