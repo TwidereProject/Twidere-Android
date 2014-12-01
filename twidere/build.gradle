@@ -86,7 +86,7 @@ dependencies {
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.sothree.slidinguppanel:library:2.0.0'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:1.0.5'
-    compile 'com.twitter:twitter-text:1.10.1'
+    compile 'com.twitter:twitter-text:1.9.9'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
     compile 'org.apache.httpcomponents:httpmime:4.3.5'
