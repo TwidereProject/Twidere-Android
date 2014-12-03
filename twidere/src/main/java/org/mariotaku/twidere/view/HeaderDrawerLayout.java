@@ -80,79 +80,6 @@ public class HeaderDrawerLayout extends ViewGroup {
         this(context, null);
     }
 
-    private static int makeChildMeasureSpec(int spec, int padding) {
-        final int size = MeasureSpec.getSize(spec), mode = MeasureSpec.getMode(spec);
-        return MeasureSpec.makeMeasureSpec(size - padding, mode);
-    }
-
-    private boolean isUsingDragHelper() {
-        return mUsingDragHelper;
-    }
-
-    private void setScrollingHeaderByGesture(boolean scrolling) {
-        mScrollingHeaderByGesture = scrolling;
-    }
-
-    public void flingHeader(float velocity) {
-        if (mTouchDown) {
-            mScroller.abortAnimation();
-            return;
-        }
-        mScroller.fling(0, getHeaderTop(), 0, (int) velocity, 0, 0,
-                mContainer.getHeaderTopMinimum(), mContainer.getHeaderTopMaximum());
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-
-    private void flingCallback(float velocity) {
-        mDrawerCallback.fling(velocity);
-    }
-
-    @Override
-    public void computeScroll() {
-        boolean invalidate = mDragHelper.continueSettling(true);
-        if (!mTouchDown && mScroller.computeScrollOffset()) {
-            if (!invalidate) {
-                offsetHeaderBy(mScroller.getCurrY() - getHeaderTop());
-            }
-            invalidate = true;
-        }
-        updateViewOffset();
-        if (invalidate) {
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
-    }
-
-    private void scrollByCallback(float dy) {
-        setScrollingContentCallback(true);
-        mDrawerCallback.scrollBy(dy);
-    }
-
-    private boolean isScrollContentCallback(float x, float y) {
-        return mDrawerCallback.isScrollContent(x, y);
-    }
-
-    private void cancelTouchCallback() {
-        mDrawerCallback.cancelTouch();
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        if (getChildCount() != 1) {
-            throw new IllegalArgumentException("Add subview by XML is not allowed.");
-        }
-    }
-
-    private boolean canScrollCallback(float dy) {
-        return mDrawerCallback.canScroll(dy);
-    }
-
-    public void setDrawerCallback(DrawerCallback callback) {
-        mDrawerCallback = callback;
-    }
-
-    private void updateViewOffset() {
-    }
-
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
         switch (ev.getAction()) {
@@ -188,39 +115,58 @@ public class HeaderDrawerLayout extends ViewGroup {
         for (int i = 0, j = getChildCount(); i < j; i++) {
             final View child = getChildAt(i);
             final int left = getPaddingLeft(), right = left + child.getMeasuredWidth();
-            final int top = i == 0 ? mHeaderOffset + getPaddingTop() : getChildAt(i - 1).getBottom();
+            final int top;
+            if (i == 0) {
+                if (shouldLayoutHeaderBottomCallback() && child.getHeight() != 0) {
+                    final int heightDelta = child.getMeasuredHeight() - child.getHeight();
+                    top = mHeaderOffset + getPaddingTop() - heightDelta;
+                } else {
+                    top = mHeaderOffset + getPaddingTop();
+                }
+            } else {
+                top = getChildAt(i - 1).getBottom();
+            }
             final int bottom = top + child.getMeasuredHeight();
             child.layout(left, top, right, bottom);
             notifyOffsetChanged();
         }
     }
 
-    @Override
-    public boolean onTouchEvent(@NonNull MotionEvent event) {
-        mDragHelper.processTouchEvent(event);
-        return true;
-    }
-
-    public View getHeader() {
-        return mContainer.getHeader();
+    public void flingHeader(float velocity) {
+        if (mTouchDown) {
+            mScroller.abortAnimation();
+            return;
+        }
+        mScroller.fling(0, getHeaderTop(), 0, (int) velocity, 0, 0,
+                mContainer.getHeaderTopMinimum(), mContainer.getHeaderTopMaximum());
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     public View getContent() {
         return mContainer.getContent();
     }
 
-    private int getScrollRange() {
-        return mContainer.getScrollRange();
+    public View getHeader() {
+        return mContainer.getHeader();
+    }
+
+    @Override
+    public void computeScroll() {
+        boolean invalidate = mDragHelper.continueSettling(true);
+        if (!mTouchDown && mScroller.computeScrollOffset()) {
+            if (!invalidate) {
+                offsetHeaderBy(mScroller.getCurrY() - getHeaderTop());
+            }
+            invalidate = true;
+        }
+        updateViewOffset();
+        if (invalidate) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
     }
 
     public int getHeaderTop() {
         return mContainer.getTop();
-    }
-
-    private void offsetHeaderBy(int dy) {
-        final int prevTop = mContainer.getTop();
-        final int clampedDy = MathUtils.clamp(prevTop + dy, getHeaderTopMinimum(), getHeaderTopMaximum()) - prevTop;
-        mContainer.offsetTopAndBottom(clampedDy);
     }
 
     public int getHeaderTopMaximum() {
@@ -229,6 +175,82 @@ public class HeaderDrawerLayout extends ViewGroup {
 
     public int getHeaderTopMinimum() {
         return mContainer.getHeaderTopMinimum();
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        mDragHelper.processTouchEvent(event);
+        return true;
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        if (getChildCount() != 1) {
+            throw new IllegalArgumentException("Add subview by XML is not allowed.");
+        }
+    }
+
+    public void setDrawerCallback(DrawerCallback callback) {
+        mDrawerCallback = callback;
+    }
+
+    private boolean canScrollCallback(float dy) {
+        return mDrawerCallback.canScroll(dy);
+    }
+
+    private void cancelTouchCallback() {
+        mDrawerCallback.cancelTouch();
+    }
+
+    private void flingCallback(float velocity) {
+        mDrawerCallback.fling(velocity);
+    }
+
+    private float getDragTouchSlop() {
+        return mDragHelper.getTouchSlop();
+    }
+
+    private int getScrollRange() {
+        return mContainer.getScrollRange();
+    }
+
+    private boolean isScrollContentCallback(float x, float y) {
+        return mDrawerCallback.isScrollContent(x, y);
+    }
+
+    private boolean isScrollingContentCallback() {
+        return mScrollingContentCallback;
+    }
+
+    private void setScrollingContentCallback(boolean scrolling) {
+        mScrollingContentCallback = scrolling;
+    }
+
+    private boolean isScrollingHeaderByHelper() {
+        return mDragCallback.isScrollingHeaderByHelper();
+    }
+
+    private boolean isTouchingScrollableContent() {
+        return mTouchingScrollableContent;
+    }
+
+    private boolean isUsingDragHelper() {
+        return mUsingDragHelper;
+    }
+
+    private boolean isValidScroll(float direction, float other) {
+        return Math.abs(direction) > getDragTouchSlop() && Math.abs(direction) > Math.abs(other);
+    }
+
+    private static int makeChildMeasureSpec(int spec, int padding) {
+        final int size = MeasureSpec.getSize(spec), mode = MeasureSpec.getMode(spec);
+        return MeasureSpec.makeMeasureSpec(size - padding, mode);
+    }
+
+    private void notifyOffsetChanged() {
+        final int top = getHeaderTop();
+        mHeaderOffset = top - getPaddingTop();
+        mDrawerCallback.topChanged(top);
     }
 
     @Override
@@ -242,47 +264,41 @@ public class HeaderDrawerLayout extends ViewGroup {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    private boolean isTouchingScrollableContent() {
-        return mTouchingScrollableContent;
+    private void offsetHeaderBy(int dy) {
+        final int prevTop = mContainer.getTop();
+        final int clampedDy = MathUtils.clamp(prevTop + dy, getHeaderTopMinimum(), getHeaderTopMaximum()) - prevTop;
+        mContainer.offsetTopAndBottom(clampedDy);
     }
 
-    private void notifyOffsetChanged() {
-        final int top = getHeaderTop();
-        mHeaderOffset = top - getPaddingTop();
-        mDrawerCallback.topChanged(top);
+    private void scrollByCallback(float dy) {
+        setScrollingContentCallback(true);
+        mDrawerCallback.scrollBy(dy);
     }
 
-    private float getDragTouchSlop() {
-        return mDragHelper.getTouchSlop();
+    private void setScrollingHeaderByGesture(boolean scrolling) {
+        mScrollingHeaderByGesture = scrolling;
     }
 
-    private boolean isValidScroll(float direction, float other) {
-        return Math.abs(direction) > getDragTouchSlop() && Math.abs(direction) > Math.abs(other);
+    private boolean shouldLayoutHeaderBottomCallback() {
+        return mDrawerCallback.shouldLayoutHeaderBottom();
     }
 
-    private boolean isScrollingHeaderByHelper() {
-        return mDragCallback.isScrollingHeaderByHelper();
-    }
-
-    private boolean isScrollingContentCallback() {
-        return mScrollingContentCallback;
-    }
-
-    private void setScrollingContentCallback(boolean scrolling) {
-        mScrollingContentCallback = scrolling;
+    private void updateViewOffset() {
     }
 
     public static interface DrawerCallback {
 
-        void fling(float velocity);
-
-        void scrollBy(float dy);
-
         boolean canScroll(float dy);
+
+        void cancelTouch();
+
+        void fling(float velocity);
 
         boolean isScrollContent(float x, float y);
 
-        void cancelTouch();
+        void scrollBy(float dy);
+
+        boolean shouldLayoutHeaderBottom();
 
         void topChanged(int offset);
     }
@@ -369,12 +385,12 @@ public class HeaderDrawerLayout extends ViewGroup {
                 mScrollingHeaderByHelper = false;
                 return current;
             }
-            if (dy > 0 && mDrawer.canScrollCallback(-dy)) {
+            if (dy > 0 && mDrawer.canScrollCallback(-dy) && mDrawer.isTouchingScrollableContent()) {
                 if (!mDrawer.isUsingDragHelper()) {
                     // Scrolling up while list still has space to scroll, so make header still
                     mScrollingHeaderByHelper = false;
                     return current;
-                } else if (mDrawer.isTouchingScrollableContent()) {
+                } else {
                     mDrawer.scrollByCallback(-dy);
                     mScrollingHeaderByHelper = false;
                     return current;
@@ -428,16 +444,24 @@ public class HeaderDrawerLayout extends ViewGroup {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             final int top = mDrawer.getHeaderTop(), min = mDrawer.getHeaderTopMinimum();
-            if (velocityY > 0 && !mDrawer.canScrollCallback(-1)) {
-                // Fling down when list reached top, so we fling header down here
-                if (Math.abs(velocityY) > Math.abs(velocityX)) {
-                    mDrawer.flingHeader(velocityY);
+            final boolean showingFullContent = top <= min, flingUp = velocityY < 0;
+            final boolean verticalFling = Math.abs(velocityY) > Math.abs(velocityX);
+            if (!verticalFling) return true;
+            if (showingFullContent) {
+                if (flingUp) {
+                    // Fling list up when showing full content
+                    if (mDrawer.isScrollingContentCallback()) {
+                        mDrawer.flingCallback(-velocityY);
+                    }
+                } else {
+                    // Fling down when list reached top and not dragging user ViewDragHelper,
+                    // so we fling header down here
+                    if (!mDrawer.canScrollCallback(1) && !mDrawer.isUsingDragHelper()) {
+                        mDrawer.flingHeader(velocityY);
+                    }
                 }
-            } else if (velocityY < 0 && top <= min && mDrawer.isScrollingContentCallback()) {
-                // Fling up when showing full content, so we fling list up here
-                if (Math.abs(velocityY) > Math.abs(velocityX)) {
-                    mDrawer.flingCallback(-velocityY);
-                }
+            } else {
+                // Header still visible
             }
             return true;
         }
@@ -464,20 +488,20 @@ public class HeaderDrawerLayout extends ViewGroup {
             addView(mContentView = inflater.inflate(contentLayoutId, this, false));
         }
 
-        public View getHeader() {
-            return mHeaderView;
-        }
-
         public View getContent() {
             return mContentView;
         }
 
-        public int getHeaderTopMinimum() {
-            return mParent.getPaddingTop() - mHeaderView.getHeight();
+        public View getHeader() {
+            return mHeaderView;
         }
 
         public int getHeaderTopMaximum() {
             return mParent.getPaddingTop();
+        }
+
+        public int getHeaderTopMinimum() {
+            return mParent.getPaddingTop() - mHeaderView.getHeight();
         }
 
         public int getScrollRange() {

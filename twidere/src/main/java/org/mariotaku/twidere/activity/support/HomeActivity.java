@@ -801,7 +801,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         final Window window = getWindow();
         final Drawable windowBackground = ThemeUtils.getWindowBackground(this, getCurrentThemeResourceId());
         ViewAccessor.setBackground(mSlidingMenu.getContent(), windowBackground);
-        window.setBackgroundDrawable(new EmptyDrawable());
+        window.setBackgroundDrawable(new EmptyDrawable(windowBackground));
     }
 
     private void showDataProfilingRequest() {
@@ -918,6 +918,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         if (fragment instanceof AccountsDashboardFragment) {
             ((AccountsDashboardFragment) fragment).setStatusBarHeight(insets.top);
         }
+        //TODO
+        mColorStatusFrameLayout.setStatusBarHeight(insets.top);
     }
 
 

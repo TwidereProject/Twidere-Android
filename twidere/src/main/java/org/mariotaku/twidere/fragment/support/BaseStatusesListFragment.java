@@ -137,14 +137,13 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
         mPositionManager = new PositionManager(context);
         mMultiSelectManager = getMultiSelectManager();
         mListView = getListView();
-        final boolean plainListStyle = mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false);
         final boolean compactCards = mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
-        mAdapter = newAdapterInstance(compactCards, plainListStyle);
+        mAdapter = newAdapterInstance(compactCards);
         mAdapter.setMenuButtonClickListener(this);
         setListAdapter(null);
         setListHeaderFooters(mListView);
         setListAdapter(mAdapter);
-        if (!plainListStyle) {
+        if (!compactCards) {
             mListView.setDivider(null);
         }
         mListView.setSelector(android.R.color.transparent);
@@ -291,7 +290,7 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
         if (status == null || twitter == null) return false;
         switch (item.getItemId()) {
             case MENU_VIEW: {
-                openStatus(getActivity(), status);
+                openStatus(getActivity(), status, null);
                 break;
             }
             case MENU_SHARE: {
@@ -480,7 +479,7 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
 
     protected abstract void loadMoreStatuses();
 
-    protected abstract IStatusesListAdapter<Data> newAdapterInstance(boolean compact, boolean plain);
+    protected abstract IStatusesListAdapter<Data> newAdapterInstance(boolean compact);
 
     @Override
     protected void onReachedBottom() {

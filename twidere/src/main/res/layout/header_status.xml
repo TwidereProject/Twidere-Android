@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
@@ -14,7 +15,6 @@
         app:cardElevation="@dimen/elevation_card">
 
         <LinearLayout
-            android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -48,8 +48,8 @@
                     android:layout_height="@dimen/element_size_mlarge"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/profile_image"
                     android:layout_margin="@dimen/padding_profile_image_detail_page"
+                    android:contentDescription="@string/profile_image"
                     android:scaleType="centerCrop"
                     app:border="true"
                     app:borderWidth="1dp"/>

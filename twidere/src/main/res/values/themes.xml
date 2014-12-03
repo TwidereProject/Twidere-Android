@@ -7,16 +7,16 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
-    <style name="Theme.Blank" parent="android:Theme.DeviceDefault.NoActionBar">
+    <style name="Theme.Blank" parent="Theme.Base.NoActionBar">
 
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
-    <style name="Theme.Blank.Dialog" parent="android:Theme.DeviceDefault.Dialog"/>
+    <style name="Theme.Blank.Dialog" parent="Theme.Base.Dialog"/>
 
-    <style name="Theme.Twidere.Dark" parent="android:Theme.DeviceDefault">
+    <style name="Theme.Twidere.Dark" parent="Theme.Base">
 
         <!-- Colors -->
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>-->
@@ -64,7 +64,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
+    <style name="Theme.Twidere.Light" parent="Theme.Base.Light.DarkActionBar">
 
         <!-- Colors -->
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
@@ -155,7 +155,7 @@
         <!--<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>-->
     </style>
 
-    <style name="Theme.Twidere.Dark.Dialog" parent="android:Theme.DeviceDefault.Dialog">
+    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Base.Dialog">
 
         <!-- Custom view styles -->
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
@@ -190,7 +190,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog">
+    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Base.Light.Dialog">
 
         <!-- Custom view styles -->
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
@@ -251,7 +251,7 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="Theme.Twidere.Viewer" parent="android:Theme.DeviceDefault">
+    <style name="Theme.Twidere.Viewer" parent="Theme.Base">
 
         <!-- Window attributes -->
         <item name="android:windowActionBarOverlay">true</item>
@@ -321,7 +321,7 @@
         <!-- Window attributes -->
     </style>
 
-    <style name="Theme.Twidere.Dark.NoDisplay" parent="android:Theme.DeviceDefault">
+    <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Base">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -330,7 +330,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Twidere.Light.NoDisplay" parent="android:Theme.DeviceDefault.Light">
+    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Base.Light">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -339,16 +339,16 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Test" parent="android:Theme.DeviceDefault">
+    <style name="Theme.Test" parent="Theme.Base">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.Nyan" parent="android:Theme.DeviceDefault.NoActionBar">
+    <style name="Theme.Nyan" parent="Theme.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>
     </style>
 
-    <style name="Theme.Twidere.Settings.Dark" parent="android:Theme.DeviceDefault">
+    <style name="Theme.Twidere.Settings.Dark" parent="Theme.Base">
 
         <!-- Colors -->
         <item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>
@@ -393,7 +393,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Settings.Light" parent="android:Theme.DeviceDefault.Light">
+    <style name="Theme.Twidere.Settings.Light" parent="Theme.Base.Light">
 
         <!-- Colors -->
         <item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>
@@ -434,7 +434,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
-    <style name="Theme.Twidere.Settings.Light.DarkActionBar" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
+    <style name="Theme.Twidere.Settings.Light.DarkActionBar" parent="Theme.Base.Light.DarkActionBar">
 
         <!-- Colors -->
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->

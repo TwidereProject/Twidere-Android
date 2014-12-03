@@ -23,7 +23,8 @@
     <FrameLayout
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/element_spacing_large">
 
         <ProgressBar
             style="?android:progressBarStyleLarge"
@@ -38,7 +39,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="@dimen/element_spacing_large"
         android:visibility="gone">
 
         <TextView

@@ -30,13 +30,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.mariotaku.twidere.view.ProfileBannerImageView
-            android:id="@+id/profile_banner"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <FrameLayout
+            android:id="@+id/profile_banner_container"
             android:layout_gravity="top"
-            android:scaleType="centerCrop"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <org.mariotaku.twidere.view.ProfileBannerImageView
+                android:id="@+id/profile_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"/>
+        </FrameLayout>
 
         <org.mariotaku.twidere.view.HeaderDrawerLayout
             android:id="@+id/user_profile_drawer"
@@ -45,7 +50,5 @@
             app:contentLayout="@layout/fragment_content_pages"
             app:headerLayout="@layout/header_user"/>
     </org.mariotaku.twidere.view.ExtendedFrameLayout>
-
-    <include layout="@layout/layout_content_fragment_common"/>
 
 </FrameLayout>

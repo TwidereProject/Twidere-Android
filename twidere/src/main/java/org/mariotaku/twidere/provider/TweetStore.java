@@ -241,6 +241,12 @@ public interface TweetStore {
 
         public static final String LISTED_COUNT = "listed_count";
 
+        public static final String BACKGROUND_COLOR = "background_color";
+
+        public static final String LINK_COLOR = "link_color";
+
+        public static final String TEXT_COLOR = "text_color";
+
         /**
          * User's screen name of the status.<br>
          * Type: TEXT
@@ -254,13 +260,15 @@ public interface TweetStore {
         public static final String PROFILE_IMAGE_URL = "profile_image_url";
 
         public static final String[] COLUMNS = new String[]{_ID, USER_ID, CREATED_AT, NAME, SCREEN_NAME,
-                DESCRIPTION_PLAIN, LOCATION, URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, IS_PROTECTED, IS_VERIFIED,
-                IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT, LISTED_COUNT, DESCRIPTION_HTML,
-                DESCRIPTION_EXPANDED, URL_EXPANDED};
+                DESCRIPTION_PLAIN, LOCATION, URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, IS_PROTECTED,
+                IS_VERIFIED, IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT,
+                LISTED_COUNT, DESCRIPTION_HTML, DESCRIPTION_EXPANDED, URL_EXPANDED, BACKGROUND_COLOR,
+                LINK_COLOR, TEXT_COLOR};
 
-        public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT_UNIQUE, TYPE_INT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+        public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT_UNIQUE, TYPE_INT,
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
+                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT,
+                TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT};
 
     }
 

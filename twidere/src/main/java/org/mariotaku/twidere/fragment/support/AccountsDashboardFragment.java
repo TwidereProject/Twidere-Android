@@ -122,14 +122,14 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAppMenuAdapter = new AppMenuAdapter(context);
         mAppMenuSectionView = newSectionView(context, R.string.more);
         mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, listView, false);
-        mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.account_selector);
+        mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.other_accounts_list);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         layoutManager.setStackFromEnd(true);
         mAccountsSelector.setLayoutManager(layoutManager);
         mAccountsSelector.setAdapter(mAccountsAdapter);
         mAccountProfileContainer = mAccountSelectorView.findViewById(R.id.profile_container);
         mAccountProfileImageView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_image);
-        mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_banner);
+        mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.account_profile_banner);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
         mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
         mAccountsToggle = (Switch) mAccountSelectorView.findViewById(R.id.toggle);

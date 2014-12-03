@@ -10,12 +10,22 @@ import java.util.List;
 /**
  * Created by mariotaku on 14/11/19.
  */
-public class ParcelableStatusesAdapter extends AbsStatusesAdapter {
+public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<ParcelableStatus>> {
 
     private List<ParcelableStatus> mData;
 
     public ParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);
+    }
+
+    @Override
+    public boolean isGapItem(int position) {
+        return getStatus(position).is_gap;
+    }
+
+    @Override
+    public void onGapClick(StatusViewHolder holder, int position) {
+
     }
 
     @Override
@@ -43,4 +53,5 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter {
     public List<ParcelableStatus> getData() {
         return mData;
     }
+
 }

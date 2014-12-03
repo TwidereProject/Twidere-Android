@@ -131,6 +131,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(CachedUsers.NAME, user.getName());
         values.put(CachedUsers.SCREEN_NAME, user.getScreenName());
         values.put(CachedUsers.PROFILE_IMAGE_URL, profile_image_url);
+        values.put(CachedUsers.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
         values.put(CachedUsers.CREATED_AT, user.getCreatedAt().getTime());
         values.put(CachedUsers.IS_PROTECTED, user.isProtected());
         values.put(CachedUsers.IS_VERIFIED, user.isVerified());
@@ -145,10 +146,12 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(CachedUsers.DESCRIPTION_HTML, Utils.formatUserDescription(user));
         values.put(CachedUsers.DESCRIPTION_EXPANDED, Utils.formatExpandedUserDescription(user));
         values.put(CachedUsers.URL, url);
-        values.put(CachedUsers.URL_EXPANDED,
-                url != null && urls != null && urls.length > 0 ? ParseUtils.parseString(urls[0].getExpandedURL())
-                        : null);
-        values.put(CachedUsers.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
+        if (url != null && urls != null && urls.length > 0) {
+            values.put(CachedUsers.URL_EXPANDED, ParseUtils.parseString(urls[0].getExpandedURL()));
+        }
+        values.put(CachedUsers.BACKGROUND_COLOR, ParseUtils.parseColor(user.getProfileBackgroundColor(), 0));
+        values.put(CachedUsers.LINK_COLOR, ParseUtils.parseColor(user.getProfileLinkColor(), 0));
+        values.put(CachedUsers.TEXT_COLOR, ParseUtils.parseColor(user.getProfileTextColor(), 0));
         return values;
     }
 

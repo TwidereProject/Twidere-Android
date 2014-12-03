@@ -43,7 +43,7 @@
         android:layout_alignRight="@id/profile_image"
         android:scaleType="fitCenter"/>
 
-    <org.mariotaku.twidere.view.ColorLabelLinearLayout
+    <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profile_name_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,40 +55,37 @@
         android:padding="@dimen/element_spacing_small"
         app:ignorePadding="true">
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/follow"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="@string/name"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:minWidth="48dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/follow"
+            android:orientation="vertical">
+
+            <org.mariotaku.twidere.view.themed.ThemedTextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="?android:textAppearanceMedium"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/screen_name"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:singleLine="true"
-                android:text="@string/screen_name"
                 android:textAppearance="?android:textAppearanceSmall"/>
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/following_you_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:singleLine="true"
-                android:text="@string/following_you"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorTertiary"
-                android:visibility="gone"/>
         </LinearLayout>
-    </org.mariotaku.twidere.view.ColorLabelLinearLayout>
+
+    </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/card"
@@ -101,6 +98,7 @@
         app:cardElevation="@dimen/elevation_card">
 
         <LinearLayout
+            android:id="@+id/card_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -304,6 +302,9 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+        <include layout="@layout/layout_content_fragment_common"/>
+
     </android.support.v7.widget.CardView>
 
     <org.mariotaku.twidere.view.AssetFontTextView

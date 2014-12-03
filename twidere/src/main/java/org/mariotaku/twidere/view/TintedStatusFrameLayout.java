@@ -85,7 +85,7 @@ public class TintedStatusFrameLayout extends FrameLayout {
         if (context instanceof FitSystemWindowsCallback) {
             ((FitSystemWindowsCallback) context).fitSystemWindows(insets);
         }
-        return false;
+        return super.fitSystemWindows(insets);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class TintedStatusFrameLayout extends FrameLayout {
         canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mDrawColor ? mColorPaint : mBlackPaint);
     }
 
-    protected void setStatusBarHeight(int height) {
+    public void setStatusBarHeight(int height) {
         mStatusBarHeight = height;
         invalidate();
     }

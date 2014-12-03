@@ -43,6 +43,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -139,6 +140,8 @@ import static org.mariotaku.twidere.util.Utils.startStatusShareChooser;
 
 public class StatusFragment extends ParcelableStatusesListFragment implements OnClickListener,
         OnMediaClickListener, OnSharedPreferenceChangeListener, ActionMode.Callback {
+
+    public static final String TRANSITION_NAME_CARD = "card";
 
     private static final int LOADER_ID_STATUS = 1;
     private static final int LOADER_ID_FOLLOW = 2;
@@ -614,7 +617,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         mLoadImagesIndicator = mHeaderView.findViewById(R.id.load_images);
         mRetryButton = (Button) view.findViewById(R.id.retry);
         final View cardView = mHeaderView.findViewById(R.id.card);
-        ThemeUtils.applyThemeAlphaToDrawable(cardView.getContext(), cardView.getBackground());
+        ViewCompat.setTransitionName(cardView, TRANSITION_NAME_CARD);
         return view;
     }
 

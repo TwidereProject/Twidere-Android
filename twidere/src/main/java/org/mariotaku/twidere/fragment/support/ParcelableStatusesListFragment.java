@@ -208,8 +208,8 @@ public abstract class ParcelableStatusesListFragment extends BaseStatusesListFra
     }
 
     @Override
-    protected ParcelableStatusesListAdapter newAdapterInstance(final boolean compact, final boolean plain) {
-        return new ParcelableStatusesListAdapter(getActivity(), compact, plain);
+    protected ParcelableStatusesListAdapter newAdapterInstance(final boolean compact) {
+        return new ParcelableStatusesListAdapter(getActivity(), compact);
     }
 
     protected abstract Loader<List<ParcelableStatus>> newLoaderInstance(Context context, Bundle args);

@@ -40,7 +40,7 @@ import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
+import org.mariotaku.twidere.adapter.CursorStatusesListAdapter;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
@@ -86,7 +86,7 @@ public abstract class CursorStatusesStaggeredGridFragment extends BaseStatusesSt
 		} else {
 			where = accountWhere;
 		}
-		return new CursorLoader(getActivity(), uri, CursorStatusesAdapter.CURSOR_COLS, where.getSQL(), null, sort_by);
+		return new CursorLoader(getActivity(), uri, CursorStatusesListAdapter.CURSOR_COLS, where.getSQL(), null, sort_by);
 	}
 
 	@Override
@@ -194,8 +194,8 @@ public abstract class CursorStatusesStaggeredGridFragment extends BaseStatusesSt
 	}
 
 	@Override
-	protected CursorStatusesAdapter newAdapterInstance() {
-		return new CursorStatusesAdapter(getActivity());
+	protected CursorStatusesListAdapter newAdapterInstance() {
+		return new CursorStatusesListAdapter(getActivity());
 	}
 
 	@Override

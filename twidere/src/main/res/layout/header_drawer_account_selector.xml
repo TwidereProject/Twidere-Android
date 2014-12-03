@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/profile_banner"
+        android:id="@+id/account_profile_banner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignBottom="@id/profile_container"
@@ -35,7 +35,7 @@
                 android:layout_marginTop="@dimen/element_spacing_mlarge"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/account_selector"
+                android:id="@+id/other_accounts_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/profile_image"

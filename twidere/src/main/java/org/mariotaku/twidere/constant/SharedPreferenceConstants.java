@@ -281,8 +281,6 @@ public interface SharedPreferenceConstants {
     @Preference(type = STRING, hasDefault = true, defaultString = "CENTER_CROP")
     public static final String KEY_IMAGE_PREVIEW_SCALE_TYPE = "image_preview_scale_type";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    public static final String KEY_PLAIN_LIST_STYLE = "plain_list_style";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_SORT_TIMELINE_BY_ID = "sort_timeline_by_id";
 
     public static final String KEY_QUICK_MENU_EXPANDED = "quick_menu_expanded";

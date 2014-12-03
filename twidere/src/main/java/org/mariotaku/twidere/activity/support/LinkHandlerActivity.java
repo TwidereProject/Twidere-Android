@@ -203,13 +203,25 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        final int transitionRes;
         switch (linkId) {
             case LINK_ID_USER: {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !ThemeUtils.isTransparentBackground(this)) {
-                    Utils.setSharedElementTransition(this, window, R.transition.transition_user_profile);
-                }
+                transitionRes = R.transition.transition_user;
                 break;
             }
+            case LINK_ID_STATUS: {
+//                transitionRes = R.transition.transition_status;
+                transitionRes = 0;
+                break;
+            }
+            default: {
+                transitionRes = 0;
+                break;
+            }
+        }
+        if (transitionRes != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && !ThemeUtils.isTransparentBackground(this)) {
+            Utils.setSharedElementTransition(this, window, R.transition.transition_status);
         }
     }
 

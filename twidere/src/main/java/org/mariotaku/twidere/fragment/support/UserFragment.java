@@ -108,11 +108,11 @@ import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CircularImageView;
-import org.mariotaku.twidere.view.ColorLabelLinearLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.ProfileBannerImageView;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
+import org.mariotaku.twidere.view.iface.IColorLabelView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.util.Locale;
@@ -171,10 +171,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private View mDescriptionContainer, mLocationContainer, mURLContainer, mListedContainer, mFollowersContainer,
             mFriendsContainer;
     private Button mRetryButton;
-    private ColorLabelLinearLayout mProfileNameContainer;
+    private IColorLabelView mProfileNameContainer;
     private View mProgressContainer, mErrorRetryContainer;
-    private View mFollowingYouIndicator;
-    private View mMainContent;
+    private View mCardContent;
     private View mProfileBannerSpace;
     private TintedStatusFrameLayout mTintedStatusContent;
     private HeaderDrawerLayout mHeaderDrawerLayout;
@@ -182,6 +181,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private PagerSlidingTabStrip mPagerIndicator;
     private CardView mCardView;
     private View mUuckyFooter;
+    private View mProfileBannerContainer;
+    private Button mFollowButton;
 
     private SupportTabsAdapter mPagerAdapter;
 
@@ -233,8 +234,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         @Override
         public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
-            if (mUser == null) {
-                mMainContent.setVisibility(View.VISIBLE);
+            final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
+            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String screenName = args.getString(EXTRA_SCREEN_NAME);
+            if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
+                mCardContent.setVisibility(View.GONE);
                 mErrorRetryContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.VISIBLE);
                 mErrorMessageView.setText(null);
@@ -243,10 +248,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             setProgressBarIndeterminateVisibility(true);
             final ParcelableUser user = mUser;
-            final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            final long userId = args.getLong(EXTRA_USER_ID, -1);
-            final String screenName = args.getString(EXTRA_SCREEN_NAME);
             return new ParcelableUserLoader(getActivity(), accountId, userId, screenName, getArguments(),
                     omitIntentExtra, user == null || !user.is_cache && userId != user.id);
         }
@@ -262,7 +263,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             if (getActivity() == null) return;
             if (data.getData() != null && data.getData().id > 0) {
                 final ParcelableUser user = data.getData();
-                mMainContent.setVisibility(View.VISIBLE);
+                mCardContent.setVisibility(View.VISIBLE);
                 mErrorRetryContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
                 setListShown(true);
@@ -276,7 +277,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
                 }
             } else if (mUser != null && mUser.is_cache) {
-                mMainContent.setVisibility(View.VISIBLE);
+                mCardContent.setVisibility(View.VISIBLE);
                 mErrorRetryContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
                 setListShown(true);
@@ -286,7 +287,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mErrorMessageView.setText(getErrorMessage(getActivity(), data.getException()));
                     mErrorMessageView.setVisibility(View.VISIBLE);
                 }
-                mMainContent.setVisibility(View.GONE);
+                mCardContent.setVisibility(View.GONE);
                 mErrorRetryContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
             }
@@ -299,6 +300,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Override
         public Loader<SingleResponse<Relationship>> onCreateLoader(final int id, final Bundle args) {
             invalidateOptionsMenu();
+            mFollowButton.setVisibility(View.GONE);
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             final long userId = args.getLong(EXTRA_USER_ID, -1);
             return new FriendshipLoader(getActivity(), accountId, userId);
@@ -317,10 +319,18 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final Relationship relationship = mRelationship = data.getData();
             if (user == null) return;
             invalidateOptionsMenu();
-            if (relationship != null) {
-                final boolean isMyself = user.account_id == user.id;
-                final boolean isFollowingYou = relationship.isTargetFollowingSource();
-                mFollowingYouIndicator.setVisibility(!isMyself && isFollowingYou ? View.VISIBLE : View.GONE);
+            final boolean isMyself = user.account_id == user.id;
+            if (isMyself) {
+                mFollowButton.setText(R.string.edit);
+                mFollowButton.setVisibility(View.VISIBLE);
+            } else if (relationship != null) {
+                if (relationship.isSourceBlockingTarget()) {
+                    mFollowButton.setText(R.string.unblock);
+                } else if (relationship.isSourceFollowingTarget()) {
+                    mFollowButton.setText(R.string.unfollow);
+                } else {
+                    mFollowButton.setText(R.string.follow);
+                }
                 final ContentResolver resolver = getContentResolver();
                 final String where = Where.equals(CachedUsers.USER_ID, user.id).getSQL();
                 resolver.delete(CachedUsers.CONTENT_URI, where, null);
@@ -332,8 +342,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                         resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
                     }
                 }
+                mFollowButton.setVisibility(View.VISIBLE);
             } else {
-                mFollowingYouIndicator.setVisibility(View.GONE);
+                mFollowButton.setText(null);
+                mFollowButton.setVisibility(View.GONE);
+//                mFollowingYouIndicator.setVisibility(View.GONE);
             }
         }
 
@@ -348,6 +361,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final boolean userIsMe = user.account_id == user.id;
+        mCardContent.setVisibility(View.VISIBLE);
         mErrorRetryContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
@@ -467,6 +481,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
+    public boolean shouldLayoutHeaderBottom() {
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        final CardView card = mCardView;
+        if (drawer == null || card == null) return false;
+        return card.getTop() + drawer.getHeaderTop() - drawer.getPaddingTop() <= 0;
+    }
+
+    @Override
     public Fragment getCurrentVisibleFragment() {
         return mCurrentVisibleFragment;
     }
@@ -497,7 +519,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         if (!isMyAccount(getActivity(), accountId)) {
-            mMainContent.setVisibility(View.GONE);
+            mCardContent.setVisibility(View.GONE);
             mErrorRetryContainer.setVisibility(View.GONE);
             return;
         }
@@ -513,7 +535,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             lm.restartLoader(LOADER_ID_USER, args, mUserInfoLoaderCallbacks);
         }
         if (accountId == -1 || userId == -1 && screenName == null) {
-            mMainContent.setVisibility(View.GONE);
+            mCardContent.setVisibility(View.GONE);
             mErrorRetryContainer.setVisibility(View.GONE);
             return;
         }
@@ -598,6 +620,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager());
 
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mPagerAdapter);
         mPagerIndicator.setViewPager(mViewPager);
 
@@ -766,7 +789,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             public void onGenerated(Palette palette) {
                 final ParcelableUser user = mUser;
                 if (user == null) return;
-                final int color = palette.getVibrantColor(0);
+                final int color = palette.getDarkVibrantColor(user.link_color);
                 setupUserColorActionBar(color);
             }
         });
@@ -804,17 +827,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        final Context context = view.getContext();
-        super.onViewCreated(view, savedInstanceState);
-        mMainContent = view.findViewById(R.id.details_container);
         mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.user_profile_drawer);
-        mErrorRetryContainer = view.findViewById(R.id.error_retry_container);
-        mProgressContainer = view.findViewById(R.id.progress_container);
-        mRetryButton = (Button) view.findViewById(R.id.retry);
-        mErrorMessageView = (TextView) view.findViewById(R.id.error_message);
-        mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
         final View headerView = mHeaderDrawerLayout.getHeader();
         final View contentView = mHeaderDrawerLayout.getContent();
+        super.onViewCreated(view, savedInstanceState);
+        mCardContent = headerView.findViewById(R.id.card_content);
+        mErrorRetryContainer = headerView.findViewById(R.id.error_retry_container);
+        mProgressContainer = headerView.findViewById(R.id.progress_container);
+        mRetryButton = (Button) headerView.findViewById(R.id.retry);
+        mErrorMessageView = (TextView) headerView.findViewById(R.id.error_message);
+        mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
+        mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
         mCardView = (CardView) headerView.findViewById(R.id.card);
         mNameView = (TextView) headerView.findViewById(R.id.name);
         mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
@@ -828,37 +851,24 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mFollowersCount = (TextView) headerView.findViewById(R.id.followers_count);
         mFriendsContainer = headerView.findViewById(R.id.friends_container);
         mFriendsCount = (TextView) headerView.findViewById(R.id.friends_count);
-        mProfileNameContainer = (ColorLabelLinearLayout) headerView.findViewById(R.id.profile_name_container);
+        mProfileNameContainer = (IColorLabelView) headerView.findViewById(R.id.profile_name_container);
         mProfileImageView = (CircularImageView) headerView.findViewById(R.id.profile_image);
         mProfileTypeView = (ImageView) headerView.findViewById(R.id.profile_type);
         mDescriptionContainer = headerView.findViewById(R.id.description_container);
         mLocationContainer = headerView.findViewById(R.id.location_container);
         mURLContainer = headerView.findViewById(R.id.url_container);
-        mFollowingYouIndicator = headerView.findViewById(R.id.following_you_indicator);
         mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (PagerSlidingTabStrip) contentView.findViewById(R.id.view_pager_tabs);
+        mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
     }
 
     @Override
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-        final View view = getView();
-        if (view != null) {
-            final View progress = view.findViewById(R.id.progress_container);
-            progress.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
-        mErrorRetryContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mHeaderDrawerLayout.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mHeaderDrawerLayout.setClipToPadding(ThemeUtils.isTransparentBackground(getActivity()));
-        final int bannerHeight = mProfileBannerView.getHeight();
-        if (bannerHeight != 0) {
-            final ViewGroup.LayoutParams params = mProfileBannerSpace.getLayoutParams();
-            params.height = bannerHeight - insets.top;
-            mProfileBannerSpace.setLayoutParams(params);
-            mProfileBannerSpace.requestLayout();
-        }
     }
 
     public void setListShown(boolean shown) {
@@ -1147,13 +1157,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private void updateScrollOffset(int offset) {
         final View space = mProfileBannerSpace;
-        if (space == null) return;
+        final ProfileBannerImageView profileBannerView = mProfileBannerView;
+        final View profileBannerContainer = mProfileBannerContainer;
         final int spaceHeight = space.getHeight();
         final float factor = MathUtils.clamp(offset / (float) spaceHeight, 0, 1);
-        final ProfileBannerImageView profileBannerView = mProfileBannerView;
         profileBannerView.setAlpha(1.0f - factor / 8f);
-        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / -2);
-        profileBannerView.setBottomClip(Math.min(offset, spaceHeight));
+        profileBannerContainer.setTranslationY(-offset);
+        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
 
         if (mActionBarBackground != null && mTintedStatusContent != null) {
             mActionBarBackground.setFactor(factor);

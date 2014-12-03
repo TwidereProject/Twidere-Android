@@ -21,7 +21,7 @@ package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 
-public interface IStatusesListAdapter<Data> extends IBaseCardAdapter, IStatusesAdapter {
+public interface IStatusesListAdapter<Data> extends IBaseCardAdapter, IStatusesAdapter<Data> {
 
     public int findPositionByStatusId(final long statusId);
 
@@ -31,15 +31,11 @@ public interface IStatusesListAdapter<Data> extends IBaseCardAdapter, IStatusesA
 
     public long getLastStatusId();
 
-    public ParcelableStatus getStatus(int position);
-
     public long getStatusId(final int position);
 
     public boolean isLastItemFiltered();
 
     public void setCardHighlightOption(String option);
-
-    public void setData(Data data);
 
     public void setDisplayImagePreview(boolean display);
 

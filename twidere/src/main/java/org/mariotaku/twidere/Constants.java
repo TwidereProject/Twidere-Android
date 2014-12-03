@@ -28,7 +28,7 @@ package org.mariotaku.twidere;
 public interface Constants extends TwidereConstants {
 
     public static final String DATABASES_NAME = "twidere.sqlite";
-    public static final int DATABASES_VERSION = 72;
+    public static final int DATABASES_VERSION = 74;
 
     public static final int MENU_GROUP_STATUS_EXTENSION = 10;
     public static final int MENU_GROUP_COMPOSE_EXTENSION = 11;

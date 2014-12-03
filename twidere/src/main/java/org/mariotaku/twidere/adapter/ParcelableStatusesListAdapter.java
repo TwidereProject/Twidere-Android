@@ -21,10 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,24 +31,17 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableUserMention;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MultiSelectManager;
-import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusListViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.iface.ICardItemView.OnOverflowIconClickListener;
 
 import java.util.List;
 import java.util.Locale;
 
-import static org.mariotaku.twidere.model.ParcelableLocation.isValidLocation;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
-import static org.mariotaku.twidere.util.Utils.getAccountColor;
-import static org.mariotaku.twidere.util.Utils.getCardHighlightColor;
 import static org.mariotaku.twidere.util.Utils.getCardHighlightOptionInt;
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 import static org.mariotaku.twidere.util.Utils.openImage;
@@ -67,7 +57,6 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
 
     private MenuButtonClickListener mListener;
 
-    private final boolean mPlainList;
 
     private boolean mDisplayImagePreview, mGapDisallowed, mMentionsHighlightDisabled, mFavoritesHighlightDisabled,
             mDisplaySensitiveContents, mIndicateMyStatusDisabled, mIsLastItemFiltered, mFiltersEnabled,
@@ -79,12 +68,11 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
     private String[] mHighlightKeywords;
 
     public ParcelableStatusesListAdapter(final Context context) {
-        this(context, Utils.isCompactCards(context), Utils.isPlainListStyle(context));
+        this(context, Utils.isCompactCards(context));
     }
 
-    public ParcelableStatusesListAdapter(final Context context, final boolean compactCards, final boolean plainList) {
+    public ParcelableStatusesListAdapter(final Context context, final boolean compactCards) {
         super(context, getItemResource(compactCards));
-        mPlainList = plainList;
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
@@ -114,6 +102,21 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
     @Override
     public int getStatusCount() {
         return super.getCount();
+    }
+
+    @Override
+    public void onItemMenuClick(StatusViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public void onStatusClick(StatusViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public void onUserProfileClick(StatusViewHolder holder, int position) {
+
     }
 
     @Override
@@ -163,141 +166,26 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
         final Object tag = view.getTag();
-        final StatusListViewHolder holder;
-        final Resources res = mContext.getResources();
-
-        if (tag instanceof StatusListViewHolder) {
-            holder = (StatusListViewHolder) tag;
+        final StatusViewHolder holder;
+        if (tag instanceof StatusViewHolder) {
+            holder = (StatusViewHolder) tag;
         } else {
-            holder = new StatusListViewHolder(view);
-            holder.profile_image.setOnClickListener(this);
-            holder.my_profile_image.setOnClickListener(this);
-            holder.image_preview.setOnClickListener(this);
-            holder.content.setOnOverflowIconClickListener(this);
-            if (mPlainList) {
-                ((View) holder.content).setPadding(0, 0, 0, 0);
-                holder.content.setItemBackground(null);
-            }
+            holder = new StatusViewHolder(this, view);
             view.setTag(holder);
         }
-
         final ParcelableStatus status = getItem(position);
-
-        final boolean showGap = status.is_gap && !mGapDisallowed && position != getCount() - 1;
-
-        holder.position = position;
-        holder.setShowAsGap(showGap);
-        holder.setDisplayProfileImage(isDisplayProfileImage());
-        holder.setCardHighlightOption(mCardHighlightOption);
-
-        final ImageLoaderWrapper loader = getImageLoader();
-        if (!showGap) {
-            final TwidereLinkify linkify = getLinkify();
-            final int highlightOption = getLinkHighlightOption();
-            final boolean mShowAccountColor = isShowAccountColor();
-
-            holder.setAccountColorEnabled(mShowAccountColor);
-
-            if (highlightOption != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                holder.text.setText(Utils.getKeywordBoldedText(Html.fromHtml(status.text_html), mHighlightKeywords));
-                linkify.applyAllLinks(holder.text, status.account_id, status.is_possibly_sensitive);
-                holder.text.setMovementMethod(null);
-            } else {
-                if (mHighlightKeywords == null || mHighlightKeywords.length == 0) {
-                    holder.text.setText(status.text_unescaped);
-                } else {
-                    holder.text.setText(Utils.getKeywordBoldedText(status.text_unescaped, mHighlightKeywords));
-                }
-            }
-
-            if (mShowAccountColor) {
-                holder.setAccountColor(getAccountColor(mContext, status.account_id));
-            }
-
-            final boolean isMention = ParcelableUserMention.hasMention(status.mentions, status.account_id);
-            final boolean isMyStatus = status.account_id == status.user_id;
-            final boolean hasMedia = status.first_media != null;
-            if (status.is_retweet) {
-                holder.setUserColor(getUserColor(mContext, status.user_id),
-                        getUserColor(mContext, status.retweeted_by_id));
-            } else {
-                holder.setUserColor(getUserColor(mContext, status.user_id));
-            }
-            holder.setHighlightColor(getCardHighlightColor(res,
-                    !mMentionsHighlightDisabled && isMention,
-                    !mFavoritesHighlightDisabled && status.is_favorite, status.is_retweet));
-            holder.setTextSize(getTextSize());
-
-            holder.setIsMyStatus(isMyStatus && !mIndicateMyStatusDisabled);
-
-            holder.setUserType(status.user_is_verified, status.user_is_protected);
-            holder.setDisplayNameFirst(isDisplayNameFirst());
-            holder.setNicknameOnly(isNicknameOnly());
-            final String nick = getUserNickname(mContext, status.user_id);
-            holder.name.setText(TextUtils.isEmpty(nick) ? status.user_name : isNicknameOnly() ? nick : mContext
-                    .getString(R.string.name_with_nickname, status.user_name, nick));
-            holder.screen_name.setText("@" + status.user_screen_name);
-            if (highlightOption != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                linkify.applyUserProfileLinkNoHighlight(holder.name, status.account_id, status.user_id,
-                        status.user_screen_name);
-                linkify.applyUserProfileLinkNoHighlight(holder.screen_name, status.account_id, status.user_id,
-                        status.user_screen_name);
-                holder.name.setMovementMethod(null);
-                holder.screen_name.setMovementMethod(null);
-            }
-            holder.time.setTime(status.retweet_timestamp > 0 ? status.retweet_timestamp : status.timestamp);
-            holder.setStatusType(!mFavoritesHighlightDisabled && status.is_favorite, isValidLocation(status.location),
-                    hasMedia, status.is_possibly_sensitive);
-            holder.setIsReplyRetweet(status.in_reply_to_status_id > 0, status.is_retweet);
-            if (status.is_retweet) {
-                holder.setRetweetedBy(status.retweet_count, status.retweeted_by_id, status.retweeted_by_name,
-                        status.retweeted_by_screen_name);
-            } else if (status.in_reply_to_status_id > 0) {
-                holder.setReplyTo(status.in_reply_to_user_id, status.in_reply_to_name, status.in_reply_to_screen_name);
-            }
-            if (isDisplayProfileImage()) {
-                loader.displayProfileImage(holder.my_profile_image, status.user_profile_image_url);
-                loader.displayProfileImage(holder.profile_image, status.user_profile_image_url);
-                holder.profile_image.setTag(position);
-                holder.my_profile_image.setTag(position);
-            } else {
-                loader.cancelDisplayTask(holder.profile_image);
-                loader.cancelDisplayTask(holder.my_profile_image);
-                holder.profile_image.setVisibility(View.GONE);
-                holder.my_profile_image.setVisibility(View.GONE);
-            }
-            final boolean hasPreview = mDisplayImagePreview && hasMedia;
-            holder.image_preview_container.setVisibility(hasPreview ? View.VISIBLE : View.GONE);
-            if (hasPreview) {
-                if (mImagePreviewScaleType != null) {
-                    holder.image_preview.setScaleType(mImagePreviewScaleType);
-                }
-                if (status.is_possibly_sensitive && !mDisplaySensitiveContents) {
-                    holder.image_preview.setImageDrawable(null);
-                    holder.image_preview.setBackgroundResource(R.drawable.image_preview_nsfw);
-                    holder.image_preview_progress.setVisibility(View.GONE);
-                } else if (!status.first_media.equals(mImageLoadingHandler.getLoadingUri(holder.image_preview))) {
-                    holder.image_preview.setBackgroundResource(0);
-                    loader.displayPreviewImage(holder.image_preview, status.first_media, mImageLoadingHandler);
-                }
-                final int count = status.media.length;
-                holder.image_preview_count.setText(res.getQuantityString(R.plurals.N_media, count, count));
-                holder.image_preview.setTag(position);
-            } else {
-                loader.cancelDisplayTask(holder.image_preview);
-            }
-        } else {
-            loader.cancelDisplayTask(holder.profile_image);
-            loader.cancelDisplayTask(holder.my_profile_image);
-            loader.cancelDisplayTask(holder.image_preview);
-        }
-        if (position > mMaxAnimationPosition) {
-            if (mAnimationEnabled) {
-                view.startAnimation(holder.item_animation);
-            }
-            mMaxAnimationPosition = position;
-        }
+        holder.displayStatus(status);
         return view;
+    }
+
+    @Override
+    public boolean isGapItem(int position) {
+        return false;
+    }
+
+    @Override
+    public void onGapClick(StatusViewHolder holder, int position) {
+
     }
 
     @Override
@@ -447,6 +335,7 @@ public class ParcelableStatusesListAdapter extends BaseArrayAdapter<ParcelableSt
     }
 
     private static int getItemResource(final boolean compactCards) {
-        return compactCards ? R.layout.card_item_status_compact : R.layout.card_item_status;
+        return compactCards ? R.layout.card_item_list_status_compat : R.layout.card_item_list_status;
     }
+
 }

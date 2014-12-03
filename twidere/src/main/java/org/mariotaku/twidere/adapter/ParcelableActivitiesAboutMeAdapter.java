@@ -50,8 +50,8 @@ public class ParcelableActivitiesAboutMeAdapter extends BaseParcelableActivities
     private boolean mDisplayImagePreview;
     private boolean mDisplaySensitiveContents;
 
-    public ParcelableActivitiesAboutMeAdapter(final Context context, final boolean compactCards, final boolean plainList) {
-        super(context, compactCards, plainList);
+    public ParcelableActivitiesAboutMeAdapter(final Context context, final boolean compactCards) {
+        super(context, compactCards);
         mImageLoadingHandler = new ImageLoadingHandler();
     }
 

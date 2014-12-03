@@ -678,5 +678,7 @@
     <string name="profile_banner">Profile banner</string>
     <string name="profile">Profile</string>
     <string name="listed">Listed</string>
+    <string name="state_blocking">Blocking</string>
+    <string name="load_more">Load more</string>
 
 </resources>

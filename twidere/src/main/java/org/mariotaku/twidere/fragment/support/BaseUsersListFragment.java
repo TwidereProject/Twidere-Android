@@ -114,7 +114,7 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
             mData.clear();
         }
         mAccountId = accountId;
-        if (!mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false)) {
+        if (!mPreferences.getBoolean(KEY_COMPACT_CARDS, false)) {
             mListView.setDivider(null);
         }
         mListView.setSelector(android.R.color.transparent);

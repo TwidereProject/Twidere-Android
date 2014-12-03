@@ -2784,8 +2784,11 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {
-        if (status == null) return false;
-        return status.retweeted_by_id == status.account_id || status.my_retweet_id > 0;
+        return status != null && isMyRetweet(status.account_id, status.retweeted_by_id, status.my_retweet_id);
+    }
+
+    public static boolean isMyRetweet(final long account_id, final long retweeted_by_id, final long my_retweet_id) {
+        return retweeted_by_id == account_id || my_retweet_id > 0;
     }
 
     public static boolean isMyUserName(final Context context, final String screen_name) {
@@ -2850,11 +2853,6 @@ public final class Utils implements Constants, TwitterConstants {
         final NetworkInfo networkInfo = conn.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI
                 && networkInfo.isConnected();
-    }
-
-    public static boolean isPlainListStyle(final Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return prefs != null && prefs.getBoolean(KEY_PLAIN_LIST_STYLE, false);
     }
 
     public static boolean isRedirected(final int code) {
@@ -3027,7 +3025,7 @@ public final class Utils implements Constants, TwitterConstants {
         activity.startActivity(intent);
     }
 
-    public static void openStatus(final Context context, final ParcelableStatus status) {
+    public static void openStatus(final Context context, final ParcelableStatus status, Bundle activityOptions) {
         if (context == null || status == null) return;
         final long account_id = status.account_id, status_id = status.id;
         final Bundle extras = new Bundle();
@@ -3040,7 +3038,11 @@ public final class Utils implements Constants, TwitterConstants {
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
-        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     public static void openStatuses(final Activity activity, final List<ParcelableStatus> statuses) {
@@ -3999,7 +4001,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     @SafeVarargs
     public static Bundle makeSceneTransitionOption(final Activity activity,
-                                                      final Pair<View, String>... sharedElements) {
+                                                   final Pair<View, String>... sharedElements) {
         if (ThemeUtils.isTransparentBackground(activity)) return null;
         return ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElements).toBundle();
     }

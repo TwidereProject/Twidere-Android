@@ -452,6 +452,11 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     }
 
     @Override
+    public boolean shouldLayoutHeaderBottom() {
+        return false;
+    }
+
+    @Override
     public boolean canScroll(float dy) {
         return false;
     }

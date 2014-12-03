@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
@@ -25,6 +24,8 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.SimpleDrawerCallback;
+import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.MediaSizeImageView;
 
 import java.util.List;
@@ -33,12 +34,50 @@ import java.util.List;
  * Created by mariotaku on 14/11/5.
  */
 public class UserMediaTimelineFragment extends BaseSupportFragment
-        implements LoaderCallbacks<List<ParcelableStatus>> {
+        implements LoaderCallbacks<List<ParcelableStatus>>, DrawerCallback {
 
+    private View mProgressContainer;
     private RecyclerView mRecyclerView;
-    private ProgressBar mProgress;
 
     private MediaTimelineAdapter mAdapter;
+
+    @Override
+    public void fling(float velocity) {
+        mDrawerCallback.fling(velocity);
+    }
+
+    @Override
+    public void scrollBy(float dy) {
+        mDrawerCallback.scrollBy(dy);
+    }
+
+    @Override
+    public boolean shouldLayoutHeaderBottom() {
+        return mDrawerCallback.shouldLayoutHeaderBottom();
+    }
+
+    @Override
+    public boolean canScroll(float dy) {
+        return mDrawerCallback.canScroll(dy);
+    }
+
+    @Override
+    public boolean isScrollContent(float x, float y) {
+        return mDrawerCallback.isScrollContent(x, y);
+    }
+
+    @Override
+    public void cancelTouch() {
+        mDrawerCallback.cancelTouch();
+    }
+
+    @Override
+    public void topChanged(int offset) {
+        mDrawerCallback.topChanged(offset);
+    }
+
+    private SimpleDrawerCallback mDrawerCallback;
+
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -49,10 +88,11 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
-        assert view != null;
+        if (view == null) throw new AssertionError();
         final Context context = view.getContext();
         mAdapter = new MediaTimelineAdapter(context);
         final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mDrawerCallback = new SimpleDrawerCallback(mRecyclerView);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnScrollListener(mOnScrollListener);
@@ -62,7 +102,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
 
     public void setListShown(boolean shown) {
         mRecyclerView.setVisibility(shown ? View.VISIBLE : View.GONE);
-        mProgress.setVisibility(shown ? View.GONE : View.VISIBLE);
+        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
     }
 
     public int getStatuses(final long maxId, final long sinceId) {
@@ -76,8 +116,8 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mProgressContainer = view.findViewById(R.id.progress_container);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mProgress = (ProgressBar) view.findViewById(R.id.progress);
     }
 
     @Override

@@ -56,15 +56,13 @@ public class ParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserL
 
     private boolean mAnimationEnabled;
     private int mMaxAnimationPosition;
-    private final boolean mPlainList;
 
     public ParcelableUserListsAdapter(final Context context) {
-        this(context, Utils.isCompactCards(context), Utils.isPlainListStyle(context));
+        this(context, Utils.isCompactCards(context));
     }
 
-    public ParcelableUserListsAdapter(final Context context, final boolean compactCards, final boolean plainList) {
+    public ParcelableUserListsAdapter(final Context context, final boolean compactCards) {
         super(context, getItemResource(compactCards));
-        mPlainList = plainList;
         mContext = context;
         mLocale = context.getResources().getConfiguration().locale;
         final TwidereApplication app = TwidereApplication.getInstance(context);
@@ -93,10 +91,6 @@ public class ParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserL
             holder = new UserListViewHolder(view);
             holder.profile_image.setOnClickListener(this);
             holder.content.setOnOverflowIconClickListener(this);
-            if (mPlainList) {
-                ((View) holder.content).setPadding(0, 0, 0, 0);
-                holder.content.setItemBackground(null);
-            }
             view.setTag(holder);
         }
 

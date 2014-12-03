@@ -203,7 +203,7 @@ abstract class BaseStatusesStaggeredGridFragment<Data> extends BasePullToRefresh
                     setItemSelected(status, position, !mMultiSelectManager.isSelected(status));
                     return;
                 }
-                openStatus(getActivity(), status);
+                openStatus(getActivity(), status, null);
             }
         }
     }
@@ -281,7 +281,7 @@ abstract class BaseStatusesStaggeredGridFragment<Data> extends BasePullToRefresh
         if (status == null || twitter == null) return false;
         switch (item.getItemId()) {
             case MENU_VIEW: {
-                openStatus(getActivity(), status);
+                openStatus(getActivity(), status, null);
                 break;
             }
             case MENU_SHARE: {

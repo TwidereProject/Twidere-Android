@@ -31,23 +31,30 @@ import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.ViewParent;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.DataExportActivity;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
-import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.holder.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsActivity extends BasePreferenceActivity {
@@ -60,7 +67,7 @@ public class SettingsActivity extends BasePreferenceActivity {
     private HeaderAdapter mAdapter;
 
     private int mCurrentThemeColor, mThemeBackgroundAlpha;
-    private boolean mCompactCards, mPlainListStyle;
+    private boolean mCompactCards;
 
     private String mTheme;
     private String mThemeFontFamily;
@@ -179,7 +186,6 @@ public class SettingsActivity extends BasePreferenceActivity {
         mPackageManager = getPackageManager();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mCompactCards = mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
-        mPlainListStyle = mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false);
         mTheme = mPreferences.getString(KEY_THEME, DEFAULT_THEME);
         mThemeBackground = mPreferences.getString(KEY_THEME_BACKGROUND, DEFAULT_THEME_BACKGROUND);
         mThemeBackgroundAlpha = mPreferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA);
@@ -194,6 +200,24 @@ public class SettingsActivity extends BasePreferenceActivity {
         if (savedInstanceState != null) {
             invalidateHeaders();
         }
+        final ListView listView = getListView();
+        if (listView != null) {
+            listView.setDivider(new EmptyDrawable());
+            listView.setDividerHeight(0);
+            final LayoutParams lp = listView.getLayoutParams();
+            if (lp instanceof MarginLayoutParams) {
+                final MarginLayoutParams mlp = (MarginLayoutParams) lp;
+                mlp.leftMargin = 0;
+                mlp.topMargin = 0;
+                mlp.rightMargin = 0;
+                mlp.bottomMargin = 0;
+                listView.setLayoutParams(mlp);
+            }
+            final ViewParent listParent = listView.getParent();
+            if (listParent instanceof ViewGroup) {
+                ((ViewGroup) listParent).setPadding(0, 0, 0, 0);
+            }
+        }
     }
 
     private boolean shouldNotifyThemeChange() {
@@ -202,29 +226,76 @@ public class SettingsActivity extends BasePreferenceActivity {
                 || !CompareUtils.objectEquals(mThemeBackground, mPreferences.getString(KEY_THEME_BACKGROUND, DEFAULT_THEME_BACKGROUND))
                 || mCurrentThemeColor != ThemeUtils.getUserAccentColor(this)
                 || mThemeBackgroundAlpha != mPreferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA)
-                || mCompactCards != mPreferences.getBoolean(KEY_COMPACT_CARDS, false)
-                || mPlainListStyle != mPreferences.getBoolean(KEY_PLAIN_LIST_STYLE, false);
+                || mCompactCards != mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
     }
 
-    private static class HeaderAdapter extends ArrayAdapter<Header> {
+    private static class HeaderAdapter extends BaseAdapter {
 
-        static final int HEADER_TYPE_CATEGORY = 0;
-        static final int HEADER_TYPE_NORMAL = 1;
+        static final int HEADER_TYPE_NORMAL = 0;
+        static final int HEADER_TYPE_CATEGORY = 1;
+        static final int HEADER_TYPE_SPACE = 2;
 
         private final Context mContext;
         private final Resources mResources;
         private final int mActionIconColor;
+        private final ArrayList<Header> mHeaders;
+        private final LayoutInflater mInflater;
+        private int mCategoriesCount;
+        private boolean mFirstItemIsCategory;
 
         public HeaderAdapter(final Context context) {
-            super(context, R.layout.list_item_preference_header);
             mContext = context;
+            mInflater = LayoutInflater.from(context);
+            mHeaders = new ArrayList<>();
             mResources = context.getResources();
             mActionIconColor = ThemeUtils.getThemeForegroundColor(context);
+        }
+
+        public void add(Header header) {
+            mHeaders.add(header);
+            notifyDataSetChanged();
+        }
+
+        public void addAll(List<Header> headers) {
+            mHeaders.addAll(headers);
+            notifyDataSetChanged();
         }
 
         @Override
         public boolean areAllItemsEnabled() {
             return false;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            updateCategoriesInfo();
+            super.notifyDataSetChanged();
+        }
+
+        private void updateCategoriesInfo() {
+            mFirstItemIsCategory = !mHeaders.isEmpty()
+                    && getHeaderType(mHeaders.get(0)) == HEADER_TYPE_CATEGORY;
+            mCategoriesCount = getCategoriesCount(0, mHeaders.size());
+        }
+
+        private int getCategoriesCount(final int start, final int end) {
+            int categoriesCount = 0;
+            for (int i = start; i < end; i++) {
+                if (getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
+                    categoriesCount++;
+                }
+            }
+            return categoriesCount;
+        }
+
+        public void clear() {
+            mHeaders.clear();
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 3;
         }
 
         @Override
@@ -234,59 +305,120 @@ public class SettingsActivity extends BasePreferenceActivity {
         }
 
         @Override
+        public int getCount() {
+            return mHeaders.size() + mCategoriesCount + (mFirstItemIsCategory ? 0 : 1);
+        }
+
+        @Override
+        public Header getItem(final int position) {
+            if (position == getCount() - 1) return new Header();
+            final int realPosition = mFirstItemIsCategory ? position + 1 : position;
+            int categoriesCount = 0;
+            int i;
+            for (i = 0; i + categoriesCount < realPosition; i++) {
+                if (getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
+                    categoriesCount++;
+                }
+            }
+            if (i + categoriesCount == realPosition && getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
+                return new Header();
+            }
+            return mHeaders.get(realPosition - categoriesCount);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
         public View getView(final int position, final View convertView, final ViewGroup parent) {
             final Header header = getItem(position);
             final int viewType = getHeaderType(header);
-            final View view;
+            final View view = convertView != null ? convertView : inflateItemView(viewType, parent);
             switch (viewType) {
                 case HEADER_TYPE_CATEGORY: {
-                    view = new TextView(mContext, null, android.R.attr.listSeparatorTextViewStyle);
-                    ((TextView) view).setText(header.getTitle(mResources));
+                    bindCategoryHeader(view, position, header);
+                    break;
+                }
+                case HEADER_TYPE_SPACE: {
                     break;
                 }
                 default: {
-                    final boolean viewChanged = convertView != null
-                            && !(convertView.getTag() instanceof HeaderViewHolder);
-                    view = super.getView(position, viewChanged ? null : convertView, parent);
-                    final HeaderViewHolder holder;
-                    final Object tag = view.getTag();
-                    if (tag instanceof HeaderViewHolder) {
-                        holder = (HeaderViewHolder) tag;
-                    } else {
-                        holder = new HeaderViewHolder(view);
-                        view.setTag(holder);
-                    }
-                    final CharSequence title = header.getTitle(mResources);
-                    holder.title.setText(title);
-                    final CharSequence summary = header.getSummary(mResources);
-                    if (!TextUtils.isEmpty(summary)) {
-                        holder.summary.setVisibility(View.VISIBLE);
-                        holder.summary.setText(summary);
-                    } else {
-                        holder.summary.setVisibility(View.GONE);
-                    }
-                    if (header.iconRes != 0) {
-                        holder.icon.setImageResource(header.iconRes);
-                    } else {
-                        holder.icon.setImageDrawable(null);
-                    }
-                    holder.icon.setColorFilter(mActionIconColor, Mode.SRC_ATOP);
+                    bindHeader(view, position, header);
                     break;
                 }
             }
             return view;
         }
 
+        private void bindCategoryHeader(View view, int position, Header header) {
+            final TextView title = (TextView) view.findViewById(android.R.id.title);
+            if (!TextUtils.isEmpty(header.title)) {
+                title.setText(header.title);
+            } else {
+                title.setText(header.titleRes);
+            }
+        }
+
+        private void bindHeader(View view, int position, Header header) {
+            final HeaderViewHolder holder;
+            final Object tag = view.getTag();
+            if (tag instanceof HeaderViewHolder) {
+                holder = (HeaderViewHolder) tag;
+            } else {
+                holder = new HeaderViewHolder(view);
+                view.setTag(holder);
+            }
+            final CharSequence title = header.getTitle(mResources);
+            holder.title.setText(title);
+            final CharSequence summary = header.getSummary(mResources);
+            if (!TextUtils.isEmpty(summary)) {
+                holder.summary.setVisibility(View.VISIBLE);
+                holder.summary.setText(summary);
+            } else {
+                holder.summary.setVisibility(View.GONE);
+            }
+            if (header.iconRes != 0) {
+                holder.icon.setImageResource(header.iconRes);
+            } else {
+                holder.icon.setImageDrawable(null);
+            }
+            holder.icon.setColorFilter(mActionIconColor, Mode.SRC_ATOP);
+        }
+
+        private View inflateItemView(int viewType, ViewGroup parent) {
+            final int layoutRes;
+            switch (viewType) {
+                case HEADER_TYPE_CATEGORY: {
+                    layoutRes = R.layout.list_item_preference_header_category;
+                    break;
+                }
+                case HEADER_TYPE_SPACE: {
+                    layoutRes = R.layout.list_item_preference_header_space;
+                    break;
+                }
+                default: {
+                    layoutRes = R.layout.list_item_preference_header_item;
+                    break;
+                }
+            }
+            return mInflater.inflate(layoutRes, parent, false);
+        }
+
         @Override
         public boolean isEnabled(final int position) {
-            return getItemViewType(position) != HEADER_TYPE_CATEGORY;
+            return getItemViewType(position) == HEADER_TYPE_NORMAL;
         }
 
         private static int getHeaderType(final Header header) {
-            if (header.fragment == null && header.intent == null)
+            if (header.fragment != null || header.intent != null)
+                return HEADER_TYPE_NORMAL;
+            else if (header.title != null || header.titleRes != 0)
                 return HEADER_TYPE_CATEGORY;
             else
-                return HEADER_TYPE_NORMAL;
+                return HEADER_TYPE_SPACE;
+
         }
 
         private static class HeaderViewHolder extends ViewHolder {
