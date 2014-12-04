@@ -591,7 +591,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 isAccountSpecific = true;
                 break;
             }
-            case NOTIFICATION_ID_MENTIONS: {
+            case NOTIFICATION_ID_MENTIONS_TIMELINE: {
                 mNewMentions.clear();
                 isAccountSpecific = true;
                 break;
@@ -889,7 +889,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private Cursor getNotificationsCursor() {
         final MatrixCursor c = new MatrixCursor(TweetStore.Notifications.MATRIX_COLUMNS);
         c.addRow(new Integer[]{NOTIFICATION_ID_HOME_TIMELINE, mUnreadStatuses.size()});
-        c.addRow(new Integer[]{NOTIFICATION_ID_MENTIONS, mNewMentions.size()});
+        c.addRow(new Integer[]{NOTIFICATION_ID_MENTIONS_TIMELINE, mNewMentions.size()});
         c.addRow(new Integer[]{NOTIFICATION_ID_DIRECT_MESSAGES, mNewMessages.size()});
         return c;
     }
@@ -898,7 +898,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final MatrixCursor c = new MatrixCursor(TweetStore.Notifications.MATRIX_COLUMNS);
         if (id == NOTIFICATION_ID_HOME_TIMELINE) {
             c.addRow(new Integer[]{id, mNewStatuses.size()});
-        } else if (id == NOTIFICATION_ID_MENTIONS) {
+        } else if (id == NOTIFICATION_ID_MENTIONS_TIMELINE) {
             c.addRow(new Integer[]{id, mNewMentions.size()});
         } else if (id == NOTIFICATION_ID_DIRECT_MESSAGES) {
             c.addRow(new Integer[]{id, mNewMessages.size()});
@@ -1018,7 +1018,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (values == null || values.length == 0) return 0;
         // Add statuses that not filtered to list for future use.
         int result = 0;
-        final boolean enabled = mPreferences.getBoolean(KEY_FILTERS_IN_MENTIONS, true);
+        final boolean enabled = mPreferences.getBoolean(KEY_FILTERS_IN_MENTIONS_TIMELINE, true);
         final boolean filtersForRts = mPreferences.getBoolean(KEY_FILTERS_FOR_RTS, true);
         for (final ContentValues value : values) {
             final ParcelableStatus status = new ParcelableStatus(value);
@@ -1112,12 +1112,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     if (pref.isMentionsNotificationEnabled()) {
                         final long accountId = pref.getAccountId();
                         displayStatusesNotification(notifiedCount, pref, pref.getMentionsNotificationType(),
-                                NOTIFICATION_ID_MENTIONS, getStatusesForAccounts(items, accountId),
+                                NOTIFICATION_ID_MENTIONS_TIMELINE, getStatusesForAccounts(items, accountId),
                                 R.string.notification_mention, R.string.notification_mention_multiple,
                                 R.drawable.ic_stat_mention);
                     }
                 }
-                notifyUnreadCountChanged(NOTIFICATION_ID_MENTIONS);
+                notifyUnreadCountChanged(NOTIFICATION_ID_MENTIONS_TIMELINE);
                 break;
             }
             case TABLE_ID_DIRECT_MESSAGES_INBOX: {

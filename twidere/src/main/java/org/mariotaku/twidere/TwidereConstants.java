@@ -175,7 +175,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final int VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE = 109;
 
     public static final int NOTIFICATION_ID_HOME_TIMELINE = 1;
-    public static final int NOTIFICATION_ID_MENTIONS = 2;
+    public static final int NOTIFICATION_ID_MENTIONS_TIMELINE = 2;
     public static final int NOTIFICATION_ID_DIRECT_MESSAGES = 3;
     public static final int NOTIFICATION_ID_DRAFTS = 4;
     public static final int NOTIFICATION_ID_DATA_PROFILING = 5;

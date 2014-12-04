@@ -24,11 +24,6 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
     }
 
     @Override
-    public void onGapClick(StatusViewHolder holder, int position) {
-
-    }
-
-    @Override
     protected void bindStatus(StatusViewHolder holder, int position) {
         holder.displayStatus(getStatus(position));
     }

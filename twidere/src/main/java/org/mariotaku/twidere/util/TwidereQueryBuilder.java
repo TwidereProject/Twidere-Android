@@ -21,11 +21,11 @@ package org.mariotaku.twidere.util;
 
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Selectable;
 import org.mariotaku.querybuilder.Tables;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Conversation;
@@ -42,16 +42,16 @@ public class TwidereQueryBuilder {
             final Selectable select = Utils.getColumnsFromProjection(projection);
             final SQLSelectQuery.Builder qb = SQLQueryBuilder.select(select);
             qb.from(new Tables(DirectMessages.TABLE_NAME));
-            final Where accountIdWhere = Where.equals(DirectMessages.ACCOUNT_ID, account_id);
-            final Where incomingWhere = Where.and(Where.notEquals(DirectMessages.IS_OUTGOING, 1),
-                    Where.equals(DirectMessages.SENDER_ID, conversationId));
-            final Where outgoingWhere = Where.and(Where.equals(DirectMessages.IS_OUTGOING, 1),
-                    Where.equals(DirectMessages.RECIPIENT_ID, conversationId));
-            final Where conversationWhere = Where.or(incomingWhere, outgoingWhere);
+            final Expression accountIdWhere = Expression.equals(DirectMessages.ACCOUNT_ID, account_id);
+            final Expression incomingWhere = Expression.and(Expression.notEquals(DirectMessages.IS_OUTGOING, 1),
+                    Expression.equals(DirectMessages.SENDER_ID, conversationId));
+            final Expression outgoingWhere = Expression.and(Expression.equals(DirectMessages.IS_OUTGOING, 1),
+                    Expression.equals(DirectMessages.RECIPIENT_ID, conversationId));
+            final Expression conversationWhere = Expression.or(incomingWhere, outgoingWhere);
             if (selection != null) {
-                qb.where(Where.and(accountIdWhere, conversationWhere, new Where(selection)));
+                qb.where(Expression.and(accountIdWhere, conversationWhere, new Expression(selection)));
             } else {
-                qb.where(Where.and(accountIdWhere, conversationWhere));
+                qb.where(Expression.and(accountIdWhere, conversationWhere));
             }
             qb.orderBy(new OrderBy(sortOrder != null ? sortOrder : Conversation.DEFAULT_SORT_ORDER));
             return qb.build().getSQL();
@@ -63,15 +63,15 @@ public class TwidereQueryBuilder {
             final SQLSelectQuery.Builder qb = SQLQueryBuilder.select(select);
             qb.select(select);
             qb.from(new Tables(DirectMessages.TABLE_NAME));
-            final Where accountIdWhere = Where.equals(DirectMessages.ACCOUNT_ID, account_id);
-            final Where incomingWhere = Where.and(Where.notEquals(DirectMessages.IS_OUTGOING, 1),
-                    Where.equals(new Column(DirectMessages.SENDER_SCREEN_NAME), screen_name));
-            final Where outgoingWhere = Where.and(Where.equals(DirectMessages.IS_OUTGOING, 1),
-                    Where.equals(new Column(DirectMessages.RECIPIENT_SCREEN_NAME), screen_name));
+            final Expression accountIdWhere = Expression.equals(DirectMessages.ACCOUNT_ID, account_id);
+            final Expression incomingWhere = Expression.and(Expression.notEquals(DirectMessages.IS_OUTGOING, 1),
+                    Expression.equals(new Column(DirectMessages.SENDER_SCREEN_NAME), screen_name));
+            final Expression outgoingWhere = Expression.and(Expression.equals(DirectMessages.IS_OUTGOING, 1),
+                    Expression.equals(new Column(DirectMessages.RECIPIENT_SCREEN_NAME), screen_name));
             if (selection != null) {
-                qb.where(Where.and(accountIdWhere, incomingWhere, outgoingWhere, new Where(selection)));
+                qb.where(Expression.and(accountIdWhere, incomingWhere, outgoingWhere, new Expression(selection)));
             } else {
-                qb.where(Where.and(accountIdWhere, incomingWhere, outgoingWhere));
+                qb.where(Expression.and(accountIdWhere, incomingWhere, outgoingWhere));
             }
             qb.orderBy(new OrderBy(sortOrder != null ? sortOrder : Conversation.DEFAULT_SORT_ORDER));
             return qb.build().getSQL();
@@ -127,20 +127,20 @@ public class TwidereQueryBuilder {
             conversationIds.select(new Columns(new Column(DirectMessages.MESSAGE_ID), new Column(
                     DirectMessages.SENDER_ID, ConversationEntries.CONVERSATION_ID)));
             conversationIds.from(new Tables(Inbox.TABLE_NAME));
-            conversationIds.where(Where.in(new Column(DirectMessages.MESSAGE_ID), recent_inbox_msg_ids.build()));
+            conversationIds.where(Expression.in(new Column(DirectMessages.MESSAGE_ID), recent_inbox_msg_ids.build()));
             conversationIds.union();
             conversationIds.select(new Columns(new Column(DirectMessages.MESSAGE_ID), new Column(
                     DirectMessages.RECIPIENT_ID, ConversationEntries.CONVERSATION_ID)));
             conversationIds.from(new Tables(Outbox.TABLE_NAME));
-            conversationIds.where(Where.in(new Column(DirectMessages.MESSAGE_ID), recent_outbox_msg_ids.build()));
+            conversationIds.where(Expression.in(new Column(DirectMessages.MESSAGE_ID), recent_outbox_msg_ids.build()));
             final SQLSelectQuery.Builder groupedConversationIds = new SQLSelectQuery.Builder();
             groupedConversationIds.select(new Column(DirectMessages.MESSAGE_ID));
             groupedConversationIds.from(conversationIds.build());
             groupedConversationIds.groupBy(new Column(ConversationEntries.CONVERSATION_ID));
-            final Where groupedWhere = Where.in(new Column(DirectMessages.MESSAGE_ID), groupedConversationIds.build());
-            final Where where;
+            final Expression groupedWhere = Expression.in(new Column(DirectMessages.MESSAGE_ID), groupedConversationIds.build());
+            final Expression where;
             if (selection != null) {
-                where = Where.and(groupedWhere, new Where(selection));
+                where = Expression.and(groupedWhere, new Expression(selection));
             } else {
                 where = groupedWhere;
             }
@@ -164,12 +164,12 @@ public class TwidereQueryBuilder {
             final Selectable select = Utils.getColumnsFromProjection(projection);
             qb.select(select).from(new Tables(DirectMessages.Inbox.TABLE_NAME));
             if (selection != null) {
-                qb.where(new Where(selection));
+                qb.where(new Expression(selection));
             }
             qb.union();
             qb.select(select).from(new Tables(DirectMessages.Outbox.TABLE_NAME));
             if (selection != null) {
-                qb.where(new Where(selection));
+                qb.where(new Expression(selection));
             }
             qb.orderBy(new OrderBy(sortOrder != null ? sortOrder : DirectMessages.DEFAULT_SORT_ORDER));
             return qb.build();

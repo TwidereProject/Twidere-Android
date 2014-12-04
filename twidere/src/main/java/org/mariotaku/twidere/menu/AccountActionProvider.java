@@ -9,19 +9,19 @@ import android.view.SubMenu;
 import android.view.View;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 
 public class AccountActionProvider extends ActionProvider implements TwidereConstants {
 
 	public static final int MENU_GROUP = 201;
 
-	private final Account[] mAccounts;
+	private final ParcelableAccount[] mAccounts;
 
 	private long mAccountId;
 
 	public AccountActionProvider(final Context context) {
 		super(context);
-		mAccounts = Account.getAccounts(context, false, false);
+		mAccounts = ParcelableAccount.getAccounts(context, false, false);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
 	@Override
 	public void onPrepareSubMenu(final SubMenu subMenu) {
 		subMenu.removeGroup(MENU_GROUP);
-		for (final Account account : mAccounts) {
+		for (final ParcelableAccount account : mAccounts) {
 			final MenuItem item = subMenu.add(MENU_GROUP, Menu.NONE, 0, account.name);
 			final Intent intent = new Intent();
 			intent.putExtra(EXTRA_ACCOUNT, account);
@@ -47,7 +47,7 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
 		for (int i = 0, j = subMenu.size(); i < j; i++) {
 			final MenuItem item = subMenu.getItem(i);
 			final Intent intent = item.getIntent();
-			final Account account = intent.getParcelableExtra(EXTRA_ACCOUNT);
+			final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
 			if (account.account_id == mAccountId) {
 				item.setChecked(true);
 			}

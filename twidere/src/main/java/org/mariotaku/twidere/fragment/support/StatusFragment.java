@@ -74,8 +74,8 @@ import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.ParcelableStatusesListAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.Account;
-import org.mariotaku.twidere.model.Account.AccountWithCredentials;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -203,7 +203,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
                     }
                     break;
                 }
-                case BROADCAST_RETWEET_CHANGED: {
+                case BROADCAST_STATUS_RETWEETED: {
                     final long status_id = intent.getLongExtra(EXTRA_STATUS_ID, -1);
                     if (status_id > 0 && status_id == getStatusId()) {
                         getStatus(true);
@@ -561,9 +561,9 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
             }
             case R.id.favorites_container: {
                 // TODO
-                final AccountWithCredentials account = Account.getAccountWithCredentials(getActivity(),
+                final ParcelableAccountWithCredentials account = ParcelableAccount.getAccountWithCredentials(getActivity(),
                         status.account_id);
-                if (AccountWithCredentials.isOfficialCredentials(getActivity(), account)) {
+                if (ParcelableAccountWithCredentials.isOfficialCredentials(getActivity(), account)) {
                     openStatusFavoriters(getActivity(), status.account_id, status.retweet_id > 0 ? status.retweet_id
                             : status.id);
                 }
@@ -689,7 +689,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_FRIENDSHIP_CHANGED);
         filter.addAction(BROADCAST_FAVORITE_CHANGED);
-        filter.addAction(BROADCAST_RETWEET_CHANGED);
+        filter.addAction(BROADCAST_STATUS_RETWEETED);
         registerReceiver(mStatusReceiver, filter);
         updateUserColor();
         final int text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
@@ -814,9 +814,9 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
                 break;
             }
             case MENU_TRANSLATE: {
-                final AccountWithCredentials account = Account.getAccountWithCredentials(getActivity(),
+                final ParcelableAccountWithCredentials account = ParcelableAccount.getAccountWithCredentials(getActivity(),
                         status.account_id);
-                if (AccountWithCredentials.isOfficialCredentials(getActivity(), account)) {
+                if (ParcelableAccountWithCredentials.isOfficialCredentials(getActivity(), account)) {
                     StatusTranslateDialogFragment.show(getFragmentManager(), status);
                 } else {
 

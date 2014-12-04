@@ -30,7 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_size_normal"
         android:textColor="?android:textColorSecondary"
-        app:pstsTabBackground="?android:selectableItemBackground"/>
+        app:pstsTabBackground="?android:selectableItemBackground"
+        app:pstsShouldExpand="true"
+        app:pstsTabPaddingLeftRight="@dimen/element_spacing_large"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"

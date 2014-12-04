@@ -17,59 +17,48 @@
 
 
 <!-- Layout of a header item in PreferenceActivity. -->
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="?android:colorBackground"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="4dp">
+    android:gravity="center_vertical"
+    android:minHeight="?android:listPreferredItemHeight"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="@dimen/header_icon_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/element_spacing_large"
+        android:layout_marginRight="@dimen/element_spacing_large"
+        android:layout_weight="0"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
+        android:id="@android:id/content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:divider="?android:dividerVertical"
         android:gravity="center_vertical"
-        android:minHeight="?android:listPreferredItemHeight"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:showDividers="end">
 
-        <ImageView
-            android:id="@android:id/icon"
-            android:layout_width="@dimen/header_icon_width"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/element_spacing_large"
-            android:layout_marginRight="@dimen/element_spacing_large"/>
-
-        <RelativeLayout
+        <TextView
+            android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dip"
-            android:layout_marginEnd="6dip"
-            android:layout_marginStart="2dip"
-            android:layout_marginTop="6dip"
-            android:layout_weight="1">
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-            <TextView
-                android:id="@android:id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <TextView
-                android:id="@android:id/summary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@android:id/summary"
-                android:layout_below="@android:id/title"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
-        </RelativeLayout>
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>

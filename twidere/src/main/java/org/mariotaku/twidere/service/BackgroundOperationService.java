@@ -45,7 +45,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
@@ -278,7 +278,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
             boolean failed = false;
             Exception exception = null;
-            final List<Long> failed_account_ids = ListUtils.fromArray(Account.getAccountIds(item.accounts));
+            final List<Long> failed_account_ids = ListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
 
             for (final SingleResponse<ParcelableStatus> response : result) {
                 if (response.getData() == null) {
@@ -446,7 +446,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     }
                 }
             }
-            for (final Account account : statusUpdate.accounts) {
+            for (final ParcelableAccount account : statusUpdate.accounts) {
                 final Twitter twitter = getTwitterInstance(this, account.account_id, true, true);
                 final StatusUpdate status = new StatusUpdate(shortenedText);
                 status.setInReplyToStatusId(statusUpdate.in_reply_to_status_id);

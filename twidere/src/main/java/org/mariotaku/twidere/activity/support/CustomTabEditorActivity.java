@@ -48,7 +48,7 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -303,10 +303,10 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
             mSecondaryFieldContainer.setVisibility(has_secondary_field ? View.VISIBLE : View.GONE);
             final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
             if (!accountIdRequired) {
-                mAccountsAdapter.add(Account.dummyInstance());
+                mAccountsAdapter.add(ParcelableAccount.dummyInstance());
             }
             final boolean officialKeyOnly = intent.getBooleanExtra(EXTRA_OFFICIAL_KEY_ONLY, false);
-            mAccountsAdapter.addAll(Account.getAccountsList(this, false, officialKeyOnly));
+            mAccountsAdapter.addAll(ParcelableAccount.getAccountsList(this, false, officialKeyOnly));
             switch (conf.getSecondaryFieldType()) {
                 case CustomTabConfiguration.FIELD_TYPE_USER: {
                     mSecondaryFieldLabel.setText(R.string.user);

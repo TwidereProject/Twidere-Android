@@ -39,7 +39,7 @@ public class ParcelableStatusUpdate implements Parcelable {
         }
     };
 
-    public final Account[] accounts;
+    public final ParcelableAccount[] accounts;
     public final ParcelableMediaUpdate[] media;
     public final String text;
     public final ParcelableLocation location;
@@ -51,7 +51,7 @@ public class ParcelableStatusUpdate implements Parcelable {
      * <b>ParcelableStatusUpdate.Builder</b> instead.
      */
     @Deprecated
-    public ParcelableStatusUpdate(final Account[] accounts, final String text, final ParcelableLocation location,
+    public ParcelableStatusUpdate(final ParcelableAccount[] accounts, final String text, final ParcelableLocation location,
                                   final ParcelableMediaUpdate[] media, final long in_reply_to_status_id, final boolean is_possibly_sensitive) {
         this.accounts = accounts;
         this.text = text;
@@ -62,7 +62,7 @@ public class ParcelableStatusUpdate implements Parcelable {
     }
 
     public ParcelableStatusUpdate(final Context context, final DraftItem draft) {
-        accounts = Account.getAccounts(context, draft.account_ids);
+        accounts = ParcelableAccount.getAccounts(context, draft.account_ids);
         text = draft.text;
         location = draft.location;
         media = draft.media;
@@ -71,7 +71,7 @@ public class ParcelableStatusUpdate implements Parcelable {
     }
 
     public ParcelableStatusUpdate(final Parcel in) {
-        accounts = in.createTypedArray(Account.CREATOR);
+        accounts = in.createTypedArray(ParcelableAccount.CREATOR);
         text = in.readString();
         location = in.readParcelable(ParcelableLocation.class.getClassLoader());
         media = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
@@ -103,7 +103,7 @@ public class ParcelableStatusUpdate implements Parcelable {
 
     public static final class Builder {
 
-        private Account[] accounts;
+        private ParcelableAccount[] accounts;
         private String text;
         private ParcelableLocation location;
         private ParcelableMediaUpdate[] media;
@@ -123,7 +123,7 @@ public class ParcelableStatusUpdate implements Parcelable {
             isPossiblySensitive(base.is_possibly_sensitive);
         }
 
-        public Builder accounts(final Account[] accounts) {
+        public Builder accounts(final ParcelableAccount[] accounts) {
             this.accounts = accounts;
             return this;
         }

@@ -55,6 +55,15 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     private Fragment mCurrentVisibleFragment;
 
     @Override
+    protected void fitSystemWindows(Rect insets) {
+        super.fitSystemWindows(insets);
+        final View view = getView();
+        if (view != null) {
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
+    }
+
+    @Override
     public Fragment getCurrentVisibleFragment() {
         return mCurrentVisibleFragment;
     }

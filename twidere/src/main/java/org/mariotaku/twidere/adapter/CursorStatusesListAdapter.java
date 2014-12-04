@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -121,7 +122,12 @@ public class CursorStatusesListAdapter extends BaseCursorAdapter implements ISta
     }
 
     @Override
-    public void onItemMenuClick(StatusViewHolder holder, int position) {
+    public void onItemActionClick(ViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onItemMenuClick(ViewHolder holder, int position) {
 
     }
 
@@ -364,7 +370,7 @@ public class CursorStatusesListAdapter extends BaseCursorAdapter implements ISta
     }
 
     @Override
-    public void onGapClick(StatusViewHolder holder, int position) {
+    public void onGapClick(ViewHolder holder, int position) {
 
     }
 }

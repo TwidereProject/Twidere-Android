@@ -102,8 +102,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.etsy.android.grid.StaggeredGridView;
-
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.mariotaku.gallery3d.ImageViewerGLActivity;
@@ -112,11 +110,13 @@ import org.mariotaku.menucomponent.internal.menu.MenuUtils;
 import org.mariotaku.querybuilder.AllColumns;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Selectable;
+import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Tables;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
 import org.mariotaku.refreshnow.widget.RefreshNowListView;
 import org.mariotaku.twidere.BuildConfig;
@@ -154,9 +154,9 @@ import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
-import org.mariotaku.twidere.model.Account;
-import org.mariotaku.twidere.model.Account.AccountWithCredentials;
 import org.mariotaku.twidere.model.AccountPreferences;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -469,10 +469,10 @@ public final class Utils implements Constants, TwitterConstants {
     public static String buildActivatedStatsWhereClause(final Context context, final String selection) {
         if (context == null) return null;
         final long[] account_ids = getActivatedAccountIds(context);
-        final Where accountWhere = Where.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(account_ids));
-        final Where where;
+        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(account_ids));
+        final Expression where;
         if (selection != null) {
-            where = Where.and(accountWhere, new Where(selection));
+            where = Expression.and(accountWhere, new Expression(selection));
         } else {
             where = accountWhere;
         }
@@ -489,50 +489,48 @@ public final class Utils implements Constants, TwitterConstants {
         return builder.build();
     }
 
-    public static String buildStatusFilterWhereClause(final String table, final String selection,
-                                                      final boolean enableInRts) {
+    public static Expression buildStatusFilterWhereClause(final String table, final Expression extraSelection,
+                                                          final boolean enableInRts) {
         if (table == null) return null;
-        final StringBuilder builder = new StringBuilder();
-        if (selection != null) {
-            builder.append(selection);
-            builder.append(" AND ");
-        }
-        builder.append(Statuses._ID + " NOT IN ( ");
-        builder.append("SELECT DISTINCT " + table + "." + Statuses._ID + " FROM " + table);
-        builder.append(" WHERE " + table + "." + Statuses.USER_ID + " IN ( SELECT " + Filters.Users.TABLE_NAME + "."
-                + Filters.Users.USER_ID + " FROM " + Filters.Users.TABLE_NAME + " )");
+        final SQLSelectQuery filteredUsersQuery = SQLQueryBuilder
+                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
+                .from(new Tables(Filters.Users.TABLE_NAME))
+                .build();
+        final Expression filteredUsersWhere;
         if (enableInRts) {
-            builder.append(" OR " + table + "." + Statuses.RETWEETED_BY_USER_ID + " IN ( SELECT "
-                    + Filters.Users.TABLE_NAME + "." + Filters.Users.USER_ID + " FROM " + Filters.Users.TABLE_NAME
-                    + " )");
+            filteredUsersWhere = Expression.or(
+                    Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery),
+                    Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), filteredUsersQuery));
+        } else {
+            filteredUsersWhere = Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery);
         }
-        builder.append(" AND " + table + "." + Statuses.IS_GAP + " IS NULL");
-        builder.append(" OR " + table + "." + Statuses.IS_GAP + " == 0");
-        builder.append(" UNION ");
-        builder.append("SELECT DISTINCT " + table + "." + Statuses._ID + " FROM " + table + ", "
-                + Filters.Sources.TABLE_NAME);
-        builder.append(" WHERE " + table + "." + Statuses.SOURCE + " LIKE '%>'||" + Filters.Sources.TABLE_NAME + "."
-                + Filters.Sources.VALUE + "||'</a>%'");
-        builder.append(" AND " + table + "." + Statuses.IS_GAP + " IS NULL");
-        builder.append(" OR " + table + "." + Statuses.IS_GAP + " == 0");
-        builder.append(" UNION ");
-        builder.append("SELECT DISTINCT " + table + "." + Statuses._ID + " FROM " + table + ", "
-                + Filters.Keywords.TABLE_NAME);
-        builder.append(" WHERE " + table + "." + Statuses.TEXT_PLAIN + " LIKE '%'||" + Filters.Keywords.TABLE_NAME
-                + "." + Filters.Keywords.VALUE + "||'%'");
-        builder.append(" AND " + table + "." + Statuses.IS_GAP + " IS NULL");
-        builder.append(" OR " + table + "." + Statuses.IS_GAP + " == 0");
-        builder.append(" UNION ");
-        builder.append("SELECT DISTINCT " + table + "." + Statuses._ID + " FROM " + table + ", "
-                + Filters.Links.TABLE_NAME);
-        builder.append(" WHERE " + table + "." + Statuses.TEXT_HTML + " LIKE '%<a href=\"%'||"
-                + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%\">%'");
-        builder.append(" OR " + table + "." + Statuses.TEXT_HTML + " LIKE '%>%'||" + Filters.Links.TABLE_NAME + "."
-                + Filters.Links.VALUE + "||'%</a>%'");
-        builder.append(" AND " + table + "." + Statuses.IS_GAP + " IS NULL");
-        builder.append(" OR " + table + "." + Statuses.IS_GAP + " == 0");
-        builder.append(" )");
-        return builder.toString();
+        final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
+                .select(true, new Column(new Table(table), Statuses._ID))
+                .from(new Tables(table))
+                .where(filteredUsersWhere)
+                .union()
+                .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
+                .from(new Tables(table, Filters.Sources.TABLE_NAME))
+                .where(Expression.like(new Column(new Table(table), Statuses.SOURCE),
+                        "%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%"))
+                .union()
+                .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
+                .from(new Tables(table, Filters.Keywords.TABLE_NAME))
+                .where(Expression.like(new Column(new Table(table), Statuses.TEXT_PLAIN),
+                        "%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%"))
+                .union()
+                .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
+                .from(new Tables(table, Filters.Links.TABLE_NAME))
+                .where(Expression.like(new Column(new Table(table), Statuses.SOURCE),
+                        "%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%"));
+        final Expression filterExpression = Expression.or(
+                Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build()),
+                Expression.equals(new Column(new Table(table), Statuses.IS_GAP), 1)
+        );
+        if (extraSelection != null) {
+            return Expression.and(filterExpression, extraSelection);
+        }
+        return filterExpression;
     }
 
     public static int calculateInSampleSize(final int width, final int height, final int preferredWidth,
@@ -569,24 +567,24 @@ public final class Utils implements Constants, TwitterConstants {
                     continue;
                 }
                 final String table = getTableNameByUri(uri);
-                final Where account_where = new Where(Statuses.ACCOUNT_ID + " = " + account_id);
+                final Expression account_where = new Expression(Statuses.ACCOUNT_ID + " = " + account_id);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(Statuses._ID)).from(new Tables(table));
-                qb.where(new Where(Statuses.ACCOUNT_ID + " = " + account_id));
+                qb.where(new Expression(Statuses.ACCOUNT_ID + " = " + account_id));
                 qb.orderBy(new OrderBy(Statuses.STATUS_ID + " DESC"));
                 qb.limit(itemLimit);
-                final Where where = Where.and(Where.notIn(new Column(Statuses._ID), qb.build()), account_where);
+                final Expression where = Expression.and(Expression.notIn(new Column(Statuses._ID), qb.build()), account_where);
                 resolver.delete(uri, where.getSQL(), null);
             }
             for (final Uri uri : DIRECT_MESSAGES_URIS) {
                 final String table = getTableNameByUri(uri);
-                final Where account_where = new Where(DirectMessages.ACCOUNT_ID + " = " + account_id);
+                final Expression account_where = new Expression(DirectMessages.ACCOUNT_ID + " = " + account_id);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(DirectMessages._ID)).from(new Tables(table));
-                qb.where(new Where(DirectMessages.ACCOUNT_ID + " = " + account_id));
+                qb.where(new Expression(DirectMessages.ACCOUNT_ID + " = " + account_id));
                 qb.orderBy(new OrderBy(DirectMessages.MESSAGE_ID + " DESC"));
                 qb.limit(itemLimit);
-                final Where where = Where.and(Where.notIn(new Column(DirectMessages._ID), qb.build()), account_where);
+                final Expression where = Expression.and(Expression.notIn(new Column(DirectMessages._ID), qb.build()), account_where);
                 resolver.delete(uri, where.getSQL(), null);
             }
         }
@@ -598,7 +596,7 @@ public final class Utils implements Constants, TwitterConstants {
             qb.from(new Tables(table));
             qb.orderBy(new OrderBy(BaseColumns._ID + " DESC"));
             qb.limit(itemLimit * 20);
-            final Where where = Where.notIn(new Column(BaseColumns._ID), qb.build());
+            final Expression where = Expression.notIn(new Column(BaseColumns._ID), qb.build());
             resolver.delete(uri, where.getSQL(), null);
         }
     }
@@ -630,20 +628,6 @@ public final class Utils implements Constants, TwitterConstants {
 //        final int position = view.getFirstVisiblePosition(), offset = Utils.getFirstChildOffset(view);
 //        view.setAdapter(adapter);
 //        Utils.scrollListToPosition(view, position, offset);
-    }
-
-    public static void clearListViewChoices(final StaggeredGridView view) {
-        if (view == null) return;
-        final ListAdapter adapter = view.getAdapter();
-        if (adapter == null) return;
-        view.clearChoices();
-        view.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-        view.invalidateViews();
-        // Workaround for Android bug
-        // http://stackoverflow.com/questions/9754170/listview-selection-remains-persistent-after-exiting-choice-mode
-        // final int position = view.getFirstVisiblePosition();
-        // view.setAdapter(adapter);
-        // Utils.scrollListToPosition(view, position);
     }
 
     public static boolean closeSilently(final Closeable c) {
@@ -1313,7 +1297,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static int[] getAccountColors(final Context context, final long[] accountIds) {
         if (context == null || accountIds == null) return new int[0];
         final String[] cols = new String[]{Accounts.ACCOUNT_ID, Accounts.COLOR};
-        final String where = Where.in(new Column(Accounts.ACCOUNT_ID), new RawItemArray(accountIds)).getSQL();
+        final String where = Expression.in(new Column(Accounts.ACCOUNT_ID), new RawItemArray(accountIds)).getSQL();
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, cols, where,
                 null, null);
         if (cur == null) return new int[0];
@@ -1398,7 +1382,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static String[] getAccountNames(final Context context, final long[] accountIds) {
         if (context == null) return new String[0];
         final String[] cols = new String[]{Accounts.NAME};
-        final String where = accountIds != null ? Where.in(new Column(Accounts.ACCOUNT_ID),
+        final String where = accountIds != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
                 new RawItemArray(accountIds)).getSQL() : null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, cols, where,
                 null, null);
@@ -1456,7 +1440,7 @@ public final class Utils implements Constants, TwitterConstants {
                                                  final boolean includeAtChar) {
         if (context == null) return new String[0];
         final String[] cols = new String[]{Accounts.SCREEN_NAME};
-        final String where = accountIds != null ? Where.in(new Column(Accounts.ACCOUNT_ID),
+        final String where = accountIds != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
                 new RawItemArray(accountIds)).getSQL() : null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, cols, where,
                 null, null);
@@ -1498,8 +1482,8 @@ public final class Utils implements Constants, TwitterConstants {
         if (context == null) return 0;
         final ContentResolver resolver = context.getContentResolver();
         final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{Statuses.STATUS_ID},
-                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context)), null,
-                null);
+                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context)).getSQL(),
+                null, null);
         if (cur == null) return 0;
         try {
             return cur.getCount();
@@ -1512,8 +1496,8 @@ public final class Utils implements Constants, TwitterConstants {
         if (context == null) return new long[0];
         final ContentResolver resolver = context.getContentResolver();
         final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{Statuses.STATUS_ID},
-                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context)), null,
-                null);
+                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context)).getSQL(),
+                null, null);
         if (cur == null) return new long[0];
         final long[] ids = new long[cur.getCount()];
         cur.moveToFirst();
@@ -1550,6 +1534,11 @@ public final class Utils implements Constants, TwitterConstants {
             }
         }
         return sb.toString();
+    }
+
+    public static String getBestBannerUrl(final String baseUrl, final int width) {
+        final String type = getBestBannerType(width);
+        return TextUtils.isEmpty(baseUrl) ? null : baseUrl + "/" + type;
     }
 
     public static String getBestBannerType(final int width) {
@@ -2288,7 +2277,7 @@ public final class Utils implements Constants, TwitterConstants {
         return date.getTime();
     }
 
-    public static Authorization getTwitterAuthorization(final Context context, final AccountWithCredentials account) {
+    public static Authorization getTwitterAuthorization(final Context context, final ParcelableAccountWithCredentials account) {
         if (context == null || account == null) return null;
         switch (account.auth_type) {
             case Accounts.AUTH_TYPE_OAUTH:
@@ -2342,7 +2331,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static Authorization getTwitterAuthorization(final Context context, final long accountId) {
 
-        final String where = Where.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
+        final String where = Expression.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
         final Cursor c = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, where, null, null);
         if (c == null) return null;
@@ -2468,7 +2457,7 @@ public final class Utils implements Constants, TwitterConstants {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
         // Here I use old consumer key/secret because it's default key for older
         // versions
-        final String where = Where.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
+        final String where = Expression.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
         final Cursor c = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, where, null, null);
         if (c == null) return null;
@@ -2596,7 +2585,7 @@ public final class Utils implements Constants, TwitterConstants {
                 Accounts.COLUMNS, null, null, null);
         if (cur == null) return false;
         final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_key_secret);
-        final Account.Indices indices = new Account.Indices(cur);
+        final ParcelableAccount.Indices indices = new ParcelableAccount.Indices(cur);
         cur.moveToFirst();
         try {
             while (!cur.isAfterLast()) {
@@ -2827,7 +2816,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static boolean isOfficialKeyAccount(final Context context, final long accountId) {
         if (context == null) return false;
         final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
-        final String selection = Where.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
+        final String selection = Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
         final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
         try {
             if (c.moveToPosition(0))
@@ -3544,8 +3533,8 @@ public final class Utils implements Constants, TwitterConstants {
         }
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);
         if (translate != null) {
-            final AccountWithCredentials account = Account.getAccountWithCredentials(context, status.account_id);
-            final boolean isOfficialKey = AccountWithCredentials.isOfficialCredentials(context, account);
+            final ParcelableAccountWithCredentials account = ParcelableAccount.getAccountWithCredentials(context, status.account_id);
+            final boolean isOfficialKey = ParcelableAccountWithCredentials.isOfficialCredentials(context, account);
             setMenuItemAvailability(menu, MENU_TRANSLATE, isOfficialKey);
         }
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION);
@@ -3975,7 +3964,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static boolean isFilteringUser(Context context, long userId) {
         final ContentResolver cr = context.getContentResolver();
-        final Where where = Where.equals(Users.USER_ID, userId);
+        final Expression where = Expression.equals(Users.USER_ID, userId);
         final Cursor c = cr.query(Users.CONTENT_URI, new String[0], where.getSQL(), null, null);
         try {
             return c.getCount() > 0;
@@ -3987,8 +3976,8 @@ public final class Utils implements Constants, TwitterConstants {
     public static ParcelableUser getUserForConversation(Context context, long accountId,
                                                         long conversationId) {
         final ContentResolver cr = context.getContentResolver();
-        final Where where = Where.and(Where.equals(ConversationEntries.ACCOUNT_ID, accountId),
-                Where.equals(ConversationEntries.CONVERSATION_ID, conversationId));
+        final Expression where = Expression.and(Expression.equals(ConversationEntries.ACCOUNT_ID, accountId),
+                Expression.equals(ConversationEntries.CONVERSATION_ID, conversationId));
         final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
         try {
             if (c.moveToFirst()) return ParcelableUser.fromDirectMessageConversationEntry(c);

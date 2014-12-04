@@ -114,7 +114,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
 
     @Override
     public int getTabPosition() {
-        return 0;
+        final Bundle args = getArguments();
+        return args != null ? args.getInt(EXTRA_TAB_POSITION, -1) : -1;
     }
 
     @Override

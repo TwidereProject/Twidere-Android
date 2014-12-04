@@ -25,7 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -326,7 +326,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
     public static ContentValues makeStatusDraftContentValues(final ParcelableStatusUpdate status) {
-        return makeStatusDraftContentValues(status, Account.getAccountIds(status.accounts));
+        return makeStatusDraftContentValues(status, ParcelableAccount.getAccountIds(status.accounts));
     }
 
     public static ContentValues makeStatusDraftContentValues(final ParcelableStatusUpdate status,

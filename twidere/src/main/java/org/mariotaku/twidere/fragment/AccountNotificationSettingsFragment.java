@@ -23,7 +23,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 
 public class AccountNotificationSettingsFragment extends BaseAccountPreferenceFragment {
 
@@ -31,7 +31,7 @@ public class AccountNotificationSettingsFragment extends BaseAccountPreferenceFr
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		final Preference preference = findPreference(KEY_NOTIFICATION_LIGHT_COLOR);
-		final Account account = getAccount();
+		final ParcelableAccount account = getAccount();
 		if (preference != null && account != null) {
 			preference.setDefaultValue(account.color);
 		}

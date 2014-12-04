@@ -35,12 +35,12 @@ import android.widget.ListView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 
-import org.mariotaku.querybuilder.Where;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Inbox;
@@ -61,7 +61,7 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
 
     private AccountsAdapter mAdapter;
     private SharedPreferences mPreferences;
-    private Account mSelectedAccount;
+    private ParcelableAccount mSelectedAccount;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -178,7 +178,7 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         if (!(menuInfo instanceof AdapterContextMenuInfo)) return;
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-        final Account account = mAdapter.getAccount(info.position);
+        final ParcelableAccount account = mAdapter.getAccount(info.position);
         menu.setHeaderTitle(account.name);
         final MenuInflater inflater = new MenuInflater(v.getContext());
         inflater.inflate(R.menu.action_manager_account, menu);
@@ -258,7 +258,7 @@ public class AccountsManagerFragment extends BaseSupportListFragment implements 
                 final long id = c.getLong(idIdx);
                 final ContentValues values = new ContentValues();
                 values.put(Accounts.SORT_POSITION, i);
-                final Where where = Where.equals(Accounts._ID, id);
+                final Expression where = Expression.equals(Accounts._ID, id);
                 cr.update(Accounts.CONTENT_URI, values, where.getSQL(), null);
             }
         }

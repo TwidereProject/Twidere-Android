@@ -10,8 +10,7 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 /**
  * Created by mariotaku on 14/11/18.
  */
-public interface IStatusesAdapter<Data> extends IGapSupportedAdapter<StatusViewHolder>,
-        IItemMenuSupportedAdapter<StatusViewHolder> {
+public interface IStatusesAdapter<Data> extends IGapSupportedAdapter, ICardSupportedAdapter {
 
     ImageLoaderWrapper getImageLoader();
 

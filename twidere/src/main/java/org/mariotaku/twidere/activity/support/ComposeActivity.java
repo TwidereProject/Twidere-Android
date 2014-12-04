@@ -83,8 +83,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.model.Account;
 import org.mariotaku.twidere.model.DraftItem;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
@@ -186,7 +186,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     private boolean mIsPossiblySensitive, mShouldSaveAccounts;
 
-    private long[] mAccountIds, mSendAccountIds;
+    private long[] mSendAccountIds;
 
     private Uri mTempPhotoUri;
     private boolean mImageUploaderUsed, mStatusShortenerUsed;
@@ -537,7 +537,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     public void saveToDrafts() {
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final ParcelableStatusUpdate.Builder builder = new ParcelableStatusUpdate.Builder();
-        builder.accounts(Account.getAccounts(this, mSendAccountIds));
+        builder.accounts(ParcelableAccount.getAccounts(this, mSendAccountIds));
         builder.text(text);
         builder.inReplyToStatusId(mInReplyToStatusId);
         builder.location(mRecentLocation);
@@ -561,8 +561,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         setContentView(R.layout.activity_compose);
         setProgressBarIndeterminateVisibility(false);
         setFinishOnTouchOutside(false);
-        mAccountIds = getAccountIds(this);
-        if (mAccountIds.length <= 0) {
+        final long[] defaultAccountIds = getAccountIds(this);
+        if (defaultAccountIds.length <= 0) {
             final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
             intent.setClass(this, SignInActivity.class);
             startActivity(intent);
@@ -574,7 +574,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
         final AccountSelectorAdapter accountAdapter = new AccountSelectorAdapter(mMenuBar.getPopupContext());
-        accountAdapter.addAll(Account.getAccountsList(this, false));
+        accountAdapter.addAll(ParcelableAccount.getAccountsList(this, false));
         mAccountSelectorPopup = IListPopupWindow.InstanceHelper.getInstance(mMenuBar.getPopupContext());
         mAccountSelectorPopup.setInputMethodMode(IListPopupWindow.INPUT_METHOD_NOT_NEEDED);
         mAccountSelectorPopup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -621,8 +621,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             if (mSendAccountIds == null || mSendAccountIds.length == 0) {
                 final long[] idsInPrefs = ArrayUtils.parseLongArray(
                         mPreferences.getString(KEY_COMPOSE_ACCOUNTS, null), ',');
-                final long[] intersection = ArrayUtils.intersection(idsInPrefs, mAccountIds);
-                mSendAccountIds = intersection.length > 0 ? intersection : mAccountIds;
+                final long[] intersection = ArrayUtils.intersection(idsInPrefs, defaultAccountIds);
+                mSendAccountIds = intersection.length > 0 ? intersection : defaultAccountIds;
             }
             mOriginalText = ParseUtils.parseString(mEditText.getText());
         }
@@ -732,7 +732,18 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     private boolean handleDefaultIntent(final Intent intent) {
         if (intent == null) return false;
         final String action = intent.getAction();
-        mShouldSaveAccounts = !Intent.ACTION_SEND.equals(action) && !Intent.ACTION_SEND_MULTIPLE.equals(action);
+        final boolean hasAccountIds;
+        if (intent.hasExtra(EXTRA_ACCOUNT_IDS)) {
+            mSendAccountIds = intent.getLongArrayExtra(EXTRA_ACCOUNT_IDS);
+            hasAccountIds = true;
+        } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
+            mSendAccountIds = new long[]{intent.getLongExtra(EXTRA_ACCOUNT_ID, -1)};
+            hasAccountIds = true;
+        } else {
+            hasAccountIds = false;
+        }
+        mShouldSaveAccounts = !Intent.ACTION_SEND.equals(action)
+                && !Intent.ACTION_SEND_MULTIPLE.equals(action) && !hasAccountIds;
         final Uri data = intent.getData();
         final CharSequence extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT);
         final CharSequence extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
@@ -1265,7 +1276,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     }
 
-    private static class AccountSelectorAdapter extends BaseArrayAdapter<Account> {
+    private static class AccountSelectorAdapter extends BaseArrayAdapter<ParcelableAccount> {
 
         public AccountSelectorAdapter(final Context context) {
             super(context, android.R.layout.simple_list_item_multiple_choice);
@@ -1284,7 +1295,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
-            final Account account = getItem(position);
+            final ParcelableAccount account = getItem(position);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             text1.setText(Utils.getAccountDisplayName(getContext(), account.account_id, isDisplayNameFirst()));
             return view;

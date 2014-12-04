@@ -20,11 +20,15 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,8 +37,31 @@ import java.util.List;
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
     @Override
-    protected ParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableStatusesAdapter(context, compact);
+    protected void onSetIntentFilter(IntentFilter filter) {
+        filter.addAction(BROADCAST_STATUS_DESTROYED);
+    }
+
+    @Override
+    protected void onReceivedBroadcast(Intent intent, String action) {
+        switch (action) {
+            case BROADCAST_STATUS_DESTROYED: {
+                deleteStatus(intent.getLongExtra(EXTRA_STATUS_ID, -1));
+                break;
+            }
+        }
+    }
+
+    public final void deleteStatus(final long statusId) {
+        final List<ParcelableStatus> data = getAdapterData();
+        if (statusId <= 0 || data == null) return;
+        final ArrayList<ParcelableStatus> dataToRemove = new ArrayList<>();
+        for (final ParcelableStatus status : data) {
+            if (status.id == statusId || status.retweet_id > 0 && status.retweet_id == statusId) {
+                dataToRemove.add(status);
+            }
+        }
+        data.removeAll(dataToRemove);
+        setAdapterData(data);
     }
 
     @Override
@@ -48,6 +75,41 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         }
         getLoaderManager().restartLoader(0, args, this);
         return -1;
+    }
+
+    @Override
+    protected long[] getAccountIds() {
+        return new long[]{getAccountId()};
+    }
+
+    @Override
+    protected ParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
+        return new ParcelableStatusesAdapter(context, compact);
+    }
+
+    @Override
+    protected void onLoadMoreStatuses() {
+        final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final long[] maxIds = new long[]{adapter.getStatus(adapter.getStatusCount() - 1).id};
+        getStatuses(null, maxIds, null);
+    }
+
+    @Override
+    public boolean triggerRefresh() {
+        final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final long[] accountIds = getAccountIds();
+        if (adapter.getStatusCount() > 0) {
+            final long[] sinceIds = new long[]{adapter.getStatus(0).id};
+            getStatuses(accountIds, null, sinceIds);
+        } else {
+            getStatuses(accountIds, null, null);
+        }
+        return true;
+    }
+
+    protected long getAccountId() {
+        final Bundle args = getArguments();
+        return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
     }
 
 }

@@ -74,11 +74,6 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     }
 
     @Override
-    public void onGapClick(StatusViewHolder holder, int position) {
-
-    }
-
-    @Override
     public Cursor getData() {
         return mCursor;
     }

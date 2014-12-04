@@ -253,7 +253,7 @@ public interface SharedPreferenceConstants {
     @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_SECRET_3)
     public static final String KEY_CONSUMER_SECRET = "consumer_secret";
     public static final String KEY_FILTERS_IN_HOME_TIMELINE = "filters_in_home_timeline";
-    public static final String KEY_FILTERS_IN_MENTIONS = "filters_in_mentions";
+    public static final String KEY_FILTERS_IN_MENTIONS_TIMELINE = "filters_in_mentions";
     public static final String KEY_FILTERS_FOR_RTS = "filters_for_rts";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_NICKNAME_ONLY = "nickname_only";

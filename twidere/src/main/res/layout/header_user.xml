@@ -50,9 +50,11 @@
         android:layout_below="@id/profile_banner_space"
         android:layout_toRightOf="@id/profile_image"
         android:background="?android:selectableItemBackground"
-        android:clipToPadding="false"
         android:orientation="vertical"
-        android:padding="@dimen/element_spacing_small"
+        android:paddingLeft="@dimen/element_spacing_small"
+        android:paddingRight="@dimen/element_spacing_small"
+        android:paddingTop="@dimen/element_spacing_xsmall"
+        android:paddingBottom="@dimen/element_spacing_xsmall"
         app:ignorePadding="true">
 
         <Button
@@ -68,6 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_toLeftOf="@id/follow"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/element_size_normal"
             android:orientation="vertical">
 
             <org.mariotaku.twidere.view.themed.ThemedTextView

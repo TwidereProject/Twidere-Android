@@ -40,8 +40,8 @@ import android.widget.ListView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
-import org.mariotaku.twidere.model.Account;
-import org.mariotaku.twidere.model.Account.AccountWithCredentials;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.task.AsyncTask;
 import org.mariotaku.twidere.util.AsyncTaskManager;
@@ -345,9 +345,9 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
                 break;
             }
             case MENU_TRANSLATE: {
-                final AccountWithCredentials account = Account.getAccountWithCredentials(getActivity(),
+                final ParcelableAccountWithCredentials account = ParcelableAccount.getAccountWithCredentials(getActivity(),
                         status.account_id);
-                if (AccountWithCredentials.isOfficialCredentials(getActivity(), account)) {
+                if (ParcelableAccountWithCredentials.isOfficialCredentials(getActivity(), account)) {
                     StatusTranslateDialogFragment.show(getFragmentManager(), status);
                 } else {
 

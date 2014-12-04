@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,7 +46,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 
-import org.mariotaku.querybuilder.Where;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
@@ -83,25 +84,19 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        setContentView(R.layout.activity_filters);
-        mActionBar = getActionBar();
-        mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        addTab(FilteredUsersFragment.class, R.string.users, 0);
-        addTab(FilteredKeywordsFragment.class, R.string.keywords, 1);
-        addTab(FilteredSourcesFragment.class, R.string.sources, 2);
-        addTab(FilteredLinksFragment.class, R.string.links, 3);
-        mViewPager.setAdapter(mAdapter);
-        mViewPager.setOnPageChangeListener(this);
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_filters, menu);
+        return true;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_filters, menu);
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        final boolean enable_in_home_timeline = mPreferences.getBoolean(KEY_FILTERS_IN_HOME_TIMELINE, true);
+        final boolean enable_in_mentions = mPreferences.getBoolean(KEY_FILTERS_IN_MENTIONS_TIMELINE, true);
+        final boolean enable_for_rts = mPreferences.getBoolean(KEY_FILTERS_FOR_RTS, true);
+        menu.findItem(R.id.enable_in_home_timeline).setChecked(enable_in_home_timeline);
+        menu.findItem(R.id.enable_in_mentions).setChecked(enable_in_mentions);
+        menu.findItem(R.id.enable_for_rts).setChecked(enable_for_rts);
         return true;
     }
 
@@ -140,7 +135,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
             }
             case R.id.enable_in_mentions: {
                 final SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putBoolean(KEY_FILTERS_IN_MENTIONS, !item.isChecked());
+                editor.putBoolean(KEY_FILTERS_IN_MENTIONS_TIMELINE, !item.isChecked());
                 editor.apply();
                 break;
             }
@@ -155,12 +150,29 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
     }
 
     @Override
-    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        setContentView(R.layout.activity_filters);
+        mActionBar = getActionBar();
+        mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        addTab(FilteredUsersFragment.class, R.string.users, 0);
+        addTab(FilteredKeywordsFragment.class, R.string.keywords, 1);
+        addTab(FilteredSourcesFragment.class, R.string.sources, 2);
+        addTab(FilteredLinksFragment.class, R.string.links, 3);
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setOnPageChangeListener(this);
     }
 
     @Override
-    public void onPageScrollStateChanged(final int state) {
+    public boolean getSystemWindowsInsets(Rect insets) {
+        return false;
+    }
 
+    @Override
+    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
     }
 
     @Override
@@ -170,18 +182,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        final boolean enable_in_home_timeline = mPreferences.getBoolean(KEY_FILTERS_IN_HOME_TIMELINE, true);
-        final boolean enable_in_mentions = mPreferences.getBoolean(KEY_FILTERS_IN_MENTIONS, true);
-        final boolean enable_for_rts = mPreferences.getBoolean(KEY_FILTERS_FOR_RTS, true);
-        menu.findItem(R.id.enable_in_home_timeline).setChecked(enable_in_home_timeline);
-        menu.findItem(R.id.enable_in_mentions).setChecked(enable_in_mentions);
-        menu.findItem(R.id.enable_for_rts).setChecked(enable_for_rts);
-        return true;
-    }
-
-    @Override
-    public void onTabReselected(final Tab tab, final FragmentTransaction ft) {
+    public void onPageScrollStateChanged(final int state) {
 
     }
 
@@ -196,6 +197,11 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
     }
 
     @Override
+    public void onTabReselected(final Tab tab, final FragmentTransaction ft) {
+
+    }
+
+    @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case REQUEST_SELECT_USER: {
@@ -205,7 +211,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
                 final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
                 final ContentValues values = ContentValuesCreator.makeFilteredUserContentValues(user);
                 final ContentResolver resolver = getContentResolver();
-                resolver.delete(Filters.Users.CONTENT_URI, Where.equals(Filters.Users.USER_ID, user.id).getSQL(), null);
+                resolver.delete(Filters.Users.CONTENT_URI, Expression.equals(Filters.Users.USER_ID, user.id).getSQL(), null);
                 resolver.insert(Filters.Users.CONTENT_URI, values);
                 break;
             }

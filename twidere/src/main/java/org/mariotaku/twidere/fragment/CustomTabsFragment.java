@@ -52,8 +52,8 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
 import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
@@ -101,7 +101,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_DELETE: {
-                final Where where = Where.in(new Column(Tabs._ID), new RawItemArray(mListView.getCheckedItemIds()));
+                final Expression where = Expression.in(new Column(Tabs._ID), new RawItemArray(mListView.getCheckedItemIds()));
                 mResolver.delete(Tabs.CONTENT_URI, where.getSQL(), null);
                 break;
             }
@@ -150,7 +150,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
                     values.put(Tabs.NAME, data.getStringExtra(EXTRA_NAME));
                     values.put(Tabs.ICON, data.getStringExtra(EXTRA_ICON));
                     values.put(Tabs.EXTRAS, data.getStringExtra(EXTRA_EXTRAS));
-                    final String where = Where.equals(Tabs._ID, data.getLongExtra(EXTRA_ID, -1)).getSQL();
+                    final String where = Expression.equals(Tabs._ID, data.getLongExtra(EXTRA_ID, -1)).getSQL();
                     mResolver.update(Tabs.CONTENT_URI, values, where, null);
                 }
                 break;

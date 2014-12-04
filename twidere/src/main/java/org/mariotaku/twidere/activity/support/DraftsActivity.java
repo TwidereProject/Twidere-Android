@@ -50,8 +50,8 @@ import android.widget.ListView;
 
 import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
@@ -106,7 +106,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
                     }
                 }
                 if (sendDrafts(list)) {
-                    final Where where = Where.in(new Column(Drafts._ID),
+                    final Expression where = Expression.in(new Column(Drafts._ID),
                             new RawItemArray(mListView.getCheckedItemIds()));
                     mResolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
                 }
@@ -237,7 +237,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
         final Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_DRAFT, draft);
         intent.putExtras(bundle);
-        mResolver.delete(Drafts.CONTENT_URI, Where.equals(Drafts._ID, draft._id).getSQL(), null);
+        mResolver.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).getSQL(), null);
         startActivityForResult(intent, REQUEST_COMPOSE);
     }
 
@@ -307,7 +307,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
         @Override
         protected Integer doInBackground(final Void... params) {
             final ContentResolver resolver = mActivity.getContentResolver();
-            final Where where = Where.in(new Column(Drafts._ID), new RawItemArray(mIds));
+            final Expression where = Expression.in(new Column(Drafts._ID), new RawItemArray(mIds));
             final String[] projection = {Drafts.MEDIA};
             final Cursor c = resolver.query(Drafts.CONTENT_URI, projection, where.getSQL(), null, null);
             final int idxMedia = c.getColumnIndex(Drafts.MEDIA);

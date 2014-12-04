@@ -45,8 +45,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.BaseSupportListFragment;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
@@ -83,7 +83,7 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_DELETE: {
-                final Where where = Where.in(new Column(Filters._ID), new RawItemArray(mListView.getCheckedItemIds()));
+                final Expression where = Expression.in(new Column(Filters._ID), new RawItemArray(mListView.getCheckedItemIds()));
                 mResolver.delete(getContentUri(), where.getSQL(), null);
                 break;
             }

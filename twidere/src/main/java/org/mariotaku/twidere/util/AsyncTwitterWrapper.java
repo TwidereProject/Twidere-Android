@@ -29,11 +29,11 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
@@ -246,7 +246,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mGetLocalTrendsTaskId = mAsyncTaskManager.add(task, true);
     }
 
-    public int getMentionsAsync(final long[] accountIds, final long[] max_ids, final long[] since_ids) {
+    public int getMentionsTimelineAsync(final long[] accountIds, final long[] max_ids, final long[] since_ids) {
         mAsyncTaskManager.cancel(mGetMentionsTaskId);
         final GetMentionsTask task = new GetMentionsTask(accountIds, max_ids, since_ids);
         return mGetMentionsTaskId = mAsyncTaskManager.add(task, true);
@@ -302,7 +302,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 || mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_STORE_TRENDS);
     }
 
-    public boolean isMentionsRefreshing() {
+    public boolean isMentionsTimelineRefreshing() {
         return mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_GET_MENTIONS)
                 || mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_STORE_MENTIONS);
     }
@@ -325,7 +325,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public int refreshAll(final long[] accountIds) {
         if (mPreferences.getBoolean(KEY_HOME_REFRESH_MENTIONS, HomeRefreshContentPreference.DEFAULT_ENABLE_MENTIONS)) {
             final long[] sinceIds = getNewestStatusIdsFromDatabase(mContext, Mentions.CONTENT_URI, accountIds);
-            getMentionsAsync(accountIds, null, sinceIds);
+            getMentionsTimelineAsync(accountIds, null, sinceIds);
         }
         if (mPreferences.getBoolean(KEY_HOME_REFRESH_DIRECT_MESSAGES,
                 HomeRefreshContentPreference.DEFAULT_ENABLE_DIRECT_MESSAGES)) {
@@ -398,7 +398,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                                  final ParcelableMediaUpdate[] media, final long inReplyToStatusId,
                                  final boolean isPossiblySensitive) {
         final ParcelableStatusUpdate.Builder builder = new ParcelableStatusUpdate.Builder();
-        builder.accounts(Account.getAccounts(mContext, accountIds));
+        builder.accounts(ParcelableAccount.getAccounts(mContext, accountIds));
         builder.text(text);
         builder.location(location);
         builder.media(media);
@@ -693,15 +693,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final User user = twitter.createBlock(user_id);
                 for (final Uri uri : STATUSES_URIS) {
-                    final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, account_id),
-                            Where.equals(Statuses.USER_ID, user_id));
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
+                            Expression.equals(Statuses.USER_ID, user_id));
                     mResolver.delete(uri, where.getSQL(), null);
 
                 }
                 // I bet you don't want to see this user in your auto
                 // complete
                 // list.
-                final Where where = Where.equals(CachedUsers.USER_ID, user_id);
+                final Expression where = Expression.equals(CachedUsers.USER_ID, user_id);
                 mResolver.delete(CachedUsers.CONTENT_URI, where.getSQL(), null);
                 return SingleResponse.getInstance(user, null);
             } catch (final TwitterException e) {
@@ -742,8 +742,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.createMute(mUserId);
-                final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, mAccountId),
-                        Where.equals(Statuses.USER_ID, mUserId));
+                final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
+                        Expression.equals(Statuses.USER_ID, mUserId));
                 mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
 
                 return SingleResponse.getInstance(user, null);
@@ -788,9 +788,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final twitter4j.Status status = twitter.createFavorite(status_id);
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
-                final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, account_id),
-                        Where.or(Where.equals(Statuses.STATUS_ID, status_id),
-                                Where.equals(Statuses.RETWEET_ID, status_id)));
+                final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
+                        Expression.or(Expression.equals(Statuses.STATUS_ID, status_id),
+                                Expression.equals(Statuses.RETWEET_ID, status_id)));
                 for (final Uri uri : TweetStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), null);
                 }
@@ -1310,8 +1310,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final twitter4j.Status status = twitter.destroyFavorite(status_id);
                     final ContentValues values = new ContentValues();
                     values.put(Statuses.IS_FAVORITE, 0);
-                    final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, account_id),
-                            Where.or(Where.equals(Statuses.STATUS_ID, status_id), Where.equals(Statuses.RETWEET_ID, status_id)));
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
+                            Expression.or(Expression.equals(Statuses.STATUS_ID, status_id), Expression.equals(Statuses.RETWEET_ID, status_id)));
                     for (final Uri uri : TweetStore.STATUSES_URIS) {
                         mResolver.update(uri, values, where.getSQL(), null);
                     }
@@ -1366,9 +1366,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 try {
                     final User user = twitter.destroyFriendship(user_id);
                     // remove user tweets and retweets
-                    final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, account_id),
-                            Where.or(Where.equals(Statuses.USER_ID, user_id),
-                                    Where.equals(Statuses.RETWEETED_BY_USER_ID, user_id)));
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
+                            Expression.or(Expression.equals(Statuses.USER_ID, user_id),
+                                    Expression.equals(Statuses.RETWEETED_BY_USER_ID, user_id)));
                     mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
                     return SingleResponse.getInstance(user, null);
                 } catch (final TwitterException e) {
@@ -1943,8 +1943,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (result != null) {
                 final String user_id_where = ListUtils.toString(result.list, ',', false);
                 for (final Uri uri : STATUSES_URIS) {
-                    final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, account_id),
-                            new Where(String.format(Locale.ROOT, "%s IN (%s)", Statuses.USER_ID, user_id_where)));
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
+                            new Expression(String.format(Locale.ROOT, "%s IN (%s)", Statuses.USER_ID, user_id_where)));
                     mResolver.delete(uri, where.getSQL(), null);
                 }
                 mMessagesManager.showInfoMessage(R.string.reported_users_for_spam, false);
@@ -2043,9 +2043,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : STATUSES_URIS) {
                     mResolver.update(uri, values, where, null);
                 }
-                final Intent intent = new Intent(BROADCAST_RETWEET_CHANGED);
+                final Intent intent = new Intent(BROADCAST_STATUS_RETWEETED);
                 intent.putExtra(EXTRA_STATUS_ID, status_id);
-                intent.putExtra(EXTRA_RETWEETED, true);
                 mContext.sendBroadcast(intent);
                 mMessagesManager.showOkMessage(R.string.status_retweeted, false);
             } else {
@@ -2090,8 +2089,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
                     // Delete all rows conflicting before new data inserted.
                     {
-                        final Where deleteWhere = Where.and(Where.equals(DirectMessages.ACCOUNT_ID, accountId),
-                                Where.in(new Column(DirectMessages.MESSAGE_ID), new RawItemArray(messageIds)));
+                        final Expression deleteWhere = Expression.and(Expression.equals(DirectMessages.ACCOUNT_ID, accountId),
+                                Expression.in(new Column(DirectMessages.MESSAGE_ID), new RawItemArray(messageIds)));
                         final Uri deleteUri = appendQueryParameters(uri, new NameValuePairImpl(QUERY_PARAM_NOTIFY,
                                 false));
                         mResolver.delete(deleteUri, deleteWhere.getSQL(), null);
@@ -2211,9 +2210,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     statusIds[i] = status.getId();
                 }
                 // Delete all rows conflicting before new data inserted.
-                final Where accountWhere = Where.equals(Statuses.ACCOUNT_ID, accountId);
-                final Where statusWhere = Where.in(new Column(Statuses.STATUS_ID), new RawItemArray(statusIds));
-                final String deleteWhere = Where.and(accountWhere, statusWhere).getSQL();
+                final Expression accountWhere = Expression.equals(Statuses.ACCOUNT_ID, accountId);
+                final Expression statusWhere = Expression.in(new Column(Statuses.STATUS_ID), new RawItemArray(statusIds));
+                final String deleteWhere = Expression.and(accountWhere, statusWhere).getSQL();
                 final Uri deleteUri = appendQueryParameters(uri, new NameValuePairImpl(QUERY_PARAM_NOTIFY, false));
                 final int rowsDeleted = mResolver.delete(deleteUri, deleteWhere, null);
                 // UCD
@@ -2233,8 +2232,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 if (insertGap) {
                     final ContentValues gapValue = new ContentValues();
                     gapValue.put(Statuses.IS_GAP, 1);
-                    final Where where = Where.and(Where.equals(Statuses.ACCOUNT_ID, accountId),
-                            Where.equals(Statuses.STATUS_ID, minId));
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
+                            Expression.equals(Statuses.STATUS_ID, minId));
                     final Uri updateUri = appendQueryParameters(uri, new NameValuePairImpl(QUERY_PARAM_NOTIFY, true));
                     mResolver.update(updateUri, gapValue, where.getSQL(), null);
                 }

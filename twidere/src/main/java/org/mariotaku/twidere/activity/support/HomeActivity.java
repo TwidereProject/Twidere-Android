@@ -77,7 +77,7 @@ import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.task.AsyncTask;
@@ -146,7 +146,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private final ArrayList<SupportTabSpec> mCustomTabs = new ArrayList<SupportTabSpec>();
 
     private final SparseArray<Fragment> mAttachedFragments = new SparseArray<Fragment>();
-    private Account mSelectedAccountToSearch;
+    private ParcelableAccount mSelectedAccountToSearch;
 
     private SharedPreferences mPreferences;
 
@@ -424,7 +424,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         }
     }
 
-    public void openSearchView(final Account account) {
+    public void openSearchView(final ParcelableAccount account) {
         mSelectedAccountToSearch = account;
         onSearchRequested();
     }

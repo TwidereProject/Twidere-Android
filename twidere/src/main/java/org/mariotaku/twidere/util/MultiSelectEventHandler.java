@@ -36,7 +36,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.menu.AccountActionProvider;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
@@ -179,7 +179,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
         if (item.getGroupId() == AccountActionProvider.MENU_GROUP) {
             final Intent intent = item.getIntent();
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false;
-            final Account account = intent.getParcelableExtra(EXTRA_ACCOUNT);
+            final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
             mMultiSelectManager.setAccountId(account.account_id);
             if (mAccountActionProvider != null) {
                 mAccountActionProvider.setAccountId(account.account_id);

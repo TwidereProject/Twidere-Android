@@ -46,7 +46,7 @@ public class AccountPreferences implements Constants {
     }
 
     public int getDefaultNotificationLightColor() {
-        final Account a = Account.getAccount(mContext, mAccountId);
+        final ParcelableAccount a = ParcelableAccount.getAccount(mContext, mAccountId);
         return a != null ? a.color : mContext.getResources().getColor(R.color.material_light_blue);
     }
 

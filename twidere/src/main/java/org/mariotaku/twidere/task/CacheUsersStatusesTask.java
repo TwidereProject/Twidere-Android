@@ -30,7 +30,7 @@ import android.content.Context;
 
 import com.twitter.Extractor;
 
-import org.mariotaku.querybuilder.Where;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.provider.TweetStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TweetStore.CachedStatuses;
@@ -84,7 +84,7 @@ public class CacheUsersStatusesTask extends AsyncTask<Void, Void, Void> implemen
 					final ContentValues filtered_users_values = new ContentValues();
 					filtered_users_values.put(Filters.Users.NAME, user.getName());
 					filtered_users_values.put(Filters.Users.SCREEN_NAME, user.getScreenName());
-					final String filtered_users_where = Where.equals(Filters.Users.USER_ID, user.getId()).getSQL();
+					final String filtered_users_where = Expression.equals(Filters.Users.USER_ID, user.getId()).getSQL();
 					resolver.update(Filters.Users.CONTENT_URI, filtered_users_values, filtered_users_where, null);
 				}
 			}

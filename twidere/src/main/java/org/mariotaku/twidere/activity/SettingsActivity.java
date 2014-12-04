@@ -41,6 +41,7 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -235,7 +236,6 @@ public class SettingsActivity extends BasePreferenceActivity {
         static final int HEADER_TYPE_CATEGORY = 1;
         static final int HEADER_TYPE_SPACE = 2;
 
-        private final Context mContext;
         private final Resources mResources;
         private final int mActionIconColor;
         private final ArrayList<Header> mHeaders;
@@ -244,7 +244,6 @@ public class SettingsActivity extends BasePreferenceActivity {
         private boolean mFirstItemIsCategory;
 
         public HeaderAdapter(final Context context) {
-            mContext = context;
             mInflater = LayoutInflater.from(context);
             mHeaders = new ArrayList<>();
             mResources = context.getResources();
@@ -385,6 +384,13 @@ public class SettingsActivity extends BasePreferenceActivity {
                 holder.icon.setImageDrawable(null);
             }
             holder.icon.setColorFilter(mActionIconColor, Mode.SRC_ATOP);
+
+            if (position > 0 && position <= getCount() - 1) {
+                final boolean prevCategory = getItemViewType(position - 1) == HEADER_TYPE_CATEGORY;
+                holder.content.setShowDividers(prevCategory ? LinearLayout.SHOW_DIVIDER_NONE : LinearLayout.SHOW_DIVIDER_END);
+            } else {
+                holder.content.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
+            }
         }
 
         private View inflateItemView(int viewType, ViewGroup parent) {
@@ -424,12 +430,14 @@ public class SettingsActivity extends BasePreferenceActivity {
         private static class HeaderViewHolder extends ViewHolder {
             private final TextView title, summary;
             private final ImageView icon;
+            private final LinearLayout content;
 
             HeaderViewHolder(final View view) {
                 super(view);
                 title = (TextView) findViewById(android.R.id.title);
                 summary = (TextView) findViewById(android.R.id.summary);
                 icon = (ImageView) findViewById(android.R.id.icon);
+                content = (LinearLayout) findViewById(android.R.id.content);
             }
         }
 

@@ -83,7 +83,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.0.2'
     compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'com.android.support:palette-v7:21.0.2'
-    compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.sothree.slidinguppanel:library:2.0.0'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:1.0.5'
     compile 'com.twitter:twitter-text:1.9.9'

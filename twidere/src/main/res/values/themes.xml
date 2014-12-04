@@ -35,7 +35,6 @@
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
         <item name="tabItemContentStyle">@style/Widget.TabPageIndicator.TabItem.Content</item>
         <item name="tabItemTextStyle">@style/Widget.TabPageIndicator.TabItem.TextView.Dark</item>
-        <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -85,7 +84,6 @@
         <item name="tabItemTextStyle">
             @style/Widget.TabPageIndicator.TabItem.TextView.Light.DarkActionBar
         </item>
-        <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -161,7 +159,6 @@
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
         <item name="tabItemContentStyle">@style/Widget.TabPageIndicator.TabItem.Content</item>
         <item name="tabItemTextStyle">@style/Widget.TabPageIndicator.TabItem.TextView</item>
-        <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -196,7 +193,6 @@
         <item name="tabItemStyle">@style/Widget.TabPageIndicator.TabItem</item>
         <item name="tabItemContentStyle">@style/Widget.TabPageIndicator.TabItem.Content</item>
         <item name="tabItemTextStyle">@style/Widget.TabPageIndicator.TabItem.TextView</item>
-        <item name="staggeredGridViewStyle">@style/Widget.StaggeredGridView</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>

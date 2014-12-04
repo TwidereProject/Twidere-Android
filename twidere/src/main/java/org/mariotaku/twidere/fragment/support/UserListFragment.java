@@ -32,12 +32,14 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +61,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
+import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -86,7 +89,7 @@ import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 
 public class UserListFragment extends BaseSupportFragment implements OnClickListener,
         LoaderCallbacks<SingleResponse<ParcelableUserList>>, DrawerCallback,
-        SystemWindowsInsetsCallback {
+        SystemWindowsInsetsCallback, SupportFragmentCallback {
 
     private ImageLoaderWrapper mProfileImageLoader;
     private AsyncTwitterWrapper mTwitterWrapper;
@@ -100,6 +103,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private PagerSlidingTabStrip mPagerIndicator;
+    private CardView mCardView;
 
     private SupportTabsAdapter mPagerAdapter;
 
@@ -125,6 +129,59 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         }
     };
     private boolean mUserListLoaderInitialized;
+    private Fragment mCurrentVisibleFragment;
+
+    @Override
+    public boolean canScroll(float dy) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
+    }
+
+    @Override
+    public void cancelTouch() {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).cancelTouch();
+        }
+    }
+
+    @Override
+    public void fling(float velocity) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).fling(velocity);
+        }
+    }
+
+    @Override
+    public boolean isScrollContent(float x, float y) {
+        final ViewPager v = mViewPager;
+        final int[] location = new int[2];
+        v.getLocationOnScreen(location);
+        return x >= location[0] && x <= location[0] + v.getWidth()
+                && y >= location[1] && y <= location[1] + v.getHeight();
+    }
+
+    @Override
+    public void scrollBy(float dy) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).scrollBy(dy);
+        }
+    }
+
+    @Override
+    public boolean shouldLayoutHeaderBottom() {
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        final CardView card = mCardView;
+        if (drawer == null || card == null) return false;
+        return card.getTop() + drawer.getHeaderTop() - drawer.getPaddingTop() <= 0;
+    }
+
+    @Override
+    public void topChanged(int offset) {
+
+    }
 
     public void displayUserList(final ParcelableUserList userList) {
         if (userList == null || getActivity() == null) return;
@@ -147,6 +204,31 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
         mProfileImageLoader.displayProfileImage(mProfileImageView, userList.user_profile_image_url);
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public Fragment getCurrentVisibleFragment() {
+        return mCurrentVisibleFragment;
+    }
+
+    @Override
+    public void onDetachFragment(Fragment fragment) {
+
+    }
+
+    @Override
+    public void onSetUserVisibleHint(Fragment fragment, boolean isVisibleToUser) {
+        mCurrentVisibleFragment = isVisibleToUser ? fragment : null;
+    }
+
+    @Override
+    public boolean triggerRefresh(int position) {
+        return false;
+    }
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        return false;
     }
 
     public void getUserListInfo(final boolean omit_intent_extra) {
@@ -320,29 +402,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         return true;
     }
 
-    private void setupUserPages() {
-        final Context context = getActivity();
-        final Bundle args = getArguments(), tabArgs = new Bundle();
-        if (args.containsKey(EXTRA_USER)) {
-            final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, userList.account_id);
-            tabArgs.putLong(EXTRA_USER_ID, userList.user_id);
-            tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
-            tabArgs.putInt(EXTRA_LIST_ID, (int) userList.id);
-            tabArgs.putString(EXTRA_LIST_NAME, userList.name);
-        } else {
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, args.getLong(EXTRA_ACCOUNT_ID, -1));
-            tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
-            tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
-            tabArgs.putInt(EXTRA_LIST_ID, args.getInt(EXTRA_LIST_ID, -1));
-            tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
-        }
-        mPagerAdapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0);
-        mPagerAdapter.addTab(UserListMembersFragment.class, tabArgs, getString(R.string.list_members), null, 1);
-        mPagerAdapter.addTab(UserListSubscribersFragment.class, tabArgs, getString(R.string.list_subscribers), null, 2);
-        mPagerIndicator.notifyDataSetChanged();
-    }
-
     @Override
     public void onClick(final View view) {
         switch (view.getId()) {
@@ -415,6 +474,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         final View headerView = mHeaderDrawerLayout.getHeader();
         final View contentView = mHeaderDrawerLayout.getContent();
+        mCardView = (CardView) headerView.findViewById(R.id.card);
         mProfileContainer = (ColorLabelRelativeLayout) headerView.findViewById(R.id.profile);
         mListNameView = (TextView) headerView.findViewById(R.id.list_name);
         mCreatedByView = (TextView) headerView.findViewById(R.id.created_by);
@@ -441,44 +501,27 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         content.setClipToPadding(false);
     }
 
-    @Override
-    public void fling(float velocity) {
-
-    }
-
-    @Override
-    public void scrollBy(float dy) {
-
-    }
-
-    @Override
-    public boolean shouldLayoutHeaderBottom() {
-        return false;
-    }
-
-    @Override
-    public boolean canScroll(float dy) {
-        return false;
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        return false;
-    }
-
-    @Override
-    public void cancelTouch() {
-
-    }
-
-    @Override
-    public void topChanged(int offset) {
-
-    }
-
-    @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        return false;
+    private void setupUserPages() {
+        final Context context = getActivity();
+        final Bundle args = getArguments(), tabArgs = new Bundle();
+        if (args.containsKey(EXTRA_USER)) {
+            final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
+            tabArgs.putLong(EXTRA_ACCOUNT_ID, userList.account_id);
+            tabArgs.putLong(EXTRA_USER_ID, userList.user_id);
+            tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
+            tabArgs.putInt(EXTRA_LIST_ID, (int) userList.id);
+            tabArgs.putString(EXTRA_LIST_NAME, userList.name);
+        } else {
+            tabArgs.putLong(EXTRA_ACCOUNT_ID, args.getLong(EXTRA_ACCOUNT_ID, -1));
+            tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
+            tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
+            tabArgs.putInt(EXTRA_LIST_ID, args.getInt(EXTRA_LIST_ID, -1));
+            tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
+        }
+        mPagerAdapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0);
+        mPagerAdapter.addTab(UserListMembersFragment.class, tabArgs, getString(R.string.list_members), null, 1);
+        mPagerAdapter.addTab(UserListSubscribersFragment.class, tabArgs, getString(R.string.list_subscribers), null, 2);
+        mPagerIndicator.notifyDataSetChanged();
     }
 
     public static class EditUserListDialogFragment extends BaseSupportDialogFragment implements

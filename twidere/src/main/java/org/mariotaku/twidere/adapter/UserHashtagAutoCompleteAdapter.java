@@ -33,8 +33,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -169,7 +169,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             builder.append(" OR ");
             builder.append(CachedUsers.NAME + " LIKE ?||'%' ESCAPE '^'");
             builder.append(" OR ");
-            builder.append(Where.in(new Column(CachedUsers.USER_ID),
+            builder.append(Expression.in(new Column(CachedUsers.USER_ID),
                     new RawItemArray(getMatchedNicknameIds(ParseUtils.parseString(constraint)))).getSQL());
             final String selection = constraint_escaped != null ? builder.toString() : null;
             final String[] selectionArgs = constraint_escaped != null ? new String[]{constraint_escaped,

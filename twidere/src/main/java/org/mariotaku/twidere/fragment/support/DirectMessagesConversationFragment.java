@@ -64,7 +64,7 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.DirectMessagesConversationAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TweetStore;
@@ -134,7 +134,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
         }
     };
 
-    private Account mSender;
+    private ParcelableAccount mSender;
     private ParcelableUser mRecipient;
     private ImageLoaderWrapper mImageLoader;
     private IColorLabelView mProfileImageContainer;
@@ -174,7 +174,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
         }
         mEditText.addTextChangedListener(this);
 
-        final List<Account> accounts = Account.getAccountsList(getActivity(), false);
+        final List<ParcelableAccount> accounts = ParcelableAccount.getAccountsList(getActivity(), false);
         mAccountSpinner.setAdapter(new AccountsSpinnerAdapter(getActivity(), accounts));
         mAccountSpinner.setOnItemSelectedListener(this);
 
@@ -331,7 +331,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
 
     @Override
     public void onItemSelected(final AdapterView<?> parent, final View view, final int pos, final long id) {
-        final Account account = (Account) mAccountSpinner.getSelectedItem();
+        final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
         if (account != null) {
             mAccountId = account.account_id;
             mSender = account;
@@ -487,7 +487,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
         mAccountId = accountId;
         mRecipientId = recipientId;
         final Context context = getActivity();
-        mSender = Account.getAccount(context, accountId);
+        mSender = ParcelableAccount.getAccount(context, accountId);
         mRecipient = Utils.getUserForConversation(context, accountId, recipientId);
         final LoaderManager lm = getLoaderManager();
         final Bundle args = new Bundle();

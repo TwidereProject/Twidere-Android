@@ -32,8 +32,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.Account;
-import org.mariotaku.twidere.model.Account.Indices;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.Indices;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.view.holder.AccountViewHolder;
@@ -58,10 +58,10 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public Account getAccount(int position) {
+    public ParcelableAccount getAccount(int position) {
         final Cursor c = getCursor();
         if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
-        return new Account(c, mIndices);
+        return new ParcelableAccount(c, mIndices);
     }
 
     @Override

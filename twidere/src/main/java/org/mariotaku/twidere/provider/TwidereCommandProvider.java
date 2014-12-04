@@ -146,7 +146,7 @@ public class TwidereCommandProvider extends ContentProvider implements Constants
 				case CODE_REFRESH_HOME_TIMELINE:
 					if (mTwitterWrapper.isHomeTimelineRefreshing()) return getEmptyCursor();
 				case CODE_REFRESH_MENTIONS:
-					if (mTwitterWrapper.isMentionsRefreshing()) return getEmptyCursor();
+					if (mTwitterWrapper.isMentionsTimelineRefreshing()) return getEmptyCursor();
 				case CODE_REFRESH_INBOX:
 					if (mTwitterWrapper.isReceivedDirectMessagesRefreshing()) return getEmptyCursor();
 				case CODE_REFRESH_OUTBOX:

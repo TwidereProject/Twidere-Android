@@ -27,8 +27,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.Where;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
@@ -39,18 +39,18 @@ import java.util.List;
 import static org.mariotaku.twidere.util.Utils.isOfficialConsumerKeySecret;
 import static org.mariotaku.twidere.util.Utils.shouldForceUsingPrivateAPIs;
 
-public class Account implements Parcelable {
+public class ParcelableAccount implements Parcelable {
 
-    public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<Account>() {
+    public static final Parcelable.Creator<ParcelableAccount> CREATOR = new Parcelable.Creator<ParcelableAccount>() {
 
         @Override
-        public Account createFromParcel(final Parcel in) {
-            return new Account(in);
+        public ParcelableAccount createFromParcel(final Parcel in) {
+            return new ParcelableAccount(in);
         }
 
         @Override
-        public Account[] newArray(final int size) {
-            return new Account[size];
+        public ParcelableAccount[] newArray(final int size) {
+            return new ParcelableAccount[size];
         }
     };
 
@@ -60,7 +60,7 @@ public class Account implements Parcelable {
     public final boolean is_activated;
     public final boolean is_dummy;
 
-    public Account(final Cursor cursor, final Indices indices) {
+    public ParcelableAccount(final Cursor cursor, final Indices indices) {
         is_dummy = false;
         screen_name = indices.screen_name != -1 ? cursor.getString(indices.screen_name) : null;
         name = indices.name != -1 ? cursor.getString(indices.name) : null;
@@ -71,7 +71,7 @@ public class Account implements Parcelable {
         is_activated = indices.is_activated != -1 && cursor.getInt(indices.is_activated) == 1;
     }
 
-    public Account(final Parcel source) {
+    public ParcelableAccount(final Parcel source) {
         is_dummy = source.readInt() == 1;
         is_activated = source.readInt() == 1;
         account_id = source.readLong();
@@ -82,7 +82,7 @@ public class Account implements Parcelable {
         color = source.readInt();
     }
 
-    private Account() {
+    private ParcelableAccount() {
         is_dummy = true;
         screen_name = null;
         name = null;
@@ -117,11 +117,11 @@ public class Account implements Parcelable {
         out.writeInt(color);
     }
 
-    public static Account dummyInstance() {
-        return new Account();
+    public static ParcelableAccount dummyInstance() {
+        return new ParcelableAccount();
     }
 
-    public static Account getAccount(final Context context, final long account_id) {
+    public static ParcelableAccount getAccount(final Context context, final long account_id) {
         if (context == null) return null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + account_id, null, null);
@@ -130,7 +130,7 @@ public class Account implements Parcelable {
                 if (cur.getCount() > 0 && cur.moveToFirst()) {
                     final Indices indices = new Indices(cur);
                     cur.moveToFirst();
-                    return new Account(cur, indices);
+                    return new ParcelableAccount(cur, indices);
                 }
             } finally {
                 cur.close();
@@ -139,7 +139,7 @@ public class Account implements Parcelable {
         return null;
     }
 
-    public static long[] getAccountIds(final Account[] accounts) {
+    public static long[] getAccountIds(final ParcelableAccount[] accounts) {
         final long[] ids = new long[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
             ids[i] = accounts[i].account_id;
@@ -147,25 +147,25 @@ public class Account implements Parcelable {
         return ids;
     }
 
-    public static Account[] getAccounts(final Context context, final boolean activatedOnly,
+    public static ParcelableAccount[] getAccounts(final Context context, final boolean activatedOnly,
                                         final boolean officialKeyOnly) {
-        final List<Account> list = getAccountsList(context, activatedOnly, officialKeyOnly);
-        return list.toArray(new Account[list.size()]);
+        final List<ParcelableAccount> list = getAccountsList(context, activatedOnly, officialKeyOnly);
+        return list.toArray(new ParcelableAccount[list.size()]);
     }
 
-    public static Account[] getAccounts(final Context context, final long[] accountIds) {
-        if (context == null) return new Account[0];
-        final String where = accountIds != null ? Where.in(new Column(Accounts.ACCOUNT_ID),
+    public static ParcelableAccount[] getAccounts(final Context context, final long[] accountIds) {
+        if (context == null) return new ParcelableAccount[0];
+        final String where = accountIds != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
                 new RawItemArray(accountIds)).getSQL() : null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS_NO_CREDENTIALS, where, null, null);
-        if (cur == null) return new Account[0];
+        if (cur == null) return new ParcelableAccount[0];
         try {
             final Indices idx = new Indices(cur);
             cur.moveToFirst();
-            final Account[] names = new Account[cur.getCount()];
+            final ParcelableAccount[] names = new ParcelableAccount[cur.getCount()];
             while (!cur.isAfterLast()) {
-                names[cur.getPosition()] = new Account(cur, idx);
+                names[cur.getPosition()] = new ParcelableAccount(cur, idx);
                 cur.moveToNext();
             }
             return names;
@@ -174,14 +174,14 @@ public class Account implements Parcelable {
         }
     }
 
-    public static List<Account> getAccountsList(final Context context, final boolean activatedOnly) {
+    public static List<ParcelableAccount> getAccountsList(final Context context, final boolean activatedOnly) {
         return getAccountsList(context, activatedOnly, false);
     }
 
-    public static List<Account> getAccountsList(final Context context, final boolean activatedOnly,
+    public static List<ParcelableAccount> getAccountsList(final Context context, final boolean activatedOnly,
                                                 final boolean officialKeyOnly) {
         if (context == null) return Collections.emptyList();
-        final ArrayList<Account> accounts = new ArrayList<>();
+        final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
                 Accounts.CONTENT_URI, Accounts.COLUMNS_NO_CREDENTIALS,
                 activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, Accounts.SORT_POSITION);
@@ -190,13 +190,13 @@ public class Account implements Parcelable {
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
             if (!officialKeyOnly) {
-                accounts.add(new Account(cur, indices));
+                accounts.add(new ParcelableAccount(cur, indices));
             } else {
                 final String consumerKey = cur.getString(indices.consumer_key);
                 final String consumerSecret = cur.getString(indices.consumer_secret);
                 if (shouldForceUsingPrivateAPIs(context)
                         || isOfficialConsumerKeySecret(context, consumerKey, consumerSecret)) {
-                    accounts.add(new Account(cur, indices));
+                    accounts.add(new ParcelableAccount(cur, indices));
                 }
             }
             cur.moveToNext();
@@ -205,7 +205,7 @@ public class Account implements Parcelable {
         return accounts;
     }
 
-    public static AccountWithCredentials getAccountWithCredentials(final Context context, final long account_id) {
+    public static ParcelableAccountWithCredentials getAccountWithCredentials(final Context context, final long account_id) {
         if (context == null) return null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + account_id, null, null);
@@ -214,7 +214,7 @@ public class Account implements Parcelable {
                 if (cur.getCount() > 0 && cur.moveToFirst()) {
                     final Indices indices = new Indices(cur);
                     cur.moveToFirst();
-                    return new AccountWithCredentials(cur, indices);
+                    return new ParcelableAccountWithCredentials(cur, indices);
                 }
             } finally {
                 cur.close();
@@ -223,7 +223,7 @@ public class Account implements Parcelable {
         return null;
     }
 
-    public static class AccountWithCredentials extends Account {
+    public static class ParcelableAccountWithCredentials extends ParcelableAccount {
 
         public final int auth_type;
         public final String consumer_key, consumer_secret;
@@ -232,7 +232,7 @@ public class Account implements Parcelable {
         public final String api_url_format;
         public final boolean same_oauth_signing_url, no_version_suffix;
 
-        public AccountWithCredentials(final Cursor cursor, final Indices indices) {
+        public ParcelableAccountWithCredentials(final Cursor cursor, final Indices indices) {
             super(cursor, indices);
             auth_type = cursor.getInt(indices.auth_type);
             consumer_key = cursor.getString(indices.consumer_key);
@@ -254,7 +254,7 @@ public class Account implements Parcelable {
                     + ", api_url_format=" + api_url_format + ", same_oauth_signing_url=" + same_oauth_signing_url + "}";
         }
 
-        public static boolean isOfficialCredentials(final Context context, final AccountWithCredentials account) {
+        public static boolean isOfficialCredentials(final Context context, final ParcelableAccountWithCredentials account) {
             if (account == null) return false;
             final boolean isOAuth = account.auth_type == Accounts.AUTH_TYPE_OAUTH
                     || account.auth_type == Accounts.AUTH_TYPE_XAUTH;

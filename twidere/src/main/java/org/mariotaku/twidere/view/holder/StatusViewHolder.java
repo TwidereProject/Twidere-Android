@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
@@ -29,9 +27,9 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 /**
  * Created by mariotaku on 14/11/19.
  */
-public class StatusViewHolder<Data> extends RecyclerView.ViewHolder implements OnClickListener {
+public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
-    private final IStatusesAdapter<Data> adapter;
+    private final IStatusesAdapter<?> adapter;
 
     private final ImageView retweetProfileImageView;
     private final CircularImageView profileImageView;
@@ -44,7 +42,7 @@ public class StatusViewHolder<Data> extends RecyclerView.ViewHolder implements O
     private final View mediaPreviewContainer;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
 
-    public StatusViewHolder(IStatusesAdapter<Data> adapter, View itemView) {
+    public StatusViewHolder(IStatusesAdapter<?> adapter, View itemView) {
         super(itemView);
         this.adapter = adapter;
         itemView.findViewById(R.id.item_content).setOnClickListener(this);
@@ -70,7 +68,7 @@ public class StatusViewHolder<Data> extends RecyclerView.ViewHolder implements O
         itemView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
         mediaPreviewContainer.setOnClickListener(this);
-        retweetCountView.setOnClickListener(this);
+        replyCountView.setOnClickListener(this);
         retweetCountView.setOnClickListener(this);
         favoriteCountView.setOnClickListener(this);
     }
@@ -280,9 +278,7 @@ public class StatusViewHolder<Data> extends RecyclerView.ViewHolder implements O
 
     @Override
     public void onClick(View v) {
-        final Context context = itemView.getContext();
         final int position = getPosition();
-        final ParcelableStatus status = adapter.getStatus(position);
         switch (v.getId()) {
             case R.id.item_content: {
                 adapter.onStatusClick(this, position);
@@ -297,10 +293,7 @@ public class StatusViewHolder<Data> extends RecyclerView.ViewHolder implements O
                 break;
             }
             case R.id.reply_count: {
-                final Intent intent = new Intent(IntentConstants.INTENT_ACTION_REPLY);
-                intent.setPackage(context.getPackageName());
-                intent.putExtra(IntentConstants.EXTRA_STATUS, status);
-                context.startActivity(intent);
+                adapter.onItemActionClick(this, v.getId(), position);
                 break;
             }
         }

@@ -1,11 +1,11 @@
 /**
  * This is free and unencumbered software released into the public domain.
- * 
+ *
  * Anyone is free to copy, modify, publish, use, compile, sell, or
  * distribute this software, either in source code form or as a compiled
  * binary, for any purpose, commercial or non-commercial, and by any
  * means.
- * 
+ *
  * In jurisdictions that recognize copyright laws, the author or authors
  * of this software dedicate any and all copyright interest in the
  * software to the public domain. We make this dedication for the benefit
@@ -21,25 +21,26 @@
  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
- * 
+ *
  * For more information, please refer to <http://unlicense.org/>
  */
 
 package org.mariotaku.querybuilder;
 
+
 import org.mariotaku.twidere.util.ArrayUtils;
 
 public class OrderBy implements SQLLang {
 
-	private final String[] orderBy;
+    private final String[] orderBy;
 
-	public OrderBy(final String... orderBy) {
-		this.orderBy = orderBy;
-	}
+    public OrderBy(final String... orderBy) {
+        this.orderBy = orderBy;
+    }
 
-	@Override
-	public String getSQL() {
-		return ArrayUtils.toString(orderBy, ',', false);
-	}
+    @Override
+    public String getSQL() {
+        return ArrayUtils.toString(orderBy, ',', false);
+    }
 
 }

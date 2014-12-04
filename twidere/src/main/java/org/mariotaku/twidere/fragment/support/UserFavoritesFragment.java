@@ -36,7 +36,6 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
     @Override
     public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
         setRefreshing(true);
-        final List<ParcelableStatus> data = getAdapterData();
         final Context context = getActivity();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
@@ -44,8 +43,8 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
-        return new UserFavoritesLoader(context, accountId, userId, screenName, maxId, sinceId, data,
-                null, tabPosition);
+        return new UserFavoritesLoader(context, accountId, userId, screenName, maxId, sinceId,
+                getAdapterData(), null, tabPosition);
     }
 
 }

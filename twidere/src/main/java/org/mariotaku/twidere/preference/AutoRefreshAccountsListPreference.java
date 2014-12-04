@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.fragment.AccountRefreshSettingsFragment;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 
 public class AutoRefreshAccountsListPreference extends AccountsListPreference implements TwidereConstants {
 
@@ -42,7 +42,7 @@ public class AutoRefreshAccountsListPreference extends AccountsListPreference im
 	}
 
 	@Override
-	protected void setupPreference(final AccountItemPreference preference, final Account account) {
+	protected void setupPreference(final AccountItemPreference preference, final ParcelableAccount account) {
 		preference.setFragment(AccountRefreshSettingsFragment.class.getName());
 		final Bundle args = preference.getExtras();
 		args.putParcelable(EXTRA_ACCOUNT, account);

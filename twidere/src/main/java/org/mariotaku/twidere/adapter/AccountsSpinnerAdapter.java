@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.graphics.PorterDuff.Mode;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,13 +28,12 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.DirectMessagesConversationFragment;
-import org.mariotaku.twidere.model.Account;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.util.Collection;
 
-public class AccountsSpinnerAdapter extends ArrayAdapter<Account> {
+public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
 
     private final ImageLoaderWrapper mImageLoader;
     private final boolean mDisplayProfileImage;
@@ -48,7 +46,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<Account> {
                 Context.MODE_PRIVATE).getBoolean(DirectMessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);
     }
 
-    public AccountsSpinnerAdapter(final Context context, final Collection<Account> accounts) {
+    public AccountsSpinnerAdapter(final Context context, final Collection<ParcelableAccount> accounts) {
         this(context);
         addAll(accounts);
     }
@@ -67,7 +65,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<Account> {
         return view;
     }
 
-    private void bindView(final View view, final Account item) {
+    private void bindView(final View view, final ParcelableAccount item) {
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
         final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);

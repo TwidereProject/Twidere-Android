@@ -36,12 +36,10 @@ import org.mariotaku.twidere.fragment.support.ActivitiesAboutMeFragment;
 import org.mariotaku.twidere.fragment.support.ActivitiesByFriendsFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
-import org.mariotaku.twidere.fragment.support.HomeTimelineListFragment;
 import org.mariotaku.twidere.fragment.support.InvalidTabFragment;
 import org.mariotaku.twidere.fragment.support.MentionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.RetweetsOfMeFragment;
 import org.mariotaku.twidere.fragment.support.SearchStatusesFragment;
-import org.mariotaku.twidere.fragment.support.StaggeredHomeTimelineFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
@@ -102,10 +100,6 @@ public class CustomTabUtils implements Constants {
                 RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_action_retweet,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 10));
         if (Utils.hasStaggeredTimeline()) {
-            CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_STAGGERED_HOME_TIMELINE, new CustomTabConfiguration(
-                    StaggeredHomeTimelineFragment.class, R.string.staggered_home_timeline,
-                    R.drawable.ic_action_view_quilt, CustomTabConfiguration.ACCOUNT_OPTIONAL,
-                    CustomTabConfiguration.FIELD_TYPE_NONE, 11, false));
         }
 
         CUSTOM_TABS_ICON_NAME_MAP.put("accounts", R.drawable.ic_action_accounts);
