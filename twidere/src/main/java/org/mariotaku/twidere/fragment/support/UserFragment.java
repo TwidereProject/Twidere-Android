@@ -303,7 +303,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFollowButton.setVisibility(View.GONE);
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             final long userId = args.getLong(EXTRA_USER_ID, -1);
-            return new FriendshipLoader(getActivity(), accountId, userId);
+            return new RelationshipLoader(getActivity(), accountId, userId);
         }
 
         @Override
@@ -624,6 +624,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mViewPager.setAdapter(mPagerAdapter);
         mPagerIndicator.setViewPager(mViewPager);
 
+        mFollowButton.setOnClickListener(this);
         mProfileImageView.setOnClickListener(this);
         mProfileBannerView.setOnClickListener(this);
         mListedContainer.setOnClickListener(this);
@@ -698,6 +699,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         switch (view.getId()) {
             case R.id.retry: {
                 getUserInfo(true);
+                break;
+            }
+            case R.id.follow: {
+                final Relationship relationship = mRelationship;
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (relationship == null || twitter == null) return;
+                if (relationship.isSourceBlockingTarget()) {
+                    twitter.destroyBlockAsync(user.account_id, user.id);
+                } else if (relationship.isSourceFollowingTarget()) {
+                    DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
+                } else {
+                    twitter.createFriendshipAsync(user.account_id, user.id);
+                }
                 break;
             }
             case R.id.profile_image: {
@@ -1171,12 +1185,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
-    static class FriendshipLoader extends AsyncTaskLoader<SingleResponse<Relationship>> {
+    static class RelationshipLoader extends AsyncTaskLoader<SingleResponse<Relationship>> {
 
         private final Context context;
         private final long account_id, user_id;
 
-        public FriendshipLoader(final Context context, final long account_id, final long user_id) {
+        public RelationshipLoader(final Context context, final long account_id, final long user_id) {
             super(context);
             this.context = context;
             this.account_id = account_id;
