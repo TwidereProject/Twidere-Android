@@ -24,8 +24,6 @@
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_dark</item>-->
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
         <item name="android:actionBarStyle">@android:style/Widget.DeviceDefault.ActionBar.Solid
@@ -71,8 +69,6 @@
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <!--<item name="android:windowBackground">@color/bg_color_light</item>-->
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionModeOverlay">true</item>
 
         <!-- ActionBar styles -->
         <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light.DarkActionBar</item>-->
@@ -250,8 +246,6 @@
     <style name="Theme.Twidere.Viewer" parent="Theme.Base">
 
         <!-- Window attributes -->
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionModeOverlay">true</item>
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@android:color/black</item>
 
@@ -336,8 +330,6 @@
     </style>
 
     <style name="Theme.Test" parent="Theme.Base">
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionModeOverlay">true</item>
     </style>
 
     <style name="Theme.Nyan" parent="Theme.Base.NoActionBar">

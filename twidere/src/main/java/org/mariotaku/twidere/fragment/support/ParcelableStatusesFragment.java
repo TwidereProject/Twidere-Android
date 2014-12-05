@@ -36,21 +36,6 @@ import java.util.List;
  */
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
-    @Override
-    protected void onSetIntentFilter(IntentFilter filter) {
-        filter.addAction(BROADCAST_STATUS_DESTROYED);
-    }
-
-    @Override
-    protected void onReceivedBroadcast(Intent intent, String action) {
-        switch (action) {
-            case BROADCAST_STATUS_DESTROYED: {
-                deleteStatus(intent.getLongExtra(EXTRA_STATUS_ID, -1));
-                break;
-            }
-        }
-    }
-
     public final void deleteStatus(final long statusId) {
         final List<ParcelableStatus> data = getAdapterData();
         if (statusId <= 0 || data == null) return;
@@ -95,6 +80,21 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
+    protected void onReceivedBroadcast(Intent intent, String action) {
+        switch (action) {
+            case BROADCAST_STATUS_DESTROYED: {
+                deleteStatus(intent.getLongExtra(EXTRA_STATUS_ID, -1));
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void onSetIntentFilter(IntentFilter filter) {
+        filter.addAction(BROADCAST_STATUS_DESTROYED);
+    }
+
+    @Override
     public boolean triggerRefresh() {
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final long[] accountIds = getAccountIds();
@@ -110,6 +110,10 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     protected long getAccountId() {
         final Bundle args = getArguments();
         return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
+    }
+
+    protected String[] getSavedStatusesFileArgs() {
+        return null;
     }
 
 }

@@ -70,7 +70,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TweetStore;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Conversation;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -386,7 +386,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
 
     @Override
     public void onRefreshFromEnd() {
-        new AsyncTask<Void, Void, long[][]>() {
+        new TwidereAsyncTask<Void, Void, long[][]>() {
 
             @Override
             protected long[][] doInBackground(final Void... params) {
@@ -404,7 +404,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
                 twitter.getSentDirectMessagesAsync(result[0], null, null);
             }
 
-        }.execute();
+        }.executeTask();
     }
 
     @Override
@@ -519,7 +519,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
 
     private void loadMoreMessages() {
         if (isRefreshing()) return;
-        new AsyncTask<Void, Void, long[][]>() {
+        new TwidereAsyncTask<Void, Void, long[][]>() {
 
             @Override
             protected long[][] doInBackground(final Void... params) {
@@ -538,7 +538,7 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
                 twitter.getSentDirectMessagesAsync(result[0], result[2], null);
             }
 
-        }.execute();
+        }.executeTask();
     }
 
     private void sendDirectMessage() {

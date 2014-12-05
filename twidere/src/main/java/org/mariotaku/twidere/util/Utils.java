@@ -2708,15 +2708,13 @@ public final class Utils implements Constants, TwitterConstants {
             if (!selection_args.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT " + user_id + " IN (SELECT " + Filters.Users.USER_ID + " FROM "
-                    + Filters.Users.TABLE_NAME + "))");
+            builder.append("(SELECT ").append(user_id).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
         }
         if (retweeted_by_id > 0) {
             if (!selection_args.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT " + retweeted_by_id + " IN (SELECT " + Filters.Users.USER_ID + " FROM "
-                    + Filters.Users.TABLE_NAME + "))");
+            builder.append("(SELECT ").append(retweeted_by_id).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
         }
         if (source != null) {
             if (!selection_args.isEmpty()) {

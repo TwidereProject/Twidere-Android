@@ -44,7 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CacheUsersStatusesTask extends AsyncTask<Void, Void, Void> implements Constants {
+public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> implements Constants {
 
 	private final TwitterListResponse<twitter4j.Status>[] all_statuses;
 	private final ContentResolver resolver;
@@ -127,7 +127,7 @@ public class CacheUsersStatusesTask extends AsyncTask<Void, Void, Void> implemen
 
 		@Override
 		public void run() {
-			new CacheUsersStatusesTask(context, all_statuses).execute();
+			new CacheUsersStatusesTask(context, all_statuses).executeTask();
 		}
 	}
 }

@@ -19,10 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.CompareUtils.objectEquals;
-import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -31,30 +27,27 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
 
-public class UserMentionsFragment extends SearchStatusesFragment {
+public class UserMentionsFragment extends StatusesSearchFragment {
 
-	@Override
-	public Loader<List<ParcelableStatus>> newLoaderInstance(final Context context, final Bundle args) {
-		if (args == null) return null;
-		final String screenName = args.getString(EXTRA_SCREEN_NAME);
-		if (screenName == null) return null;
-		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-		final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-		final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
-		getListAdapter().setMentionsHightlightDisabled(
-				objectEquals(getAccountScreenName(getActivity(), accountId), screenName));
-		return new UserMentionsLoader(getActivity(), accountId, screenName, maxId, sinceId, getData(),
-				getSavedStatusesFileArgs(), tabPosition);
-	}
+    @Override
+    public Loader<List<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
+        if (args == null) return null;
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
+        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+        final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        return new UserMentionsLoader(getActivity(), accountId, screenName, maxId, sinceId,
+                getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
+    }
 
-	@Override
-	protected String[] getSavedStatusesFileArgs() {
-		final Bundle args = getArguments();
-		if (args == null) return null;
-		final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-		return new String[] { AUTHORITY_USER_MENTIONS, "account" + account_id, "screen_name" + screen_name };
-	}
+    @Override
+    protected String[] getSavedStatusesFileArgs() {
+        final Bundle args = getArguments();
+        if (args == null) return null;
+        final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final String screen_name = args.getString(EXTRA_SCREEN_NAME);
+        return new String[]{AUTHORITY_USER_MENTIONS, "account" + account_id, "screen_name" + screen_name};
+    }
 
 }

@@ -32,7 +32,7 @@ import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserListMembersLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -86,7 +86,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment impl
             final long user_id = args.getLong(EXTRA_USER_ID, -1);
             final String screen_name = args.getString(EXTRA_SCREEN_NAME);
             final String list_name = args.getString(EXTRA_LIST_NAME);
-            new GetUserListTask(account_id, list_id, list_name, user_id, screen_name).execute();
+            new GetUserListTask(account_id, list_id, list_name, user_id, screen_name).executeTask();
         }
     }
 
@@ -130,7 +130,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment impl
         return R.menu.action_user_list_member;
     }
 
-    private class GetUserListTask extends AsyncTask<Void, Void, ParcelableUserList> {
+    private class GetUserListTask extends TwidereAsyncTask<Void, Void, ParcelableUserList> {
 
         private final long account_id, user_id;
         private final int list_id;

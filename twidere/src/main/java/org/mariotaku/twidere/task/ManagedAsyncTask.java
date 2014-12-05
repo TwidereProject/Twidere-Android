@@ -25,7 +25,7 @@ import android.content.Intent;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 
-public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> implements
+public abstract class ManagedAsyncTask<Params, Progress, Result> extends TwidereAsyncTask<Params, Progress, Result> implements
 		Constants {
 
 	private final AsyncTaskManager manager;

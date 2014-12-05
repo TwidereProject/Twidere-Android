@@ -680,5 +680,8 @@
     <string name="listed">Listed</string>
     <string name="state_blocking">Blocking</string>
     <string name="load_more">Load more</string>
+    <string name="photo">Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="remove">Remove</string>
 
 </resources>

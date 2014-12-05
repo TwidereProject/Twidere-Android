@@ -39,7 +39,7 @@ import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
 import org.mariotaku.twidere.fragment.support.InvalidTabFragment;
 import org.mariotaku.twidere.fragment.support.MentionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.RetweetsOfMeFragment;
-import org.mariotaku.twidere.fragment.support.SearchStatusesFragment;
+import org.mariotaku.twidere.fragment.support.StatusesSearchFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
@@ -83,7 +83,7 @@ public class CustomTabUtils implements Constants {
                 UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_action_quote,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 5));
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_SEARCH_STATUSES, new CustomTabConfiguration(
-                SearchStatusesFragment.class, R.string.search_statuses, R.drawable.ic_action_search,
+                StatusesSearchFragment.class, R.string.search_statuses, R.drawable.ic_action_search,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_TEXT, R.string.query,
                 EXTRA_QUERY, 6));
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_LIST_TIMELINE, new CustomTabConfiguration(

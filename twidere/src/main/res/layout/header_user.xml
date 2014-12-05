@@ -11,38 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/element_spacing_xsmall"
-        android:layout_above="@id/profile_name_container"
-        android:background="@drawable/shadow_top"/>
-
-    <!--<View-->
-    <!--android:id="@+id/profile_layer_bottom"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_alignBottom="@id/card"-->
-    <!--android:layout_alignTop="@id/profile_name_container"/>-->
-
-    <org.mariotaku.twidere.view.CircularImageView
-        android:id="@+id/profile_image"
-        style="?profileImageStyleLarge"
-        android:layout_width="@dimen/icon_size_user_profile"
-        android:layout_height="@dimen/icon_size_user_profile"
-        android:layout_alignBottom="@id/profile_name_container"
-        android:layout_marginLeft="@dimen/element_spacing_normal"
-        android:contentDescription="@string/profile_image"
-        android:src="@drawable/ic_profile_image_default"/>
-
-    <ImageView
-        android:id="@+id/profile_type"
-        style="@style/Widget.ProfileType"
-        android:layout_width="@dimen/icon_size_profile_type_user_profile"
-        android:layout_height="@dimen/icon_size_profile_type_user_profile"
-        android:layout_alignBottom="@id/profile_image"
-        android:layout_alignRight="@id/profile_image"
-        android:scaleType="fitCenter"/>
-
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profile_name_container"
         android:layout_width="match_parent"
@@ -90,6 +58,12 @@
         </LinearLayout>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/element_spacing_xsmall"
+        android:layout_above="@id/profile_name_container"
+        android:background="@drawable/shadow_top"/>
 
     <android.support.v7.widget.CardView
         android:id="@+id/card"
@@ -310,6 +284,25 @@
         <include layout="@layout/layout_content_fragment_common"/>
 
     </android.support.v7.widget.CardView>
+
+    <org.mariotaku.twidere.view.CircularImageView
+        android:id="@+id/profile_image"
+        style="?profileImageStyleLarge"
+        android:layout_width="@dimen/icon_size_user_profile"
+        android:layout_height="@dimen/icon_size_user_profile"
+        android:layout_alignBottom="@id/profile_name_container"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:contentDescription="@string/profile_image"
+        android:src="@drawable/ic_profile_image_default"/>
+
+    <ImageView
+        android:id="@+id/profile_type"
+        style="@style/Widget.ProfileType"
+        android:layout_width="@dimen/icon_size_profile_type_user_profile"
+        android:layout_height="@dimen/icon_size_profile_type_user_profile"
+        android:layout_alignBottom="@id/profile_image"
+        android:layout_alignRight="@id/profile_image"
+        android:scaleType="fitCenter"/>
 
     <org.mariotaku.twidere.view.AssetFontTextView
         android:id="@+id/uucky_footer"

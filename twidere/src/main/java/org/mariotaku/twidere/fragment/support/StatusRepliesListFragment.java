@@ -19,10 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.CompareUtils.objectEquals;
-import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -31,33 +27,29 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
 
-public class StatusRepliesListFragment extends SearchStatusesFragment {
+public class StatusRepliesListFragment extends StatusesSearchFragment {
 
-	@Override
-	public Loader<List<ParcelableStatus>> newLoaderInstance(final Context context, final Bundle args) {
-		if (args == null) return null;
-		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		final String screenName = args.getString(EXTRA_SCREEN_NAME);
-		final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
-		if (accountId <= 0 || statusId <= 0 || screenName == null) return null;
-		final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-		final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-		final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
-		getListAdapter().setMentionsHightlightDisabled(
-				objectEquals(getAccountScreenName(getActivity(), accountId), screenName));
-		return new StatusRepliesLoader(getActivity(), accountId, screenName, statusId, maxId, sinceId, getData(),
-				getSavedStatusesFileArgs(), tabPosition);
-	}
+    @Override
+    public Loader<List<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
+        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
+        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+        final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        return new StatusRepliesLoader(getActivity(), accountId, screenName, statusId, maxId,
+                sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
+    }
 
-	@Override
-	protected String[] getSavedStatusesFileArgs() {
-		final Bundle args = getArguments();
-		if (args == null) return null;
-		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		final String screenName = args.getString(EXTRA_SCREEN_NAME);
-		final long statusId = args.getLong(EXTRA_STATUS_ID);
-		return new String[] { AUTHORITY_STATUS_REPLIES, "account" + accountId, "screen_name" + screenName,
-				"status_id" + statusId };
-	}
+    @Override
+    protected String[] getSavedStatusesFileArgs() {
+        final Bundle args = getArguments();
+        if (args == null) return null;
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final long statusId = args.getLong(EXTRA_STATUS_ID);
+        return new String[]{AUTHORITY_STATUS_REPLIES, "account" + accountId, "screen_name" + screenName,
+                "status_id" + statusId};
+    }
 
 }

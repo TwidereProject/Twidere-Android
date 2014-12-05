@@ -80,7 +80,7 @@ import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
@@ -195,7 +195,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
                     }
                     break;
                 }
-                case BROADCAST_FAVORITE_CHANGED: {
+                case BROADCAST_STATUS_FAVORITE_CREATED: {
                     final ParcelableStatus status = intent.getParcelableExtra(EXTRA_STATUS);
                     if (mStatus != null && status != null && isSameAccount(context, status.account_id, mStatus.account_id)
                             && status.id == getStatusId()) {
@@ -326,7 +326,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         } else {
             setSelection(0);
         }
-        if (mConversationTask != null && mConversationTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (mConversationTask != null && mConversationTask.getStatus() == TwidereAsyncTask.Status.RUNNING) {
             mConversationTask.cancel(true);
         }
         mStatus = status;
@@ -636,7 +636,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         lm.destroyLoader(LOADER_ID_STATUS);
         lm.destroyLoader(LOADER_ID_LOCATION);
         lm.destroyLoader(LOADER_ID_FOLLOW);
-        if (mConversationTask != null && mConversationTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (mConversationTask != null && mConversationTask.getStatus() == TwidereAsyncTask.Status.RUNNING) {
             mConversationTask.cancel(true);
         }
         super.onDestroyView();
@@ -688,7 +688,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         super.onStart();
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_FRIENDSHIP_CHANGED);
-        filter.addAction(BROADCAST_FAVORITE_CHANGED);
+        filter.addAction(BROADCAST_STATUS_FAVORITE_CREATED);
         filter.addAction(BROADCAST_STATUS_RETWEETED);
         registerReceiver(mStatusReceiver, filter);
         updateUserColor();
@@ -920,7 +920,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
     }
 
     private void showConversation() {
-        if (mConversationTask != null && mConversationTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (mConversationTask != null && mConversationTask.getStatus() == TwidereAsyncTask.Status.RUNNING) {
             mConversationTask.cancel(true);
             return;
         }
@@ -935,7 +935,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         }
         if (status == null || status.in_reply_to_status_id <= 0) return;
         mConversationTask = new LoadConversationTask(this);
-        mConversationTask.execute(status);
+        mConversationTask.executeTask(status);
     }
 
     private void showFollowInfo(final boolean force) {
@@ -1063,7 +1063,7 @@ public class StatusFragment extends ParcelableStatusesListFragment implements On
         }
     }
 
-    static class LoadConversationTask extends AsyncTask<ParcelableStatus, Void, SingleResponse<Boolean>> {
+    static class LoadConversationTask extends TwidereAsyncTask<ParcelableStatus, Void, SingleResponse<Boolean>> {
 
         final Handler handler;
         final Context context;

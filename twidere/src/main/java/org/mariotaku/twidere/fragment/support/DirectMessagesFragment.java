@@ -44,7 +44,7 @@ import org.mariotaku.twidere.adapter.DirectMessageConversationEntriesAdapter;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -178,7 +178,7 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
     @Override
     public void onRefreshFromStart() {
         if (isRefreshing()) return;
-        new AsyncTask<Void, Void, long[][]>() {
+        new TwidereAsyncTask<Void, Void, long[][]>() {
 
             @Override
             protected long[][] doInBackground(final Void... params) {
@@ -196,7 +196,7 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
                 twitter.getSentDirectMessagesAsync(result[0], null, null);
             }
 
-        }.execute();
+        }.executeTask();
     }
 
     @Override
@@ -312,7 +312,7 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
 
     private void loadMoreMessages() {
         if (isRefreshing()) return;
-        new AsyncTask<Void, Void, long[][]>() {
+        new TwidereAsyncTask<Void, Void, long[][]>() {
 
             @Override
             protected long[][] doInBackground(final Void... params) {
@@ -331,17 +331,17 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
                 twitter.getSentDirectMessagesAsync(result[0], result[2], null);
             }
 
-        }.execute();
+        }.executeTask();
     }
 
     private void removeUnreadCounts() {
-        if (mRemoveUnreadCountsTask != null && mRemoveUnreadCountsTask.getStatus() == AsyncTask.Status.RUNNING)
+        if (mRemoveUnreadCountsTask != null && mRemoveUnreadCountsTask.getStatus() == TwidereAsyncTask.Status.RUNNING)
             return;
         mRemoveUnreadCountsTask = new RemoveUnreadCountsTask(mReadPositions, this);
-        mRemoveUnreadCountsTask.execute();
+        mRemoveUnreadCountsTask.executeTask();
     }
 
-    static class RemoveUnreadCountsTask extends AsyncTask<Void, Void, Void> {
+    static class RemoveUnreadCountsTask extends TwidereAsyncTask<Void, Void, Void> {
         private final Set<Integer> read_positions;
         private final DirectMessageConversationEntriesAdapter adapter;
         private final DirectMessagesFragment fragment;

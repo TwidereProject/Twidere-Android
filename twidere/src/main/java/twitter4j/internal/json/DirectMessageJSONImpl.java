@@ -36,6 +36,7 @@ import twitter4j.UserMentionEntity;
 import twitter4j.conf.Configuration;
 import twitter4j.http.HttpResponse;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -186,16 +187,27 @@ import java.util.Date;
 		return (int) id;
 	}
 
-	@Override
-	public String toString() {
-		return "DirectMessageJSONImpl{id=" + id + ", text=" + text + ", rawText=" + rawText + ", senderId=" + senderId
-				+ ", recipientId=" + recipientId + ", createdAt=" + createdAt + ", senderScreenName="
-				+ senderScreenName + ", recipientScreenName=" + recipientScreenName + ", userMentionEntities="
-				+ userMentionEntities + ", urlEntities=" + urlEntities + ", hashtagEntities=" + hashtagEntities
-				+ ", sender=" + sender + ", recipient=" + recipient + "}";
-	}
+    @Override
+    public String toString() {
+        return "DirectMessageJSONImpl{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", rawText='" + rawText + '\'' +
+                ", senderId=" + senderId +
+                ", recipientId=" + recipientId +
+                ", createdAt=" + createdAt +
+                ", senderScreenName='" + senderScreenName + '\'' +
+                ", recipientScreenName='" + recipientScreenName + '\'' +
+                ", userMentionEntities=" + Arrays.toString(userMentionEntities) +
+                ", urlEntities=" + Arrays.toString(urlEntities) +
+                ", hashtagEntities=" + Arrays.toString(hashtagEntities) +
+                ", mediaEntities=" + Arrays.toString(mediaEntities) +
+                ", sender=" + sender +
+                ", recipient=" + recipient +
+                '}';
+    }
 
-	private void init(final JSONObject json) throws TwitterException {
+    private void init(final JSONObject json) throws TwitterException {
 		id = getLong("id", json);
 		text = getUnescapedString("text", json);
 		rawText = getRawString("text", json);

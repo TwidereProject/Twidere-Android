@@ -53,7 +53,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.HostsFileParser;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -297,7 +297,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
     }
 
-    static class ImportHostsTask extends AsyncTask<Void, Void, Boolean> {
+    static class ImportHostsTask extends TwidereAsyncTask<Void, Void, Boolean> {
 
         private final SharedPreferences mPreferences;
         private final HostMappingsListFragment mActivity;

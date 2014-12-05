@@ -39,10 +39,8 @@ public class AccessToken extends OAuthToken {
 		} catch (final IndexOutOfBoundsException e) {
 			throw new IllegalArgumentException("Invalid access token format.");
 		}
-		if (sUserId != null) {
-			userId = Long.parseLong(sUserId);
-		}
-	}
+        userId = Long.parseLong(sUserId);
+    }
 
 	AccessToken(final HttpResponse res) throws TwitterException {
 		this(res.asString());

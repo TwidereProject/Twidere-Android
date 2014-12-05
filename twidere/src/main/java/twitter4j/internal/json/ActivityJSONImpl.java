@@ -18,6 +18,7 @@ import twitter4j.UserList;
 import twitter4j.conf.Configuration;
 import twitter4j.http.HttpResponse;
 
+import java.util.Arrays;
 import java.util.Date;
 
 class ActivityJSONImpl extends TwitterResponseImpl implements Activity {
@@ -119,16 +120,26 @@ class ActivityJSONImpl extends TwitterResponseImpl implements Activity {
 		return targetUsers;
 	}
 
-	@Override
-	public String toString() {
-		return "ActivityJSONImpl{action=" + action + ", createdAt=" + createdAt + ", sources=" + sources
-				+ ", targetUsers=" + targetUsers + ", targetObjects=" + targetObjectStatuses + ", targetStatuses="
-				+ targetStatuses + ", maxPosition=" + maxPosition + ", minPosition=" + minPosition
-				+ ", targetObjectsSize=" + targetObjectsSize + ", targetsSize=" + targetsSize + ", sourcesSize="
-				+ sourcesSize + "}";
-	}
+    @Override
+    public String toString() {
+        return "ActivityJSONImpl{" +
+                "action=" + action +
+                ", createdAt=" + createdAt +
+                ", sources=" + Arrays.toString(sources) +
+                ", targetUsers=" + Arrays.toString(targetUsers) +
+                ", targetObjectStatuses=" + Arrays.toString(targetObjectStatuses) +
+                ", targetStatuses=" + Arrays.toString(targetStatuses) +
+                ", targetUserLists=" + Arrays.toString(targetUserLists) +
+                ", targetObjectUserLists=" + Arrays.toString(targetObjectUserLists) +
+                ", maxPosition=" + maxPosition +
+                ", minPosition=" + minPosition +
+                ", targetObjectsSize=" + targetObjectsSize +
+                ", targetsSize=" + targetsSize +
+                ", sourcesSize=" + sourcesSize +
+                '}';
+    }
 
-	final void init(final JSONObject json) throws TwitterException {
+    final void init(final JSONObject json) throws TwitterException {
 		try {
 			action = Action.fromString(getRawString("action", json));
 			maxPosition = getLong("max_position", json);

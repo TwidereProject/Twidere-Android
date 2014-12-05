@@ -45,7 +45,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         final String listName = args.getString(EXTRA_LIST_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         return new UserListTimelineLoader(getActivity(), accountId, listId, userId, screenName,
-                listName, maxId, sinceId, getAdapterData(), null, tabPosition);
+                listName, maxId, sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
     }
 
 }

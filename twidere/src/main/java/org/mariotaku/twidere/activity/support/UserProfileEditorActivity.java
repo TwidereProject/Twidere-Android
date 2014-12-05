@@ -32,10 +32,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -43,23 +39,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.task.AsyncTask;
-import org.mariotaku.twidere.task.AsyncTask.Status;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileTask;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
-import org.mariotaku.twidere.view.ProfileImageBannerLayout;
+import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.io.File;
@@ -80,19 +76,21 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
 
     private ImageLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
-    private AsyncTask<Void, Void, ?> mTask;
+    private TwidereAsyncTask<Void, Void, ?> mTask;
 
-    private ProfileImageBannerLayout mProfileImageBannerLayout;
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
     private EditText mEditName, mEditDescription, mEditLocation, mEditUrl;
-    private View mProgress, mContent;
+    private View mProgressContainer, mContent;
+    private View mProfileImageCamera;
+    private View mProfileImageGallery;
+    private View mProfileBannerGallery;
+    private View mProfileBannerRemove;
+    private View mActionBarOverlay;
+    private View mCancelButton;
+    private View mDoneButton;
 
-    private PopupMenu mPopupMenu;
-
-    private boolean mBackPressed;
     private long mAccountId;
-    private int mBannerWidth;
     private ParcelableUser mUser;
 
     private boolean mUserInfoLoaderInitialized;
@@ -105,80 +103,12 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
             if (BROADCAST_PROFILE_UPDATED.equals(action)) {
-                if (mUser == null || intent.getLongExtra(EXTRA_USER_ID, -1) == mUser.id) {
+                final ParcelableUser user = mUser;
+                if (user == null || intent.getLongExtra(EXTRA_USER_ID, -1) == user.id) {
                     getUserInfo();
                 }
             }
         }
-    };
-
-    private final OnMenuItemClickListener mProfileBannerImageMenuListener = new OnMenuItemClickListener() {
-
-        @Override
-        public boolean onMenuItemClick(final MenuItem item) {
-            if (mUser == null) return false;
-            switch (item.getItemId()) {
-                case MENU_TAKE_PHOTO: {
-                    final Uri uri = createTempFileUri();
-                    final Intent intent = createTakePhotoIntent(uri, null, null, 2, 1, true);
-                    startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
-                    mTask = new UpdateProfileBannerImageTaskInternal(UserProfileEditorActivity.this, mAsyncTaskManager,
-                            mAccountId, uri, true);
-                    break;
-                }
-                case MENU_PICK_FROM_GALLERY: {
-                    final Uri uri = createTempFileUri();
-                    final Intent intent = createPickImageIntent(uri, null, null, 2, 1, true);
-                    try {
-                        startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
-                        mTask = new UpdateProfileBannerImageTaskInternal(UserProfileEditorActivity.this,
-                                mAsyncTaskManager, mAccountId, uri, true);
-                    } catch (final Exception e) {
-                        Log.w(LOGTAG, e);
-                    }
-                    break;
-                }
-                case MENU_DELETE: {
-                    mTask = new RemoveProfileBannerTaskInternal(mUser.account_id);
-                    mTask.execute();
-                    break;
-                }
-            }
-            return true;
-        }
-
-    };
-
-    private final OnMenuItemClickListener mProfileImageMenuListener = new OnMenuItemClickListener() {
-
-        @Override
-        public boolean onMenuItemClick(final MenuItem item) {
-            if (mUser == null) return false;
-            switch (item.getItemId()) {
-                case MENU_TAKE_PHOTO: {
-                    final Uri uri = createTempFileUri();
-                    final Intent intent = createTakePhotoIntent(uri, null, null, 1, 1, true);
-                    startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
-                    mTask = new UpdateProfileImageTaskInternal(UserProfileEditorActivity.this, mAsyncTaskManager,
-                            mAccountId, uri, true);
-                    break;
-                }
-                case MENU_PICK_FROM_GALLERY: {
-                    final Uri uri = createTempFileUri();
-                    final Intent intent = createPickImageIntent(uri, null, null, 1, 1, true);
-                    try {
-                        startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
-                        mTask = new UpdateProfileImageTaskInternal(UserProfileEditorActivity.this, mAsyncTaskManager,
-                                mAccountId, uri, true);
-                    } catch (final Exception e) {
-                        Log.w(LOGTAG, e);
-                    }
-                    break;
-                }
-            }
-            return true;
-        }
-
     };
 
     @Override
@@ -190,74 +120,86 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     }
 
     @Override
-    public void onBackPressed() {
-        if (mHasUnsavedChanges() && !mBackPressed) {
-            final Toast toast = Toast.makeText(this, R.string.unsaved_change_back_pressed, Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(final View view) {
-        if (mUser == null) return;
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
-        }
+        final ParcelableUser user = mUser;
+        if (user == null || (mTask != null && mTask.getStatus() == Status.RUNNING)) return;
         switch (view.getId()) {
-            case ProfileImageBannerLayout.VIEW_ID_PROFILE_IMAGE: {
-                mPopupMenu = PopupMenu.getInstance(this, view);
-                mPopupMenu.inflate(R.menu.action_profile_image);
-                mPopupMenu.setOnMenuItemClickListener(mProfileImageMenuListener);
+            case R.id.profile_image: {
                 break;
             }
-            case ProfileImageBannerLayout.VIEW_ID_PROFILE_BANNER: {
-                mPopupMenu = PopupMenu.getInstance(this, view);
-                mPopupMenu.inflate(R.menu.action_profile_banner_image);
-                final Menu menu = mPopupMenu.getMenu();
-                final MenuItem delete_submenu = menu.findItem(MENU_DELETE_SUBMENU);
-                final boolean has_profile_banner = !isEmpty(mUser.profile_banner_url);
-                delete_submenu.setVisible(has_profile_banner);
-                delete_submenu.setEnabled(has_profile_banner);
-                mPopupMenu.setOnMenuItemClickListener(mProfileBannerImageMenuListener);
+            case R.id.profile_banner: {
                 break;
             }
-            default: {
-                return;
+            case R.id.profile_image_camera: {
+                final Uri uri = createTempFileUri();
+                final Intent intent = createTakePhotoIntent(uri, null, null, 1, 1, true);
+                mTask = new UpdateProfileImageTaskInternal(this, mAsyncTaskManager, mAccountId, uri, true);
+                startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
+                break;
+            }
+            case R.id.profile_image_gallery: {
+                final Uri uri = createTempFileUri();
+                final Intent intent = createPickImageIntent(uri, null, null, 1, 1, true);
+                mTask = new UpdateProfileImageTaskInternal(this, mAsyncTaskManager, mAccountId, uri, true);
+                startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
+                break;
+            }
+            case R.id.profile_banner_gallery: {
+                final Uri uri = createTempFileUri();
+                final Intent intent = createPickImageIntent(uri, null, null, 2, 1, true);
+                mTask = new UpdateProfileBannerImageTaskInternal(this, mAsyncTaskManager, mAccountId, uri, true);
+                startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
+                break;
+            }
+            case R.id.profile_banner_remove: {
+                mTask = new RemoveProfileBannerTaskInternal(user.account_id);
+                mTask.executeTask();
+                break;
+            }
+            case R.id.actionbar_cancel: {
+                finish();
+                break;
+            }
+            case R.id.actionbar_done: {
+                final String name = ParseUtils.parseString(mEditName.getText());
+                final String url = ParseUtils.parseString(mEditUrl.getText());
+                final String location = ParseUtils.parseString(mEditLocation.getText());
+                final String description = ParseUtils.parseString(mEditDescription.getText());
+                mTask = new UpdateProfileTaskInternal(this, mAsyncTaskManager, mAccountId, name, url, location,
+                        description);
+                mTask.executeTask();
+                break;
             }
         }
-        mPopupMenu.show();
-
     }
 
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mProgress = findViewById(R.id.progress);
+        mProgressContainer = findViewById(R.id.progress_container);
         mContent = findViewById(R.id.content);
-        mProfileImageBannerLayout = (ProfileImageBannerLayout) findViewById(R.id.profile_image_banner);
-        mProfileBannerView = mProfileImageBannerLayout.getProfileBannerImageView();
-        mProfileImageView = mProfileImageBannerLayout.getProfileImageView();
+        mProfileBannerView = (ImageView) findViewById(R.id.profile_banner);
+        mProfileImageView = (ImageView) findViewById(R.id.profile_image);
         mEditName = (EditText) findViewById(R.id.name);
         mEditDescription = (EditText) findViewById(R.id.description);
         mEditLocation = (EditText) findViewById(R.id.location);
         mEditUrl = (EditText) findViewById(R.id.url);
+        mActionBarOverlay = findViewById(R.id.actionbar_overlay);
+        mProfileImageCamera = findViewById(R.id.profile_image_camera);
+        mProfileImageGallery = findViewById(R.id.profile_image_gallery);
+        mProfileBannerGallery = findViewById(R.id.profile_banner_gallery);
+        mProfileBannerRemove = findViewById(R.id.profile_banner_remove);
+        mCancelButton = findViewById(R.id.actionbar_cancel);
+        mDoneButton = findViewById(R.id.actionbar_done);
     }
 
     @Override
     public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
-        mProgress.setVisibility(View.VISIBLE);
+        mProgressContainer.setVisibility(View.VISIBLE);
         mContent.setVisibility(View.GONE);
         setProgressBarIndeterminateVisibility(true);
         return new ParcelableUserLoader(UserProfileEditorActivity.this, mAccountId, mAccountId, null, getIntent()
                 .getExtras(), false, false);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit_user_profile, menu);
-        return true;
     }
 
     @Override
@@ -277,36 +219,6 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_HOME: {
-                onBackPressed();
-                break;
-            }
-            case MENU_SAVE: {
-                final String name = ParseUtils.parseString(mEditName.getText());
-                final String url = ParseUtils.parseString(mEditUrl.getText());
-                final String location = ParseUtils.parseString(mEditLocation.getText());
-                final String description = ParseUtils.parseString(mEditDescription.getText());
-                mTask = new UpdateProfileTaskInternal(this, mAsyncTaskManager, mAccountId, name, url, location,
-                        description);
-                mTask.execute();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        final MenuItem save = menu.findItem(MENU_SAVE);
-        if (save != null) {
-            save.setEnabled(mHasUnsavedChanges() && (mTask == null || mTask.getStatus() != AsyncTask.Status.RUNNING));
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public void onSizeChanged(final View view, final int w, final int h, final int oldw, final int oldh) {
     }
 
@@ -321,11 +233,11 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         if (mTask == null || mTask.getStatus() != Status.PENDING) return;
         switch (requestCode) {
             case REQUEST_UPLOAD_PROFILE_BANNER_IMAGE: {
-                mTask.execute();
+                mTask.executeTask();
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
-                mTask.execute();
+                mTask.executeTask();
                 break;
             }
         }
@@ -334,7 +246,7 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         final Intent intent = getIntent();
         final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
@@ -345,16 +257,24 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
         mLazyImageLoader = TwidereApplication.getInstance(this).getImageLoaderWrapper();
         mAccountId = accountId;
-        setContentView(R.layout.edit_user_profile);
+
+
+        setContentView(R.layout.activity_user_profile_editor);
+        ViewAccessor.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
         // setOverrideExitAniamtion(false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        mProfileImageBannerLayout.setOnSizeChangedListener(this);
         mEditName.addTextChangedListener(this);
         mEditDescription.addTextChangedListener(this);
         mEditLocation.addTextChangedListener(this);
         mEditUrl.addTextChangedListener(this);
         mProfileImageView.setOnClickListener(this);
         mProfileBannerView.setOnClickListener(this);
+        mProfileImageCamera.setOnClickListener(this);
+        mProfileImageGallery.setOnClickListener(this);
+        mProfileBannerGallery.setOnClickListener(this);
+        mProfileBannerRemove.setOnClickListener(this);
+        mCancelButton.setOnClickListener(this);
+        mDoneButton.setOnClickListener(this);
+
         if (savedInstanceState != null && savedInstanceState.getParcelable(EXTRA_USER) != null) {
             final ParcelableUser user = savedInstanceState.getParcelable(EXTRA_USER);
             displayUser(user);
@@ -401,7 +321,7 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         mGetUserInfoCalled = false;
         mUser = user;
         if (user != null && user.id > 0) {
-            mProgress.setVisibility(View.GONE);
+            mProgressContainer.setVisibility(View.GONE);
             mContent.setVisibility(View.VISIBLE);
             mEditName.setText(user.name);
             mEditDescription.setText(user.description_expanded);
@@ -409,10 +329,9 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
             mEditUrl.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
             mLazyImageLoader.displayProfileImage(mProfileImageView, user.profile_image_url);
             final int def_width = getResources().getDisplayMetrics().widthPixels;
-            final int width = mBannerWidth > 0 ? mBannerWidth : def_width;
-            mLazyImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
+            mLazyImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, def_width);
         } else {
-            mProgress.setVisibility(View.GONE);
+            mProgressContainer.setVisibility(View.GONE);
             mContent.setVisibility(View.GONE);
         }
     }
@@ -501,7 +420,7 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
 
     }
 
-    class RemoveProfileBannerTaskInternal extends AsyncTask<Void, Void, SingleResponse<Boolean>> {
+    class RemoveProfileBannerTaskInternal extends TwidereAsyncTask<Void, Void, SingleResponse<Boolean>> {
 
         private final long account_id;
 

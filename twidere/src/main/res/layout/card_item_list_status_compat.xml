@@ -18,7 +18,7 @@
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:scaleType="centerCrop"/>
 
-    <org.mariotaku.twidere.view.CardActionTextView
+    <org.mariotaku.twidere.view.ActionIconTextView
         android:id="@+id/reply_retweet_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
             android:orientation="horizontal">
 
 
-            <org.mariotaku.twidere.view.CardActionTextView
+            <org.mariotaku.twidere.view.ActionIconTextView
                 android:id="@+id/reply_count"
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"
@@ -166,7 +166,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 app:activatedColor="@color/highlight_reply"/>
 
-            <org.mariotaku.twidere.view.CardActionTextView
+            <org.mariotaku.twidere.view.ActionIconTextView
                 android:id="@+id/retweet_count"
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"
@@ -179,7 +179,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 app:activatedColor="@color/highlight_retweet"/>
 
-            <org.mariotaku.twidere.view.CardActionTextView
+            <org.mariotaku.twidere.view.ActionIconTextView
                 android:id="@+id/favorite_count"
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"

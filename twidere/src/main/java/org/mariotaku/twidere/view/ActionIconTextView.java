@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
@@ -33,20 +34,20 @@ import org.mariotaku.twidere.R;
 /**
  * Created by mariotaku on 14/11/20.
  */
-public class CardActionTextView extends TextView {
+public class ActionIconTextView extends TextView {
 
     private int mColor;
     private int mActivatedColor;
 
-    public CardActionTextView(Context context) {
+    public ActionIconTextView(Context context) {
         this(context, null);
     }
 
-    public CardActionTextView(Context context, AttributeSet attrs) {
+    public ActionIconTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CardActionTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ActionIconTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray defaultValues = context.obtainStyledAttributes(
                 new int[]{android.R.attr.colorActivatedHighlight});
@@ -64,7 +65,10 @@ public class CardActionTextView extends TextView {
     }
 
     public int getColor() {
-        return mColor != 0 ? mColor : getCurrentTextColor();
+        if (mColor != 0) return mColor;
+        final ColorStateList colors = getTextColors();
+        if (colors != null) return colors.getDefaultColor();
+        return getCurrentTextColor();
     }
 
     @Override

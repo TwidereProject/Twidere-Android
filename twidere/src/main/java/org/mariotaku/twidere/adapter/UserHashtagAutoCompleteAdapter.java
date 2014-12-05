@@ -162,24 +162,18 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             if (filter != null) return filter.runQuery(constraint);
         }
         mToken = token;
-        final String constraint_escaped = constraint != null ? constraint.toString().replaceAll("_", "^_") : null;
+        final String constraintEscaped = constraint != null ? constraint.toString().replaceAll("_", "^_") : null;
         if (isAtSymbol(token)) {
-            final StringBuilder builder = new StringBuilder();
-            builder.append(CachedUsers.SCREEN_NAME + " LIKE ?||'%' ESCAPE '^'");
-            builder.append(" OR ");
-            builder.append(CachedUsers.NAME + " LIKE ?||'%' ESCAPE '^'");
-            builder.append(" OR ");
-            builder.append(Expression.in(new Column(CachedUsers.USER_ID),
-                    new RawItemArray(getMatchedNicknameIds(ParseUtils.parseString(constraint)))).getSQL());
-            final String selection = constraint_escaped != null ? builder.toString() : null;
-            final String[] selectionArgs = constraint_escaped != null ? new String[]{constraint_escaped,
-                    constraint_escaped} : null;
+            final String selection = constraintEscaped != null ? (CachedUsers.SCREEN_NAME + " LIKE ?||'%' ESCAPE '^'") + " OR " + CachedUsers.NAME + " LIKE ?||'%' ESCAPE '^'" + " OR " + Expression.in(new Column(CachedUsers.USER_ID),
+                    new RawItemArray(getMatchedNicknameIds(ParseUtils.parseString(constraint)))).getSQL() : null;
+            final String[] selectionArgs = constraintEscaped != null ? new String[]{constraintEscaped,
+                    constraintEscaped} : null;
             final String orderBy = CachedUsers.SCREEN_NAME + ", " + CachedUsers.NAME;
             return mResolver.query(CachedUsers.CONTENT_URI, CACHED_USERS_COLUMNS, selection, selectionArgs, orderBy);
         } else {
-            final String selection = constraint_escaped != null ? CachedHashtags.NAME + " LIKE ?||'%' ESCAPE '^'"
+            final String selection = constraintEscaped != null ? CachedHashtags.NAME + " LIKE ?||'%' ESCAPE '^'"
                     : null;
-            final String[] selectionArgs = constraint_escaped != null ? new String[]{constraint_escaped} : null;
+            final String[] selectionArgs = constraintEscaped != null ? new String[]{constraintEscaped} : null;
             return mDatabase.query(true, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, selection, selectionArgs,
                     null, null, CachedHashtags.NAME, null);
         }

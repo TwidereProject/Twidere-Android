@@ -121,7 +121,7 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
 			mPermissions = permissions;
 			mCallingPackage = pname;
 			final StringBuilder builder = new StringBuilder();
-			builder.append(HtmlEscapeHelper.escape(getString(R.string.permissions_request_message)) + "<br/>");
+			builder.append(HtmlEscapeHelper.escape(getString(R.string.permissions_request_message))).append("<br/>");
 			if (PermissionsManager.isPermissionValid(permissions)) {
 				if (PermissionsManager.hasPermissions(permissions, PERMISSION_PREFERENCES)) {
 					appendPermission(builder, getString(R.string.permission_description_preferences), true);
@@ -148,8 +148,7 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
 		} catch (final NameNotFoundException e) {
 			setResult(RESULT_CANCELED);
 			finish();
-			return;
-		}
+        }
 	}
 
 }

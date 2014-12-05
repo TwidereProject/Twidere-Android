@@ -43,7 +43,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesListAdapter;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
@@ -559,13 +559,13 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
     }
 
     private void removeUnreadCounts() {
-        if (mRemoveUnreadCountsTask != null && mRemoveUnreadCountsTask.getStatus() == AsyncTask.Status.RUNNING)
+        if (mRemoveUnreadCountsTask != null && mRemoveUnreadCountsTask.getStatus() == TwidereAsyncTask.Status.RUNNING)
             return;
         mRemoveUnreadCountsTask = new RemoveUnreadCountsTask<Data>(mReadPositions, this);
-        mRemoveUnreadCountsTask.execute();
+        mRemoveUnreadCountsTask.executeTask();
     }
 
-    static class RemoveUnreadCountsTask<T> extends AsyncTask<Void, Void, Void> {
+    static class RemoveUnreadCountsTask<T> extends TwidereAsyncTask<Void, Void, Void> {
         private final List<Integer> read_positions;
         private final IStatusesListAdapter<T> adapter;
         private final BaseStatusesListFragment<T> fragment;

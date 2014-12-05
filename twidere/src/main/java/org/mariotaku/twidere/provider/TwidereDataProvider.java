@@ -284,7 +284,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         restoreUnreadItems();
         // final GetWritableDatabaseTask task = new
         // GetWritableDatabaseTask(context, helper, mDatabaseWrapper);
-        // task.execute();
+        // task.executeTask();
         return true;
     }
 

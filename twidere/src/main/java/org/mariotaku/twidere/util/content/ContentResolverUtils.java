@@ -59,14 +59,14 @@ public class ContentResolverUtils {
 				final StringBuilder where = new StringBuilder(in_column + " IN(" + ArrayUtils.toStringForSQL(block)
 						+ ")");
 				if (!isEmpty(extra_where)) {
-					where.append("AND " + extra_where);
+					where.append("AND ").append(extra_where);
 				}
 				rows_deleted += resolver.delete(uri, where.toString(), block);
 			} else {
 				final StringBuilder where = new StringBuilder(in_column + " IN("
 						+ ArrayUtils.toString(block, ',', true) + ")");
 				if (!isEmpty(extra_where)) {
-					where.append("AND " + extra_where);
+					where.append("AND ").append(extra_where);
 				}
 				rows_deleted += resolver.delete(uri, where.toString(), null);
 			}

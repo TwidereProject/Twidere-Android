@@ -19,6 +19,7 @@ package twitter4j;
 import twitter4j.http.HttpParameter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -518,9 +519,7 @@ public final class Query {
 		appendParameter("result_type", resultType, params);
 		params.add(WITH_TWITTER_USER_ID);
 		if (extraParams != null) {
-			for (final HttpParameter param : extraParams) {
-				params.add(param);
-			}
+            Collections.addAll(params, extraParams);
 		}
 		final HttpParameter[] paramArray = new HttpParameter[params.size()];
 		return params.toArray(paramArray);

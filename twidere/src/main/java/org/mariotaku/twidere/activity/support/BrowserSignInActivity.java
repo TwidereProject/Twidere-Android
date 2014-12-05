@@ -40,7 +40,7 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -119,10 +119,10 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
     }
 
     private void getRequestToken() {
-        if (mRequestToken != null || mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING)
+        if (mRequestToken != null || mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING)
             return;
         mTask = new GetRequestTokenTask(this);
-        mTask.execute();
+        mTask.executeTask();
     }
 
     private void loadUrl(final String url) {
@@ -207,7 +207,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
 
     }
 
-    static class GetRequestTokenTask extends AsyncTask<Void, Void, RequestToken> {
+    static class GetRequestTokenTask extends TwidereAsyncTask<Void, Void, RequestToken> {
 
         private final String mConsumerKey, mConsumerSecret;
         private final TwidereApplication mApplication;

@@ -64,7 +64,7 @@ public class OAuthPasswordAuthenticator implements Constants {
 		}
 		try {
 			final String oauthToken = requestToken.getToken();
-			final String authorizationUrl = requestToken.getAuthorizationURL().toString();
+			final String authorizationUrl = requestToken.getAuthorizationURL();
 			final String authenticityToken = readAuthenticityTokenFromHtml(client.get(authorizationUrl,
 					authorizationUrl, null, null).asReader());
 			if (authenticityToken == null) throw new AuthenticityTokenException();
@@ -74,21 +74,15 @@ public class OAuthPasswordAuthenticator implements Constants {
 			params[1] = new HttpParameter("oauth_token", oauthToken);
 			params[2] = new HttpParameter("session[username_or_email]", username);
 			params[3] = new HttpParameter("session[password]", password);
-			final String oAuthAuthorizationUrl = conf.getOAuthAuthorizationURL().toString();
+			final String oAuthAuthorizationUrl = conf.getOAuthAuthorizationURL();
 			final String oauthPin = readOAuthPINFromHtml(client.post(oAuthAuthorizationUrl, oAuthAuthorizationUrl,
 					params).asReader());
 			if (isEmpty(oauthPin)) throw new WrongUserPassException();
 			return twitter.getOAuthAccessToken(requestToken, oauthPin);
-		} catch (final IOException e) {
-			throw new AuthenticationException(e);
-		} catch (final TwitterException e) {
-			throw new AuthenticationException(e);
-		} catch (final NullPointerException e) {
-			throw new AuthenticationException(e);
-		} catch (final XmlPullParserException e) {
+		} catch (final IOException | TwitterException | NullPointerException | XmlPullParserException e) {
 			throw new AuthenticationException(e);
 		}
-	}
+    }
 
 	public static String readAuthenticityTokenFromHtml(final Reader in) throws IOException, XmlPullParserException {
 		final XmlPullParserFactory f = XmlPullParserFactory.newInstance();

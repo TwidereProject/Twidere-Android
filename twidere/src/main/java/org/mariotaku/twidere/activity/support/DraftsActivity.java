@@ -60,7 +60,7 @@ import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.provider.TweetStore.Drafts;
-import org.mariotaku.twidere.task.AsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -275,7 +275,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
                     final Bundle args = getArguments();
                     if (args == null) return;
                     final DeleteDraftsTask task = new DeleteDraftsTask(getActivity(), args.getLongArray(EXTRA_IDS));
-                    task.execute();
+                    task.executeTask();
                     break;
                 }
             }
@@ -293,7 +293,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
 
     }
 
-    private static class DeleteDraftsTask extends AsyncTask<Void, Void, Integer> {
+    private static class DeleteDraftsTask extends TwidereAsyncTask<Void, Void, Integer> {
 
         private static final String FRAGMENT_TAG_DELETING_DRAFTS = "deleting_drafts";
         private final FragmentActivity mActivity;

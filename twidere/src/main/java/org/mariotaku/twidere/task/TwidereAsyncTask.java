@@ -23,7 +23,7 @@ import android.os.Handler;
 
 import java.util.concurrent.ExecutorService;
 
-public abstract class AsyncTask<Param, Progress, Result> {
+public abstract class TwidereAsyncTask<Param, Progress, Result> {
 
 	private Thread mThread;
 	private final Handler mHandler;
@@ -34,19 +34,19 @@ public abstract class AsyncTask<Param, Progress, Result> {
 	private Param[] mParams;
 	private Status mStatus = Status.PENDING;
 
-	public AsyncTask() {
+	public TwidereAsyncTask() {
 		this(new Handler(), null);
 	}
 
-	public AsyncTask(final ExecutorService executor) {
+	public TwidereAsyncTask(final ExecutorService executor) {
 		this(new Handler(), executor);
 	}
 
-	public AsyncTask(final Handler handler) {
+	public TwidereAsyncTask(final Handler handler) {
 		this(handler, null);
 	}
 
-	public AsyncTask(final Handler handler, final ExecutorService executor) {
+	public TwidereAsyncTask(final Handler handler, final ExecutorService executor) {
 		if (handler == null) throw new NullPointerException();
 		mHandler = handler;
 		mExecutor = executor;
@@ -62,7 +62,7 @@ public abstract class AsyncTask<Param, Progress, Result> {
 		mStatus = Status.FINISHED;
 	}
 
-	public AsyncTask<Param, Progress, Result> execute(final Param... params) {
+	public TwidereAsyncTask<Param, Progress, Result> executeTask(final Param... params) {
 		switch (mStatus) {
 			case RUNNING:
 				throw new IllegalStateException("Cannot execute task:" + " the task is already running.");
