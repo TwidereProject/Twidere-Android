@@ -683,5 +683,6 @@
     <string name="photo">Photo</string>
     <string name="gallery">Gallery</string>
     <string name="remove">Remove</string>
+    <string name="load_media">Load media</string>
 
 </resources>

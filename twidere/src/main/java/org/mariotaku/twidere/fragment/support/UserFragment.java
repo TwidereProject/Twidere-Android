@@ -366,7 +366,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
         final int userColor = getUserColor(getActivity(), user.id, true);
-        mProfileImageView.setBorderColor(userColor);
+        mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
         mProfileNameContainer.drawEnd(getAccountColor(getActivity(), user.account_id));
         final String nick = getUserNickname(getActivity(), user.id, true);
         mNameView

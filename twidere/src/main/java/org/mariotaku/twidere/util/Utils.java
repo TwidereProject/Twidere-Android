@@ -1128,21 +1128,22 @@ public final class Utils implements Constants, TwitterConstants {
         return message;
     }
 
-    public static ParcelableStatus findStatus(final Context context, final long account_id, final long status_id)
+    @NonNull
+    public static ParcelableStatus findStatus(final Context context, final long accountId, final long statusId)
             throws TwitterException {
-        if (context == null || account_id <= 0 || status_id <= 0) return null;
-        final ParcelableStatus p_status = findStatusInDatabases(context, account_id, status_id);
-        if (p_status != null) return p_status;
-        final Twitter twitter = getTwitterInstance(context, account_id, true);
-        if (twitter == null) return null;
-        final Status status = twitter.showStatus(status_id);
-        if (status == null || status.getId() <= 0) return null;
-        final String where = Statuses.ACCOUNT_ID + " = " + account_id + " AND " + Statuses.STATUS_ID + " = "
-                + status.getId();
+        if (context == null) throw new NullPointerException();
+        final ParcelableStatus cached = findStatusInDatabases(context, accountId, statusId);
+        if (cached != null) return cached;
+        final Twitter twitter = getTwitterInstance(context, accountId, true);
+        if (twitter == null) throw new TwitterException("Account does not exist");
+        final Status status = twitter.showStatus(statusId);
+        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
+                Expression.equals(Statuses.STATUS_ID, statusId)).getSQL();
         final ContentResolver resolver = context.getContentResolver();
         resolver.delete(CachedStatuses.CONTENT_URI, where, null);
-        resolver.insert(CachedStatuses.CONTENT_URI, ContentValuesCreator.makeStatusContentValues(status, account_id));
-        return new ParcelableStatus(status, account_id, false);
+        resolver.insert(CachedStatuses.CONTENT_URI,
+                ContentValuesCreator.makeStatusContentValues(status, accountId));
+        return new ParcelableStatus(status, accountId, false);
     }
 
     public static ParcelableStatus findStatusInDatabases(final Context context, final long account_id,
@@ -3503,7 +3504,16 @@ public final class Utils implements Constants, TwitterConstants {
         scrollListToPosition(list, 0);
     }
 
-    public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status) {
+    public static void setMenuForStatus(final Context context, final Menu menu,
+                                        final ParcelableStatus status) {
+        final ParcelableAccountWithCredentials account
+                = ParcelableAccount.getAccountWithCredentials(context, status.account_id);
+        setMenuForStatus(context, menu, status, account);
+    }
+
+    public static void setMenuForStatus(final Context context, final Menu menu,
+                                        final ParcelableStatus status,
+                                        final ParcelableAccountWithCredentials account) {
         if (context == null || menu == null || status == null) return;
         final Resources resources = context.getResources();
         final int retweetHighlight = resources.getColor(R.color.highlight_retweet);
@@ -3531,7 +3541,6 @@ public final class Utils implements Constants, TwitterConstants {
         }
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);
         if (translate != null) {
-            final ParcelableAccountWithCredentials account = ParcelableAccount.getAccountWithCredentials(context, status.account_id);
             final boolean isOfficialKey = ParcelableAccountWithCredentials.isOfficialCredentials(context, account);
             setMenuItemAvailability(menu, MENU_TRANSLATE, isOfficialKey);
         }

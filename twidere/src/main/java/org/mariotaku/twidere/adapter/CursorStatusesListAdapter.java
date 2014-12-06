@@ -357,7 +357,7 @@ public class CursorStatusesListAdapter extends BaseCursorAdapter implements ISta
     }
 
     private static int getItemResource(final boolean compactCards) {
-        return compactCards ? R.layout.card_item_list_status_compat : R.layout.card_item_list_status;
+        return compactCards ? R.layout.card_item_status_compat : R.layout.card_item_status;
     }
 
     private static boolean moveCursorToLast(final Cursor c) {

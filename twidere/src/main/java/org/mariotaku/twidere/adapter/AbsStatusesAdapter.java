@@ -14,7 +14,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.support.StatusMenuDialogFragment;
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -30,9 +29,9 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implements Constants,
         IStatusesAdapter<D> {
 
-    private static final int ITEM_VIEW_TYPE_STATUS = 1;
-    private static final int ITEM_VIEW_TYPE_GAP = 2;
-    private static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 3;
+    private static final int ITEM_VIEW_TYPE_STATUS = 0;
+    private static final int ITEM_VIEW_TYPE_GAP = 1;
+    private static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
 
     private final Context mContext;
     private final LayoutInflater mInflater;
@@ -49,9 +48,9 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         mLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         if (compact) {
-            mCardLayoutResource = R.layout.card_item_list_status_compat;
+            mCardLayoutResource = R.layout.card_item_status_compat;
         } else {
-            mCardLayoutResource = R.layout.card_item_list_status;
+            mCardLayoutResource = R.layout.card_item_status;
         }
     }
 

@@ -85,18 +85,18 @@ public class SingleResponse<Data> {
 	}
 
 	public static <T> SingleResponse<T> getInstance() {
-		return new SingleResponse<T>(null, null);
+		return new SingleResponse<>(null, null);
 	}
 
 	public static <T> SingleResponse<T> getInstance(final Exception exception) {
-		return new SingleResponse<T>(null, exception);
+		return new SingleResponse<>(null, exception);
 	}
 
 	public static <T> SingleResponse<T> getInstance(final T data) {
-		return new SingleResponse<T>(data, null);
+		return new SingleResponse<>(data, null);
 	}
 
 	public static <T> SingleResponse<T> getInstance(final T data, final Exception exception) {
-		return new SingleResponse<T>(data, exception);
+		return new SingleResponse<>(data, exception);
 	}
 }

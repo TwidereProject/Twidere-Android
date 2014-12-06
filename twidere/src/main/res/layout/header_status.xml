@@ -15,12 +15,13 @@
         app:cardElevation="@dimen/elevation_card">
 
         <LinearLayout
+            android:id="@+id/card_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/in_reply_to"
+                android:id="@+id/reply_retweet_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackground"
@@ -135,7 +136,7 @@
             </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
             <include
-                layout="@layout/image_preview_grid"
+                layout="@layout/layout_media_preview"
                 android:visibility="gone"/>
 
             <org.mariotaku.twidere.view.StatusTextView
@@ -294,5 +295,7 @@
                 app:maxActionItems="@integer/max_action_buttons_bottom"/>
 
         </LinearLayout>
+
+        <include layout="@layout/layout_content_fragment_common"/>
     </android.support.v7.widget.CardView>
 </FrameLayout>

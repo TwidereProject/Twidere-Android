@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/image_preview"
+    android:id="@+id/media_preview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/image_grid"
+        android:id="@+id/media_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"/>
 
     <LinearLayout
-        android:id="@+id/load_images"
+        android:id="@+id/load_media"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_button_size"
         android:background="?android:selectableItemBackground"
@@ -23,14 +23,14 @@
         <org.mariotaku.twidere.view.ActionIconView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/load_images"
+            android:contentDescription="@string/load_media"
             android:src="@drawable/ic_action_gallery"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/load_images"
+            android:text="@string/load_media"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"/>
     </LinearLayout>
