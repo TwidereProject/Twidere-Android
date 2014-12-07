@@ -149,9 +149,9 @@ public final class ContentValuesCreator implements TwidereConstants {
         if (url != null && urls != null && urls.length > 0) {
             values.put(CachedUsers.URL_EXPANDED, ParseUtils.parseString(urls[0].getExpandedURL()));
         }
-        values.put(CachedUsers.BACKGROUND_COLOR, ParseUtils.parseColor(user.getProfileBackgroundColor(), 0));
-        values.put(CachedUsers.LINK_COLOR, ParseUtils.parseColor(user.getProfileLinkColor(), 0));
-        values.put(CachedUsers.TEXT_COLOR, ParseUtils.parseColor(user.getProfileTextColor(), 0));
+        values.put(CachedUsers.BACKGROUND_COLOR, ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0));
+        values.put(CachedUsers.LINK_COLOR, ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0));
+        values.put(CachedUsers.TEXT_COLOR, ParseUtils.parseColor("#" + user.getProfileTextColor(), 0));
         return values;
     }
 

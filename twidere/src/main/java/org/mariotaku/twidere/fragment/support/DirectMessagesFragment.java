@@ -19,11 +19,8 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,16 +28,21 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.LongSparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DirectMessageConversationEntriesAdapter;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
@@ -48,11 +50,10 @@ import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
+import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
@@ -66,18 +67,6 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
 
-    private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            if (getActivity() == null || !isAdded() || isDetached()) return;
-            final String action = intent.getAction();
-            if (BROADCAST_TASK_STATE_CHANGED.equals(action)) {
-                updateRefreshState();
-            }
-        }
-    };
-
     private MultiSelectManager mMultiSelectManager;
 
     private SharedPreferences mPreferences;
@@ -88,8 +77,7 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
     private DirectMessageConversationEntriesAdapter mAdapter;
     private int mFirstVisibleItem;
 
-    private final Map<Long, Set<Long>> mUnreadCountsToRemove = Collections
-            .synchronizedMap(new HashMap<Long, Set<Long>>());
+    private final LongSparseArray<Set<Long>> mUnreadCountsToRemove = new LongSparseArray<>();
 
     private final Set<Integer> mReadPositions = Collections.synchronizedSet(new HashSet<Integer>());
 
@@ -100,7 +88,7 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
         return (DirectMessageConversationEntriesAdapter) super.getListAdapter();
     }
 
-    public final Map<Long, Set<Long>> getUnreadCountsToRemove() {
+    public final LongSparseArray<Set<Long>> getUnreadCountsToRemove() {
         return mUnreadCountsToRemove;
     }
 
@@ -236,14 +224,14 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
         super.onStart();
         final ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_TASK_STATE_CHANGED);
-        registerReceiver(mStatusReceiver, filter);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
     }
 
     @Override
     public void onStop() {
-        unregisterReceiver(mStatusReceiver);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mReloadContentObserver);
         super.onStop();
@@ -280,6 +268,12 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
         }
     }
 
+
+    @Subscribe
+    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
+        updateRefreshState();
+    }
+
     @Override
     protected void onReachedBottom() {
         if (!mLoadMoreAutomatically) return;
@@ -299,14 +293,14 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
         mFirstVisibleItem = firstVisibleItem;
     }
 
-    private void addUnreadCountsToRemove(final long account_id, final long id) {
-        if (mUnreadCountsToRemove.containsKey(account_id)) {
-            final Set<Long> counts = mUnreadCountsToRemove.get(account_id);
+    private void addUnreadCountsToRemove(final long accountId, final long id) {
+        if (mUnreadCountsToRemove.indexOfKey(accountId) < 0) {
+            final Set<Long> counts = new HashSet<>();
             counts.add(id);
+            mUnreadCountsToRemove.put(accountId, counts);
         } else {
-            final Set<Long> counts = new HashSet<Long>();
+            final Set<Long> counts = mUnreadCountsToRemove.get(accountId);
             counts.add(id);
-            mUnreadCountsToRemove.put(account_id, counts);
         }
     }
 

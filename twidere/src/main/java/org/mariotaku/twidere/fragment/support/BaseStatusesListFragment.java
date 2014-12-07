@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -54,11 +55,8 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.NoDuplicatesCopyOnWriteArrayList;
 import org.mariotaku.twidere.view.holder.StatusListViewHolder;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.mariotaku.twidere.util.Utils.cancelRetweet;
@@ -90,9 +88,8 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
     private int mFirstVisibleItem;
     private int mSelectedPosition;
 
-    private final Map<Long, Set<Long>> mUnreadCountsToRemove = Collections
-            .synchronizedMap(new HashMap<Long, Set<Long>>());
-    private final List<Integer> mReadPositions = new NoDuplicatesCopyOnWriteArrayList<Integer>();
+    private final LongSparseArray<Set<Long>> mUnreadCountsToRemove = new LongSparseArray<>();
+    private final List<Integer> mReadPositions = new NoDuplicatesCopyOnWriteArrayList<>();
 
     private RemoveUnreadCountsTask<Data> mRemoveUnreadCountsTask;
 
@@ -119,7 +116,7 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
 
     public abstract int getStatuses(long[] account_ids, long[] max_ids, long[] since_ids);
 
-    public final Map<Long, Set<Long>> getUnreadCountsToRemove() {
+    public final LongSparseArray<Set<Long>> getUnreadCountsToRemove() {
         return mUnreadCountsToRemove;
     }
 
@@ -531,14 +528,14 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
         mFirstVisibleItem = firstVisibleItem;
     }
 
-    private void addUnreadCountsToRemove(final long account_id, final long id) {
-        if (mUnreadCountsToRemove.containsKey(account_id)) {
-            final Set<Long> counts = mUnreadCountsToRemove.get(account_id);
+    private void addUnreadCountsToRemove(final long accountId, final long id) {
+        if (mUnreadCountsToRemove.indexOfKey(accountId) < 0) {
+            final Set<Long> counts = new HashSet<>();
             counts.add(id);
+            mUnreadCountsToRemove.put(accountId, counts);
         } else {
-            final Set<Long> counts = new HashSet<Long>();
+            final Set<Long> counts = mUnreadCountsToRemove.get(accountId);
             counts.add(id);
-            mUnreadCountsToRemove.put(account_id, counts);
         }
     }
 

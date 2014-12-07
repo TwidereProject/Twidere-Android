@@ -19,6 +19,7 @@ package org.mariotaku.gallery3d.ui;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.v4.util.LongSparseArray;
 import android.util.FloatMath;
 import android.util.Log;
 
@@ -28,7 +29,6 @@ import org.mariotaku.gallery3d.util.BitmapPool;
 import org.mariotaku.gallery3d.util.DecodeUtils;
 import org.mariotaku.gallery3d.util.Future;
 import org.mariotaku.gallery3d.util.GalleryUtils;
-import org.mariotaku.gallery3d.util.LongSparseArray;
 import org.mariotaku.gallery3d.util.ThreadPool;
 import org.mariotaku.gallery3d.util.ThreadPool.CancelListener;
 import org.mariotaku.gallery3d.util.ThreadPool.JobContext;

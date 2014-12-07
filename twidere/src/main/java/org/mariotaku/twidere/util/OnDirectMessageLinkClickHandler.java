@@ -40,14 +40,14 @@ public class OnDirectMessageLinkClickHandler extends OnLinkClickHandler {
 
 	@Override
 	protected void openLink(final String link) {
-		if (link == null || activity == null || manager.isActive()) return;
+		if (link == null || context == null || manager.isActive()) return;
 		if (!hasShortenedLinks(link)) {
 			super.openLink(link);
 			return;
 		}
-		final SharedPreferences prefs = activity.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-		if (activity instanceof FragmentActivity && prefs.getBoolean(KEY_PHISHING_LINK_WARNING, true)) {
-			final FragmentManager fm = ((FragmentActivity) activity).getSupportFragmentManager();
+		final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+		if (context instanceof FragmentActivity && prefs.getBoolean(KEY_PHISHING_LINK_WARNING, true)) {
+			final FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
 			final DialogFragment fragment = new PhishingLinkWarningDialogFragment();
 			final Bundle args = new Bundle();
 			args.putParcelable(EXTRA_URI, Uri.parse(link));

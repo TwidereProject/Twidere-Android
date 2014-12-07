@@ -19,10 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -34,9 +31,14 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.ListView;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
@@ -50,18 +52,6 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
     private TrendsAdapter mTrendsAdapter;
 
     private long mAccountId;
-
-    private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            if (getActivity() == null || !isAdded() || isDetached()) return;
-            final String action = intent.getAction();
-            if (BROADCAST_TASK_STATE_CHANGED.equals(action)) {
-                updateRefreshState();
-            }
-        }
-    };
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -118,14 +108,20 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
     public void onStart() {
         super.onStart();
         getLoaderManager().restartLoader(0, null, this);
-        final IntentFilter filter = new IntentFilter(BROADCAST_TASK_STATE_CHANGED);
-        registerReceiver(mStatusReceiver, filter);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
     }
 
     @Override
     public void onStop() {
-        unregisterReceiver(mStatusReceiver);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
         super.onStop();
+    }
+
+    @Subscribe
+    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
+        updateRefreshState();
     }
 
     protected void updateRefreshState() {

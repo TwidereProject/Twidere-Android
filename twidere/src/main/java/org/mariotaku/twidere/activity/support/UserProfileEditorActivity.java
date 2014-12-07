@@ -19,14 +19,12 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -41,28 +39,33 @@ import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileTask;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.io.File;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.User;
+
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.createPickImageIntent;
 import static org.mariotaku.twidere.util.Utils.createTakePhotoIntent;
+import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 
@@ -73,6 +76,8 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
 
     private static final int REQUEST_UPLOAD_PROFILE_IMAGE = 1;
     private static final int REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2;
+    private static final int REQUEST_PICK_LINK_COLOR = 3;
+    private static final int REQUEST_PICK_BACKGROUND_COLOR = 4;
 
     private ImageLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
@@ -82,13 +87,12 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     private ImageView mProfileBannerView;
     private EditText mEditName, mEditDescription, mEditLocation, mEditUrl;
     private View mProgressContainer, mContent;
-    private View mProfileImageCamera;
-    private View mProfileImageGallery;
-    private View mProfileBannerGallery;
-    private View mProfileBannerRemove;
+    private View mProfileImageCamera, mProfileImageGallery;
+    private View mProfileBannerGallery, mProfileBannerRemove;
     private View mActionBarOverlay;
-    private View mCancelButton;
-    private View mDoneButton;
+    private View mCancelButton, mDoneButton;
+    private View mSetLinkColor, mSetBackgroundColor;
+    private ForegroundColorView mLinkColor, mBackgroundColor;
 
     private long mAccountId;
     private ParcelableUser mUser;
@@ -97,26 +101,17 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
 
     private boolean mGetUserInfoCalled;
 
-    private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            final String action = intent.getAction();
-            if (BROADCAST_PROFILE_UPDATED.equals(action)) {
-                final ParcelableUser user = mUser;
-                if (user == null || intent.getLongExtra(EXTRA_USER_ID, -1) == user.id) {
-                    getUserInfo();
-                }
-            }
-        }
-    };
-
     @Override
-    public void afterTextChanged(final Editable s) {
+    public void beforeTextChanged(final CharSequence s, final int length, final int start, final int end) {
     }
 
     @Override
-    public void beforeTextChanged(final CharSequence s, final int length, final int start, final int end) {
+    public void onTextChanged(final CharSequence s, final int length, final int start, final int end) {
+        updateDoneButton();
+    }
+
+    @Override
+    public void afterTextChanged(final Editable s) {
     }
 
     @Override
@@ -165,9 +160,25 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
                 final String url = ParseUtils.parseString(mEditUrl.getText());
                 final String location = ParseUtils.parseString(mEditLocation.getText());
                 final String description = ParseUtils.parseString(mEditDescription.getText());
-                mTask = new UpdateProfileTaskInternal(this, mAsyncTaskManager, mAccountId, name, url, location,
-                        description);
+                final int linkColor = mLinkColor.getColor();
+                final int backgroundColor = mBackgroundColor.getColor();
+                mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
+                        description, linkColor, backgroundColor);
                 mTask.executeTask();
+                break;
+            }
+            case R.id.set_link_color: {
+                final Intent intent = new Intent(this, ColorPickerDialogActivity.class);
+                intent.putExtra(EXTRA_COLOR, user.link_color);
+                intent.putExtra(EXTRA_ALPHA_SLIDER, false);
+                startActivityForResult(intent, REQUEST_PICK_LINK_COLOR);
+                break;
+            }
+            case R.id.set_background_color: {
+                final Intent intent = new Intent(this, ColorPickerDialogActivity.class);
+                intent.putExtra(EXTRA_COLOR, user.background_color);
+                intent.putExtra(EXTRA_ALPHA_SLIDER, false);
+                startActivityForResult(intent, REQUEST_PICK_BACKGROUND_COLOR);
                 break;
             }
         }
@@ -189,8 +200,12 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         mProfileImageGallery = findViewById(R.id.profile_image_gallery);
         mProfileBannerGallery = findViewById(R.id.profile_banner_gallery);
         mProfileBannerRemove = findViewById(R.id.profile_banner_remove);
+        mLinkColor = (ForegroundColorView) findViewById(R.id.link_color);
+        mBackgroundColor = (ForegroundColorView) findViewById(R.id.background_color);
         mCancelButton = findViewById(R.id.actionbar_cancel);
         mDoneButton = findViewById(R.id.actionbar_done);
+        mSetLinkColor = findViewById(R.id.set_link_color);
+        mSetBackgroundColor = findViewById(R.id.set_background_color);
     }
 
     @Override
@@ -200,11 +215,6 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         setProgressBarIndeterminateVisibility(true);
         return new ParcelableUserLoader(UserProfileEditorActivity.this, mAccountId, mAccountId, null, getIntent()
                 .getExtras(), false, false);
-    }
-
-    @Override
-    public void onLoaderReset(final Loader<SingleResponse<ParcelableUser>> loader) {
-
     }
 
     @Override
@@ -219,25 +229,40 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     }
 
     @Override
-    public void onSizeChanged(final View view, final int w, final int h, final int oldw, final int oldh) {
+    public void onLoaderReset(final Loader<SingleResponse<ParcelableUser>> loader) {
+
     }
 
     @Override
-    public void onTextChanged(final CharSequence s, final int length, final int start, final int end) {
-        invalidateOptionsMenu();
+    public void onSizeChanged(final View view, final int w, final int h, final int oldw, final int oldh) {
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode == RESULT_CANCELED) return;
-        if (mTask == null || mTask.getStatus() != Status.PENDING) return;
         switch (requestCode) {
             case REQUEST_UPLOAD_PROFILE_BANNER_IMAGE: {
+                if (mTask == null || mTask.getStatus() != Status.PENDING) return;
                 mTask.executeTask();
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
+                if (mTask == null || mTask.getStatus() != Status.PENDING) return;
                 mTask.executeTask();
+                break;
+            }
+            case REQUEST_PICK_LINK_COLOR: {
+                if (resultCode == ColorPickerDialogActivity.RESULT_OK) {
+                    mLinkColor.setColor(data.getIntExtra(EXTRA_COLOR, 0));
+                    updateDoneButton();
+                }
+                break;
+            }
+            case REQUEST_PICK_BACKGROUND_COLOR: {
+                if (resultCode == ColorPickerDialogActivity.RESULT_OK) {
+                    mBackgroundColor.setColor(data.getIntExtra(EXTRA_COLOR, 0));
+                    updateDoneButton();
+                }
                 break;
             }
         }
@@ -274,6 +299,8 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         mProfileBannerRemove.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
         mDoneButton.setOnClickListener(this);
+        mSetLinkColor.setOnClickListener(this);
+        mSetBackgroundColor.setOnClickListener(this);
 
         if (savedInstanceState != null && savedInstanceState.getParcelable(EXTRA_USER) != null) {
             final ParcelableUser user = savedInstanceState.getParcelable(EXTRA_USER);
@@ -300,14 +327,24 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     @Override
     protected void onStart() {
         super.onStart();
-        final IntentFilter filter = new IntentFilter(BROADCAST_PROFILE_UPDATED);
-        registerReceiver(mStatusReceiver, filter);
     }
 
     @Override
     protected void onStop() {
-        unregisterReceiver(mStatusReceiver);
         super.onStop();
+    }
+
+    boolean isProfileChanged() {
+        final ParcelableUser user = mUser;
+        if (user == null) return true;
+        if (!stringEquals(mEditName.getText(), user.name)) return true;
+        if (!stringEquals(mEditDescription.getText(), user.description_expanded)) return true;
+        if (!stringEquals(mEditLocation.getText(), user.location)) return true;
+        if (!stringEquals(mEditUrl.getText(), isEmpty(user.url_expanded) ? user.url : user.url_expanded))
+            return true;
+        if (mLinkColor.getColor() != user.link_color) return true;
+        if (mBackgroundColor.getColor() != user.background_color) return true;
+        return false;
     }
 
     private Uri createTempFileUri() {
@@ -320,7 +357,7 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         if (!mGetUserInfoCalled) return;
         mGetUserInfoCalled = false;
         mUser = user;
-        if (user != null && user.id > 0) {
+        if (user != null) {
             mProgressContainer.setVisibility(View.GONE);
             mContent.setVisibility(View.VISIBLE);
             mEditName.setText(user.name);
@@ -330,10 +367,13 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
             mLazyImageLoader.displayProfileImage(mProfileImageView, user.profile_image_url);
             final int def_width = getResources().getDisplayMetrics().widthPixels;
             mLazyImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, def_width);
+            mLinkColor.setColor(user.link_color);
+            mBackgroundColor.setColor(user.background_color);
         } else {
             mProgressContainer.setVisibility(View.GONE);
             mContent.setVisibility(View.GONE);
         }
+        updateDoneButton();
     }
 
     private void getUserInfo() {
@@ -361,17 +401,107 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         invalidateOptionsMenu();
     }
 
-    boolean mHasUnsavedChanges() {
-        if (mUser == null) return false;
-        return !stringEquals(mEditName.getText(), mUser.name)
-                || !stringEquals(mEditDescription.getText(), mUser.description_expanded)
-                || !stringEquals(mEditLocation.getText(), mUser.location)
-                || !stringEquals(mEditUrl.getText(), isEmpty(mUser.url_expanded) ? mUser.url : mUser.url_expanded);
-    }
-
     private static boolean stringEquals(final CharSequence str1, final CharSequence str2) {
         if (str1 == null || str2 == null) return str1 == str2;
-        return str1.toString().equals(str2.toString());
+        if (str1.length() != str2.length()) return false;
+        for (int i = 0, j = str1.length(); i < j; i++) {
+            if (str1.charAt(i) != str2.charAt(i)) return false;
+        }
+        return true;
+    }
+
+    private void updateDoneButton() {
+        mDoneButton.setEnabled(isProfileChanged());
+    }
+
+    static class UpdateProfileTaskInternal extends TwidereAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
+
+        private static final String DIALOG_FRAGMENT_TAG = "updating_user_profile";
+        private final UserProfileEditorActivity mActivity;
+        private final long mAccountId;
+        private final ParcelableUser mOriginal;
+        private final String mName;
+        private final String mUrl;
+        private final String mLocation;
+        private final String mDescription;
+        private final int mLinkColor;
+        private final int mBackgroundColor;
+
+        public UpdateProfileTaskInternal(final UserProfileEditorActivity activity,
+                                         final long accountId, final ParcelableUser original,
+                                         final String name, final String url, final String location,
+                                         final String description, final int linkColor,
+                                         final int backgroundColor) {
+            mActivity = activity;
+            mAccountId = accountId;
+            mOriginal = original;
+            mName = name;
+            mUrl = url;
+            mLocation = location;
+            mDescription = description;
+            mLinkColor = linkColor;
+            mBackgroundColor = backgroundColor;
+        }
+
+        private boolean isColorChanged() {
+            final ParcelableUser orig = mOriginal;
+            if (orig == null) return true;
+            if (mLinkColor != orig.link_color) return true;
+            if (mBackgroundColor != orig.background_color) return true;
+            return false;
+        }
+
+        private boolean isProfileChanged() {
+            final ParcelableUser orig = mOriginal;
+            if (orig == null) return true;
+            if (!stringEquals(mName, orig.name)) return true;
+            if (!stringEquals(mDescription, isEmpty(orig.description_expanded) ? orig.description_plain : orig.description_expanded))
+                return true;
+            if (!stringEquals(mLocation, orig.location)) return true;
+            if (!stringEquals(mUrl, isEmpty(orig.url_expanded) ? orig.url : orig.url_expanded))
+                return true;
+            return false;
+        }
+
+        @Override
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
+            final Twitter twitter = getTwitterInstance(mActivity, mAccountId, true);
+            try {
+                User user = null;
+                if (isColorChanged()) {
+                    final String linkColor = String.format("%08x", mLinkColor).substring(2);
+                    final String backgroundColor = String.format("%08x", mBackgroundColor).substring(2);
+                    user = twitter.updateProfileColors(backgroundColor, null, linkColor, null, null);
+                }
+                if (isProfileChanged()) {
+                    user = twitter.updateProfile(mName, mUrl, mLocation, mDescription);
+                }
+                if (user == null) {
+                    // User profile unchanged
+                    return SingleResponse.getInstance();
+                }
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId));
+            } catch (TwitterException e) {
+                return SingleResponse.getInstance(e);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
+            super.onPostExecute(result);
+            final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
+            if (f instanceof DialogFragment) {
+                ((DialogFragment) f).dismissAllowingStateLoss();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            final DialogFragment df = SupportProgressDialogFragment.show(mActivity, DIALOG_FRAGMENT_TAG);
+            df.setCancelable(false);
+            super.onPreExecute();
+        }
+
     }
 
     private class UpdateProfileBannerImageTaskInternal extends UpdateProfileBannerImageTask {
@@ -382,7 +512,7 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<Boolean> result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             super.onPostExecute(result);
             setUpdateState(false);
             getUserInfo();
@@ -443,47 +573,6 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
             } else {
                 showErrorMessage(UserProfileEditorActivity.this, R.string.action_removing_profile_banner_image,
                         result.getException(), true);
-            }
-            setUpdateState(false);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            setUpdateState(true);
-        }
-
-    }
-
-    class UpdateProfileTaskInternal extends UpdateProfileTask {
-
-        public UpdateProfileTaskInternal(final Context context, final AsyncTaskManager manager, final long account_id,
-                                         final String name, final String url, final String location, final String description) {
-            super(context, manager, account_id, name, url, location, description);
-        }
-
-        @Override
-        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
-            final SingleResponse<ParcelableUser> result = super.doInBackground(params);
-            if (result.getData() != null && isMyAccount(getContext(), result.getData().id)) {
-                final ContentResolver resolver = getContentResolver();
-                final ContentValues values = new ContentValues();
-                values.put(Accounts.NAME, result.getData().name);
-                values.put(Accounts.SCREEN_NAME, result.getData().screen_name);
-                values.put(Accounts.PROFILE_IMAGE_URL, result.getData().profile_image_url);
-                values.put(Accounts.PROFILE_BANNER_URL, result.getData().profile_banner_url);
-                final String where = Accounts.ACCOUNT_ID + " = " + result.getData().id;
-                resolver.update(Accounts.CONTENT_URI, values, where, null);
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
-            super.onPostExecute(result);
-            if (result != null && result.getData() != null) {
-                mGetUserInfoCalled = true;
-                displayUser(result.getData());
             }
             setUpdateState(false);
         }

@@ -36,7 +36,7 @@
 
 
             <org.mariotaku.twidere.view.ColorLabelRelativeLayout
-                android:id="@+id/profile"
+                android:id="@+id/profile_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackground"
@@ -52,8 +52,8 @@
                     android:layout_margin="@dimen/padding_profile_image_detail_page"
                     android:contentDescription="@string/profile_image"
                     android:scaleType="centerCrop"
-                    app:border="true"
-                    app:borderWidth="1dp"/>
+                    app:civBorder="true"
+                    app:civBorderWidth="1dp"/>
 
                 <ImageView
                     android:id="@+id/profile_type"

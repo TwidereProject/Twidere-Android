@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.jsonserializer.JSONParcel;
 import org.mariotaku.jsonserializer.JSONParcelable;
@@ -242,14 +243,14 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         listed_count = user.getListedCount();
         is_cache = false;
         is_following = user.isFollowing();
-        background_color = ParseUtils.parseColor(user.getProfileBackgroundColor(), 0);
-        link_color = ParseUtils.parseColor(user.getProfileLinkColor(), 0);
-        text_color = ParseUtils.parseColor(user.getProfileTextColor(), 0);
+        background_color = ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0);
+        link_color = ParseUtils.parseColor("#"+user.getProfileLinkColor(), 0);
+        text_color = ParseUtils.parseColor("#"+user.getProfileTextColor(), 0);
     }
 
     @Override
-    public int compareTo(final ParcelableUser that) {
-        final long diff = that != null ? position - that.position : position;
+    public int compareTo(@NonNull final ParcelableUser that) {
+        final long diff = position - that.position;
         if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
         return (int) diff;

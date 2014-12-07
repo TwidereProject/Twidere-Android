@@ -137,9 +137,11 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         final Context context = getContext();
         final ParcelableStatus status = getStatus(position);
         final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
         if (context instanceof FragmentActivity) {
             final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
+                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
             Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
         } else {
             Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);

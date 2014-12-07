@@ -6,13 +6,13 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/media_grid"
+        android:id="@+id/media_preview_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"/>
 
     <LinearLayout
-        android:id="@+id/load_media"
+        android:id="@+id/media_preview_load"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_button_size"
         android:background="?android:selectableItemBackground"

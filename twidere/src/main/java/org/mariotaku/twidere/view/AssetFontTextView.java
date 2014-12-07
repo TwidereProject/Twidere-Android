@@ -24,7 +24,7 @@ public class AssetFontTextView extends TextView {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AssetFontTextView, defStyleAttr, 0);
         final String path = a.getString(R.styleable.AssetFontTextView_fontPath);
-        if (path != null) {
+        if (path != null && !isInEditMode()) {
             setTypeface(Typeface.createFromAsset(context.getAssets(), path));
         }
         a.recycle();

@@ -19,14 +19,20 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +42,10 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,20 +54,25 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
-import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
+import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.ParcelableStatusLoader;
 import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
 import org.mariotaku.twidere.model.ListResponse;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
@@ -69,6 +83,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.StatusTextView;
+import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
@@ -79,12 +94,20 @@ import java.util.Locale;
 import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserNickname;
+import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.Utils.cancelRetweet;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
+import static org.mariotaku.twidere.util.Utils.isMyRetweet;
+import static org.mariotaku.twidere.util.Utils.openUserProfile;
+import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
+import static org.mariotaku.twidere.util.Utils.showOkMessage;
+import static org.mariotaku.twidere.util.Utils.startStatusShareChooser;
 
 /**
  * Created by mariotaku on 14/12/5.
@@ -92,9 +115,11 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 public class StatusFragment extends BaseSupportFragment
         implements LoaderCallbacks<SingleResponse<ParcelableStatus>>, OnMediaClickListener {
 
+    public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
+    public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
+
     private static final int LOADER_ID_DETAIL_STATUS = 1;
     private static final int LOADER_ID_STATUS_REPLIES = 2;
-
 
     private RecyclerView mRecyclerView;
     private StatusAdapter mStatusAdapter;
@@ -129,11 +154,38 @@ public class StatusFragment extends BaseSupportFragment
     private LinearLayoutManager mLayoutManager;
 
     @Override
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_status, container, false);
+    }
+
+    @Override
     public Loader<SingleResponse<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
         final Bundle fragmentArgs = getArguments();
         final long accountId = fragmentArgs.getLong(EXTRA_ACCOUNT_ID, -1);
         final long statusId = fragmentArgs.getLong(EXTRA_STATUS_ID, -1);
         return new ParcelableStatusLoader(getActivity(), false, fragmentArgs, accountId, statusId);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final View view = getView();
+        if (view == null) throw new AssertionError();
+        final Context context = view.getContext();
+        final boolean compact = Utils.isCompactCards(context);
+        mLayoutManager = new MyLinearLayoutManager(context, mRecyclerView);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        if (compact) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, mLayoutManager.getOrientation()));
+        }
+        mLayoutManager.setRecycleChildrenOnDetach(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setClipToPadding(false);
+        mStatusAdapter = new StatusAdapter(this, compact);
+        mRecyclerView.setAdapter(mStatusAdapter);
+
+        getLoaderManager().initLoader(LOADER_ID_DETAIL_STATUS, getArguments(), this);
     }
 
     @Override
@@ -157,19 +209,6 @@ public class StatusFragment extends BaseSupportFragment
 
     }
 
-    private void loadConversation(ParcelableStatus status) {
-        if (mLoadConversationTask != null && mLoadConversationTask.getStatus() == Status.RUNNING) {
-            mLoadConversationTask.cancel(true);
-        }
-        mLoadConversationTask = new LoadConversationTask(this);
-        mLoadConversationTask.executeTask(status);
-    }
-
-    @Override
-    public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
-
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -184,30 +223,16 @@ public class StatusFragment extends BaseSupportFragment
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final View view = getView();
-        if (view == null) throw new AssertionError();
-        final Context context = view.getContext();
-        final boolean compact = Utils.isCompactCards(context);
-        mLayoutManager = new MyLinearLayoutManager(context);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        if (compact) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, mLayoutManager.getOrientation()));
-        }
-        mLayoutManager.setRecycleChildrenOnDetach(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setClipToPadding(false);
-        mStatusAdapter = new StatusAdapter(this, compact);
-        mRecyclerView.setAdapter(mStatusAdapter);
+    public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
 
-        getLoaderManager().initLoader(LOADER_ID_DETAIL_STATUS, getArguments(), this);
     }
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
-                             @Nullable final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_status, container, false);
+    private void loadConversation(ParcelableStatus status) {
+        if (mLoadConversationTask != null && mLoadConversationTask.getStatus() == Status.RUNNING) {
+            mLoadConversationTask.cancel(true);
+        }
+        mLoadConversationTask = new LoadConversationTask(this);
+        mLoadConversationTask.executeTask(status);
     }
 
     private void loadReplies(ParcelableStatus status) {
@@ -222,6 +247,30 @@ public class StatusFragment extends BaseSupportFragment
         }
         getLoaderManager().initLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
         mRepliesLoaderInitialized = true;
+    }
+
+    private void setConversation(List<ParcelableStatus> data) {
+        if (mLayoutManager.getChildCount() != 0) {
+            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
+            final int top = mLayoutManager.getChildAt(0).getTop();
+            mStatusAdapter.setConversation(data);
+            final int position = mStatusAdapter.findPositionById(itemId);
+            mLayoutManager.scrollToPositionWithOffset(position, top);
+        } else {
+            mStatusAdapter.setConversation(data);
+        }
+    }
+
+    private void setReplies(List<ParcelableStatus> data) {
+        if (mLayoutManager.getChildCount() != 0) {
+            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
+            final int top = mLayoutManager.getChildAt(0).getTop();
+            mStatusAdapter.setReplies(data);
+            final int position = mStatusAdapter.findPositionById(itemId);
+            mLayoutManager.scrollToPositionWithOffset(position, top);
+        } else {
+            mStatusAdapter.setReplies(data);
+        }
     }
 
     private static class StatusAdapter extends Adapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
@@ -269,6 +318,14 @@ public class StatusFragment extends BaseSupportFragment
             return -1;
         }
 
+        public StatusFragment getFragment() {
+            return mFragment;
+        }
+
+        public ImageLoaderWrapper getImageLoader() {
+            return mImageLoader;
+        }
+
         public Context getContext() {
             return mContext;
         }
@@ -297,34 +354,6 @@ public class StatusFragment extends BaseSupportFragment
             return getConversationCount() + 1 + getRepliesCount() + 1;
         }
 
-        public boolean isDetailMediaExpanded() {
-            return mDetailMediaExpanded;
-        }
-
-        @Override
-        public boolean isGapItem(int position) {
-            return false;
-        }
-
-        @Override
-        public void onGapClick(ViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public void onItemActionClick(ViewHolder holder, int id, int position) {
-
-        }
-
-        @Override
-        public void onItemMenuClick(ViewHolder holder, int position) {
-
-        }
-
-        public void onLoadMediaClick(DetailStatusViewHolder holder, ParcelableStatus status, int position) {
-            mFragment.onLoadMediaClick(holder, status, position);
-        }
-
         @Override
         public void onStatusClick(StatusViewHolder holder, int position) {
 
@@ -340,8 +369,23 @@ public class StatusFragment extends BaseSupportFragment
 
         }
 
-        public ImageLoaderWrapper getImageLoader() {
-            return mImageLoader;
+        public boolean isDetailMediaExpanded() {
+            return mDetailMediaExpanded;
+        }
+
+        public void setDetailMediaExpanded(boolean expanded) {
+            mDetailMediaExpanded = expanded;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public boolean isGapItem(int position) {
+            return false;
+        }
+
+        @Override
+        public void onGapClick(ViewHolder holder, int position) {
+
         }
 
         public boolean isNameFirst() {
@@ -350,16 +394,6 @@ public class StatusFragment extends BaseSupportFragment
 
         public boolean isNicknameOnly() {
             return mNicknameOnly;
-        }
-
-        @Override
-        public void onViewDetachedFromWindow(ViewHolder holder) {
-            super.onViewDetachedFromWindow(holder);
-        }
-
-        @Override
-        public void onViewRecycled(ViewHolder holder) {
-            super.onViewRecycled(holder);
         }
 
         @Override
@@ -387,16 +421,20 @@ public class StatusFragment extends BaseSupportFragment
         }
 
         @Override
-        public long getItemId(int position) {
-            final int conversationCount = getConversationCount();
-            if (position == getItemCount() - 1) {
-                return 4;
-            } else if (position < conversationCount) {
-                return mConversation != null ? mConversation.get(position).id : 2;
-            } else if (position > conversationCount) {
-                return mReplies != null ? mReplies.get(position - conversationCount - 1).id : 3;
-            } else {
-                return mStatus != null ? mStatus.id : 1;
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            switch (getItemViewType(position)) {
+                case VIEW_TYPE_DETAIL_STATUS: {
+                    final ParcelableStatus status = getStatus(position);
+                    final DetailStatusViewHolder detailHolder = (DetailStatusViewHolder) holder;
+                    detailHolder.showStatus(status);
+                    break;
+                }
+                case VIEW_TYPE_LIST_STATUS: {
+                    final ParcelableStatus status = getStatus(position);
+                    final StatusViewHolder statusHolder = (StatusViewHolder) holder;
+                    statusHolder.displayStatus(status);
+                    break;
+                }
             }
         }
 
@@ -415,39 +453,37 @@ public class StatusFragment extends BaseSupportFragment
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            switch (getItemViewType(position)) {
-                case VIEW_TYPE_DETAIL_STATUS: {
-                    final ParcelableStatus status = getStatus(position);
-                    final DetailStatusViewHolder detailHolder = (DetailStatusViewHolder) holder;
-                    detailHolder.showStatus(status);
-                    break;
-                }
-                case VIEW_TYPE_LIST_STATUS: {
-                    final ParcelableStatus status = getStatus(position);
-                    final StatusViewHolder statusHolder = (StatusViewHolder) holder;
-                    statusHolder.displayStatus(status);
-                    break;
-                }
+        public long getItemId(int position) {
+            final int conversationCount = getConversationCount();
+            if (position == getItemCount() - 1) {
+                return 4;
+            } else if (position < conversationCount) {
+                return mConversation != null ? mConversation.get(position).id : 2;
+            } else if (position > conversationCount) {
+                return mReplies != null ? mReplies.get(position - conversationCount - 1).id : 3;
+            } else {
+                return mStatus != null ? mStatus.id : 1;
             }
+        }
+
+        @Override
+        public int getItemCount() {
+            return getStatusCount();
+        }
+
+        @Override
+        public void onItemActionClick(ViewHolder holder, int id, int position) {
+
+        }
+
+        @Override
+        public void onItemMenuClick(ViewHolder holder, int position) {
+
         }
 
         public void setConversation(List<ParcelableStatus> conversation) {
             mConversation = conversation;
             notifyDataSetChanged();
-        }
-
-        public void setDetailMediaExpanded(boolean expanded) {
-            mDetailMediaExpanded = expanded;
-            notifyDataSetChanged();
-        }
-
-        private int getConversationCount() {
-            return mConversation != null ? mConversation.size() : 1;
-        }
-
-        private int getRepliesCount() {
-            return mReplies != null ? mReplies.size() : 1;
         }
 
         public void setReplies(List<ParcelableStatus> replies) {
@@ -460,16 +496,14 @@ public class StatusFragment extends BaseSupportFragment
             notifyDataSetChanged();
         }
 
-        @Override
-        public int getItemCount() {
-            return getStatusCount();
+        private int getConversationCount() {
+            return mConversation != null ? mConversation.size() : 1;
+        }
+
+        private int getRepliesCount() {
+            return mReplies != null ? mReplies.size() : 1;
         }
     }
-
-    private void onLoadMediaClick(DetailStatusViewHolder holder, ParcelableStatus status, int position) {
-        mStatusAdapter.setDetailMediaExpanded(true);
-    }
-
 
     static class LoadConversationTask extends TwidereAsyncTask<ParcelableStatus, ParcelableStatus,
             ListResponse<ParcelableStatus>> {
@@ -504,11 +538,6 @@ public class StatusFragment extends BaseSupportFragment
         }
 
         @Override
-        protected void onProgressUpdate(ParcelableStatus... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
         protected void onPostExecute(final ListResponse<ParcelableStatus> data) {
             if (data.hasData()) {
                 fragment.setConversation(data.getData());
@@ -517,30 +546,11 @@ public class StatusFragment extends BaseSupportFragment
             }
         }
 
-    }
-
-    private void setReplies(List<ParcelableStatus> data) {
-        if (mLayoutManager.getChildCount() != 0) {
-            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
-            final int top = mLayoutManager.getChildAt(0).getTop();
-            mStatusAdapter.setReplies(data);
-            final int position = mStatusAdapter.findPositionById(itemId);
-            mLayoutManager.scrollToPositionWithOffset(position, top);
-        } else {
-            mStatusAdapter.setReplies(data);
+        @Override
+        protected void onProgressUpdate(ParcelableStatus... values) {
+            super.onProgressUpdate(values);
         }
-    }
 
-    private void setConversation(List<ParcelableStatus> data) {
-        if (mLayoutManager.getChildCount() != 0) {
-            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
-            final int top = mLayoutManager.getChildAt(0).getTop();
-            mStatusAdapter.setConversation(data);
-            final int position = mStatusAdapter.findPositionById(itemId);
-            mLayoutManager.scrollToPositionWithOffset(position, top);
-        } else {
-            mStatusAdapter.setConversation(data);
-        }
     }
 
     private static class SpaceViewHolder extends ViewHolder {
@@ -550,12 +560,14 @@ public class StatusFragment extends BaseSupportFragment
         }
     }
 
-    private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener, OnMediaClickListener {
+    private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener, OnMediaClickListener, OnMenuItemClickListener {
 
         private final StatusAdapter adapter;
 
+        private final View cardContent, progressContainer;
         private final CardView cardView;
-        private final MenuBar menuBar;
+
+        private final TwidereMenuBar menuBar;
         private final TextView nameView, screenNameView;
         private final StatusTextView textView;
         private final CircularImageView profileImageView;
@@ -564,9 +576,13 @@ public class StatusFragment extends BaseSupportFragment
         private final TextView replyRetweetStatusView;
         private final View repliesContainer, retweetsContainer, favoritesContainer;
         private final TextView repliesCountView, retweetsCountView, favoritesCountView;
-        private final View cardContent, progressContainer;
-        private final View loadMedia;
+
+        private final View profileContainer;
+        private final View mediaPreviewContainer;
+        private final View mediaPreviewLoad;
         private final LinearLayout mediaPreviewGrid;
+
+        private final View locationContainer;
 
         public DetailStatusViewHolder(StatusAdapter adapter, View itemView) {
             super(itemView);
@@ -574,7 +590,7 @@ public class StatusFragment extends BaseSupportFragment
             cardView = (CardView) itemView.findViewById(R.id.card);
             cardContent = itemView.findViewById(R.id.card_content);
             progressContainer = itemView.findViewById(R.id.progress_container);
-            menuBar = (MenuBar) itemView.findViewById(R.id.menu_bar);
+            menuBar = (TwidereMenuBar) itemView.findViewById(R.id.menu_bar);
             nameView = (TextView) itemView.findViewById(R.id.name);
             screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
             textView = (StatusTextView) itemView.findViewById(R.id.text);
@@ -588,8 +604,11 @@ public class StatusFragment extends BaseSupportFragment
             repliesCountView = (TextView) itemView.findViewById(R.id.replies_count);
             retweetsCountView = (TextView) itemView.findViewById(R.id.retweets_count);
             favoritesCountView = (TextView) itemView.findViewById(R.id.favorites_count);
-            loadMedia = itemView.findViewById(R.id.load_media);
-            mediaPreviewGrid = (LinearLayout) itemView.findViewById(R.id.media_grid);
+            mediaPreviewContainer = itemView.findViewById(R.id.media_preview);
+            mediaPreviewLoad = itemView.findViewById(R.id.media_preview_load);
+            mediaPreviewGrid = (LinearLayout) itemView.findViewById(R.id.media_preview_grid);
+            locationContainer = itemView.findViewById(R.id.location_container);
+            profileContainer = itemView.findViewById(R.id.profile_container);
 
             setIsRecyclable(false);
             initViews();
@@ -598,22 +617,136 @@ public class StatusFragment extends BaseSupportFragment
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.load_media: {
+                case R.id.media_preview_load: {
+                    adapter.setDetailMediaExpanded(true);
+                    break;
+                }
+                case R.id.profile_container: {
                     final ParcelableStatus status = adapter.getStatus(getPosition());
-                    adapter.onLoadMediaClick(this, status, getPosition());
+                    final Fragment fragment = adapter.getFragment();
+                    final FragmentActivity activity = fragment.getActivity();
+                    final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
+                            new Pair<View, String>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                            new Pair<View, String>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+                    openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name,
+                            activityOption);
                     break;
                 }
             }
         }
 
         @Override
-        public void onMediaClick(View view, ParcelableMedia media) {
-            adapter.mFragment.onMediaClick(view, media);
+        public boolean onMenuItemClick(MenuItem item) {
+            final StatusFragment fragment = adapter.getFragment();
+            final ParcelableStatus status = adapter.getStatus(getPosition());
+            if (status == null || fragment == null) return false;
+            final AsyncTwitterWrapper twitter = fragment.getTwitterWrapper();
+            final FragmentActivity activity = fragment.getActivity();
+            switch (item.getItemId()) {
+                case MENU_SHARE: {
+                    startStatusShareChooser(activity, status);
+                    break;
+                }
+                case MENU_COPY: {
+                    if (ClipboardUtils.setText(activity, status.text_plain)) {
+                        showOkMessage(activity, R.string.text_copied, false);
+                    }
+                    break;
+                }
+                case MENU_RETWEET: {
+                    if (isMyRetweet(status)) {
+                        cancelRetweet(twitter, status);
+                    } else {
+                        final long id_to_retweet = status.is_retweet && status.retweet_id > 0 ? status.retweet_id
+                                : status.id;
+                        twitter.retweetStatus(status.account_id, id_to_retweet);
+                    }
+                    break;
+                }
+                case MENU_QUOTE: {
+                    final Intent intent = new Intent(INTENT_ACTION_QUOTE);
+                    intent.putExtra(EXTRA_STATUS, status);
+                    activity.startActivity(intent);
+                    break;
+                }
+                case MENU_REPLY: {
+                    final Intent intent = new Intent(INTENT_ACTION_REPLY);
+                    intent.putExtra(EXTRA_STATUS, status);
+                    activity.startActivity(intent);
+                    break;
+                }
+                case MENU_FAVORITE: {
+                    if (status.is_favorite) {
+                        twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    } else {
+                        twitter.createFavoriteAsync(status.account_id, status.id);
+                    }
+                    break;
+                }
+                case MENU_DELETE: {
+                    DestroyStatusDialogFragment.show(fragment.getFragmentManager(), status);
+                    break;
+                }
+                case MENU_ADD_TO_FILTER: {
+                    AddStatusFilterDialogFragment.show(fragment.getFragmentManager(), status);
+                    break;
+                }
+                case MENU_SET_COLOR: {
+                    final Intent intent = new Intent(activity, ColorPickerDialogActivity.class);
+                    final int color = getUserColor(activity, status.user_id, true);
+                    if (color != 0) {
+                        intent.putExtra(EXTRA_COLOR, color);
+                    }
+                    intent.putExtra(EXTRA_CLEAR_BUTTON, color != 0);
+                    intent.putExtra(EXTRA_ALPHA_SLIDER, false);
+                    fragment.startActivityForResult(intent, REQUEST_SET_COLOR);
+                    break;
+                }
+                case MENU_CLEAR_NICKNAME: {
+                    clearUserNickname(activity, status.user_id);
+                    adapter.notifyDataSetChanged();
+                    break;
+                }
+                case MENU_SET_NICKNAME: {
+                    final String nick = getUserNickname(activity, status.user_id, true);
+                    SetUserNicknameDialogFragment.show(fragment.getFragmentManager(), status.user_id, nick);
+                    break;
+                }
+                case MENU_TRANSLATE: {
+                    final ParcelableAccountWithCredentials account
+                            = ParcelableAccount.getAccountWithCredentials(activity, status.account_id);
+                    if (ParcelableAccountWithCredentials.isOfficialCredentials(activity, account)) {
+                        StatusTranslateDialogFragment.show(fragment.getFragmentManager(), status);
+                    } else {
+
+                    }
+                    break;
+                }
+                case MENU_OPEN_WITH_ACCOUNT: {
+                    final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
+                    intent.setClass(activity, AccountSelectorActivity.class);
+                    intent.putExtra(EXTRA_SINGLE_SELECTION, true);
+                    activity.startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
+                    break;
+                }
+                default: {
+                    if (item.getIntent() != null) {
+                        try {
+                            activity.startActivity(item.getIntent());
+                        } catch (final ActivityNotFoundException e) {
+                            Log.w(LOGTAG, e);
+                            return false;
+                        }
+                    }
+                    break;
+                }
+            }
+            return true;
         }
 
-        private void initViews() {
-            menuBar.inflate(R.menu.menu_status);
-            loadMedia.setOnClickListener(this);
+        @Override
+        public void onMediaClick(View view, ParcelableMedia media) {
+            adapter.mFragment.onMediaClick(view, media);
         }
 
         public void showStatus(ParcelableStatus status) {
@@ -677,29 +810,46 @@ public class StatusFragment extends BaseSupportFragment
                 profileTypeView.setVisibility(View.GONE);
             }
 
-            if (adapter.isDetailMediaExpanded()) {
-                loadMedia.setVisibility(View.GONE);
+            if (status.media == null) {
+                mediaPreviewContainer.setVisibility(View.GONE);
+            } else if (adapter.isDetailMediaExpanded()) {
+                mediaPreviewContainer.setVisibility(View.VISIBLE);
+                mediaPreviewLoad.setVisibility(View.GONE);
                 mediaPreviewGrid.setVisibility(View.VISIBLE);
                 mediaPreviewGrid.removeAllViews();
-                if (status.media != null) {
-                    final int maxColumns = resources.getInteger(R.integer.grid_column_image_preview);
-                    MediaPreviewUtils.addToLinearLayout(mediaPreviewGrid, loader, status.media,
-                            maxColumns, this);
-                }
+                final int maxColumns = resources.getInteger(R.integer.grid_column_image_preview);
+                MediaPreviewUtils.addToLinearLayout(mediaPreviewGrid, loader, status.media,
+                        maxColumns, this);
             } else {
-                loadMedia.setVisibility(View.VISIBLE);
+                mediaPreviewContainer.setVisibility(View.VISIBLE);
+                mediaPreviewLoad.setVisibility(View.VISIBLE);
                 mediaPreviewGrid.setVisibility(View.GONE);
                 mediaPreviewGrid.removeAllViews();
             }
-//            setMenuForStatus(context, menuBar.getMenu(), status);
+            setMenuForStatus(context, menuBar.getMenu(), status);
             menuBar.show();
         }
+
+        private void initViews() {
+            menuBar.setOnMenuItemClickListener(this);
+            menuBar.inflate(R.menu.menu_status);
+            mediaPreviewLoad.setOnClickListener(this);
+            profileContainer.setOnClickListener(this);
+
+            ViewCompat.setTransitionName(profileImageView, TRANSITION_NAME_PROFILE_IMAGE);
+            ViewCompat.setTransitionName(profileTypeView, TRANSITION_NAME_PROFILE_TYPE);
+        }
+
+
     }
 
-    private class MyLinearLayoutManager extends LinearLayoutManager {
+    private static class MyLinearLayoutManager extends LinearLayoutManager {
 
-        public MyLinearLayoutManager(Context context) {
+        private final RecyclerView recyclerView;
+
+        public MyLinearLayoutManager(Context context, RecyclerView recyclerView) {
             super(context);
+            this.recyclerView = recyclerView;
         }
 
         @Override
@@ -720,7 +870,7 @@ public class StatusFragment extends BaseSupportFragment
                     }
                 }
                 if (heightBeforeSpace != 0) {
-                    final int spaceHeight = mRecyclerView.getMeasuredHeight() - heightBeforeSpace;
+                    final int spaceHeight = recyclerView.getMeasuredHeight() - heightBeforeSpace;
                     return Math.max(0, spaceHeight);
                 }
             }
@@ -728,4 +878,5 @@ public class StatusFragment extends BaseSupportFragment
         }
 
     }
+
 }

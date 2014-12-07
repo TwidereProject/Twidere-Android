@@ -20,10 +20,8 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
@@ -56,6 +54,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ImagePickerActivity;
@@ -79,6 +80,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
@@ -122,22 +124,17 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
 
     private DirectMessagesConversationAdapter mAdapter;
 
-    private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            if (getActivity() == null || !isAdded() || isDetached()) return;
-            final String action = intent.getAction();
-            if (BROADCAST_TASK_STATE_CHANGED.equals(action)) {
-                updateRefreshState();
-            }
-        }
-    };
 
     private ParcelableAccount mSender;
     private ParcelableUser mRecipient;
     private ImageLoaderWrapper mImageLoader;
     private IColorLabelView mProfileImageContainer;
+
+
+    @Subscribe
+    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
+        updateRefreshState();
+    }
 
     @Override
     public void afterTextChanged(final Editable s) {
@@ -440,14 +437,15 @@ public class DirectMessagesConversationFragment extends BasePullToRefreshListFra
     @Override
     public void onStart() {
         super.onStart();
-        final IntentFilter filter = new IntentFilter(BROADCAST_TASK_STATE_CHANGED);
-        registerReceiver(mStatusReceiver, filter);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
         updateTextCount();
     }
 
     @Override
     public void onStop() {
-        unregisterReceiver(mStatusReceiver);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();
         }

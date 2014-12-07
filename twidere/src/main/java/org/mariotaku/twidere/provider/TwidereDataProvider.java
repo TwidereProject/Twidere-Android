@@ -42,10 +42,15 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
+
+import com.squareup.otto.Bus;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.Constants;
@@ -75,6 +80,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereQueryBuilder;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.NoDuplicatesCopyOnWriteArrayList;
+import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -120,6 +126,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;
     private HostAddressResolver mHostAddressResolver;
+    private Handler mHandler;
 
     private final List<ParcelableStatus> mNewStatuses = new CopyOnWriteArrayList<>();
     private final List<ParcelableStatus> mNewMentions = new CopyOnWriteArrayList<>();
@@ -147,7 +154,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     };
 
     @Override
-    public int bulkInsert(final Uri uri, final ContentValues[] values) {
+    public int bulkInsert(final Uri uri, @NonNull final ContentValues[] values) {
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);
@@ -159,7 +166,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return 0;
             }
             int result = 0;
-            if (table != null && values != null) {
+            if (table != null) {
                 mDatabaseWrapper.beginTransaction();
                 final boolean replaceOnConflict = shouldReplaceOnConflict(tableId);
                 for (final ContentValues contentValues : values) {
@@ -270,6 +277,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     public boolean onCreate() {
         final Context context = getContext();
         final TwidereApplication app = TwidereApplication.getInstance(context);
+        mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
         mHostAddressResolver = app.getHostAddressResolver();
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -1060,10 +1068,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void notifyUnreadCountChanged(final int position) {
-        final Intent intent = new Intent(BROADCAST_UNREAD_COUNT_UPDATED);
-        intent.putExtra(EXTRA_TAB_POSITION, position);
         final Context context = getContext();
-        context.sendBroadcast(intent);
+        final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                bus.post(new UnreadCountUpdatedEvent(position));
+            }
+        });
         notifyContentObserver(UnreadCounts.CONTENT_URI);
     }
 

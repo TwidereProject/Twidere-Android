@@ -275,6 +275,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         return profileImageView;
     }
 
+    public ImageView getProfileTypeView() {
+        return profileTypeView;
+    }
+
 
     @Override
     public void onClick(View v) {

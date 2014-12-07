@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
@@ -32,55 +33,55 @@ import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 public class HandleSpanClickTextView extends ThemedTextView {
 
-	public HandleSpanClickTextView(final Context context) {
-		super(context);
-	}
+    public HandleSpanClickTextView(final Context context) {
+        super(context);
+    }
 
-	public HandleSpanClickTextView(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public HandleSpanClickTextView(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public HandleSpanClickTextView(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public HandleSpanClickTextView(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	public boolean onTouchEvent(final MotionEvent event) {
-		final Spannable buffer = SpannableString.valueOf(getText());
-		final int action = event.getAction();
-		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
-			int x = (int) event.getX();
-			int y = (int) event.getY();
+    @Override
+    public boolean onTouchEvent(@NonNull final MotionEvent event) {
+        final Spannable buffer = SpannableString.valueOf(getText());
+        final int action = event.getAction();
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
 
-			x -= getTotalPaddingLeft();
-			y -= getTotalPaddingTop();
+            x -= getTotalPaddingLeft();
+            y -= getTotalPaddingTop();
 
-			x += getScrollX();
-			y += getScrollY();
+            x += getScrollX();
+            y += getScrollY();
 
-			final Layout layout = getLayout();
-			final int line = layout.getLineForVertical(y);
-			final int off = layout.getOffsetForHorizontal(line, x);
-			final float lineWidth = layout.getLineWidth(line);
+            final Layout layout = getLayout();
+            final int line = layout.getLineForVertical(y);
+            final int off = layout.getOffsetForHorizontal(line, x);
+            final float lineWidth = layout.getLineWidth(line);
 
-			final ClickableSpan[] links = buffer.getSpans(off, off, ClickableSpan.class);
+            final ClickableSpan[] links = buffer.getSpans(off, off, ClickableSpan.class);
 
-			if (links.length != 0 && x <= lineWidth) {
-				final ClickableSpan link = links[0];
-				if (action == MotionEvent.ACTION_UP) {
-					Selection.removeSelection(buffer);
-					setClickable(false);
-					link.onClick(this);
-					return true;
-				} else if (action == MotionEvent.ACTION_DOWN) {
-					Selection.setSelection(buffer, buffer.getSpanStart(link), buffer.getSpanEnd(link));
-					setClickable(true);
-				}
-			} else {
-				Selection.removeSelection(buffer);
-				setClickable(false);
-			}
-		}
-		return super.onTouchEvent(event);
-	}
+            if (links.length != 0 && x <= lineWidth) {
+                final ClickableSpan link = links[0];
+                if (action == MotionEvent.ACTION_UP) {
+                    Selection.removeSelection(buffer);
+                    setClickable(false);
+                    link.onClick(this);
+                    return true;
+                } else {
+                    Selection.setSelection(buffer, buffer.getSpanStart(link), buffer.getSpanEnd(link));
+                    setClickable(true);
+                }
+            } else {
+                Selection.removeSelection(buffer);
+                setClickable(false);
+            }
+        }
+        return super.onTouchEvent(event);
+    }
 }

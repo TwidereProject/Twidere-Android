@@ -8,13 +8,6 @@
         android:title="@string/edit_profile"
         android:visible="false"/>
     <item
-        android:id="@id/follow"
-        android:enabled="false"
-        android:visible="false"
-        android:icon="@android:color/transparent"
-        android:showAsAction="always"
-        android:title="@string/follow"/>
-    <item
         android:id="@id/mention"
         android:icon="@drawable/ic_action_at"
         android:showAsAction="ifRoom"

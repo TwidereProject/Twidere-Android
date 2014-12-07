@@ -31,8 +31,8 @@ public class IconActionButton extends ImageButton {
         final int defaultActivatedColor = defaultValues.getColor(1, 0);
         defaultValues.recycle();
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton);
-        mColor = a.getColor(R.styleable.IconActionButton_color, defaultColor);
-        mActivatedColor = a.getColor(R.styleable.IconActionButton_activatedColor, defaultActivatedColor);
+        mColor = a.getColor(R.styleable.IconActionButton_iabColor, defaultColor);
+        mActivatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, defaultActivatedColor);
         a.recycle();
         updateColorFilter();
     }

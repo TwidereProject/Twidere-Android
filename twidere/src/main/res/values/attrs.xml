@@ -73,14 +73,14 @@
         <attr name="fontPath" format="string"/>
     </declare-styleable>
     <declare-styleable name="IconActionButton">
-        <attr name="color" format="color"/>
-        <attr name="activatedColor" format="color"/>
+        <attr name="iabColor" format="color"/>
+        <attr name="iabActivatedColor" format="color"/>
     </declare-styleable>
     <declare-styleable name="CircularImageView">
-        <attr name="border" format="boolean"/>
-        <attr name="borderWidth" format="dimension"/>
-        <attr name="borderColor" format="color"/>
-        <attr name="elevation" format="dimension"/>
+        <attr name="civBorder" format="boolean"/>
+        <attr name="civBorderWidth" format="dimension"/>
+        <attr name="civBorderColor" format="color"/>
+        <attr name="civElevation" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="HeaderDrawerLayout">
         <attr name="headerLayout" format="reference"/>

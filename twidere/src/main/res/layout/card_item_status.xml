@@ -197,7 +197,7 @@
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
                     android:textAppearance="?android:textAppearanceSmall"
-                    app:activatedColor="@color/highlight_reply"/>
+                    app:iabActivatedColor="@color/highlight_reply"/>
 
                 <org.mariotaku.twidere.view.ActionIconTextView
                     android:id="@+id/retweet_count"
@@ -210,7 +210,7 @@
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
                     android:textAppearance="?android:textAppearanceSmall"
-                    app:activatedColor="@color/highlight_retweet"/>
+                    app:iabActivatedColor="@color/highlight_retweet"/>
 
                 <org.mariotaku.twidere.view.ActionIconTextView
                     android:id="@+id/favorite_count"
@@ -223,7 +223,7 @@
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
                     android:textAppearance="?android:textAppearanceSmall"
-                    app:activatedColor="@color/highlight_favorite"/>
+                    app:iabActivatedColor="@color/highlight_favorite"/>
 
             </LinearLayout>
         </HorizontalScrollView>

@@ -609,7 +609,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             mOriginalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT);
             mTempPhotoUri = savedInstanceState.getParcelable(EXTRA_TEMP_URI);
         } else {
-            // The activity was first created
+            // The context was first created
             final int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1);
             final long notificationAccount = intent.getLongExtra(EXTRA_NOTIFICATION_ACCOUNT, -1);
             if (notificationId != -1) {

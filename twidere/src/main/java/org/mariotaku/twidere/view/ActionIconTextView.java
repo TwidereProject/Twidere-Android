@@ -54,8 +54,8 @@ public class ActionIconTextView extends TextView {
         final int defaultActivatedColor = defaultValues.getColor(0, 0);
         defaultValues.recycle();
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton);
-        mColor = a.getColor(R.styleable.IconActionButton_color, 0);
-        mActivatedColor = a.getColor(R.styleable.IconActionButton_activatedColor, defaultActivatedColor);
+        mColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);
+        mActivatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, defaultActivatedColor);
         a.recycle();
         updateColorFilter();
     }

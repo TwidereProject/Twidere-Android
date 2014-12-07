@@ -94,22 +94,22 @@ public class CircularImageView extends ImageView {
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setStyle(Paint.Style.STROKE);
 
-        if (a.hasValue(R.styleable.CircularImageView_border)) {
-            setBorderEnabled(a.getBoolean(R.styleable.CircularImageView_border, false));
-        } else if (a.hasValue(R.styleable.CircularImageView_borderColor)
-                || a.hasValue(R.styleable.CircularImageView_borderWidth)) {
+        if (a.hasValue(R.styleable.CircularImageView_civBorder)) {
+            setBorderEnabled(a.getBoolean(R.styleable.CircularImageView_civBorder, false));
+        } else if (a.hasValue(R.styleable.CircularImageView_civBorderColor)
+                || a.hasValue(R.styleable.CircularImageView_civBorderWidth)) {
             setBorderEnabled(true);
         }
-        setBorderColor(a.getColor(R.styleable.CircularImageView_borderColor, Color.TRANSPARENT));
-        setBorderWidth(a.getDimensionPixelSize(R.styleable.CircularImageView_borderWidth, 0));
+        setBorderColor(a.getColor(R.styleable.CircularImageView_civBorderColor, Color.TRANSPARENT));
+        setBorderWidth(a.getDimensionPixelSize(R.styleable.CircularImageView_civBorderWidth, 0));
 
         if (USE_OUTLINE) {
-            if (a.hasValue(R.styleable.CircularImageView_elevation)) {
+            if (a.hasValue(R.styleable.CircularImageView_civElevation)) {
                 ViewCompat.setElevation(this,
-                        a.getDimensionPixelSize(R.styleable.CircularImageView_elevation, 0));
+                        a.getDimensionPixelSize(R.styleable.CircularImageView_civElevation, 0));
             }
         } else {
-            mShadowRadius = a.getDimensionPixelSize(R.styleable.CircularImageView_elevation, 0);
+            mShadowRadius = a.getDimensionPixelSize(R.styleable.CircularImageView_civElevation, 0);
         }
 
         a.recycle();

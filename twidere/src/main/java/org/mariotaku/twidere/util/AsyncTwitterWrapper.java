@@ -27,6 +27,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.util.LongSparseArray;
+import android.util.Log;
+
+import com.squareup.otto.Bus;
 
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
@@ -51,15 +55,17 @@ import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.Mentions;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
+import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
+import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import edu.ucdavis.earlybird.ProfilingUtil;
@@ -268,24 +274,26 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.hasRunningTask();
     }
 
-    public boolean isCreatingFriendship(final long accountId, final long user_id) {
+    public boolean isCreatingFriendship(final long accountId, final long userId) {
         for (final ManagedAsyncTask<?, ?, ?> task : mAsyncTaskManager.getTaskSpecList()) {
             if (task instanceof CreateFriendshipTask) {
-                final CreateFriendshipTask create_friendship = (CreateFriendshipTask) task;
-                if (create_friendship.getStatus() == TwidereAsyncTask.Status.RUNNING
-                        && create_friendship.getAccountId() == accountId && create_friendship.getUserId() == user_id)
+                final CreateFriendshipTask createFriendshipTask = (CreateFriendshipTask) task;
+                if (createFriendshipTask.getStatus() == TwidereAsyncTask.Status.RUNNING
+                        && createFriendshipTask.getAccountId() == accountId
+                        && createFriendshipTask.getUserId() == userId)
                     return true;
             }
         }
         return false;
     }
 
-    public boolean isDestroyingFriendship(final long accountId, final long user_id) {
+    public boolean isDestroyingFriendship(final long accountId, final long userId) {
         for (final ManagedAsyncTask<?, ?, ?> task : mAsyncTaskManager.getTaskSpecList()) {
             if (task instanceof DestroyFriendshipTask) {
-                final DestroyFriendshipTask create_friendship = (DestroyFriendshipTask) task;
-                if (create_friendship.getStatus() == TwidereAsyncTask.Status.RUNNING
-                        && create_friendship.getAccountId() == accountId && create_friendship.getUserId() == user_id)
+                final DestroyFriendshipTask destroyFriendshipTask = (DestroyFriendshipTask) task;
+                if (destroyFriendshipTask.getStatus() == TwidereAsyncTask.Status.RUNNING
+                        && destroyFriendshipTask.getAccountId() == accountId
+                        && destroyFriendshipTask.getUserId() == userId)
                     return true;
             }
         }
@@ -343,7 +351,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return getHomeTimelineAsync(accountIds, null, statusSinceIds);
     }
 
-    public void removeUnreadCountsAsync(final int position, final Map<Long, Set<Long>> counts) {
+    public void removeUnreadCountsAsync(final int position, final LongSparseArray<Set<Long>> counts) {
         final RemoveUnreadCountsTask task = new RemoveUnreadCountsTask(position, counts);
         task.executeTask();
     }
@@ -427,7 +435,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return sInstance = new AsyncTwitterWrapper(context);
     }
 
-    public static class UpdateProfileBannerImageTask extends ManagedAsyncTask<Void, Void, SingleResponse<Boolean>> {
+    public static class UpdateProfileBannerImageTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
         private final long mAccountId;
         private final Uri mImageUri;
@@ -444,58 +452,84 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<Boolean> doInBackground(final Void... params) {
-            return TwitterWrapper.updateProfileBannerImage(mContext, mAccountId, mImageUri, mDeleteImage);
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
+            try {
+                final Twitter twitter = getTwitterInstance(mContext, mAccountId, true);
+                TwitterWrapper.updateProfileBannerImage(mContext, twitter, mImageUri, mDeleteImage);
+                // Wait for 5 seconds, see
+                // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
+                try {
+                    Thread.sleep(5000L);
+                } catch (InterruptedException e) {
+                    Log.w(LOGTAG, e);
+                }
+                final User user = TwitterWrapper.tryShowUser(twitter, mAccountId, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId));
+            } catch (TwitterException | FileNotFoundException e) {
+                return SingleResponse.getInstance(e);
+            }
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<Boolean> result) {
-            if (Boolean.TRUE.equals(result.getData())) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
+            super.onPostExecute(result);
+            if (result.hasData()) {
                 Utils.showOkMessage(mContext, R.string.profile_banner_image_updated, false);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new ProfileUpdatedEvent(result.getData()));
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_updating_profile_banner_image, result.getException(),
                         true);
             }
-            final Intent intent = new Intent(BROADCAST_PROFILE_BANNER_UPDATED);
-            intent.putExtra(EXTRA_USER_ID, mAccountId);
-            mContext.sendBroadcast(intent);
-            super.onPostExecute(result);
         }
 
     }
 
     public static class UpdateProfileImageTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
-        private final long account_id;
-        private final Uri image_uri;
-        private final boolean delete_image;
-        private final Context context;
+        private final long mAccountId;
+        private final Uri mImageUri;
+        private final boolean mDeleteImage;
+        private final Context mContext;
 
         public UpdateProfileImageTask(final Context context, final AsyncTaskManager manager, final long account_id,
                                       final Uri image_uri, final boolean delete_image) {
             super(context, manager);
-            this.context = context;
-            this.account_id = account_id;
-            this.image_uri = image_uri;
-            this.delete_image = delete_image;
+            this.mContext = context;
+            this.mAccountId = account_id;
+            this.mImageUri = image_uri;
+            this.mDeleteImage = delete_image;
         }
 
         @Override
         protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
-            return TwitterWrapper.updateProfileImage(context, account_id, image_uri, delete_image);
+            try {
+                final Twitter twitter = getTwitterInstance(mContext, mAccountId, true);
+                TwitterWrapper.updateProfileImage(mContext, twitter, mImageUri, mDeleteImage);
+                // Wait for 5 seconds, see
+                // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
+                try {
+                    Thread.sleep(5000L);
+                } catch (InterruptedException e) {
+                    Log.w(LOGTAG, e);
+                }
+                final User user = TwitterWrapper.tryShowUser(twitter, mAccountId, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId));
+            } catch (TwitterException | FileNotFoundException e) {
+                return SingleResponse.getInstance(e);
+            }
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
-            if (result.hasData()) {
-                Utils.showOkMessage(context, R.string.profile_image_updated, false);
-            } else {
-                Utils.showErrorMessage(context, R.string.action_updating_profile_image, result.getException(), true);
-            }
-            final Intent intent = new Intent(BROADCAST_PROFILE_UPDATED);
-            intent.putExtra(EXTRA_USER_ID, account_id);
-            context.sendBroadcast(intent);
             super.onPostExecute(result);
+            if (result.hasData()) {
+                Utils.showOkMessage(mContext, R.string.profile_image_updated, false);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new ProfileUpdatedEvent(result.getData()));
+            } else {
+                Utils.showErrorMessage(mContext, R.string.action_updating_profile_image, result.getException(), true);
+            }
         }
 
     }
@@ -526,13 +560,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             if (result.hasData()) {
                 Utils.showOkMessage(context, R.string.profile_updated, false);
+                final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
+                bus.post(new ProfileUpdatedEvent(result.getData()));
             } else {
                 Utils.showErrorMessage(context, context.getString(R.string.action_updating_profile),
                         result.getException(), true);
             }
-            final Intent intent = new Intent(BROADCAST_PROFILE_IMAGE_UPDATED);
-            intent.putExtra(EXTRA_USER_ID, account_id);
-            context.sendBroadcast(intent);
             super.onPostExecute(result);
         }
 
@@ -676,7 +709,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class CreateBlockTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class CreateBlockTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
         private final long account_id, user_id;
 
@@ -687,7 +720,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
             final Twitter twitter = getTwitterInstance(mContext, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
@@ -703,21 +736,20 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 // list.
                 final Expression where = Expression.equals(CachedUsers.USER_ID, user_id);
                 mResolver.delete(CachedUsers.CONTENT_URI, where.getSQL(), null);
-                return SingleResponse.getInstance(user, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, account_id), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
-            if (result.hasData() && result.getData().getId() > 0) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
+            if (result.hasData()) {
                 final String message = mContext.getString(R.string.blocked_user,
                         getUserName(mContext, result.getData()));
                 mMessagesManager.showInfoMessage(message, false);
-                final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-                intent.putExtra(EXTRA_USER_ID, user_id);
-                mContext.sendBroadcast(intent);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_blocking, result.getException(), true);
             }
@@ -726,7 +758,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class CreateMuteTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class CreateMuteTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
         private final long mAccountId, mUserId;
 
@@ -737,7 +769,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
             final Twitter twitter = getTwitterInstance(mContext, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
@@ -746,21 +778,20 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         Expression.equals(Statuses.USER_ID, mUserId));
                 mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
 
-                return SingleResponse.getInstance(user, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
-            if (result.hasData() && result.getData().getId() > 0) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
+            if (result.hasData()) {
                 final String message = mContext.getString(R.string.muted_user,
                         getUserName(mContext, result.getData()));
                 mMessagesManager.showInfoMessage(message, false);
-                final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-                intent.putExtra(EXTRA_USER_ID, mUserId);
-                mContext.sendBroadcast(intent);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_muting, result.getException(), true);
             }
@@ -815,19 +846,19 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class CreateFriendshipTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class CreateFriendshipTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
-        private final long account_id;
+        private final long mAccountId;
         private final long user_id;
 
-        public CreateFriendshipTask(final long account_id, final long user_id) {
+        public CreateFriendshipTask(final long accountId, final long user_id) {
             super(mContext, mAsyncTaskManager);
-            this.account_id = account_id;
+            this.mAccountId = accountId;
             this.user_id = user_id;
         }
 
         public long getAccountId() {
-            return account_id;
+            return mAccountId;
         }
 
         public long getUserId() {
@@ -835,35 +866,34 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
 
-            final Twitter twitter = getTwitterInstance(mContext, account_id, false);
+            final Twitter twitter = getTwitterInstance(mContext, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.createFriendship(user_id);
-                return SingleResponse.getInstance(user, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             if (result.hasData()) {
-                final User user = result.getData();
+                final ParcelableUser user = result.getData();
                 final String message;
-                if (user.isProtected()) {
+                if (user.is_protected) {
                     message = mContext.getString(R.string.sent_follow_request_to_user, getUserName(mContext, user));
                 } else {
                     message = mContext.getString(R.string.followed_user, getUserName(mContext, user));
                 }
                 mMessagesManager.showOkMessage(message, false);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_following, result.getException(), false);
             }
-            final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-            intent.putExtra(EXTRA_USER_ID, user_id);
-            mContext.sendBroadcast(intent);
             super.onPostExecute(result);
         }
 
@@ -1153,7 +1183,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class DestroyBlockTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class DestroyBlockTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
         private final long mAccountId;
         private final long mUserId;
@@ -1165,12 +1195,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
             final Twitter twitter = getTwitterInstance(mContext, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.destroyBlock(mUserId);
-                return SingleResponse.getInstance(user, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -1178,14 +1208,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             if (result.hasData()) {
                 final String message = mContext.getString(R.string.unblocked_user,
                         getUserName(mContext, result.getData()));
                 mMessagesManager.showInfoMessage(message, false);
-                final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-                intent.putExtra(EXTRA_USER_ID, mUserId);
-                mContext.sendBroadcast(intent);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_unblocking, result.getException(), true);
             }
@@ -1194,7 +1223,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class DestroyMuteTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class DestroyMuteTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
         private final long mAccountId;
         private final long mUserId;
@@ -1206,12 +1235,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
             final Twitter twitter = getTwitterInstance(mContext, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.destroyMute(mUserId);
-                return SingleResponse.getInstance(user, null);
+                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -1219,14 +1248,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             if (result.hasData()) {
                 final String message = mContext.getString(R.string.unmuted_user,
                         getUserName(mContext, result.getData()));
                 mMessagesManager.showInfoMessage(message, false);
-                final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-                intent.putExtra(EXTRA_USER_ID, mUserId);
-                mContext.sendBroadcast(intent);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_unmuting, result.getException(), true);
             }
@@ -1337,19 +1365,19 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class DestroyFriendshipTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class DestroyFriendshipTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
-        private final long account_id;
+        private final long mAccountId;
         private final long user_id;
 
-        public DestroyFriendshipTask(final long account_id, final long user_id) {
+        public DestroyFriendshipTask(final long accountId, final long user_id) {
             super(mContext, mAsyncTaskManager);
-            this.account_id = account_id;
+            mAccountId = accountId;
             this.user_id = user_id;
         }
 
         public long getAccountId() {
-            return account_id;
+            return mAccountId;
         }
 
         public long getUserId() {
@@ -1357,18 +1385,18 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
 
-            final Twitter twitter = getTwitterInstance(mContext, account_id, false);
+            final Twitter twitter = getTwitterInstance(mContext, mAccountId, false);
             if (twitter != null) {
                 try {
                     final User user = twitter.destroyFriendship(user_id);
                     // remove user tweets and retweets
-                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
                             Expression.or(Expression.equals(Statuses.USER_ID, user_id),
                                     Expression.equals(Statuses.RETWEETED_BY_USER_ID, user_id)));
                     mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
-                    return SingleResponse.getInstance(user, null);
+                    return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
                 } catch (final TwitterException e) {
                     return SingleResponse.getInstance(null, e);
                 }
@@ -1377,14 +1405,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             if (result.hasData()) {
                 final String message = mContext.getString(R.string.unfollowed_user,
                         getUserName(mContext, result.getData()));
                 mMessagesManager.showInfoMessage(message, false);
-                final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-                intent.putExtra(EXTRA_USER_ID, user_id);
-                mContext.sendBroadcast(intent);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_unfollowing, result.getException(), true);
             }
@@ -1888,9 +1915,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     final class RemoveUnreadCountsTask extends TwidereAsyncTask<Void, Void, Integer> {
         private final int position;
-        private final Map<Long, Set<Long>> counts;
+        private final LongSparseArray<Set<Long>> counts;
 
-        RemoveUnreadCountsTask(final int position, final Map<Long, Set<Long>> counts) {
+        RemoveUnreadCountsTask(final int position, final LongSparseArray<Set<Long>> counts) {
             this.position = position;
             this.counts = counts;
         }
@@ -1956,24 +1983,24 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class ReportSpamTask extends ManagedAsyncTask<Void, Void, SingleResponse<User>> {
+    class ReportSpamTask extends ManagedAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
-        private final long account_id;
+        private final long mAccountId;
         private final long user_id;
 
-        public ReportSpamTask(final long account_id, final long user_id) {
+        public ReportSpamTask(final long accountId, final long user_id) {
             super(mContext, mAsyncTaskManager);
-            this.account_id = account_id;
+            this.mAccountId = accountId;
             this.user_id = user_id;
         }
 
         @Override
-        protected SingleResponse<User> doInBackground(final Void... params) {
-            final Twitter twitter = getTwitterInstance(mContext, account_id, false);
+        protected SingleResponse<ParcelableUser> doInBackground(final Void... params) {
+            final Twitter twitter = getTwitterInstance(mContext, mAccountId, false);
             if (twitter != null) {
                 try {
                     final User user = twitter.reportSpam(user_id);
-                    return SingleResponse.getInstance(user, null);
+                    return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
                 } catch (final TwitterException e) {
                     return SingleResponse.getInstance(null, e);
                 }
@@ -1982,17 +2009,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<User> result) {
-            if (result.hasData() && result.getData().getId() > 0) {
+        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
+            if (result.hasData()) {
                 for (final Uri uri : STATUSES_URIS) {
-                    final String where = Statuses.ACCOUNT_ID + " = " + account_id + " AND " + Statuses.USER_ID + " = "
+                    final String where = Statuses.ACCOUNT_ID + " = " + mAccountId + " AND " + Statuses.USER_ID + " = "
                             + user_id;
                     mResolver.delete(uri, where, null);
                 }
                 mMessagesManager.showInfoMessage(R.string.reported_user_for_spam, false);
-                final Intent intent = new Intent(BROADCAST_FRIENDSHIP_CHANGED);
-                intent.putExtra(EXTRA_USER_ID, user_id);
-                mContext.sendBroadcast(intent);
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new FriendshipUpdatedEvent(result.getData()));
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_reporting_for_spam, result.getException(), true);
             }
@@ -2117,7 +2143,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<Boolean> response) {
             if (Boolean.TRUE.equals(response.getData())) {
-                mContext.sendBroadcast(new Intent(BROADCAST_HOME_TIMELINE_REFRESHED));
+                //TODO notify if necessary?
             }
             super.onPostExecute(response);
         }
@@ -2141,7 +2167,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<Boolean> response) {
             if (Boolean.TRUE.equals(response.getData())) {
-                mContext.sendBroadcast(new Intent(BROADCAST_MENTIONS_REFRESHED));
+                //TODO notify if necessary?
             }
             super.onPostExecute(response);
         }

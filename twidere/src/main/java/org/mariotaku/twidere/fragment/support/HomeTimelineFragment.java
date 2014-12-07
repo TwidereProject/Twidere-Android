@@ -24,8 +24,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -56,18 +61,32 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
+        updateRefreshState();
+    }
+
+    @Override
     protected void onReceivedBroadcast(Intent intent, String action) {
-        switch (action) {
-            case BROADCAST_TASK_STATE_CHANGED: {
-                updateRefreshState();
-                break;
-            }
-        }
+
     }
 
     @Override
     protected void onSetIntentFilter(IntentFilter filter) {
-        filter.addAction(BROADCAST_TASK_STATE_CHANGED);
+
     }
 
     private void updateRefreshState() {

@@ -215,13 +215,15 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 break;
             }
             case MENU_SETTINGS: {
-                if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING) return false;
+                if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING)
+                    return false;
                 final Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             }
             case MENU_EDIT_API: {
-                if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING) return false;
+                if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING)
+                    return false;
                 setDefaultAPI();
                 final Intent intent = new Intent(this, APIEditorActivity.class);
                 intent.putExtra(Accounts.API_URL_FORMAT, mAPIUrlFormat);
@@ -525,7 +527,8 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
             final String profileImageUrl = ParseUtils.parseString(user.getProfileImageURL());
             final HttpResponse conn = profileImageUrl != null ? client.get(profileImageUrl, null) : null;
             final Bitmap bm = conn != null ? BitmapFactory.decodeStream(conn.asStream()) : null;
-            final int profileBackgroundColor = ParseUtils.parseColor(user.getProfileBackgroundColor(), Color.TRANSPARENT);
+            final int profileBackgroundColor = ParseUtils.parseColor("#" + user.getProfileLinkColor(),
+                    Color.TRANSPARENT);
             if (bm == null) return profileBackgroundColor;
             try {
                 return Palette.generate(bm).getVibrantColor(profileBackgroundColor);

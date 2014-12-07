@@ -84,6 +84,7 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ActionProvider;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -154,6 +155,7 @@ import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
+import org.mariotaku.twidere.menu.StatusShareProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
@@ -2991,26 +2993,26 @@ public final class Utils implements Constants, TwitterConstants {
         activity.startActivity(intent);
     }
 
-    public static void openSearch(final Activity activity, final long account_id, final String query) {
-        if (activity == null) return;
+    public static void openSearch(final Context context, final long account_id, final String query) {
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_SEARCH);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
         builder.appendQueryParameter(QUERY_PARAM_QUERY, query);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void openStatus(final Activity activity, final long accountId, final long statusId) {
-        if (activity == null || accountId <= 0 || statusId <= 0) return;
+    public static void openStatus(final Context context, final long accountId, final long statusId) {
+        if (context == null || accountId <= 0 || statusId <= 0) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openStatus(final Context context, final ParcelableStatus status, Bundle activityOptions) {
@@ -3080,8 +3082,8 @@ public final class Utils implements Constants, TwitterConstants {
         activity.startActivity(intent);
     }
 
-    public static void openTweetSearch(final Activity activity, final long accountId, final String query) {
-        if (activity == null) return;
+    public static void openTweetSearch(final Context context, final long accountId, final String query) {
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_SEARCH);
@@ -3091,7 +3093,7 @@ public final class Utils implements Constants, TwitterConstants {
             builder.appendQueryParameter(QUERY_PARAM_QUERY, query);
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openUserBlocks(final Activity activity, final long account_id) {
@@ -3157,9 +3159,9 @@ public final class Utils implements Constants, TwitterConstants {
 
     }
 
-    public static void openUserListDetails(final Activity activity, final long accountId, final int listId,
+    public static void openUserListDetails(final Context context, final long accountId, final int listId,
                                            final long userId, final String screenName, final String listName) {
-        if (activity == null) return;
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_LIST);
@@ -3177,7 +3179,7 @@ public final class Utils implements Constants, TwitterConstants {
             builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName);
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openUserListDetails(final Activity activity, final ParcelableUserList userList) {
@@ -3547,12 +3549,17 @@ public final class Utils implements Constants, TwitterConstants {
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION);
         addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION, INTENT_ACTION_EXTENSION_OPEN_STATUS,
                 EXTRA_STATUS, EXTRA_STATUS_JSON, status);
-        final MenuItem shareItem = menu.findItem(R.id.share_submenu);
-        final Menu shareSubMenu = shareItem != null && shareItem.hasSubMenu() ? shareItem.getSubMenu() : null;
-        if (shareSubMenu != null) {
-            final Intent shareIntent = createStatusShareIntent(context, status);
-            shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
-            addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
+        final MenuItem shareItem = menu.findItem(R.id.share);
+        final ActionProvider shareProvider = shareItem.getActionProvider();
+        if (shareProvider instanceof StatusShareProvider) {
+            ((StatusShareProvider) shareProvider).setStatus(status);
+        } else {
+            if (shareItem.hasSubMenu()) {
+                final Menu shareSubMenu = shareItem.getSubMenu();
+                final Intent shareIntent = createStatusShareIntent(context, status);
+                shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
+                addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
+            }
         }
     }
 
