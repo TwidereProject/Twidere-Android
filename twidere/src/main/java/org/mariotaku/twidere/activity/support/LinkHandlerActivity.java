@@ -211,10 +211,10 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
                 transitionRes = R.transition.transition_user;
                 break;
             }
-            case LINK_ID_STATUS: {
-                transitionRes = R.transition.transition_status;
-                break;
-            }
+//            case LINK_ID_STATUS: {
+//                transitionRes = R.transition.transition_status;
+//                break;
+//            }
             default: {
                 transitionRes = 0;
                 break;

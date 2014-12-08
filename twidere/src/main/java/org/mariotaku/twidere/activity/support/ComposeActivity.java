@@ -105,7 +105,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
-import org.mariotaku.twidere.view.ColorLabelFrameLayout;
+import org.mariotaku.twidere.view.ComposeSelectAccountButton;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.holder.StatusListViewHolder;
@@ -132,7 +132,6 @@ import static org.mariotaku.twidere.util.ThemeUtils.getWindowContentOverlayForCo
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.copyStream;
-import static org.mariotaku.twidere.util.Utils.getAccountColors;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getAccountName;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
@@ -180,7 +179,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     private ProgressBar mProgress;
     private View mSendView;
     private StatusTextCountView mSendTextCountView;
-    private ColorLabelFrameLayout mSelectAccountButton;
+    private ComposeSelectAccountButton mSelectAccountAccounts;
 
     private MediaPreviewAdapter mMediaPreviewAdapter;
 
@@ -438,7 +437,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         final View composeBottomBar = findViewById(R.id.compose_bottombar);
         mSendView = composeBottomBar.findViewById(R.id.send);
         mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
-        mSelectAccountButton = (ColorLabelFrameLayout) composeActionBar.findViewById(R.id.select_account);
+        mSelectAccountAccounts = (ComposeSelectAccountButton) composeActionBar.findViewById(R.id.select_account);
         ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
         ViewAccessor.setBackground(composeActionBar, getActionBarBackground(this, getCurrentThemeResourceId()));
     }
@@ -581,12 +580,12 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mAccountSelectorPopup.setModal(true);
         mAccountSelectorPopup.setContentWidth(getResources().getDimensionPixelSize(R.dimen.account_selector_popup_width));
         mAccountSelectorPopup.setAdapter(accountAdapter);
-        mAccountSelectorPopup.setAnchorView(mSelectAccountButton);
+        mAccountSelectorPopup.setAnchorView(mSelectAccountAccounts);
 //        mSelectAccountButton.setOnTouchListener(ListPopupWindowCompat.createDragToOpenListener(
 //                mAccountSelectorPopup, mSelectAccountButton));
 
-        mSelectAccountButton.setOnClickListener(this);
-        mSelectAccountButton.setOnLongClickListener(this);
+        mSelectAccountAccounts.setOnClickListener(this);
+        mSelectAccountAccounts.setOnLongClickListener(this);
 
         mMediaPreviewAdapter = new MediaPreviewAdapter(this);
         mMediaPreviewGrid.setAdapter(mMediaPreviewAdapter);
@@ -1032,7 +1031,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             editor.putString(KEY_COMPOSE_ACCOUNTS, ArrayUtils.toString(mSendAccountIds, ',', false));
             editor.apply();
         }
-        mSelectAccountButton.drawEnd(getAccountColors(this, mSendAccountIds));
+        mSelectAccountAccounts.setSelectedAccounts(mSendAccountIds);
     }
 
     private void updateMediaPreview() {
@@ -1492,4 +1491,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             return Collections.unmodifiableList(getObjects());
         }
     }
+
+
 }

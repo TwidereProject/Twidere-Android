@@ -35,7 +35,6 @@ public class HomeSlidingMenu extends SlidingMenu implements Constants {
         mActivity = (HomeActivity) context;
     }
 
-
     @Override
     public boolean dispatchTouchEvent(@NonNull final MotionEvent ev) {
         switch (ev.getActionMasked()) {

@@ -105,9 +105,6 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
@@ -131,8 +128,6 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private final Handler mHandler = new Handler();
 
     private final ContentObserver mAccountChangeObserver = new AccountChangeObserver(this, mHandler);
-
-    private final ArrayList<SupportTabSpec> mCustomTabs = new ArrayList<>();
 
     private final SparseArray<Fragment> mAttachedFragments = new SparseArray<>();
     private ParcelableAccount mSelectedAccountToSearch;
@@ -645,7 +640,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mAccountChangeObserver);
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
         bus.register(this);
-        if (isTabsChanged(getHomeTabs(this)) || getTabDisplayOptionInt(this) != mTabDisplayOption) {
+        if (getTabDisplayOptionInt(this) != mTabDisplayOption) {
             restart();
         }
         // UCD
@@ -725,28 +720,17 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     private void setupHomeTabs() {
-        final List<SupportTabSpec> tabs = getHomeTabs(this);
-        mCustomTabs.clear();
-        mCustomTabs.addAll(tabs);
         mPagerAdapter.clear();
-        mPagerAdapter.addTabs(tabs);
-        mEmptyTabHint.setVisibility(tabs.isEmpty() ? View.VISIBLE : View.GONE);
-        mViewPager.setVisibility(tabs.isEmpty() ? View.GONE : View.VISIBLE);
+        mPagerAdapter.addTabs(getHomeTabs(this));
+        final boolean hasNoTab = mPagerAdapter.getCount() == 0;
+        mEmptyTabHint.setVisibility(hasNoTab ? View.VISIBLE : View.GONE);
+        mViewPager.setVisibility(hasNoTab ? View.GONE : View.VISIBLE);
     }
 
     private void initUnreadCount() {
         for (int i = 0, j = mTabIndicator.getCount(); i < j; i++) {
             mTabIndicator.setBadge(i, 0);
         }
-    }
-
-    private boolean isTabsChanged(final List<SupportTabSpec> tabs) {
-        if (mCustomTabs.size() == 0 && tabs == null) return false;
-        if (mCustomTabs.size() != tabs.size()) return true;
-        for (int i = 0, size = mCustomTabs.size(); i < size; i++) {
-            if (!mCustomTabs.get(i).equals(tabs.get(i))) return true;
-        }
-        return false;
     }
 
     private void openAccountsDrawer() {

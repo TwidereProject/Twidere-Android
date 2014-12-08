@@ -40,7 +40,7 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final int mCardLayoutResource;
     private boolean mLoadMoreIndicatorEnabled;
 
-    private EventListener mEventListener;
+    private StatusAdapterListener mStatusAdapterListener;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
         mContext = context;
@@ -127,8 +127,8 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
 
     @Override
     public final void onStatusClick(StatusViewHolder holder, int position) {
-        if (mEventListener != null) {
-            mEventListener.onStatusClick(holder, position);
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusClick(holder, position);
         }
     }
 
@@ -150,15 +150,15 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
 
     @Override
     public void onItemActionClick(ViewHolder holder, int id, int position) {
-        if (mEventListener != null) {
-            mEventListener.onStatusActionClick((StatusViewHolder) holder, id, position);
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusActionClick((StatusViewHolder) holder, id, position);
         }
     }
 
     @Override
     public void onItemMenuClick(ViewHolder holder, int position) {
-        if (mEventListener != null) {
-            mEventListener.onStatusMenuClick((StatusViewHolder) holder, position);
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusMenuClick((StatusViewHolder) holder, position);
         }
     }
 
@@ -166,18 +166,18 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
 
     public abstract D getData();
 
-    public void setEventListener(EventListener listener) {
-        mEventListener = listener;
+    public void setEventListener(StatusAdapterListener listener) {
+        mStatusAdapterListener = listener;
     }
 
     @Override
     public final void onGapClick(ViewHolder holder, int position) {
-        if (mEventListener != null) {
-            mEventListener.onGapClick((GapViewHolder) holder, position);
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onGapClick((GapViewHolder) holder, position);
         }
     }
 
-    public static interface EventListener {
+    public static interface StatusAdapterListener {
         void onStatusActionClick(StatusViewHolder holder, int id, int position);
 
         void onStatusClick(StatusViewHolder holder, int position);

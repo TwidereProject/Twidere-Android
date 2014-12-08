@@ -8,10 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +21,7 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter.EventListener;
+import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
@@ -40,7 +38,7 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
  * Created by mariotaku on 14/11/5.
  */
 public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment implements LoaderCallbacks<Data>,
-        OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, EventListener {
+        OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, StatusAdapterListener {
 
 
     private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
@@ -204,19 +202,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public void onStatusClick(StatusViewHolder holder, int position) {
-        final FragmentActivity activity = getActivity();
-        final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
-                new Pair<View, String>(holder.getProfileImageView(), StatusFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                new Pair<View, String>(holder.getProfileTypeView(), StatusFragment.TRANSITION_NAME_PROFILE_TYPE));
-        Utils.openStatus(getActivity(), mAdapter.getStatus(position), activityOption);
-//        final View cardView = holder.getCardView();
-//        if (cardView != null && context instanceof FragmentActivity) {
-//            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-//                    new Pair<>(cardView, StatusFragment.TRANSITION_NAME_CARD));
-//            Utils.openStatus(context, getStatus(position), options);
-//        } else {
-//            Utils.openStatus(context, getStatus(position), null);
-//        }
+        Utils.openStatus(getActivity(), mAdapter.getStatus(position), null);
     }
 
     @Override

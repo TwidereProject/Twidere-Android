@@ -53,6 +53,7 @@ import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConf
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 
@@ -240,7 +241,7 @@ public class ThemeUtils implements Constants {
     public static Drawable getActionBarBackground(final Context context, final int themeRes,
                                                   final int accentColor) {
         if (!isDarkTheme(themeRes)) {
-            final ColorDrawable d = new ColorDrawable(accentColor);
+            final ColorDrawable d = new ActionBarColorDrawable(accentColor);
             return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
         }
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},

@@ -97,12 +97,12 @@ public abstract class BaseSupportThemedActivity extends FragmentActivity impleme
     @Override
     protected void onTitleChanged(CharSequence title, int color) {
         final SpannableStringBuilder builder = new SpannableStringBuilder(title);
-        super.onTitleChanged(title, color);
         final int themeResId = getCurrentThemeResourceId();
         final int themeColor = getThemeColor(), contrastColor = Utils.getContrastYIQ(themeColor, 192);
         if (!ThemeUtils.isDarkTheme(themeResId)) {
             builder.setSpan(new ForegroundColorSpan(contrastColor), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+        super.onTitleChanged(title, color);
     }
 
     @Override

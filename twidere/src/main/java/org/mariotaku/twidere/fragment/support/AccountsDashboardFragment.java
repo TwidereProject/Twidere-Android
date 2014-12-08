@@ -494,7 +494,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
         @Override
         public AccountProfileImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = mInflater.inflate(R.layout.adapter_item_compose_account, parent, false);
+            final View view = mInflater.inflate(R.layout.adapter_item_dashboard_account, parent, false);
             return new AccountProfileImageViewHolder(this, view);
         }
 
