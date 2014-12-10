@@ -104,6 +104,7 @@
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
         <item name="menuIconColorActionBar">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>

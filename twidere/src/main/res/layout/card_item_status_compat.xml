@@ -199,11 +199,11 @@
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/menu"
+        android:layout_toLeftOf="@+id/item_menu"
         android:layout_toRightOf="@+id/actions_scroller"/>
 
     <org.mariotaku.twidere.view.ActionIconButton
-        android:id="@+id/menu"
+        android:id="@+id/item_menu"
         style="?cardActionButtonStyle"
         android:layout_width="@dimen/button_size_content_card"
         android:layout_height="@dimen/button_size_content_card"

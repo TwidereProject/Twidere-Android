@@ -59,7 +59,9 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
                 final View view = mInflater.inflate(mCardLayoutResource, parent, false);
-                return new StatusViewHolder(this, view);
+                final StatusViewHolder holder = new StatusViewHolder(this, view);
+                holder.setupViews();
+                return holder;
             }
             case ITEM_VIEW_TYPE_GAP: {
                 final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);

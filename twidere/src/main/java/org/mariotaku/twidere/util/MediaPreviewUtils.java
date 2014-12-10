@@ -194,8 +194,8 @@ public class MediaPreviewUtils {
     private static final String URL_PHOTOZOU_PHOTO_INFO = "https://api.photozou.jp/rest/photo_info.json";
 
     public static void addToLinearLayout(final LinearLayout container, final ImageLoaderWrapper loader,
-                                         final List<ParcelableMedia> mediaList, final int maxColumnCount,
-                                         final OnMediaClickListener mediaClickListener) {
+                                         final List<ParcelableMedia> mediaList, final long accountId,
+                                         final int maxColumnCount, final OnMediaClickListener mediaClickListener) {
         if (container.getOrientation() != LinearLayout.VERTICAL)
             throw new IllegalArgumentException();
         final Context context = container.getContext();
@@ -207,7 +207,7 @@ public class MediaPreviewUtils {
         final int bestColumnCount = imageCountSqrt % 1 == 0 ? (int) imageCountSqrt : maxColumnCount;
         final int firstColumn = imageCount % bestColumnCount, fullRowCount = imageCount / bestColumnCount;
         final int rowCount = fullRowCount + (firstColumn > 0 ? 1 : 0);
-        final View.OnClickListener clickListener = new ImageGridClickListener(mediaClickListener);
+        final View.OnClickListener clickListener = new ImageGridClickListener(mediaClickListener, accountId);
         container.setMotionEventSplittingEnabled(false);
         for (int currentRow = 0; currentRow < rowCount; currentRow++) {
             final LinearLayout rowContainer = new LinearLayout(context);
@@ -233,9 +233,10 @@ public class MediaPreviewUtils {
     }
 
     public static void addToLinearLayout(final LinearLayout container, final ImageLoaderWrapper loader,
-                                         final ParcelableMedia[] mediaArray, final int maxColumnCount,
-                                         final OnMediaClickListener listener) {
-        addToLinearLayout(container, loader, Arrays.asList(mediaArray), maxColumnCount, listener);
+                                         final ParcelableMedia[] mediaArray, final long accountId,
+                                         final int maxColumnCount, final OnMediaClickListener listener) {
+        addToLinearLayout(container, loader, Arrays.asList(mediaArray), accountId, maxColumnCount,
+                listener);
     }
 
     public static ParcelableMedia getAllAvailableImage(final String link, final boolean fullImage) {
@@ -461,20 +462,22 @@ public class MediaPreviewUtils {
     }
 
     public interface OnMediaClickListener {
-        void onMediaClick(View view, ParcelableMedia media);
+        void onMediaClick(View view, ParcelableMedia media, long accountId);
     }
 
     private static class ImageGridClickListener implements View.OnClickListener {
         private final OnMediaClickListener mListener;
+        private final long mAccountId;
 
-        ImageGridClickListener(final OnMediaClickListener listener) {
+        ImageGridClickListener(final OnMediaClickListener listener, final long accountId) {
             mListener = listener;
+            mAccountId = accountId;
         }
 
         @Override
         public void onClick(final View v) {
             if (mListener == null) return;
-            mListener.onMediaClick(v, (ParcelableMedia) v.getTag());
+            mListener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId);
         }
 
     }

@@ -104,7 +104,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         if (statusContentView != null) {
             ViewAccessor.setBackground(statusContentView, ThemeUtils.getWindowBackground(context));
 
-            final View profileView = statusContentView.findViewById(R.id.profile);
+            final View profileView = statusContentView.findViewById(R.id.profile_container);
             final ImageView profileImageView = (ImageView) statusContentView.findViewById(R.id.profile_image);
             final TextView nameView = (TextView) statusContentView.findViewById(R.id.name);
             final TextView screenNameView = (TextView) statusContentView.findViewById(R.id.screen_name);

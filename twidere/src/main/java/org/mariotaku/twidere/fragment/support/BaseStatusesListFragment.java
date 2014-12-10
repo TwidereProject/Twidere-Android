@@ -305,7 +305,7 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
                     cancelRetweet(twitter, status);
                 } else {
                     final long id_to_retweet = status.retweet_id > 0 ? status.retweet_id : status.id;
-                    twitter.retweetStatus(status.account_id, id_to_retweet);
+                    twitter.retweetStatusAsync(status.account_id, id_to_retweet);
                 }
                 break;
             }

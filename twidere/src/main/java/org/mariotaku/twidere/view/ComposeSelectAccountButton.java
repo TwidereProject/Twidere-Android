@@ -49,9 +49,6 @@ public class ComposeSelectAccountButton extends ViewGroup {
     private final AccountIconsAdapter mAccountIconsAdapter;
     private final Helper mColorLabelHelper;
 
-    private OnClickListener mOnClickListener;
-    private OnLongClickListener mOnLongClickListener;
-
     public ComposeSelectAccountButton(Context context) {
         this(context, null);
     }
@@ -213,7 +210,11 @@ public class ComposeSelectAccountButton extends ViewGroup {
             final int idx = findChildIndex(child);
             if (firstVisibleItem < 1 && idx == 0) {
                 // when firstVisibleItem is 0 or -1, assume view with idx == 0 is first view
-                layoutParams.leftMargin = 0;
+                if (itemCount == 1) {
+                    layoutParams.leftMargin = (contentWidth - contentHeight) / 2 - child.getPaddingLeft() - child.getPaddingRight();
+                } else {
+                    layoutParams.leftMargin = 0;
+                }
             } else {
                 layoutParams.leftMargin = -Math.min((contentHeight * itemCount - contentWidth)
                         / (itemCount - 1) + child.getPaddingLeft() + child.getPaddingRight(), contentHeight);
@@ -223,7 +224,15 @@ public class ComposeSelectAccountButton extends ViewGroup {
 
         @Override
         public void onMeasure(Recycler recycler, State state, int widthSpec, int heightSpec) {
-            final int height = MeasureSpec.getSize(heightSpec), width = Math.round(height * 1.5f);
+            final int height = MeasureSpec.getSize(heightSpec), width;
+            if (getItemCount() > 1) {
+                width = Math.round(height * 1.5f);
+            } else if (getChildCount() > 0) {
+                final View firstChild = getChildAt(0);
+                width = height + firstChild.getPaddingLeft() + firstChild.getPaddingRight();
+            } else {
+                width = height;
+            }
             mWidth = width;
             mHeight = height;
             super.onMeasure(recycler, state, MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), heightSpec);

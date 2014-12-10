@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical">
+
+        <org.mariotaku.twidere.view.CircularImageView
+            android:id="@+id/retweet_profile_image"
+            android:layout_width="@dimen/element_size_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:scaleType="centerCrop"/>
+
+        <org.mariotaku.twidere.view.ActionIconTextView
+            android:id="@+id/reply_retweet_status"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_marginBottom="@dimen/element_spacing_minus_normal"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginRight="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_toRightOf="@id/retweet_profile_image"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/element_size_small"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="10sp"/>
+
+        <RelativeLayout
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/retweet_profile_image"
+            android:layout_below="@id/reply_retweet_status"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_mlarge">
+
+            <org.mariotaku.twidere.view.CircularImageView
+                android:id="@+id/profile_image"
+                style="?profileImageStyle"
+                android:layout_width="@dimen/icon_size_status_profile_image"
+                android:layout_height="@dimen/icon_size_status_profile_image"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:contentDescription="@string/profile_image"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:id="@+id/profile_type"
+                android:layout_width="@dimen/icon_size_profile_type"
+                android:layout_height="@dimen/icon_size_profile_type"
+                android:layout_alignBottom="@id/profile_image"
+                android:layout_alignRight="@id/profile_image"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_toLeftOf="@+id/item_menu"
+                android:layout_toRightOf="@id/profile_image"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/element_spacing_xsmall"
+                    android:layout_marginTop="@dimen/element_spacing_small"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorPrimary"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/screen_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/element_spacing_small"
+                        android:singleLine="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+                <org.mariotaku.twidere.view.ShortTimeView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/element_spacing_small"
+                    android:paddingTop="@dimen/element_spacing_xsmall"
+                    android:singleLine="true"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textSize="10sp"/>
+
+            </LinearLayout>
+
+            <org.mariotaku.twidere.view.ActionIconButton
+                android:id="@+id/item_menu"
+                style="?cardActionButtonStyle"
+                android:layout_width="@dimen/element_size_normal"
+                android:layout_height="@dimen/element_size_normal"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_more_vertical"/>
+
+        </RelativeLayout>
+
+        <org.mariotaku.twidere.view.ImagePreviewContainer
+            android:id="@+id/media_preview_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@id/profile_container"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:foreground="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/media_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/media"
+                android:scaleType="centerCrop"/>
+
+            <ProgressBar
+                android:id="@+id/media_preview_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/element_spacing_large"/>
+
+        </org.mariotaku.twidere.view.ImagePreviewContainer>
+
+        <org.mariotaku.twidere.view.HandleSpanClickTextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@id/media_preview_container"
+            android:layout_marginBottom="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_normal"
+            android:paddingRight="@dimen/element_spacing_normal"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <HorizontalScrollView
+            android:id="@+id/action_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@+id/text"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <org.mariotaku.twidere.view.ActionIconTextView
+                    android:id="@+id/reply_count"
+                    style="?cardActionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_size_content_card"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_action_reply"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    app:iabActivatedColor="@color/highlight_reply"/>
+
+                <org.mariotaku.twidere.view.ActionIconTextView
+                    android:id="@+id/retweet_count"
+                    style="?cardActionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_size_content_card"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_action_retweet"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    app:iabActivatedColor="@color/highlight_retweet"/>
+
+                <org.mariotaku.twidere.view.ActionIconTextView
+                    android:id="@+id/favorite_count"
+                    style="?cardActionButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_size_content_card"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_action_star"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    app:iabActivatedColor="@color/highlight_favorite"/>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
+</merge>

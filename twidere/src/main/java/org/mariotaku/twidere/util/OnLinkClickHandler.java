@@ -93,7 +93,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     protected void openLink(final String link) {
-        if (context == null || manager.isActive()) return;
+        if (context == null || (manager != null && manager.isActive())) return;
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {

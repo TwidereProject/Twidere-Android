@@ -39,8 +39,11 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
     private final boolean mDisplayProfileImage;
 
     public AccountsSpinnerAdapter(final Context context) {
-        super(context, R.layout.list_item_two_line_small);
-        setDropDownViewResource(R.layout.list_item_two_line_small);
+        this(context, R.layout.list_item_user);
+    }
+
+    public AccountsSpinnerAdapter(final Context context, int itemViewResource) {
+        super(context, itemViewResource);
         mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         mDisplayProfileImage = context.getSharedPreferences(DirectMessagesConversationFragment.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE).getBoolean(DirectMessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);
@@ -69,18 +72,28 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
         final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
-        text2.setVisibility(item.is_dummy ? View.GONE : View.VISIBLE);
-        icon.setVisibility(item.is_dummy ? View.GONE : View.VISIBLE);
+        if (text2 != null) {
+            text2.setVisibility(item.is_dummy ? View.GONE : View.VISIBLE);
+        }
+        if (icon != null) {
+            icon.setVisibility(item.is_dummy ? View.GONE : View.VISIBLE);
+        }
         if (!item.is_dummy) {
-            text1.setText(item.name);
-            text2.setText(String.format("@%s", item.screen_name));
-            if (mDisplayProfileImage) {
-                mImageLoader.displayProfileImage(icon, item.profile_image_url);
-            } else {
-                mImageLoader.cancelDisplayTask(icon);
-                icon.setImageResource(R.drawable.ic_profile_image_default);
+            if (text1 != null) {
+                text1.setText(item.name);
             }
-        } else {
+            if (text2 != null) {
+                text2.setText(String.format("@%s", item.screen_name));
+            }
+            if (icon != null) {
+                if (mDisplayProfileImage) {
+                    mImageLoader.displayProfileImage(icon, item.profile_image_url);
+                } else {
+                    mImageLoader.cancelDisplayTask(icon);
+                    icon.setImageResource(R.drawable.ic_profile_image_default);
+                }
+            }
+        } else if (text1 != null) {
             text1.setText(R.string.none);
         }
     }

@@ -357,7 +357,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
         final int userColor = getUserColor(getActivity(), user.id, true);
-        mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
+        mProfileImageView.setBorderColor(userColor);
         mProfileNameContainer.drawEnd(getAccountColor(getActivity(), user.account_id));
         final String nick = getUserNickname(getActivity(), user.id, true);
         mNameView
@@ -374,7 +374,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mDescriptionContainer.setVisibility(userIsMe || !isEmpty(user.description_html) ? View.VISIBLE : View.GONE);
         mDescriptionView.setText(user.description_html != null ? Html.fromHtml(user.description_html) : null);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        linkify.setLinkTextColor(ThemeUtils.getUserLinkTextColor(getActivity()));
+        linkify.setLinkTextColor(user.link_color);
         linkify.applyAllLinks(mDescriptionView, user.account_id, false);
         mDescriptionView.setMovementMethod(null);
         mLocationContainer.setVisibility(userIsMe || !isEmpty(user.location) ? View.VISIBLE : View.GONE);
@@ -382,6 +382,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mURLContainer.setVisibility(userIsMe || !isEmpty(user.url) || !isEmpty(user.url_expanded) ? View.VISIBLE
                 : View.GONE);
         mURLView.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
+        mURLView.setLinkTextColor(user.link_color);
         mURLView.setMovementMethod(null);
         final String createdAt = formatToLongTimeString(getActivity(), user.created_at);
         final float daysSinceCreated = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24;
@@ -700,6 +701,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.follow: {
+                if (user.id == user.account_id) {
+                    final Bundle extras = new Bundle();
+                    extras.putLong(EXTRA_ACCOUNT_ID, user.account_id);
+                    final Intent intent = new Intent(INTENT_ACTION_EDIT_USER_PROFILE);
+                    intent.setClass(getActivity(), UserProfileEditorActivity.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                    break;
+                }
                 final Relationship relationship = mRelationship;
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (relationship == null || twitter == null) return;
@@ -988,15 +998,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
                 break;
             }
-            case MENU_EDIT: {
-                final Bundle extras = new Bundle();
-                extras.putLong(EXTRA_ACCOUNT_ID, user.account_id);
-                final Intent intent = new Intent(INTENT_ACTION_EDIT_USER_PROFILE);
-                intent.setClass(getActivity(), UserProfileEditorActivity.class);
-                intent.putExtras(extras);
-                startActivity(intent);
-                return true;
-            }
             case MENU_FOLLOW: {
                 if (relationship == null) return false;
                 final boolean isFollowing = relationship.isSourceFollowingTarget();
@@ -1067,7 +1068,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final Relationship relationship = mRelationship;
         if (twitter == null || user == null) return;
         final boolean isMyself = user.account_id == user.id;
-        setMenuItemAvailability(menu, MENU_EDIT, isMyself);
         final MenuItem mentionItem = menu.findItem(MENU_MENTION);
         if (mentionItem != null) {
             mentionItem.setTitle(getString(R.string.mention_user_name, getDisplayName(getActivity(), user)));

@@ -36,8 +36,7 @@ import org.mariotaku.twidere.R;
  */
 public class ActionIconTextView extends TextView {
 
-    private int mColor;
-    private int mActivatedColor;
+    private int mColor, mDisabledColor, mActivatedColor;
 
     public ActionIconTextView(Context context) {
         this(context, null);
@@ -49,19 +48,18 @@ public class ActionIconTextView extends TextView {
 
     public ActionIconTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray defaultValues = context.obtainStyledAttributes(
-                new int[]{android.R.attr.colorActivatedHighlight});
-        final int defaultActivatedColor = defaultValues.getColor(0, 0);
-        defaultValues.recycle();
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton);
         mColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);
-        mActivatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, defaultActivatedColor);
+        mDisabledColor = a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0);
+        mActivatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0);
         a.recycle();
-        updateColorFilter();
     }
 
     public int getActivatedColor() {
-        return mActivatedColor;
+        if (mActivatedColor != 0) return mActivatedColor;
+        final ColorStateList colors = getLinkTextColors();
+        if (colors != null) return colors.getDefaultColor();
+        return getCurrentTextColor();
     }
 
     public int getColor() {
@@ -71,32 +69,46 @@ public class ActionIconTextView extends TextView {
         return getCurrentTextColor();
     }
 
+    public int getDisabledColor() {
+        if (mDisabledColor != 0) return mDisabledColor;
+        final ColorStateList colors = getTextColors();
+        if (colors != null) return colors.getColorForState(new int[0], colors.getDefaultColor());
+        return getCurrentTextColor();
+    }
+
     @Override
     public void setActivated(boolean activated) {
         super.setActivated(activated);
-        updateColorFilter();
+    }
+
+    @Override
+    public void setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom) {
+        super.setCompoundDrawables(left, top, right, bottom);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void setCompoundDrawablesRelative(Drawable start, Drawable top, Drawable end, Drawable bottom) {
         super.setCompoundDrawablesRelative(start, top, end, bottom);
-        updateColorFilter();
     }
 
     @Override
-    public void setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom) {
-        super.setCompoundDrawables(left, top, right, bottom);
-        updateColorFilter();
-    }
-
-    private void updateColorFilter() {
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
         for (Drawable d : getCompoundDrawables()) {
             if (d != null) {
                 d.mutate();
-                d.setColorFilter(isActivated() ? getActivatedColor() : getColor(), Mode.SRC_ATOP);
+                final int color;
+                if (isActivated()) {
+                    color = getActivatedColor();
+                } else if (isEnabled()) {
+                    color = getColor();
+                } else {
+                    color = getDisabledColor();
+                }
+                d.setColorFilter(color, Mode.SRC_ATOP);
             }
         }
-
     }
+
 }

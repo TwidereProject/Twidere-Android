@@ -1,65 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".fragment.DirectMessagesConversationFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.DirectMessagesConversationFragment">
 
-	<RelativeLayout
-		android:id="@+id/conversation_container"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:visibility="gone">
+    <LinearLayout
+        android:id="@+id/conversation_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-		<FrameLayout
-			android:id="@+id/list_container"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_above="@+id/input_send_container"/>
+        <FrameLayout
+            android:id="@+id/list_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-		<FrameLayout
-			android:id="@+id/input_send_container"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"/>
-	</RelativeLayout>
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-	<LinearLayout
-		android:id="@+id/recipient_selector_container"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:visibility="visible">
+        </FrameLayout>
 
-		<LinearLayout
-			android:layout_width="300dp"
-			android:layout_height="0dp"
-			android:layout_gravity="center"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:orientation="vertical"
-			android:padding="16dp">
+        <FrameLayout
+            android:id="@+id/input_send_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0">
 
-			<Spinner
-				android:id="@+id/account_selector"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:minHeight="?android:listPreferredItemHeightSmall"
-				android:padding="@dimen/element_spacing_normal"
-				tools:listitem="@layout/list_item_two_line_small"/>
+            <include layout="@layout/fragment_messages_conversation_input_send"/>
+        </FrameLayout>
+    </LinearLayout>
 
-			<TextView
-				android:id="@+id/recipient_selector"
-				style="?android:dropDownSpinnerStyle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:clickable="true"
-				android:gravity="center_vertical"
-				android:minHeight="?android:listPreferredItemHeightSmall"
-				android:padding="@dimen/element_spacing_normal"
-				android:text="@string/select_user"
-				android:textAppearance="?android:textAppearanceMedium"/>
-		</LinearLayout>
-	</LinearLayout>
+    <FrameLayout
+        android:id="@+id/recipient_selector_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        tools:visibility="gone">
+
+        <ListView
+            android:id="@+id/users_search_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideInset"
+            android:padding="@dimen/element_spacing_normal"/>
+
+        <ProgressBar
+            android:id="@+id/users_search_progress"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
 
 </FrameLayout>

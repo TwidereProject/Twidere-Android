@@ -6,6 +6,7 @@
         <attr name="profileImageStyle" format="reference"/>
         <attr name="profileImageStyleLarge" format="reference"/>
         <attr name="menuIconColor" format="color"/>
+        <attr name="menuIconColorDisabled" format="color"/>
         <attr name="menuIconColorActionBar" format="color"/>
         <attr name="messageBubbleColor" format="color"/>
         <attr name="cardItemBackground" format="reference"/>
@@ -75,6 +76,7 @@
     <declare-styleable name="IconActionButton">
         <attr name="iabColor" format="color"/>
         <attr name="iabActivatedColor" format="color"/>
+        <attr name="iabDisabledColor" format="color"/>
     </declare-styleable>
     <declare-styleable name="CircularImageView">
         <attr name="civBorder" format="boolean"/>

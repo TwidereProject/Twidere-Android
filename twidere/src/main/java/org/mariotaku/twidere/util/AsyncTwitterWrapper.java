@@ -366,7 +366,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int retweetStatus(final long accountId, final long status_id) {
+    public int retweetStatusAsync(final long accountId, final long status_id) {
         final RetweetStatusTask task = new RetweetStatusTask(accountId, status_id);
         return mAsyncTaskManager.add(task, true);
     }

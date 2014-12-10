@@ -4,6 +4,6 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<include layout="@layout/card_item_status_deprecated"/>
+	<include layout="@layout/list_item_status_deprecated"/>
 
 </LinearLayout>

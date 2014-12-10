@@ -645,7 +645,7 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
     }
 
     @Override
-    public void onMediaClick(final View view, final ParcelableMedia media) {
+    public void onMediaClick(final View view, final ParcelableMedia media, long accountId) {
         final ParcelableStatus status = mStatus;
         if (status == null) return;
         // UCD
@@ -756,7 +756,7 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
                 } else {
                     final long id_to_retweet = status.is_retweet && status.retweet_id > 0 ? status.retweet_id
                             : status.id;
-                    mTwitterWrapper.retweetStatus(status.account_id, id_to_retweet);
+                    mTwitterWrapper.retweetStatusAsync(status.account_id, id_to_retweet);
                 }
                 break;
             }
@@ -905,13 +905,15 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
     }
 
     private void loadPreviewImages() {
-        if (mStatus == null) return;
+        final ParcelableStatus status = mStatus;
+        if (status == null) return;
         mLoadImagesIndicator.setVisibility(View.GONE);
         mImagePreviewGrid.setVisibility(View.VISIBLE);
         mImagePreviewGrid.removeAllViews();
         if (mStatus.media != null) {
             final int maxColumns = getResources().getInteger(R.integer.grid_column_image_preview);
-            MediaPreviewUtils.addToLinearLayout(mImagePreviewGrid, mImageLoader, mStatus.media, maxColumns, this);
+            MediaPreviewUtils.addToLinearLayout(mImagePreviewGrid, mImageLoader, status.media,
+                    status.account_id, maxColumns, this);
         }
     }
 

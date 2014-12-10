@@ -188,13 +188,29 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public void onStatusActionClick(StatusViewHolder holder, int id, int position) {
+        final ParcelableStatus status = mAdapter.getStatus(position);
+        if (status == null) return;
         switch (id) {
             case R.id.reply_count: {
                 final Context context = getActivity();
                 final Intent intent = new Intent(IntentConstants.INTENT_ACTION_REPLY);
                 intent.setPackage(context.getPackageName());
-                intent.putExtra(IntentConstants.EXTRA_STATUS, mAdapter.getStatus(position));
+                intent.putExtra(IntentConstants.EXTRA_STATUS, status);
                 context.startActivity(intent);
+                break;
+            }
+            case R.id.retweet_count: {
+                RetweetQuoteDialogFragment.show(getFragmentManager(), status);
+                break;
+            }
+            case R.id.favorite_count: {
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (twitter == null) return;
+                if (status.is_favorite) {
+                    twitter.destroyFavoriteAsync(status.account_id, status.id);
+                } else {
+                    twitter.createFavoriteAsync(status.account_id, status.id);
+                }
                 break;
             }
         }

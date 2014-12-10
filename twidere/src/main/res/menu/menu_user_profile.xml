@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@id/edit"
-        android:icon="@drawable/ic_action_edit"
-        android:showAsAction="always"
-        android:title="@string/edit_profile"
-        android:visible="false"/>
-    <item
         android:id="@id/mention"
         android:icon="@drawable/ic_action_at"
         android:showAsAction="ifRoom"

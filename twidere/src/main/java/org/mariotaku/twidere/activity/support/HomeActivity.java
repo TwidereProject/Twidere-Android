@@ -216,7 +216,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.actions_button: {
+            case R.id.action_buttons: {
                 triggerActionsClick();
                 break;
             }
@@ -247,7 +247,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
-        mActionsButton = findViewById(R.id.actions_button);
+        mActionsButton = findViewById(R.id.action_buttons);
         mTabsContainer = findViewById(R.id.tabs_container);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mActionBarOverlay = findViewById(R.id.actionbar_overlay);
@@ -297,7 +297,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
-            case R.id.actions_button: {
+            case R.id.action_buttons: {
                 showMenuItemToast(v, v.getContentDescription(), true);
                 return true;
             }

@@ -43,7 +43,7 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
     private final Context mContext;
 
     public SimpleParcelableUsersAdapter(final Context context) {
-        super(context, R.layout.list_item_two_line);
+        super(context, R.layout.list_item_user);
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mImageLoader = app.getImageLoaderWrapper();

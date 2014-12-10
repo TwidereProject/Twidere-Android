@@ -296,6 +296,5 @@
 
         </LinearLayout>
 
-        <include layout="@layout/layout_content_fragment_common"/>
     </android.support.v7.widget.CardView>
 </FrameLayout>
