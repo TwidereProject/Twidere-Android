@@ -1,9 +1,7 @@
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -19,10 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.otto.Bus;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -40,16 +41,6 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment implements LoaderCallbacks<Data>,
         OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, StatusAdapterListener {
 
-
-    private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            if (getActivity() == null || !isAdded() || isDetached()) return;
-            onReceivedBroadcast(intent, intent.getAction());
-        }
-
-    };
     private View mContentView;
     private SharedPreferences mPreferences;
     private View mProgressContainer;
@@ -159,14 +150,20 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     @Override
     public void onStart() {
         super.onStart();
-        final IntentFilter filter = new IntentFilter();
-        onSetIntentFilter(filter);
-        registerReceiver(mStateReceiver, filter);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        final Object callback = getMessageBusCallback();
+        if (callback != null) {
+            bus.register(callback);
+        }
     }
 
     @Override
     public void onStop() {
-        unregisterReceiver(mStateReceiver);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        final Object callback = getMessageBusCallback();
+        if (callback != null) {
+            bus.unregister(callback);
+        }
         super.onStop();
     }
 
@@ -276,13 +273,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         mAdapter.setData(data);
     }
 
+    protected Object getMessageBusCallback() {
+        return null;
+    }
+
     protected abstract AbsStatusesAdapter<Data> onCreateAdapter(Context context, boolean compact);
 
     protected abstract void onLoadMoreStatuses();
-
-    protected abstract void onReceivedBroadcast(Intent intent, String action);
-
-    protected abstract void onSetIntentFilter(IntentFilter filter);
 
     private void setListShown(boolean shown) {
         mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);

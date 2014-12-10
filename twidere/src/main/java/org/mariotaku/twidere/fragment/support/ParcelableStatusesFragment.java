@@ -20,26 +20,38 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
+
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
+import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by mariotaku on 14/12/3.
  */
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
+    private final StatusesBusCallback mStatusesBusCallback;
+
+    protected ParcelableStatusesFragment() {
+        mStatusesBusCallback = new StatusesBusCallback(this);
+    }
+
     public final void deleteStatus(final long statusId) {
         final List<ParcelableStatus> data = getAdapterData();
         if (statusId <= 0 || data == null) return;
-        final ArrayList<ParcelableStatus> dataToRemove = new ArrayList<>();
+        final Set<ParcelableStatus> dataToRemove = new HashSet<>();
         for (final ParcelableStatus status : data) {
             if (status.id == statusId || status.retweet_id > 0 && status.retweet_id == statusId) {
                 dataToRemove.add(status);
@@ -63,8 +75,27 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
+        super.onStop();
+    }
+
+    @Override
     protected long[] getAccountIds() {
         return new long[]{getAccountId()};
+    }
+
+    @Override
+    protected Object getMessageBusCallback() {
+        return mStatusesBusCallback;
     }
 
     @Override
@@ -79,19 +110,15 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         getStatuses(null, maxIds, null);
     }
 
-    @Override
-    protected void onReceivedBroadcast(Intent intent, String action) {
-        switch (action) {
-            case BROADCAST_STATUS_DESTROYED: {
-                deleteStatus(intent.getLongExtra(EXTRA_STATUS_ID, -1));
-                break;
+    public final void replaceStatus(final ParcelableStatus status) {
+        final List<ParcelableStatus> data = getAdapterData();
+        if (status == null || data == null) return;
+        for (int i = 0, j = data.size(); i < j; i++) {
+            if (status.equals(data.get(i))) {
+                data.set(i, status);
             }
         }
-    }
-
-    @Override
-    protected void onSetIntentFilter(IntentFilter filter) {
-        filter.addAction(BROADCAST_STATUS_DESTROYED);
+        setAdapterData(data);
     }
 
     @Override
@@ -114,6 +141,39 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
     protected String[] getSavedStatusesFileArgs() {
         return null;
+    }
+
+    private void updateFavoritedStatus(ParcelableStatus status) {
+        final Context context = getActivity();
+        if (context == null) return;
+        if (status.account_id == getAccountId()) {
+            replaceStatus(status);
+        }
+    }
+
+    protected static class StatusesBusCallback {
+
+        private final ParcelableStatusesFragment fragment;
+
+        StatusesBusCallback(ParcelableStatusesFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Subscribe
+        public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
+            fragment.updateFavoritedStatus(event.status);
+        }
+
+        @Subscribe
+        public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
+            fragment.updateFavoritedStatus(event.status);
+        }
+
+        @Subscribe
+        public void notifyStatusDestroyed(StatusDestroyedEvent event) {
+            fragment.deleteStatus(event.status.id);
+        }
+
     }
 
 }

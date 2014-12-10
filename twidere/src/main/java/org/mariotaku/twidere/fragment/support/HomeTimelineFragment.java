@@ -60,34 +60,11 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
         return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.unregister(this);
-        super.onStop();
-    }
-
     @Subscribe
     public void notifyTaskStateChanged(TaskStateChangedEvent event) {
         updateRefreshState();
     }
 
-    @Override
-    protected void onReceivedBroadcast(Intent intent, String action) {
-
-    }
-
-    @Override
-    protected void onSetIntentFilter(IntentFilter filter) {
-
-    }
 
     private void updateRefreshState() {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();

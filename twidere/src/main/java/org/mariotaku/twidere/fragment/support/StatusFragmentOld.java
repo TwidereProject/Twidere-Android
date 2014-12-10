@@ -125,7 +125,6 @@ import static org.mariotaku.twidere.util.Utils.getMapStaticImageUri;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
-import static org.mariotaku.twidere.util.Utils.isSameAccount;
 import static org.mariotaku.twidere.util.Utils.openImageDirectly;
 import static org.mariotaku.twidere.util.Utils.openMap;
 import static org.mariotaku.twidere.util.Utils.openStatus;
@@ -196,14 +195,6 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
 //                    }
 //                    break;
 //                }
-                case BROADCAST_STATUS_FAVORITE_CREATED: {
-                    final ParcelableStatus status = intent.getParcelableExtra(EXTRA_STATUS);
-                    if (mStatus != null && status != null && isSameAccount(context, status.account_id, mStatus.account_id)
-                            && status.id == getStatusId()) {
-                        getStatus(true);
-                    }
-                    break;
-                }
                 case BROADCAST_STATUS_RETWEETED: {
                     final long status_id = intent.getLongExtra(EXTRA_STATUS_ID, -1);
                     if (status_id > 0 && status_id == getStatusId()) {
@@ -684,7 +675,6 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
     public void onStart() {
         super.onStart();
         final IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_STATUS_FAVORITE_CREATED);
         filter.addAction(BROADCAST_STATUS_RETWEETED);
         registerReceiver(mStatusReceiver, filter);
         updateUserColor();

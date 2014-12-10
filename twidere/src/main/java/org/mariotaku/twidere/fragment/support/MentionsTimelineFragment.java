@@ -79,14 +79,6 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
         updateRefreshState();
     }
 
-    @Override
-    protected void onReceivedBroadcast(Intent intent, String action) {
-    }
-
-    @Override
-    protected void onSetIntentFilter(IntentFilter filter) {
-    }
-
     private void updateRefreshState() {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null) return;
