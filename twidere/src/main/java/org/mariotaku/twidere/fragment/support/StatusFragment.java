@@ -101,7 +101,6 @@ import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserNicknam
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.setUserColor;
-import static org.mariotaku.twidere.util.Utils.cancelRetweet;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
@@ -342,6 +341,7 @@ public class StatusFragment extends BaseSupportFragment
         private final StatusFragment mFragment;
         private final LayoutInflater mInflater;
         private final ImageLoaderWrapper mImageLoader;
+        private final ImageLoadingHandler mImageLoadingHandler;
 
         private final boolean mNameFirst, mNicknameOnly;
         private final int mCardLayoutResource;
@@ -361,6 +361,7 @@ public class StatusFragment extends BaseSupportFragment
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
@@ -392,7 +393,7 @@ public class StatusFragment extends BaseSupportFragment
 
         @Override
         public ImageLoadingHandler getImageLoadingHandler() {
-            return null;
+            return mImageLoadingHandler;
         }
 
         @Override
@@ -480,7 +481,9 @@ public class StatusFragment extends BaseSupportFragment
                 }
                 case VIEW_TYPE_LIST_STATUS: {
                     final View view = mInflater.inflate(mCardLayoutResource, parent, false);
-                    return new StatusViewHolder(this, view);
+                    final StatusViewHolder holder = new StatusViewHolder(this, view);
+                    holder.setupViews();
+                    return holder;
                 }
                 case VIEW_TYPE_CONVERSATION_LOAD_INDICATOR:
                 case VIEW_TYPE_REPLIES_LOAD_INDICATOR: {
@@ -723,11 +726,9 @@ public class StatusFragment extends BaseSupportFragment
                 }
                 case MENU_RETWEET: {
                     if (isMyRetweet(status)) {
-                        cancelRetweet(twitter, status);
+                        twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
                     } else {
-                        final long id_to_retweet = status.is_retweet && status.retweet_id > 0 ? status.retweet_id
-                                : status.id;
-                        twitter.retweetStatusAsync(status.account_id, id_to_retweet);
+                        twitter.retweetStatusAsync(status.account_id, status.id);
                     }
                     break;
                 }

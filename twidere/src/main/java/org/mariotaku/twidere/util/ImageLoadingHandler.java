@@ -40,7 +40,7 @@ public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingPr
 	private final int[] mProgressBarIds;
 
 	public ImageLoadingHandler() {
-		this(R.id.image_preview_progress);
+		this(R.id.media_preview_progress);
 	}
 
 	public ImageLoadingHandler(final int... progressBarIds) {

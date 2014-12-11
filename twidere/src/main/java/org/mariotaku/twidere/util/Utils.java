@@ -542,15 +542,6 @@ public final class Utils implements Constants, TwitterConstants {
         return Math.max(1, result);
     }
 
-    public static int cancelRetweet(final AsyncTwitterWrapper wrapper, final ParcelableStatus status) {
-        if (wrapper == null || status == null) return -1;
-        if (status.my_retweet_id > 0)
-            return wrapper.destroyStatusAsync(status.account_id, status.my_retweet_id);
-        else if (status.retweeted_by_id == status.account_id)
-            return wrapper.destroyStatusAsync(status.account_id, status.retweet_id);
-        return -1;
-    }
-
     public static boolean checkActivityValidity(final Context context, final Intent intent) {
         final PackageManager pm = context.getPackageManager();
         return !pm.queryIntentActivities(intent, 0).isEmpty();
@@ -2438,9 +2429,9 @@ public final class Utils implements Constants, TwitterConstants {
             return te.getMessage();
     }
 
-    public static Twitter getTwitterInstance(final Context context, final long account_id,
-                                             final boolean include_entities) {
-        return getTwitterInstance(context, account_id, include_entities, true, !MIUIUtils.isMIUI());
+    public static Twitter getTwitterInstance(final Context context, final long accountId,
+                                             final boolean includeEntities) {
+        return getTwitterInstance(context, accountId, includeEntities, true, !MIUIUtils.isMIUI());
     }
 
     public static Twitter getTwitterInstance(final Context context, final long accountId,

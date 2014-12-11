@@ -272,6 +272,46 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         first_media = media != null && media.length > 0 ? media[0].url : null;
     }
 
+    public ParcelableStatus(final ParcelableStatus orig, long override_my_retweet_id) {
+        id = orig.id;
+        account_id = orig.account_id;
+        timestamp = orig.timestamp;
+        user_id = orig.user_id;
+        retweet_id = orig.retweet_id;
+        retweet_timestamp = orig.retweet_timestamp;
+        retweeted_by_id = orig.retweeted_by_id;
+        retweet_count = orig.retweet_count;
+        favorite_count = orig.favorite_count;
+        reply_count = orig.reply_count;
+        descendent_reply_count = orig.descendent_reply_count;
+        in_reply_to_status_id = orig.in_reply_to_status_id;
+        is_gap = orig.is_gap;
+        is_retweet = orig.is_retweet;
+        is_favorite = orig.is_favorite;
+        user_is_protected = orig.user_is_protected;
+        user_is_verified = orig.user_is_verified;
+        retweeted_by_name = orig.retweeted_by_name;
+        retweeted_by_screen_name = orig.retweeted_by_screen_name;
+        retweeted_by_profile_image = orig.retweeted_by_profile_image;
+        text_html = orig.text_html;
+        text_plain = orig.text_plain;
+        user_name = orig.user_name;
+        user_screen_name = orig.user_screen_name;
+        in_reply_to_screen_name = orig.in_reply_to_screen_name;
+        source = orig.source;
+        user_profile_image_url = orig.user_profile_image_url;
+        media = orig.media;
+        location = orig.location;
+        my_retweet_id = override_my_retweet_id;
+        is_possibly_sensitive = orig.is_possibly_sensitive;
+        user_is_following = orig.user_is_following;
+        text_unescaped = orig.text_unescaped;
+        in_reply_to_user_id = orig.in_reply_to_user_id;
+        in_reply_to_name = orig.in_reply_to_name;
+        mentions = orig.mentions;
+        first_media = orig.first_media;
+    }
+
     public ParcelableStatus(final Status orig, final long account_id, final boolean is_gap) {
         this.is_gap = is_gap;
         this.account_id = account_id;

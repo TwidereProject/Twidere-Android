@@ -63,7 +63,7 @@ public class StatusListViewHolder extends CardViewHolder {
         profile_image = (ImageView) findViewById(R.id.profile_image);
         my_profile_image = (ImageView) findViewById(R.id.my_profile_image);
         image_preview = (ImageView) findViewById(R.id.image_preview);
-        image_preview_progress = (ProgressBar) findViewById(R.id.image_preview_progress);
+        image_preview_progress = (ProgressBar) findViewById(R.id.media_preview_progress);
         image_preview_container = (ViewGroup) findViewById(R.id.image_preview_container);
         name = (TextView) findViewById(R.id.name);
         screen_name = (TextView) findViewById(R.id.screen_name);

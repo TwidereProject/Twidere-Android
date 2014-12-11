@@ -25,7 +25,7 @@
             android:scaleType="centerCrop"/>
 
         <ProgressBar
-            android:id="@+id/image_preview_progress"
+            android:id="@+id/media_preview_progress"
             style="?android:progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

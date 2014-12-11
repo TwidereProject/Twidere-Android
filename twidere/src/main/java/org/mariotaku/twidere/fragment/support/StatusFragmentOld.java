@@ -27,7 +27,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
@@ -114,7 +113,6 @@ import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserNicknam
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.setUserColor;
-import static org.mariotaku.twidere.util.Utils.cancelRetweet;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
@@ -195,13 +193,13 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
 //                    }
 //                    break;
 //                }
-                case BROADCAST_STATUS_RETWEETED: {
-                    final long status_id = intent.getLongExtra(EXTRA_STATUS_ID, -1);
-                    if (status_id > 0 && status_id == getStatusId()) {
-                        getStatus(true);
-                    }
-                    break;
-                }
+//                case BROADCAST_STATUS_RETWEETED: {
+//                    final long status_id = intent.getLongExtra(EXTRA_STATUS_ID, -1);
+//                    if (status_id > 0 && status_id == getStatusId()) {
+//                        getStatus(true);
+//                    }
+//                    break;
+//                }
             }
         }
     };
@@ -674,9 +672,6 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_STATUS_RETWEETED);
-        registerReceiver(mStatusReceiver, filter);
         updateUserColor();
         final int text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
         mTextView.setTextSize(text_size * 1.25f);
@@ -686,12 +681,6 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
         mInReplyToView.setTextSize(text_size * 0.85f);
         mLocationView.setTextSize(text_size * 0.85f);
         // mRetweetView.setTextSize(text_size * 0.85f);
-    }
-
-    @Override
-    public void onStop() {
-        unregisterReceiver(mStatusReceiver);
-        super.onStop();
     }
 
     @Override
@@ -742,11 +731,9 @@ public class StatusFragmentOld extends ParcelableStatusesListFragment implements
             }
             case MENU_RETWEET: {
                 if (isMyRetweet(status)) {
-                    cancelRetweet(mTwitterWrapper, status);
+                    mTwitterWrapper.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
                 } else {
-                    final long id_to_retweet = status.is_retweet && status.retweet_id > 0 ? status.retweet_id
-                            : status.id;
-                    mTwitterWrapper.retweetStatusAsync(status.account_id, id_to_retweet);
+                    mTwitterWrapper.retweetStatusAsync(status.account_id, status.id);
                 }
                 break;
             }

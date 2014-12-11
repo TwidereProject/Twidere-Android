@@ -199,7 +199,7 @@ public class MediaPreviewUtils {
         if (container.getOrientation() != LinearLayout.VERTICAL)
             throw new IllegalArgumentException();
         final Context context = container.getContext();
-        final ImageLoadingHandler loadingHandler = new ImageLoadingHandler();
+        final ImageLoadingHandler loadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         final LayoutInflater inflater = LayoutInflater.from(context);
         final ListIterator<ParcelableMedia> iterator = mediaList.listIterator();
         final int imageCount = mediaList.size();
@@ -218,7 +218,7 @@ public class MediaPreviewUtils {
             final int columnCount = currentRow == 0 && firstColumn > 0 ? firstColumn : bestColumnCount;
             for (int currentColumn = 0; currentColumn < columnCount; currentColumn++) {
                 final ParcelableMedia media = iterator.next();
-                final View item = inflater.inflate(R.layout.grid_item_image_preview, rowContainer, false);
+                final View item = inflater.inflate(R.layout.grid_item_media_preview, rowContainer, false);
                 item.setTag(media);
                 if (mediaClickListener != null) {
                     item.setOnClickListener(clickListener);
@@ -226,7 +226,7 @@ public class MediaPreviewUtils {
                 final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) item.getLayoutParams();
                 lp.weight = 1.0f;
                 rowContainer.addView(item, lp);
-                final ImageView imageView = (ImageView) item.findViewById(R.id.image_preview_item);
+                final ImageView imageView = (ImageView) item.findViewById(R.id.media_preview_item);
                 loader.displayPreviewImage(imageView, media.url, loadingHandler);
             }
         }

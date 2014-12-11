@@ -109,7 +109,7 @@
             android:scaleType="fitCenter"/>
 
         <ProgressBar
-            android:id="@+id/image_preview_progress"
+            android:id="@+id/media_preview_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

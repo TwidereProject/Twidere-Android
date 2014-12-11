@@ -59,7 +59,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.mariotaku.twidere.util.Utils.cancelRetweet;
 import static org.mariotaku.twidere.util.Utils.clearListViewChoices;
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
@@ -302,10 +301,9 @@ abstract class BaseStatusesListFragment<Data> extends BasePullToRefreshListFragm
             }
             case MENU_RETWEET: {
                 if (isMyRetweet(status)) {
-                    cancelRetweet(twitter, status);
+                    twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
                 } else {
-                    final long id_to_retweet = status.retweet_id > 0 ? status.retweet_id : status.id;
-                    twitter.retweetStatusAsync(status.account_id, id_to_retweet);
+                    twitter.retweetStatusAsync(status.account_id, status.id);
                 }
                 break;
             }

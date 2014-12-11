@@ -54,7 +54,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (status == null || twitter == null) return;
                 if (isMyRetweet(status)) {
-                    twitter.destroyStatusAsync(status.account_id, status.retweet_id);
+                    twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
                 } else {
                     twitter.retweetStatusAsync(status.account_id, status.id);
                 }
