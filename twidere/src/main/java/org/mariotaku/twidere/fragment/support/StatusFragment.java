@@ -348,7 +348,7 @@ public class StatusFragment extends BaseSupportFragment
         private final int mTextSize;
 
         private ParcelableStatus mStatus;
-
+        private ParcelableAccountWithCredentials mStatusAccount;
         private List<ParcelableStatus> mConversation, mReplies;
         private boolean mDetailMediaExpanded;
 
@@ -410,6 +410,10 @@ public class StatusFragment extends BaseSupportFragment
             }
         }
 
+        public ParcelableAccountWithCredentials getStatusAccount() {
+            return mStatusAccount;
+        }
+
         @Override
         public int getStatusCount() {
             return getConversationCount() + 1 + getRepliesCount() + 1;
@@ -441,6 +445,11 @@ public class StatusFragment extends BaseSupportFragment
         public boolean setStatus(ParcelableStatus status) {
             final ParcelableStatus old = mStatus;
             mStatus = status;
+            if (status != null) {
+                mStatusAccount = ParcelableAccount.getAccountWithCredentials(mContext, status.account_id);
+            } else {
+                mStatusAccount = null;
+            }
             notifyDataSetChanged();
             return !CompareUtils.objectEquals(old, status);
         }
@@ -889,7 +898,7 @@ public class StatusFragment extends BaseSupportFragment
                 mediaPreviewGrid.setVisibility(View.GONE);
                 mediaPreviewGrid.removeAllViews();
             }
-            setMenuForStatus(context, menuBar.getMenu(), status);
+            setMenuForStatus(context, menuBar.getMenu(), status, adapter.getStatusAccount());
             menuBar.show();
         }
 
