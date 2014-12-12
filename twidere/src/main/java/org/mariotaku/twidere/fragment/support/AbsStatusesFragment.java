@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
@@ -31,6 +32,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -40,6 +42,13 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
  */
 public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment implements LoaderCallbacks<Data>,
         OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, StatusAdapterListener {
+
+
+    private final Object mStatusesBusCallback;
+
+    protected AbsStatusesFragment() {
+        mStatusesBusCallback = createMessageBusCallback();
+    }
 
     private View mContentView;
     private SharedPreferences mPreferences;
@@ -151,19 +160,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     public void onStart() {
         super.onStart();
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        final Object callback = getMessageBusCallback();
-        if (callback != null) {
-            bus.register(callback);
-        }
+        bus.register(mStatusesBusCallback);
     }
 
     @Override
     public void onStop() {
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        final Object callback = getMessageBusCallback();
-        if (callback != null) {
-            bus.unregister(callback);
-        }
+        bus.unregister(mStatusesBusCallback);
         super.onStop();
     }
 
@@ -273,8 +276,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         mAdapter.setData(data);
     }
 
-    protected Object getMessageBusCallback() {
-        return null;
+    protected Object createMessageBusCallback() {
+        return new StatusesBusCallback();
     }
 
     protected abstract AbsStatusesAdapter<Data> onCreateAdapter(Context context, boolean compact);
@@ -284,5 +287,18 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private void setListShown(boolean shown) {
         mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
         mSwipeRefreshLayout.setVisibility(shown ? View.VISIBLE : View.GONE);
+    }
+
+
+    protected final class StatusesBusCallback {
+
+        protected StatusesBusCallback() {
+        }
+
+        @Subscribe
+        public void notifyStatusListChanged(StatusListChangedEvent event) {
+            mAdapter.notifyDataSetChanged();
+        }
+
     }
 }

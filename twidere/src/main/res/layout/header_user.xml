@@ -112,13 +112,20 @@
                 <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/element_spacing_small"
+                    android:singleLine="true"
                     android:text="@string/description"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"/>
 
                 <org.mariotaku.twidere.view.HandleSpanClickTextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorSecondary"/>
             </LinearLayout>
@@ -135,14 +142,20 @@
                 <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:text="@string/location"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"/>
 
                 <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorSecondary"/>
@@ -160,15 +173,21 @@
                 <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:text="@string/url"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"/>
 
                 <org.mariotaku.twidere.view.HandleSpanClickTextView
                     android:id="@+id/url"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorSecondary"/>
@@ -184,16 +203,22 @@
                 android:padding="@dimen/element_spacing_small">
 
                 <org.mariotaku.twidere.view.themed.ThemedTextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:text="@string/created_at"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"/>
 
                 <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:id="@+id/created_at"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorSecondary"/>
@@ -332,7 +357,7 @@
         android:alpha="0.2"
         android:gravity="center"
         android:padding="@dimen/element_spacing_small"
-        android:text="- Luna meae es -"
+        android:text="@string/uucky_footer_text"
         android:textColor="?android:textColorPrimary"
         android:textSize="10sp"
         android:textStyle="italic"

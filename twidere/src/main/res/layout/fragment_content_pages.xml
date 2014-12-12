@@ -25,13 +25,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.astuetz.PagerSlidingTabStrip
+    <org.mariotaku.twidere.view.TabPagerIndicator
         android:id="@+id/view_pager_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_size_normal"
         android:textColor="?android:textColorSecondary"
-        app:pstsTabBackground="?android:selectableItemBackground"
-        app:pstsTabPaddingLeftRight="@dimen/element_spacing_large"/>
+        app:tabHorizontalPadding="@dimen/element_spacing_large"
+        app:tabExpandEnabled="false"
+        app:tabIconColor="?android:colorForeground"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"

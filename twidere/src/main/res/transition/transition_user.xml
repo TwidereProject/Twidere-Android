@@ -29,6 +29,7 @@
     <autoTransition>
         <targets>
             <target android:targetId="@id/profile_banner"/>
+            <target android:targetId="@id/view_pager_tabs"/>
         </targets>
     </autoTransition>
 </transitionSet>

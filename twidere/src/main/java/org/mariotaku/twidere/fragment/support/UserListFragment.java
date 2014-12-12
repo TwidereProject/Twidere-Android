@@ -55,8 +55,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.astuetz.PagerSlidingTabStrip;
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
@@ -74,6 +72,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
+import org.mariotaku.twidere.view.TabPagerIndicator;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -102,7 +101,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     private Button mRetryButton;
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
-    private PagerSlidingTabStrip mPagerIndicator;
+    private TabPagerIndicator mPagerIndicator;
     private CardView mCardView;
 
     private SupportTabsAdapter mPagerAdapter;
@@ -484,7 +483,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mRetryButton = (Button) mErrorRetryContainer.findViewById(R.id.retry);
         mErrorMessageView = (TextView) mErrorRetryContainer.findViewById(R.id.error_message);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
-        mPagerIndicator = (PagerSlidingTabStrip) contentView.findViewById(R.id.view_pager_tabs);
+        mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
     }
 
     @Override

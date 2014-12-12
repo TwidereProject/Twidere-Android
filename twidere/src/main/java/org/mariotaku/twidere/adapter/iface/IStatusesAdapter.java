@@ -3,6 +3,7 @@ package org.mariotaku.twidere.adapter.iface;
 import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -27,4 +28,6 @@ public interface IStatusesAdapter<Data> extends IGapSupportedAdapter, ICardSuppo
     void onUserProfileClick(StatusViewHolder holder, int position);
 
     void setData(Data data);
+
+    AsyncTwitterWrapper getTwitterWrapper();
 }

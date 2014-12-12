@@ -12,5 +12,6 @@
     <string name="font_family_light" translatable="false">Light</string>
     <string name="font_family_thin" translatable="false">Thin</string>
     <string name="easter_egg_triggered_message" translatable="false">不二对你的膝盖发动了会心一击！</string>
+    <string name="uucky_footer_text">- Luna meae es -</string>
 
 </resources>

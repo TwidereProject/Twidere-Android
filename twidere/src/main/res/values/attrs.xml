@@ -11,10 +11,6 @@
         <attr name="messageBubbleColor" format="color"/>
         <attr name="cardItemBackground" format="reference"/>
         <attr name="cardItemBackgroundColor" format="color"/>
-        <attr name="cardItemMessageIncomingBackground" format="reference"/>
-        <attr name="cardItemMessageOutgoingBackground" format="reference"/>
-        <attr name="cardItemMessageProfileImageIncomingBackground" format="reference"/>
-        <attr name="cardItemMessageProfileImageOutgoingBackground" format="reference"/>
         <attr name="listMenuOverflowButton" format="reference"/>
         <attr name="ignorePadding" format="boolean"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
@@ -32,9 +28,12 @@
         <attr name="cardGapTextSize" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="TabPagerIndicator">
-        <attr name="tabItemStyle" format="reference"/>
-        <attr name="tabItemContentStyle" format="reference"/>
-        <attr name="tabItemTextStyle" format="reference"/>
+        <attr name="tabStripColor" format="color"/>
+        <attr name="tabIconColor" format="color"/>
+        <attr name="tabHorizontalPadding" format="dimension"/>
+        <attr name="tabVerticalPadding" format="dimension"/>
+        <attr name="tabExpandEnabled" format="boolean"/>
+        <attr name="tabDisplayOption"/>
     </declare-styleable>
     <declare-styleable name="LinePageIndicator">
         <!-- Whether or not the indicators should be centered. -->
@@ -94,5 +93,8 @@
         <flag name="vibration" value="2"/>
         <flag name="light" value="4"/>
     </attr>
-
+    <attr name="tabDisplayOption">
+        <flag name="label" value="0x1"/>
+        <flag name="icon" value="0x2"/>
+    </attr>
 </resources>

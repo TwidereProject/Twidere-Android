@@ -59,11 +59,13 @@ import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
+import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 
 import java.io.FileNotFoundException;
@@ -116,6 +118,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private int mGetReceivedDirectMessagesTaskId, mGetSentDirectMessagesTaskId;
     private int mGetLocalTrendsTaskId;
 
+    private LongSparseMap<Long> mCreatingFavoriteIds = new LongSparseMap<>();
+    private LongSparseMap<Long> mDestroyingFavoriteIds = new LongSparseMap<>();
+
     public AsyncTwitterWrapper(final Context context) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
@@ -133,6 +138,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public int addUserListMembersAsync(final long accountId, final long listId, final ParcelableUser... users) {
         final AddUserListMembersTask task = new AddUserListMembersTask(accountId, listId, users);
         return mAsyncTaskManager.add(task, true);
+    }
+
+    public boolean isCreatingFavorite(final long accountId, final long statusId) {
+        return mCreatingFavoriteIds.has(accountId, statusId);
+    }
+
+
+    public boolean isDestroyingFavorite(final long accountId, final long statusId) {
+        return mDestroyingFavoriteIds.has(accountId, statusId);
     }
 
     public void clearNotificationAsync(final int notificationType) {
@@ -850,7 +864,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mCreatingFavoriteIds.put(account_id, status_id);
+            final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+            bus.post(new StatusListChangedEvent());
+        }
+
+        @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
+            mCreatingFavoriteIds.remove(account_id, status_id);
             if (result.hasData()) {
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 bus.post(new FavoriteCreatedEvent(result.getData()));
@@ -1368,7 +1391,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDestroyingFavoriteIds.put(account_id, status_id);
+            final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+            bus.post(new StatusListChangedEvent());
+        }
+
+        @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
+            mDestroyingFavoriteIds.remove(account_id, status_id);
             if (result.hasData()) {
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 bus.post(new FavoriteDestroyedEvent(result.getData()));

@@ -24,6 +24,7 @@ import android.database.Cursor;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 /**
@@ -72,7 +73,6 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
         mIndices = data != null ? new CursorIndices(data) : null;
         notifyDataSetChanged();
     }
-
     @Override
     public Cursor getData() {
         return mCursor;

@@ -33,8 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.astuetz.PagerSlidingTabStrip;
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
@@ -43,6 +41,7 @@ import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.view.TabPagerIndicator;
 
 public class SearchFragment extends BaseSupportFragment implements RefreshScrollTopInterface,
         SupportFragmentCallback, SystemWindowsInsetsCallback {
@@ -50,7 +49,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     private ViewPager mViewPager;
 
     private SupportTabsAdapter mAdapter;
-    private PagerSlidingTabStrip mPagerIndicator;
+    private TabPagerIndicator mPagerIndicator;
 
     private Fragment mCurrentVisibleFragment;
 
@@ -141,7 +140,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
-        mPagerIndicator = (PagerSlidingTabStrip) view.findViewById(R.id.view_pager_tabs);
+        mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
     }
 
     @Override

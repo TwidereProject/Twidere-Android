@@ -72,6 +72,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final Context context = builder.getContext();
         final ImageLoaderWrapper loader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_scrollable_status, null);
         final StatusViewHolder holder = new StatusViewHolder(view.findViewById(R.id.item_content));
@@ -85,7 +86,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         builder.setNegativeButton(android.R.string.cancel, null);
 
 
-        holder.displayStatus(context, loader, handler, getStatus());
+        holder.displayStatus(context, loader, handler, twitter, getStatus());
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);

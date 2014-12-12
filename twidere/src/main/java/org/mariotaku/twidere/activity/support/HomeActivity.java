@@ -532,13 +532,11 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mTabIndicator.setViewPager(mViewPager);
         mTabIndicator.setOnPageChangeListener(this);
         if (mTabDisplayOption != 0) {
-            mTabIndicator.setDisplayLabel((mTabDisplayOption & VALUE_TAB_DIPLAY_OPTION_CODE_LABEL) != 0);
-            mTabIndicator.setDisplayIcon((mTabDisplayOption & VALUE_TAB_DIPLAY_OPTION_CODE_ICON) != 0);
+            mTabIndicator.setTabDisplayOption(mTabDisplayOption);
         } else {
-            mTabIndicator.setDisplayLabel(false);
-            mTabIndicator.setDisplayIcon(true);
+            mTabIndicator.setTabDisplayOption(TabPagerIndicator.ICON);
         }
-//        mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
+        mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
         setTabPosition(initialTabPosition);

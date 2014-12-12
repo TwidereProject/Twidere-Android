@@ -14,6 +14,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.UserColorNicknameUtils;
@@ -84,11 +85,12 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
     public void displayStatus(final ParcelableStatus status) {
         displayStatus(adapter.getContext(), adapter.getImageLoader(),
-                adapter.getImageLoadingHandler(), status);
+                adapter.getImageLoadingHandler(), adapter.getTwitterWrapper(), status);
     }
 
     public void displayStatus(final Context context, final ImageLoaderWrapper loader,
-                              final ImageLoadingHandler handler, final ParcelableStatus status) {
+                              final ImageLoadingHandler handler, final AsyncTwitterWrapper twitter,
+                              final ParcelableStatus status) {
         final ParcelableMedia[] media = status.media;
 
         if (status.retweet_id > 0) {
@@ -163,12 +165,18 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         retweetCountView.setEnabled(!status.user_is_protected);
 
         retweetCountView.setActivated(Utils.isMyRetweet(status));
-        favoriteCountView.setActivated(status.is_favorite);
+        if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
+            favoriteCountView.setActivated(false);
+        } else {
+            favoriteCountView.setActivated(twitter.isCreatingFavorite(status.account_id, status.id)
+                    || status.is_favorite);
+        }
     }
 
 
     public void displayStatus(Cursor cursor, CursorIndices indices) {
         final ImageLoaderWrapper loader = adapter.getImageLoader();
+        final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final Context context = adapter.getContext();
 
         final int reply_count = cursor.getInt(indices.reply_count);
@@ -178,6 +186,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final long account_id = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.status_timestamp);
         final long user_id = cursor.getLong(indices.user_id);
+        final long status_id = cursor.getLong(indices.status_id);
         final long retweet_id = cursor.getLong(indices.retweet_id);
         final long my_retweet_id = cursor.getLong(indices.my_retweet_id);
         final long retweeted_by_id = cursor.getLong(indices.retweeted_by_user_id);
@@ -269,6 +278,12 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         retweetCountView.setEnabled(!user_is_protected);
         retweetCountView.setActivated(Utils.isMyRetweet(account_id, retweeted_by_id, my_retweet_id));
         favoriteCountView.setActivated(cursor.getInt(indices.is_favorite) == 1);
+        if (twitter.isDestroyingFavorite(account_id, status_id)) {
+            favoriteCountView.setActivated(false);
+        } else {
+            favoriteCountView.setActivated(twitter.isCreatingFavorite(account_id, status_id)
+                    || cursor.getInt(indices.is_favorite) == 1);
+        }
     }
 
     public CardView getCardView() {

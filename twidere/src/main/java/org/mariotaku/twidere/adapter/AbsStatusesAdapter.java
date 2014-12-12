@@ -16,6 +16,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.Utils;
@@ -38,15 +39,18 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final ImageLoaderWrapper mImageLoader;
     private final ImageLoadingHandler mLoadingHandler;
     private final int mCardLayoutResource;
+    private final AsyncTwitterWrapper mTwitterWrapper;
     private boolean mLoadMoreIndicatorEnabled;
 
     private StatusAdapterListener mStatusAdapterListener;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
         mContext = context;
+        final TwidereApplication app = TwidereApplication.getInstance(context);
         mInflater = LayoutInflater.from(context);
-        mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        mImageLoader = app.getImageLoaderWrapper();
         mLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
+        mTwitterWrapper = app.getTwitterWrapper();
         if (compact) {
             mCardLayoutResource = R.layout.card_item_status_compat;
         } else {
@@ -54,62 +58,13 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case ITEM_VIEW_TYPE_STATUS: {
-                final View view = mInflater.inflate(mCardLayoutResource, parent, false);
-                final StatusViewHolder holder = new StatusViewHolder(this, view);
-                holder.setupViews();
-                return holder;
-            }
-            case ITEM_VIEW_TYPE_GAP: {
-                final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);
-                return new GapViewHolder(this, view);
-            }
-            case ITEM_VIEW_TYPE_LOAD_INDICATOR: {
-                final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
-                return new LoadIndicatorViewHolder(view);
-            }
-        }
-        throw new IllegalStateException("Unknown view type " + viewType);
-    }
+    public abstract D getData();
 
-    public void setLoadMoreIndicatorEnabled(boolean enabled) {
-        if (mLoadMoreIndicatorEnabled == enabled) return;
-        mLoadMoreIndicatorEnabled = enabled;
-        notifyDataSetChanged();
-    }
-
-    public boolean hasLoadMoreIndicator() {
-        return mLoadMoreIndicatorEnabled;
-    }
+    public abstract void setData(D data);
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        switch (holder.getItemViewType()) {
-            case ITEM_VIEW_TYPE_STATUS: {
-                bindStatus(((StatusViewHolder) holder), position);
-                break;
-            }
-        }
-    }
-
-    protected abstract void bindStatus(StatusViewHolder holder, int position);
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
-        } else if (isGapItem(position)) {
-            return ITEM_VIEW_TYPE_GAP;
-        }
-        return ITEM_VIEW_TYPE_STATUS;
-    }
-
-    @Override
-    public final int getItemCount() {
-        return getStatusCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return mTwitterWrapper;
     }
 
     @Override
@@ -150,6 +105,63 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
+    public boolean hasLoadMoreIndicator() {
+        return mLoadMoreIndicatorEnabled;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case ITEM_VIEW_TYPE_STATUS: {
+                final View view = mInflater.inflate(mCardLayoutResource, parent, false);
+                final StatusViewHolder holder = new StatusViewHolder(this, view);
+                holder.setupViews();
+                return holder;
+            }
+            case ITEM_VIEW_TYPE_GAP: {
+                final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);
+                return new GapViewHolder(this, view);
+            }
+            case ITEM_VIEW_TYPE_LOAD_INDICATOR: {
+                final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
+                return new LoadIndicatorViewHolder(view);
+            }
+        }
+        throw new IllegalStateException("Unknown view type " + viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case ITEM_VIEW_TYPE_STATUS: {
+                bindStatus(((StatusViewHolder) holder), position);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == getItemCount() - 1) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        } else if (isGapItem(position)) {
+            return ITEM_VIEW_TYPE_GAP;
+        }
+        return ITEM_VIEW_TYPE_STATUS;
+    }
+
+    @Override
+    public final int getItemCount() {
+        return getStatusCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+    }
+
+    @Override
+    public final void onGapClick(ViewHolder holder, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onGapClick((GapViewHolder) holder, position);
+        }
+    }
+
     @Override
     public void onItemActionClick(ViewHolder holder, int id, int position) {
         if (mStatusAdapterListener != null) {
@@ -164,27 +176,24 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
-    public abstract void setData(D data);
-
-    public abstract D getData();
-
     public void setEventListener(StatusAdapterListener listener) {
         mStatusAdapterListener = listener;
     }
 
-    @Override
-    public final void onGapClick(ViewHolder holder, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onGapClick((GapViewHolder) holder, position);
-        }
+    public void setLoadMoreIndicatorEnabled(boolean enabled) {
+        if (mLoadMoreIndicatorEnabled == enabled) return;
+        mLoadMoreIndicatorEnabled = enabled;
+        notifyDataSetChanged();
     }
 
+    protected abstract void bindStatus(StatusViewHolder holder, int position);
+
     public static interface StatusAdapterListener {
+        void onGapClick(GapViewHolder holder, int position);
+
         void onStatusActionClick(StatusViewHolder holder, int id, int position);
 
         void onStatusClick(StatusViewHolder holder, int position);
-
-        void onGapClick(GapViewHolder holder, int position);
 
         void onStatusMenuClick(StatusViewHolder holder, int position);
     }

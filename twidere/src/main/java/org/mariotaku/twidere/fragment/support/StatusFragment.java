@@ -438,6 +438,11 @@ public class StatusFragment extends BaseSupportFragment
 
         }
 
+        @Override
+        public AsyncTwitterWrapper getTwitterWrapper() {
+            return mFragment.getTwitterWrapper();
+        }
+
         public ParcelableStatus getStatus() {
             return mStatus;
         }
