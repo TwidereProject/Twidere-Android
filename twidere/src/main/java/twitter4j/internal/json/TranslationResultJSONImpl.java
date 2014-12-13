@@ -69,7 +69,7 @@ public class TranslationResultJSONImpl extends TwitterResponseImpl implements Tr
 	}
 
 	@Override
-	public String getTranslatedLong() {
+	public String getTranslatedLang() {
 		return translatedLang;
 	}
 

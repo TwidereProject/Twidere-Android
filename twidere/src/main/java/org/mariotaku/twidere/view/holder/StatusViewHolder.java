@@ -2,6 +2,8 @@ package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,6 +25,8 @@ import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.ShortTimeView;
 
 import java.util.Locale;
+
+import twitter4j.TranslationResult;
 
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
@@ -91,18 +95,17 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
     public void displayStatus(final Context context, final ImageLoaderWrapper loader,
                               final ImageLoadingHandler handler, final AsyncTwitterWrapper twitter,
                               final ParcelableStatus status) {
+        displayStatus(context, loader, handler, twitter, status, null);
+    }
+
+    public void displayStatus(final Context context, final ImageLoaderWrapper loader,
+                              final ImageLoadingHandler handler, final AsyncTwitterWrapper twitter,
+                              @NonNull final ParcelableStatus status,
+                              @Nullable final TranslationResult translation) {
         final ParcelableMedia[] media = status.media;
 
         if (status.retweet_id > 0) {
-            if (status.retweet_count == 2) {
-                replyRetweetView.setText(context.getString(R.string.name_and_another_retweeted,
-                        status.retweeted_by_name));
-            } else if (status.retweet_count > 2) {
-                replyRetweetView.setText(context.getString(R.string.name_and_count_retweeted,
-                        status.retweeted_by_name, status.retweet_count - 1));
-            } else {
-                replyRetweetView.setText(context.getString(R.string.name_retweeted, status.retweeted_by_name));
-            }
+            replyRetweetView.setText(context.getString(R.string.name_retweeted, status.retweeted_by_name));
             replyRetweetView.setVisibility(View.VISIBLE);
             retweetProfileImageView.setVisibility(View.GONE);
         } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0) {
@@ -136,14 +139,17 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         if (media != null && media.length > 0) {
             final ParcelableMedia firstMedia = media[0];
-            textView.setText(status.text_unescaped);
             loader.displayPreviewImageWithCredentials(mediaPreviewView, firstMedia.media_url,
                     status.account_id, handler);
             mediaPreviewContainer.setVisibility(View.VISIBLE);
         } else {
             loader.cancelDisplayTask(mediaPreviewView);
-            textView.setText(status.text_unescaped);
             mediaPreviewContainer.setVisibility(View.GONE);
+        }
+        if (translation != null) {
+            textView.setText(translation.getText());
+        } else {
+            textView.setText(status.text_unescaped);
         }
 
         if (status.reply_count > 0) {
@@ -151,25 +157,36 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         } else {
             replyCountView.setText(null);
         }
-        if (status.retweet_count > 0) {
-            retweetCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), status.retweet_count));
+
+        final long retweet_count;
+        if (twitter.isDestroyingStatus(status.account_id, status.my_retweet_id)) {
+            retweetCountView.setActivated(false);
+            retweet_count = Math.max(0, status.favorite_count - 1);
+        } else {
+            final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_id, status.id);
+            retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status));
+            retweet_count = status.retweet_count + (creatingRetweet ? 1 : 0);
+        }
+        if (retweet_count > 0) {
+            retweetCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), retweet_count));
         } else {
             retweetCountView.setText(null);
         }
-        if (status.favorite_count > 0) {
-            favoriteCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), status.favorite_count));
-        } else {
-            favoriteCountView.setText(null);
-        }
-
         retweetCountView.setEnabled(!status.user_is_protected);
 
-        retweetCountView.setActivated(Utils.isMyRetweet(status));
+        final long favorite_count;
         if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
             favoriteCountView.setActivated(false);
+            favorite_count = Math.max(0, status.favorite_count - 1);
         } else {
-            favoriteCountView.setActivated(twitter.isCreatingFavorite(status.account_id, status.id)
-                    || status.is_favorite);
+            final boolean creatingFavorite = twitter.isCreatingFavorite(status.account_id, status.id);
+            favoriteCountView.setActivated(creatingFavorite || status.is_favorite);
+            favorite_count = status.favorite_count + (creatingFavorite ? 1 : 0);
+        }
+        if (favorite_count > 0) {
+            favoriteCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), favorite_count));
+        } else {
+            favoriteCountView.setText(null);
         }
     }
 
@@ -179,9 +196,9 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final Context context = adapter.getContext();
 
-        final int reply_count = cursor.getInt(indices.reply_count);
-        final int retweet_count = cursor.getInt(indices.retweet_count);
-        final int favorite_count = cursor.getInt(indices.favorite_count);
+        final long reply_count = cursor.getLong(indices.reply_count);
+        final long retweet_count;
+        final long favorite_count;
 
         final long account_id = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.status_timestamp);
@@ -204,15 +221,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final ParcelableMedia[] media = ParcelableMedia.fromJSONString(cursor.getString(indices.media));
 
         if (retweet_id > 0) {
-            if (retweet_count == 2) {
-                replyRetweetView.setText(context.getString(R.string.name_and_another_retweeted,
-                        retweeted_by_name));
-            } else if (retweet_count > 2) {
-                replyRetweetView.setText(context.getString(R.string.name_and_count_retweeted,
-                        retweeted_by_name, retweet_count - 1));
-            } else {
-                replyRetweetView.setText(context.getString(R.string.name_retweeted, retweeted_by_name));
-            }
+            replyRetweetView.setText(context.getString(R.string.name_retweeted, retweeted_by_name));
             replyRetweetView.setVisibility(View.VISIBLE);
             retweetProfileImageView.setVisibility(View.GONE);
         } else if (in_reply_to_status_id > 0 && in_reply_to_user_id > 0) {
@@ -264,25 +273,36 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         } else {
             replyCountView.setText(null);
         }
+
+        if (twitter.isDestroyingStatus(account_id, my_retweet_id)) {
+            retweetCountView.setActivated(false);
+            retweet_count = Math.max(0, cursor.getLong(indices.retweet_count) - 1);
+        } else {
+            final boolean creatingRetweet = twitter.isCreatingRetweet(account_id, status_id);
+            retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(account_id,
+                    retweeted_by_id, my_retweet_id));
+            retweet_count = cursor.getLong(indices.retweet_count) + (creatingRetweet ? 1 : 0);
+        }
         if (retweet_count > 0) {
             retweetCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), retweet_count));
         } else {
             retweetCountView.setText(null);
         }
+        retweetCountView.setEnabled(!user_is_protected);
+
+        favoriteCountView.setActivated(cursor.getInt(indices.is_favorite) == 1);
+        if (twitter.isDestroyingFavorite(account_id, status_id)) {
+            favoriteCountView.setActivated(false);
+            favorite_count = Math.max(0, cursor.getLong(indices.favorite_count) - 1);
+        } else {
+            final boolean creatingFavorite = twitter.isCreatingFavorite(account_id, status_id);
+            favoriteCountView.setActivated(creatingFavorite || cursor.getInt(indices.is_favorite) == 1);
+            favorite_count = cursor.getLong(indices.favorite_count) + (creatingFavorite ? 1 : 0);
+        }
         if (favorite_count > 0) {
             favoriteCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), favorite_count));
         } else {
             favoriteCountView.setText(null);
-        }
-
-        retweetCountView.setEnabled(!user_is_protected);
-        retweetCountView.setActivated(Utils.isMyRetweet(account_id, retweeted_by_id, my_retweet_id));
-        favoriteCountView.setActivated(cursor.getInt(indices.is_favorite) == 1);
-        if (twitter.isDestroyingFavorite(account_id, status_id)) {
-            favoriteCountView.setActivated(false);
-        } else {
-            favoriteCountView.setActivated(twitter.isCreatingFavorite(account_id, status_id)
-                    || cursor.getInt(indices.is_favorite) == 1);
         }
     }
 

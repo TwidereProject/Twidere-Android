@@ -70,11 +70,6 @@
         <item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
     </style>
 
-    <style name="Widget.TabPageIndicator.TabItem" parent="@android:style/Widget">
-        <item name="android:background">@drawable/tab_indicator_vpi_nocolor</item>
-        <item name="android:minWidth">@dimen/tab_item_minwidth_vpi</item>
-    </style>
-
     <style name="Widget.TabPageIndicator.TabItem.Content" parent="@android:style/Widget">
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">8dp</item>
@@ -108,30 +103,6 @@
     </style>
 
     <style name="TextAppearance.TabPageIndicator" parent="android:TextAppearance.Small"/>
-
-    <style name="Widget.CardItemView" parent="Widget.Base">
-        <item name="cardBackground">?cardItemBackground</item>
-        <item name="cardBackgroundAlpha">50%p</item>
-        <item name="cardSelector">?android:selectableItemBackground</item>
-        <item name="cardActivatedIndicator">?android:activatedBackgroundIndicator</item>
-        <item name="cardOverflowIcon">@drawable/ic_menu_moreoverflow_card_dark</item>
-        <item name="cardGapHeight">@dimen/minimum_element_size</item>
-        <item name="cardGapText">@string/tap_to_load_more</item>
-        <item name="cardGapTextColor">?android:textColorPrimary</item>
-        <item name="cardGapTextSize">18sp</item>
-    </style>
-
-    <style name="Widget.CardItemView.Light" parent="Widget.Base">
-        <item name="cardBackground">?cardItemBackground</item>
-        <item name="cardBackgroundAlpha">50%p</item>
-        <item name="cardSelector">?android:selectableItemBackground</item>
-        <item name="cardActivatedIndicator">?android:activatedBackgroundIndicator</item>
-        <item name="cardOverflowIcon">@drawable/ic_menu_moreoverflow_card_light</item>
-        <item name="cardGapHeight">@dimen/minimum_element_size</item>
-        <item name="cardGapText">@string/tap_to_load_more</item>
-        <item name="cardGapTextColor">?android:textColorPrimary</item>
-        <item name="cardGapTextSize">18sp</item>
-    </style>
 
     <style name="Widget.CardActionButton" parent="Widget.Base.ImageButton">
         <item name="android:background">?android:selectableItemBackground</item>

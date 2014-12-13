@@ -54,7 +54,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
             if (status.id == statusId || status.retweet_id > 0 && status.retweet_id == statusId) {
                 dataToRemove.add(status);
             } else if (status.my_retweet_id == statusId) {
-                data.set(i, new ParcelableStatus(status, -1));
+                data.set(i, new ParcelableStatus(status, -1, status.retweet_count - 1));
             }
         }
         data.removeAll(dataToRemove);
@@ -157,7 +157,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         for (int i = 0, j = data.size(); i < j; i++) {
             final ParcelableStatus orig = data.get(i);
             if (orig.account_id == status.account_id && orig.id == status.retweet_id) {
-                data.set(i, new ParcelableStatus(orig, status.id));
+                data.set(i, new ParcelableStatus(orig, status.my_retweet_id, status.retweet_count));
             }
         }
         setAdapterData(data);

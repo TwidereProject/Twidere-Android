@@ -18,24 +18,33 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/element_spacing_xsmall"
+        android:layout_alignBottom="@+id/view_pager_tabs"
+        android:background="?android:dividerVertical"/>
+
     <org.mariotaku.twidere.view.TabPagerIndicator
         android:id="@+id/view_pager_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_size_normal"
         android:textColor="?android:textColorSecondary"
-        app:tabHorizontalPadding="@dimen/element_spacing_large"
+        app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
         app:tabExpandEnabled="false"
-        app:tabIconColor="?android:colorForeground"/>
+        app:tabHorizontalPadding="@dimen/element_spacing_large"
+        app:tabIconColor="?android:colorForeground"
+        app:tabShowDivider="true"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/view_pager_tabs"/>
+</RelativeLayout>

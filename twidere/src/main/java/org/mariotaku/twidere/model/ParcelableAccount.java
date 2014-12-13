@@ -99,13 +99,6 @@ public class ParcelableAccount implements Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "Account{screen_name=" + screen_name + ", name=" + name + ", profile_image_url=" + profile_image_url
-                + ", profile_banner_url=" + profile_banner_url + ", account_id=" + account_id + ", color=" + color
-                + ", is_activated=" + is_activated + ", is_dummy=" + is_dummy + "}";
-    }
-
-    @Override
     public void writeToParcel(final Parcel out, final int flags) {
         out.writeInt(is_dummy ? 1 : 0);
         out.writeInt(is_activated ? 1 : 0);
@@ -148,7 +141,7 @@ public class ParcelableAccount implements Parcelable {
     }
 
     public static ParcelableAccount[] getAccounts(final Context context, final boolean activatedOnly,
-                                        final boolean officialKeyOnly) {
+                                                  final boolean officialKeyOnly) {
         final List<ParcelableAccount> list = getAccountsList(context, activatedOnly, officialKeyOnly);
         return list.toArray(new ParcelableAccount[list.size()]);
     }
@@ -179,7 +172,7 @@ public class ParcelableAccount implements Parcelable {
     }
 
     public static List<ParcelableAccount> getAccountsList(final Context context, final boolean activatedOnly,
-                                                final boolean officialKeyOnly) {
+                                                          final boolean officialKeyOnly) {
         if (context == null) return Collections.emptyList();
         final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
@@ -205,7 +198,7 @@ public class ParcelableAccount implements Parcelable {
         return accounts;
     }
 
-    public static ParcelableAccountWithCredentials getAccountWithCredentials(final Context context, final long account_id) {
+    public static ParcelableCredentials getCredentials(final Context context, final long account_id) {
         if (context == null) return null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + account_id, null, null);
@@ -214,7 +207,7 @@ public class ParcelableAccount implements Parcelable {
                 if (cur.getCount() > 0 && cur.moveToFirst()) {
                     final Indices indices = new Indices(cur);
                     cur.moveToFirst();
-                    return new ParcelableAccountWithCredentials(cur, indices);
+                    return new ParcelableCredentials(cur, indices);
                 }
             } finally {
                 cur.close();
@@ -223,7 +216,27 @@ public class ParcelableAccount implements Parcelable {
         return null;
     }
 
-    public static class ParcelableAccountWithCredentials extends ParcelableAccount {
+    @Override
+    public String toString() {
+        return "Account{screen_name=" + screen_name + ", name=" + name + ", profile_image_url=" + profile_image_url
+                + ", profile_banner_url=" + profile_banner_url + ", account_id=" + account_id + ", color=" + color
+                + ", is_activated=" + is_activated + ", is_dummy=" + is_dummy + "}";
+    }
+
+    public static class ParcelableCredentials extends ParcelableAccount {
+
+        public static final Parcelable.Creator<ParcelableCredentials> CREATOR = new Parcelable.Creator<ParcelableCredentials>() {
+
+            @Override
+            public ParcelableCredentials createFromParcel(final Parcel in) {
+                return new ParcelableCredentials(in);
+            }
+
+            @Override
+            public ParcelableCredentials[] newArray(final int size) {
+                return new ParcelableCredentials[size];
+            }
+        };
 
         public final int auth_type;
         public final String consumer_key, consumer_secret;
@@ -232,7 +245,7 @@ public class ParcelableAccount implements Parcelable {
         public final String api_url_format;
         public final boolean same_oauth_signing_url, no_version_suffix;
 
-        public ParcelableAccountWithCredentials(final Cursor cursor, final Indices indices) {
+        public ParcelableCredentials(final Cursor cursor, final Indices indices) {
             super(cursor, indices);
             auth_type = cursor.getInt(indices.auth_type);
             consumer_key = cursor.getString(indices.consumer_key);
@@ -246,20 +259,81 @@ public class ParcelableAccount implements Parcelable {
             no_version_suffix = cursor.getInt(indices.no_version_suffix) == 1;
         }
 
+        public ParcelableCredentials(Parcel in) {
+            super(in);
+            auth_type = in.readInt();
+            consumer_key = in.readString();
+            consumer_secret = in.readString();
+            basic_auth_username = in.readString();
+            basic_auth_password = in.readString();
+            oauth_token = in.readString();
+            oauth_token_secret = in.readString();
+            api_url_format = in.readString();
+            same_oauth_signing_url = in.readInt() == 1;
+            no_version_suffix = in.readInt() == 1;
+        }
+
+
+        public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly) {
+            return getCredentialsList(context, activatedOnly, false);
+        }
+
+        public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly,
+                                                                     final boolean officialKeyOnly) {
+            if (context == null) return Collections.emptyList();
+            final ArrayList<ParcelableCredentials> accounts = new ArrayList<>();
+            final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
+                    Accounts.CONTENT_URI, Accounts.COLUMNS,
+                    activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, Accounts.SORT_POSITION);
+            if (cur == null) return accounts;
+            final Indices indices = new Indices(cur);
+            cur.moveToFirst();
+            while (!cur.isAfterLast()) {
+                if (!officialKeyOnly) {
+                    accounts.add(new ParcelableCredentials(cur, indices));
+                } else {
+                    final String consumerKey = cur.getString(indices.consumer_key);
+                    final String consumerSecret = cur.getString(indices.consumer_secret);
+                    if (shouldForceUsingPrivateAPIs(context)
+                            || isOfficialConsumerKeySecret(context, consumerKey, consumerSecret)) {
+                        accounts.add(new ParcelableCredentials(cur, indices));
+                    }
+                }
+                cur.moveToNext();
+            }
+            cur.close();
+            return accounts;
+        }
+
+        public static boolean isOfficialCredentials(final Context context, final ParcelableCredentials account) {
+            if (account == null) return false;
+            final boolean isOAuth = account.auth_type == Accounts.AUTH_TYPE_OAUTH
+                    || account.auth_type == Accounts.AUTH_TYPE_XAUTH;
+            final String consumerKey = account.consumer_key, consumerSecret = account.consumer_secret;
+            return isOAuth && isOfficialConsumerKeySecret(context, consumerKey, consumerSecret);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(auth_type);
+            out.writeString(consumer_key);
+            out.writeString(consumer_secret);
+            out.writeString(basic_auth_username);
+            out.writeString(basic_auth_password);
+            out.writeString(oauth_token);
+            out.writeString(oauth_token_secret);
+            out.writeString(api_url_format);
+            out.writeInt(same_oauth_signing_url ? 1 : 0);
+            out.writeInt(no_version_suffix ? 1 : 0);
+        }
+
         @Override
         public String toString() {
             return "AccountWithCredentials{auth_type=" + auth_type + ", consumer_key=" + consumer_key
                     + ", consumer_secret=" + consumer_secret + ", basic_auth_password=" + basic_auth_password
                     + ", oauth_token=" + oauth_token + ", oauth_token_secret=" + oauth_token_secret
                     + ", api_url_format=" + api_url_format + ", same_oauth_signing_url=" + same_oauth_signing_url + "}";
-        }
-
-        public static boolean isOfficialCredentials(final Context context, final ParcelableAccountWithCredentials account) {
-            if (account == null) return false;
-            final boolean isOAuth = account.auth_type == Accounts.AUTH_TYPE_OAUTH
-                    || account.auth_type == Accounts.AUTH_TYPE_XAUTH;
-            final String consumerKey = account.consumer_key, consumerSecret = account.consumer_secret;
-            return isOAuth && isOfficialConsumerKeySecret(context, consumerKey, consumerSecret);
         }
     }
 

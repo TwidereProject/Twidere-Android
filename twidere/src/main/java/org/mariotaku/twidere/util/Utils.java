@@ -158,7 +158,7 @@ import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.StatusShareProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -649,7 +649,6 @@ public final class Utils implements Constants, TwitterConstants {
         if (context == null) return;
         configBaseAdapter(context, adapter);
         final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        adapter.setAnimationEnabled(pref.getBoolean(KEY_CARD_ANIMATION, true));
         adapter.notifyDataSetChanged();
     }
 
@@ -2271,7 +2270,7 @@ public final class Utils implements Constants, TwitterConstants {
         return date.getTime();
     }
 
-    public static Authorization getTwitterAuthorization(final Context context, final ParcelableAccountWithCredentials account) {
+    public static Authorization getTwitterAuthorization(final Context context, final ParcelableCredentials account) {
         if (context == null || account == null) return null;
         switch (account.auth_type) {
             case Accounts.AUTH_TYPE_OAUTH:
@@ -3499,14 +3498,14 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void setMenuForStatus(final Context context, final Menu menu,
                                         final ParcelableStatus status) {
-        final ParcelableAccountWithCredentials account
-                = ParcelableAccount.getAccountWithCredentials(context, status.account_id);
+        final ParcelableCredentials account
+                = ParcelableAccount.getCredentials(context, status.account_id);
         setMenuForStatus(context, menu, status, account);
     }
 
     public static void setMenuForStatus(final Context context, final Menu menu,
                                         final ParcelableStatus status,
-                                        final ParcelableAccountWithCredentials account) {
+                                        final ParcelableCredentials account) {
         if (context == null || menu == null || status == null) return;
         final Resources resources = context.getResources();
         final int retweetHighlight = resources.getColor(R.color.highlight_retweet);
@@ -3534,7 +3533,7 @@ public final class Utils implements Constants, TwitterConstants {
         }
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);
         if (translate != null) {
-            final boolean isOfficialKey = ParcelableAccountWithCredentials.isOfficialCredentials(context, account);
+            final boolean isOfficialKey = ParcelableCredentials.isOfficialCredentials(context, account);
             setMenuItemAvailability(menu, MENU_TRANSLATE, isOfficialKey);
         }
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION);

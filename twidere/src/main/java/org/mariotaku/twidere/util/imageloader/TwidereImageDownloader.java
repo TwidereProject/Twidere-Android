@@ -36,7 +36,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableAccountWithCredentials;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -125,10 +125,10 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
 			throws IOException, TwitterException {
 		final Uri uri = Uri.parse(uriString);
 		final Authorization auth;
-		final ParcelableAccountWithCredentials account;
+		final ParcelableCredentials account;
 		if (isTwitterAuthRequired(uri) && extras instanceof AccountExtra) {
 			final AccountExtra accountExtra = (AccountExtra) extras;
-			account = ParcelableAccount.getAccountWithCredentials(mContext, accountExtra.account_id);
+			account = ParcelableAccount.getCredentials(mContext, accountExtra.account_id);
 			auth = getTwitterAuthorization(mContext, accountExtra.account_id);
 		} else {
 			account = null;

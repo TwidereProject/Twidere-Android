@@ -26,9 +26,13 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.SharedElementCallback;
+import android.support.v4.view.WindowCompat;
+import android.support.v4.view.WindowInsetsCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +54,8 @@ import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
+
+import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.CardItemLinearLayout
+<org.mariotaku.twidere.view.ColorLabelLinearLayout
     android:id="@+id/content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -100,4 +100,4 @@
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 
-</org.mariotaku.twidere.view.CardItemLinearLayout>
+</org.mariotaku.twidere.view.ColorLabelLinearLayout>

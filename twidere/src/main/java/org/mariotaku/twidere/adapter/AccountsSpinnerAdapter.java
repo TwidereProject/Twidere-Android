@@ -55,6 +55,11 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
     }
 
     @Override
+    public long getItemId(int position) {
+        return getItem(position).account_id;
+    }
+
+    @Override
     public View getDropDownView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getDropDownView(position, convertView, parent);
         bindView(view, getItem(position));

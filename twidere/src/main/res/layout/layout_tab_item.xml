@@ -25,6 +25,7 @@
             android:id="@+id/tab_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:textAllCaps="true"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="?android:textColorPrimary"
@@ -37,7 +38,6 @@
         android:layout_height="@dimen/unread_indicator_size"
         android:layout_alignRight="@+id/tab_content"
         android:layout_alignTop="@+id/tab_content"
-        android:layout_marginRight="@dimen/element_spacing_minus_small"
         android:layout_marginTop="@dimen/element_spacing_minus_small"
         android:background="@drawable/bg_unread_indicator"
         android:ellipsize="none"
@@ -45,6 +45,5 @@
         android:padding="@dimen/element_spacing_xsmall"
         android:singleLine="true"
         android:textColor="?android:textColorPrimary"/>
-
 
 </view>

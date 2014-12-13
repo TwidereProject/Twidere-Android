@@ -24,11 +24,11 @@ import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 
-public class ViewHolder implements Constants {
+public class ListViewHolder implements Constants {
 
 	public View view;
 
-	public ViewHolder(final View view) {
+	public ListViewHolder(final View view) {
 		if (view == null) throw new NullPointerException();
 		this.view = view;
 	}

@@ -120,6 +120,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     private LongSparseMap<Long> mCreatingFavoriteIds = new LongSparseMap<>();
     private LongSparseMap<Long> mDestroyingFavoriteIds = new LongSparseMap<>();
+    private LongSparseMap<Long> mCreatingRetweetIds = new LongSparseMap<>();
+    private LongSparseMap<Long> mDestroyingStatusIds = new LongSparseMap<>();
 
     public AsyncTwitterWrapper(final Context context) {
         mContext = context;
@@ -144,9 +146,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mCreatingFavoriteIds.has(accountId, statusId);
     }
 
-
     public boolean isDestroyingFavorite(final long accountId, final long statusId) {
         return mDestroyingFavoriteIds.has(accountId, statusId);
+    }
+    public boolean isCreatingRetweet(final long accountId, final long statusId) {
+        return mCreatingRetweetIds.has(accountId, statusId);
+    }
+
+    public boolean isDestroyingStatus(final long accountId, final long statusId) {
+        return mDestroyingStatusIds.has(accountId, statusId);
     }
 
     public void clearNotificationAsync(final int notificationType) {
@@ -1538,7 +1546,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDestroyingStatusIds.put(account_id, status_id);
+            final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+            bus.post(new StatusListChangedEvent());
+        }
+
+        @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
+            mDestroyingStatusIds.remove(account_id, status_id);
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
                 if (status.retweet_id > 0) {
@@ -2104,7 +2121,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mCreatingRetweetIds.put(account_id, status_id);
+            final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+            bus.post(new StatusListChangedEvent());
+        }
+
+        @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
+            mCreatingRetweetIds.remove(account_id, status_id);
             if (result.hasData()) {
                 final ContentValues values = new ContentValues();
                 final ParcelableStatus status = result.getData();
@@ -2122,7 +2148,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_retweeting, result.getException(), true);
             }
-
             super.onPostExecute(result);
         }
 

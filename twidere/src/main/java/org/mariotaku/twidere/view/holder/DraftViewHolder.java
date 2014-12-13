@@ -26,7 +26,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
-public class DraftViewHolder extends ViewHolder {
+public class DraftViewHolder extends ListViewHolder {
 
 	public final IColorLabelView content;
 	public final TextView text;

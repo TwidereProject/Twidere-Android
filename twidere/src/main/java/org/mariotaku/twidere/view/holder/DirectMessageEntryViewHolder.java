@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +28,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShortTimeView;
 
-public class DirectMessageEntryViewHolder extends ViewHolder {
+public class DirectMessageEntryViewHolder extends ListViewHolder {
 
     public final ImageView profile_image;
     public final TextView name, text;

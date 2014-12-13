@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.CardItemFrameLayout
+<org.mariotaku.twidere.view.ColorLabelFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
@@ -28,6 +28,16 @@
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:contentDescription="@string/profile_image"
             android:scaleType="fitCenter"/>
+
+        <ImageView
+            android:id="@+id/profile_type"
+            android:layout_width="@dimen/icon_size_profile_type"
+            android:layout_height="@dimen/icon_size_profile_type"
+            android:layout_alignBottom="@id/profile_image"
+            android:layout_alignRight="@id/profile_image"
+            android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_marginRight="@dimen/element_spacing_minus_normal"
+            android:scaleType="centerInside"/>
 
         <FrameLayout
             android:id="@+id/name_frame"
@@ -141,4 +151,4 @@
         </LinearLayout>
     </RelativeLayout>
 
-</org.mariotaku.twidere.view.CardItemFrameLayout>
+</org.mariotaku.twidere.view.ColorLabelFrameLayout>

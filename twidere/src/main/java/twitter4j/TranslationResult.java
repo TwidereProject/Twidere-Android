@@ -8,7 +8,7 @@ public interface TranslationResult extends TwitterResponse {
 
 	public String getText();
 
-	public String getTranslatedLong();
+	public String getTranslatedLang();
 
 	public String getTranslationType();
 

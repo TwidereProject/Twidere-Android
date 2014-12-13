@@ -31,8 +31,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.holder.UserViewHolder;
-import org.mariotaku.twidere.view.iface.ICardItemView.OnOverflowIconClickListener;
+import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
 import java.util.List;
 import java.util.Locale;
@@ -44,18 +43,13 @@ import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
-public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> implements IBaseCardAdapter,
-        OnOverflowIconClickListener {
+public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> implements IBaseCardAdapter {
 
     private final ImageLoaderWrapper mProfileImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final Context mContext;
-    private MenuButtonClickListener mListener;
 
     private final Locale mLocale;
-
-    private boolean mAnimationEnabled;
-    private int mMaxAnimationPosition;
 
     public ParcelableUsersAdapter(final Context context) {
         this(context, Utils.isCompactCards(context));
@@ -80,12 +74,12 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
         final Object tag = view.getTag();
-        final UserViewHolder holder;
-        if (tag instanceof UserViewHolder) {
-            holder = (UserViewHolder) tag;
+        final UserListViewHolder holder;
+        if (tag instanceof UserListViewHolder) {
+            holder = (UserListViewHolder) tag;
         } else {
-            holder = new UserViewHolder(view);
-            holder.content.setOnOverflowIconClickListener(this);
+            holder = new UserListViewHolder(view);
+//            holder.content.setOnOverflowIconClickListener(this);
             view.setTag(holder);
         }
 
@@ -104,8 +98,12 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         holder.setUserColor(getUserColor(mContext, user.id));
 
         holder.setTextSize(getTextSize());
-        holder.name.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-                getUserTypeIconRes(user.is_verified, user.is_protected), 0);
+        final int userTypeRes = getUserTypeIconRes(user.is_verified, user.is_protected);
+        if (userTypeRes != 0) {
+            holder.profile_type.setImageResource(userTypeRes);
+        } else {
+            holder.profile_type.setImageDrawable(null);
+        }
         final String nick = getUserNickname(mContext, user.id);
         holder.name.setText(TextUtils.isEmpty(nick) ? user.name : isNicknameOnly() ? nick : mContext.getString(
                 R.string.name_with_nickname, user.name, nick));
@@ -123,32 +121,9 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         if (isDisplayProfileImage()) {
             mProfileImageLoader.displayProfileImage(holder.profile_image, user.profile_image_url);
         }
-        if (position > mMaxAnimationPosition) {
-            if (mAnimationEnabled) {
-                view.startAnimation(holder.item_animation);
-            }
-            mMaxAnimationPosition = position;
-        }
         return view;
     }
 
-    @Override
-    public void onOverflowIconClick(final View view) {
-        if (mMultiSelectManager.isActive()) return;
-        final Object tag = view.getTag();
-        if (tag instanceof UserViewHolder) {
-            final UserViewHolder holder = (UserViewHolder) tag;
-            final int position = holder.position;
-            if (position == -1 || mListener == null) return;
-            mListener.onMenuButtonClick(view, position, getItemId(position));
-        }
-    }
-
-    @Override
-    public void setAnimationEnabled(final boolean anim) {
-        if (mAnimationEnabled == anim) return;
-        mAnimationEnabled = anim;
-    }
 
     public void setData(final List<ParcelableUser> data) {
         setData(data, false);
@@ -166,15 +141,6 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         }
     }
 
-    @Override
-    public void setMaxAnimationPosition(final int position) {
-        mMaxAnimationPosition = position;
-    }
-
-    @Override
-    public void setMenuButtonClickListener(final MenuButtonClickListener listener) {
-        mListener = listener;
-    }
 
     private static int getItemResource(final boolean compactCards) {
         return compactCards ? R.layout.card_item_user_compact : R.layout.card_item_user;

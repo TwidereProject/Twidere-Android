@@ -47,10 +47,7 @@ public abstract class BaseParcelableActivitiesAdapter extends BaseArrayAdapter<P
     private final MultiSelectManager mMultiSelectManager;
     private final ImageLoaderWrapper mImageLoader;
 
-    private boolean mShowAbsoluteTime, mAnimationEnabled;
-    private int mMaxAnimationPosition;
-
-    private MenuButtonClickListener mListener;
+    private boolean mShowAbsoluteTime;
 
     public BaseParcelableActivitiesAdapter(final Context context) {
         this(context, isCompactCards(context));
@@ -113,26 +110,10 @@ public abstract class BaseParcelableActivitiesAdapter extends BaseArrayAdapter<P
         notifyDataSetChanged();
     }
 
-    @Override
-    public void setAnimationEnabled(final boolean anim) {
-        if (mAnimationEnabled == anim) return;
-        mAnimationEnabled = anim;
-    }
-
     public void setData(final List<ParcelableActivity> data) {
         clear();
         if (data == null) return;
         addAll(data);
-    }
-
-    @Override
-    public void setMaxAnimationPosition(final int position) {
-        mMaxAnimationPosition = position;
-    }
-
-    @Override
-    public void setMenuButtonClickListener(final MenuButtonClickListener listener) {
-        mListener = listener;
     }
 
     public void setShowAbsoluteTime(final boolean show) {

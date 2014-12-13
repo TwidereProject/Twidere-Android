@@ -9,30 +9,19 @@
         <attr name="menuIconColorDisabled" format="color"/>
         <attr name="menuIconColorActionBar" format="color"/>
         <attr name="messageBubbleColor" format="color"/>
-        <attr name="cardItemBackground" format="reference"/>
         <attr name="cardItemBackgroundColor" format="color"/>
-        <attr name="listMenuOverflowButton" format="reference"/>
         <attr name="ignorePadding" format="boolean"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
-        <attr name="cardItemViewStyle" format="reference"/>
-    </declare-styleable>
-    <declare-styleable name="CardItemView">
-        <attr name="cardBackground" format="reference"/>
-        <attr name="cardSelector" format="reference"/>
-        <attr name="cardActivatedIndicator" format="reference"/>
-        <attr name="cardOverflowIcon" format="reference"/>
-        <attr name="cardBackgroundAlpha" format="fraction"/>
-        <attr name="cardGapHeight" format="dimension"/>
-        <attr name="cardGapText" format="string"/>
-        <attr name="cardGapTextColor" format="color"/>
-        <attr name="cardGapTextSize" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="TabPagerIndicator">
         <attr name="tabStripColor" format="color"/>
         <attr name="tabIconColor" format="color"/>
         <attr name="tabHorizontalPadding" format="dimension"/>
         <attr name="tabVerticalPadding" format="dimension"/>
+        <attr name="tabDividerVerticalPadding" format="dimension"/>
+        <attr name="tabDividerHorizontalPadding" format="dimension"/>
         <attr name="tabExpandEnabled" format="boolean"/>
+        <attr name="tabShowDivider" format="boolean"/>
         <attr name="tabDisplayOption"/>
     </declare-styleable>
     <declare-styleable name="LinePageIndicator">

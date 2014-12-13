@@ -272,7 +272,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         first_media = media != null && media.length > 0 ? media[0].url : null;
     }
 
-    public ParcelableStatus(final ParcelableStatus orig, long override_my_retweet_id) {
+    public ParcelableStatus(final ParcelableStatus orig, final long override_my_retweet_id,
+                            final long override_retweet_count) {
         id = orig.id;
         account_id = orig.account_id;
         timestamp = orig.timestamp;
@@ -280,7 +281,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         retweet_id = orig.retweet_id;
         retweet_timestamp = orig.retweet_timestamp;
         retweeted_by_id = orig.retweeted_by_id;
-        retweet_count = orig.retweet_count;
+        retweet_count = override_retweet_count;
         favorite_count = orig.favorite_count;
         reply_count = orig.reply_count;
         descendent_reply_count = orig.descendent_reply_count;

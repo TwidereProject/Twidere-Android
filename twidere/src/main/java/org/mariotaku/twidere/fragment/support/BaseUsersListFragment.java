@@ -103,7 +103,6 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
         super.onActivityCreated(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mAdapter = new ParcelableUsersAdapter(getActivity());
-        mAdapter.setMenuButtonClickListener(this);
         mMultiSelectManager = getMultiSelectManager();
         mListView = getListView();
         mListView.setFastScrollEnabled(mPreferences.getBoolean(KEY_FAST_SCROLL_THUMB, false));

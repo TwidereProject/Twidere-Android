@@ -39,6 +39,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final String USER_NICKNAME_PREFERENCES_NAME = "user_nicknames";
     public static final String USER_COLOR_PREFERENCES_NAME = "user_colors";
     public static final String HOST_MAPPING_PREFERENCES_NAME = "host_mapping";
+    public static final String MESSAGE_DRAFTS_PREFERENCES_NAME = "message_drafts";
     public static final String SHARED_PREFERENCES_NAME = "preferences";
     public static final String PERMISSION_PREFERENCES_NAME = "app_permissions";
     public static final String SILENT_NOTIFICATIONS_PREFERENCE_NAME = "silent_notifications";

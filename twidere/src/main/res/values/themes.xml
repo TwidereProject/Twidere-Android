@@ -34,11 +34,7 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
@@ -64,11 +60,7 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
@@ -124,12 +116,8 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
 
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
@@ -144,12 +132,8 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
 
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
@@ -195,11 +179,7 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
@@ -282,11 +262,7 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_dark</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_dark
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_light</item>
@@ -308,11 +284,7 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
@@ -334,11 +306,7 @@
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackground">@drawable/bg_card_item_light</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
-        <item name="listMenuOverflowButton">@drawable/ic_list_menu_moreoverflow_normal_holo_light
-        </item>
-        <item name="cardItemViewStyle">@style/Widget.CardItemView.Light</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>

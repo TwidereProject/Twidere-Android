@@ -22,18 +22,15 @@ package org.mariotaku.twidere.view.holder;
 import android.view.View;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.animation.CardItemAnimation;
-import org.mariotaku.twidere.view.iface.ICardItemView;
+import org.mariotaku.twidere.view.iface.IColorLabelView;
 
-public class CardViewHolder extends ViewHolder {
+public class CardViewHolder extends ListViewHolder {
 
-	public final CardItemAnimation item_animation;
-	public final ICardItemView content;
+    public final IColorLabelView content;
 
-	public CardViewHolder(final View view) {
-		super(view);
-		content = (ICardItemView) view.findViewById(R.id.content);
-		item_animation = new CardItemAnimation();
-	}
+    public CardViewHolder(final View view) {
+        super(view);
+        content = (IColorLabelView) view.findViewById(R.id.content);
+    }
 
 }
