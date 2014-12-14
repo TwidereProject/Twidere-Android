@@ -144,5 +144,6 @@
     </style>
 
     <style name="Widget.ProfileType" parent="Widget.Base">
+        <item name="android:scaleType">centerInside</item>
     </style>
 </resources>

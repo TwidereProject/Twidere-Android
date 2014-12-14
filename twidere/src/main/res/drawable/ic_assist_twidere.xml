@@ -16,8 +16,17 @@
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item android:drawable="@drawable/ic_action_assist_twidere_normal" android:state_active="false" android:state_enabled="true" android:state_focused="false"/>
-	<item android:drawable="@drawable/ic_action_assist_twidere_activated" android:state_active="true" android:state_enabled="true" android:state_focused="false"/>
-	<item android:drawable="@drawable/ic_action_assist_twidere_activated" android:state_active="false" android:state_enabled="true" android:state_focused="true"/>
+    <item android:drawable="@drawable/ic_action_assist_twidere_normal"
+          android:state_active="false"
+          android:state_enabled="true"
+          android:state_focused="false"/>
+    <item android:drawable="@drawable/ic_action_assist_twidere_activated"
+          android:state_active="true"
+          android:state_enabled="true"
+          android:state_focused="false"/>
+    <item android:drawable="@drawable/ic_action_assist_twidere_activated"
+          android:state_active="false"
+          android:state_enabled="true"
+          android:state_focused="true"/>
 
 </selector>

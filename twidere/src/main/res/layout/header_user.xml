@@ -233,7 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_button_size"
                 android:baselineAligned="false"
-                android:divider="@drawable/divider_vertical_small_holo"
+                android:divider="?android:dividerHorizontal"
                 android:orientation="horizontal"
                 android:showDividers="middle"
                 android:splitMotionEvents="false">

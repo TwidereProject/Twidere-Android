@@ -29,6 +29,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Matrix.ScaleToFit;
 import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -313,8 +314,36 @@ public class CircularImageView extends ImageView {
                 Shader.TileMode.CLAMP);
         mMatrix.reset();
 
+        switch (getScaleType()) {
+            case CENTER_CROP: {
+                final float srcRatio = source.width() / source.height();
+                final float dstRatio = dest.width() / dest.height();
+                if (srcRatio > dstRatio) {
+                    // Source is wider than destination, fit height
+                    tempDest.top = dest.top;
+                    tempDest.bottom = dest.bottom;
+                    final float dstWidth = dest.height() * srcRatio;
+                    tempDest.left = dest.centerX() - dstWidth / 2;
+                    tempDest.right = dest.centerX() + dstWidth / 2;
+                } else if (srcRatio < dstRatio) {
+                    tempDest.left = dest.left;
+                    tempDest.right = dest.right;
+                    final float dstHeight = dest.width() / srcRatio;
+                    tempDest.top = dest.centerY() - dstHeight / 2;
+                    tempDest.bottom = dest.centerY() + dstHeight / 2;
+                } else {
+                    tempDest.set(dest);
+                }
+                break;
+            }
+            default: {
+                tempDest.set(dest);
+                break;
+            }
+        }
+
         // Fit bitmap to bounds.
-        mMatrix.setRectToRect(source, dest, Matrix.ScaleToFit.FILL);
+        mMatrix.setRectToRect(source, tempDest, ScaleToFit.CENTER);
 
         shader.setLocalMatrix(mMatrix);
         mBitmapPaint.setShader(shader);
@@ -322,6 +351,8 @@ public class CircularImageView extends ImageView {
                 mBitmapPaint);
 
     }
+
+    private RectF tempDest = new RectF();
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static class CircularOutlineProvider extends ViewOutlineProvider {
