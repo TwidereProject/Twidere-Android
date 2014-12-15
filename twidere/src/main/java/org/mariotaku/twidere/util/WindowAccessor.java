@@ -13,7 +13,7 @@ public class WindowAccessor {
         WindowAccessorL.setStatusBarColor(window, color);
     }
 
-    @TargetApi(Build.VERSION_CODES.L)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static class WindowAccessorL {
         public static void setStatusBarColor(Window window, int color) {
             window.setStatusBarColor(color);
