@@ -229,8 +229,6 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     public static final String KEY_PRELOAD_WIFI_ONLY = "preload_wifi_only";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    public static final String KEY_DISABLE_TAB_SWIPE = "disable_tab_swipe";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     public static final String KEY_LINK_TO_QUOTED_TWEET = "link_to_quoted_tweet";
     @Preference(type = BOOLEAN)
     public static final String KEY_BACKGROUND_TOAST_NOTIFICATION = "background_toast_notification";
@@ -269,8 +267,6 @@ public interface SharedPreferenceConstants {
 
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_COMPACT_CARDS = "compact_cards";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    public static final String KEY_LONG_CLICK_TO_OPEN_MENU = "long_click_to_open_menu";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_FORCE_USING_PRIVATE_APIS = "force_using_private_apis";
     @Preference(type = STRING, hasDefault = true, defaultString = "140")

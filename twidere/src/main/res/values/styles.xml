@@ -115,12 +115,14 @@
 
     <style name="Widget.ProfileImage" parent="Widget.Base">
         <item name="android:scaleType">centerCrop</item>
-        <item name="civBorderWidth">1dp</item>
+        <item name="pivBorderWidth">1dp</item>
+        <item name="pivCornerRadiusRatio">10%p</item>
     </style>
 
     <style name="Widget.Light.ProfileImage" parent="Widget.Base">
         <item name="android:scaleType">centerCrop</item>
-        <item name="civBorderWidth">1dp</item>
+        <item name="pivBorderWidth">1dp</item>
+        <item name="pivCornerRadiusRatio">10%p</item>
     </style>
 
     <style name="Widget.ProfileImage.Large">
@@ -129,8 +131,8 @@
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
         <item name="android:paddingBottom">3dp</item>
-        <item name="civElevation">@dimen/elevation_card</item>
-        <item name="civBorderWidth">2dp</item>
+        <item name="pivElevation">@dimen/elevation_card</item>
+        <item name="pivBorderWidth">2dp</item>
     </style>
 
     <style name="Widget.Light.ProfileImage.Large">
@@ -139,8 +141,8 @@
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
         <item name="android:paddingBottom">3dp</item>
-        <item name="civElevation">@dimen/elevation_card</item>
-        <item name="civBorderWidth">2dp</item>
+        <item name="pivElevation">@dimen/elevation_card</item>
+        <item name="pivBorderWidth">2dp</item>
     </style>
 
     <style name="Widget.ProfileType" parent="Widget.Base">

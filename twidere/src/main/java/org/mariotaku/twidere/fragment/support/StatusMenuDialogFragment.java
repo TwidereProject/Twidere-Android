@@ -22,8 +22,6 @@ public class StatusMenuDialogFragment extends MenuDialogFragment {
         final Bundle args = getArguments();
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
         setMenuForStatus(getThemedContext(), menu, status);
-        final boolean longclickToOpenMenu = prefs.getBoolean(KEY_LONG_CLICK_TO_OPEN_MENU, false);
-        Utils.setMenuItemAvailability(menu, MENU_MULTI_SELECT, longclickToOpenMenu);
     }
 
 }

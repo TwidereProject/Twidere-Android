@@ -66,11 +66,14 @@
         <attr name="iabActivatedColor" format="color"/>
         <attr name="iabDisabledColor" format="color"/>
     </declare-styleable>
-    <declare-styleable name="CircularImageView">
-        <attr name="civBorder" format="boolean"/>
-        <attr name="civBorderWidth" format="dimension"/>
-        <attr name="civBorderColor" format="color"/>
-        <attr name="civElevation" format="dimension"/>
+    <declare-styleable name="ProfileImageView">
+        <attr name="pivBorder" format="boolean"/>
+        <attr name="pivBorderWidth" format="dimension"/>
+        <attr name="pivBorderColor" format="color"/>
+        <attr name="pivElevation" format="dimension"/>
+        <attr name="pivCornerRadius" format="dimension"/>
+        <attr name="pivCornerRadiusRatio" format="fraction"/>
+        <attr name="pivStyle"/>
     </declare-styleable>
     <declare-styleable name="HeaderDrawerLayout">
         <attr name="headerLayout" format="reference"/>
@@ -85,5 +88,9 @@
     <attr name="tabDisplayOption">
         <flag name="label" value="0x1"/>
         <flag name="icon" value="0x2"/>
+    </attr>
+    <attr name="pivStyle">
+        <enum name="circle" value="0x1"/>
+        <enum name="rectangle" value="0x2"/>
     </attr>
 </resources>

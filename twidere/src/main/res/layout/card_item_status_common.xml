@@ -30,8 +30,9 @@
         android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
-        <org.mariotaku.twidere.view.CircularImageView
+        <org.mariotaku.twidere.view.ProfileImageView
             android:id="@+id/retweet_profile_image"
+            style="?profileImageStyle"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
             android:layout_marginBottom="@dimen/element_spacing_small"
@@ -64,7 +65,7 @@
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:paddingLeft="@dimen/element_spacing_mlarge">
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 android:id="@+id/profile_image"
                 style="?profileImageStyle"
                 android:layout_width="@dimen/icon_size_status_profile_image"

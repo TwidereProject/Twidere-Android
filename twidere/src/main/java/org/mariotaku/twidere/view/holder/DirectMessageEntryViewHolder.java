@@ -31,7 +31,7 @@ import org.mariotaku.twidere.view.ShortTimeView;
 public class DirectMessageEntryViewHolder extends ListViewHolder {
 
     public final ImageView profile_image;
-    public final TextView name, text;
+    public final TextView name, screen_name, text;
     public final ShortTimeView time;
     private float text_size;
     private boolean account_color_enabled;
@@ -42,6 +42,7 @@ public class DirectMessageEntryViewHolder extends ListViewHolder {
         final Context context = view.getContext();
         profile_image = (ImageView) findViewById(R.id.profile_image);
         name = (TextView) findViewById(R.id.name);
+        screen_name = (TextView) findViewById(R.id.screen_name);
         text = (TextView) findViewById(R.id.text);
         time = (ShortTimeView) findViewById(R.id.time);
         is_rtl = Utils.isRTL(context);
@@ -70,6 +71,8 @@ public class DirectMessageEntryViewHolder extends ListViewHolder {
     public void setTextSize(final float text_size) {
         if (this.text_size == text_size) return;
         this.text_size = text_size;
+        text.setTextSize(text_size);
+        name.setTextSize(text_size);
     }
 
     public void setUserColor(final int color) {

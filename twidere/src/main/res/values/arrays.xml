@@ -51,21 +51,20 @@
         <item>save</item>
         <item>discard</item>
     </string-array>
-    <string-array name="entries_official_consumer_key_secret">
-        <item>Twitter for Android</item>
-        <item>Twitter for iPhone</item>
-        <item>Twitter for iPad</item>
-        <item>Twitter for Mac</item>
-        <item>Twitter for Windows Phone</item>
-        <item>Twitter for Google TV</item>
-    </string-array>
-    <string-array name="values_official_consumer_key_secret">
-        <item>3nVuSoBZnx6U4vzUxf5w;Bcs59EFbbsdF6Sl9Ng71smgStWEGwXXKSjYvPVt7qys</item>
-        <item>IQKbtAYlXLripLGPWd0HUA;GgDYlkSvaPxGxC4X8liwpUoqKwwr3lCADbz8A7ADU</item>
-        <item>CjulERsDeqhhjSme66ECg;IQWdVyqFxghAtURHGeGiWAsmCAGmdW3WmbEx6Hck</item>
-        <item>3rJOl1ODzm9yZy63FACdg;5jPoQ5kQvMJFDYRNE8bQ4rHuds4xJqhvgNJM4awaE8</item>
-        <item>yN3DUNVO0Me63IAQdhTfCA;c768oTKdzAjIYCmpSNIdZbGaG0t6rOhSFQP0S5uC79g</item>
-        <item>iAtYJ4HpUVfIUoNnif1DA;172fOpzuZoYzNYaU3mMYvE8m8MEyLbztOdbrUolU</item>
+    <!-- CRC32 checksum of consumer secret of official clients to check whether user is using official keys -->
+    <string-array name="values_official_consumer_secret_crc32">
+        <!--Twitter for Android-->
+        <item>6ce85096</item>
+        <!--Twitter for iPhone-->
+        <item>deffe9c7</item>
+        <!--Twitter for iPad-->
+        <item>9f00e0cb</item>
+        <!--Twitter for Mac-->
+        <item>df27640e</item>
+        <!--Twitter for Windows Phone-->
+        <item>62bd0d33</item>
+        <!--Twitter for Google TV-->
+        <item>56d8f9ff</item>
     </string-array>
     <string-array name="entries_theme">
         <item>@string/theme_light</item>

@@ -30,6 +30,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
@@ -39,32 +40,33 @@ import twitter4j.User;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.makeCachedUserContentValues;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.Utils.isMyAccount;
 
 public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<ParcelableUser>> implements Constants {
 
-    private final ContentResolver resolver;
-    private final boolean omit_intent_extra, load_from_cache;
-    private final Bundle extras;
-    private final long account_id, user_id;
-    private final String screen_name;
+    private final boolean mOmitIntentExtra, mLoadFromCache;
+    private final Bundle mExtras;
+    private final long mAccountId, mUserId;
+    private final String mScreenName;
 
-    public ParcelableUserLoader(final Context context, final long account_id, final long user_id,
-                                final String screen_name, final Bundle extras, final boolean omit_intent_extra,
-                                final boolean load_from_cache) {
+    public ParcelableUserLoader(final Context context, final long accountId, final long userId,
+                                final String screenName, final Bundle extras, final boolean omitIntentExtra,
+                                final boolean loadFromCache) {
         super(context);
-        resolver = context.getContentResolver();
-        this.omit_intent_extra = omit_intent_extra;
-        this.load_from_cache = load_from_cache;
-        this.extras = extras;
-        this.account_id = account_id;
-        this.user_id = user_id;
-        this.screen_name = screen_name;
+        this.mOmitIntentExtra = omitIntentExtra;
+        this.mLoadFromCache = loadFromCache;
+        this.mExtras = extras;
+        this.mAccountId = accountId;
+        this.mUserId = userId;
+        this.mScreenName = screenName;
     }
 
     @Override
     public SingleResponse<ParcelableUser> loadInBackground() {
-        if (!omit_intent_extra && extras != null) {
-            final ParcelableUser user = extras.getParcelable(EXTRA_USER);
+        final Context context = getContext();
+        final ContentResolver resolver = context.getContentResolver();
+        if (!mOmitIntentExtra && mExtras != null) {
+            final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
                 final ContentValues values = ParcelableUser.makeCachedUserContentValues(user);
                 resolver.delete(CachedUsers.CONTENT_URI, CachedUsers.USER_ID + " = " + user.id, null);
@@ -72,30 +74,41 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 return SingleResponse.getInstance(user);
             }
         }
-        final Twitter twitter = getTwitterInstance(getContext(), account_id, true);
+        final Twitter twitter = getTwitterInstance(context, mAccountId, true);
         if (twitter == null) return SingleResponse.getInstance();
-        if (load_from_cache) {
-            final String where = CachedUsers.USER_ID + " = " + user_id + " OR " + CachedUsers.SCREEN_NAME + " = '"
-                    + screen_name + "'";
+        if (mLoadFromCache) {
+            final String where = CachedUsers.USER_ID + " = " + mUserId + " OR " + CachedUsers.SCREEN_NAME + " = '"
+                    + mScreenName + "'";
             final Cursor cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS, where, null, null);
             final int count = cur.getCount();
             try {
                 if (count > 0) {
                     cur.moveToFirst();
-                    return new SingleResponse<>(new ParcelableUser(cur, account_id), null);
+                    return SingleResponse.getInstance(new ParcelableUser(cur, mAccountId));
                 }
             } finally {
                 cur.close();
             }
         }
         try {
-            final User user = TwitterWrapper.tryShowUser(twitter, user_id, screen_name);
+            final User user = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
             if (user == null) return SingleResponse.getInstance();
-            final ContentValues values = makeCachedUserContentValues(user);
-            final String where = Expression.equals(CachedUsers.USER_ID, user.getId()).getSQL();
-            resolver.delete(CachedUsers.CONTENT_URI, where, null);
-            resolver.insert(CachedUsers.CONTENT_URI, values);
-            return SingleResponse.getInstance(new ParcelableUser(user, account_id));
+            final ContentValues cachedUserValues = makeCachedUserContentValues(user);
+            final long userId = user.getId();
+            final String cachedUserWhere = Expression.equals(CachedUsers.USER_ID, userId).getSQL();
+            resolver.delete(CachedUsers.CONTENT_URI, cachedUserWhere, null);
+            resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
+            final ParcelableUser result = new ParcelableUser(user, mAccountId);
+            if (isMyAccount(context, userId)) {
+                final ContentValues accountValues = new ContentValues();
+                accountValues.put(Accounts.NAME, result.name);
+                accountValues.put(Accounts.SCREEN_NAME, result.screen_name);
+                accountValues.put(Accounts.PROFILE_IMAGE_URL, result.profile_image_url);
+                accountValues.put(Accounts.PROFILE_BANNER_URL, result.profile_banner_url);
+                final String accountWhere = Expression.equals(Accounts.ACCOUNT_ID, userId).getSQL();
+                resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
+            }
+            return SingleResponse.getInstance(result);
         } catch (final TwitterException e) {
             return SingleResponse.getInstance(e);
         }

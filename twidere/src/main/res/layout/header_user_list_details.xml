@@ -33,7 +33,7 @@
                 android:padding="@dimen/element_spacing_normal"
                 app:ignorePadding="true">
 
-                <org.mariotaku.twidere.view.CircularImageView
+                <org.mariotaku.twidere.view.ProfileImageView
                     android:id="@+id/profile_image"
                     android:layout_width="@dimen/icon_size_card_details"
                     android:layout_height="@dimen/icon_size_card_details"

@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:title="@string/settings_interface">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/settings_interface">
 
+    <PreferenceCategory android:title="@string/font">
+
+        <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
+            android:defaultValue="sans-serif-light"
+            android:enabled="@bool/has_font_family"
+            android:key="theme_font_family"
+            android:title="@string/style"/>
+
+        <org.mariotaku.twidere.preference.SeekBarDialogPreference
+            android:defaultValue="@integer/default_text_size"
+            android:key="text_size_int"
+            android:summary="@string/text_size_summary"
+            android:title="@string/size"
+            app:max="24"
+            app:min="12"
+            app:progressTextSuffix="sp"/>
+
+    </PreferenceCategory>
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
         android:key="unread_count"
@@ -17,10 +37,6 @@
         android:defaultValue="false"
         android:key="fast_scroll_thumb"
         android:title="@string/fast_scroll_thumb"/>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
-        android:key="disable_tab_swipe"
-        android:title="@string/disable_tab_swipe"/>
 
     <org.mariotaku.twidere.preference.AutoInvalidateListPreference
         android:defaultValue="@string/default_tab_display_option"
@@ -29,10 +45,5 @@
         android:key="tab_display_option"
         android:summary="%s"
         android:title="@string/tab_display_option"/>
-
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
-        android:key="long_click_to_open_menu"
-        android:title="@string/long_click_to_open_menu"/>
 
 </PreferenceScreen>

@@ -94,7 +94,6 @@ import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
 import org.mariotaku.twidere.text.TextAlphaSpan;
@@ -111,10 +110,10 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
-import org.mariotaku.twidere.view.CircularImageView;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.ProfileBannerImageView;
+import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
@@ -143,7 +142,6 @@ import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
-import static org.mariotaku.twidere.util.Utils.isMyAccount;
 import static org.mariotaku.twidere.util.Utils.openImage;
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
@@ -168,7 +166,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private ImageLoaderWrapper mProfileImageLoader;
 
-    private CircularImageView mProfileImageView;
+    private ProfileImageView mProfileImageView;
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
@@ -214,11 +212,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     private void updateRefreshState() {
+        final ParcelableUser user = mUser;
+        if (user == null) return;
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final boolean is_creating_friendship = twitter != null
-                && twitter.isCreatingFriendship(mUser.account_id, mUser.id);
+                && twitter.isCreatingFriendship(user.account_id, user.id);
         final boolean is_destroying_friendship = twitter != null
-                && twitter.isDestroyingFriendship(mUser.account_id, mUser.id);
+                && twitter.isDestroyingFriendship(user.account_id, user.id);
         setProgressBarIndeterminateVisibility(is_creating_friendship || is_destroying_friendship);
         invalidateOptionsMenu();
     }
@@ -361,7 +361,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
         final int userColor = getUserColor(activity, user.id, true);
-        mProfileImageView.setBorderColor(userColor);
+        mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
         mProfileNameContainer.drawEnd(getAccountColor(activity, user.account_id));
         final String nick = getUserNickname(activity, user.id, true);
         mNameView
@@ -408,16 +408,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final int defWidth = res.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
         mProfileImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
-        if (isMyAccount(activity, user.id)) {
-            final ContentResolver resolver = getContentResolver();
-            final ContentValues values = new ContentValues();
-            values.put(Accounts.NAME, user.name);
-            values.put(Accounts.SCREEN_NAME, user.screen_name);
-            values.put(Accounts.PROFILE_IMAGE_URL, user.profile_image_url);
-            values.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
-            final String where = Accounts.ACCOUNT_ID + " = " + user.id;
-            resolver.update(Accounts.CONTENT_URI, values, where, null);
-        }
         mUuckyFooter.setVisibility(isUucky(user.id, user.screen_name, user) ? View.VISIBLE : View.GONE);
         final Relationship relationship = mRelationship;
         if (relationship == null || relationship.getTargetUserId() != user.id) {
@@ -518,11 +508,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
-        if (!isMyAccount(getActivity(), accountId)) {
-            mCardContent.setVisibility(View.GONE);
-            mErrorRetryContainer.setVisibility(View.GONE);
-            return;
-        }
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, accountId);
         args.putLong(EXTRA_USER_ID, userId);
@@ -537,7 +522,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (accountId == -1 || userId == -1 && screenName == null) {
             mCardContent.setVisibility(View.GONE);
             mErrorRetryContainer.setVisibility(View.GONE);
-            return;
         }
     }
 
@@ -853,7 +837,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mFriendsContainer = headerView.findViewById(R.id.friends_container);
         mFriendsCount = (TextView) headerView.findViewById(R.id.friends_count);
         mProfileNameContainer = (IColorLabelView) headerView.findViewById(R.id.profile_name_container);
-        mProfileImageView = (CircularImageView) headerView.findViewById(R.id.profile_image);
+        mProfileImageView = (ProfileImageView) headerView.findViewById(R.id.profile_image);
         mProfileTypeView = (ImageView) headerView.findViewById(R.id.profile_type);
         mDescriptionContainer = headerView.findViewById(R.id.description_container);
         mLocationContainer = headerView.findViewById(R.id.location_container);

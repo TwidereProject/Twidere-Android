@@ -621,7 +621,6 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     protected void onResume() {
         super.onResume();
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONRESUME));
-        mViewPager.setEnabled(!mPreferences.getBoolean(KEY_DISABLE_TAB_SWIPE, false));
         invalidateOptionsMenu();
         updateActionsButtonStyle();
         updateActionsButton();
@@ -659,13 +658,6 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         // UCD
         ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStop");
         super.onStop();
-    }
-
-    protected void setPagingEnabled(final boolean enabled) {
-        if (mTabIndicator != null && mViewPager != null) {
-            mViewPager.setEnabled(!mPreferences.getBoolean(KEY_DISABLE_TAB_SWIPE, false));
-            mTabIndicator.setEnabled(enabled);
-        }
     }
 
     @Override

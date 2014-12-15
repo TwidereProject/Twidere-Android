@@ -29,11 +29,5 @@
         android:order="25"
         android:title="@string/color"/>
 
-    <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
-        android:defaultValue="sans-serif-light"
-        android:enabled="@bool/has_font_family"
-        android:key="theme_font_family"
-        android:order="26"
-        android:title="@string/font_family"/>
 
 </PreferenceScreen>

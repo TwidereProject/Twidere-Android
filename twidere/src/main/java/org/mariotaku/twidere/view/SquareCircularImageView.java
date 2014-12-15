@@ -22,9 +22,8 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-public class SquareCircularImageView extends CircularImageView {
+public class SquareCircularImageView extends ProfileImageView {
 
 	public SquareCircularImageView(final Context context) {
 		this(context, null);

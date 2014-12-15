@@ -11,8 +11,9 @@
     android:paddingRight="@dimen/element_spacing_normal"
     android:paddingTop="@dimen/element_spacing_normal">
 
-    <org.mariotaku.twidere.view.CircularImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/retweet_profile_image"
+        style="?profileImageStyle"
         android:layout_width="@dimen/element_size_small"
         android:layout_height="@dimen/element_size_small"
         android:layout_marginLeft="@dimen/element_spacing_normal"
@@ -33,8 +34,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="10sp"/>
 
-    <org.mariotaku.twidere.view.CircularImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profile_image"
+        style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_status_profile_image"
         android:layout_height="@dimen/icon_size_status_profile_image"
         android:layout_alignLeft="@id/retweet_profile_image"

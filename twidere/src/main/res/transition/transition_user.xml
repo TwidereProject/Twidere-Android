@@ -19,7 +19,8 @@
   -->
 
 <transitionSet
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime">
     <changeBounds>
         <targets>
             <target android:targetId="@id/profile_image"/>

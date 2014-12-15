@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/element_spacing_normal">
 
-        <org.mariotaku.twidere.view.CircularImageView
+        <org.mariotaku.twidere.view.ProfileImageView
             style="?profileImageStyle"
             android:id="@+id/profile_image"
             android:layout_width="@dimen/icon_size_card_list_item"
@@ -25,7 +25,7 @@
             android:contentDescription="@string/profile_image"
             android:scaleType="fitCenter"/>
 
-        <org.mariotaku.twidere.view.CircularImageView
+        <org.mariotaku.twidere.view.ProfileImageView
             style="?profileImageStyle"
             android:id="@+id/my_profile_image"
             android:layout_width="@dimen/icon_size_card_list_item"
@@ -156,7 +156,7 @@
             android:orientation="horizontal"
             android:paddingTop="@dimen/element_spacing_small">
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 style="?profileImageStyle"
                 android:id="@+id/activity_profile_image_1"
                 android:layout_width="@dimen/profile_image_size_activity_small"
@@ -165,7 +165,7 @@
                 android:contentDescription="@string/profile_image"
                 android:scaleType="fitCenter"/>
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 style="?profileImageStyle"
                 android:id="@+id/activity_profile_image_2"
                 android:layout_width="@dimen/profile_image_size_activity_small"
@@ -174,7 +174,7 @@
                 android:contentDescription="@string/profile_image"
                 android:scaleType="fitCenter"/>
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 style="?profileImageStyle"
                 android:id="@+id/activity_profile_image_3"
                 android:layout_width="@dimen/profile_image_size_activity_small"
@@ -183,7 +183,7 @@
                 android:contentDescription="@string/profile_image"
                 android:scaleType="fitCenter"/>
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 style="?profileImageStyle"
                 android:id="@+id/activity_profile_image_4"
                 android:layout_width="@dimen/profile_image_size_activity_small"
@@ -192,7 +192,7 @@
                 android:contentDescription="@string/profile_image"
                 android:scaleType="fitCenter"/>
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 style="?profileImageStyle"
                 android:id="@+id/activity_profile_image_5"
                 android:layout_width="@dimen/profile_image_size_activity_small"

@@ -36,7 +36,7 @@
         android:layout_weight="0"
         android:background="@drawable/list_drag_handle"/>
 
-    <org.mariotaku.twidere.view.CircularImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_list_item"

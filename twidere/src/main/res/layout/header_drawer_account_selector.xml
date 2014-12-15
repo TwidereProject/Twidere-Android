@@ -28,10 +28,11 @@
             android:paddingRight="@dimen/element_spacing_large"
             android:paddingTop="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 android:id="@+id/profile_image"
                 android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
+                style="?profileImageStyle"
                 android:layout_marginBottom="@dimen/element_spacing_mlarge"
                 android:layout_marginTop="@dimen/element_spacing_mlarge"/>
 

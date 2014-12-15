@@ -204,6 +204,7 @@ import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -213,6 +214,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import javax.net.ssl.SSLException;
 
@@ -2577,16 +2580,19 @@ public final class Utils implements Constants, TwitterConstants {
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, null, null, null);
         if (cur == null) return false;
-        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_key_secret);
+        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_secret_crc32);
         final ParcelableAccount.Indices indices = new ParcelableAccount.Indices(cur);
         cur.moveToFirst();
+        final CRC32 crc32 = new CRC32();
         try {
             while (!cur.isAfterLast()) {
-                final String consumerKey = cur.getString(indices.consumer_key);
                 final String consumerSecret = cur.getString(indices.consumer_secret);
+                final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
+                crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
+                final long value = crc32.getValue();
+                crc32.reset();
                 for (final String keySecret : keySecrets) {
-                    final String[] pair = keySecret.split(";");
-                    if (pair[0].equals(consumerKey) && pair[1].equals(consumerSecret)) return true;
+                    if (Long.parseLong(keySecret, 16) == value) return true;
                 }
                 cur.moveToNext();
             }
@@ -2796,10 +2802,14 @@ public final class Utils implements Constants, TwitterConstants {
     public static boolean isOfficialConsumerKeySecret(final Context context, final String consumerKey,
                                                       final String consumerSecret) {
         if (context == null || consumerKey == null || consumerSecret == null) return false;
-        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_key_secret);
+        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_secret_crc32);
+        final CRC32 crc32 = new CRC32();
+        final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
+        crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
+        final long value = crc32.getValue();
+        crc32.reset();
         for (final String keySecret : keySecrets) {
-            final String[] pair = keySecret.split(";");
-            if (pair[0].equals(consumerKey) && pair[1].equals(consumerSecret)) return true;
+            if (Long.parseLong(keySecret, 16) == value) return true;
         }
         return false;
     }

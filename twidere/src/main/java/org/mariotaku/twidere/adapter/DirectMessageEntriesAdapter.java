@@ -48,13 +48,13 @@ import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
-public class DirectMessageConversationEntriesAdapter extends BaseCursorAdapter implements IBaseCardAdapter,
+public class DirectMessageEntriesAdapter extends BaseCursorAdapter implements IBaseCardAdapter,
         OnClickListener {
 
     private final ImageLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
 
-    public DirectMessageConversationEntriesAdapter(final Context context) {
+    public DirectMessageEntriesAdapter(final Context context) {
         super(context, R.layout.list_item_message_entry, null, new String[0], new int[0], 0);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
@@ -88,6 +88,7 @@ public class DirectMessageConversationEntriesAdapter extends BaseCursorAdapter i
         final String nick = getUserNickname(context, conversationId);
         holder.name.setText(TextUtils.isEmpty(nick) ? name : isNicknameOnly() ? nick : context.getString(
                 R.string.name_with_nickname, name, nick));
+        holder.screen_name.setText("@" + screenName);
         holder.text.setText(toPlainText(cursor.getString(IDX_TEXT)));
         holder.time.setTime(timestamp);
         holder.setIsOutgoing(isOutgoing);

@@ -11,14 +11,14 @@
 
     <style name="Widget.ProfileImage.Large">
         <item name="android:background">@drawable/bg_oval_white</item>
-        <item name="civElevation">@dimen/elevation_card</item>
-        <item name="civBorderWidth">2dp</item>
+        <item name="pivElevation">@dimen/elevation_card</item>
+        <item name="pivBorderWidth">2dp</item>
     </style>
 
     <style name="Widget.Light.ProfileImage.Large">
         <item name="android:background">@drawable/bg_oval_white</item>
-        <item name="civElevation">@dimen/elevation_card</item>
-        <item name="civBorderWidth">2dp</item>
+        <item name="pivElevation">@dimen/elevation_card</item>
+        <item name="pivBorderWidth">2dp</item>
     </style>
 
     <style name="Widget.ProfileType" parent="Widget.Base">

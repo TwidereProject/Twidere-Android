@@ -33,6 +33,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
 
@@ -59,6 +60,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
         <!-- Twidere specific styles -->
@@ -115,6 +117,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
 
@@ -131,6 +134,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
 
@@ -178,6 +182,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
 
@@ -261,6 +266,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#1a1a1a</item>
 
@@ -283,6 +289,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
 
@@ -305,6 +312,7 @@
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
 

@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/element_spacing_small">
 
-            <org.mariotaku.twidere.view.CircularImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 android:id="@+id/media_profile_image"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"/>

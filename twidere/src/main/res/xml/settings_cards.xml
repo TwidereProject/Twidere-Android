@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  android:title="@string/cards">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/cards">
 
     <PreferenceCategory
         android:key="cat_card_preview"
@@ -9,16 +10,6 @@
         android:title="@string/preview">
         <org.mariotaku.twidere.preference.CardPreviewPreference android:key="card_preview"/>
     </PreferenceCategory>
-
-    <org.mariotaku.twidere.preference.SeekBarDialogPreference
-        android:defaultValue="@integer/default_text_size"
-        android:key="text_size_int"
-        android:order="21"
-        android:summary="@string/text_size_summary"
-        android:title="@string/text_size"
-        app:max="24"
-        app:min="12"
-        app:progressTextSuffix="sp"/>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
@@ -59,14 +50,14 @@
         android:order="27"
         android:title="@string/link_highlight_option"/>
 
-    <org.mariotaku.twidere.preference.AutoInvalidateListPreference
-        android:defaultValue="background"
-        android:entries="@array/entries_card_highlight_option"
-        android:entryValues="@array/values_card_highlight_option"
-        android:key="card_highlight_option"
-        android:order="28"
-        android:summary="%s"
-        android:title="@string/card_highlight_option"/>
+    <!--<org.mariotaku.twidere.preference.AutoInvalidateListPreference-->
+        <!--android:defaultValue="background"-->
+        <!--android:entries="@array/entries_card_highlight_option"-->
+        <!--android:entryValues="@array/values_card_highlight_option"-->
+        <!--android:key="card_highlight_option"-->
+        <!--android:order="28"-->
+        <!--android:summary="%s"-->
+        <!--android:title="@string/card_highlight_option"/>-->
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"

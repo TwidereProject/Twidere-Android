@@ -328,7 +328,7 @@
 
     </android.support.v7.widget.CardView>
 
-    <org.mariotaku.twidere.view.CircularImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profile_image"
         style="?profileImageStyleLarge"
         android:layout_width="@dimen/icon_size_user_profile"

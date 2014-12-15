@@ -83,7 +83,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.CircularImageView;
+import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
@@ -657,7 +657,7 @@ public class StatusFragment extends BaseSupportFragment
         private final TwidereMenuBar menuBar;
         private final TextView nameView, screenNameView;
         private final StatusTextView textView;
-        private final CircularImageView profileImageView;
+        private final ProfileImageView profileImageView;
         private final ImageView profileTypeView;
         private final TextView timeSourceView;
         private final TextView replyRetweetStatusView;
@@ -679,7 +679,7 @@ public class StatusFragment extends BaseSupportFragment
             nameView = (TextView) itemView.findViewById(R.id.name);
             screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
             textView = (StatusTextView) itemView.findViewById(R.id.text);
-            profileImageView = (CircularImageView) itemView.findViewById(R.id.profile_image);
+            profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image);
             profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
             timeSourceView = (TextView) itemView.findViewById(R.id.time_source);
             replyRetweetStatusView = (TextView) itemView.findViewById(R.id.reply_retweet_status);

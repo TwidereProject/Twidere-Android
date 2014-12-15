@@ -679,6 +679,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Context context = getContext();
         final Resources resources = context.getResources();
         final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
+        notifBuilder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
         final ParcelableDirectMessage firstItem = messages.get(0);
         final int messagesCount = messages.size();
         final Intent deleteIntent = new Intent(BROADCAST_NOTIFICATION_DELETED);

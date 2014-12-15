@@ -28,8 +28,6 @@ public class UserListMenuDialogFragment extends MenuDialogFragment {
         extensionsExtras.putParcelable(EXTRA_USER_LIST, user);
         extensionsIntent.putExtras(extensionsExtras);
         addIntentToMenu(getThemedContext(), menu, extensionsIntent);
-        final boolean longClickToOpenMenu = prefs.getBoolean(KEY_LONG_CLICK_TO_OPEN_MENU, false);
-        Utils.setMenuItemAvailability(menu, MENU_MULTI_SELECT, longClickToOpenMenu);
     }
 
     protected void onPrepareItemMenu(final Menu menu, final ParcelableUserList userList) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.CircularImageView
+<org.mariotaku.twidere.view.ProfileImageView
     android:id="@+id/color"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/element_size_small"
