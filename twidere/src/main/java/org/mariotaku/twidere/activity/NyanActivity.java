@@ -35,9 +35,9 @@ import android.widget.Toast;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.service.NyanDaydreamService;
-import org.mariotaku.twidere.service.NyanWallpaperService;
-import org.mariotaku.twidere.util.NyanSurfaceHelper;
+import org.mariotaku.twidere.nyan.NyanDaydreamService;
+import org.mariotaku.twidere.nyan.NyanWallpaperService;
+import org.mariotaku.twidere.nyan.NyanSurfaceHelper;
 
 public class NyanActivity extends Activity implements Constants, OnLongClickListener, OnSharedPreferenceChangeListener {
 

@@ -23,7 +23,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-public class SquareCircularImageView extends ProfileImageView {
+public class SquareCircularImageView extends ShapedImageView {
 
 	public SquareCircularImageView(final Context context) {
 		this(context, null);

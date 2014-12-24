@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item
-		android:id="@id/settings"
-		android:icon="@drawable/ic_action_settings"
-		android:title="@string/settings"/>
-	<item
-		android:id="@id/revoke"
-		android:icon="@drawable/ic_action_cancel"
-		android:title="@string/revoke_permissions"/>
-	<item
-		android:id="@id/delete"
-		android:icon="@drawable/ic_action_delete"
-		android:title="@string/uninstall"/>
+    <item
+        android:id="@id/settings"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/settings"/>
+    <item
+        android:id="@id/revoke"
+        android:icon="@drawable/ic_action_cancel"
+        android:title="@string/revoke_permissions"/>
+    <item
+        android:id="@id/delete"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/uninstall"/>
 
 </menu>

@@ -68,12 +68,7 @@ public class BaseCursorAdapter extends SimpleCursorAdapter implements IBaseAdapt
 		return mImageLoader;
 	}
 
-	@Override
-	public final int getLinkHighlightColor() {
-		return mLinkHighlightColor;
-	}
-
-	@Override
+    @Override
 	public final int getLinkHighlightOption() {
 		return mLinkHighlightOption;
 	}
@@ -126,15 +121,7 @@ public class BaseCursorAdapter extends SimpleCursorAdapter implements IBaseAdapt
 		notifyDataSetChanged();
 	}
 
-	@Override
-	public final void setLinkHighlightColor(final int color) {
-		if (color == mLinkHighlightColor) return;
-		mLinkHighlightColor = color;
-		mLinkify.setLinkTextColor(color);
-		notifyDataSetChanged();
-	}
-
-	@Override
+    @Override
 	public final void setLinkHighlightOption(final String option) {
 		final int option_int = getLinkHighlightOptionInt(option);
 		if (option_int == mLinkHighlightOption) return;

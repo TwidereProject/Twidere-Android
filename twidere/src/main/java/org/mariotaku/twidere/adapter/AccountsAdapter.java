@@ -98,11 +98,6 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
-    public int getLinkHighlightColor() {
-        return 0;
-    }
-
-    @Override
     public int getLinkHighlightOption() {
         return 0;
     }
@@ -153,11 +148,6 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     public void setDisplayProfileImage(final boolean display) {
         mDisplayProfileImage = display;
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void setLinkHighlightColor(int color) {
-
     }
 
     @Override

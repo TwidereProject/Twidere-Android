@@ -1,0 +1,6 @@
+<resources>
+
+	<integer name="nyan_star_rows">5</integer>
+	<integer name="nyan_star_cols">17</integer>
+
+</resources>

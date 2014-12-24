@@ -252,14 +252,6 @@ public class ParcelableActivitiesAboutMeAdapter extends BaseParcelableActivities
             holder.name.setText(TextUtils.isEmpty(nick) ? status.user_name : isNicknameOnly() ? nick : context
                     .getString(R.string.name_with_nickname, status.user_name, nick));
             holder.screen_name.setText("@" + status.user_screen_name);
-            if (highlightOption != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                linkify.applyUserProfileLinkNoHighlight(holder.name, status.account_id, status.user_id,
-                        status.user_screen_name);
-                linkify.applyUserProfileLinkNoHighlight(holder.screen_name, status.account_id, status.user_id,
-                        status.user_screen_name);
-                holder.name.setMovementMethod(null);
-                holder.screen_name.setMovementMethod(null);
-            }
             holder.time.setTime(status.timestamp);
             holder.setStatusType(!mFavoritesHighlightDisabled && status.is_favorite,
                     ParcelableLocation.isValidLocation(status.location), hasMedia, status.is_possibly_sensitive);

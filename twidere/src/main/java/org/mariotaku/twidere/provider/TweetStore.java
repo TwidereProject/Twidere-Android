@@ -265,6 +265,9 @@ public interface TweetStore {
                 LISTED_COUNT, DESCRIPTION_HTML, DESCRIPTION_EXPANDED, URL_EXPANDED, BACKGROUND_COLOR,
                 LINK_COLOR, TEXT_COLOR};
 
+        public static final String[] BASIC_COLUMNS = new String[]{_ID, USER_ID,
+                NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
+
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT_UNIQUE, TYPE_INT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT,

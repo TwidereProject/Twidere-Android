@@ -20,24 +20,31 @@
 package org.mariotaku.twidere.view.themed;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.widget.AutoCompleteTextView;
 
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.view.iface.IThemedView;
 
-public class ThemedAutoCompleteTextView extends AutoCompleteTextView {
+public class ThemedAutoCompleteTextView extends AutoCompleteTextView implements IThemedView {
 
-	public ThemedAutoCompleteTextView(final Context context) {
-		this(context, null);
-	}
+    public ThemedAutoCompleteTextView(final Context context) {
+        this(context, null);
+    }
 
-	public ThemedAutoCompleteTextView(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.editTextStyle);
-	}
+    public ThemedAutoCompleteTextView(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.editTextStyle);
+    }
 
-	public ThemedAutoCompleteTextView(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
+    public ThemedAutoCompleteTextView(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
         ThemeUtils.initTextView(this);
-	}
+    }
 
+    @Override
+    public void setThemeTintColor(ColorStateList color) {
+        ViewAccessor.setBackgroundTintList(this, color);
+    }
 }

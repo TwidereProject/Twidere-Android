@@ -37,7 +37,7 @@ public class TwidereMenuBar extends MenuBar implements MenuBarListener, Constant
         final int colorLight = resources.getColor(R.color.action_icon_light);
         mItemColor = Utils.getContrastYIQ(itemBackgroundColor, colorDark, colorLight);
         mPopupItemColor = Utils.getContrastYIQ(popupItemBackgroundColor, colorDark, colorLight);
-        mHighlightColor = ThemeUtils.getUserAccentColor(getContext());
+        mHighlightColor = isInEditMode() ? 0 : ThemeUtils.getUserAccentColor(getContext());
         setMenuBarListener(this);
     }
 

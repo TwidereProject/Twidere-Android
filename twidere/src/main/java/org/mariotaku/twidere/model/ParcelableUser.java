@@ -109,44 +109,40 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         is_cache = true;
     }
 
-    public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
-        final long account_id = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
-        final long id = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
-        final String name = cursor.getString(ConversationEntries.IDX_NAME);
-        final String screen_name = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
-        final String profile_image_url = cursor.getString(ConversationEntries.IDX_PROFILE_IMAGE_URL);
-        return new ParcelableUser(account_id, id, name, screen_name, profile_image_url);
+    @Deprecated
+    public ParcelableUser(final Cursor cursor, final long account_id) {
+        this(cursor, new CachedIndices(cursor), account_id);
     }
 
-    public ParcelableUser(final Cursor cursor, final long account_id) {
+    public ParcelableUser(final Cursor cursor, CachedIndices indices, final long account_id) {
         this.account_id = account_id;
         position = -1;
         is_follow_request_sent = false;
-        id = cursor.getLong(cursor.getColumnIndex(CachedUsers.USER_ID));
-        name = cursor.getString(cursor.getColumnIndex(CachedUsers.NAME));
-        screen_name = cursor.getString(cursor.getColumnIndex(CachedUsers.SCREEN_NAME));
-        profile_image_url = cursor.getString(cursor.getColumnIndex(CachedUsers.PROFILE_IMAGE_URL));
-        created_at = cursor.getLong(cursor.getColumnIndex(CachedUsers.CREATED_AT));
-        is_protected = cursor.getInt(cursor.getColumnIndex(CachedUsers.IS_PROTECTED)) == 1;
-        is_verified = cursor.getInt(cursor.getColumnIndex(CachedUsers.IS_VERIFIED)) == 1;
-        favorites_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.FAVORITES_COUNT));
-        listed_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.LISTED_COUNT));
-        followers_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.FOLLOWERS_COUNT));
-        friends_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.FRIENDS_COUNT));
-        statuses_count = cursor.getInt(cursor.getColumnIndex(CachedUsers.STATUSES_COUNT));
-        location = cursor.getString(cursor.getColumnIndex(CachedUsers.LOCATION));
-        description_plain = cursor.getString(cursor.getColumnIndex(CachedUsers.DESCRIPTION_PLAIN));
-        description_html = cursor.getString(cursor.getColumnIndex(CachedUsers.DESCRIPTION_HTML));
-        description_expanded = cursor.getString(cursor.getColumnIndex(CachedUsers.DESCRIPTION_EXPANDED));
-        url = cursor.getString(cursor.getColumnIndex(CachedUsers.URL));
-        url_expanded = cursor.getString(cursor.getColumnIndex(CachedUsers.URL_EXPANDED));
-        profile_banner_url = cursor.getString(cursor.getColumnIndex(CachedUsers.PROFILE_BANNER_URL));
+        id = indices.id != -1 ? cursor.getLong(indices.id) : -1;
+        name = indices.name != -1 ? cursor.getString(indices.name) : null;
+        screen_name = indices.screen_name != -1 ? cursor.getString(indices.screen_name) : null;
+        profile_image_url = indices.profile_image_url != -1 ? cursor.getString(indices.profile_image_url) : null;
+        created_at = indices.created_at != -1 ? cursor.getLong(indices.created_at) : -1;
+        is_protected = indices.is_protected != -1 && cursor.getInt(indices.is_protected) == 1;
+        is_verified = indices.is_verified != -1 && cursor.getInt(indices.is_verified) == 1;
+        favorites_count = indices.favorites_count != -1 ? cursor.getInt(indices.favorites_count) : 0;
+        listed_count = indices.listed_count != -1 ? cursor.getInt(indices.listed_count) : 0;
+        followers_count = indices.followers_count != -1 ? cursor.getInt(indices.followers_count) : 0;
+        friends_count = indices.friends_count != -1 ? cursor.getInt(indices.friends_count) : 0;
+        statuses_count = indices.statuses_count != -1 ? cursor.getInt(indices.statuses_count) : 0;
+        location = indices.location != -1 ? cursor.getString(indices.location) : null;
+        description_plain = indices.description_plain != -1 ? cursor.getString(indices.description_plain) : null;
+        description_html = indices.description_html != -1 ? cursor.getString(indices.description_html) : null;
+        description_expanded = indices.description_expanded != -1 ? cursor.getString(indices.description_expanded) : null;
+        url = indices.url != -1 ? cursor.getString(indices.url) : null;
+        url_expanded = indices.url_expanded != -1 ? cursor.getString(indices.url_expanded) : null;
+        profile_banner_url = indices.profile_banner_url != -1 ? cursor.getString(indices.profile_banner_url) : null;
         is_cache = true;
         description_unescaped = toPlainText(description_html);
-        is_following = cursor.getInt(cursor.getColumnIndex(CachedUsers.IS_FOLLOWING)) == 1;
-        background_color = cursor.getInt(cursor.getColumnIndex(CachedUsers.BACKGROUND_COLOR));
-        link_color = cursor.getInt(cursor.getColumnIndex(CachedUsers.LINK_COLOR));
-        text_color = cursor.getInt(cursor.getColumnIndex(CachedUsers.TEXT_COLOR));
+        is_following = indices.is_following != -1 && cursor.getInt(indices.is_following) == 1;
+        background_color = indices.background_color != -1 ? cursor.getInt(indices.background_color) : 0;
+        link_color = indices.link_color != -1 ? cursor.getInt(indices.link_color) : 0;
+        text_color = indices.text_color != -1 ? cursor.getInt(indices.text_color) : 0;
     }
 
     public ParcelableUser(final JSONParcel in) {
@@ -244,8 +240,8 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         is_cache = false;
         is_following = user.isFollowing();
         background_color = ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0);
-        link_color = ParseUtils.parseColor("#"+user.getProfileLinkColor(), 0);
-        text_color = ParseUtils.parseColor("#"+user.getProfileTextColor(), 0);
+        link_color = ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0);
+        text_color = ParseUtils.parseColor("#" + user.getProfileTextColor(), 0);
     }
 
     @Override
@@ -259,6 +255,38 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public void writeToParcel(final Parcel out, final int flags) {
+        out.writeLong(position);
+        out.writeLong(account_id);
+        out.writeLong(id);
+        out.writeLong(created_at);
+        out.writeInt(is_protected ? 1 : 0);
+        out.writeInt(is_verified ? 1 : 0);
+        out.writeString(name);
+        out.writeString(screen_name);
+        out.writeString(description_plain);
+        out.writeString(description_html);
+        out.writeString(description_expanded);
+        out.writeString(description_unescaped);
+        out.writeString(location);
+        out.writeString(profile_image_url);
+        out.writeString(profile_banner_url);
+        out.writeString(url);
+        out.writeInt(is_follow_request_sent ? 1 : 0);
+        out.writeInt(followers_count);
+        out.writeInt(friends_count);
+        out.writeInt(statuses_count);
+        out.writeInt(favorites_count);
+        out.writeInt(listed_count);
+        out.writeInt(is_cache ? 1 : 0);
+        out.writeString(url_expanded);
+        out.writeInt(is_following ? 1 : 0);
+        out.writeInt(background_color);
+        out.writeInt(link_color);
+        out.writeInt(text_color);
     }
 
     @Override
@@ -295,6 +323,44 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
                 + is_cache + "}";
     }
 
+    public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
+        final long account_id = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
+        final long id = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
+        final String name = cursor.getString(ConversationEntries.IDX_NAME);
+        final String screen_name = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
+        final String profile_image_url = cursor.getString(ConversationEntries.IDX_PROFILE_IMAGE_URL);
+        return new ParcelableUser(account_id, id, name, screen_name, profile_image_url);
+    }
+
+    public static ContentValues makeCachedUserContentValues(final ParcelableUser user) {
+        if (user == null) return null;
+        final ContentValues values = new ContentValues();
+        values.put(CachedUsers.USER_ID, user.id);
+        values.put(CachedUsers.NAME, user.name);
+        values.put(CachedUsers.SCREEN_NAME, user.screen_name);
+        values.put(CachedUsers.PROFILE_IMAGE_URL, user.profile_image_url);
+        values.put(CachedUsers.CREATED_AT, user.created_at);
+        values.put(CachedUsers.IS_PROTECTED, user.is_protected);
+        values.put(CachedUsers.IS_VERIFIED, user.is_verified);
+        values.put(CachedUsers.LISTED_COUNT, user.listed_count);
+        values.put(CachedUsers.FAVORITES_COUNT, user.favorites_count);
+        values.put(CachedUsers.FOLLOWERS_COUNT, user.followers_count);
+        values.put(CachedUsers.FRIENDS_COUNT, user.friends_count);
+        values.put(CachedUsers.STATUSES_COUNT, user.statuses_count);
+        values.put(CachedUsers.LOCATION, user.location);
+        values.put(CachedUsers.DESCRIPTION_PLAIN, user.description_plain);
+        values.put(CachedUsers.DESCRIPTION_HTML, user.description_html);
+        values.put(CachedUsers.DESCRIPTION_EXPANDED, user.description_expanded);
+        values.put(CachedUsers.URL, user.url);
+        values.put(CachedUsers.URL_EXPANDED, user.url_expanded);
+        values.put(CachedUsers.PROFILE_BANNER_URL, user.profile_banner_url);
+        values.put(CachedUsers.IS_FOLLOWING, user.is_following);
+        values.put(CachedUsers.BACKGROUND_COLOR, user.background_color);
+        values.put(CachedUsers.LINK_COLOR, user.link_color);
+        values.put(CachedUsers.TEXT_COLOR, user.text_color);
+        return values;
+    }
+
     @Override
     public void writeToParcel(final JSONParcel out) {
         out.writeLong("position", position);
@@ -327,65 +393,39 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeInt("text_color", text_color);
     }
 
-    @Override
-    public void writeToParcel(final Parcel out, final int flags) {
-        out.writeLong(position);
-        out.writeLong(account_id);
-        out.writeLong(id);
-        out.writeLong(created_at);
-        out.writeInt(is_protected ? 1 : 0);
-        out.writeInt(is_verified ? 1 : 0);
-        out.writeString(name);
-        out.writeString(screen_name);
-        out.writeString(description_plain);
-        out.writeString(description_html);
-        out.writeString(description_expanded);
-        out.writeString(description_unescaped);
-        out.writeString(location);
-        out.writeString(profile_image_url);
-        out.writeString(profile_banner_url);
-        out.writeString(url);
-        out.writeInt(is_follow_request_sent ? 1 : 0);
-        out.writeInt(followers_count);
-        out.writeInt(friends_count);
-        out.writeInt(statuses_count);
-        out.writeInt(favorites_count);
-        out.writeInt(listed_count);
-        out.writeInt(is_cache ? 1 : 0);
-        out.writeString(url_expanded);
-        out.writeInt(is_following ? 1 : 0);
-        out.writeInt(background_color);
-        out.writeInt(link_color);
-        out.writeInt(text_color);
-    }
+    public static final class CachedIndices {
 
-    public static ContentValues makeCachedUserContentValues(final ParcelableUser user) {
-        if (user == null) return null;
-        final ContentValues values = new ContentValues();
-        values.put(CachedUsers.USER_ID, user.id);
-        values.put(CachedUsers.NAME, user.name);
-        values.put(CachedUsers.SCREEN_NAME, user.screen_name);
-        values.put(CachedUsers.PROFILE_IMAGE_URL, user.profile_image_url);
-        values.put(CachedUsers.CREATED_AT, user.created_at);
-        values.put(CachedUsers.IS_PROTECTED, user.is_protected);
-        values.put(CachedUsers.IS_VERIFIED, user.is_verified);
-        values.put(CachedUsers.LISTED_COUNT, user.listed_count);
-        values.put(CachedUsers.FAVORITES_COUNT, user.favorites_count);
-        values.put(CachedUsers.FOLLOWERS_COUNT, user.followers_count);
-        values.put(CachedUsers.FRIENDS_COUNT, user.friends_count);
-        values.put(CachedUsers.STATUSES_COUNT, user.statuses_count);
-        values.put(CachedUsers.LOCATION, user.location);
-        values.put(CachedUsers.DESCRIPTION_PLAIN, user.description_plain);
-        values.put(CachedUsers.DESCRIPTION_HTML, user.description_html);
-        values.put(CachedUsers.DESCRIPTION_EXPANDED, user.description_expanded);
-        values.put(CachedUsers.URL, user.url);
-        values.put(CachedUsers.URL_EXPANDED, user.url_expanded);
-        values.put(CachedUsers.PROFILE_BANNER_URL, user.profile_banner_url);
-        values.put(CachedUsers.IS_FOLLOWING, user.is_following);
-        values.put(CachedUsers.BACKGROUND_COLOR, user.background_color);
-        values.put(CachedUsers.LINK_COLOR, user.link_color);
-        values.put(CachedUsers.TEXT_COLOR, user.text_color);
-        return values;
+        public final int id, name, screen_name, profile_image_url, created_at, is_protected,
+                is_verified, favorites_count, listed_count, followers_count, friends_count,
+                statuses_count, location, description_plain, description_html, description_expanded,
+                url, url_expanded, profile_banner_url, is_following, background_color, link_color, text_color;
+
+        public CachedIndices(Cursor cursor) {
+            id = cursor.getColumnIndex(CachedUsers.USER_ID);
+            name = cursor.getColumnIndex(CachedUsers.NAME);
+            screen_name = cursor.getColumnIndex(CachedUsers.SCREEN_NAME);
+            profile_image_url = cursor.getColumnIndex(CachedUsers.PROFILE_IMAGE_URL);
+            created_at = cursor.getColumnIndex(CachedUsers.CREATED_AT);
+            is_protected = cursor.getColumnIndex(CachedUsers.IS_PROTECTED);
+            is_verified = cursor.getColumnIndex(CachedUsers.IS_VERIFIED);
+            favorites_count = cursor.getColumnIndex(CachedUsers.FAVORITES_COUNT);
+            listed_count = cursor.getColumnIndex(CachedUsers.LISTED_COUNT);
+            followers_count = cursor.getColumnIndex(CachedUsers.FOLLOWERS_COUNT);
+            friends_count = cursor.getColumnIndex(CachedUsers.FRIENDS_COUNT);
+            statuses_count = cursor.getColumnIndex(CachedUsers.STATUSES_COUNT);
+            location = cursor.getColumnIndex(CachedUsers.LOCATION);
+            description_plain = cursor.getColumnIndex(CachedUsers.DESCRIPTION_PLAIN);
+            description_html = cursor.getColumnIndex(CachedUsers.DESCRIPTION_HTML);
+            description_expanded = cursor.getColumnIndex(CachedUsers.DESCRIPTION_EXPANDED);
+            url = cursor.getColumnIndex(CachedUsers.URL);
+            url_expanded = cursor.getColumnIndex(CachedUsers.URL_EXPANDED);
+            profile_banner_url = cursor.getColumnIndex(CachedUsers.PROFILE_BANNER_URL);
+            is_following = cursor.getColumnIndex(CachedUsers.IS_FOLLOWING);
+            background_color = cursor.getColumnIndex(CachedUsers.BACKGROUND_COLOR);
+            link_color = cursor.getColumnIndex(CachedUsers.LINK_COLOR);
+            text_color = cursor.getColumnIndex(CachedUsers.TEXT_COLOR);
+        }
+
     }
 
 }

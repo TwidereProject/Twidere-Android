@@ -33,7 +33,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import org.mariotaku.refreshnow.widget.RefreshMode;
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.loader.support.BaseUserListsLoader;
@@ -131,7 +130,6 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, getArguments(), this);
         setListShown(false);
-        setRefreshMode(RefreshMode.NONE);
     }
 
     @Override
@@ -163,7 +161,7 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
                 mCursor = cursor;
             }
         }
-        setRefreshComplete();
+        setRefreshing(false);
         setListShown(true);
     }
 
@@ -203,13 +201,7 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
     }
 
     @Override
-    public void onRefreshFromEnd() {
-        if (mLoadMoreAutomatically) return;
-        loadMoreUserLists();
-    }
-
-    @Override
-    public void onRefreshFromStart() {
+    public void onRefresh() {
         if (isRefreshing()) return;
         getLoaderManager().restartLoader(0, getArguments(), this);
     }

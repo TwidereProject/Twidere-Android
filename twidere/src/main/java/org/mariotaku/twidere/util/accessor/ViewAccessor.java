@@ -25,6 +25,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 
 public final class ViewAccessor {
 
@@ -34,11 +36,6 @@ public final class ViewAccessor {
         }
     }
 
-    public static void setBackgroundTintList(final View view, final ColorStateList list) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ViewAccessorL.setBackgroundTintList(view, list);
-    }
-
     @SuppressWarnings("deprecation")
     public static void setBackground(final View view, final Drawable background) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -46,6 +43,31 @@ public final class ViewAccessor {
         } else {
             ViewAccessorJB.setBackground(view, background);
         }
+    }
+
+    public static void setBackgroundTintList(final View view, final ColorStateList list) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        ViewAccessorL.setBackgroundTintList(view, list);
+    }
+
+    public static void setButtonTintList(CompoundButton view, ColorStateList list) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        ViewAccessorL.setButtonTintList(view, list);
+    }
+
+    public static void setIndeterminateTintList(ProgressBar view, ColorStateList list) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        ViewAccessorL.setIndeterminateTintList(view, list);
+    }
+
+    public static void setProgressBackgroundTintList(ProgressBar view, ColorStateList list) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        ViewAccessorL.setProgressBackgroundTintList(view, list);
+    }
+
+    public static void setProgressTintList(ProgressBar view, ColorStateList list) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        ViewAccessorL.setProgressTintList(view, list);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -61,6 +83,26 @@ public final class ViewAccessor {
         static void setBackgroundTintList(final View view, final ColorStateList list) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
             view.setBackgroundTintList(list);
+        }
+
+        static void setButtonTintList(final CompoundButton view, final ColorStateList list) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+            view.setButtonTintList(list);
+        }
+
+        static void setIndeterminateTintList(final ProgressBar view, final ColorStateList list) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+            view.setIndeterminateTintList(list);
+        }
+
+        static void setProgressBackgroundTintList(final ProgressBar view, final ColorStateList list) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+            view.setProgressBackgroundTintList(list);
+        }
+
+        static void setProgressTintList(final ProgressBar view, final ColorStateList list) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+            view.setProgressTintList(list);
         }
     }
 }

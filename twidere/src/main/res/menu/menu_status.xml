@@ -29,9 +29,9 @@
         android:title="@string/favorite"/>
     <item
         android:id="@id/share"
+        android:actionProviderClass="org.mariotaku.twidere.menu.StatusShareProvider"
         android:icon="@drawable/ic_action_share"
         android:showAsAction="ifRoom"
-        android:actionProviderClass="org.mariotaku.twidere.menu.StatusShareProvider"
         android:title="@string/share"/>
     <item
         android:id="@id/copy"

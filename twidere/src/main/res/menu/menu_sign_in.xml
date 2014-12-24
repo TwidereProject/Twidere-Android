@@ -5,15 +5,15 @@
         android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
         android:showAsAction="always"
-        android:title="@string/browser_sign_in" />
+        android:title="@string/browser_sign_in"/>
     <item
         android:id="@id/edit_api"
         android:icon="@drawable/ic_action_server"
         android:showAsAction="always"
-        android:title="@string/edit_api" />
+        android:title="@string/edit_api"/>
     <item
         android:id="@id/settings"
         android:icon="@drawable/ic_action_settings"
         android:showAsAction="always"
-        android:title="@string/settings" />
+        android:title="@string/settings"/>
 </menu>

@@ -225,10 +225,11 @@ public class ComposeSelectAccountButton extends ViewGroup {
         @Override
         public void onMeasure(Recycler recycler, State state, int widthSpec, int heightSpec) {
             final int height = MeasureSpec.getSize(heightSpec), width;
-            if (getItemCount() > 1) {
+            final int itemCount = getItemCount();
+            if (itemCount > 1) {
                 width = Math.round(height * 1.5f);
-            } else if (getChildCount() > 0) {
-                final View firstChild = getChildAt(0);
+            } else if (itemCount > 0 && state.getItemCount() > 0) {
+                final View firstChild = recycler.getViewForPosition(0);
                 width = height + firstChild.getPaddingLeft() + firstChild.getPaddingRight();
             } else {
                 width = height;

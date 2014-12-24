@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
@@ -83,6 +84,11 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
         mPagerIndicator.setViewPager(mViewPager);
+        if (activity instanceof IThemedActivity) {
+            mPagerIndicator.setStripColor(((IThemedActivity) activity).getCurrentThemeColor());
+        } else {
+
+        }
         if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
             final String query = args.getString(EXTRA_QUERY);
             final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),

@@ -1,4 +1,4 @@
-include ':twidere', ':twidere.wear'
+include ':twidere', ':twidere.wear', ':twidere.donate.nyanwp', ':twidere.nyan', ':twidere.donate.nyanwp.wear'
 include ':SlidingMenu', ':DragSortListView', ':MenuComponent', ':RefreshNow', ':PullToRefresh', ':MessageBubbleView'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')

@@ -1,0 +1,7 @@
+<resources>
+
+	<integer name="nyan_star_rows">10</integer>
+	<integer name="nyan_star_cols">13</integer>
+	<integer name="default_live_wallpaper_scale">2</integer>
+
+</resources>

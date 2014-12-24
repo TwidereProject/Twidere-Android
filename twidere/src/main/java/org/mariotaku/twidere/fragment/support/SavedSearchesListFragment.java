@@ -103,16 +103,11 @@ public class SavedSearchesListFragment extends BasePullToRefreshListFragment imp
         }
         mAdapter.setData(data);
         setListShown(true);
-        setRefreshComplete();
+        setRefreshing(false);
     }
 
     @Override
-    public void onRefreshFromEnd() {
-
-    }
-
-    @Override
-    public void onRefreshFromStart() {
+    public void onRefresh() {
         if (isRefreshing()) return;
         getLoaderManager().restartLoader(0, null, this);
     }

@@ -158,6 +158,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         final Dialog dialog = getDialog();
         final SharedPreferences preferences = getSharedPreferences();
         if (dialog instanceof AlertDialog && preferences != null) {
+            mValue = getPersistedString(mValue);
             final Resources res = dialog.getContext().getResources();
             final LayoutInflater inflater = dialog.getLayoutInflater();
             final ListView listView = ((AlertDialog) dialog).getListView();
@@ -176,7 +177,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             updateAlphaVisibility();
             updateAlphaPreview();
 
-            final int checkedIdx = findIndexOfValue(getPersistedString(mValue));
+            final int checkedIdx = findIndexOfValue(mValue);
             if (checkedIdx < 0) {
                 listView.clearChoices();
             } else {

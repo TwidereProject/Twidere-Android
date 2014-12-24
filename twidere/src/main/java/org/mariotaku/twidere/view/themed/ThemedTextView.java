@@ -20,24 +20,30 @@
 package org.mariotaku.twidere.view.themed;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.view.iface.IThemedView;
 
-public class ThemedTextView extends TextView {
+public class ThemedTextView extends TextView implements IThemedView {
 
-	public ThemedTextView(final Context context) {
-		this(context, null);
-	}
+    public ThemedTextView(final Context context) {
+        this(context, null);
+    }
 
-	public ThemedTextView(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.textViewStyle);
-	}
+    public ThemedTextView(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.textViewStyle);
+    }
 
-	public ThemedTextView(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
+    public ThemedTextView(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
         ThemeUtils.initTextView(this);
-	}
+    }
 
+    @Override
+    public void setThemeTintColor(ColorStateList color) {
+        setLinkTextColor(color);
+    }
 }

@@ -36,6 +36,14 @@
         android:icon="@drawable/ic_action_block"
         android:title="@string/block"/>
     <item
+        android:id="@+id/muted_users"
+        android:icon="@drawable/ic_action_mic_muted"
+        android:title="@string/twitter_muted_users"/>
+    <item
+        android:id="@+id/blocked_users"
+        android:icon="@drawable/ic_action_block"
+        android:title="@string/blocked_users"/>
+    <item
         android:id="@id/report_spam"
         android:icon="@drawable/ic_action_warning"
         android:title="@string/report_for_spam"/>

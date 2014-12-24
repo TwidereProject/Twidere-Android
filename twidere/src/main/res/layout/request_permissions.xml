@@ -1,101 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:orientation="vertical">
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:padding="8dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
 
-				<ImageView
-					android:id="@android:id/icon"
-					android:layout_width="56dp"
-					android:layout_height="56dp"
-					android:layout_margin="4dp"
-					android:contentDescription="@string/icon"
-					android:scaleType="fitCenter"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-				<LinearLayout
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="center_vertical"
-					android:orientation="vertical">
+                <ImageView
+                    android:id="@android:id/icon"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_margin="4dp"
+                    android:contentDescription="@string/icon"
+                    android:scaleType="fitCenter"/>
 
-					<TextView
-						android:id="@android:id/text1"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:singleLine="true"
-						android:textAppearance="?android:attr/textAppearanceMedium"
-						android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-					<TextView
-						android:id="@android:id/text2"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:singleLine="true"
-						android:textAppearance="?android:attr/textAppearanceSmall"/>
-				</LinearLayout>
-			</LinearLayout>
+                    <TextView
+                        android:id="@android:id/text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"/>
 
-			<TextView
-				android:id="@+id/message"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:paddingBottom="16dp"
-				android:paddingLeft="16dp"
-				android:paddingRight="16dp"
-				android:textAppearance="?android:attr/textAppearanceSmall"/>
-		</LinearLayout>
-	</ScrollView>
+                    <TextView
+                        android:id="@android:id/text2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="?android:attr/textAppearanceSmall"/>
+                </LinearLayout>
+            </LinearLayout>
 
-	<View
-		android:id="@+id/divider"
-		android:layout_width="match_parent"
-		android:layout_height="0.2dp"
-		android:background="#40808080"/>
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout>
+    </ScrollView>
 
-	<LinearLayout
-		android:id="@+id/buttons"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:orientation="horizontal">
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="#40808080"/>
 
-		<Button
-			android:id="@+id/accept"
-			style="?android:borderlessButtonStyle"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:text="@string/accept_permission_request"/>
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal">
 
-		<View
-			android:layout_width="0.2dp"
-			android:layout_height="match_parent"
-			android:background="#40808080"/>
+        <Button
+            android:id="@+id/accept"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/accept_permission_request"/>
 
-		<Button
-			android:id="@+id/deny"
-			style="?android:borderlessButtonStyle"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:text="@string/no_thanks"/>
-	</LinearLayout>
+        <View
+            android:layout_width="0.2dp"
+            android:layout_height="match_parent"
+            android:background="#40808080"/>
+
+        <Button
+            android:id="@+id/deny"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/no_thanks"/>
+    </LinearLayout>
 
 </LinearLayout>

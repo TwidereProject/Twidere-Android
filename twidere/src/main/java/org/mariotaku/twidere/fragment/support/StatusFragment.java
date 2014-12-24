@@ -83,7 +83,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ProfileImageView;
+import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
@@ -346,6 +346,7 @@ public class StatusFragment extends BaseSupportFragment
         private final boolean mNameFirst, mNicknameOnly;
         private final int mCardLayoutResource;
         private final int mTextSize;
+        private final int mCardBackgroundColor;
 
         private ParcelableStatus mStatus;
         private ParcelableCredentials mStatusAccount;
@@ -362,6 +363,7 @@ public class StatusFragment extends BaseSupportFragment
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
             mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
+            mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
@@ -419,7 +421,7 @@ public class StatusFragment extends BaseSupportFragment
             return getConversationCount() + 1 + getRepliesCount() + 1;
         }
 
-        public int getTextSize() {
+        public float getTextSize() {
             return mTextSize;
         }
 
@@ -491,12 +493,20 @@ public class StatusFragment extends BaseSupportFragment
             switch (viewType) {
                 case VIEW_TYPE_DETAIL_STATUS: {
                     final View view = mInflater.inflate(R.layout.header_status, parent, false);
+                    final CardView cardView = (CardView) view.findViewById(R.id.card);
+                    if (cardView != null) {
+                        cardView.setCardBackgroundColor(mCardBackgroundColor);
+                    }
                     return new DetailStatusViewHolder(this, view);
                 }
                 case VIEW_TYPE_LIST_STATUS: {
                     final View view = mInflater.inflate(mCardLayoutResource, parent, false);
+                    final CardView cardView = (CardView) view.findViewById(R.id.card);
+                    if (cardView != null) {
+                        cardView.setCardBackgroundColor(mCardBackgroundColor);
+                    }
                     final StatusViewHolder holder = new StatusViewHolder(this, view);
-                    holder.setupViews();
+                    holder.setupViewListeners();
                     return holder;
                 }
                 case VIEW_TYPE_CONVERSATION_LOAD_INDICATOR:
@@ -657,7 +667,7 @@ public class StatusFragment extends BaseSupportFragment
         private final TwidereMenuBar menuBar;
         private final TextView nameView, screenNameView;
         private final StatusTextView textView;
-        private final ProfileImageView profileImageView;
+        private final ShapedImageView profileImageView;
         private final ImageView profileTypeView;
         private final TextView timeSourceView;
         private final TextView replyRetweetStatusView;
@@ -679,7 +689,7 @@ public class StatusFragment extends BaseSupportFragment
             nameView = (TextView) itemView.findViewById(R.id.name);
             screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
             textView = (StatusTextView) itemView.findViewById(R.id.text);
-            profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image);
+            profileImageView = (ShapedImageView) itemView.findViewById(R.id.profile_image);
             profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
             timeSourceView = (TextView) itemView.findViewById(R.id.time_source);
             replyRetweetStatusView = (TextView) itemView.findViewById(R.id.reply_retweet_status);
@@ -847,7 +857,6 @@ public class StatusFragment extends BaseSupportFragment
 
             textView.setText(Html.fromHtml(status.text_html));
             final TwidereLinkify linkify = new TwidereLinkify(new OnLinkClickHandler(context, null));
-            linkify.setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
             linkify.applyAllLinks(textView, status.account_id, status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 
@@ -913,7 +922,7 @@ public class StatusFragment extends BaseSupportFragment
             mediaPreviewLoad.setOnClickListener(this);
             profileContainer.setOnClickListener(this);
 
-            final int defaultTextSize = adapter.getTextSize();
+            final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);
             textView.setTextSize(defaultTextSize * 1.25f);
             screenNameView.setTextSize(defaultTextSize * 0.85f);

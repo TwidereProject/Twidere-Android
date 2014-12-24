@@ -23,10 +23,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    tools:layout_height="?android:actionBarSize"
-    android:padding="@dimen/element_spacing_small">
+    android:padding="@dimen/element_spacing_small"
+    tools:layout_height="?android:actionBarSize">
 
-    <org.mariotaku.twidere.view.ProfileImageView
+    <org.mariotaku.twidere.view.ShapedImageView
         android:id="@android:id/icon"
         android:layout_width="@dimen/icon_size_list_item_small"
         android:layout_height="@dimen/icon_size_list_item_small"

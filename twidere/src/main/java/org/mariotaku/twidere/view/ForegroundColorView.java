@@ -62,7 +62,7 @@ public class ForegroundColorView extends View implements IForegroundView {
         mAlphaPatternSize = Math.round(getResources().getDisplayMetrics().density * 4);
         mAlphaRect = new Rect();
         mColorRect = new Rect();
-        mPaint = new Paint();
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.color});
         setColor(a.getColor(0, Color.TRANSPARENT));
         a.recycle();

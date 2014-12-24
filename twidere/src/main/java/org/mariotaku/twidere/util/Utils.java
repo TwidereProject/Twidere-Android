@@ -91,8 +91,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
@@ -114,12 +112,12 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.querybuilder.SQLFunctions;
 import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Selectable;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
-import org.mariotaku.refreshnow.widget.RefreshNowListView;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -212,10 +210,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 import javax.net.ssl.SSLException;
 
@@ -516,18 +514,18 @@ public final class Utils implements Constants, TwitterConstants {
                 .union()
                 .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Sources.TABLE_NAME))
-                .where(Expression.like(new Column(new Table(table), Statuses.SOURCE),
-                        "%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%"))
+                .where(Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
+                        "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"))
                 .union()
                 .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Keywords.TABLE_NAME))
-                .where(Expression.like(new Column(new Table(table), Statuses.TEXT_PLAIN),
-                        "%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%"))
+                .where(Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_PLAIN),
+                        "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"))
                 .union()
                 .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
-                .where(Expression.like(new Column(new Table(table), Statuses.SOURCE),
-                        "%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%"));
+                .where(Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
+                        "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"));
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build()),
                 Expression.equals(new Column(new Table(table), Statuses.IS_GAP), 1)
@@ -642,7 +640,6 @@ public final class Utils implements Constants, TwitterConstants {
         adapter.setDisplayProfileImage(pref.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true));
         adapter.setDisplayNameFirst(pref.getBoolean(KEY_NAME_FIRST, true));
         adapter.setLinkHighlightOption(pref.getString(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HIGHLIGHT_OPTION_NONE));
-        adapter.setLinkHighlightColor(ThemeUtils.getUserLinkTextColor(context));
         adapter.setNicknameOnly(pref.getBoolean(KEY_NICKNAME_ONLY, false));
         adapter.setTextSize(pref.getInt(KEY_TEXT_SIZE, getDefaultTextSize(context)));
         adapter.notifyDataSetChanged();
@@ -1919,6 +1916,22 @@ public final class Utils implements Constants, TwitterConstants {
                 .getConfiguration().locale);
     }
 
+    public static long[] getMatchedNicknameIds(final String str, SharedPreferences nicknamePrefs) {
+        if (isEmpty(str)) return new long[0];
+        final List<Long> list = new ArrayList<>();
+        for (final Entry<String, ?> entry : nicknamePrefs.getAll().entrySet()) {
+            final String value = ParseUtils.parseString(entry.getValue());
+            final long key = ParseUtils.parseLong(entry.getKey(), -1);
+            if (key == -1 || isEmpty(value)) {
+                continue;
+            }
+            if (StringUtils.startsWithIgnoreCase(value, str)) {
+                list.add(key);
+            }
+        }
+        return ArrayUtils.fromList(list);
+    }
+
     public static long[] getNewestMessageIdsFromDatabase(final Context context, final Uri uri) {
         final long[] account_ids = getActivatedAccountIds(context);
         return getNewestMessageIdsFromDatabase(context, uri, account_ids);
@@ -2156,23 +2169,21 @@ public final class Utils implements Constants, TwitterConstants {
         return share_format.replace(FORMAT_PATTERN_TITLE, title).replace(FORMAT_PATTERN_TEXT, text != null ? text : "");
     }
 
-    public static ArrayList<Long> getStatusIdsInDatabase(final Context context, final Uri uri, final long account_id) {
-        final ArrayList<Long> list = new ArrayList<Long>();
-        if (context == null) return list;
+    public static int getStatusCountInDatabase(final Context context, final Uri uri, final long account_id) {
+        if (context == null) return -1;
         final ContentResolver resolver = context.getContentResolver();
         final String where = Statuses.ACCOUNT_ID + " = " + account_id;
-        final String[] projection = new String[]{Statuses.STATUS_ID};
+        final String[] projection = new String[]{SQLFunctions.COUNT(Statuses.STATUS_ID)};
         final Cursor cur = ContentResolverUtils.query(resolver, uri, projection, where, null, null);
-        if (cur != null) {
-            final int idx = cur.getColumnIndexOrThrow(Statuses.STATUS_ID);
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                list.add(cur.getLong(idx));
-                cur.moveToNext();
+        if (cur == null) return -1;
+        try {
+            if (cur.moveToFirst()) {
+                return cur.getInt(0);
             }
+            return -1;
+        } finally {
             cur.close();
         }
-        return list;
     }
 
     public static int getStatusTypeIconRes(final boolean is_favorite, final boolean has_location,
@@ -2612,14 +2623,6 @@ public final class Utils implements Constants, TwitterConstants {
         return false;
     }
 
-    public static int inferStatusBarHeight(final Activity activity) {
-        final Window w = activity.getWindow();
-        final View decorView = w.getDecorView();
-        final Rect rect = new Rect();
-        decorView.getWindowVisibleDisplayFrame(rect);
-        return rect.top;
-    }
-
     public static void initAccountColor(final Context context) {
         if (context == null) return;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, new String[]{
@@ -2777,14 +2780,6 @@ public final class Utils implements Constants, TwitterConstants {
         return retweeted_by_id == account_id || my_retweet_id > 0;
     }
 
-    public static boolean isMyUserName(final Context context, final String screen_name) {
-        if (context == null) return false;
-        for (final String account_screen_name : getAccountScreenNames(context)) {
-            if (account_screen_name.equalsIgnoreCase(screen_name)) return true;
-        }
-        return false;
-    }
-
     public static boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo info = cm.getActiveNetworkInfo();
@@ -2858,16 +2853,6 @@ public final class Utils implements Constants, TwitterConstants {
         // SCREENLAYOUT_LAYOUTDIR_RTL;
     }
 
-    public static boolean isSameAccount(final Context context, final long accountId, final long userId) {
-        if (context == null || accountId <= 0 || userId <= 0) return false;
-        return accountId == userId;
-    }
-
-    public static boolean isSameAccount(final Context context, final long accountId, final String screenName) {
-        if (context == null || accountId <= 0 || screenName == null) return false;
-        return screenName.equalsIgnoreCase(getAccountScreenName(context, accountId));
-    }
-
     public static boolean isUserLoggedIn(final Context context, final long accountId) {
         if (context == null) return false;
         final long[] ids = getAccountIds(context);
@@ -2878,7 +2863,7 @@ public final class Utils implements Constants, TwitterConstants {
         return false;
     }
 
-    public static final int matcherEnd(final Matcher matcher, final int group) {
+    public static int matcherEnd(final Matcher matcher, final int group) {
         try {
             return matcher.end(group);
         } catch (final IllegalStateException e) {
@@ -2887,7 +2872,7 @@ public final class Utils implements Constants, TwitterConstants {
         return -1;
     }
 
-    public static final String matcherGroup(final Matcher matcher, final int group) {
+    public static String matcherGroup(final Matcher matcher, final int group) {
         try {
             return matcher.group(group);
         } catch (final IllegalStateException e) {
@@ -2896,7 +2881,7 @@ public final class Utils implements Constants, TwitterConstants {
         return null;
     }
 
-    public static final int matcherStart(final Matcher matcher, final int group) {
+    public static int matcherStart(final Matcher matcher, final int group) {
         try {
             return matcher.start(group);
         } catch (final IllegalStateException e) {
@@ -3966,14 +3951,14 @@ public final class Utils implements Constants, TwitterConstants {
         final ListView listView = fragment.getListView();
         listView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         listView.setClipToPadding(false);
-        if (listView instanceof RefreshNowListView) {
-            final View indicatorView = ((RefreshNowListView) listView).getRefreshIndicatorView();
-            final LayoutParams lp = indicatorView.getLayoutParams();
-            if (lp instanceof MarginLayoutParams) {
-                ((MarginLayoutParams) lp).topMargin = insets.top;
-                indicatorView.setLayoutParams(lp);
-            }
-        }
+//        if (listView instanceof RefreshNowListView) {
+//            final View indicatorView = ((RefreshNowListView) listView).getRefreshIndicatorView();
+//            final LayoutParams lp = indicatorView.getLayoutParams();
+//            if (lp instanceof MarginLayoutParams) {
+//                ((MarginLayoutParams) lp).topMargin = insets.top;
+//                indicatorView.setLayoutParams(lp);
+//            }
+//        }
     }
 
     public static boolean isFilteringUser(Context context, long userId) {

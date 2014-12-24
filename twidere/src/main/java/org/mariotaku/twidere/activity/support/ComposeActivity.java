@@ -78,6 +78,7 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
+import org.mariotaku.menucomponent.internal.menu.MenuUtils;
 import org.mariotaku.menucomponent.internal.widget.IListPopupWindow;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
@@ -106,6 +107,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.ComposeSelectAccountButton;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
@@ -964,12 +966,15 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         final MenuItem itemAttachLocation = menu.findItem(MENU_ADD_LOCATION);
         if (itemAttachLocation != null) {
             final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+            final int menuHighlight = ThemeUtils.getUserAccentColor(this);
             if (attachLocation && getLocation()) {
                 itemAttachLocation.setChecked(true);
+                MenuUtils.setMenuInfo(itemAttachLocation, new TwidereMenuInfo(true, menuHighlight));
             } else {
                 setProgressVisibility(false);
                 mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, false).apply();
                 itemAttachLocation.setChecked(false);
+                MenuUtils.setMenuInfo(itemAttachLocation, new TwidereMenuInfo(false, menuHighlight));
             }
         }
         final MenuItem viewItem = menu.findItem(MENU_VIEW);

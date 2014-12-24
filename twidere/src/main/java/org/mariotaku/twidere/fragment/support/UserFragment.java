@@ -36,6 +36,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -62,7 +63,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,6 +91,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -105,6 +106,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
+import org.mariotaku.twidere.util.UserColorNicknameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -113,7 +115,7 @@ import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.ProfileBannerImageView;
-import org.mariotaku.twidere.view.ProfileImageView;
+import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
@@ -131,7 +133,6 @@ import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserColor;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserNickname;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
 import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.setUserColor;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
@@ -143,8 +144,10 @@ import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 import static org.mariotaku.twidere.util.Utils.openImage;
+import static org.mariotaku.twidere.util.Utils.openMutesUsers;
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
+import static org.mariotaku.twidere.util.Utils.openUserBlocks;
 import static org.mariotaku.twidere.util.Utils.openUserFollowers;
 import static org.mariotaku.twidere.util.Utils.openUserFriends;
 import static org.mariotaku.twidere.util.Utils.openUserLists;
@@ -153,9 +156,8 @@ import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
-        OnMenuItemClickListener, OnLinkClickListener, OnSizeChangedListener,
-        OnSharedPreferenceChangeListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
-        SystemWindowsInsetsCallback {
+        OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,
+        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback {
 
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
@@ -166,7 +168,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private ImageLoaderWrapper mProfileImageLoader;
 
-    private ProfileImageView mProfileImageView;
+    private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
@@ -254,7 +256,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public void onLoadFinished(final Loader<SingleResponse<ParcelableUser>> loader,
                                    final SingleResponse<ParcelableUser> data) {
             if (getActivity() == null) return;
-            if (data.getData() != null && data.getData().id > 0) {
+            if (data.hasData()) {
                 final ParcelableUser user = data.getData();
                 mCardContent.setVisibility(View.VISIBLE);
                 mErrorRetryContainer.setVisibility(View.GONE);
@@ -319,13 +321,39 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mFollowButton.setText(R.string.edit);
                 mFollowButton.setVisibility(View.VISIBLE);
             } else if (relationship != null) {
+                final int drawableRes;
                 if (relationship.isSourceBlockingTarget()) {
                     mFollowButton.setText(R.string.unblock);
+                    drawableRes = R.drawable.ic_follow_blocked;
                 } else if (relationship.isSourceFollowingTarget()) {
                     mFollowButton.setText(R.string.unfollow);
+                    if (relationship.isTargetFollowingSource()) {
+                        drawableRes = R.drawable.ic_follow_bidirectional;
+                    } else {
+                        drawableRes = R.drawable.ic_follow_outgoing;
+                    }
+                } else if (user.is_follow_request_sent) {
+                    mFollowButton.setText(R.string.requested);
+                    if (relationship.isTargetFollowingSource()) {
+                        drawableRes = R.drawable.ic_follow_incoming;
+                    } else {
+                        drawableRes = R.drawable.ic_follow_requested;
+                    }
                 } else {
                     mFollowButton.setText(R.string.follow);
+                    if (relationship.isTargetFollowingSource()) {
+                        drawableRes = R.drawable.ic_follow_incoming;
+                    } else {
+                        drawableRes = R.drawable.ic_follow_none;
+                    }
                 }
+                final Drawable icon = getResources().getDrawable(drawableRes);
+                final int iconSize = Math.round(mFollowButton.getTextSize() * 1.4f);
+                icon.setBounds(0, 0, iconSize, iconSize);
+                icon.setColorFilter(mFollowButton.getCurrentTextColor(), Mode.SRC_ATOP);
+                mFollowButton.setCompoundDrawables(icon, null, null, null);
+                mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
+
                 final ContentResolver resolver = getContentResolver();
                 final String where = Expression.equals(CachedUsers.USER_ID, user.id).getSQL();
                 resolver.delete(CachedUsers.CONTENT_URI, where, null);
@@ -378,7 +406,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mDescriptionContainer.setVisibility(userIsMe || !isEmpty(user.description_html) ? View.VISIBLE : View.GONE);
         mDescriptionView.setText(user.description_html != null ? Html.fromHtml(user.description_html) : null);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        linkify.setLinkTextColor(user.link_color);
         linkify.applyAllLinks(mDescriptionView, user.account_id, false);
         mDescriptionView.setMovementMethod(null);
         mLocationContainer.setVisibility(userIsMe || !isEmpty(user.location) ? View.VISIBLE : View.GONE);
@@ -386,7 +413,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mURLContainer.setVisibility(userIsMe || !isEmpty(user.url) || !isEmpty(user.url_expanded) ? View.VISIBLE
                 : View.GONE);
         mURLView.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
-        mURLView.setLinkTextColor(user.link_color);
         mURLView.setMovementMethod(null);
         final String createdAt = formatToLongTimeString(activity, user.created_at);
         final float daysSinceCreated = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24;
@@ -399,11 +425,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (userColor != 0) {
             mProfileImageLoader.displayProfileImage(mProfileImageView,
                     getOriginalTwitterProfileImage(user.profile_image_url));
-            setupUserColorActionBar(userColor);
+            setUserColor(userColor);
         } else {
             mProfileImageLoader.displayProfileImage(mProfileImageView,
                     getOriginalTwitterProfileImage(user.profile_image_url));
-            setupUserColorActionBar(user.link_color);
+            setUserColor(user.link_color);
         }
         final int defWidth = res.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
@@ -534,7 +560,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
-                    setUserColor(getActivity(), mUser.id, color);
+                    UserColorNicknameUtils.setUserColor(getActivity(), mUser.id, color);
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
                     clearUserColor(getActivity(), mUser.id);
                 }
@@ -619,6 +645,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerView.setOnSizeChangedListener(this);
         mProfileBannerSpace.setOnTouchListener(this);
 
+
+        mCardView.setCardBackgroundColor(ThemeUtils.getCardBackgroundColor(getActivity()));
+
         getUserInfo(accountId, userId, screenName, false);
 
         setupBaseActionBar();
@@ -673,12 +702,198 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onPrepareOptionsMenu(final Menu menu) {
         if (!shouldUseNativeMenu() || !menu.hasVisibleItems()) return;
-        setMenu(menu);
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final ParcelableUser user = mUser;
+        final Relationship relationship = mRelationship;
+        if (twitter == null || user == null) return;
+        final boolean isMyself = user.account_id == user.id;
+        final MenuItem mentionItem = menu.findItem(MENU_MENTION);
+        if (mentionItem != null) {
+            mentionItem.setTitle(getString(R.string.mention_user_name, getDisplayName(getActivity(), user)));
+        }
+        Utils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
+//        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
+//        followItem.setVisible(!isMyself);
+//        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
+//                && relationship != null;
+//        followItem.setEnabled(shouldShowFollowItem);
+//        if (shouldShowFollowItem) {
+//            followItem.setTitle(isFollowing ? R.string.unfollow : isProtected ? R.string.send_follow_request
+//                    : R.string.follow);
+//            followItem.setIcon(isFollowing ? R.drawable.ic_action_cancel : R.drawable.ic_action_add);
+//        } else {
+//            followItem.setTitle(null);
+//            followItem.setIcon(null);
+//        }
+        if (!isMyself && relationship != null) {
+            setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, relationship.canSourceDMTarget());
+            setMenuItemAvailability(menu, MENU_BLOCK, true);
+            setMenuItemAvailability(menu, MENU_MUTE_USER, true);
+            final MenuItem blockItem = menu.findItem(MENU_BLOCK);
+            if (blockItem != null) {
+                final boolean blocking = relationship.isSourceBlockingTarget();
+                MenuUtils.setMenuInfo(blockItem, new TwidereMenuInfo(blocking));
+                blockItem.setTitle(blocking ? R.string.unblock : R.string.block);
+            }
+            final MenuItem muteItem = menu.findItem(MENU_MUTE_USER);
+            if (muteItem != null) {
+                final boolean muting = relationship.isSourceMutingTarget();
+                MenuUtils.setMenuInfo(muteItem, new TwidereMenuInfo(muting));
+                muteItem.setTitle(muting ? R.string.unmute : R.string.mute);
+            }
+            final MenuItem filterItem = menu.findItem(MENU_ADD_TO_FILTER);
+            if (filterItem != null) {
+                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
+                MenuUtils.setMenuInfo(filterItem, new TwidereMenuInfo(filtering));
+                filterItem.setTitle(filtering ? R.string.remove_from_filter : R.string.add_to_filter);
+            }
+        } else {
+            setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, false);
+            setMenuItemAvailability(menu, MENU_BLOCK, false);
+            setMenuItemAvailability(menu, MENU_MUTE_USER, false);
+            setMenuItemAvailability(menu, MENU_REPORT_SPAM, false);
+        }
+        setMenuItemAvailability(menu, R.id.muted_users, isMyself);
+        setMenuItemAvailability(menu, R.id.blocked_users, isMyself);
+        final Intent intent = new Intent(INTENT_ACTION_EXTENSION_OPEN_USER);
+        final Bundle extras = new Bundle();
+        extras.putParcelable(EXTRA_USER, user);
+        intent.putExtras(extras);
+        menu.removeGroup(MENU_GROUP_USER_EXTENSION);
+        addIntentToMenu(getActivity(), menu, intent, MENU_GROUP_USER_EXTENSION);
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return handleMenuItemClick(item);
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final ParcelableUser user = mUser;
+        final Relationship relationship = mRelationship;
+        if (user == null || twitter == null) return false;
+        switch (item.getItemId()) {
+            case MENU_BLOCK: {
+                if (mRelationship != null) {
+                    if (mRelationship.isSourceBlockingTarget()) {
+                        twitter.destroyBlockAsync(user.account_id, user.id);
+                    } else {
+                        CreateUserBlockDialogFragment.show(getFragmentManager(), user);
+                    }
+                }
+                break;
+            }
+            case MENU_REPORT_SPAM: {
+                ReportSpamDialogFragment.show(getFragmentManager(), user);
+                break;
+            }
+            case MENU_ADD_TO_FILTER: {
+                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
+                final ContentResolver cr = getContentResolver();
+                if (filtering) {
+                    final Expression where = Expression.equals(Filters.Users.USER_ID, user.id);
+                    cr.delete(Filters.Users.CONTENT_URI, where.getSQL(), null);
+                    showInfoMessage(getActivity(), R.string.message_user_unmuted, false);
+                } else {
+                    cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.makeFilteredUserContentValues(user));
+                    showInfoMessage(getActivity(), R.string.message_user_muted, false);
+                }
+                break;
+            }
+            case MENU_MUTE_USER: {
+                if (mRelationship != null) {
+                    if (mRelationship.isSourceMutingTarget()) {
+                        twitter.destroyMuteAsync(user.account_id, user.id);
+                    } else {
+                        CreateUserMuteDialogFragment.show(getFragmentManager(), user);
+                    }
+                }
+                break;
+            }
+            case MENU_MENTION: {
+                final Intent intent = new Intent(INTENT_ACTION_MENTION);
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable(EXTRA_USER, user);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
+            }
+            case MENU_SEND_DIRECT_MESSAGE: {
+                final Uri.Builder builder = new Uri.Builder();
+                builder.scheme(SCHEME_TWIDERE);
+                builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
+                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_id));
+                builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.id));
+                final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+                intent.putExtra(EXTRA_ACCOUNT, ParcelableCredentials.getAccount(getActivity(), user.account_id));
+                intent.putExtra(EXTRA_USER, user);
+                startActivity(intent);
+                break;
+            }
+            case MENU_SET_COLOR: {
+                final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
+                intent.putExtra(EXTRA_COLOR, getUserColor(getActivity(), user.id, true));
+                intent.putExtra(EXTRA_ALPHA_SLIDER, false);
+                intent.putExtra(EXTRA_CLEAR_BUTTON, true);
+                startActivityForResult(intent, REQUEST_SET_COLOR);
+                break;
+            }
+            case MENU_CLEAR_NICKNAME: {
+                clearUserNickname(getActivity(), user.id);
+                break;
+            }
+            case MENU_SET_NICKNAME: {
+                final String nick = getUserNickname(getActivity(), user.id, true);
+                SetUserNicknameDialogFragment.show(getFragmentManager(), user.id, nick);
+                break;
+            }
+            case MENU_ADD_TO_LIST: {
+                final Intent intent = new Intent(INTENT_ACTION_SELECT_USER_LIST);
+                intent.setClass(getActivity(), UserListSelectorActivity.class);
+                intent.putExtra(EXTRA_ACCOUNT_ID, user.account_id);
+                intent.putExtra(EXTRA_SCREEN_NAME, getAccountScreenName(getActivity(), user.account_id));
+                startActivityForResult(intent, REQUEST_ADD_TO_LIST);
+                break;
+            }
+            case MENU_OPEN_WITH_ACCOUNT: {
+                final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
+                intent.setClass(getActivity(), AccountSelectorActivity.class);
+                intent.putExtra(EXTRA_SINGLE_SELECTION, true);
+                startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
+                break;
+            }
+            case MENU_FOLLOW: {
+                if (relationship == null) return false;
+                final boolean isFollowing = relationship.isSourceFollowingTarget();
+                final boolean isCreatingFriendship = twitter.isCreatingFriendship(user.account_id, user.id);
+                final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(user.account_id, user.id);
+                if (!isCreatingFriendship && !isDestroyingFriendship) {
+                    if (isFollowing) {
+                        DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
+                    } else {
+                        twitter.createFriendshipAsync(user.account_id, user.id);
+                    }
+                }
+                return true;
+            }
+            case R.id.muted_users: {
+                openMutesUsers(getActivity(), user.account_id);
+                return true;
+            }
+            case R.id.blocked_users: {
+                openUserBlocks(getActivity(), user.account_id);
+                return true;
+            }
+            default: {
+                if (item.getIntent() != null) {
+                    try {
+                        startActivity(item.getIntent());
+                    } catch (final ActivityNotFoundException e) {
+                        Log.w(LOGTAG, e);
+                        return false;
+                    }
+                }
+                break;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -786,12 +1001,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public boolean onMenuItemClick(final MenuItem item) {
-        return handleMenuItemClick(item);
-
-    }
-
-    @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
         if (mUser == null || !ParseUtils.parseString(mUser.id).equals(key)) return;
         displayUser(mUser);
@@ -837,7 +1046,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mFriendsContainer = headerView.findViewById(R.id.friends_container);
         mFriendsCount = (TextView) headerView.findViewById(R.id.friends_count);
         mProfileNameContainer = (IColorLabelView) headerView.findViewById(R.id.profile_name_container);
-        mProfileImageView = (ProfileImageView) headerView.findViewById(R.id.profile_image);
+        mProfileImageView = (ShapedImageView) headerView.findViewById(R.id.profile_image);
         mProfileTypeView = (ImageView) headerView.findViewById(R.id.profile_type);
         mDescriptionContainer = headerView.findViewById(R.id.description_container);
         mLocationContainer = headerView.findViewById(R.id.location_container);
@@ -897,127 +1106,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         getUserInfo(user.account_id, user.id, user.screen_name, omitIntentExtra);
     }
 
-    private boolean handleMenuItemClick(final MenuItem item) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final ParcelableUser user = mUser;
-        final Relationship relationship = mRelationship;
-        if (user == null || twitter == null) return false;
-        switch (item.getItemId()) {
-            case MENU_BLOCK: {
-                if (mRelationship != null) {
-                    if (mRelationship.isSourceBlockingTarget()) {
-                        twitter.destroyBlockAsync(user.account_id, user.id);
-                    } else {
-                        CreateUserBlockDialogFragment.show(getFragmentManager(), user);
-                    }
-                }
-                break;
-            }
-            case MENU_REPORT_SPAM: {
-                ReportSpamDialogFragment.show(getFragmentManager(), user);
-                break;
-            }
-            case MENU_ADD_TO_FILTER: {
-                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
-                final ContentResolver cr = getContentResolver();
-                if (filtering) {
-                    final Expression where = Expression.equals(Filters.Users.USER_ID, user.id);
-                    cr.delete(Filters.Users.CONTENT_URI, where.getSQL(), null);
-                    showInfoMessage(getActivity(), R.string.message_user_unmuted, false);
-                } else {
-                    cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.makeFilteredUserContentValues(user));
-                    showInfoMessage(getActivity(), R.string.message_user_muted, false);
-                }
-                break;
-            }
-            case MENU_MUTE_USER: {
-                if (mRelationship != null) {
-                    if (mRelationship.isSourceMutingTarget()) {
-                        twitter.destroyMuteAsync(user.account_id, user.id);
-                    } else {
-                        CreateUserMuteDialogFragment.show(getFragmentManager(), user);
-                    }
-                }
-                break;
-            }
-            case MENU_MENTION: {
-                final Intent intent = new Intent(INTENT_ACTION_MENTION);
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable(EXTRA_USER, user);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                break;
-            }
-            case MENU_SEND_DIRECT_MESSAGE: {
-                final Uri.Builder builder = new Uri.Builder();
-                builder.scheme(SCHEME_TWIDERE);
-                builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_id));
-                builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(user.id));
-                startActivity(new Intent(Intent.ACTION_VIEW, builder.build()));
-                break;
-            }
-            case MENU_SET_COLOR: {
-                final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
-                intent.putExtra(EXTRA_COLOR, getUserColor(getActivity(), user.id, true));
-                intent.putExtra(EXTRA_ALPHA_SLIDER, false);
-                intent.putExtra(EXTRA_CLEAR_BUTTON, true);
-                startActivityForResult(intent, REQUEST_SET_COLOR);
-                break;
-            }
-            case MENU_CLEAR_NICKNAME: {
-                clearUserNickname(getActivity(), user.id);
-                break;
-            }
-            case MENU_SET_NICKNAME: {
-                final String nick = getUserNickname(getActivity(), user.id, true);
-                SetUserNicknameDialogFragment.show(getFragmentManager(), user.id, nick);
-                break;
-            }
-            case MENU_ADD_TO_LIST: {
-                final Intent intent = new Intent(INTENT_ACTION_SELECT_USER_LIST);
-                intent.setClass(getActivity(), UserListSelectorActivity.class);
-                intent.putExtra(EXTRA_ACCOUNT_ID, user.account_id);
-                intent.putExtra(EXTRA_SCREEN_NAME, getAccountScreenName(getActivity(), user.account_id));
-                startActivityForResult(intent, REQUEST_ADD_TO_LIST);
-                break;
-            }
-            case MENU_OPEN_WITH_ACCOUNT: {
-                final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
-                intent.setClass(getActivity(), AccountSelectorActivity.class);
-                intent.putExtra(EXTRA_SINGLE_SELECTION, true);
-                startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
-                break;
-            }
-            case MENU_FOLLOW: {
-                if (relationship == null) return false;
-                final boolean isFollowing = relationship.isSourceFollowingTarget();
-                final boolean isCreatingFriendship = twitter.isCreatingFriendship(user.account_id, user.id);
-                final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(user.account_id, user.id);
-                if (!isCreatingFriendship && !isDestroyingFriendship) {
-                    if (isFollowing) {
-                        DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
-                    } else {
-                        twitter.createFriendshipAsync(user.account_id, user.id);
-                    }
-                }
-                return true;
-            }
-            default: {
-                if (item.getIntent() != null) {
-                    try {
-                        startActivity(item.getIntent());
-                    } catch (final ActivityNotFoundException e) {
-                        Log.w(LOGTAG, e);
-                        return false;
-                    }
-                }
-                break;
-            }
-        }
-        return true;
-    }
-
     private boolean isUucky(long userId, String screenName, Parcelable parcelable) {
         if (userId == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(screenName)) return true;
         if (parcelable instanceof ParcelableUser) {
@@ -1053,66 +1141,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
-    private void setMenu(final Menu menu) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final ParcelableUser user = mUser;
-        final Relationship relationship = mRelationship;
-        if (twitter == null || user == null) return;
-        final boolean isMyself = user.account_id == user.id;
-        final MenuItem mentionItem = menu.findItem(MENU_MENTION);
-        if (mentionItem != null) {
-            mentionItem.setTitle(getString(R.string.mention_user_name, getDisplayName(getActivity(), user)));
-        }
-        Utils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
-//        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
-//        followItem.setVisible(!isMyself);
-//        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
-//                && relationship != null;
-//        followItem.setEnabled(shouldShowFollowItem);
-//        if (shouldShowFollowItem) {
-//            followItem.setTitle(isFollowing ? R.string.unfollow : isProtected ? R.string.send_follow_request
-//                    : R.string.follow);
-//            followItem.setIcon(isFollowing ? R.drawable.ic_action_cancel : R.drawable.ic_action_add);
-//        } else {
-//            followItem.setTitle(null);
-//            followItem.setIcon(null);
-//        }
-        if (!isMyself && relationship != null) {
-            setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, relationship.canSourceDMTarget());
-            setMenuItemAvailability(menu, MENU_BLOCK, true);
-            setMenuItemAvailability(menu, MENU_MUTE_USER, true);
-            final MenuItem blockItem = menu.findItem(MENU_BLOCK);
-            if (blockItem != null) {
-                final boolean blocking = relationship.isSourceBlockingTarget();
-                MenuUtils.setMenuInfo(blockItem, new TwidereMenuInfo(blocking));
-                blockItem.setTitle(blocking ? R.string.unblock : R.string.block);
-            }
-            final MenuItem muteItem = menu.findItem(MENU_MUTE_USER);
-            if (muteItem != null) {
-                final boolean muting = relationship.isSourceMutingTarget();
-                MenuUtils.setMenuInfo(muteItem, new TwidereMenuInfo(muting));
-                muteItem.setTitle(muting ? R.string.unmute : R.string.mute);
-            }
-            final MenuItem filterItem = menu.findItem(MENU_ADD_TO_FILTER);
-            if (filterItem != null) {
-                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
-                MenuUtils.setMenuInfo(filterItem, new TwidereMenuInfo(filtering));
-                filterItem.setTitle(filtering ? R.string.remove_from_filter : R.string.add_to_filter);
-            }
-        } else {
-            setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, false);
-            setMenuItemAvailability(menu, MENU_BLOCK, false);
-            setMenuItemAvailability(menu, MENU_MUTE_USER, false);
-            setMenuItemAvailability(menu, MENU_REPORT_SPAM, false);
-        }
-        final Intent intent = new Intent(INTENT_ACTION_EXTENSION_OPEN_USER);
-        final Bundle extras = new Bundle();
-        extras.putParcelable(EXTRA_USER, user);
-        intent.putExtras(extras);
-        menu.removeGroup(MENU_GROUP_USER_EXTENSION);
-        addIntentToMenu(getActivity(), menu, intent, MENU_GROUP_USER_EXTENSION);
-    }
-
     private void setupBaseActionBar() {
         final FragmentActivity activity = getActivity();
         if (!(activity instanceof LinkHandlerActivity)) return;
@@ -1128,13 +1156,16 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         actionBar.setBackgroundDrawable(mActionBarBackground);
     }
 
-    private void setupUserColorActionBar(int color) {
+    private void setUserColor(int color) {
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
         mActionBarBackground.setColor(color);
         mTintedStatusContent.setColor(color, ThemeUtils.getThemeAlpha(getActivity()));
         mPagerIndicator.setStripColor(color);
+        mDescriptionView.setLinkTextColor(color);
+        mLocationView.setLinkTextColor(color);
+        mURLView.setLinkTextColor(color);
     }
 
     private void setupUserPages() {

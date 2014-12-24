@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Set;
 
 import twitter4j.DirectMessage;
+import twitter4j.Paging;
+import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -111,6 +113,7 @@ public class TwitterWrapper implements Constants {
         throw new IllegalArgumentException();
     }
 
+    @NonNull
     public static User showUserAlternative(final Twitter twitter, final long id, final String screenName)
             throws TwitterException {
         final String searchScreenName;
@@ -120,12 +123,29 @@ public class TwitterWrapper implements Constants {
             searchScreenName = twitter.showFriendship(twitter.getId(), id).getTargetUserScreenName();
         } else
             throw new IllegalArgumentException();
-        for (final User user : twitter.searchUsers(searchScreenName, 1)) {
-            if (user.getId() == id || searchScreenName.equals(user.getScreenName())) return user;
+        final Paging paging = new Paging();
+        paging.count(1);
+        if (id != -1) {
+            final ResponseList<Status> timeline = twitter.getUserTimeline(id, paging);
+            for (final Status status : timeline) {
+                final User user = status.getUser();
+                if (user.getId() == id) return user;
+            }
+        } else {
+            final ResponseList<Status> timeline = twitter.getUserTimeline(screenName, paging);
+            for (final Status status : timeline) {
+                final User user = status.getUser();
+                if (searchScreenName.equalsIgnoreCase(user.getScreenName()))
+                    return user;
+            }
         }
-        return null;
+        for (final User user : twitter.searchUsers(searchScreenName, 1)) {
+            if (user.getId() == id || searchScreenName.equalsIgnoreCase(user.getScreenName())) return user;
+        }
+        throw new TwitterException("can't find user");
     }
 
+    @NonNull
     public static User tryShowUser(final Twitter twitter, final long id, final String screenName)
             throws TwitterException {
         try {

@@ -46,22 +46,18 @@ public class StatusShareProvider extends ActionProvider implements Constants {
     }
 
     @Override
-    public View onCreateActionView(MenuItem forItem) {
+    public View onCreateActionView() {
         return null;
     }
 
     @Override
-    public View onCreateActionView() {
+    public View onCreateActionView(MenuItem forItem) {
         return null;
     }
 
     @Override
     public boolean hasSubMenu() {
         return true;
-    }
-
-    public void setStatus(ParcelableStatus status) {
-        mStatus = status;
     }
 
     @Override
@@ -71,5 +67,9 @@ public class StatusShareProvider extends ActionProvider implements Constants {
         if (mStatus != null) {
             addIntentToMenu(mContext, subMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
         }
+    }
+
+    public void setStatus(ParcelableStatus status) {
+        mStatus = status;
     }
 }

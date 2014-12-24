@@ -19,13 +19,11 @@
 
 package org.mariotaku.twidere.fragment.iface;
 
-import org.mariotaku.refreshnow.widget.OnRefreshListener;
-import org.mariotaku.refreshnow.widget.iface.IRefreshNowView;
+public interface IBasePullToRefreshFragment {
 
-public interface IBasePullToRefreshFragment extends IRefreshNowView, OnRefreshListener {
+    public void onRefresh();
 
-	public void onRefreshFromEnd();
+    public boolean isRefreshing();
 
-	public void onRefreshFromStart();
-
+    void setRefreshing(boolean refresh);
 }

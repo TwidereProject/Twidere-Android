@@ -690,5 +690,7 @@
     <string name="retweet_quote_confirm_title">Retweet to your followers?</string>
     <string name="font">Font</string>
     <string name="size">Size</string>
+    <string name="just_now">Just now</string>
+    <string name="requested">Requested</string>
 
 </resources>

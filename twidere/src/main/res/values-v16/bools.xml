@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
-	<bool name="has_font_family">true</bool>
+    <bool name="has_font_family">true</bool>
 
 </resources>

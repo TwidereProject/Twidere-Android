@@ -21,38 +21,44 @@
 <resources>
 
     <style name="Theme.Base" parent="android:Theme.Material">
-        <item name="android:colorPrimary">@color/material_light_blue</item>
-        <item name="android:colorPrimaryDark">@color/material_light_blue_700</item>
-        <item name="android:colorAccent">@color/material_light_blue_a200</item>
+        <!--<item name="android:colorPrimary">@color/material_light_blue</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/material_light_blue_700</item>-->
+        <!--<item name="android:colorAccent">@color/material_light_blue_a200</item>-->
+        <item name="android:colorAccent">#ccc</item>
     </style>
 
     <style name="Theme.Base.NoActionBar" parent="android:Theme.Material.NoActionBar">
-        <item name="android:colorPrimary">@color/material_light_blue</item>
-        <item name="android:colorPrimaryDark">@color/material_light_blue_700</item>
-        <item name="android:colorAccent">@color/material_light_blue_a200</item>
+        <!--<item name="android:colorPrimary">@color/material_light_blue</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/material_light_blue_700</item>-->
+        <!--<item name="android:colorAccent">@color/material_light_blue_a200</item>-->
+        <item name="android:colorAccent">#ccc</item>
     </style>
 
     <style name="Theme.Base.Dialog" parent="android:Theme.Material.Dialog">
-        <item name="android:colorPrimary">@color/material_light_blue</item>
-        <item name="android:colorPrimaryDark">@color/material_light_blue_700</item>
-        <item name="android:colorAccent">@color/material_light_blue_a200</item>
+        <!--<item name="android:colorPrimary">@color/material_light_blue</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/material_light_blue_700</item>-->
+        <!--<item name="android:colorAccent">@color/material_light_blue_a200</item>-->
+        <item name="android:colorAccent">#ccc</item>
     </style>
 
     <style name="Theme.Base.Light" parent="android:Theme.Material.Light">
-        <item name="android:colorPrimary">@color/material_light_blue</item>
-        <item name="android:colorPrimaryDark">@color/material_light_blue_700</item>
-        <item name="android:colorAccent">@color/material_light_blue_a200</item>
+        <!--<item name="android:colorPrimary">@color/material_light_blue</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/material_light_blue_700</item>-->
+        <!--<item name="android:colorAccent">@color/material_light_blue_a200</item>-->
+        <item name="android:colorAccent">#aaa</item>
     </style>
 
     <style name="Theme.Base.Light.DarkActionBar" parent="android:Theme.Material.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/material_light_blue</item>
-        <item name="android:colorPrimaryDark">@color/material_light_blue_700</item>
-        <item name="android:colorAccent">@color/material_light_blue_a200</item>
+        <!--<item name="android:colorPrimary">@color/material_light_blue</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/material_light_blue_700</item>-->
+        <!--<item name="android:colorAccent">@color/material_light_blue_a200</item>-->
+        <item name="android:colorAccent">#aaa</item>
     </style>
 
     <style name="Theme.Base.Light.Dialog" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorPrimary">@color/material_light_blue</item>
-        <item name="android:colorPrimaryDark">@color/material_light_blue_700</item>
-        <item name="android:colorAccent">@color/material_light_blue_a200</item>
+        <!--<item name="android:colorPrimary">@color/material_light_blue</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/material_light_blue_700</item>-->
+        <!--<item name="android:colorAccent">@color/material_light_blue_a200</item>-->
+        <item name="android:colorAccent">#aaa</item>
     </style>
 </resources>

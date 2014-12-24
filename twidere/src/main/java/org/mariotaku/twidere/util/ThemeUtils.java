@@ -23,6 +23,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -34,6 +35,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -44,18 +46,21 @@ import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.mariotaku.menucomponent.internal.Utils;
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarMenuInfo;
-import org.mariotaku.refreshnow.widget.RefreshNowConfig;
-import org.mariotaku.refreshnow.widget.RefreshNowProgressIndicator.IndicatorConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
+import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.iface.IThemedView;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -182,42 +187,58 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static IndicatorConfig buildRefreshIndicatorConfig(final Context context) {
-        final IndicatorConfig.Builder builder = new IndicatorConfig.Builder(context);
-        final Resources res = context.getResources();
-        final float width = 3 * res.getDisplayMetrics().density;
-        final int themeColor = getUserAccentColor(context);
-        builder.progressColor(themeColor);
-        builder.indeterminateColor(themeColor);
-        builder.progressStrokeWidth(width);
-        builder.indeterminateStrokeWidth(width);
-        return builder.build();
+    public static View createView(final String name, final Context context,
+                                  final AttributeSet attrs) {
+        return createView(name, context, attrs, 0);
     }
 
-    public static RefreshNowConfig buildRefreshNowConfig(final Context context) {
-        final RefreshNowConfig.Builder builder = new RefreshNowConfig.Builder(context);
-        builder.minPullDivisor(2);
-        builder.extraPullDivisor(1);
-        builder.maxOverScrollDistance(72);
-        return builder.build();
-    }
-
-    public static View createView(final String name, final Context context, final AttributeSet attrs) {
+    public static View createView(final String name, final Context context,
+                                  final AttributeSet attrs, final int tintColor) {
+        View view = null;
         try {
-            return newViewInstance(name, context, attrs);
+            view = newViewInstance(name, context, attrs);
         } catch (final Exception e) {
             // In this case we want to let the base class take a crack
             // at it.
         }
         for (final String prefix : sClassPrefixList) {
             try {
-                return newViewInstance(prefix + name, context, attrs);
+                view = newViewInstance(prefix + name, context, attrs);
             } catch (final Exception e) {
                 // In this case we want to let the base class take a crack
                 // at it.
             }
         }
-        return null;
+        if (view != null) {
+            applyColorTintForView(view, tintColor);
+        }
+        return view;
+    }
+
+    private static void applyColorTintForView(View view, int tintColor) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        if (view instanceof IThemedView) {
+            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
+            ((IThemedView) view).setThemeTintColor(tintList);
+        } else if (view instanceof ProgressBar) {
+            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
+            final ProgressBar progressBar = (ProgressBar) view;
+            ViewAccessor.setProgressTintList(progressBar, tintList);
+            ViewAccessor.setProgressBackgroundTintList(progressBar, tintList);
+            ViewAccessor.setIndeterminateTintList(progressBar, tintList);
+        } else if (view instanceof Switch) {
+            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
+            final Switch switchView = (Switch) view;
+            DrawableCompat.setTintList(switchView.getThumbDrawable(), tintList);
+            DrawableCompat.setTintList(switchView.getTrackDrawable(), tintList);
+        } else if (view instanceof CompoundButton) {
+            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
+            final CompoundButton compoundButton = (CompoundButton) view;
+            ViewAccessor.setButtonTintList(compoundButton, tintList);
+        } else if (view instanceof TextView) {
+            final TextView textView = (TextView) view;
+            textView.setLinkTextColor(tintColor);
+        }
     }
 
 
@@ -324,6 +345,14 @@ public class ThemeUtils implements Constants {
         final int color = a.getColor(0, Color.TRANSPARENT);
         a.recycle();
         return color;
+    }
+
+    public static int getCardBackgroundColor(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.cardItemBackgroundColor});
+        final int color = a.getColor(0, Color.TRANSPARENT);
+        a.recycle();
+        final int themeAlpha = getThemeAlpha(context);
+        return themeAlpha << 24 | (0x00FFFFFF & color);
     }
 
     public static int getComposeThemeResource(final Context context) {

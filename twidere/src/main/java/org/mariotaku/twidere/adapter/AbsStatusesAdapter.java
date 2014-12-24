@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
@@ -40,17 +43,21 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final ImageLoadingHandler mLoadingHandler;
     private final int mCardLayoutResource;
     private final AsyncTwitterWrapper mTwitterWrapper;
+    private final int mCardBackgroundColor;
+    private final int mTextSize;
     private boolean mLoadMoreIndicatorEnabled;
-
     private StatusAdapterListener mStatusAdapterListener;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
         mInflater = LayoutInflater.from(context);
         mImageLoader = app.getImageLoaderWrapper();
         mLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         mTwitterWrapper = app.getTwitterWrapper();
+        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         if (compact) {
             mCardLayoutResource = R.layout.card_item_status_compat;
         } else {
@@ -65,6 +72,11 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     @Override
     public AsyncTwitterWrapper getTwitterWrapper() {
         return mTwitterWrapper;
+    }
+
+    @Override
+    public float getTextSize() {
+        return mTextSize;
     }
 
     @Override
@@ -114,8 +126,13 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
                 final View view = mInflater.inflate(mCardLayoutResource, parent, false);
+                final CardView cardView = (CardView) view.findViewById(R.id.card);
+                if (cardView != null) {
+                    cardView.setCardBackgroundColor(mCardBackgroundColor);
+                }
                 final StatusViewHolder holder = new StatusViewHolder(this, view);
-                holder.setupViews();
+                holder.setupViewListeners();
+                holder.setupViewOptions();
                 return holder;
             }
             case ITEM_VIEW_TYPE_GAP: {

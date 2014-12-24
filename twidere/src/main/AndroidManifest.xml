@@ -636,7 +636,7 @@
                 android:value="@string/dashclock_messages_unread_count_description"/>
         </service>
         <service
-            android:name=".service.NyanWallpaperService"
+            android:name=".nyan.NyanWallpaperService"
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/nyan_sakamoto_thumbnail"
@@ -652,7 +652,7 @@
                 android:resource="@xml/nyan_wallpaper"/>
         </service>
         <service
-            android:name=".service.NyanDaydreamService"
+            android:name=".nyan.NyanDaydreamService"
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/nyan_sakamoto_thumbnail"

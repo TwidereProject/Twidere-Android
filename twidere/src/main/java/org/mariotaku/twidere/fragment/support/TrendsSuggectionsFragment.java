@@ -92,12 +92,7 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
     }
 
     @Override
-    public void onRefreshFromEnd() {
-
-    }
-
-    @Override
-    public void onRefreshFromStart() {
+    public void onRefresh() {
         if (isRefreshing()) return;
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null) return;

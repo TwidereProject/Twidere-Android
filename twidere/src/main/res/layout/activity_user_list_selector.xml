@@ -1,101 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".activity.UserListSelectorActivity">
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-	<LinearLayout
-		android:id="@+id/user_lists_container"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:visibility="gone">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.UserListSelectorActivity">
 
-		<ListView
-			android:id="@+id/user_lists_list"
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1"/>
+    <LinearLayout
+        android:id="@+id/user_lists_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-		<LinearLayout
-			android:id="@+id/create_list_container"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="0"
-			android:orientation="vertical"
-			android:visibility="gone">
+        <ListView
+            android:id="@+id/user_lists_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="0.2dp"
-				android:background="#40808080"/>
+        <LinearLayout
+            android:id="@+id/create_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-			<Button
-				android:id="@+id/create_list"
-				style="?android:borderlessButtonStyle"
-				android:layout_width="match_parent"
-				android:layout_height="@dimen/button_bar_height"
-				android:gravity="center"
-				android:onClick="onClick"
-				android:text="@string/new_user_list"/>
-		</LinearLayout>
-	</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="#40808080"/>
 
-	<LinearLayout
-		android:id="@+id/users_list_container"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		tools:context=".activity.UserListSelectorActivity">
+            <Button
+                android:id="@+id/create_list"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_bar_height"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="@string/new_user_list"/>
+        </LinearLayout>
+    </LinearLayout>
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/users_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activity.UserListSelectorActivity">
 
-			<TextView
-				style="?android:listSeparatorTextViewStyle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/user"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center_vertical"
-				android:orientation="horizontal"
-				android:padding="@dimen/element_spacing_normal">
+            <TextView
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/user"/>
 
-				<AutoCompleteTextView
-					android:id="@+id/edit_screen_name"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:ems="10"
-					android:singleLine="true"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/element_spacing_normal">
 
-				<ImageButton
-					android:id="@+id/screen_name_confirm"
-					android:layout_width="@dimen/minimum_element_size"
-					android:layout_height="@dimen/minimum_element_size"
-					android:layout_weight="0"
-					android:background="?android:selectableItemBackground"
-					android:contentDescription="@android:string/search_go"
-					android:onClick="onClick"
-					android:src="@android:drawable/ic_menu_search"/>
-			</LinearLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/edit_screen_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"/>
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="0.2dp"
-				android:background="#40808080"/>
-		</LinearLayout>
+                <ImageButton
+                    android:id="@+id/screen_name_confirm"
+                    android:layout_width="@dimen/minimum_element_size"
+                    android:layout_height="@dimen/minimum_element_size"
+                    android:layout_weight="0"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@android:string/search_go"
+                    android:onClick="onClick"
+                    android:src="@android:drawable/ic_menu_search"/>
+            </LinearLayout>
 
-		<ListView
-			android:id="@+id/users_list"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
-	</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="#40808080"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/users_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
 </FrameLayout>

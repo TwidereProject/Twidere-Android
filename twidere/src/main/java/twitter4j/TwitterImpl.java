@@ -124,7 +124,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         ensureAuthorizationEnabled();
         final String url = conf.getRestBaseURL() + ENDPOINT_BLOCKS_CREATE;
         final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_BLOCKS_CREATE;
-        return factory.createUser(post(url, signUrl, new HttpParameter("screen_name", screenName), INCLUDE_ENTITIES));
+        return factory.createUser(post(url, signUrl, new HttpParameter("screen_name", screenName),
+                INCLUDE_ENTITIES));
     }
 
     @Override
@@ -132,7 +133,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         ensureAuthorizationEnabled();
         final String url = conf.getRestBaseURL() + ENDPOINT_FAVORITES_CREATE;
         final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_FAVORITES_CREATE;
-        return factory.createStatus(post(url, signUrl, new HttpParameter("id", id), INCLUDE_ENTITIES));
+        return factory.createStatus(post(url, signUrl, new HttpParameter("id", id), INCLUDE_ENTITIES,
+                INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT));
     }
 
     @Override
@@ -302,7 +304,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         ensureAuthorizationEnabled();
         return factory.createStatus(post(conf.getRestBaseURL() + ENDPOINT_FAVORITES_DESTROY,
                 conf.getSigningRestBaseURL() + ENDPOINT_FAVORITES_DESTROY, new HttpParameter("id", id),
-                INCLUDE_ENTITIES));
+                INCLUDE_ENTITIES, INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT));
     }
 
     @Override
@@ -347,7 +349,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public Status destroyStatus(final long statusId) throws TwitterException {
         ensureAuthorizationEnabled();
         return factory.createStatus(post(conf.getRestBaseURL() + "statuses/destroy/" + statusId + ".json",
-                conf.getSigningRestBaseURL() + "statuses/destroy/" + statusId + ".json", INCLUDE_ENTITIES));
+                conf.getSigningRestBaseURL() + "statuses/destroy/" + statusId + ".json", INCLUDE_ENTITIES,
+                INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT));
     }
 
     @Override

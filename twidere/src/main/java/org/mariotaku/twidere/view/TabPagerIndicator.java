@@ -408,7 +408,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             final int count = mIndicator.getCount();
             if (count == 0) return;
             final int parentHeight = mIndicator.getHeight(), parentWidth = mIndicator.getWidth();
-            final int width = Math.max(parentWidth / count, child.getMeasuredWidth());
+            final int decoratedWidth = getDecoratedMeasuredWidth(child);
+            final int decoratorWidth = decoratedWidth - child.getMeasuredWidth();
+            final int width = Math.max(parentWidth / count - decoratorWidth, decoratedWidth);
             final int heightMeasureSpec = MeasureSpec.makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY);
             final int widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             child.measure(widthMeasureSpec, heightMeasureSpec);

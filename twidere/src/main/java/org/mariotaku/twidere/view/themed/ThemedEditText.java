@@ -20,12 +20,15 @@
 package org.mariotaku.twidere.view.themed;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.view.iface.IThemedView;
 
-public class ThemedEditText extends EditText {
+public class ThemedEditText extends EditText implements IThemedView {
 
 	public ThemedEditText(final Context context) {
 		this(context, null);
@@ -40,4 +43,8 @@ public class ThemedEditText extends EditText {
         ThemeUtils.initTextView(this);
 	}
 
+    @Override
+    public void setThemeTintColor(ColorStateList color) {
+        ViewAccessor.setBackgroundTintList(this, color);
+    }
 }

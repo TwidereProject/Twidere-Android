@@ -59,7 +59,6 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
 
     private ParcelableUsersAdapter mAdapter;
 
-    private boolean mLoadMoreAutomatically;
     private ListView mListView;
     private long mAccountId;
 
@@ -177,7 +176,7 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
         setProgressBarIndeterminateVisibility(false);
         mAdapter.setData(data);
         mAdapter.setShowAccountColor(shouldShowAccountColor());
-        setRefreshComplete();
+        setRefreshing(false);
         setListShown(true);
     }
 
@@ -209,18 +208,12 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
 
     @Override
     public void onReachedBottom() {
-        if (!mLoadMoreAutomatically) return;
         loadMoreUsers();
     }
 
-    @Override
-    public void onRefreshFromEnd() {
-        if (mLoadMoreAutomatically) return;
-        loadMoreUsers();
-    }
 
     @Override
-    public void onRefreshFromStart() {
+    public void onRefresh() {
         if (isRefreshing()) return;
         getLoaderManager().restartLoader(0, getArguments(), this);
     }
@@ -228,7 +221,6 @@ abstract class BaseUsersListFragment extends BasePullToRefreshListFragment imple
     @Override
     public void onResume() {
         super.onResume();
-        mLoadMoreAutomatically = mPreferences.getBoolean(KEY_LOAD_MORE_AUTOMATICALLY, false);
         configBaseCardAdapter(getActivity(), mAdapter);
     }
 

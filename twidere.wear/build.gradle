@@ -17,8 +17,42 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-    buildTypes {
+    signingConfigs {
+        debug {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                Properties signingProp = new Properties()
+                signingProp.load(signingPropFile.newDataInputStream())
+                storeFile file(signingProp.get("twidere.debug.storeFile"))
+                storePassword signingProp.get("twidere.debug.storePassword")
+                keyAlias signingProp.get("twidere.debug.keyAlias")
+                keyPassword signingProp.get("twidere.debug.keyPassword")
+            }
+        }
         release {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                Properties signingProp = new Properties()
+                signingProp.load(signingPropFile.newDataInputStream())
+                storeFile file(signingProp.get("twidere.release.storeFile"))
+                storePassword signingProp.get("twidere.release.storePassword")
+                keyAlias signingProp.get("twidere.release.keyAlias")
+                keyPassword signingProp.get("twidere.release.keyPassword")
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                signingConfig signingConfigs.debug
+            }
+        }
+        release {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

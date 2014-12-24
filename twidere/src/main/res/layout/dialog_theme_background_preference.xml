@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -18,10 +37,10 @@
         android:layout_weight="0"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingBottom="@dimen/element_spacing_normal"
         android:paddingLeft="@dimen/element_spacing_large"
         android:paddingRight="@dimen/element_spacing_normal"
-        android:paddingTop="@dimen/element_spacing_normal"
-        android:paddingBottom="@dimen/element_spacing_normal">
+        android:paddingTop="@dimen/element_spacing_normal">
 
         <SeekBar
             android:id="@+id/alpha_slider"
@@ -32,12 +51,12 @@
         <ImageView
             android:id="@+id/alpha_preview"
             android:layout_width="@dimen/element_size_small"
-            android:visibility="gone"
             android:layout_height="@dimen/element_size_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_weight="0"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_launcher"/>
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

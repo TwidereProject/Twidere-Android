@@ -42,14 +42,14 @@
 
     <Preference android:title="@string/import_settings">
         <intent
-            android:targetPackage="org.mariotaku.twidere"
-            android:targetClass="org.mariotaku.twidere.activity.support.DataImportActivity"/>
+            android:targetClass="org.mariotaku.twidere.activity.support.DataImportActivity"
+            android:targetPackage="org.mariotaku.twidere"/>
     </Preference>
 
     <Preference android:title="@string/export_settings">
         <intent
-            android:targetPackage="org.mariotaku.twidere"
-            android:targetClass="org.mariotaku.twidere.activity.support.DataExportActivity"/>
+            android:targetClass="org.mariotaku.twidere.activity.support.DataExportActivity"
+            android:targetPackage="org.mariotaku.twidere"/>
     </Preference>
 
 </PreferenceScreen>

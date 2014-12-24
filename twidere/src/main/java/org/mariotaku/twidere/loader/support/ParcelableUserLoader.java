@@ -92,7 +92,6 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         }
         try {
             final User user = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
-            if (user == null) return SingleResponse.getInstance();
             final ContentValues cachedUserValues = makeCachedUserContentValues(user);
             final long userId = user.getId();
             final String cachedUserWhere = Expression.equals(CachedUsers.USER_ID, userId).getSQL();

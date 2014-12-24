@@ -1,0 +1,79 @@
+/*
+ * Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "org.mariotaku.twidere.donate.nyanwp"
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 3
+        versionName "1.2"
+    }
+    signingConfigs {
+        debug {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                Properties signingProp = new Properties()
+                signingProp.load(signingPropFile.newDataInputStream())
+                storeFile file(signingProp.get("twidere.debug.storeFile"))
+                storePassword signingProp.get("twidere.debug.storePassword")
+                keyAlias signingProp.get("twidere.debug.keyAlias")
+                keyPassword signingProp.get("twidere.debug.keyPassword")
+            }
+        }
+        release {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                Properties signingProp = new Properties()
+                signingProp.load(signingPropFile.newDataInputStream())
+                storeFile file(signingProp.get("twidere.release.storeFile"))
+                storePassword signingProp.get("twidere.release.storePassword")
+                keyAlias signingProp.get("twidere.release.keyAlias")
+                keyPassword signingProp.get("twidere.release.keyPassword")
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                signingConfig signingConfigs.debug
+            }
+        }
+        release {
+            File signingPropFile = project.rootProject.file('signing.properties')
+            if (signingPropFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    wearApp project(':twidere.donate.nyanwp.wear')
+    compile project(':twidere.nyan')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

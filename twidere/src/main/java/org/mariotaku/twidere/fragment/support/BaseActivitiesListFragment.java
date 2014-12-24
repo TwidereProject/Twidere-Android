@@ -79,24 +79,18 @@ public abstract class BaseActivitiesListFragment extends BasePullToRefreshListFr
     @Override
     public void onLoadFinished(final Loader<List<ParcelableActivity>> loader, final List<ParcelableActivity> data) {
         setProgressBarIndeterminateVisibility(false);
-        setRefreshComplete();
         mData = data;
         mAdapter.setData(data);
         if (loader instanceof Twitter4JActivitiesLoader) {
             final boolean multipleAccounts = ((Twitter4JActivitiesLoader) loader).getAccountIds().length > 1;
             mAdapter.setShowAccountColor(multipleAccounts);
         }
-        setRefreshComplete();
+        setRefreshing(false);
         setListShown(true);
     }
 
     @Override
-    public void onRefreshFromEnd() {
-
-    }
-
-    @Override
-    public void onRefreshFromStart() {
+    public void onRefresh() {
         if (isRefreshing()) return;
         getLoaderManager().restartLoader(0, getArguments(), this);
     }

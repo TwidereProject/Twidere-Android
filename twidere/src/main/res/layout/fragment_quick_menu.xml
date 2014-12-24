@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
     android:id="@+id/activities_drawer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
@@ -41,7 +61,7 @@
                 android:text="@string/notifications"
                 android:textAllCaps="true"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <ImageButton
                 android:id="@+id/activities_config_button"
@@ -50,8 +70,8 @@
                 android:layout_weight="0"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/customize"
-                android:text="@string/notifications"
-                android:src="@drawable/ic_action_settings" />
+                android:src="@drawable/ic_action_settings"
+                android:text="@string/notifications"/>
         </LinearLayout>
 
         <FrameLayout

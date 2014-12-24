@@ -15,6 +15,6 @@
 -->
 <resources>
     <declare-styleable name="CenteredLinearLayout">
-        <attr name="max_width" format="dimension" />
+        <attr name="max_width" format="dimension"/>
     </declare-styleable>
 </resources>
