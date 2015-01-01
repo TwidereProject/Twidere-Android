@@ -100,17 +100,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
     public void displayStatus(final ParcelableStatus status) {
         displayStatus(adapter.getContext(), adapter.getImageLoader(),
-                adapter.getImageLoadingHandler(), adapter.getTwitterWrapper(), status);
+                adapter.getImageLoadingHandler(), adapter.getTwitterWrapper(),
+                adapter.getProfileImageStyle(), adapter.getMediaPreviewStyle(), status, null);
     }
 
     public void displayStatus(final Context context, final ImageLoaderWrapper loader,
                               final ImageLoadingHandler handler, final AsyncTwitterWrapper twitter,
-                              final ParcelableStatus status) {
-        displayStatus(context, loader, handler, twitter, status, null);
-    }
-
-    public void displayStatus(final Context context, final ImageLoaderWrapper loader,
-                              final ImageLoadingHandler handler, final AsyncTwitterWrapper twitter,
+                              final int profileImageStyle, final int mediaPreviewStyle,
                               @NonNull final ParcelableStatus status,
                               @Nullable final TranslationResult translation) {
         final ParcelableMedia[] media = status.media;
@@ -145,9 +141,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         final int userColor = UserColorNicknameUtils.getUserColor(context, status.user_id);
         profileImageView.setBorderColor(userColor);
+        profileImageView.setStyle(profileImageStyle);
 
         loader.displayProfileImage(profileImageView, status.user_profile_image_url);
 
+        mediaPreviewContainer.setStyle(mediaPreviewStyle);
         mediaPreviewContainer.displayMedia(media, loader, status.account_id, null, handler);
         if (translation != null) {
             textView.setText(translation.getText());
@@ -254,10 +252,12 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         final int userColor = UserColorNicknameUtils.getUserColor(context, user_id);
         profileImageView.setBorderColor(userColor);
+        profileImageView.setStyle(adapter.getProfileImageStyle());
 
         loader.displayProfileImage(profileImageView, user_profile_image_url);
 
         final String text_unescaped = cursor.getString(indices.text_unescaped);
+        mediaPreviewContainer.setStyle(adapter.getMediaPreviewStyle());
         mediaPreviewContainer.displayMedia(media, loader, account_id, null,
                 adapter.getImageLoadingHandler());
         textView.setText(text_unescaped);

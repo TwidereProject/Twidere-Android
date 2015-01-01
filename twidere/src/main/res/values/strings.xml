@@ -692,5 +692,12 @@
     <string name="size">Size</string>
     <string name="just_now">Just now</string>
     <string name="requested">Requested</string>
+    <string name="round">Round</string>
+    <string name="square">Square</string>
+    <string name="profile_image_style">Profile image style</string>
+    <string name="default_profile_image_style">round</string>
+    <string name="media_preview_style">Media preview style</string>
+    <string name="draft_saved">Draft saved</string>
+    <string name="open_twitter_links">Open Twitter links</string>
 
 </resources>

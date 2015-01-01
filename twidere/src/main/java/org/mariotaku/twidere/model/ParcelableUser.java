@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.jsonserializer.JSONParcel;
 import org.mariotaku.jsonserializer.JSONParcelable;
@@ -255,6 +256,15 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public static ParcelableUser[] fromUsersArray(@Nullable final User[] users, long account_id) {
+        if (users == null) return null;
+        final ParcelableUser[] result = new ParcelableUser[users.length];
+        for (int i = 0, j = users.length; i < j; i++) {
+            result[i] = new ParcelableUser(users[i], account_id);
+        }
+        return result;
     }
 
     @Override

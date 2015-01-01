@@ -47,6 +47,7 @@ import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Action;
 import android.text.Html;
 import android.util.Log;
 
@@ -64,9 +65,11 @@ import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.UnreadItem;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
+import org.mariotaku.twidere.provider.TweetStore.Drafts;
 import org.mariotaku.twidere.provider.TweetStore.Preferences;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
+import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.ArrayUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -184,7 +187,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             if (result > 0) {
                 onDatabaseUpdated(tableId, uri);
             }
-            onNewItemsInserted(uri, values);
+            onNewItemsInserted(uri, tableId, values);
             return result;
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
@@ -266,7 +269,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 rowId = mDatabaseWrapper.insert(table, null, values);
             }
             onDatabaseUpdated(tableId, uri);
-            onNewItemsInserted(uri, values);
+            onNewItemsInserted(uri, tableId, values);
             return Uri.withAppendedPath(uri, String.valueOf(rowId));
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
@@ -1092,13 +1095,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         notifyContentObserver(getNotificationUri(tableId, uri));
     }
 
-    private void onNewItemsInserted(final Uri uri, final ContentValues... values) {
-        if (uri == null || values == null || values.length == 0) return;
-        preloadImages(values);
+    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues... valuesArray) {
+        if (uri == null || valuesArray == null || valuesArray.length == 0) return;
+        preloadImages(valuesArray);
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
-        switch (getTableId(uri)) {
+        switch (tableId) {
             case TABLE_ID_STATUSES: {
-                final int notifiedCount = notifyStatusesInserted(values);
+                final int notifiedCount = notifyStatusesInserted(valuesArray);
                 final List<ParcelableStatus> items = new ArrayList<ParcelableStatus>(mNewStatuses);
                 Collections.sort(items);
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
@@ -1118,7 +1121,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_MENTIONS: {
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
                         getAccountIds(getContext()));
-                final int notifiedCount = notifyMentionsInserted(prefs, values);
+                final int notifiedCount = notifyMentionsInserted(prefs, valuesArray);
                 final List<ParcelableStatus> items = new ArrayList<ParcelableStatus>(mNewMentions);
                 Collections.sort(items);
                 for (final AccountPreferences pref : prefs) {
@@ -1134,8 +1137,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             case TABLE_ID_DIRECT_MESSAGES_INBOX: {
-                final int notifiedCount = notifyIncomingMessagesInserted(values);
-                final List<ParcelableDirectMessage> items = new ArrayList<ParcelableDirectMessage>(mNewMessages);
+                final int notifiedCount = notifyIncomingMessagesInserted(valuesArray);
+                final List<ParcelableDirectMessage> items = new ArrayList<>(mNewMessages);
                 Collections.sort(items);
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
                         getAccountIds(getContext()));
@@ -1149,7 +1152,30 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES);
                 break;
             }
+            case TABLE_ID_DRAFTS: {
+                for (ContentValues values : valuesArray) {
+                    displayNewDraftNotification(values);
+                }
+                break;
+            }
         }
+    }
+
+    private void displayNewDraftNotification(ContentValues values) {
+        final Context context = getContext();
+        final NotificationManager nm = getNotificationManager();
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setTicker(context.getString(R.string.draft_saved));
+        builder.setContentTitle(context.getString(R.string.draft_saved));
+        builder.setContentText(values.getAsString(Drafts.TEXT));
+        builder.setSmallIcon(R.drawable.ic_stat_info);
+        final Intent service = new Intent(context, BackgroundOperationService.class);
+        service.setAction(INTENT_ACTION_DISCARD_DRAFT);
+        final PendingIntent discardIntent = PendingIntent.getService(context, 0, service, 0);
+        final Action.Builder actionBuilder = new Action.Builder(R.drawable.ic_action_delete,
+                context.getString(R.string.discard), discardIntent);
+        builder.addAction(actionBuilder.build());
+        nm.notify(16, builder.build());
     }
 
     private void preloadImages(final ContentValues... values) {

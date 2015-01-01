@@ -168,4 +168,6 @@ public interface Status extends Comparable<Status>, TwitterResponse, ExtendedEnt
      */
     boolean isTruncated();
 
+    CardEntity getCard();
+
 }

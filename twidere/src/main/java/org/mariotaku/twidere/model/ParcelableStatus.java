@@ -24,9 +24,13 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mariotaku.jsonserializer.JSONParcel;
 import org.mariotaku.jsonserializer.JSONParcelable;
+import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.util.ParseUtils;
 
@@ -34,6 +38,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
+import twitter4j.CardEntity;
+import twitter4j.CardEntity.BindingValue;
+import twitter4j.CardEntity.ImageValue;
+import twitter4j.CardEntity.StringValue;
+import twitter4j.CardEntity.UserValue;
 import twitter4j.Status;
 import twitter4j.User;
 
@@ -109,6 +118,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
 
     public final ParcelableMedia[] media;
 
+    public final ParcelableCardEntity card;
+
     public ParcelableStatus(final ContentValues values) {
         id = getAsLong(values, Statuses.STATUS_ID, -1);
         account_id = getAsLong(values, Statuses.ACCOUNT_ID, -1);
@@ -147,6 +158,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = getAsBoolean(values, Statuses.IS_FOLLOWING, false);
         mentions = ParcelableUserMention.fromJSONString(values.getAsString(Statuses.MENTIONS));
         first_media = values.getAsString(Statuses.FIRST_MEDIA);
+        card = ParcelableCardEntity.fromJSONString(values.getAsString(Statuses.CARD));
     }
 
     public ParcelableStatus(final Cursor c, final CursorIndices idx) {
@@ -190,6 +202,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = idx.is_following != -1 && c.getInt(idx.is_following) == 1;
         mentions = idx.mentions != -1 ? ParcelableUserMention.fromJSONString(c.getString(idx.mentions)) : null;
         first_media = idx.first_media != -1 ? c.getString(idx.first_media) : null;
+        card = idx.card != -1 ? ParcelableCardEntity.fromJSONString(c.getString(idx.card)) : null;
     }
 
     public ParcelableStatus(final JSONParcel in) {
@@ -230,6 +243,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = in.readBoolean("is_following");
         mentions = in.readParcelableArray("mentions", ParcelableUserMention.JSON_CREATOR);
         first_media = media != null && media.length > 0 ? media[0].url : null;
+        card = in.readParcelable("card", ParcelableCardEntity.JSON_CREATOR);
     }
 
     public ParcelableStatus(final Parcel in) {
@@ -270,6 +284,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         in_reply_to_name = in.readString();
         mentions = in.createTypedArray(ParcelableUserMention.CREATOR);
         first_media = media != null && media.length > 0 ? media[0].url : null;
+        card = in.readParcelable(ParcelableCardEntity.class.getClassLoader());
     }
 
     public ParcelableStatus(final ParcelableStatus orig, final long override_my_retweet_id,
@@ -311,6 +326,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         in_reply_to_name = orig.in_reply_to_name;
         mentions = orig.mentions;
         first_media = orig.first_media;
+        card = orig.card;
     }
 
     public ParcelableStatus(final Status orig, final long account_id, final boolean is_gap) {
@@ -352,10 +368,11 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         location = new ParcelableLocation(status.getGeoLocation());
         is_favorite = status.isFavorited();
         text_unescaped = toPlainText(text_html);
-        my_retweet_id = retweeted_by_id == account_id ? id : -1;
+        my_retweet_id = retweeted_by_id == account_id ? id : status.getCurrentUserRetweet();
         is_possibly_sensitive = status.isPossiblySensitive();
         mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
         first_media = media != null && media.length > 0 ? media[0].url : null;
+        card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
     }
 
     @Override
@@ -470,6 +487,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeBoolean("is_possibly_sensitive", is_possibly_sensitive);
         out.writeBoolean("is_following", user_is_following);
         out.writeParcelableArray("mentions", mentions);
+        out.writeParcelable("card", card);
     }
 
     @Override
@@ -510,6 +528,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeLong(in_reply_to_user_id);
         out.writeString(in_reply_to_name);
         out.writeTypedArray(mentions, flags);
+        out.writeParcelable(card, flags);
     }
 
     private static long getTime(final Date date) {
@@ -524,7 +543,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 in_reply_to_user_name, in_reply_to_user_screen_name, my_retweet_id, retweeted_by_user_name,
                 retweeted_by_user_screen_name, retweeted_by_user_profile_image, retweet_id, retweet_timestamp,
                 retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
-                descendent_reply_count, is_possibly_sensitive, is_following, media, first_media, mentions;
+                descendent_reply_count, is_possibly_sensitive, is_following, media, first_media, mentions,
+                card;
 
         @Override
         public String toString() {
@@ -608,7 +628,317 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             media = cursor.getColumnIndex(Statuses.MEDIA);
             first_media = cursor.getColumnIndex(Statuses.FIRST_MEDIA);
             mentions = cursor.getColumnIndex(Statuses.MENTIONS);
+            card = cursor.getColumnIndex(Statuses.MENTIONS);
         }
 
+    }
+
+    public static final class ParcelableCardEntity implements TwidereParcelable {
+
+        public static ParcelableValueItem getValue(ParcelableCardEntity entity, String key) {
+            for (ParcelableValueItem item : entity.values) {
+                if (item.name.equals(key)) return item;
+            }
+            return null;
+        }
+
+        public static final Parcelable.Creator<ParcelableCardEntity> CREATOR = new Parcelable.Creator<ParcelableCardEntity>() {
+            @Override
+            public ParcelableCardEntity createFromParcel(final Parcel in) {
+                return new ParcelableCardEntity(in);
+            }
+
+            @Override
+            public ParcelableCardEntity[] newArray(final int size) {
+                return new ParcelableCardEntity[size];
+            }
+        };
+
+        public static final JSONParcelable.Creator<ParcelableCardEntity> JSON_CREATOR = new JSONParcelable.Creator<ParcelableCardEntity>() {
+            @Override
+            public ParcelableCardEntity createFromParcel(final JSONParcel in) {
+                return new ParcelableCardEntity(in);
+            }
+
+            @Override
+            public ParcelableCardEntity[] newArray(final int size) {
+                return new ParcelableCardEntity[size];
+            }
+        };
+
+        public final String name;
+        public final ParcelableUser[] users;
+        public final ParcelableValueItem[] values;
+
+        public ParcelableCardEntity(Parcel src) {
+            name = src.readString();
+            values = src.createTypedArray(ParcelableValueItem.CREATOR);
+            users = src.createTypedArray(ParcelableUser.CREATOR);
+        }
+
+        public ParcelableCardEntity(JSONParcel src) {
+            name = src.readString("name");
+            values = src.readParcelableArray("values", ParcelableValueItem.JSON_CREATOR);
+            users = src.readParcelableArray("users", ParcelableUser.JSON_CREATOR);
+        }
+
+        public ParcelableCardEntity(CardEntity card, long account_id) {
+            name = card.getName();
+            users = ParcelableUser.fromUsersArray(card.gerUsers(), account_id);
+            final BindingValue[] bindingValues = card.getBindingValues();
+            if (bindingValues != null) {
+                values = new ParcelableValueItem[bindingValues.length];
+                for (int i = 0, j = bindingValues.length; i < j; i++) {
+                    values[i] = new ParcelableValueItem(bindingValues[i]);
+                }
+            } else {
+                values = null;
+            }
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static ParcelableCardEntity fromCardEntity(CardEntity card, long account_id) {
+            if (card == null) return null;
+            return new ParcelableCardEntity(card, account_id);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeTypedArray(values, flags);
+            dest.writeTypedArray(users, flags);
+        }
+
+        @Override
+        public void writeToParcel(JSONParcel dest) {
+            dest.writeString("name", name);
+            dest.writeParcelableArray("values", values);
+            dest.writeParcelableArray("users", users);
+        }
+
+
+        public static ParcelableCardEntity fromJSONString(final String json) {
+            if (TextUtils.isEmpty(json)) return null;
+            try {
+                return JSONSerializer.createObject(JSON_CREATOR, new JSONObject(json));
+            } catch (final JSONException e) {
+                return null;
+            }
+        }
+
+
+        public static final class ParcelableValueItem implements TwidereParcelable {
+
+            public static final Parcelable.Creator<ParcelableValueItem> CREATOR = new Parcelable.Creator<ParcelableValueItem>() {
+                @Override
+                public ParcelableValueItem createFromParcel(final Parcel in) {
+                    return new ParcelableValueItem(in);
+                }
+
+                @Override
+                public ParcelableValueItem[] newArray(final int size) {
+                    return new ParcelableValueItem[size];
+                }
+            };
+
+            public static final JSONParcelable.Creator<ParcelableValueItem> JSON_CREATOR = new JSONParcelable.Creator<ParcelableValueItem>() {
+                @Override
+                public ParcelableValueItem createFromParcel(final JSONParcel in) {
+                    return new ParcelableValueItem(in);
+                }
+
+                @Override
+                public ParcelableValueItem[] newArray(final int size) {
+                    return new ParcelableValueItem[size];
+                }
+            };
+            public final String name, type;
+            public final Object value;
+
+            public ParcelableValueItem(JSONParcel in) {
+                this.name = in.readString("name");
+                this.type = in.readString("type");
+                if ("STRING".equals(type)) {
+                    value = in.readString("value");
+                } else if ("IMAGE".equals(type)) {
+                    value = in.readParcelable("value", ParcelableImageValue.JSON_CREATOR);
+                } else if ("USER".equals(type)) {
+                    value = in.readParcelable("value", ParcelableUserValue.JSON_CREATOR);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            }
+
+            public ParcelableValueItem(String name, String type, Object value) {
+                this.name = name;
+                this.type = type;
+                this.value = value;
+            }
+
+            public ParcelableValueItem(Parcel in) {
+                this.name = in.readString();
+                this.type = in.readString();
+                this.value = in.readValue(ParcelableValueItem.class.getClassLoader());
+            }
+
+            public ParcelableValueItem(BindingValue bindingValue) {
+                name = bindingValue.getName();
+                type = bindingValue.getType();
+                if ("STRING".equals(type)) {
+                    value = ((StringValue) bindingValue).getValue();
+                } else if ("IMAGE".equals(type)) {
+                    value = new ParcelableImageValue((ImageValue) bindingValue);
+                } else if ("USER".equals(type)) {
+                    value = new ParcelableUserValue((UserValue) bindingValue);
+                } else {
+                    value = null;
+                }
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(name);
+                dest.writeString(type);
+                dest.writeValue(value);
+            }
+
+            @Override
+            public void writeToParcel(JSONParcel dest) {
+                dest.writeString("name", name);
+                dest.writeString("type", type);
+                dest.writeObject("value", value);
+            }
+        }
+
+
+        public static final class ParcelableUserValue implements TwidereParcelable {
+
+            public static final Parcelable.Creator<ParcelableUserValue> CREATOR = new Parcelable.Creator<ParcelableUserValue>() {
+                @Override
+                public ParcelableUserValue createFromParcel(final Parcel in) {
+                    return new ParcelableUserValue(in);
+                }
+
+                @Override
+                public ParcelableUserValue[] newArray(final int size) {
+                    return new ParcelableUserValue[size];
+                }
+            };
+
+            public static final JSONParcelable.Creator<ParcelableUserValue> JSON_CREATOR = new JSONParcelable.Creator<ParcelableUserValue>() {
+                @Override
+                public ParcelableUserValue createFromParcel(final JSONParcel in) {
+                    return new ParcelableUserValue(in);
+                }
+
+                @Override
+                public ParcelableUserValue[] newArray(final int size) {
+                    return new ParcelableUserValue[size];
+                }
+            };
+            public final long id;
+
+            public ParcelableUserValue(JSONParcel in) {
+                this.id = in.readLong("id");
+            }
+
+            public ParcelableUserValue(Parcel in) {
+                this.id = in.readLong();
+            }
+
+            public ParcelableUserValue(UserValue value) {
+                this.id = value.getUserId();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeLong(id);
+            }
+
+            @Override
+            public void writeToParcel(JSONParcel dest) {
+                dest.writeLong("id", id);
+            }
+        }
+
+        public static final class ParcelableImageValue implements TwidereParcelable {
+
+            public static final Parcelable.Creator<ParcelableImageValue> CREATOR = new Parcelable.Creator<ParcelableImageValue>() {
+                @Override
+                public ParcelableImageValue createFromParcel(final Parcel in) {
+                    return new ParcelableImageValue(in);
+                }
+
+                @Override
+                public ParcelableImageValue[] newArray(final int size) {
+                    return new ParcelableImageValue[size];
+                }
+            };
+
+            public static final JSONParcelable.Creator<ParcelableImageValue> JSON_CREATOR = new JSONParcelable.Creator<ParcelableImageValue>() {
+                @Override
+                public ParcelableImageValue createFromParcel(final JSONParcel in) {
+                    return new ParcelableImageValue(in);
+                }
+
+                @Override
+                public ParcelableImageValue[] newArray(final int size) {
+                    return new ParcelableImageValue[size];
+                }
+            };
+            public final int width, height;
+            public final String url;
+
+            public ParcelableImageValue(JSONParcel in) {
+                this.width = in.readInt("width");
+                this.height = in.readInt("height");
+                this.url = in.readString("url");
+            }
+
+            public ParcelableImageValue(Parcel in) {
+                this.width = in.readInt();
+                this.height = in.readInt();
+                this.url = in.readString();
+            }
+
+            public ParcelableImageValue(ImageValue value) {
+                this.width = value.getWidth();
+                this.height = value.getHeight();
+                this.url = value.getUrl();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(width);
+                dest.writeInt(height);
+                dest.writeString(url);
+            }
+
+            @Override
+            public void writeToParcel(JSONParcel dest) {
+                dest.writeInt("width", width);
+                dest.writeInt("height", height);
+                dest.writeString("url", url);
+            }
+        }
     }
 }

@@ -27,8 +27,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -38,11 +40,12 @@ import org.mariotaku.twidere.util.MediaPreviewUtils.OnMediaClickListener;
 /**
  * Created by mariotaku on 14/12/17.
  */
-public class CardMediaContainer extends ViewGroup {
+public class CardMediaContainer extends ViewGroup implements Constants {
 
     private final int mMaxColumns;
     private final int mHorizontalSpacing, mVerticalSpacing;
     private int[] mTempIndices;
+    private int mMediaPreviewStyle;
 
     public CardMediaContainer(Context context) {
         this(context, null);
@@ -83,7 +86,7 @@ public class CardMediaContainer extends ViewGroup {
                              final long accountId,
                              final OnMediaClickListener mediaClickListener,
                              final ImageLoadingHandler loadingHandler) {
-        if (mediaArray == null) {
+        if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
             for (int i = 0, j = getChildCount(); i < j; i++) {
                 final View child = getChildAt(i);
                 child.setVisibility(GONE);
@@ -95,6 +98,16 @@ public class CardMediaContainer extends ViewGroup {
             final View child = getChildAt(i);
             child.setOnClickListener(clickListener);
             final ImageView imageView = (ImageView) child.findViewById(R.id.media_preview);
+            switch (mMediaPreviewStyle) {
+                case VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP: {
+                    imageView.setScaleType(ScaleType.CENTER_CROP);
+                    break;
+                }
+                case VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE: {
+                    imageView.setScaleType(ScaleType.CENTER_INSIDE);
+                    break;
+                }
+            }
             if (i < k) {
                 final ParcelableMedia media = mediaArray[i];
                 loader.displayPreviewImage(imageView, media.url, loadingHandler);
@@ -115,6 +128,10 @@ public class CardMediaContainer extends ViewGroup {
                 child.setVisibility(GONE);
             }
         }
+    }
+
+    public void setStyle(int style) {
+        mMediaPreviewStyle = style;
     }
 
     @Override

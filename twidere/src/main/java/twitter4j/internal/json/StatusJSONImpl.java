@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Date;
 
+import twitter4j.CardEntity;
 import twitter4j.GeoLocation;
 import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
@@ -72,6 +73,7 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
     private Place place = null;
     private long retweetCount;
     private long favoriteCount;
+    private CardEntity cardEntity;
 
     public long getReplyCount() {
         return replyCount;
@@ -333,6 +335,11 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
     }
 
     @Override
+    public CardEntity getCard() {
+        return cardEntity;
+    }
+
+    @Override
     public String toString() {
         return "StatusJSONImpl{createdAt=" + createdAt + ", id=" + id + ", text=" + text + ", rawText=" + rawText
                 + ", source=" + source + ", isTruncated=" + isTruncated + ", inReplyToStatusId=" + inReplyToStatusId
@@ -468,6 +475,13 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
             } catch (final JSONException ignore) {
                 ignore.printStackTrace();
                 logger.warn("failed to parse current_user_retweet:" + json);
+            }
+        }
+        if (!json.isNull("card")) {
+            try {
+                cardEntity = new CardEntityJSONImpl(json.getJSONObject("card"));
+            } catch (JSONException jsone) {
+                throw new TwitterException(jsone);
             }
         }
     }

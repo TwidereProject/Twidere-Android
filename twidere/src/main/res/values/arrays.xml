@@ -137,13 +137,15 @@
         <item>@string/card_highlight_option_line</item>
         <item>@string/none</item>
     </string-array>
-    <string-array name="values_image_preview_scale_type">
-        <item>CENTER_CROP</item>
-        <item>FIT_CENTER</item>
+    <string-array name="values_media_preview_style">
+        <item>crop</item>
+        <item>scale</item>
+        <item>none</item>
     </string-array>
-    <string-array name="entries_image_preview_scale_type">
-        <item>@string/image_preview_scale_type_crop</item>
-        <item>@string/image_preview_scale_type_fit_center</item>
+    <string-array name="entries_media_preview_style">
+        <item>@string/crop</item>
+        <item>@string/scale</item>
+        <item>@string/none</item>
     </string-array>
     <string-array name="entries_image_sources">
         <item>@string/from_camera</item>
@@ -153,5 +155,15 @@
         <item>camera</item>
         <item>gallery</item>
     </string-array>
+    <string-array name="values_profile_image_style">
+        <item>round</item>
+        <item>square</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>@string/round</item>
+        <item>@string/square</item>
+    </string-array>
 
+    <string name="crop">Crop</string>
+    <string name="scale">Scale</string>
 </resources>

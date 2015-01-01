@@ -44,7 +44,17 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         return new UserFavoritesLoader(context, accountId, userId, screenName, maxId, sinceId,
-                getAdapterData(), null, tabPosition);
+                getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
+    }
+
+    @Override
+    protected String[] getSavedStatusesFileArgs() {
+        final Bundle args = getArguments();
+        if (args == null) return null;
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        return new String[]{AUTHORITY_USER_FAVORITES, "account" + accountId, "user" + userId, "name" + screenName};
     }
 
 }

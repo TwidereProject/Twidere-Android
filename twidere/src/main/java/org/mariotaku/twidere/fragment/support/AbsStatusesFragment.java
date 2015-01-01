@@ -25,7 +25,6 @@ import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -193,9 +192,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         switch (id) {
             case R.id.reply_count: {
                 final Context context = getActivity();
-                final Intent intent = new Intent(IntentConstants.INTENT_ACTION_REPLY);
+                final Intent intent = new Intent(INTENT_ACTION_REPLY);
                 intent.setPackage(context.getPackageName());
-                intent.putExtra(IntentConstants.EXTRA_STATUS, status);
+                intent.putExtra(EXTRA_STATUS, status);
                 context.startActivity(intent);
                 break;
             }

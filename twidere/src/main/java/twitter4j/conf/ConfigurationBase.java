@@ -101,6 +101,8 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     Map<String, String> requestHeaders;
 
     private static final List<ConfigurationBase> instances = new ArrayList<ConfigurationBase>();
+    private boolean includeCards;
+    private String cardsPlatform;
 
     protected ConfigurationBase() {
         setDebug(false);
@@ -255,6 +257,10 @@ class ConfigurationBase implements TwitterConstants, Configuration {
             if (other.userAgent != null) return false;
         } else if (!userAgent.equals(other.userAgent)) return false;
         return true;
+    }
+
+    public String getCardsPlatform() {
+        return cardsPlatform;
     }
 
     @Override
@@ -499,6 +505,11 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     }
 
     @Override
+    public boolean isIncludeCardsEnabled() {
+        return includeCards;
+    }
+
+    @Override
     public boolean isGZIPEnabled() {
         return gzipEnabled;
     }
@@ -546,6 +557,14 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     @Override
     public boolean isTwitterClientHeaderIncluded() {
         return includeTwitterClientHeader;
+    }
+
+    public void setCardsPlatform(String cardsPlatform) {
+        this.cardsPlatform = cardsPlatform;
+    }
+
+    public void setIncludeCards(boolean includeCards) {
+        this.includeCards = includeCards;
     }
 
     @Override

@@ -265,35 +265,39 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.ACCOUNT_ID, accountId);
         values.put(Statuses.STATUS_ID, orig.getId());
         values.put(Statuses.STATUS_TIMESTAMP, orig.getCreatedAt().getTime());
-        values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
         final boolean isRetweet = orig.isRetweet();
         final Status status;
         final Status retweetedStatus = isRetweet ? orig.getRetweetedStatus() : null;
         if (retweetedStatus != null) {
             final User retweetUser = orig.getUser();
+            final long retweetedById = retweetUser.getId();
             values.put(Statuses.RETWEET_ID, retweetedStatus.getId());
             values.put(Statuses.RETWEET_TIMESTAMP, retweetedStatus.getCreatedAt().getTime());
-            values.put(Statuses.RETWEETED_BY_USER_ID, retweetUser.getId());
+            values.put(Statuses.RETWEETED_BY_USER_ID, retweetedById);
             values.put(Statuses.RETWEETED_BY_USER_NAME, retweetUser.getName());
             values.put(Statuses.RETWEETED_BY_USER_SCREEN_NAME, retweetUser.getScreenName());
             values.put(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE, ParseUtils.parseString(retweetUser.getProfileImageUrlHttps()));
+            if (retweetedById == accountId) {
+                values.put(Statuses.MY_RETWEET_ID, orig.getId());
+            } else {
+                values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
+            }
             status = retweetedStatus;
         } else {
+            values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
             status = orig;
         }
         final User user = status.getUser();
-        if (user != null) {
-            final long userId = user.getId();
-            final String profileImageUrl = ParseUtils.parseString(user.getProfileImageUrlHttps());
-            final String name = user.getName(), screenName = user.getScreenName();
-            values.put(Statuses.USER_ID, userId);
-            values.put(Statuses.USER_NAME, name);
-            values.put(Statuses.USER_SCREEN_NAME, screenName);
-            values.put(Statuses.IS_PROTECTED, user.isProtected());
-            values.put(Statuses.IS_VERIFIED, user.isVerified());
-            values.put(Statuses.USER_PROFILE_IMAGE_URL, profileImageUrl);
-            values.put(CachedUsers.IS_FOLLOWING, user.isFollowing());
-        }
+        final long userId = user.getId();
+        final String profileImageUrl = ParseUtils.parseString(user.getProfileImageUrlHttps());
+        final String name = user.getName(), screenName = user.getScreenName();
+        values.put(Statuses.USER_ID, userId);
+        values.put(Statuses.USER_NAME, name);
+        values.put(Statuses.USER_SCREEN_NAME, screenName);
+        values.put(Statuses.IS_PROTECTED, user.isProtected());
+        values.put(Statuses.IS_VERIFIED, user.isVerified());
+        values.put(Statuses.USER_PROFILE_IMAGE_URL, profileImageUrl);
+        values.put(CachedUsers.IS_FOLLOWING, user.isFollowing());
         final String text_html = Utils.formatStatusText(status);
         values.put(Statuses.TEXT_HTML, text_html);
         values.put(Statuses.TEXT_PLAIN, status.getText());

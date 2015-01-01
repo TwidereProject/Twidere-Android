@@ -3,6 +3,7 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import java.util.List;
@@ -38,6 +39,11 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
     public int getStatusCount() {
         if (mData == null) return 0;
         return mData.size();
+    }
+
+    @Override
+    public int getMediaPreviewStyle() {
+        return 0;
     }
 
     public void setData(List<ParcelableStatus> data) {

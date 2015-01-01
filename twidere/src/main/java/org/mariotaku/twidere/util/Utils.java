@@ -101,6 +101,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.mariotaku.gallery3d.ImageViewerGLActivity;
@@ -160,6 +166,8 @@ import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
+import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableValueItem;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.TwidereParcelable;
@@ -189,6 +197,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
+import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.io.Closeable;
 import java.io.File;
@@ -2074,6 +2083,22 @@ public final class Utils implements Constants, TwitterConstants {
         return url;
     }
 
+    public static int getProfileImageStyle(String style) {
+        if (VALUE_PROFILE_IMAGE_STYLE_SQUARE.equalsIgnoreCase(style)) {
+            return ShapedImageView.SHAPE_RECTANGLE;
+        }
+        return ShapedImageView.SHAPE_CIRCLE;
+    }
+
+    public static int getMediaPreviewStyle(String style) {
+        if (VALUE_MEDIA_PREVIEW_STYLE_CROP.equalsIgnoreCase(style)) {
+            return VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP;
+        } else if (VALUE_MEDIA_PREVIEW_STYLE_SCALE.equalsIgnoreCase(style)) {
+            return VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE;
+        }
+        return VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE;
+    }
+
     public static Proxy getProxy(final Context context) {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -2478,6 +2503,8 @@ public final class Utils implements Constants, TwitterConstants {
             cb.setHttpConnectionTimeout(connection_timeout);
             cb.setGZIPEnabled(enableGzip);
             cb.setIgnoreSSLError(ignoreSslError);
+            cb.setIncludeCards(true);
+            cb.setCardsPlatform("Android-5");
             if (enableProxy) {
                 final String proxy_host = prefs.getString(KEY_PROXY_HOST, null);
                 final int proxy_port = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
@@ -2647,6 +2674,32 @@ public final class Utils implements Constants, TwitterConstants {
         final float level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         final float scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
         return plugged || level / scale > 0.15f;
+    }
+
+    public static boolean isCardSupported(ParcelableCardEntity card) {
+        return card != null && "player".equals(card.name);
+    }
+
+    public static Fragment createTwitterCardFragment(ParcelableCardEntity card) {
+        if ("player".equals(card.name)) {
+            final ParcelableValueItem player_url = ParcelableCardEntity.getValue(card, "player_url");
+            final YouTubePlayerSupportFragment fragment = YouTubePlayerSupportFragment.newInstance();
+            fragment.initialize("AIzaSyCVdCIMFFxdNqHnCPrJ9yKUzoTfs8jhYGc", new OnInitializedListener() {
+                @Override
+                public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean b) {
+                    final String url = (String) player_url.value;
+                    final String id = url.substring(url.lastIndexOf('/') + 1);
+                    player.cueVideo(id);
+                }
+
+                @Override
+                public void onInitializationFailure(Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+                }
+            });
+            return fragment;
+        }
+        return null;
     }
 
     public static boolean isCompactCards(final Context context) {

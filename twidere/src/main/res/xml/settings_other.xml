@@ -18,7 +18,7 @@
     <org.mariotaku.twidere.preference.ComponentStatePreference
         android:name="org.mariotaku.twidere.activity.TwitterLinkHandlerActivity"
         android:key="twitter_link_handler"
-        android:title="@string/twitter_link_handler"/>
+        android:title="@string/open_twitter_links"/>
 
     <org.mariotaku.twidere.preference.ComponentStatePreference
         android:name="org.mariotaku.twidere.activity.AssistLauncherActivity"
@@ -26,13 +26,12 @@
         android:summary="@string/compose_now_summary"
         android:title="@string/compose_now"/>
 
-    <org.mariotaku.twidere.preference.AutoInvalidateListPreference
+    <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="compose"
         android:dependency="compose_now"
         android:entries="@array/entries_compose_now_action"
         android:entryValues="@array/values_compose_now_action"
         android:key="compose_now_action"
-        android:summary="%s"
         android:title="@string/compose_now_action"/>
 
     <Preference

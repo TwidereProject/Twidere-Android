@@ -23,6 +23,10 @@ public interface IStatusesAdapter<Data> extends IGapSupportedAdapter, ICardSuppo
 
     int getStatusCount();
 
+    int getProfileImageStyle();
+
+    int getMediaPreviewStyle();
+
     void onStatusClick(StatusViewHolder holder, int position);
 
     void onUserProfileClick(StatusViewHolder holder, int position);

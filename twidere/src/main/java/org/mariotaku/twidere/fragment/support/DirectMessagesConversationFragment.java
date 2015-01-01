@@ -528,10 +528,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     public void onResume() {
         super.onResume();
         configBaseCardAdapter(getActivity(), mAdapter);
-        final boolean displayImagePreview = mPreferences.getBoolean(KEY_DISPLAY_IMAGE_PREVIEW, false);
-        final String previewScaleType = Utils.getNonEmptyString(mPreferences, KEY_IMAGE_PREVIEW_SCALE_TYPE,
+        final String previewScaleType = Utils.getNonEmptyString(mPreferences, KEY_MEDIA_PREVIEW_STYLE,
                 ScaleType.CENTER_CROP.name());
-        mAdapter.setDisplayImagePreview(displayImagePreview);
         mAdapter.setImagePreviewScaleType(previewScaleType);
         mAdapter.notifyDataSetChanged();
         mLoadMoreAutomatically = mPreferences.getBoolean(KEY_LOAD_MORE_AUTOMATICALLY, false);

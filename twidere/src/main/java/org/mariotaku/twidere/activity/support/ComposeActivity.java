@@ -1208,8 +1208,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             final ImageLoaderWrapper loader = application.getImageLoaderWrapper();
             final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
             final AsyncTwitterWrapper twitter = getTwitterWrapper();
+            final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
+                    SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
-            mHolder.displayStatus(activity, loader, handler, twitter, status);
+            final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+            final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+            mHolder.displayStatus(activity, loader, handler, twitter, profileImageStyle,
+                    mediaPreviewStyle, status, null);
             mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
             mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
             mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);

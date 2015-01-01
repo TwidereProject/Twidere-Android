@@ -21,27 +21,7 @@
         android:order="23"
         android:summary="@string/nickname_only_summary"
         android:title="@string/nickname_only"/>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="true"
-        android:key="display_profile_image"
-        android:order="24"
-        android:summary="@string/image_load_summary"
-        android:title="@string/display_profile_image"/>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
-        android:key="display_image_preview"
-        android:order="25"
-        android:summary="@string/image_load_summary"
-        android:title="@string/display_image_preview"/>
 
-    <org.mariotaku.twidere.preference.AutoFixListPreference
-        android:defaultValue="CENTER_CROP"
-        android:entries="@array/entries_image_preview_scale_type"
-        android:entryValues="@array/values_image_preview_scale_type"
-        android:key="image_preview_scale_type"
-        android:order="26"
-        android:summary="%s"
-        android:title="@string/image_preview_scale_type"/>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"

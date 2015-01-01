@@ -48,4 +48,17 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
                 listName, maxId, sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
     }
 
+    @Override
+    protected String[] getSavedStatusesFileArgs() {
+        final Bundle args = getArguments();
+        if (args == null) return null;
+        final int listId = args.getInt(EXTRA_LIST_ID, -1);
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final String listName = args.getString(EXTRA_LIST_NAME);
+        return new String[]{AUTHORITY_USER_LIST_TIMELINE, "account" + accountId, "list_id" + listId,
+                "list_name" + listName, "user_id" + userId, "screen_name" + screenName};
+    }
+
 }
