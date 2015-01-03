@@ -140,12 +140,10 @@
     <string-array name="values_media_preview_style">
         <item>crop</item>
         <item>scale</item>
-        <item>none</item>
     </string-array>
     <string-array name="entries_media_preview_style">
         <item>@string/crop</item>
         <item>@string/scale</item>
-        <item>@string/none</item>
     </string-array>
     <string-array name="entries_image_sources">
         <item>@string/from_camera</item>

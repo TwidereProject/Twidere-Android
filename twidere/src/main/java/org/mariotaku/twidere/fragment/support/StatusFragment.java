@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -52,7 +53,6 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -87,10 +87,12 @@ import org.mariotaku.twidere.util.MediaPreviewUtils.OnMediaClickListener;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
+import org.mariotaku.twidere.view.TwitterCardContainer;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -102,11 +104,11 @@ import java.util.Locale;
 import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserNickname;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.setUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.setUserColor;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
@@ -484,7 +486,18 @@ public class StatusFragment extends BaseSupportFragment
 
         @Override
         public void onUserProfileClick(StatusViewHolder holder, int position) {
-
+            final Context context = getContext();
+            final ParcelableStatus status = getStatus(position);
+            final View profileImageView = holder.getProfileImageView();
+            final View profileTypeView = holder.getProfileTypeView();
+            if (context instanceof FragmentActivity) {
+                final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
+                        new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                        new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
+            } else {
+                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
+            }
         }
 
         @Override
@@ -771,7 +784,7 @@ public class StatusFragment extends BaseSupportFragment
         private final LinearLayout mediaPreviewGrid;
 
         private final View locationContainer;
-        private final FrameLayout twitterCard;
+        private final TwitterCardContainer twitterCard;
 
         public DetailStatusViewHolder(StatusAdapter adapter, View itemView) {
             super(itemView);
@@ -796,7 +809,7 @@ public class StatusFragment extends BaseSupportFragment
             mediaPreviewGrid = (LinearLayout) itemView.findViewById(R.id.media_preview_grid);
             locationContainer = itemView.findViewById(R.id.location_container);
             profileContainer = itemView.findViewById(R.id.profile_container);
-            twitterCard = (FrameLayout) itemView.findViewById(R.id.twitter_card);
+            twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
 
             setIsRecyclable(false);
             initViews();
@@ -1007,9 +1020,15 @@ public class StatusFragment extends BaseSupportFragment
                 mediaPreviewGrid.removeAllViews();
             }
 
-            if (Utils.isCardSupported(status.card)) {
+            if (TwitterCardUtils.isCardSupported(status.card)) {
+                final Point size = TwitterCardUtils.getCardSize(status.card);
                 twitterCard.setVisibility(View.VISIBLE);
-                final Fragment cardFragment = Utils.createTwitterCardFragment(status.card);
+                if (size != null) {
+                    twitterCard.setCardSize(size.x, size.y);
+                } else {
+                    twitterCard.setCardSize(0, 0);
+                }
+                final Fragment cardFragment = TwitterCardUtils.createCardFragment(status.card);
                 final FragmentManager fm = fragment.getChildFragmentManager();
                 final FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.twitter_card, cardFragment);

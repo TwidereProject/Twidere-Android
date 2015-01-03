@@ -50,8 +50,8 @@ public class ActivitiesByFriendsFragment extends BaseActivitiesListFragment {
     @Override
     public Loader<List<ParcelableActivity>> onCreateLoader(final int id, final Bundle args) {
         setProgressBarIndeterminateVisibility(true);
-        return new ActivitiesAboutMeLoader(getActivity(), getAccountIds(), getData(), getSavedActivitiesFileArgs(),
-                getTabPosition() >= 0);
+        return new ActivitiesAboutMeLoader(getActivity(), getAccountIds()[0], -1, -1, getData(),
+                getSavedActivitiesFileArgs(), getTabPosition());
     }
 
     @Override

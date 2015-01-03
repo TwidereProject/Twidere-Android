@@ -106,7 +106,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
-import org.mariotaku.twidere.util.UserColorNicknameUtils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -129,15 +129,15 @@ import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseLong;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.clearUserNickname;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getErrorMessage;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
@@ -439,7 +439,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (relationship == null || relationship.getTargetUserId() != user.id) {
             getFriendship();
         }
-        activity.setTitle(getDisplayName(activity, user, true));
+        activity.setTitle(UserColorNameUtils.getDisplayName(activity, user, true));
         updateTitleColor();
         invalidateOptionsMenu();
     }
@@ -560,7 +560,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
-                    UserColorNicknameUtils.setUserColor(getActivity(), mUser.id, color);
+                    UserColorNameUtils.setUserColor(getActivity(), mUser.id, color);
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
                     clearUserColor(getActivity(), mUser.id);
                 }
@@ -709,7 +709,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final boolean isMyself = user.account_id == user.id;
         final MenuItem mentionItem = menu.findItem(MENU_MENTION);
         if (mentionItem != null) {
-            mentionItem.setTitle(getString(R.string.mention_user_name, getDisplayName(getActivity(), user)));
+            mentionItem.setTitle(getString(R.string.mention_user_name, UserColorNameUtils.getDisplayName(getActivity(), user)));
         }
         Utils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
 //        final MenuItem followItem = menu.findItem(MENU_FOLLOW);

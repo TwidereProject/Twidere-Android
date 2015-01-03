@@ -49,11 +49,6 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private boolean mLoadMoreIndicatorEnabled;
     private StatusAdapterListener mStatusAdapterListener;
 
-    @Override
-    public int getMediaPreviewStyle() {
-        return mMediaPreviewStyle;
-    }
-
     public AbsStatusesAdapter(Context context, boolean compact) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
@@ -74,23 +69,31 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
     }
 
-    @Override
-    public int getProfileImageStyle() {
-        return mProfileImageStyle;
-    }
-
     public abstract D getData();
 
     public abstract void setData(D data);
 
     @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return mTwitterWrapper;
+    public void onUserProfileClick(StatusViewHolder holder, int position) {
+        final Context context = getContext();
+        final ParcelableStatus status = getStatus(position);
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        if (context instanceof FragmentActivity) {
+            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
+                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
+        } else {
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
+        }
     }
 
     @Override
-    public float getTextSize() {
-        return mTextSize;
+    public final void onStatusClick(StatusViewHolder holder, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusClick(holder, position);
+        }
     }
 
     @Override
@@ -109,26 +112,23 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
-    public final void onStatusClick(StatusViewHolder holder, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onStatusClick(holder, position);
-        }
+    public int getProfileImageStyle() {
+        return mProfileImageStyle;
     }
 
     @Override
-    public void onUserProfileClick(StatusViewHolder holder, int position) {
-        final Context context = getContext();
-        final ParcelableStatus status = getStatus(position);
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        if (context instanceof FragmentActivity) {
-            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-        } else {
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
-        }
+    public int getMediaPreviewStyle() {
+        return mMediaPreviewStyle;
+    }
+
+    @Override
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return mTwitterWrapper;
+    }
+
+    @Override
+    public float getTextSize() {
+        return mTextSize;
     }
 
     public boolean hasLoadMoreIndicator() {

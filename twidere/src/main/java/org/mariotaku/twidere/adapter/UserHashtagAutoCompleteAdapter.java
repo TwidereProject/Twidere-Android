@@ -46,7 +46,7 @@ import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
 
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
 

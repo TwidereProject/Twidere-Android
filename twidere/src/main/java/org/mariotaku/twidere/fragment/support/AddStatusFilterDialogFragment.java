@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.fragment.support;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.makeFilteredUserContentValues;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
@@ -45,6 +45,7 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -167,10 +168,10 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
 	private String getName(final Object value) {
 		if (value instanceof ParcelableUserMention) {
 			final ParcelableUserMention mention = (ParcelableUserMention) value;
-			return getDisplayName(getActivity(), mention.id, mention.name, mention.screen_name);
+			return UserColorNameUtils.getDisplayName(getActivity(), mention.id, mention.name, mention.screen_name);
 		} else if (value instanceof ParcelableStatus) {
 			final ParcelableStatus status = (ParcelableStatus) value;
-			return getDisplayName(getActivity(), status.user_id, status.user_name, status.user_screen_name);
+			return UserColorNameUtils.getDisplayName(getActivity(), status.user_id, status.user_name, status.user_screen_name);
 		} else
 			return ParseUtils.parseString(value);
 	}

@@ -3,6 +3,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.AccelerateSmoothScroller;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -66,7 +68,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (isRefreshing()) return;
-            if (layoutManager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
+            if (mAdapter.hasLoadMoreIndicator()
+                    && layoutManager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
                 onLoadMoreStatuses();
             }
         }
@@ -261,7 +264,26 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         if (twitter != null && tabPosition != -1) {
             twitter.clearUnreadCountAsync(tabPosition);
         }
-        mRecyclerView.smoothScrollToPosition(0);
+//        mRecyclerView.smoothScrollToPosition(0);
+        final LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        final AccelerateSmoothScroller smoothScroller = new AccelerateSmoothScroller(getActivity(), 2) {
+
+            @Override
+            public PointF computeScrollVectorForPosition(int targetPosition) {
+                if (getChildCount() == 0) {
+                    return null;
+                }
+                final int firstChildPos = layoutManager.getPosition(layoutManager.getChildAt(0));
+                final int direction = targetPosition < firstChildPos != layoutManager.getReverseLayout() ? -1 : 1;
+                if (layoutManager.getOrientation() == LinearLayoutManager.HORIZONTAL) {
+                    return new PointF(direction, 0);
+                } else {
+                    return new PointF(0, direction);
+                }
+            }
+        };
+        smoothScroller.setTargetPosition(0);
+        layoutManager.startSmoothScroll(smoothScroller);
         return true;
     }
 

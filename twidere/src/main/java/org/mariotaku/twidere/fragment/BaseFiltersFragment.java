@@ -50,8 +50,9 @@ import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.BaseSupportListFragment;
 import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 
 public abstract class BaseFiltersFragment extends BaseSupportListFragment implements LoaderManager.LoaderCallbacks<Cursor>,
         MultiChoiceModeListener {
@@ -281,7 +282,7 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
                 final long user_id = cursor.getLong(mUserIdIdx);
                 final String name = cursor.getString(mNameIdx);
                 final String screen_name = cursor.getString(mScreenNameIdx);
-                final String display_name = getDisplayName(context, user_id, name, screen_name, mNameFirst,
+                final String display_name = UserColorNameUtils.getDisplayName(context, user_id, name, screen_name, mNameFirst,
                         mNicknameOnly);
                 text1.setText(display_name);
             }

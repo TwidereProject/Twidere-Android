@@ -19,7 +19,7 @@ import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
-import org.mariotaku.twidere.util.UserColorNicknameUtils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -87,7 +87,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
     }
 
     public void setupViewOptions() {
-        final float textSize = adapter.getTextSize();
+        setTextSize(adapter.getTextSize());
+    }
+
+    public void setTextSize(final float textSize) {
         nameView.setTextSize(textSize);
         textView.setTextSize(textSize);
         screenNameView.setTextSize(textSize * 0.85f);
@@ -139,7 +142,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         screenNameView.setText("@" + status.user_screen_name);
         timeView.setTime(status.timestamp);
 
-        final int userColor = UserColorNicknameUtils.getUserColor(context, status.user_id);
+        final int userColor = UserColorNameUtils.getUserColor(context, status.user_id);
         profileImageView.setBorderColor(userColor);
         profileImageView.setStyle(profileImageStyle);
 
@@ -250,7 +253,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         screenNameView.setText("@" + user_screen_name);
         timeView.setTime(timestamp);
 
-        final int userColor = UserColorNicknameUtils.getUserColor(context, user_id);
+        final int userColor = UserColorNameUtils.getUserColor(context, user_id);
         profileImageView.setBorderColor(userColor);
         profileImageView.setStyle(adapter.getProfileImageStyle());
 

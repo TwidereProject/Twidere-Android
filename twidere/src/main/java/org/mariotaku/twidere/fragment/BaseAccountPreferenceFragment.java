@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.fragment;
 
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -40,6 +40,7 @@ import android.widget.Switch;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 
 public abstract class BaseAccountPreferenceFragment extends PreferenceFragment implements Constants,
 		OnCheckedChangeListener, OnSharedPreferenceChangeListener {
@@ -59,7 +60,7 @@ public abstract class BaseAccountPreferenceFragment extends PreferenceFragment i
 		final Activity activity = getActivity();
 		final Intent intent = activity.getIntent();
 		if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
-			final String name = getDisplayName(getActivity(), account.account_id, account.name, account.screen_name);
+			final String name = UserColorNameUtils.getDisplayName(getActivity(), account.account_id, account.name, account.screen_name);
 			activity.setTitle(name);
 		}
 		updatePreferenceScreen();

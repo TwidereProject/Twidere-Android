@@ -33,7 +33,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 
 public class DeleteUserListMembersDialogFragment extends BaseSupportDialogFragment implements
 		DialogInterface.OnClickListener {
@@ -64,7 +64,7 @@ public class DeleteUserListMembersDialogFragment extends BaseSupportDialogFragme
 		if (users == null || userList == null) throw new NullPointerException();
 		if (users.length == 1) {
 			final ParcelableUser user = users[0];
-			final String displayName = Utils.getDisplayName(wrapped, user.id, user.name, user.screen_name);
+			final String displayName = UserColorNameUtils.getDisplayName(wrapped, user.id, user.name, user.screen_name);
 			builder.setTitle(getString(R.string.delete_user, displayName));
 			builder.setMessage(getString(R.string.delete_user_from_list_confirm, displayName, userList.name));
 		} else {

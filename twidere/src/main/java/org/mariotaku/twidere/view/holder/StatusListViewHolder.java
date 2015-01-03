@@ -29,10 +29,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShortTimeView;
 
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getStatusTypeIconRes;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
@@ -124,14 +125,14 @@ public class StatusListViewHolder extends CardViewHolder {
     }
 
     public void setReplyTo(final long user_id, final String name, final String screen_name) {
-        final String display_name = getDisplayName(getContext(), user_id, name, screen_name, name_first, nickname_only,
+        final String display_name = UserColorNameUtils.getDisplayName(getContext(), user_id, name, screen_name, name_first, nickname_only,
                 false);
         reply_retweet_status.setText(getString(R.string.in_reply_to_name, display_name));
         reply_retweet_status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_indicator_conversation, 0, 0, 0);
     }
 
     public void setRetweetedBy(final long count, final long user_id, final String name, final String screen_name) {
-        final String display_name = getDisplayName(getContext(), user_id, name, screen_name, name_first, nickname_only,
+        final String display_name = UserColorNameUtils.getDisplayName(getContext(), user_id, name, screen_name, name_first, nickname_only,
                 false);
         reply_retweet_status.setText(count > 1 ? getString(R.string.retweeted_by_name_with_count, display_name, count - 1)
                 : getString(R.string.retweeted_by_name, display_name));

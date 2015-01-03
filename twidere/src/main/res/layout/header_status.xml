@@ -23,8 +23,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card"
@@ -170,11 +169,10 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textIsSelectable="true"/>
 
-            <FrameLayout
+            <org.mariotaku.twidere.view.TwitterCardContainer
                 android:id="@+id/twitter_card"
                 android:layout_width="match_parent"
-                android:minHeight="200dp"
-                android:layout_height="wrap_content"></FrameLayout>
+                android:layout_height="wrap_content"/>
 
             <RelativeLayout
                 android:id="@+id/location_container"

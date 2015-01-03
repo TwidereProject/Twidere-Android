@@ -34,8 +34,6 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
     private final boolean mFirstLoad;
     private final int mTabPosition;
 
-    private Long mLastViewedId;
-
     public ParcelableStatusesLoader(final Context context, final List<ParcelableStatus> data, final int tab_position) {
         super(context);
         mFirstLoad = data == null;
@@ -43,10 +41,6 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
             mData.addAll(data);
         }
         mTabPosition = tab_position;
-    }
-
-    public Long getLastViewedId() {
-        return mLastViewedId;
     }
 
     protected boolean containsStatus(final long status_id) {
@@ -84,8 +78,5 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
         forceLoad();
     }
 
-    protected void setLastViewedId(final Long id) {
-        mLastViewedId = id;
-    }
 
 }

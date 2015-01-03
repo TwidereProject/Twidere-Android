@@ -36,6 +36,14 @@ public final class ViewAccessor {
         }
     }
 
+    public static boolean isInLayout(View view) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return false;
+        } else {
+            return ViewAccessorJBMR2.isInLayout(view);
+        }
+    }
+
     @SuppressWarnings("deprecation")
     public static void setBackground(final View view, final Drawable background) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -75,6 +83,14 @@ public final class ViewAccessor {
         static void setBackground(final View view, final Drawable background) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
             view.setBackground(background);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    static class ViewAccessorJBMR2 {
+        static boolean isInLayout(final View view) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) return false;
+            return view.isInLayout();
         }
     }
 

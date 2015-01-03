@@ -28,12 +28,13 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.configBaseAdapter;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 
 public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserList> implements IBaseAdapter {
 
@@ -73,7 +74,7 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
         holder.icon.setImageDrawable(null);
 
         final ParcelableUserList user_list = getItem(position);
-        final String display_name = getDisplayName(mContext, user_list.user_id, user_list.user_name,
+        final String display_name = UserColorNameUtils.getDisplayName(mContext, user_list.user_id, user_list.user_name,
                 user_list.user_screen_name, isDisplayNameFirst(), isNicknameOnly(), false);
         holder.text1.setText(user_list.name);
         holder.text2.setText(mContext.getString(R.string.created_by, display_name));

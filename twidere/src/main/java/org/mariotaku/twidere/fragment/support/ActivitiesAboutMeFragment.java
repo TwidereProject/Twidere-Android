@@ -19,90 +19,27 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.ListView;
 
-import org.mariotaku.twidere.adapter.BaseParcelableActivitiesAdapter;
-import org.mariotaku.twidere.adapter.ParcelableActivitiesAboutMeAdapter;
 import org.mariotaku.twidere.loader.support.ActivitiesAboutMeLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableUser;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.openStatus;
-import static org.mariotaku.twidere.util.Utils.openUserProfile;
-import static org.mariotaku.twidere.util.Utils.openUsers;
-
-public class ActivitiesAboutMeFragment extends BaseActivitiesListFragment {
-
-    @Override
-    public BaseParcelableActivitiesAdapter createListAdapter(final Context context, final boolean compactCards) {
-        return new ParcelableActivitiesAboutMeAdapter(context, compactCards);
-    }
+public class ActivitiesAboutMeFragment extends ParcelableActivitiesFragment {
 
     @Override
     public Loader<List<ParcelableActivity>> onCreateLoader(final int id, final Bundle args) {
         setProgressBarIndeterminateVisibility(true);
-        return new ActivitiesAboutMeLoader(getActivity(), getAccountIds(), getData(), getSavedActivitiesFileArgs(),
-                true);
-    }
-
-    @Override
-    public void onListItemClick(final ListView l, final View v, final int position, final long id) {
-        final int adapter_pos = position - l.getHeaderViewsCount();
-        final ParcelableActivity item = getListAdapter().getItem(adapter_pos);
-        if (item == null) return;
-        final ParcelableUser[] sources = item.sources;
-        if (sources == null || sources.length == 0) return;
-        final ParcelableStatus[] target_statuses = item.target_statuses;
-        final ParcelableStatus[] target_objects = item.target_object_statuses;
-        switch (item.action) {
-            case ParcelableActivity.ACTION_FAVORITE: {
-                if (sources.length == 1) {
-                    openUserProfile(getActivity(), sources[0], null);
-                } else {
-                    final List<ParcelableUser> users = Arrays.asList(sources);
-                    openUsers(getActivity(), users);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_FOLLOW: {
-                if (sources.length == 1) {
-                    openUserProfile(getActivity(), sources[0], null);
-                } else {
-                    final List<ParcelableUser> users = Arrays.asList(sources);
-                    openUsers(getActivity(), users);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_MENTION: {
-                if (target_objects != null && target_objects.length > 0) {
-                    openStatus(getActivity(), target_objects[0], null);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_REPLY: {
-                if (target_statuses != null && target_statuses.length > 0) {
-                    openStatus(getActivity(), target_statuses[0], null);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_RETWEET: {
-                if (sources.length == 1) {
-                    openUserProfile(getActivity(), sources[0], null);
-                } else {
-                    final List<ParcelableUser> users = Arrays.asList(sources);
-                    openUsers(getActivity(), users);
-                }
-                break;
-            }
-        }
+        final long[] accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
+        final long[] sinceIds = args.getLongArray(EXTRA_SINCE_IDS);
+        final long[] maxIds = args.getLongArray(EXTRA_MAX_IDS);
+        final long accountId = accountIds != null ? accountIds[0] : -1;
+        final long sinceId = sinceIds != null ? sinceIds[0] : -1;
+        final long maxId = maxIds != null ? maxIds[0] : -1;
+        return new ActivitiesAboutMeLoader(getActivity(), accountId, sinceId, maxId, getAdapterData(),
+                getSavedActivitiesFileArgs(), getTabPosition());
     }
 
     @Override

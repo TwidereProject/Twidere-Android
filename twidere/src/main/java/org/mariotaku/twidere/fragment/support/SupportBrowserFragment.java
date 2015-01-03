@@ -35,4 +35,12 @@ public class SupportBrowserFragment extends BaseSupportWebViewFragment {
         view.loadUrl(ParseUtils.parseString(uri, "about:blank"));
     }
 
+    public static SupportBrowserFragment show(String uri) {
+        final Bundle args = new Bundle();
+        args.putString(EXTRA_URI, uri);
+        final SupportBrowserFragment fragment = new SupportBrowserFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 }

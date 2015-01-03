@@ -67,7 +67,7 @@ import static org.mariotaku.twidere.util.CustomTabUtils.findTabIconKey;
 import static org.mariotaku.twidere.util.CustomTabUtils.getIconMap;
 import static org.mariotaku.twidere.util.CustomTabUtils.getTabConfiguration;
 import static org.mariotaku.twidere.util.CustomTabUtils.getTabTypeName;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class CustomTabEditorActivity extends BaseSupportDialogActivity implements OnClickListener {
 

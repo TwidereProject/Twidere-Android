@@ -42,8 +42,8 @@ import static org.mariotaku.twidere.provider.TweetStore.DirectMessages.Conversat
 import static org.mariotaku.twidere.provider.TweetStore.DirectMessages.ConversationEntries.IDX_SCREEN_NAME;
 import static org.mariotaku.twidere.provider.TweetStore.DirectMessages.ConversationEntries.IDX_TEXT;
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;

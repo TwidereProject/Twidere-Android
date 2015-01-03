@@ -86,6 +86,7 @@ import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.StatusTextCountView;
@@ -337,7 +338,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         }
         final FragmentActivity activity = getActivity();
         if (mRecipient != null) {
-            activity.setTitle(Utils.getDisplayName(activity, mRecipient));
+            activity.setTitle(UserColorNameUtils.getDisplayName(activity, mRecipient));
         } else {
             activity.setTitle(R.string.direct_messages);
         }

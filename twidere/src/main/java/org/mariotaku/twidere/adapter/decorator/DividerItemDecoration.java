@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.State;
 import android.view.View;
 
@@ -108,6 +109,11 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+        final Adapter adapter = parent.getAdapter();
+        if (adapter != null && parent.getChildPosition(view) == adapter.getItemCount() - 1) {
+            outRect.setEmpty();
+            return;
+        }
         if (mOrientation == VERTICAL_LIST) {
             outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
         } else {

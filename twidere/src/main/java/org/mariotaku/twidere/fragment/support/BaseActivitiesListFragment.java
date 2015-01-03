@@ -27,7 +27,7 @@ import android.support.v4.content.Loader;
 import android.widget.ListView;
 
 import org.mariotaku.twidere.adapter.BaseParcelableActivitiesAdapter;
-import org.mariotaku.twidere.loader.support.Twitter4JActivitiesLoader;
+import org.mariotaku.twidere.loader.support.Twitter4JActivitiesLoaderOld;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.ArrayUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -81,8 +81,8 @@ public abstract class BaseActivitiesListFragment extends BasePullToRefreshListFr
         setProgressBarIndeterminateVisibility(false);
         mData = data;
         mAdapter.setData(data);
-        if (loader instanceof Twitter4JActivitiesLoader) {
-            final boolean multipleAccounts = ((Twitter4JActivitiesLoader) loader).getAccountIds().length > 1;
+        if (loader instanceof Twitter4JActivitiesLoaderOld) {
+            final boolean multipleAccounts = ((Twitter4JActivitiesLoaderOld) loader).getAccountIds().length > 1;
             mAdapter.setShowAccountColor(multipleAccounts);
         }
         setRefreshing(false);

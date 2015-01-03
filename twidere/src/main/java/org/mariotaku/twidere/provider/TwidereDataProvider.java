@@ -81,6 +81,7 @@ import org.mariotaku.twidere.util.SQLiteDatabaseWrapper;
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereQueryBuilder;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.NoDuplicatesCopyOnWriteArrayList;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
@@ -108,7 +109,7 @@ import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getAccountNotificationId;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
 import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getNotificationUri;
 import static org.mariotaku.twidere.util.Utils.getTableId;
 import static org.mariotaku.twidere.util.Utils.getTableNameById;
@@ -709,7 +710,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             contentIntent.putExtra(EXTRA_EXTRA_INTENT, statusIntent);
         }
 
-        final String displayName = getDisplayName(context, firstItem.sender_id, firstItem.sender_name,
+        final String displayName = UserColorNameUtils.getDisplayName(context, firstItem.sender_id, firstItem.sender_name,
                 firstItem.sender_screen_name, mNameFirst, mNickOnly);
         if (usersCount > 1) {
             title = resources.getString(R.string.notification_direct_message_multiple_users, displayName,
@@ -730,7 +731,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             for (int i = 0; i < max; i++) {
                 final ParcelableDirectMessage item = messages.get(i);
                 if (item == null) return;
-                final String nameEscaped = HtmlEscapeHelper.escape(getDisplayName(context, item.sender_id,
+                final String nameEscaped = HtmlEscapeHelper.escape(UserColorNameUtils.getDisplayName(context, item.sender_id,
                         item.sender_name, item.sender_name, mNameFirst, mNickOnly));
                 final String textEscaped = HtmlEscapeHelper.escape(stripMentionText(item.text_unescaped,
                         getAccountScreenName(context, item.account_id)));
@@ -787,7 +788,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             contentIntent.putExtra(EXTRA_EXTRA_INTENT, statusIntent);
         }
 
-        final String displayName = getDisplayName(context, firstItem.user_id, firstItem.user_name,
+        final String displayName = UserColorNameUtils.getDisplayName(context, firstItem.user_id, firstItem.user_name,
                 firstItem.user_screen_name, mNameFirst, mNickOnly);
         if (usersCount > 1) {
             title = resources.getString(titleMultiple, displayName, usersCount - 1);
@@ -804,7 +805,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             for (int i = 0; i < max; i++) {
                 final ParcelableStatus s = safeGet(statuses, i);
                 if (s == null) return;
-                final String nameEscaped = HtmlEscapeHelper.escape(getDisplayName(context, s.user_id, s.user_name,
+                final String nameEscaped = HtmlEscapeHelper.escape(UserColorNameUtils.getDisplayName(context, s.user_id, s.user_name,
                         s.user_screen_name, mNameFirst, mNickOnly));
                 final String textEscaped = HtmlEscapeHelper.escape(stripMentionText(s.text_unescaped,
                         getAccountScreenName(context, s.account_id)));

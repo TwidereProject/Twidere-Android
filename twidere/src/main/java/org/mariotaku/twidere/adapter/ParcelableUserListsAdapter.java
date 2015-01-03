@@ -32,6 +32,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserListListViewHolder;
 
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
@@ -91,7 +92,7 @@ public class ParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserL
         holder.position = position;
 
         final ParcelableUserList user_list = getItem(position);
-        final String display_name = getDisplayName(mContext, user_list.user_id, user_list.user_name,
+        final String display_name = UserColorNameUtils.getDisplayName(mContext, user_list.user_id, user_list.user_name,
                 user_list.user_screen_name, isDisplayNameFirst(), isNicknameOnly(), false);
         holder.setTextSize(getTextSize());
         holder.name.setText(user_list.name);

@@ -30,7 +30,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 
 public class ReportSpamDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
 
@@ -56,7 +56,7 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
 		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
 		final ParcelableUser user = getUser();
 		if (user != null) {
-			final String display_name = Utils.getDisplayName(getActivity(), user.id, user.name, user.screen_name);
+			final String display_name = UserColorNameUtils.getDisplayName(getActivity(), user.id, user.name, user.screen_name);
 			builder.setTitle(getString(R.string.report_user, display_name));
 			builder.setMessage(getString(R.string.report_user_confirm_message, display_name));
 		}

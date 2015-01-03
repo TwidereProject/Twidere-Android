@@ -31,7 +31,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 
 public class CreateUserMuteDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
 
@@ -58,7 +58,7 @@ public class CreateUserMuteDialogFragment extends BaseSupportDialogFragment impl
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         final ParcelableUser user = getUser();
         if (user != null) {
-            final String displayName = Utils.getDisplayName(wrapped, user.id, user.name, user.screen_name);
+            final String displayName = UserColorNameUtils.getDisplayName(wrapped, user.id, user.name, user.screen_name);
             builder.setTitle(getString(R.string.mute_user, displayName));
             builder.setMessage(getString(R.string.mute_user_confirm_message, displayName));
         }

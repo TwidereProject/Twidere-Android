@@ -176,7 +176,7 @@ public class ParcelableAccount implements Parcelable {
         if (context == null) return Collections.emptyList();
         final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
-                Accounts.CONTENT_URI, Accounts.COLUMNS_NO_CREDENTIALS,
+                Accounts.CONTENT_URI, Accounts.COLUMNS,
                 activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, Accounts.SORT_POSITION);
         if (cur == null) return accounts;
         final Indices indices = new Indices(cur);

@@ -63,7 +63,7 @@ import java.io.File;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.http.HostAddressResolver;
 
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.initUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.initUserColor;
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;

@@ -33,7 +33,7 @@ import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.configBaseAdapter;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 

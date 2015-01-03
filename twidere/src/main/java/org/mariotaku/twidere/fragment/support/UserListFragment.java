@@ -69,6 +69,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
@@ -81,7 +82,7 @@ import twitter4j.UserList;
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
@@ -191,7 +192,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mUserList = userList;
         mProfileContainer.drawEnd(getAccountColor(getActivity(), userList.account_id));
         mListNameView.setText(userList.name);
-        final String display_name = getDisplayName(getActivity(), userList.user_id, userList.user_name,
+        final String display_name = UserColorNameUtils.getDisplayName(getActivity(), userList.user_id, userList.user_name,
                 userList.user_screen_name, false);
         mCreatedByView.setText(getString(R.string.created_by, display_name));
         final String description = userList.description;

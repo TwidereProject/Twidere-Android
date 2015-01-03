@@ -20,27 +20,34 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
+
+import java.util.List;
 
 import twitter4j.Activity;
 import twitter4j.Paging;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import java.util.List;
-
 public class ActivitiesAboutMeLoader extends Twitter4JActivitiesLoader {
 
-	public ActivitiesAboutMeLoader(final Context context, final long[] accountIds, final List<ParcelableActivity> data,
-			final String[] saveFileArgs, final boolean useCache) {
-		super(context, accountIds, data, saveFileArgs, useCache);
-	}
+    public ActivitiesAboutMeLoader(final Context context, final long accountId, long sinceId,
+                                   long maxId, final List<ParcelableActivity> data,
+                                   final String[] saveFileArgs, final int position) {
+        super(context, accountId, sinceId, maxId, data, saveFileArgs, position);
+    }
 
-	@Override
-	protected List<Activity> getActivities(final Twitter twitter, final Paging paging) throws TwitterException {
-		if (twitter == null) return null;
-		return twitter.getActivitiesAboutMe(paging);
-	}
+    @Override
+    protected List<Activity> getActivities(final Twitter twitter, final Paging paging) throws TwitterException {
+        if (twitter == null) return null;
+        return twitter.getActivitiesAboutMe(paging);
+    }
+
+    @Override
+    protected boolean shouldFilterActivity(SQLiteDatabase database, ParcelableActivity activity) {
+        return false;
+    }
 
 }

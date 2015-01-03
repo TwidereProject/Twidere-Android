@@ -36,8 +36,8 @@ import org.mariotaku.twidere.view.holder.UserListViewHolder;
 import java.util.List;
 import java.util.Locale;
 
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNicknameUtils.getUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;

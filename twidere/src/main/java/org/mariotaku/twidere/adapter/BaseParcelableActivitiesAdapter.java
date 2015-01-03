@@ -32,13 +32,14 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.view.holder.ActivityListViewHolder;
 
 import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
-import static org.mariotaku.twidere.util.Utils.getDisplayName;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.isCompactCards;
 
 public abstract class BaseParcelableActivitiesAdapter extends BaseArrayAdapter<ParcelableActivity> implements
@@ -94,9 +95,9 @@ public abstract class BaseParcelableActivitiesAdapter extends BaseArrayAdapter<P
             holder.setAccountColor(getAccountColor(getContext(), item.account_id));
         }
         if (mShowAbsoluteTime) {
-            holder.time.setTime(item.activity_timestamp);
+            holder.time.setTime(item.timestamp);
         } else {
-            holder.time.setTime(item.activity_timestamp);
+            holder.time.setTime(item.timestamp);
         }
         bindView(position, holder, item);
         return view;
@@ -157,13 +158,13 @@ public abstract class BaseParcelableActivitiesAdapter extends BaseArrayAdapter<P
 
     protected String getName(final ParcelableStatus status) {
         if (status == null) return null;
-        return getDisplayName(getContext(), status.user_id, status.user_name, status.user_screen_name,
+        return UserColorNameUtils.getDisplayName(getContext(), status.user_id, status.user_name, status.user_screen_name,
                 isDisplayNameFirst(), isNicknameOnly());
     }
 
     protected String getName(final ParcelableUser user) {
         if (user == null) return null;
-        return getDisplayName(getContext(), user.id, user.name, user.screen_name, isDisplayNameFirst(),
+        return UserColorNameUtils.getDisplayName(getContext(), user.id, user.name, user.screen_name, isDisplayNameFirst(),
                 isNicknameOnly());
     }
 

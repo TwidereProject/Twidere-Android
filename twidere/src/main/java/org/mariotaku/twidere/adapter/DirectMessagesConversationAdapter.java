@@ -34,9 +34,8 @@ import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.DirectMessageConversationViewHolder;
-
-import java.util.Locale;
 
 import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.findDirectMessageInDatabases;
@@ -152,7 +151,20 @@ public class DirectMessagesConversationAdapter extends BaseCursorAdapter impleme
 
     @Override
     public void setImagePreviewScaleType(final String scaleTypeString) {
-        final ScaleType scaleType = ScaleType.valueOf(scaleTypeString.toUpperCase(Locale.US));
+        final ScaleType scaleType;
+        switch (Utils.getMediaPreviewStyle(scaleTypeString)) {
+            case VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP: {
+                scaleType = ScaleType.CENTER_CROP;
+                break;
+            }
+            case VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE: {
+                scaleType = ScaleType.CENTER_INSIDE;
+                break;
+            }
+            default: {
+                return;
+            }
+        }
         mImagePreviewScaleType = scaleType;
     }
 
