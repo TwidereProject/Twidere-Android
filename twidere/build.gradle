@@ -85,8 +85,13 @@ repositories {
     maven { url 'https://repo.commonsware.com.s3.amazonaws.com' }
 }
 
+configurations.all {
+    exclude group: 'org.yaml', module: 'snakeyaml'
+}
+
 dependencies {
-//    wearApp project(':twidere.wear')
+
+    //    wearApp project(':twidere.wear')
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
@@ -111,4 +116,5 @@ dependencies {
     compile project(':twidere.nyan')
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
+    compile files('libs/google/YouTubeAndroidPlayerApi.jar')
 }
