@@ -145,7 +145,7 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
                     cardView.setCardBackgroundColor(mCardBackgroundColor);
                 }
                 final StatusViewHolder holder = new StatusViewHolder(this, view);
-                holder.setupViewListeners();
+                holder.setOnClickListeners();
                 holder.setupViewOptions();
                 return holder;
             }

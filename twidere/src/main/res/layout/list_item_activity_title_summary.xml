@@ -26,15 +26,13 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/element_spacing_normal"
-    android:paddingRight="@dimen/element_spacing_normal"
-    android:paddingTop="@dimen/element_spacing_normal">
+    android:padding="@dimen/element_spacing_normal">
 
-    <ImageView
+    <org.mariotaku.twidere.view.ActionIconView
         android:id="@+id/activity_type"
-        android:layout_width="@dimen/element_spacing_large"
-        android:layout_height="@dimen/element_spacing_large"
-        android:layout_alignRight="@+id/profile_image"
+        android:layout_width="@dimen/icon_size_activity_type"
+        android:layout_height="@dimen/icon_size_activity_type"
+        android:layout_alignRight="@+id/profile_image_space"
         android:layout_alignTop="@+id/profile_images_container"
         android:scaleType="centerInside"
         tools:src="@drawable/ic_indicator_retweet"/>
@@ -43,7 +41,8 @@
         android:id="@+id/profile_images_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/profile_image"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_toRightOf="@+id/profile_image_space"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -95,12 +94,12 @@
         <org.mariotaku.twidere.view.themed.ThemedTextView
             android:id="@+id/activity_profile_image_more_number"
             android:layout_width="0dp"
-            android:minHeight="@dimen/profile_image_size_activity_small"
-            android:minWidth="@dimen/profile_image_size_activity_small"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:layout_weight="1"
             android:gravity="center"
+            android:minHeight="@dimen/profile_image_size_activity_small"
+            android:minWidth="@dimen/profile_image_size_activity_small"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
@@ -108,9 +107,9 @@
     </LinearLayout>
 
     <Space
-        android:id="@+id/profile_image"
+        android:id="@+id/profile_image_space"
         android:layout_width="@dimen/icon_size_status_profile_image"
-        android:layout_height="@dimen/icon_size_status_profile_image"
+        android:layout_height="0dp"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/profile_images_container"/>
 
@@ -120,21 +119,21 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_images_container"
         android:layout_below="@+id/profile_images_container"
+        android:singleLine="false"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        android:singleLine="false"
         tools:text="Uucky and 15 others favorited your tweet."/>
 
     <TextView
         android:id="@+id/summary"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_images_container"
         android:layout_below="@+id/title"
         android:singleLine="false"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="12dp"
         tools:text="@string/sample_status_text"/>
 
 </RelativeLayout>

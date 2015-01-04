@@ -74,16 +74,20 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
     }
 
-    public void setupViewListeners() {
-        itemView.findViewById(R.id.item_content).setOnClickListener(this);
-        itemView.findViewById(R.id.item_menu).setOnClickListener(this);
+    public void setOnClickListeners() {
+        setOnClickListeners(this);
+    }
 
-        itemView.setOnClickListener(this);
-        profileImageView.setOnClickListener(this);
-        mediaPreviewContainer.setOnClickListener(this);
-        replyCountView.setOnClickListener(this);
-        retweetCountView.setOnClickListener(this);
-        favoriteCountView.setOnClickListener(this);
+    public void setOnClickListeners(OnClickListener listener) {
+        itemView.findViewById(R.id.item_content).setOnClickListener(listener);
+        itemView.findViewById(R.id.item_menu).setOnClickListener(listener);
+
+        itemView.setOnClickListener(listener);
+        profileImageView.setOnClickListener(listener);
+        mediaPreviewContainer.setOnClickListener(listener);
+        replyCountView.setOnClickListener(listener);
+        retweetCountView.setOnClickListener(listener);
+        favoriteCountView.setOnClickListener(listener);
     }
 
     public void setupViewOptions() {

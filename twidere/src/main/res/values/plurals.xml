@@ -42,5 +42,9 @@
         <item quantity="one">@string/N_retweeted_quantity_one</item>
         <item quantity="other">@string/N_retweeted_quantity_other</item>
     </plurals>
+    <plurals name="N_others">
+        <item quantity="one">@string/N_others_quantity_one</item>
+        <item quantity="other">@string/N_others_quantity_other</item>
+    </plurals>
 
 </resources>

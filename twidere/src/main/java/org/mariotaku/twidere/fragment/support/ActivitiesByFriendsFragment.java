@@ -19,95 +19,28 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.ListView;
 
-import org.mariotaku.twidere.adapter.BaseParcelableActivitiesAdapter;
-import org.mariotaku.twidere.adapter.ParcelableActivitiesByFriendsAdapter;
-import org.mariotaku.twidere.loader.support.ActivitiesAboutMeLoader;
+import org.mariotaku.twidere.loader.support.ActivitiesByFriendsLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableUser;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.openStatus;
-import static org.mariotaku.twidere.util.Utils.openStatuses;
-import static org.mariotaku.twidere.util.Utils.openUserProfile;
-import static org.mariotaku.twidere.util.Utils.openUsers;
+public class ActivitiesByFriendsFragment extends ParcelableActivitiesFragment {
 
-public class ActivitiesByFriendsFragment extends BaseActivitiesListFragment {
-
-    @Override
-    public BaseParcelableActivitiesAdapter createListAdapter(final Context context, final boolean compactCards) {
-        return new ParcelableActivitiesByFriendsAdapter(context, compactCards);
-    }
 
     @Override
     public Loader<List<ParcelableActivity>> onCreateLoader(final int id, final Bundle args) {
         setProgressBarIndeterminateVisibility(true);
-        return new ActivitiesAboutMeLoader(getActivity(), getAccountIds()[0], -1, -1, getData(),
+        final long[] accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
+        final long[] sinceIds = args.getLongArray(EXTRA_SINCE_IDS);
+        final long[] maxIds = args.getLongArray(EXTRA_MAX_IDS);
+        final long accountId = accountIds != null ? accountIds[0] : -1;
+        final long sinceId = sinceIds != null ? sinceIds[0] : -1;
+        final long maxId = maxIds != null ? maxIds[0] : -1;
+        return new ActivitiesByFriendsLoader(getActivity(), accountId, sinceId, maxId, getAdapterData(),
                 getSavedActivitiesFileArgs(), getTabPosition());
-    }
-
-    @Override
-    public void onListItemClick(final ListView l, final View v, final int position, final long id) {
-        final int adapterPos = position - l.getHeaderViewsCount();
-        final ParcelableActivity item = getListAdapter().getItem(adapterPos);
-        if (item == null) return;
-        final ParcelableUser[] sources = item.sources;
-        if (sources == null || sources.length == 0) return;
-        final ParcelableStatus[] targetStatuses = item.target_statuses;
-        final ParcelableUser[] targetUsers = item.target_users;
-        final ParcelableStatus[] target_object_statuses = item.target_object_statuses;
-        switch (item.action) {
-            case ParcelableActivity.ACTION_FAVORITE: {
-                if (targetStatuses == null || targetStatuses.length == 0) return;
-                if (targetStatuses.length == 1) {
-                    openStatus(getActivity(), targetStatuses[0], null);
-                } else {
-                    final List<ParcelableStatus> statuses = Arrays.asList(targetStatuses);
-                    openStatuses(getActivity(), statuses);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_FOLLOW: {
-                if (targetUsers == null || targetUsers.length == 0) return;
-                if (targetUsers.length == 1) {
-                    openUserProfile(getActivity(), targetUsers[0], null);
-                } else {
-                    final List<ParcelableUser> users = Arrays.asList(targetUsers);
-                    openUsers(getActivity(), users);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_MENTION: {
-                if (target_object_statuses != null && target_object_statuses.length > 0) {
-                    openStatus(getActivity(), target_object_statuses[0], null);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_REPLY: {
-                if (targetStatuses != null && targetStatuses.length > 0) {
-                    openStatus(getActivity(), targetStatuses[0], null);
-                }
-                break;
-            }
-            case ParcelableActivity.ACTION_RETWEET: {
-                if (targetStatuses == null || targetStatuses.length == 0) return;
-                if (targetStatuses.length == 1) {
-                    openStatus(getActivity(), targetStatuses[0], null);
-                } else {
-                    final List<ParcelableStatus> statuses = Arrays.asList(targetStatuses);
-                    openStatuses(getActivity(), statuses);
-                }
-                break;
-            }
-        }
     }
 
     @Override

@@ -11,8 +11,14 @@ import android.widget.ImageView;
  */
 public class ActionIconView extends ImageView {
 
+    private final int mDefaultColor;
+
     public ActionIconView(Context context) {
         this(context, null);
+    }
+
+    public int getDefaultColor() {
+        return mDefaultColor;
     }
 
     public ActionIconView(Context context, AttributeSet attrs) {
@@ -22,7 +28,8 @@ public class ActionIconView extends ImageView {
     public ActionIconView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.colorForeground});
-        setColorFilter(a.getColor(0, 0), Mode.SRC_ATOP);
+        mDefaultColor = a.getColor(0, 0);
+        setColorFilter(mDefaultColor, Mode.SRC_ATOP);
         a.recycle();
     }
 }

@@ -91,6 +91,7 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
         final Context context = getContext();
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int loadItemLimit = prefs.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
+        final int databaseLimit = prefs.getInt(KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
         try {
             final Paging paging = new Paging();
             paging.setCount(loadItemLimit);

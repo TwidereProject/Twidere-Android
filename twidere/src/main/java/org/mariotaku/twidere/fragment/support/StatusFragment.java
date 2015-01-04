@@ -395,6 +395,7 @@ public class StatusFragment extends BaseSupportFragment
         private final int mCardLayoutResource;
         private final int mTextSize;
         private final int mCardBackgroundColor;
+        private final boolean mIsCompact;
 
         private ParcelableStatus mStatus;
         private ParcelableCredentials mStatusAccount;
@@ -417,6 +418,7 @@ public class StatusFragment extends BaseSupportFragment
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
+            mIsCompact = compact;
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compat;
             } else {
@@ -572,7 +574,12 @@ public class StatusFragment extends BaseSupportFragment
             switch (viewType) {
                 case VIEW_TYPE_DETAIL_STATUS: {
                     if (mCachedHolder != null) return mCachedHolder;
-                    final View view = mInflater.inflate(R.layout.header_status, parent, false);
+                    final View view;
+                    if (mIsCompact) {
+                        view = mInflater.inflate(R.layout.header_status_common, parent, false);
+                    } else {
+                        view = mInflater.inflate(R.layout.header_status, parent, false);
+                    }
                     final CardView cardView = (CardView) view.findViewById(R.id.card);
                     if (cardView != null) {
                         cardView.setCardBackgroundColor(mCardBackgroundColor);
@@ -586,7 +593,7 @@ public class StatusFragment extends BaseSupportFragment
                         cardView.setCardBackgroundColor(mCardBackgroundColor);
                     }
                     final StatusViewHolder holder = new StatusViewHolder(this, view);
-                    holder.setupViewListeners();
+                    holder.setOnClickListeners();
                     return holder;
                 }
                 case VIEW_TYPE_CONVERSATION_LOAD_INDICATOR:

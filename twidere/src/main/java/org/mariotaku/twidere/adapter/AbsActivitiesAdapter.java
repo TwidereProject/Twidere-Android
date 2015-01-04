@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -41,13 +42,14 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
+import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 /**
  * Created by mariotaku on 15/1/3.
  */
 public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> implements Constants,
-        IActivitiesAdapter<Data> {
+        IActivitiesAdapter<Data>, OnClickListener {
 
     private static final int ITEM_VIEW_TYPE_STUB = 0;
     private static final int ITEM_VIEW_TYPE_GAP = 1;
@@ -65,7 +67,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final int mProfileImageStyle, mMediaPreviewStyle;
     private boolean mLoadMoreIndicatorEnabled;
 
-    protected AbsActivitiesAdapter(Context context) {
+    protected AbsActivitiesAdapter(final Context context) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
@@ -83,6 +85,11 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     public abstract ParcelableActivity getActivity(int position);
 
     public abstract int getActivityCount();
+
+    @Override
+    public void onClick(View v) {
+
+    }
 
     @Override
     public void onStatusClick(StatusViewHolder holder, int position) {
@@ -144,10 +151,11 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 final View view = mInflater.inflate(R.layout.card_item_status_compat, parent, false);
                 final StatusViewHolder holder = new StatusViewHolder(view);
                 holder.setTextSize(getTextSize());
+                holder.setOnClickListeners(this);
                 return holder;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
-                final View view = mInflater.inflate(R.layout.list_item_activity_about_me_status, parent, false);
+                final View view = mInflater.inflate(R.layout.list_item_activity_title_summary, parent, false);
                 final ActivityTitleSummaryViewHolder holder = new ActivityTitleSummaryViewHolder(this, view);
                 holder.setTextSize(getTextSize());
                 return holder;
@@ -155,6 +163,10 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
             case ITEM_VIEW_TYPE_GAP: {
                 final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);
                 return new GapViewHolder(this, view);
+            }
+            case ITEM_VIEW_TYPE_LOAD_INDICATOR: {
+                final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
+                return new LoadIndicatorViewHolder(view);
             }
             default: {
                 final View view = mInflater.inflate(R.layout.list_item_two_line, parent, false);
@@ -181,7 +193,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
-                ((ActivityTitleSummaryViewHolder) holder).displayActivity(getActivity(position));
+                bindTitleSummaryViewHolder((ActivityTitleSummaryViewHolder) holder, position);
                 break;
             }
             case ITEM_VIEW_TYPE_STUB: {
@@ -190,6 +202,8 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
             }
         }
     }
+
+    protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
 
     @Override
     public int getItemViewType(int position) {
@@ -205,7 +219,10 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
             }
             case ParcelableActivity.ACTION_FOLLOW:
             case ParcelableActivity.ACTION_FAVORITE:
-            case ParcelableActivity.ACTION_RETWEET: {
+            case ParcelableActivity.ACTION_RETWEET:
+            case ParcelableActivity.ACTION_FAVORITED_RETWEET:
+            case ParcelableActivity.ACTION_RETWEETED_RETWEET:
+            case ParcelableActivity.ACTION_LIST_MEMBER_ADDED: {
                 return ITEM_VIEW_TYPE_TITLE_SUMMARY;
             }
         }

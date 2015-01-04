@@ -81,11 +81,12 @@
     <dimen name="action_icon_size">32dp</dimen>
     <dimen name="unread_indicator_size">16dp</dimen>
     <dimen name="account_selector_popup_width">180dp</dimen>
-    <dimen name="icon_size_status_profile_image">40dp</dimen>
+    <dimen name="icon_size_status_profile_image">48dp</dimen>
 
     <dimen name="icon_size_profile_type">16dp</dimen>
     <dimen name="icon_size_profile_type_detail">22dp</dimen>
     <dimen name="icon_size_profile_type_user_profile">28dp</dimen>
+    <dimen name="icon_size_activity_type">16dp</dimen>
 
     <!-- Elevation values -->
     <dimen name="elevation_card">2dp</dimen>

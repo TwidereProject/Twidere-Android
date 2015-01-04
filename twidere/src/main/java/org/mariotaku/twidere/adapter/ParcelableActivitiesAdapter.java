@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 
 import java.util.List;
 
@@ -79,6 +80,11 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     public void setData(List<ParcelableActivity> data) {
         mData = data;
         notifyDataSetChanged();
+    }
+
+    @Override
+    protected void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position) {
+        holder.displayActivity(getActivity(position));
     }
 
     @Override
