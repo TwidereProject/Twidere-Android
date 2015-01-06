@@ -104,11 +104,12 @@ dependencies {
     googleCompile 'com.google.android.gms:play-services:6.5.87'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.2'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.9'
+    compile project(':twidere.component.nyan')
+    compile project(':twidere.component.viewer.media')
     compile project(':SlidingMenu')
     compile project(':DragSortListView')
     compile project(':MenuComponent')
     compile project(':MessageBubbleView')
-    compile project(':twidere.nyan')
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
 }

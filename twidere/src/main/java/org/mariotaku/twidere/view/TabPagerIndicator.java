@@ -75,6 +75,8 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         final int dividerHorizontalPadding = a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabDividerHorizontalPadding, 0);
         mItemDecoration.setPadding(dividerHorizontalPadding, dividerVerticalPadding,
                 dividerHorizontalPadding, dividerVerticalPadding);
+        mItemDecoration.setDecorationStart(0);
+        mItemDecoration.setDecorationEndOffset(1);
         a.recycle();
     }
 

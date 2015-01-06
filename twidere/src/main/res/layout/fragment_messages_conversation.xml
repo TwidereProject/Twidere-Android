@@ -71,6 +71,25 @@
             android:paddingRight="@dimen/element_spacing_normal"
             android:scrollbarStyle="outsideInset"/>
 
+        <FrameLayout
+            android:id="@+id/users_search_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/element_spacing_normal"
+            android:paddingRight="@dimen/element_spacing_normal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/users_search_empty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </FrameLayout>
+
         <ProgressBar
             android:id="@+id/users_search_progress"
             style="?android:progressBarStyleLarge"

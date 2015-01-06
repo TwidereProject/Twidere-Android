@@ -42,6 +42,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
     private Rect mPadding;
+    private int mDecorationStart = -1, mDecorationEnd = -1, mDecorationEndOffset;
 
     public DividerItemDecoration(Context context, int orientation) {
         mPadding = new Rect();
@@ -49,6 +50,21 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         mDivider = a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
+    }
+
+
+    public void setDecorationStart(int start) {
+        mDecorationStart = start;
+    }
+
+    public void setDecorationEnd(int end) {
+        mDecorationEnd = end;
+        mDecorationEndOffset = -1;
+    }
+
+    public void setDecorationEndOffset(int endOffset) {
+        mDecorationEndOffset = endOffset;
+        mDecorationEnd = -1;
     }
 
     public void setOrientation(int orientation) {
@@ -78,6 +94,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
+            final int childPos = parent.getChildPosition(child);
+            final int start = getDecorationStart(), end = getDecorationEnd(parent);
+            if (start >= 0 && end >= 0 && (childPos < start || childPos > end)) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int top = child.getBottom() + params.bottomMargin +
@@ -96,6 +115,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
+            final int childPos = parent.getChildPosition(child);
+            final int start = getDecorationStart(), end = getDecorationEnd(parent);
+            if (start >= 0 && end >= 0 && (childPos < start || childPos > end)) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int left = child.getRight() + params.rightMargin +
@@ -109,8 +131,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-        final Adapter adapter = parent.getAdapter();
-        if (adapter != null && parent.getChildPosition(view) == adapter.getItemCount() - 1) {
+        final int childPos = parent.getChildPosition(view);
+        final int start = getDecorationStart(), end = getDecorationEnd(parent);
+        if (start >= 0 && end >= 0 && childPos < start && childPos > end) {
             outRect.setEmpty();
             return;
         }
@@ -119,5 +142,18 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         } else {
             outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }
+    }
+
+    private int getDecorationEnd(RecyclerView parent) {
+        if (mDecorationEnd != -1) return mDecorationEnd;
+        if (mDecorationEndOffset != -1) {
+            final Adapter adapter = parent.getAdapter();
+            return adapter.getItemCount() - 1 - mDecorationEndOffset;
+        }
+        return -1;
+    }
+
+    private int getDecorationStart() {
+        return mDecorationStart;
     }
 }

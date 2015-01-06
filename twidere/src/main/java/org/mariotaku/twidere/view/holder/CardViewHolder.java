@@ -24,7 +24,7 @@ import android.view.View;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
-public class CardViewHolder extends ListViewHolder {
+public class CardViewHolder extends ViewListHolder {
 
     public final IColorLabelView content;
 

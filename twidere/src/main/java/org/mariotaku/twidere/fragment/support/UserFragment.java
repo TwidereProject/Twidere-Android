@@ -137,7 +137,6 @@ import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getErrorMessage;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
@@ -322,6 +321,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mFollowButton.setVisibility(View.VISIBLE);
             } else if (relationship != null) {
                 final int drawableRes;
+                mFollowButton.setEnabled(!relationship.isSourceBlockedByTarget());
+                getView().findViewById(R.id.pages_error).setVisibility(relationship.isSourceBlockedByTarget() ? View.VISIBLE : View.GONE);
                 if (relationship.isSourceBlockingTarget()) {
                     mFollowButton.setText(R.string.unblock);
                     drawableRes = R.drawable.ic_follow_blocked;
@@ -369,6 +370,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             } else {
                 mFollowButton.setText(null);
                 mFollowButton.setVisibility(View.GONE);
+                getView().findViewById(R.id.pages_error).setVisibility(View.GONE);
 //                mFollowingYouIndicator.setVisibility(View.GONE);
             }
         }

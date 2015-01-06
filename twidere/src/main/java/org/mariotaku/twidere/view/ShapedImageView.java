@@ -40,6 +40,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -49,13 +50,24 @@ import android.widget.ImageView;
 
 import org.mariotaku.twidere.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * An ImageView class with a circle mask so that all images are drawn in a
  * circle instead of a square.
  */
 public class ShapedImageView extends ImageView {
 
+
+    @IntDef({SHAPE_CIRCLE, SHAPE_RECTANGLE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ShapeStyle {
+    }
+
+    @ShapeStyle
     public static final int SHAPE_CIRCLE = 0x1;
+    @ShapeStyle
     public static final int SHAPE_RECTANGLE = 0x2;
 
     private static final int SHADOW_START_COLOR = 0x37000000;
@@ -120,7 +132,9 @@ public class ShapedImageView extends ImageView {
         }
         setBorderColor(a.getColor(R.styleable.ShapedImageView_sivBorderColor, Color.TRANSPARENT));
         setBorderWidth(a.getDimensionPixelSize(R.styleable.ShapedImageView_sivBorderWidth, 0));
-        setStyle(a.getInt(R.styleable.ShapedImageView_sivShape, SHAPE_RECTANGLE));
+        @ShapeStyle
+        final int shapeStyle = a.getInt(R.styleable.ShapedImageView_sivShape, SHAPE_RECTANGLE);
+        setStyle(shapeStyle);
         setCornerRadius(a.getDimension(R.styleable.ShapedImageView_sivCornerRadius, 0));
         setCornerRadiusRatio(a.getFraction(R.styleable.ShapedImageView_sivCornerRadiusRatio, 1, 1, -1));
 
@@ -203,11 +217,12 @@ public class ShapedImageView extends ImageView {
         }
     }
 
+    @ShapeStyle
     public int getStyle() {
         return mStyle;
     }
 
-    public void setStyle(int style) {
+    public void setStyle(@ShapeStyle final int style) {
         mStyle = style;
     }
 

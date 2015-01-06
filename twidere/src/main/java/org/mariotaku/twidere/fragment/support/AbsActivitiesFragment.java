@@ -163,7 +163,9 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(context, layoutManager.getOrientation()));
+        if (compact) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, layoutManager.getOrientation()));
+        }
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnScrollListener(mOnScrollListener);
         getLoaderManager().initLoader(0, getArguments(), this);

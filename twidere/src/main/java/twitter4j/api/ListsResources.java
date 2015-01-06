@@ -309,14 +309,14 @@ public interface ListsResources {
 	 * returned. <br>
 	 * This method calls http://api.twitter.com/1.1/lists.json
 	 * 
-	 * @param listOwnerUserId The id of the list owner
+	 * @param userId The id of the list owner
 	 * @return the list of lists
 	 * @throws TwitterException when Twitter service or network is unavailable
 	 * @see <a href="https://dev.twitter.com/docs/api/1.1/get/lists">GET lists |
 	 *      Twitter Developers</a>
 	 * @since Twitter4J 2.2.3
 	 */
-	ResponseList<UserList> getUserLists(long listOwnerUserId) throws TwitterException;
+	ResponseList<UserList> getUserLists(long userId, boolean reverse) throws TwitterException;
 
 	/**
 	 * List the lists of the specified user. Private lists will be included if
@@ -324,14 +324,14 @@ public interface ListsResources {
 	 * returned. <br>
 	 * This method calls http://api.twitter.com/1.1/lists.json
 	 * 
-	 * @param listOwnerScreenName The screen name of the list owner
+	 * @param screenName The screen name of the user
 	 * @return the list of lists
 	 * @throws TwitterException when Twitter service or network is unavailable
 	 * @see <a href="https://dev.twitter.com/docs/api/1.1/get/lists">GET lists |
 	 *      Twitter Developers</a>
 	 * @since Twitter4J 2.1.0
 	 */
-	ResponseList<UserList> getUserLists(String listOwnerScreenName) throws TwitterException;
+	ResponseList<UserList> getUserLists(String screenName, boolean reverse) throws TwitterException;
 
 	/**
 	 * Show tweet timeline for members of the specified list. <br>

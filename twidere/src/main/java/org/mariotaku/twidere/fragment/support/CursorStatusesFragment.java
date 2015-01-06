@@ -89,6 +89,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     }
 
     @Override
+    protected boolean hasMoreData(Cursor cursor) {
+        return true;
+    }
+
+    @Override
     protected long[] getAccountIds() {
         final Bundle args = getArguments();
         if (args != null && args.getLong(EXTRA_ACCOUNT_ID) > 0) {

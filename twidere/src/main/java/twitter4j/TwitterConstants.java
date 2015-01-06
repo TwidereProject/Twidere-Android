@@ -59,6 +59,8 @@ public interface TwitterConstants {
 	public static final String ENDPOINT_DIRECT_MESSAGES_SENT = "direct_messages/sent.json";
 	public static final String ENDPOINT_DIRECT_MESSAGES_SHOW = "direct_messages/show.json";
 
+    public static final String TEMPLATE_DM_CONVERSATION_DELETE = "dm/conversation/%d-%d/delete.json";
+
 	public static final String ENDPOINT_FAVORITES_LIST = "favorites/list.json";
 	public static final String ENDPOINT_FAVORITES_CREATE = "favorites/create.json";
 	public static final String ENDPOINT_FAVORITES_DESTROY = "favorites/destroy.json";

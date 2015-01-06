@@ -28,7 +28,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 @SuppressLint("Registered")
-public class BaseSupportDialogActivity extends BaseSupportThemedActivity implements Constants, IThemedActivity {
+public class BaseSupportDialogActivity extends ThemedFragmentActivity implements Constants, IThemedActivity {
 
     private boolean mInstanceStateSaved;
 

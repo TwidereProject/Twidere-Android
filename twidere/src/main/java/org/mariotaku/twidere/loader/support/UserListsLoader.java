@@ -23,38 +23,38 @@ import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUserList;
 
+import java.util.List;
+
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UserList;
 
-import java.util.List;
-
 public class UserListsLoader extends BaseUserListsLoader {
 
-	public static final String LOGTAG = UserListsLoader.class.getSimpleName();
+    private final long mUserId;
+    private final String mScreenName;
+    private final boolean mReverse;
 
-	private final long mUserId;
-	private final String mScreenName;
+    public UserListsLoader(final Context context, final long accountId, final long userId,
+                           final String screenName, final boolean reverse, final List<ParcelableUserList> data) {
+        super(context, accountId, 0, data);
+        mUserId = userId;
+        mScreenName = screenName;
+        mReverse = reverse;
+    }
 
-	public UserListsLoader(final Context context, final long accountId, final long userId, final String screenName,
-			final List<ParcelableUserList> data) {
-		super(context, accountId, 0, data);
-		mUserId = userId;
-		mScreenName = screenName;
-	}
+    @Override
+    public ResponseList<UserList> getUserLists(final Twitter twitter) throws TwitterException {
+        if (twitter == null) return null;
+        if (mUserId > 0)
+            return twitter.getUserLists(mUserId, mReverse);
+        else if (mScreenName != null) return twitter.getUserLists(mScreenName, mReverse);
+        return null;
+    }
 
-	@Override
-	public ResponseList<UserList> getUserLists(final Twitter twitter) throws TwitterException {
-		if (twitter == null) return null;
-		if (mUserId > 0)
-			return twitter.getUserLists(mUserId);
-		else if (mScreenName != null) return twitter.getUserLists(mScreenName);
-		return null;
-	}
-
-	@Override
-	protected boolean isFollowing(final UserList list) {
-		return true;
-	}
+    @Override
+    protected boolean isFollowing(final UserList list) {
+        return true;
+    }
 }

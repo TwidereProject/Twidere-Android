@@ -14,6 +14,13 @@
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
+    <style name="Theme.Blank.Translucent" parent="Theme.Base.NoActionBar">
+
+        <!-- Window attributes -->
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
     <style name="Theme.Blank.Dialog" parent="Theme.Base.Dialog"/>
 
     <style name="Theme.Twidere.Dark" parent="Theme.Base">
@@ -169,6 +176,20 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.GlobalSearch" parent="Theme.Twidere.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+    </style>
+
+    <style name="Theme.Twidere.Dark.GlobalSearch" parent="Theme.Twidere.Dark.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
     <style name="Theme.Twidere.Viewer" parent="Theme.Base">

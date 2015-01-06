@@ -45,6 +45,8 @@ import java.util.Set;
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
 
+    private long mLastId;
+
     public final void deleteStatus(final long statusId) {
         final List<ParcelableStatus> data = getAdapterData();
         if (statusId <= 0 || data == null) return;
@@ -86,6 +88,12 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.unregister(this);
         super.onStop();
+    }
+
+    @Override
+    protected boolean hasMoreData(List<ParcelableStatus> data) {
+        if (data == null || data.isEmpty()) return false;
+        return (mLastId != (mLastId = data.get(data.size() - 1).id));
     }
 
     @Override

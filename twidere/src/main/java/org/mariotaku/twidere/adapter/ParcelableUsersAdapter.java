@@ -31,7 +31,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.holder.UserListViewHolder;
+import org.mariotaku.twidere.view.holder.UserViewListHolder;
 
 import java.util.List;
 import java.util.Locale;
@@ -74,11 +74,11 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
         final Object tag = view.getTag();
-        final UserListViewHolder holder;
-        if (tag instanceof UserListViewHolder) {
-            holder = (UserListViewHolder) tag;
+        final UserViewListHolder holder;
+        if (tag instanceof UserViewListHolder) {
+            holder = (UserViewListHolder) tag;
         } else {
-            holder = new UserListViewHolder(view);
+            holder = new UserViewListHolder(view);
 //            holder.content.setOnOverflowIconClickListener(this);
             view.setTag(holder);
         }

@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TwoLineWithIconViewHolder extends ListViewHolder {
+public class TwoLineWithIconViewHolder extends ViewListHolder {
 
 	public final ImageView icon;
 	public final TextView text1, text2;

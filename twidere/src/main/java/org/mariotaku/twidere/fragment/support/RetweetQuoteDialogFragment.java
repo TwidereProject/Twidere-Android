@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -50,17 +51,25 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
+        final ParcelableStatus status = getStatus();
+        if (status == null) return;
         switch (which) {
-            case DialogInterface.BUTTON_POSITIVE:
-                final ParcelableStatus status = getStatus();
+            case DialogInterface.BUTTON_POSITIVE: {
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
-                if (status == null || twitter == null) return;
+                if (twitter == null) return;
                 if (isMyRetweet(status)) {
                     twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
                 } else {
                     twitter.retweetStatusAsync(status.account_id, status.id);
                 }
                 break;
+            }
+            case DialogInterface.BUTTON_NEUTRAL: {
+                final Intent intent = new Intent(INTENT_ACTION_QUOTE);
+                intent.putExtra(EXTRA_STATUS, status);
+                startActivity(intent);
+                break;
+            }
             default:
                 break;
         }

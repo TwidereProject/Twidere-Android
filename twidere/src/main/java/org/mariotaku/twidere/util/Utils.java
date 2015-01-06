@@ -103,7 +103,6 @@ import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
-import org.mariotaku.gallery3d.ImageViewerGLActivity;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
 import org.mariotaku.querybuilder.AllColumns;
@@ -122,6 +121,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CameraCropActivity;
+import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -190,6 +190,7 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
 import org.mariotaku.twidere.view.ShapedImageView;
+import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 import java.io.Closeable;
 import java.io.File;
@@ -2036,6 +2037,14 @@ public final class Utils implements Constants, TwitterConstants {
         return url;
     }
 
+    @ShapeStyle
+    public static int getProfileImageStyle(Context context) {
+        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final String style = prefs.getString(KEY_PROFILE_IMAGE_STYLE, null);
+        return getProfileImageStyle(style);
+    }
+
+    @ShapeStyle
     public static int getProfileImageStyle(String style) {
         if (VALUE_PROFILE_IMAGE_STYLE_SQUARE.equalsIgnoreCase(style)) {
             return ShapedImageView.SHAPE_RECTANGLE;
@@ -2457,7 +2466,8 @@ public final class Utils implements Constants, TwitterConstants {
             cb.setGZIPEnabled(enableGzip);
             cb.setIgnoreSSLError(ignoreSslError);
             cb.setIncludeCards(true);
-            cb.setCardsPlatform("Android-5");
+            cb.setCardsPlatform("Android-12");
+//            cb.setModelVersion(7);
             if (enableProxy) {
                 final String proxy_host = prefs.getString(KEY_PROXY_HOST, null);
                 final int proxy_port = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
@@ -2912,7 +2922,7 @@ public final class Utils implements Constants, TwitterConstants {
         final Intent intent = new Intent(INTENT_ACTION_VIEW_IMAGE);
         intent.setData(Uri.parse(uri));
         intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
-        intent.setClass(context, ImageViewerGLActivity.class);
+        intent.setClass(context, MediaViewerActivity.class);
         context.startActivity(intent);
     }
 

@@ -300,6 +300,15 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     }
 
     @Override
+    public void destroyDirectMessagesConversation(long userId) throws TwitterException {
+        final String url = conf.getRestBaseURL()
+                + String.format(Locale.ROOT, TEMPLATE_DM_CONVERSATION_DELETE, id, userId);
+        final String signUrl = conf.getSigningRestBaseURL()
+                + String.format(Locale.ROOT, TEMPLATE_DM_CONVERSATION_DELETE, id, userId);
+        post(url, signUrl);
+    }
+
+    @Override
     public Status destroyFavorite(final long id) throws TwitterException {
         ensureAuthorizationEnabled();
         return factory.createStatus(post(conf.getRestBaseURL() + ENDPOINT_FAVORITES_DESTROY,
@@ -1069,15 +1078,19 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     }
 
     @Override
-    public ResponseList<UserList> getUserLists(final long listOwnerUserId) throws TwitterException {
-        return factory.createUserListList(get(conf.getRestBaseURL() + ENDPOINT_LISTS_LIST, conf.getSigningRestBaseURL()
-                + ENDPOINT_LISTS_LIST, new HttpParameter("user_id", listOwnerUserId)));
+    public ResponseList<UserList> getUserLists(final long userId, final boolean reverse) throws TwitterException {
+        final String url = conf.getRestBaseURL() + ENDPOINT_LISTS_LIST;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_LISTS_LIST;
+        return factory.createUserListList(get(url, signUrl,
+                new HttpParameter("user_id", userId), new HttpParameter("reverse", reverse)));
     }
 
     @Override
-    public ResponseList<UserList> getUserLists(final String listOwnerScreenName) throws TwitterException {
-        return factory.createUserListList(get(conf.getRestBaseURL() + ENDPOINT_LISTS_LIST, conf.getSigningRestBaseURL()
-                + ENDPOINT_LISTS_LIST, new HttpParameter("screen_name", listOwnerScreenName)));
+    public ResponseList<UserList> getUserLists(final String screenName, final boolean reverse) throws TwitterException {
+        final String url = conf.getRestBaseURL() + ENDPOINT_LISTS_LIST;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_LISTS_LIST;
+        return factory.createUserListList(get(url, signUrl,
+                new HttpParameter("screen_name", screenName), new HttpParameter("reverse", reverse)));
     }
 
     @Override
@@ -1497,23 +1510,14 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     }
 
     @Override
-    public AccountSettings updateAccountSettings(final Integer trend_locationWoeid, final Boolean sleep_timeEnabled,
-                                                 final String start_sleepTime, final String end_sleepTime, final String time_zone, final String lang)
-            throws TwitterException {
-
+    public AccountSettings updateAccountSettings(final SettingsUpdate settingsUpdate) throws TwitterException {
         ensureAuthorizationEnabled();
-
-        final List<HttpParameter> params = new ArrayList<HttpParameter>(6);
-        addParameterToList(params, "trend_location_woeid", trend_locationWoeid);
-        addParameterToList(params, "sleep_time_enabled", sleep_timeEnabled);
-        addParameterToList(params, "start_sleep_time", start_sleepTime);
-        addParameterToList(params, "end_sleep_time", end_sleepTime);
-        addParameterToList(params, "time_zone", time_zone);
-        addParameterToList(params, "lang", lang);
+        final List<HttpParameter> params = new ArrayList<>();
+        settingsUpdate.addToHttpParameterList(params);
         params.add(INCLUDE_ENTITIES);
-        return factory.createAccountSettings(post(conf.getRestBaseURL() + ENDPOINT_ACCOUNT_SETTINGS,
-                conf.getSigningRestBaseURL() + ENDPOINT_ACCOUNT_SETTINGS,
-                params.toArray(new HttpParameter[params.size()])));
+        final String url = conf.getRestBaseURL() + ENDPOINT_ACCOUNT_SETTINGS;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_ACCOUNT_SETTINGS;
+        return factory.createAccountSettings(post(url, signUrl, params.toArray(new HttpParameter[params.size()])));
     }
 
     @Override

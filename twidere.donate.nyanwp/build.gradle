@@ -74,6 +74,6 @@ android {
 
 dependencies {
     wearApp project(':twidere.donate.nyanwp.wear')
-    compile project(':twidere.nyan')
+    compile project(':twidere.component.nyan')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

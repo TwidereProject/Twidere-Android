@@ -33,7 +33,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
+import org.mariotaku.twidere.adapter.ParcelableUserListsListAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.loader.support.BaseUserListsLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -49,7 +49,7 @@ import static org.mariotaku.twidere.util.Utils.openUserListDetails;
 abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment implements
         LoaderCallbacks<List<ParcelableUserList>>, OnMenuItemClickListener, MenuButtonClickListener {
 
-    private ParcelableUserListsAdapter mAdapter;
+    private ParcelableUserListsListAdapter mAdapter;
 
     private SharedPreferences mPreferences;
     private ListView mListView;
@@ -77,7 +77,7 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
     }
 
     @Override
-    public ParcelableUserListsAdapter getListAdapter() {
+    public ParcelableUserListsListAdapter getListAdapter() {
         return mAdapter;
     }
 
@@ -116,7 +116,7 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
             mUserId = args.getLong(EXTRA_USER_ID, -1);
             mScreenName = args.getString(EXTRA_SCREEN_NAME);
         }
-        mAdapter = new ParcelableUserListsAdapter(getActivity());
+        mAdapter = new ParcelableUserListsListAdapter(getActivity());
         mListView = getListView();
         mListView.setDivider(null);
         mListView.setSelector(android.R.color.transparent);

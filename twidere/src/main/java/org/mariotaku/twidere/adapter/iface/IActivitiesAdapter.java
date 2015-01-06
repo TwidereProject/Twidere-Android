@@ -20,21 +20,15 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 /**
  * Created by mariotaku on 14/11/18.
  */
 public interface IActivitiesAdapter<Data> extends IContentCardAdapter {
 
-
     ParcelableActivity getActivity(int position);
 
     int getActivityCount();
-
-    void onStatusClick(StatusViewHolder holder, int position);
-
-    void onUserProfileClick(StatusViewHolder holder, int position);
 
     void setData(Data data);
 

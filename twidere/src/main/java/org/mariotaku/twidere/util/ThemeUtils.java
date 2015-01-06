@@ -215,6 +215,15 @@ public class ThemeUtils implements Constants {
         return view;
     }
 
+    public static int getGlobalSearchThemeResource(final Context context) {
+        return getGlobalSearchThemeResource(getThemeNameOption(context));
+    }
+
+    public static int getGlobalSearchThemeResource(final String name) {
+        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_GlobalSearch;
+        return R.style.Theme_Twidere_Light_GlobalSearch;
+    }
+
     private static void applyColorTintForView(View view, int tintColor) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         if (view instanceof IThemedView) {
@@ -227,10 +236,10 @@ public class ThemeUtils implements Constants {
             ViewAccessor.setProgressBackgroundTintList(progressBar, tintList);
             ViewAccessor.setIndeterminateTintList(progressBar, tintList);
         } else if (view instanceof Switch) {
-            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
-            final Switch switchView = (Switch) view;
-            DrawableCompat.setTintList(switchView.getThumbDrawable(), tintList);
-            DrawableCompat.setTintList(switchView.getTrackDrawable(), tintList);
+//            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
+//            final Switch switchView = (Switch) view;
+//            DrawableCompat.setTintList(switchView.getThumbDrawable(), tintList);
+//            DrawableCompat.setTintList(switchView.getTrackDrawable(), tintList);
         } else if (view instanceof CompoundButton) {
             final ColorStateList tintList = ColorStateList.valueOf(tintColor);
             final CompoundButton compoundButton = (CompoundButton) view;

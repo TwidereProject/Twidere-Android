@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -29,7 +28,7 @@ import org.mariotaku.twidere.util.ImageLoadingHandler;
 /**
  * Created by mariotaku on 15/1/3.
  */
-public interface IContentCardAdapter extends IGapSupportedAdapter, ICardSupportedAdapter {
+public interface IContentCardAdapter extends IGapSupportedAdapter, ContentCardClickListener {
     ImageLoaderWrapper getImageLoader();
 
     Context getContext();

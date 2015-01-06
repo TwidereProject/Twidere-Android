@@ -33,6 +33,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -48,7 +49,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -125,6 +125,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     private EditText mUserQuery;
     private View mUsersSearchProgress;
     private View mQueryButton;
+    private View mUsersSearchEmpty;
+    private TextView mUsersSearchEmptyText;
 
     private PopupMenu mPopupMenu;
 
@@ -160,6 +162,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
             mUsersSearchList.setVisibility(View.VISIBLE);
             mUsersSearchProgress.setVisibility(View.GONE);
             mUsersSearchAdapter.setData(data, true);
+            updateEmptyText();
         }
 
         @Override
@@ -238,6 +241,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
 
         mUsersSearchAdapter = new SimpleParcelableUsersAdapter(activity);
         mUsersSearchList.setAdapter(mUsersSearchAdapter);
+        mUsersSearchList.setEmptyView(mUsersSearchEmpty);
         mUsersSearchList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -361,14 +365,6 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
                 sendDirectMessage();
                 break;
             }
-//            case R.id.recipient_selector: {
-//                if (mAccountId <= 0) return;
-//                final Intent intent = new Intent(INTENT_ACTION_SELECT_USER);
-//                intent.setClass(getActivity(), UserListSelectorActivity.class);
-//                intent.putExtra(EXTRA_ACCOUNT_ID, mAccountId);
-//                startActivityForResult(intent, REQUEST_SELECT_USER);
-//                break;
-//            }
             case R.id.add_image: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
                 startActivityForResult(intent, REQUEST_PICK_IMAGE);
@@ -377,8 +373,10 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
             case R.id.item_profile_image: {
                 final ParcelableUser recipient = mRecipient;
                 if (recipient == null) return;
+                final Bundle options = Utils.makeSceneTransitionOption(getActivity(),
+                        new Pair<>(view, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
                 Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
-                        recipient.screen_name, null);
+                        recipient.screen_name, options);
                 break;
             }
             case R.id.query_button: {
@@ -554,6 +552,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.register(this);
         updateTextCount();
+        updateEmptyText();
     }
 
     @Override
@@ -582,11 +581,22 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));
     }
 
+    private void updateEmptyText() {
+        final boolean noQuery = mUserQuery.length() <= 0;
+        if (noQuery) {
+            mUsersSearchEmptyText.setText(R.string.type_name_to_search);
+        } else {
+            mUsersSearchEmptyText.setText(R.string.no_user_found);
+        }
+    }
+
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUsersSearchProgress = view.findViewById(R.id.users_search_progress);
         mUsersSearchList = (ListView) view.findViewById(R.id.users_search_list);
+        mUsersSearchEmpty = view.findViewById(R.id.users_search_empty);
+        mUsersSearchEmptyText = (TextView) view.findViewById(R.id.users_search_empty_text);
         mMessagesListView = (ListView) view.findViewById(android.R.id.list);
         final View inputSendContainer = view.findViewById(R.id.input_send_container);
         mConversationContainer = view.findViewById(R.id.conversation_container);
@@ -707,86 +717,6 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         if (mTextCountView == null || mEditText == null) return;
         final int count = mValidator.getTweetLength(ParseUtils.parseString(mEditText.getText()));
         mTextCountView.setTextCount(count);
-    }
-
-    private static class UsersSearchAdapter extends BaseAdapter {
-
-        private final LayoutInflater mInflater;
-        private Object mUsers;
-        private int mScreenNameIdx;
-        private long mAccountId;
-
-        public UsersSearchAdapter(Context context) {
-            mInflater = LayoutInflater.from(context);
-        }
-
-        public void setUsers(List<ParcelableUser> users) {
-            mUsers = users;
-            notifyDataSetChanged();
-        }
-
-        public void setUsers(Cursor users) {
-            mUsers = users;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            if (mUsers instanceof Cursor) {
-                final Cursor c = (Cursor) mUsers;
-                mScreenNameIdx = c.getColumnIndex(CachedUsers.SCREEN_NAME);
-                return c.getCount();
-            } else if (mUsers instanceof List) {
-                return ((List) mUsers).size();
-            }
-            return 0;
-        }
-
-        public void setAccountId(long accountId) {
-            mAccountId = accountId;
-        }
-
-        @Override
-        public ParcelableUser getItem(int position) {
-            if (mUsers instanceof Cursor) {
-                final Cursor c = (Cursor) mUsers;
-                return new ParcelableUser(c, mAccountId);
-            } else if (mUsers instanceof List) {
-                return (ParcelableUser) ((List) mUsers).get(position);
-            }
-            throw new IllegalStateException();
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final View view;
-            if (convertView != null) {
-                view = convertView;
-            } else {
-                view = mInflater.inflate(R.layout.list_item_user, parent, false);
-            }
-            if (mUsers instanceof Cursor) {
-                final Cursor c = (Cursor) mUsers;
-                c.moveToPosition(position);
-                bindUser(view, c);
-            } else if (mUsers instanceof List) {
-                bindUser(view, getItem(position));
-            }
-            return view;
-        }
-
-        private void bindUser(View view, ParcelableUser user) {
-
-        }
-
-        private void bindUser(View view, Cursor cursor) {
-
-        }
     }
 
     private static class MyUserSearchLoader extends UserSearchLoader {

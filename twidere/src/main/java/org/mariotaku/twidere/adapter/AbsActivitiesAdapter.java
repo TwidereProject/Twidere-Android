@@ -20,11 +20,14 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -32,6 +35,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -44,12 +48,13 @@ import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
 
 /**
  * Created by mariotaku on 15/1/3.
  */
 public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> implements Constants,
-        IActivitiesAdapter<Data>, OnClickListener {
+        IActivitiesAdapter<Data>, StatusClickListener {
 
     private static final int ITEM_VIEW_TYPE_STUB = 0;
     private static final int ITEM_VIEW_TYPE_GAP = 1;
@@ -65,9 +70,10 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final int mCardBackgroundColor;
     private final int mTextSize;
     private final int mProfileImageStyle, mMediaPreviewStyle;
+    private final boolean mCompactCards;
     private boolean mLoadMoreIndicatorEnabled;
 
-    protected AbsActivitiesAdapter(final Context context) {
+    protected AbsActivitiesAdapter(final Context context, boolean compact) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
@@ -78,6 +84,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
     }
@@ -86,19 +93,39 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     public abstract int getActivityCount();
 
-    @Override
-    public void onClick(View v) {
-
-    }
 
     @Override
     public void onStatusClick(StatusViewHolder holder, int position) {
-
+        final ParcelableActivity activity = getActivity(position);
+        final ParcelableStatus status;
+        if (activity.action == ParcelableActivity.ACTION_MENTION) {
+            status = activity.target_object_statuses[0];
+        } else {
+            status = activity.target_statuses[0];
+        }
+        Utils.openStatus(getContext(), status, null);
     }
 
     @Override
     public void onUserProfileClick(StatusViewHolder holder, int position) {
-
+        final Context context = getContext();
+        final ParcelableActivity activity = getActivity(position);
+        final ParcelableStatus status;
+        if (activity.action == ParcelableActivity.ACTION_MENTION) {
+            status = activity.target_object_statuses[0];
+        } else {
+            status = activity.target_statuses[0];
+        }
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        if (context instanceof FragmentActivity) {
+            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
+                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
+        } else {
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
+        }
     }
 
     public abstract Data getData();
@@ -145,17 +172,41 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     }
 
     @Override
+    public void onItemMenuClick(ViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public void onItemActionClick(ViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
-                final View view = mInflater.inflate(R.layout.card_item_status_compat, parent, false);
+                final View view;
+                if (mCompactCards) {
+                    view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
+                } else {
+                    view = mInflater.inflate(R.layout.card_item_status, parent, false);
+                    final CardView cardView = (CardView) view.findViewById(R.id.card);
+                    cardView.setCardBackgroundColor(mCardBackgroundColor);
+                }
                 final StatusViewHolder holder = new StatusViewHolder(view);
                 holder.setTextSize(getTextSize());
-                holder.setOnClickListeners(this);
+                holder.setStatusClickListener(this);
                 return holder;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
-                final View view = mInflater.inflate(R.layout.list_item_activity_title_summary, parent, false);
+                final View view;
+                if (mCompactCards) {
+                    view = mInflater.inflate(R.layout.card_item_activity_summary_compact, parent, false);
+                } else {
+                    view = mInflater.inflate(R.layout.card_item_activity_summary, parent, false);
+                    final CardView cardView = (CardView) view.findViewById(R.id.card);
+                    cardView.setCardBackgroundColor(mCardBackgroundColor);
+                }
                 final ActivityTitleSummaryViewHolder holder = new ActivityTitleSummaryViewHolder(this, view);
                 holder.setTextSize(getTextSize());
                 return holder;
@@ -207,7 +258,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
+        if (position == getActivityCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;

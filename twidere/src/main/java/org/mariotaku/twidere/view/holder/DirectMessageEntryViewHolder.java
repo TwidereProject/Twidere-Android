@@ -28,7 +28,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShortTimeView;
 
-public class DirectMessageEntryViewHolder extends ListViewHolder {
+public class DirectMessageEntryViewHolder extends ViewListHolder {
 
     public final ImageView profile_image;
     public final TextView name, screen_name, text;

@@ -31,7 +31,7 @@ import android.widget.TextView;
 import org.mariotaku.messagebubbleview.library.MessageBubbleView;
 import org.mariotaku.twidere.R;
 
-public class DirectMessageConversationViewHolder extends ListViewHolder {
+public class DirectMessageConversationViewHolder extends ViewListHolder {
 
     public final TextView text, time;
 

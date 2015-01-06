@@ -57,16 +57,20 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private AbsStatusesAdapter<Data> mAdapter;
     private SimpleDrawerCallback mDrawerCallback;
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
+
+        private int mScrollState;
+
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
+            mScrollState = newState;
         }
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (isRefreshing()) return;
-            if (mAdapter.hasLoadMoreIndicator()
+            if (mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
                     && layoutManager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
                 onLoadMoreStatuses();
             }
@@ -174,8 +178,11 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     public void onLoadFinished(Loader<Data> loader, Data data) {
         setRefreshing(false);
         mAdapter.setData(data);
+        mAdapter.setLoadMoreIndicatorEnabled(hasMoreData(data));
         setListShown(true);
     }
+
+    protected abstract boolean hasMoreData(Data data);
 
     @Override
     public void onLoaderReset(Loader<Data> loader) {

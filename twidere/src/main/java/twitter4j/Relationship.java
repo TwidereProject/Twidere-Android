@@ -19,92 +19,94 @@ package twitter4j;
 /**
  * A data interface that has detailed information about a relationship between
  * two users
- * 
+ *
  * @author Perry Sakkaris - psakkaris at gmail.com
  * @see <a href="https://dev.twitter.com/docs/api/1.1/get/friendships/show">GET
- *      friendships/show | Twitter Developers</a>
+ * friendships/show | Twitter Developers</a>
  * @since Twitter4J 2.1.0
  */
 public interface Relationship extends TwitterResponse {
-	boolean canSourceDMTarget();
+    boolean canSourceDMTarget();
 
-	boolean canSourceMediaTagTarget();
+    boolean canSourceMediaTagTarget();
 
-	/**
-	 * Returns the source user id
-	 * 
-	 * @return the source user id
-	 */
-	long getSourceUserId();
+    /**
+     * Returns the source user id
+     *
+     * @return the source user id
+     */
+    long getSourceUserId();
 
-	/**
-	 * Returns the source user screen name
-	 * 
-	 * @return returns the source user screen name
-	 */
-	String getSourceUserScreenName();
+    /**
+     * Returns the source user screen name
+     *
+     * @return returns the source user screen name
+     */
+    String getSourceUserScreenName();
 
-	/**
-	 * Returns the target user id
-	 * 
-	 * @return target user id
-	 */
-	long getTargetUserId();
+    /**
+     * Returns the target user id
+     *
+     * @return target user id
+     */
+    long getTargetUserId();
 
-	/**
-	 * Returns the target user screen name
-	 * 
-	 * @return the target user screen name
-	 */
-	String getTargetUserScreenName();
+    /**
+     * Returns the target user screen name
+     *
+     * @return the target user screen name
+     */
+    String getTargetUserScreenName();
 
-	/**
-	 * Returns if the source user is blocking the target user
-	 * 
-	 * @return if the source is blocking the target
-	 */
-	boolean isSourceBlockingTarget();
+    /**
+     * Returns if the source user is blocking the target user
+     *
+     * @return if the source is blocking the target
+     */
+    boolean isSourceBlockingTarget();
 
-	/**
-	 * Checks if source user is being followed by target user
-	 * 
-	 * @return true if source user is being followed by target user
-	 */
-	boolean isSourceFollowedByTarget();
+    boolean isSourceBlockedByTarget();
 
-	/**
-	 * Checks if source user is following target user
-	 * 
-	 * @return true if source user is following target user
-	 */
-	boolean isSourceFollowingTarget();
+    /**
+     * Checks if source user is being followed by target user
+     *
+     * @return true if source user is being followed by target user
+     */
+    boolean isSourceFollowedByTarget();
 
-	boolean isSourceMarkedTargetAsSpam();
+    /**
+     * Checks if source user is following target user
+     *
+     * @return true if source user is following target user
+     */
+    boolean isSourceFollowingTarget();
 
-	boolean isSourceMutingTarget();
+    boolean isSourceMarkedTargetAsSpam();
 
-	/**
-	 * Checks if the source user has enabled notifications for updates of the
-	 * target user
-	 * 
-	 * @return true if source user enabled notifications for target user
-	 */
-	boolean isSourceNotificationsEnabled();
+    boolean isSourceMutingTarget();
 
-	/**
-	 * Checks if target user is being followed by source user.<br>
-	 * This method is equivalent to isSourceFollowingTarget().
-	 * 
-	 * @return true if target user is being followed by source user
-	 */
-	boolean isTargetFollowedBySource();
+    /**
+     * Checks if the source user has enabled notifications for updates of the
+     * target user
+     *
+     * @return true if source user enabled notifications for target user
+     */
+    boolean isSourceNotificationsEnabled();
 
-	/**
-	 * Checks if target user is following source user.<br>
-	 * This method is equivalent to isSourceFollowedByTarget().
-	 * 
-	 * @return true if target user is following source user
-	 */
-	boolean isTargetFollowingSource();
+    /**
+     * Checks if target user is being followed by source user.<br>
+     * This method is equivalent to isSourceFollowingTarget().
+     *
+     * @return true if target user is being followed by source user
+     */
+    boolean isTargetFollowedBySource();
+
+    /**
+     * Checks if target user is following source user.<br>
+     * This method is equivalent to isSourceFollowedByTarget().
+     *
+     * @return true if target user is following source user
+     */
+    boolean isTargetFollowingSource();
 
 }

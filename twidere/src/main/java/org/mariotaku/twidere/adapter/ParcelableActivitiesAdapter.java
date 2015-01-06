@@ -34,8 +34,8 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
     private List<ParcelableActivity> mData;
 
-    public ParcelableActivitiesAdapter(Context context) {
-        super(context);
+    public ParcelableActivitiesAdapter(Context context, boolean compact) {
+        super(context,compact);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
     @Override
     public ParcelableActivity getActivity(int position) {
-        if (hasLoadMoreIndicator() && position == getItemCount() - 1) return null;
+        if (position == getActivityCount()) return null;
         return mData.get(position);
     }
 

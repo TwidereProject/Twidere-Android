@@ -170,6 +170,17 @@
                 android:value=".activity.support.HomeActivity"/>
         </activity>
         <activity
+            android:name=".activity.support.GlobalSearchBoxActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Blank.Dialog"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@android:string/search_go">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.GLOBAL_SEARCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.support.SignInActivity"
             android:label="@string/sign_in"
             android:windowSoftInputMode="adjustResize">
@@ -373,12 +384,11 @@
                 android:value=".activity.support.HomeActivity"/>
         </activity>
         <activity
-            android:name="org.mariotaku.gallery3d.ImageViewerGLActivity"
+            android:name=".activity.support.MediaViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:label="@string/view_image"
             android:launchMode="singleTop"
-            android:process=":image_viewer"
             android:theme="@style/Theme.Blank">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.VIEW_IMAGE"/>

@@ -31,7 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
+import org.mariotaku.twidere.adapter.ParcelableUserListsListAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
@@ -59,7 +59,7 @@ public class UserListsListFragment extends BaseUserListsListFragment {
     @Override
     public Loader<List<ParcelableUserList>> newLoaderInstance(final long accountId, final long userId,
                                                               final String screenName) {
-        return new UserListsLoader(getActivity(), accountId, userId, screenName, getData());
+        return new UserListsLoader(getActivity(), accountId, userId, screenName, true, getData());
     }
 
     @Override
@@ -113,7 +113,7 @@ public class UserListsListFragment extends BaseUserListsListFragment {
     }
 
     private void removeUserList(final long id) {
-        final ParcelableUserListsAdapter adapter = getListAdapter();
+        final ParcelableUserListsListAdapter adapter = getListAdapter();
         final int listsIdx = adapter.findItemPosition(id);
         if (listsIdx >= 0) {
             adapter.removeAt(listsIdx);

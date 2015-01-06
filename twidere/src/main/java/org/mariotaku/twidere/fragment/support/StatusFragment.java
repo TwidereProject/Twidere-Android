@@ -66,7 +66,7 @@ import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.IntentConstants;
-import org.mariotaku.twidere.loader.ParcelableStatusLoader;
+import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -140,6 +140,8 @@ public class StatusFragment extends BaseSupportFragment
     private View mStatusContent;
     private View mProgressContainer;
     private View mErrorContainer;
+    private DividerItemDecoration mItemDecoration;
+
     private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
         @Override
         public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
@@ -207,8 +209,9 @@ public class StatusFragment extends BaseSupportFragment
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
         mLayoutManager = new StatusListLinearLayoutManager(context, mRecyclerView);
+        mItemDecoration = new DividerItemDecoration(context, mLayoutManager.getOrientation());
         if (compact) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, mLayoutManager.getOrientation()));
+            mRecyclerView.addItemDecoration(mItemDecoration);
         }
         mLayoutManager.setRecycleChildrenOnDetach(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -420,7 +423,7 @@ public class StatusFragment extends BaseSupportFragment
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
             mIsCompact = compact;
             if (compact) {
-                mCardLayoutResource = R.layout.card_item_status_compat;
+                mCardLayoutResource = R.layout.card_item_status_compact;
             } else {
                 mCardLayoutResource = R.layout.card_item_status;
             }
@@ -531,7 +534,20 @@ public class StatusFragment extends BaseSupportFragment
         public void setDetailMediaExpanded(boolean expanded) {
             mDetailMediaExpanded = expanded;
             notifyDataSetChanged();
+            updateItemDecoration();
         }
+
+        private void updateItemDecoration() {
+            final DividerItemDecoration decoration = mFragment.getItemDecoration();
+            decoration.setDecorationStart(0);
+            if (mReplies != null) {
+                decoration.setDecorationEnd(getItemCount() - 2);
+            } else {
+                decoration.setDecorationEnd(getItemCount() - 3);
+            }
+            mFragment.mRecyclerView.invalidateItemDecorations();
+        }
+
 
         @Override
         public boolean isGapItem(int position) {
@@ -576,7 +592,7 @@ public class StatusFragment extends BaseSupportFragment
                     if (mCachedHolder != null) return mCachedHolder;
                     final View view;
                     if (mIsCompact) {
-                        view = mInflater.inflate(R.layout.header_status_common, parent, false);
+                        view = mInflater.inflate(R.layout.header_status_compact, parent, false);
                     } else {
                         view = mInflater.inflate(R.layout.header_status, parent, false);
                     }
@@ -677,6 +693,7 @@ public class StatusFragment extends BaseSupportFragment
         public void setConversation(List<ParcelableStatus> conversation) {
             mConversation = conversation;
             notifyDataSetChanged();
+            updateItemDecoration();
         }
 
         public void setEventListener(StatusAdapterListener listener) {
@@ -686,6 +703,7 @@ public class StatusFragment extends BaseSupportFragment
         public void setReplies(List<ParcelableStatus> replies) {
             mReplies = replies;
             notifyDataSetChanged();
+            updateItemDecoration();
         }
 
         public boolean setStatus(ParcelableStatus status) {
@@ -697,6 +715,7 @@ public class StatusFragment extends BaseSupportFragment
                 mStatusAccount = null;
             }
             notifyDataSetChanged();
+            updateItemDecoration();
             return !CompareUtils.objectEquals(old, status);
         }
 
@@ -707,6 +726,10 @@ public class StatusFragment extends BaseSupportFragment
         private int getRepliesCount() {
             return mReplies != null ? mReplies.size() : 1;
         }
+    }
+
+    private DividerItemDecoration getItemDecoration() {
+        return mItemDecoration;
     }
 
     @Override

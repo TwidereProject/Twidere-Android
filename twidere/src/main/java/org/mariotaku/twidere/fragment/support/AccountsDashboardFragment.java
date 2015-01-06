@@ -65,6 +65,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountsManagerActivity;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.DraftsActivity;
+import org.mariotaku.twidere.activity.support.GlobalSearchBoxActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
@@ -187,12 +188,15 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
                 case MENU_SEARCH: {
-                    final FragmentActivity a = getActivity();
-                    if (a instanceof HomeActivity) {
-                        ((HomeActivity) a).openSearchView(account);
-                    } else {
-                        getActivity().onSearchRequested();
-                    }
+//                    final FragmentActivity a = getActivity();
+//                    if (a instanceof HomeActivity) {
+//                        ((HomeActivity) a).openSearchView(account);
+//                    } else {
+//                        getActivity().onSearchRequested();
+//                    }
+                    final Intent intent = new Intent(getActivity(), GlobalSearchBoxActivity.class);
+                    intent.putExtra(EXTRA_ACCOUNT_ID, account.account_id);
+                    startActivity(intent);
                     closeAccountsDrawer();
                     break;
                 }
@@ -294,7 +298,9 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         super.onActivityCreated(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mResolver = getContentResolver();
-        final Context context = getView().getContext();
+        final View view = getView();
+        if (view == null) throw new AssertionError();
+        final Context context = view.getContext();
         mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         final LayoutInflater inflater = LayoutInflater.from(context);
         final ListView listView = getListView();

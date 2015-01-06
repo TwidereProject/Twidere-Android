@@ -67,7 +67,7 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
 
     @Override
     protected ParcelableActivitiesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableActivitiesAdapter(context);
+        return new ParcelableActivitiesAdapter(context,compact);
     }
 
     @Override

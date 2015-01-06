@@ -61,7 +61,7 @@
                     android:contentDescription="@string/profile_image"
                     android:foreground="?android:selectableItemBackground"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_profile_image_default"/>
+                    tools:src="@drawable/ic_profile_image_default"/>
 
                 <LinearLayout
                     android:id="@+id/name_container"
@@ -95,27 +95,14 @@
                 android:layout_height="0.2dp"
                 android:background="#40808080"/>
 
-            <LinearLayout
-                android:id="@+id/description_container"
+            <org.mariotaku.twidere.view.themed.ThemedTextView
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
-                android:orientation="vertical"
-                android:padding="@dimen/element_spacing_small">
-
-                <org.mariotaku.twidere.view.themed.ThemedTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-                <org.mariotaku.twidere.view.themed.ThemedTextView
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorSecondary"/>
-            </LinearLayout>
+                android:padding="@dimen/element_spacing_small"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="@string/sample_status_text"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

@@ -53,7 +53,7 @@ import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.view.holder.ListViewHolder;
+import org.mariotaku.twidere.view.holder.ViewListHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -427,7 +427,7 @@ public class SettingsActivity extends BasePreferenceActivity {
 
         }
 
-        private static class HeaderViewHolder extends ListViewHolder {
+        private static class HeaderViewHolder extends ViewListHolder {
             private final TextView title, summary;
             private final ImageView icon;
             private final LinearLayout content;

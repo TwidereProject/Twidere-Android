@@ -3,7 +3,6 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     @Override
     public boolean isGapItem(int position) {
-        return getStatus(position).is_gap;
+        return getStatus(position).is_gap && position != getStatusCount() - 1;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     @Override
     public ParcelableStatus getStatus(int position) {
-        if (hasLoadMoreIndicator() && position == getStatusCount() - 1) return null;
+        if (position == getStatusCount()) return null;
         return mData.get(position);
     }
 
