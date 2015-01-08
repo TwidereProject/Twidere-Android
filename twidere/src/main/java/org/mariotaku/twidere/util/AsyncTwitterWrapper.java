@@ -54,12 +54,14 @@ import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.Mentions;
+import org.mariotaku.twidere.provider.TweetStore.SavedSearches;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
+import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -88,9 +90,9 @@ import twitter4j.UserList;
 import twitter4j.http.HttpResponseCode;
 
 import static org.mariotaku.twidere.provider.TweetStore.STATUSES_URIS;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeDirectMessageContentValues;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeStatusContentValues;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeTrendsContentValues;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createDirectMessage;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createStatus;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createTrends;
 import static org.mariotaku.twidere.util.Utils.appendQueryParameters;
 import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
@@ -140,6 +142,14 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public int addUserListMembersAsync(final long accountId, final long listId, final ParcelableUser... users) {
         final AddUserListMembersTask task = new AddUserListMembersTask(accountId, listId, users);
         return mAsyncTaskManager.add(task, true);
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public AsyncTaskManager getTaskManager() {
+        return mAsyncTaskManager;
     }
 
     public boolean isCreatingFavorite(final long accountId, final long statusId) {
@@ -388,6 +398,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final int woeId = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
             getLocalTrendsAsync(accountId, woeId);
         }
+        getSavedSearchesAsync(accountIds);
         final long[] statusSinceIds = getNewestStatusIdsFromDatabase(mContext, Statuses.CONTENT_URI, accountIds);
         return getHomeTimelineAsync(accountIds, null, statusSinceIds);
     }
@@ -2182,7 +2193,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     for (int i = 0, j = messages.size(); i < j; i++) {
                         final DirectMessage message = messages.get(i);
                         messageIds[i] = message.getId();
-                        values_array[i] = makeDirectMessageContentValues(message, accountId, isOutgoing());
+                        values_array[i] = createDirectMessage(message, accountId, isOutgoing());
                     }
 
                     // Delete all rows conflicting before new data inserted.
@@ -2248,6 +2259,43 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
+    public int getSavedSearchesAsync(long[] accountIds) {
+        final GetSavedSearchesTask task = new GetSavedSearchesTask(this);
+        final Long[] ids = new Long[accountIds.length];
+        for (int i = 0, j = accountIds.length; i < j; i++) {
+            ids[i] = accountIds[i];
+        }
+        return mAsyncTaskManager.add(task, true, ids);
+    }
+
+    static class GetSavedSearchesTask extends ManagedAsyncTask<Long, Void, SingleResponse<Void>> {
+
+        private final Context mContext;
+
+        GetSavedSearchesTask(AsyncTwitterWrapper twitter) {
+            super(twitter.getContext(), twitter.getTaskManager());
+            this.mContext = twitter.getContext();
+        }
+
+        @Override
+        protected SingleResponse<Void> doInBackground(Long... params) {
+            final ContentResolver cr = mContext.getContentResolver();
+            for (long accountId : params) {
+                final Twitter twitter = Utils.getTwitterInstance(mContext, accountId, true);
+                try {
+                    final ResponseList<SavedSearch> searches = twitter.getSavedSearches();
+                    final ContentValues[] values = ContentValuesCreator.createSavedSearches(searches, accountId);
+                    final Expression where = Expression.equals(SavedSearches.ACCOUNT_ID, accountId);
+                    cr.delete(SavedSearches.CONTENT_URI, where.getSQL(), null);
+                    ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values);
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+            }
+            return SingleResponse.getInstance();
+        }
+    }
+
     class StoreReceivedDirectMessagesTask extends StoreDirectMessagesTask {
 
         public StoreReceivedDirectMessagesTask(final List<MessageListResponse> result, final boolean notify) {
@@ -2303,7 +2351,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final long[] statusIds = new long[statuses.size()];
                 for (int i = 0, j = statuses.size(); i < j; i++) {
                     final twitter4j.Status status = statuses.get(i);
-                    values[i] = makeStatusContentValues(status, accountId);
+                    values[i] = createStatus(status, accountId);
                     statusIds[i] = status.getId();
                 }
                 // Delete all rows conflicting before new data inserted.
@@ -2366,7 +2414,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final ArrayList<String> hashtags = new ArrayList<>();
             final ArrayList<ContentValues> hashtagValues = new ArrayList<>();
             if (messages != null && messages.size() > 0) {
-                final ContentValues[] valuesArray = makeTrendsContentValues(messages);
+                final ContentValues[] valuesArray = createTrends(messages);
                 for (final ContentValues values : valuesArray) {
                     final String hashtag = values.getAsString(CachedTrends.NAME).replaceFirst("#", "");
                     if (hashtags.contains(hashtag)) {

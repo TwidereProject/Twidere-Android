@@ -209,7 +209,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
                 if (resultCode != RESULT_OK || !(filter instanceof FilteredUsersFragment) || !data.hasExtra(EXTRA_USER))
                     return;
                 final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
-                final ContentValues values = ContentValuesCreator.makeFilteredUserContentValues(user);
+                final ContentValues values = ContentValuesCreator.createFilteredUser(user);
                 final ContentResolver resolver = getContentResolver();
                 resolver.delete(Filters.Users.CONTENT_URI, Expression.equals(Filters.Users.USER_ID, user.id).getSQL(), null);
                 resolver.insert(Filters.Users.CONTENT_URI, values);

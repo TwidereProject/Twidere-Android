@@ -425,6 +425,26 @@ public interface TweetStore {
         public static final String[] COLUMNS = new String[]{_ID, HOST, ADDRESS};
     }
 
+    public static interface SavedSearches extends BaseColumns {
+
+        public static final String TABLE_NAME = "saved_searches";
+
+        public static final String CONTENT_PATH = TABLE_NAME;
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+        public static final String ACCOUNT_ID = "account_id";
+        public static final String SEARCH_ID = "search_id";
+        public static final String QUERY = "query";
+        public static final String NAME = "name";
+        public static final String CREATED_AT = "created_at";
+
+        public static final String[] COLUMNS = new String[]{_ID, ACCOUNT_ID, SEARCH_ID, CREATED_AT,
+                QUERY, NAME};
+        public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
+                TYPE_INT, TYPE_TEXT, TYPE_TEXT};
+    }
+
     public static interface Drafts extends BaseColumns {
 
         public static final int ACTION_UPDATE_STATUS = 1;

@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.task;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeCachedUserContentValues;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeStatusContentValues;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createStatus;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
@@ -76,7 +76,7 @@ public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> i
 					continue;
 				}
 				status_ids.add(status.getId());
-				cached_statuses_values.add(makeStatusContentValues(status, values.account_id));
+				cached_statuses_values.add(createStatus(status, values.account_id));
 				hashtags.addAll(extractor.extractHashtags(status.getText()));
 				final User user = status.getUser();
 				if (user != null && user.getId() > 0) {
@@ -103,7 +103,7 @@ public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> i
 
 		for (final User user : users) {
 			userIds.add(user.getId());
-			cachedUsersValues.add(makeCachedUserContentValues(user));
+			cachedUsersValues.add(createCachedUser(user));
 		}
 		bulkDelete(resolver, CachedUsers.CONTENT_URI, CachedUsers.USER_ID, userIds, null, false);
 		bulkInsert(resolver, CachedUsers.CONTENT_URI, cachedUsersValues);

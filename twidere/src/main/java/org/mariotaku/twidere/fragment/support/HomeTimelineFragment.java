@@ -19,15 +19,11 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
@@ -57,6 +53,9 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
     public int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds) {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null) return -1;
+        if (maxIds == null) {
+            return twitter.refreshAll(accountIds);
+        }
         return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
     }
 

@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,7 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
+import org.apache.http.protocol.HTTP;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
@@ -97,6 +99,8 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -340,7 +344,7 @@ public class StatusFragment extends BaseSupportFragment
         if (status == null) return;
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, status.account_id);
-        args.putLong(EXTRA_STATUS_ID, status.id);
+        args.putLong(EXTRA_STATUS_ID, status.retweet_id > 0 ? status.retweet_id : status.id);
         args.putString(EXTRA_SCREEN_NAME, status.user_screen_name);
         if (mRepliesLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
@@ -863,6 +867,13 @@ public class StatusFragment extends BaseSupportFragment
                             activityOption);
                     break;
                 }
+                case R.id.retweets_container: {
+                    final ParcelableStatus status = adapter.getStatus(getPosition());
+                    final Fragment fragment = adapter.getFragment();
+                    final FragmentActivity activity = fragment.getActivity();
+                    Utils.openStatusRetweeters(activity, status.account_id, status.id);
+                    break;
+                }
             }
         }
 
@@ -947,7 +958,20 @@ public class StatusFragment extends BaseSupportFragment
                     if (ParcelableCredentials.isOfficialCredentials(activity, account)) {
                         StatusTranslateDialogFragment.show(fragment.getFragmentManager(), status);
                     } else {
+                        final Resources resources = fragment.getResources();
+                        final Locale locale = resources.getConfiguration().locale;
+                        try {
+                            final String template = "http://translate.google.com/#%s|%s|%s";
+                            final String sourceLang = "auto";
+                            final String targetLang = URLEncoder.encode(locale.getLanguage(), HTTP.UTF_8);
+                            final String text = URLEncoder.encode(status.text_unescaped, HTTP.UTF_8);
+                            final Uri uri = Uri.parse(String.format(Locale.ROOT, template, sourceLang, targetLang, text));
+                            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                            fragment.startActivity(intent);
+                        } catch (UnsupportedEncodingException ignore) {
 
+                        }
                     }
                     break;
                 }
@@ -1078,6 +1102,8 @@ public class StatusFragment extends BaseSupportFragment
             menuBar.inflate(R.menu.menu_status);
             mediaPreviewLoad.setOnClickListener(this);
             profileContainer.setOnClickListener(this);
+
+            retweetsContainer.setOnClickListener(this);
 
             final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);

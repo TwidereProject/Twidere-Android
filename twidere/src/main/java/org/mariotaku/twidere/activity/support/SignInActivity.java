@@ -51,6 +51,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
@@ -76,9 +77,7 @@ import twitter4j.http.HttpClientWrapper;
 import twitter4j.http.HttpResponse;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeAccountContentValuesBasic;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeAccountContentValuesOAuth;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeAccountContentValuesTWIP;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createAccount;
 import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
@@ -435,19 +434,19 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
                 final ContentValues values;
                 switch (result.auth_type) {
                     case Accounts.AUTH_TYPE_BASIC: {
-                        values = makeAccountContentValuesBasic(result.conf, result.basic_username,
+                        values = createAccount(result.conf, result.basic_username,
                                 result.basic_password, result.user, result.color,
                                 result.api_url_format, result.no_version_suffix);
                         break;
                     }
                     case Accounts.AUTH_TYPE_TWIP_O_MODE: {
-                        values = makeAccountContentValuesTWIP(result.conf, result.user, result.color,
+                        values = ContentValuesCreator.createAccount(result.conf, result.user, result.color,
                                 result.api_url_format, result.no_version_suffix);
                         break;
                     }
                     case Accounts.AUTH_TYPE_OAUTH:
                     case Accounts.AUTH_TYPE_XAUTH: {
-                        values = makeAccountContentValuesOAuth(result.conf, result.access_token,
+                        values = ContentValuesCreator.createAccount(result.conf, result.access_token,
                                 result.user, result.auth_type, result.color, result.api_url_format,
                                 result.same_oauth_signing_url, result.no_version_suffix);
                         break;

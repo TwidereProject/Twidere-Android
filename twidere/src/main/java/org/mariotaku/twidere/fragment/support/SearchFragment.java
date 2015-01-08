@@ -84,6 +84,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
         mPagerIndicator.setViewPager(mViewPager);
+        mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
         if (activity instanceof IThemedActivity) {
             mPagerIndicator.setStripColor(((IThemedActivity) activity).getCurrentThemeColor());
         } else {

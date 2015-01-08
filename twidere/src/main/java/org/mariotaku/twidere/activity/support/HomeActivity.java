@@ -838,7 +838,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             final IHomeActionButton hab = (IHomeActionButton) mActionsButton;
             hab.setIcon(icon);
             hab.setTitle(title);
-            hab.setShowProgress(hasActivatedTask);
+//            hab.setShowProgress(hasActivatedTask);
         }
         if (mSmartBarProgress != null) {
             mSmartBarProgress.setVisibility(hasActivatedTask ? View.VISIBLE : View.INVISIBLE);

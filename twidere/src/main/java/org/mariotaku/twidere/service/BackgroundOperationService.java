@@ -88,8 +88,7 @@ import twitter4j.TwitterException;
 import twitter4j.UserMentionEntity;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeDirectMessageContentValues;
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeDirectMessageDraftContentValues;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
 import static org.mariotaku.twidere.util.Utils.getImagePathFromUri;
 import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
@@ -241,14 +240,14 @@ public class BackgroundOperationService extends IntentService implements Constan
         final SingleResponse<ParcelableDirectMessage> result = sendDirectMessage(builder, accountId, recipientId, text,
                 imageUri);
         if (result.getData() != null && result.getData().id > 0) {
-            final ContentValues values = makeDirectMessageContentValues(result.getData());
+            final ContentValues values = ContentValuesCreator.createDirectMessage(result.getData());
             final String delete_where = DirectMessages.ACCOUNT_ID + " = " + accountId + " AND "
                     + DirectMessages.MESSAGE_ID + " = " + result.getData().id;
             mResolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
             mResolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
         } else {
-            final ContentValues values = makeDirectMessageDraftContentValues(accountId, recipientId, text, imageUri);
+            final ContentValues values = createMessageDraft(accountId, recipientId, text, imageUri);
             mResolver.insert(Drafts.CONTENT_URI, values);
             showErrorMessage(R.string.action_sending_direct_message, result.getException(), true);
         }
@@ -323,7 +322,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private void saveDrafts(final ParcelableStatusUpdate status, final List<Long> account_ids) {
-        final ContentValues values = ContentValuesCreator.makeStatusDraftContentValues(status,
+        final ContentValues values = ContentValuesCreator.createStatusDraft(status,
                 ArrayUtils.fromList(account_ids));
         mResolver.insert(Drafts.CONTENT_URI, values);
         final String title = getString(R.string.status_not_updated);

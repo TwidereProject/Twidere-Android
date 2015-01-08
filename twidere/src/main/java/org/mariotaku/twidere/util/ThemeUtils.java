@@ -35,7 +35,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -215,13 +214,27 @@ public class ThemeUtils implements Constants {
         return view;
     }
 
-    public static int getGlobalSearchThemeResource(final Context context) {
+    public static int getOptimalLinkColor(int linkColor, int color) {
+        final int[] yiq = new int[3];
+        ColorUtils.colorToYIQ(color, yiq);
+        final int y = yiq[0];
+        ColorUtils.colorToYIQ(linkColor, yiq);
+        if (y < 32 && yiq[0] < 192) {
+            return linkColor;
+        } else if (y > 192 && yiq[0] > 32) {
+            return linkColor;
+        }
+        yiq[0] = yiq[0] + (y - yiq[0]) / 2;
+        return ColorUtils.YIQToColor(Color.alpha(linkColor), yiq);
+    }
+
+    public static int getQuickSearchBoxThemeResource(final Context context) {
         return getGlobalSearchThemeResource(getThemeNameOption(context));
     }
 
     public static int getGlobalSearchThemeResource(final String name) {
-        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_GlobalSearch;
-        return R.style.Theme_Twidere_Light_GlobalSearch;
+        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_QuickSearchBox;
+        return R.style.Theme_Twidere_Light_QuickSearchBox;
     }
 
     private static void applyColorTintForView(View view, int tintColor) {
@@ -244,9 +257,6 @@ public class ThemeUtils implements Constants {
             final ColorStateList tintList = ColorStateList.valueOf(tintColor);
             final CompoundButton compoundButton = (CompoundButton) view;
             ViewAccessor.setButtonTintList(compoundButton, tintList);
-        } else if (view instanceof TextView) {
-            final TextView textView = (TextView) view;
-            textView.setLinkTextColor(tintColor);
         }
     }
 

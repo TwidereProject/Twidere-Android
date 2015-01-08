@@ -794,7 +794,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     cr.delete(Filters.Users.CONTENT_URI, where.getSQL(), null);
                     showInfoMessage(getActivity(), R.string.message_user_unmuted, false);
                 } else {
-                    cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.makeFilteredUserContentValues(user));
+                    cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.createFilteredUser(user));
                     showInfoMessage(getActivity(), R.string.message_user_muted, false);
                 }
                 break;

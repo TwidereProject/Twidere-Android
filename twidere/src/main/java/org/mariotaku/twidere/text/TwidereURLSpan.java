@@ -25,6 +25,7 @@ import android.text.style.URLSpan;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
 public class TwidereURLSpan extends URLSpan implements Constants {
@@ -65,7 +66,7 @@ public class TwidereURLSpan extends URLSpan implements Constants {
             ds.setUnderlineText(true);
         }
         if ((highlightStyle & VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT) != 0) {
-            ds.setColor(ds.linkColor);
+            ds.setColor(ThemeUtils.getOptimalLinkColor(ds.linkColor, ds.getColor()));
         }
     }
 }

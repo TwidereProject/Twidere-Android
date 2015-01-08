@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeFilteredUserContentValues;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createFilteredUser;
 import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
@@ -73,11 +73,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
 			if (value instanceof ParcelableUserMention) {
 				final ParcelableUserMention mention = (ParcelableUserMention) value;
 				user_ids.add(mention.id);
-				user_values.add(makeFilteredUserContentValues(mention));
+				user_values.add(createFilteredUser(mention));
 			} else if (value instanceof ParcelableStatus) {
 				final ParcelableStatus status = (ParcelableStatus) value;
 				user_ids.add(status.user_id);
-				user_values.add(ContentValuesCreator.makeFilteredUserContentValues(status));
+				user_values.add(ContentValuesCreator.createFilteredUser(status));
 			} else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
 				if (value != null) {
 					final String keyword = ParseUtils.parseString(value);

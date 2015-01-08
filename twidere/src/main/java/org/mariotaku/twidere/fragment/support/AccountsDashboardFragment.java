@@ -65,7 +65,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountsManagerActivity;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.DraftsActivity;
-import org.mariotaku.twidere.activity.support.GlobalSearchBoxActivity;
+import org.mariotaku.twidere.activity.support.QuickSearchBoxActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
@@ -194,7 +194,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 //                    } else {
 //                        getActivity().onSearchRequested();
 //                    }
-                    final Intent intent = new Intent(getActivity(), GlobalSearchBoxActivity.class);
+                    final Intent intent = new Intent(getActivity(), QuickSearchBoxActivity.class);
                     intent.putExtra(EXTRA_ACCOUNT_ID, account.account_id);
                     startActivity(intent);
                     closeAccountsDrawer();

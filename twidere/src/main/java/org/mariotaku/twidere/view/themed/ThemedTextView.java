@@ -44,6 +44,6 @@ public class ThemedTextView extends TextView implements IThemedView {
 
     @Override
     public void setThemeTintColor(ColorStateList color) {
-        setLinkTextColor(color);
+        setLinkTextColor(ThemeUtils.getOptimalLinkColor(color.getDefaultColor(), getCurrentTextColor()));
     }
 }

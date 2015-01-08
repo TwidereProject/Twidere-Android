@@ -38,7 +38,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.makeCachedUserContentValues;
+import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 
@@ -92,7 +92,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         }
         try {
             final User user = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
-            final ContentValues cachedUserValues = makeCachedUserContentValues(user);
+            final ContentValues cachedUserValues = createCachedUser(user);
             final long userId = user.getId();
             final String cachedUserWhere = Expression.equals(CachedUsers.USER_ID, userId).getSQL();
             resolver.delete(CachedUsers.CONTENT_URI, cachedUserWhere, null);

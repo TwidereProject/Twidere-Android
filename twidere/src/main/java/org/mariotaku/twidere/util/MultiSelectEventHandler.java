@@ -141,11 +141,11 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                     if (object instanceof ParcelableStatus) {
                         final ParcelableStatus status = (ParcelableStatus) object;
                         userIds.add(status.user_id);
-                        valuesList.add(ContentValuesCreator.makeFilteredUserContentValues(status));
+                        valuesList.add(ContentValuesCreator.createFilteredUser(status));
                     } else if (object instanceof ParcelableUser) {
                         final ParcelableUser user = (ParcelableUser) object;
                         userIds.add(user.id);
-                        valuesList.add(ContentValuesCreator.makeFilteredUserContentValues(user));
+                        valuesList.add(ContentValuesCreator.createFilteredUser(user));
                     } else {
                         continue;
                     }
