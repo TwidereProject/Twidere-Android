@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.loader.support;
 
-import static org.mariotaku.twidere.util.Utils.isFiltered;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
+
+import java.util.List;
 
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -32,44 +32,45 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import java.util.List;
+import static org.mariotaku.twidere.util.Utils.isFiltered;
 
 public class UserListTimelineLoader extends Twitter4JStatusesLoader {
 
-	private final long mUserId;
-	private final String mScreenName, mListName;
-	private final int mListId;
-	private final boolean mFiltersForRts;
+    private final long mUserId;
+    private final String mScreenName, mListName;
+    private final int mListId;
+    private final boolean mFiltersForRts;
 
-	public UserListTimelineLoader(final Context context, final long account_id, final int list_id, final long user_id,
-			final String screen_name, final String list_name, final long max_id, final long since_id,
-			final List<ParcelableStatus> data, final String[] saved_statuses_args, final int tab_position) {
-		super(context, account_id, max_id, since_id, data, saved_statuses_args, tab_position);
-		mListId = list_id;
-		mUserId = user_id;
-		mScreenName = screen_name;
-		mListName = list_name;
-		mFiltersForRts = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getBoolean(
-				KEY_FILTERS_FOR_RTS, true);
-	}
+    public UserListTimelineLoader(final Context context, final long accountId, final int listId,
+                                  final long userId, final String screenName, final String listName,
+                                  final long sinceId, final long maxId, final List<ParcelableStatus> data,
+                                  final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
+        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+        mListId = listId;
+        mUserId = userId;
+        mScreenName = screenName;
+        mListName = listName;
+        mFiltersForRts = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getBoolean(
+                KEY_FILTERS_FOR_RTS, true);
+    }
 
-	@Override
-	protected ResponseList<Status> getStatuses(final Twitter twitter, final Paging paging) throws TwitterException {
-		if (twitter == null) return null;
-		if (mListId > 0)
-			return twitter.getUserListStatuses(mListId, paging);
-		else if (mListName == null)
-			return null;
-		else if (mUserId > 0)
-			return twitter.getUserListStatuses(mListName.replace(' ', '-'), mUserId, paging);
-		else if (mScreenName != null)
-			return twitter.getUserListStatuses(mListName.replace(' ', '-'), mScreenName, paging);
-		return null;
-	}
+    @Override
+    protected ResponseList<Status> getStatuses(final Twitter twitter, final Paging paging) throws TwitterException {
+        if (twitter == null) return null;
+        if (mListId > 0)
+            return twitter.getUserListStatuses(mListId, paging);
+        else if (mListName == null)
+            return null;
+        else if (mUserId > 0)
+            return twitter.getUserListStatuses(mListName.replace(' ', '-'), mUserId, paging);
+        else if (mScreenName != null)
+            return twitter.getUserListStatuses(mListName.replace(' ', '-'), mScreenName, paging);
+        return null;
+    }
 
-	@Override
-	protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-		return isFiltered(database, status, mFiltersForRts);
-	}
+    @Override
+    protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
+        return isFiltered(database, status, mFiltersForRts);
+    }
 
 }

@@ -34,18 +34,19 @@ import java.util.List;
 public class UserTimelineFragment extends ParcelableStatusesFragment {
 
     @Override
-    public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+                                                                 final Bundle args,
+                                                                 final boolean fromUser) {
         setRefreshing(true);
         final List<ParcelableStatus> data = getAdapterData();
-        final Context context = getActivity();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
-        return new UserTimelineLoader(context, accountId, userId, screenName, maxId, sinceId, data,
-                getSavedStatusesFileArgs(), tabPosition);
+        return new UserTimelineLoader(context, accountId, userId, screenName, sinceId, maxId, data,
+                getSavedStatusesFileArgs(), tabPosition, fromUser);
     }
 
     @Override

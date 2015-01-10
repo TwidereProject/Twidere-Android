@@ -19,12 +19,13 @@
 
 package org.mariotaku.twidere.loader.support;
 
-import static org.mariotaku.twidere.util.Utils.isFiltered;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
+
+import java.util.Arrays;
+import java.util.List;
 
 import twitter4j.Paging;
 import twitter4j.Query;
@@ -32,41 +33,40 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.mariotaku.twidere.util.Utils.isFiltered;
 
 public class TweetSearchLoader extends Twitter4JStatusesLoader {
 
-	private final String mQuery;
-	private final boolean mFiltersForRts;
+    private final String mQuery;
+    private final boolean mFiltersForRts;
 
-	public TweetSearchLoader(final Context context, final long accountId, final String query, final long maxId,
-			final long sinceId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-			final int tabPosition) {
-		super(context, accountId, maxId, sinceId, data, savedStatusesArgs, tabPosition);
-		mQuery = query;
-		mFiltersForRts = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getBoolean(
-				KEY_FILTERS_FOR_RTS, true);
-	}
+    public TweetSearchLoader(final Context context, final long accountId, final String query,
+                             final long sinceId, final long maxId, final List<ParcelableStatus> data,
+                             final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
+        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+        mQuery = query;
+        mFiltersForRts = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getBoolean(
+                KEY_FILTERS_FOR_RTS, true);
+    }
 
-	@Override
-	public List<Status> getStatuses(final Twitter twitter, final Paging paging) throws TwitterException {
-		if (twitter == null) return null;
-		final Query query = new Query(processQuery(mQuery));
-		query.setRpp(paging.getCount());
-		if (paging.getMaxId() > 0) {
-			query.setMaxId(paging.getMaxId());
-		}
-		return Arrays.asList(twitter.search(query).getStatuses());
-	}
+    @Override
+    public List<Status> getStatuses(final Twitter twitter, final Paging paging) throws TwitterException {
+        if (twitter == null) return null;
+        final Query query = new Query(processQuery(mQuery));
+        query.setRpp(paging.getCount());
+        if (paging.getMaxId() > 0) {
+            query.setMaxId(paging.getMaxId());
+        }
+        return Arrays.asList(twitter.search(query).getStatuses());
+    }
 
-	protected String processQuery(final String query) {
-		return String.format("%s", query);
-	}
+    protected String processQuery(final String query) {
+        return String.format("%s", query);
+    }
 
-	@Override
-	protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-		return isFiltered(database, status, mFiltersForRts);
-	}
+    @Override
+    protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
+        return isFiltered(database, status, mFiltersForRts);
+    }
 
 }

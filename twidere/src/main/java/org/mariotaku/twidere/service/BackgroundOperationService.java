@@ -36,6 +36,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.twitter.Extractor;
@@ -45,8 +46,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.MediaUploadResult;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
@@ -308,7 +309,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                     for (final ParcelableMediaUpdate media : item.media) {
                         final String path = getImagePathFromUri(this, Uri.parse(media.uri));
                         if (path != null) {
-                            new File(path).delete();
+                            if (!new File(path).delete()) {
+                                Log.d(LOGTAG, String.format("unable to delete %s", path));
+                            }
                         }
                     }
                 }
@@ -333,7 +336,8 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private SingleResponse<ParcelableDirectMessage> sendDirectMessage(final NotificationCompat.Builder builder,
-                                                                      final long accountId, final long recipientId, final String text, final String imageUri) {
+                                                                      final long accountId, final long recipientId,
+                                                                      final String text, final String imageUri) {
         final Twitter twitter = getTwitterInstance(this, accountId, true, true);
         try {
             final ParcelableDirectMessage directMessage;
@@ -350,11 +354,14 @@ public class BackgroundOperationService extends IntentService implements Constan
                 final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
                 directMessage = new ParcelableDirectMessage(twitter.sendDirectMessage(recipientId, text,
                         uploadResp.getId()), accountId, true);
-                file.delete();
+                if (!file.delete()) {
+                    Log.d(LOGTAG, String.format("unable to delete %s", path));
+                }
             } else {
                 directMessage = new ParcelableDirectMessage(twitter.sendDirectMessage(recipientId, text), accountId,
                         true);
             }
+            Utils.setLastSeen(this, recipientId, System.currentTimeMillis());
             return SingleResponse.getInstance(directMessage);
         } catch (final IOException e) {
             return SingleResponse.getInstance(e);
@@ -369,12 +376,12 @@ public class BackgroundOperationService extends IntentService implements Constan
 
     private List<SingleResponse<ParcelableStatus>> updateStatus(final Builder builder,
                                                                 final ParcelableStatusUpdate statusUpdate) {
-        final ArrayList<ContentValues> hashtag_values = new ArrayList<ContentValues>();
-        final Collection<String> hashtags = extractor.extractHashtags(statusUpdate.text);
-        for (final String hashtag : hashtags) {
+        final ArrayList<ContentValues> hashTagValues = new ArrayList<>();
+        final Collection<String> hashTags = extractor.extractHashtags(statusUpdate.text);
+        for (final String hashTag : hashTags) {
             final ContentValues values = new ContentValues();
-            values.put(CachedHashtags.NAME, hashtag);
-            hashtag_values.add(values);
+            values.put(CachedHashtags.NAME, hashTag);
+            hashTagValues.add(values);
         }
         final boolean hasEasterEggTriggerText = statusUpdate.text.contains(EASTER_EGG_TRIGGER_TEXT);
         final boolean hasEasterEggRestoreText = statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART1)
@@ -382,9 +389,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                 && statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART3);
         boolean mentionedHondaJOJO = false, notReplyToOther = false;
         mResolver.bulkInsert(CachedHashtags.CONTENT_URI,
-                hashtag_values.toArray(new ContentValues[hashtag_values.size()]));
+                hashTagValues.toArray(new ContentValues[hashTagValues.size()]));
 
-        final List<SingleResponse<ParcelableStatus>> results = new ArrayList<SingleResponse<ParcelableStatus>>();
+        final List<SingleResponse<ParcelableStatus>> results = new ArrayList<>();
 
         if (statusUpdate.accounts.length == 0) return Collections.emptyList();
 
@@ -415,16 +422,16 @@ public class BackgroundOperationService extends IntentService implements Constan
                 overrideStatusText = null;
             }
 
-            final String unshortenedText = isEmpty(overrideStatusText) ? statusUpdate.text : overrideStatusText;
+            final String unShortenedText = isEmpty(overrideStatusText) ? statusUpdate.text : overrideStatusText;
 
-            final boolean shouldShorten = mValidator.getTweetLength(unshortenedText) > mValidator.getMaxTweetLength();
+            final boolean shouldShorten = mValidator.getTweetLength(unShortenedText) > mValidator.getMaxTweetLength();
             final String shortenedText;
             if (shouldShorten) {
                 if (mUseShortener) {
                     final StatusShortenResult shortenedResult;
                     mShortener.waitForService();
                     try {
-                        shortenedResult = mShortener.shorten(statusUpdate, unshortenedText);
+                        shortenedResult = mShortener.shorten(statusUpdate, unShortenedText);
                     } catch (final Exception e) {
                         throw new ShortenException(this);
                     }
@@ -434,7 +441,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 } else
                     throw new StatusTooLongException(this);
             } else {
-                shortenedText = unshortenedText;
+                shortenedText = unShortenedText;
             }
             if (statusUpdate.media != null) {
                 for (final ParcelableMediaUpdate media : statusUpdate.media) {
@@ -471,7 +478,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                             mediaIds[i] = uploadResp.getId();
                         }
                     } catch (final FileNotFoundException e) {
-
+                        Log.w(LOGTAG, e);
                     } catch (final TwitterException e) {
                         final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
                         results.add(response);
@@ -494,6 +501,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         } else if (entities.length == 1 && entities[0].getId() == HONDAJOJO_ID) {
                             mentionedHondaJOJO = true;
                         }
+                        Utils.setLastSeen(this, entities, System.currentTimeMillis());
                     }
                     if (!notReplyToOther) {
                         final long inReplyToUserId = resultStatus.getInReplyToUserId();
@@ -502,7 +510,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         }
                     }
                     final ParcelableStatus result = new ParcelableStatus(resultStatus, account.account_id, false);
-                    results.add(new SingleResponse<ParcelableStatus>(result, null));
+                    results.add(new SingleResponse<>(result, null));
                 } catch (final TwitterException e) {
                     final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
                     results.add(response);
@@ -513,26 +521,28 @@ public class BackgroundOperationService extends IntentService implements Constan
             results.add(response);
         }
         if (mentionedHondaJOJO) {
-            final PackageManager pm = getPackageManager();
-            final ComponentName main = new ComponentName(this, MainActivity.class);
-            final ComponentName main2 = new ComponentName(this, MainHondaJOJOActivity.class);
-            if (hasEasterEggTriggerText) {
-                if (notReplyToOther) {
-                    pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                            PackageManager.DONT_KILL_APP);
-                    pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                            PackageManager.DONT_KILL_APP);
-                    showToast(R.string.easter_egg_triggered_message, Toast.LENGTH_SHORT);
-                }
-            } else if (hasEasterEggRestoreText) {
-                pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                        PackageManager.DONT_KILL_APP);
-                pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                        PackageManager.DONT_KILL_APP);
-                showToast(R.string.icon_restored_message, Toast.LENGTH_SHORT);
-            }
+            triggerEasterEgg(notReplyToOther, hasEasterEggTriggerText, hasEasterEggRestoreText);
         }
         return results;
+    }
+
+    private void triggerEasterEgg(boolean notReplyToOther, boolean hasEasterEggTriggerText, boolean hasEasterEggRestoreText) {
+        final PackageManager pm = getPackageManager();
+        final ComponentName main = new ComponentName(this, MainActivity.class);
+        final ComponentName main2 = new ComponentName(this, MainHondaJOJOActivity.class);
+        if (hasEasterEggTriggerText && notReplyToOther) {
+            pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+            showToast(R.string.easter_egg_triggered_message, Toast.LENGTH_SHORT);
+        } else if (hasEasterEggRestoreText) {
+            pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+            pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            showToast(R.string.icon_restored_message, Toast.LENGTH_SHORT);
+        }
     }
 
     private static Notification updateSendDirectMessageNotificaion(final Context context,

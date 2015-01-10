@@ -777,17 +777,17 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.createBlock(user_id);
+                Utils.setLastSeen(mContext, user.getId(), -1);
                 for (final Uri uri : STATUSES_URIS) {
                     final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                             Expression.equals(Statuses.USER_ID, user_id));
                     mResolver.delete(uri, where.getSQL(), null);
 
                 }
-                // I bet you don't want to see this user in your auto
-                // complete
-                // list.
-                final Expression where = Expression.equals(CachedUsers.USER_ID, user_id);
-                mResolver.delete(CachedUsers.CONTENT_URI, where.getSQL(), null);
+                // I bet you don't want to see this user in your auto complete list.
+                //TODO insert to blocked users data
+//                final Expression where = Expression.equals(CachedUsers.USER_ID, user_id);
+//                mResolver.delete(CachedUsers.CONTENT_URI, where.getSQL(), null);
                 return SingleResponse.getInstance(new ParcelableUser(user, account_id), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
@@ -826,6 +826,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.createMute(mUserId);
+                Utils.setLastSeen(mContext, user.getId(), -1);
                 final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
                         Expression.equals(Statuses.USER_ID, mUserId));
                 mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
@@ -869,6 +870,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final twitter4j.Status status = twitter.createFavorite(status_id);
+                Utils.setLastSeen(mContext, status.getUserMentionEntities(), System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
                 final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
@@ -932,6 +934,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.createFriendship(user_id);
+                Utils.setLastSeen(mContext, user.getId(), System.currentTimeMillis());
                 return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
@@ -1009,9 +1012,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             for (final Uri uri : STATUSES_URIS) {
                 bulkDelete(mResolver, uri, Statuses.USER_ID, list, Statuses.ACCOUNT_ID + " = " + account_id, false);
             }
-            // I bet you don't want to see these users in your auto complete
-            // list.
-            bulkDelete(mResolver, CachedUsers.CONTENT_URI, CachedUsers.USER_ID, list, null, false);
+            // I bet you don't want to see these users in your auto complete list.
+            //TODO insert to blocked users data
+//            bulkDelete(mResolver, CachedUsers.CONTENT_URI, CachedUsers.USER_ID, list, null, false);
         }
     }
 
@@ -1260,6 +1263,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.destroyBlock(mUserId);
+                Utils.setLastSeen(mContext, user.getId(), -1);
                 return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
@@ -1300,6 +1304,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.destroyMute(mUserId);
+                Utils.setLastSeen(mContext, user.getId(), -1);
                 return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
@@ -1460,6 +1465,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 try {
                     final User user = twitter.destroyFriendship(user_id);
                     // remove user tweets and retweets
+                    Utils.setLastSeen(mContext, user.getId(), -1);
                     final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
                             Expression.or(Expression.equals(Statuses.USER_ID, user_id),
                                     Expression.equals(Statuses.RETWEETED_BY_USER_ID, user_id)));
@@ -2124,9 +2130,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance();
             }
             try {
-                final ParcelableStatus status = new ParcelableStatus(twitter.retweetStatus(status_id),
-                        account_id, false);
-                return SingleResponse.getInstance(status);
+                final twitter4j.Status status = twitter.retweetStatus(status_id);
+                Utils.setLastSeen(mContext, status.getUserMentionEntities(), System.currentTimeMillis());
+                return SingleResponse.getInstance(new ParcelableStatus(status, account_id, false));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }

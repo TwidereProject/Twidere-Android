@@ -72,6 +72,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         if (sinceIds != null) {
             args.putLong(EXTRA_SINCE_ID, sinceIds[0]);
         }
+        args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
         return -1;
     }

@@ -228,13 +228,13 @@ public class ThemeUtils implements Constants {
         return ColorUtils.YIQToColor(Color.alpha(linkColor), yiq);
     }
 
-    public static int getQuickSearchBoxThemeResource(final Context context) {
-        return getGlobalSearchThemeResource(getThemeNameOption(context));
+    public static int getQuickSearchBarThemeResource(final Context context) {
+        return getQuickSearchBarThemeResource(getThemeNameOption(context));
     }
 
-    public static int getGlobalSearchThemeResource(final String name) {
-        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_QuickSearchBox;
-        return R.style.Theme_Twidere_Light_QuickSearchBox;
+    public static int getQuickSearchBarThemeResource(final String name) {
+        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dark_QuickSearchBar;
+        return R.style.Theme_Twidere_Light_QuickSearchBar;
     }
 
     private static void applyColorTintForView(View view, int tintColor) {

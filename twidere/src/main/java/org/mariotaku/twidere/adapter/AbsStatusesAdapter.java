@@ -33,9 +33,9 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implements Constants,
         IStatusesAdapter<D> {
 
-    private static final int ITEM_VIEW_TYPE_STATUS = 0;
-    private static final int ITEM_VIEW_TYPE_GAP = 1;
-    private static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
+    public static final int ITEM_VIEW_TYPE_STATUS = 0;
+    public static final int ITEM_VIEW_TYPE_GAP = 1;
+    public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
 
     private final Context mContext;
     private final LayoutInflater mInflater;
@@ -70,6 +70,10 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     public abstract D getData();
+
+    public boolean isStatus(int position) {
+        return position < getStatusCount();
+    }
 
     public abstract void setData(D data);
 

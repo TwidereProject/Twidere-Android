@@ -32,6 +32,7 @@ public interface TweetStore {
     public static final String TYPE_INT_UNIQUE = "INTEGER UNIQUE";
     public static final String TYPE_BOOLEAN = "INTEGER(1)";
     public static final String TYPE_BOOLEAN_DEFAULT_TRUE = "INTEGER(1) DEFAULT 1";
+    public static final String TYPE_BOOLEAN_DEFAULT_FALSE = "INTEGER(1) DEFAULT 0";
     public static final String TYPE_TEXT = "TEXT";
     public static final String TYPE_TEXT_NOT_NULL = "TEXT NOT NULL";
     public static final String TYPE_TEXT_NOT_NULL_UNIQUE = "TEXT NOT NULL UNIQUE";
@@ -259,11 +260,13 @@ public interface TweetStore {
          */
         public static final String PROFILE_IMAGE_URL = "profile_image_url";
 
+        public static final String LAST_SEEN = "last_seen";
+
         public static final String[] COLUMNS = new String[]{_ID, USER_ID, CREATED_AT, NAME, SCREEN_NAME,
                 DESCRIPTION_PLAIN, LOCATION, URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, IS_PROTECTED,
                 IS_VERIFIED, IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT,
                 LISTED_COUNT, DESCRIPTION_HTML, DESCRIPTION_EXPANDED, URL_EXPANDED, BACKGROUND_COLOR,
-                LINK_COLOR, TEXT_COLOR};
+                LINK_COLOR, TEXT_COLOR, LAST_SEEN};
 
         public static final String[] BASIC_COLUMNS = new String[]{_ID, USER_ID,
                 NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
@@ -271,7 +274,7 @@ public interface TweetStore {
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT_UNIQUE, TYPE_INT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT};
 
     }
 
@@ -410,6 +413,22 @@ public interface TweetStore {
 
     }
 
+    public static interface SearchHistory extends BaseColumns {
+
+        public static final String TABLE_NAME = "search_history";
+        public static final String CONTENT_PATH = TABLE_NAME;
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+        public static final String QUERY = "query";
+
+        public static final String RECENT_QUERY = "recent_query";
+
+        public static final String[] COLUMNS = new String[]{_ID, RECENT_QUERY, QUERY};
+        public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_TEXT_NOT_NULL_UNIQUE};
+        public static final String DEFAULT_SORT_ORDER = RECENT_QUERY + " DESC";
+    }
+
     public static interface DNS extends BaseColumns {
         public static final String TABLE_NAME = "dns";
         public static final String CONTENT_PATH = TABLE_NAME;
@@ -443,6 +462,7 @@ public interface TweetStore {
                 QUERY, NAME};
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_TEXT, TYPE_TEXT};
+        public static final String DEFAULT_SORT_ORDER = CREATED_AT + " DESC";
     }
 
     public static interface Drafts extends BaseColumns {
@@ -804,6 +824,35 @@ public interface TweetStore {
                 TYPE_TEXT_NOT_NULL, TYPE_TEXT, TYPE_TEXT, TYPE_INT};
 
         public static final String DEFAULT_SORT_ORDER = POSITION + " ASC";
+    }
+
+    public static interface CachedRelationships extends BaseColumns {
+
+        public static final String TABLE_NAME = "cached_relationships";
+        public static final String CONTENT_PATH = TABLE_NAME;
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+        public static final String ACCOUNT_ID = "account_id";
+
+        public static final String USER_ID = "user_id";
+
+        public static final String FOLLOWING = "following";
+
+        public static final String FOLLOWED_BY = "followed_by";
+
+        public static final String BLOCKING = "blocking";
+
+        public static final String BLOCKED_BY = "blocked_by";
+
+        public static final String MUTING = "muting";
+
+        public static final String[] COLUMNS = {ACCOUNT_ID, USER_ID, FOLLOWING, FOLLOWED_BY, BLOCKING,
+                BLOCKED_BY, MUTING};
+
+        public static final String[] TYPES = {TYPE_INT, TYPE_INT, TYPE_BOOLEAN_DEFAULT_FALSE,
+                TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE,
+                TYPE_BOOLEAN_DEFAULT_FALSE};
     }
 
     public static interface UnreadCounts extends BaseColumns {

@@ -39,7 +39,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:showDividers="middle">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,10 +76,17 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#20808080"/>
+
             <ListView
                 android:id="@+id/suggestions_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="0dp"
+                tools:listitem="@layout/list_item_user"
+                android:layout_weight="1"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

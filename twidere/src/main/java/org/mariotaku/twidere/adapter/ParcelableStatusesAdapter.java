@@ -16,6 +16,7 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     public ParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);
+        setHasStableIds(true);
     }
 
     @Override
@@ -38,6 +39,19 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
     public int getStatusCount() {
         if (mData == null) return 0;
         return mData.size();
+    }
+
+
+    @Override
+    public long getItemId(int position) {
+        if (position == getStatusCount()) return position;
+        return mData.get(position).hashCode();
+    }
+
+    @Override
+    public long getStatusId(int position) {
+        if (position == getStatusCount()) return -1;
+        return mData.get(position).id;
     }
 
     @Override

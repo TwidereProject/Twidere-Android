@@ -143,6 +143,7 @@ import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 import static org.mariotaku.twidere.util.Utils.openImage;
+import static org.mariotaku.twidere.util.Utils.openIncomingFriendships;
 import static org.mariotaku.twidere.util.Utils.openMutesUsers;
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
@@ -357,14 +358,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
                 final ContentResolver resolver = getContentResolver();
                 final String where = Expression.equals(CachedUsers.USER_ID, user.id).getSQL();
-                resolver.delete(CachedUsers.CONTENT_URI, where, null);
+                final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
+                resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
                 // I bet you don't want to see blocked user in your auto
                 // complete list.
                 if (!data.getData().isSourceBlockingTarget()) {
-                    final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
-                    if (cachedValues != null) {
-                        resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
-                    }
                 }
                 mFollowButton.setVisibility(View.VISIBLE);
             } else {
@@ -883,6 +881,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 openUserBlocks(getActivity(), user.account_id);
                 return true;
             }
+            case R.id.incoming_friendships: {
+                openIncomingFriendships(getActivity(), user.account_id);
+                return true;
+            }
             default: {
                 if (item.getIntent() != null) {
                     try {
@@ -1250,14 +1252,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         @Override
         public SingleResponse<Relationship> loadInBackground() {
-            if (account_id == user_id) return new SingleResponse<>(null, null);
+            if (account_id == user_id) return SingleResponse.getInstance();
             final Twitter twitter = getTwitterInstance(context, account_id, false);
-            if (twitter == null) return new SingleResponse<>(null, null);
+            if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Relationship result = twitter.showFriendship(account_id, user_id);
-                return new SingleResponse<>(result, null);
+                if (result.isSourceBlockingTarget() || result.isSourceBlockedByTarget()) {
+                    Utils.setLastSeen(context, user_id, -1);
+                } else {
+                    Utils.setLastSeen(context, user_id, System.currentTimeMillis());
+                }
+                return SingleResponse.getInstance(result);
             } catch (final TwitterException e) {
-                return new SingleResponse<>(null, e);
+                return SingleResponse.getInstance(e);
             }
         }
 

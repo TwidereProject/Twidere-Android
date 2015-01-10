@@ -44,6 +44,10 @@
         android:icon="@drawable/ic_action_block"
         android:title="@string/blocked_users"/>
     <item
+        android:id="@+id/incoming_friendships"
+        android:icon="@drawable/ic_action_profile"
+        android:title="@string/incoming_friendships"/>
+    <item
         android:id="@id/report_spam"
         android:icon="@drawable/ic_action_warning"
         android:title="@string/report_for_spam"/>

@@ -160,11 +160,13 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final int TABLE_ID_FILTERED_LINKS = 34;
     public static final int TABLE_ID_TRENDS_LOCAL = 41;
     public static final int TABLE_ID_SAVED_SEARCHES = 42;
+    public static final int TABLE_ID_SEARCH_HISTORY = 43;
     public static final int TABLE_ID_DRAFTS = 51;
     public static final int TABLE_ID_TABS = 52;
     public static final int TABLE_ID_CACHED_USERS = 61;
     public static final int TABLE_ID_CACHED_STATUSES = 62;
     public static final int TABLE_ID_CACHED_HASHTAGS = 63;
+    public static final int TABLE_ID_CACHED_RELATIONSHIPS = 64;
     public static final int VIRTUAL_TABLE_ID_DATABASE_READY = 100;
     public static final int VIRTUAL_TABLE_ID_NOTIFICATIONS = 101;
     public static final int VIRTUAL_TABLE_ID_PREFERENCES = 102;

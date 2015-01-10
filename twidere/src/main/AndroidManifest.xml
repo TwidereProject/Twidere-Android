@@ -170,7 +170,7 @@
                 android:value=".activity.support.HomeActivity"/>
         </activity>
         <activity
-            android:name=".activity.support.QuickSearchBoxActivity"
+            android:name=".activity.support.QuickSearchBarActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Blank.Dialog"
             android:windowSoftInputMode="adjustResize"

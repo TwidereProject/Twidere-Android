@@ -154,7 +154,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID);
             final String query = args.getString(EXTRA_QUERY);
             final boolean fromCache = args.getBoolean(EXTRA_FROM_CACHE);
-            return new MyUserSearchLoader(getActivity(), accountId, query, fromCache);
+            return new CacheUserSearchLoader(getActivity(), accountId, query, fromCache);
         }
 
         @Override
@@ -719,10 +719,10 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mTextCountView.setTextCount(count);
     }
 
-    private static class MyUserSearchLoader extends UserSearchLoader {
+    public static class CacheUserSearchLoader extends UserSearchLoader {
         private final boolean mFromCache;
 
-        public MyUserSearchLoader(Context context, long accountId, String query, boolean fromCache) {
+        public CacheUserSearchLoader(Context context, long accountId, String query, boolean fromCache) {
             super(context, accountId, query, 0, null);
             mFromCache = fromCache;
         }
@@ -748,7 +748,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
                     selection = null;
                     selectionArgs = null;
                 }
-                final OrderBy orderBy = new OrderBy(CachedUsers.SCREEN_NAME, CachedUsers.NAME);
+                final OrderBy orderBy = new OrderBy(CachedUsers.LAST_SEEN + " DESC",
+                        CachedUsers.SCREEN_NAME, CachedUsers.NAME);
                 final Cursor c = context.getContentResolver().query(CachedUsers.CONTENT_URI,
                         CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());

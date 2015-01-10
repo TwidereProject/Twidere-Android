@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
 
 /**
@@ -12,6 +11,8 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, StatusClick
     ParcelableStatus getStatus(int position);
 
     int getStatusCount();
+
+    long getStatusId(int position);
 
     void setData(Data data);
 

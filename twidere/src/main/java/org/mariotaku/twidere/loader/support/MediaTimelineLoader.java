@@ -42,9 +42,9 @@ public class MediaTimelineLoader extends Twitter4JStatusesLoader {
     private final boolean mIsMyTimeline;
 
     public MediaTimelineLoader(final Context context, final long accountId, final long userId, final String screenName,
-                               final long maxId, final long sinceId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-                               final int tabPosition) {
-        super(context, accountId, maxId, sinceId, data, savedStatusesArgs, tabPosition);
+                               final long sinceId, final long maxId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+                               final int tabPosition, boolean fromUser) {
+        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mUserId = userId;
         mUserScreenName = screenName;
         mIsMyTimeline = userId > 0 ? accountId == userId : accountId == getAccountId(context, screenName);

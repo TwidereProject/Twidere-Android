@@ -56,14 +56,14 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
     private final Object[] mSavedStatusesFileArgs;
     private Comparator<ParcelableStatus> mComparator;
 
-    public Twitter4JStatusesLoader(final Context context, final long account_id, final long max_id,
-                                   final long since_id, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-                                   final int tabPosition) {
-        super(context, data, tabPosition);
+    public Twitter4JStatusesLoader(final Context context, final long account_id, final long sinceId, final long maxId,
+                                   final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+                                   final int tabPosition, boolean fromUser) {
+        super(context, data, tabPosition, fromUser);
         mContext = context;
         mAccountId = account_id;
-        mMaxId = max_id;
-        mSinceId = since_id;
+        mMaxId = maxId;
+        mSinceId = sinceId;
         mDatabase = TwidereApplication.getInstance(context).getSQLiteDatabase();
         mHandler = new Handler();
         mSavedStatusesFileArgs = savedStatusesArgs;

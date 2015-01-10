@@ -22,11 +22,8 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import com.squareup.otto.Subscribe;
-
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -36,6 +33,13 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
     @Override
     public Uri getContentUri() {
         return Statuses.CONTENT_URI;
+    }
+
+    @Override
+    protected void updateRefreshState() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter == null) return;
+        setRefreshing(twitter.isHomeTimelineRefreshing());
     }
 
     @Override
@@ -57,18 +61,6 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
             return twitter.refreshAll(accountIds);
         }
         return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
-    }
-
-    @Subscribe
-    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-        updateRefreshState();
-    }
-
-
-    private void updateRefreshState() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        if (twitter == null) return;
-        setRefreshing(twitter.isHomeTimelineRefreshing());
     }
 
 }

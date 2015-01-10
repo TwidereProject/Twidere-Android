@@ -24,7 +24,6 @@ import android.content.Context;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import twitter4j.Paging;
@@ -41,8 +40,8 @@ public class StatusRepliesLoader extends UserMentionsLoader {
 
     public StatusRepliesLoader(final Context context, final long accountId, final String screenName,
                                final long statusId, final long maxId, final long sinceId, final List<ParcelableStatus> data,
-                               final String[] savedStatusesArgs, final int tabPosition) {
-        super(context, accountId, screenName, maxId, sinceId, data, savedStatusesArgs, tabPosition);
+                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
+        super(context, accountId, screenName, maxId, sinceId, data, savedStatusesArgs, tabPosition, fromUser);
         mInReplyToStatusId = statusId;
     }
 
@@ -59,6 +58,7 @@ public class StatusRepliesLoader extends UserMentionsLoader {
             }
         } else {
             final List<Status> statuses = super.getStatuses(twitter, paging);
+            // TODO null check
             for (final Status status : statuses) {
                 if (status.getInReplyToStatusId() == mInReplyToStatusId) {
                     result.add(status);

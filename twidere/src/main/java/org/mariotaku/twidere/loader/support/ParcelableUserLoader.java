@@ -69,7 +69,6 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
                 final ContentValues values = ParcelableUser.makeCachedUserContentValues(user);
-                resolver.delete(CachedUsers.CONTENT_URI, CachedUsers.USER_ID + " = " + user.id, null);
                 resolver.insert(CachedUsers.CONTENT_URI, values);
                 return SingleResponse.getInstance(user);
             }
@@ -94,8 +93,6 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final User user = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
             final ContentValues cachedUserValues = createCachedUser(user);
             final long userId = user.getId();
-            final String cachedUserWhere = Expression.equals(CachedUsers.USER_ID, userId).getSQL();
-            resolver.delete(CachedUsers.CONTENT_URI, cachedUserWhere, null);
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
             final ParcelableUser result = new ParcelableUser(user, mAccountId);
             if (isMyAccount(context, userId)) {

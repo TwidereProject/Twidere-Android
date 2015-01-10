@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -33,7 +34,9 @@ import java.util.List;
 public class UserListTimelineFragment extends ParcelableStatusesFragment {
 
     @Override
-    public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+                                                                 final Bundle args,
+                                                                 final boolean fromUser) {
         setRefreshing(true);
         if (args == null) return null;
         final int listId = args.getInt(EXTRA_LIST_ID, -1);
@@ -45,7 +48,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         final String listName = args.getString(EXTRA_LIST_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         return new UserListTimelineLoader(getActivity(), accountId, listId, userId, screenName,
-                listName, maxId, sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
+                listName, sinceId, maxId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser);
     }
 
     @Override

@@ -27,17 +27,17 @@ import java.util.List;
 
 public class UserMentionsLoader extends TweetSearchLoader {
 
-	public UserMentionsLoader(final Context context, final long accountId, final String screenName, final long maxId,
-			final long sinceId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-			final int tabPosition) {
-		super(context, accountId, screenName, maxId, sinceId, data, savedStatusesArgs, tabPosition);
-	}
+    public UserMentionsLoader(final Context context, final long accountId, final String screenName,
+                              final long maxId, final long sinceId, final List<ParcelableStatus> data,
+                              final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
+        super(context, accountId, screenName, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+    }
 
-	@Override
-	protected String processQuery(final String query) {
-		if (query == null) return null;
-		final String screenName = query.startsWith("@") ? query : String.format("@%s", query);
-		return String.format("%s exclude:retweets", screenName);
-	}
+    @Override
+    protected String processQuery(final String query) {
+        if (query == null) return null;
+        final String screenName = query.startsWith("@") ? query : String.format("@%s", query);
+        return String.format("%s exclude:retweets", screenName);
+    }
 
 }

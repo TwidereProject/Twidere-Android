@@ -178,14 +178,14 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="Theme.Twidere.Light.QuickSearchBox" parent="Theme.Twidere.Light.Dialog">
+    <style name="Theme.Twidere.Light.QuickSearchBar" parent="Theme.Twidere.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.QuickSearchBox" parent="Theme.Twidere.Dark.Dialog">
+    <style name="Theme.Twidere.Dark.QuickSearchBar" parent="Theme.Twidere.Dark.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>

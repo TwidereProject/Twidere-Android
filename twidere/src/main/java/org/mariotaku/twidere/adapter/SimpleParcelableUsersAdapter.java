@@ -43,7 +43,11 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
     private final Context mContext;
 
     public SimpleParcelableUsersAdapter(final Context context) {
-        super(context, R.layout.list_item_user);
+        this(context, R.layout.list_item_user);
+    }
+
+    public SimpleParcelableUsersAdapter(final Context context, final int layoutRes) {
+        super(context, layoutRes);
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mImageLoader = app.getImageLoaderWrapper();
@@ -88,13 +92,13 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
         setData(data, false);
     }
 
-    public void setData(final List<ParcelableUser> data, final boolean clear_old) {
-        if (clear_old) {
+    public void setData(final List<ParcelableUser> data, final boolean clearOld) {
+        if (clearOld) {
             clear();
         }
         if (data == null) return;
         for (final ParcelableUser user : data) {
-            if (clear_old || findItemPosition(user.id) < 0) {
+            if (clearOld || findItemPosition(user.id) < 0) {
                 add(user);
             }
         }

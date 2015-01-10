@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -168,6 +169,7 @@ import org.mariotaku.twidere.provider.TweetStore.Accounts;
 import org.mariotaku.twidere.provider.TweetStore.CacheFiles;
 import org.mariotaku.twidere.provider.TweetStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TweetStore.CachedImages;
+import org.mariotaku.twidere.provider.TweetStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TweetStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
@@ -182,6 +184,7 @@ import org.mariotaku.twidere.provider.TweetStore.Notifications;
 import org.mariotaku.twidere.provider.TweetStore.Permissions;
 import org.mariotaku.twidere.provider.TweetStore.Preferences;
 import org.mariotaku.twidere.provider.TweetStore.SavedSearches;
+import org.mariotaku.twidere.provider.TweetStore.SearchHistory;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.provider.TweetStore.Tabs;
 import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
@@ -295,6 +298,13 @@ public final class Utils implements Constants, TwitterConstants {
                 .addURI(TweetStore.AUTHORITY, CachedStatuses.CONTENT_PATH, TABLE_ID_CACHED_STATUSES);
         CONTENT_PROVIDER_URI_MATCHER
                 .addURI(TweetStore.AUTHORITY, CachedHashtags.CONTENT_PATH, TABLE_ID_CACHED_HASHTAGS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
+                TABLE_ID_CACHED_RELATIONSHIPS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, SavedSearches.CONTENT_PATH,
+                TABLE_ID_SAVED_SEARCHES);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, SearchHistory.CONTENT_PATH,
+                TABLE_ID_SEARCH_HISTORY);
+
         CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Notifications.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Notifications.CONTENT_PATH + "/#",
@@ -306,8 +316,6 @@ public final class Utils implements Constants, TwitterConstants {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DNS.CONTENT_PATH + "/*", VIRTUAL_TABLE_ID_DNS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CachedImages.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_CACHED_IMAGES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, SavedSearches.CONTENT_PATH,
-                TABLE_ID_SAVED_SEARCHES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CacheFiles.CONTENT_PATH + "/*",
                 VIRTUAL_TABLE_ID_CACHE_FILES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Preferences.CONTENT_PATH,
@@ -354,9 +362,9 @@ public final class Utils implements Constants, TwitterConstants {
 
     }
 
-    private static LongSparseArray<Integer> sAccountColors = new LongSparseArray<Integer>();
-    private static LongSparseArray<String> sAccountScreenNames = new LongSparseArray<String>();
-    private static LongSparseArray<String> sAccountNames = new LongSparseArray<String>();
+    private static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
+    private static LongSparseArray<String> sAccountScreenNames = new LongSparseArray<>();
+    private static LongSparseArray<String> sAccountNames = new LongSparseArray<>();
     static final String MAPS_STATIC_IMAGE_URI_TEMPLATE = "https://maps.googleapis.com/maps/api/staticmap?zoom=%d&size=%dx%d&sensor=false&language=%s&center=%f,%f&markers=%f,%f";
 
     private Utils() {
@@ -653,7 +661,6 @@ public final class Utils implements Constants, TwitterConstants {
     public static void configBaseCardAdapter(final Context context, final IBaseCardAdapter adapter) {
         if (context == null) return;
         configBaseAdapter(context, adapter);
-        final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         adapter.notifyDataSetChanged();
     }
 
@@ -1509,11 +1516,44 @@ public final class Utils implements Constants, TwitterConstants {
         return ids;
     }
 
+    public static boolean setLastSeen(Context context, UserMentionEntity[] entities, long time) {
+        if (entities == null) return false;
+        boolean result = false;
+        for (UserMentionEntity entity : entities) {
+            result |= setLastSeen(context, entity.getId(), time);
+        }
+        return result;
+    }
 
-    public static String getApiBaseUrl(final String pattern, final String domain) {
-        if (pattern == null) return null;
-        if (TextUtils.isEmpty(domain)) return pattern.replaceAll("\\[\\.?DOMAIN\\.?\\]", "");
-        return pattern.replaceAll("\\[(\\.?)DOMAIN(\\.?)\\]", String.format("$1%s$2", domain));
+    public static boolean setLastSeen(Context context, long userId, long time) {
+        final ContentResolver cr = context.getContentResolver();
+        final ContentValues values = new ContentValues();
+        if (time > 0) {
+            values.put(CachedUsers.LAST_SEEN, time);
+        } else {
+            // Zero or negative value means remove last seen
+            values.putNull(CachedUsers.LAST_SEEN);
+        }
+        final Expression where = Expression.equals(CachedUsers.USER_ID, userId);
+        return cr.update(CachedUsers.CONTENT_URI, values, where.getSQL(), null) != 0;
+    }
+
+
+    public static String getApiBaseUrl(final String format, final String domain) {
+        if (format == null) return null;
+        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]").matcher(format);
+        if (!matcher.find()) {
+            // For backward compatibility
+            if (!format.endsWith("/1.1") && !format.endsWith("/1.1/")) {
+                return format;
+            }
+            final String versionSuffix = "/1.1";
+            final int suffixLength = versionSuffix.length();
+            final int lastIndex = format.lastIndexOf(versionSuffix);
+            return format.substring(0, lastIndex) + format.substring(lastIndex + suffixLength);
+        }
+        if (TextUtils.isEmpty(domain)) return matcher.replaceAll("");
+        return matcher.replaceAll(String.format("$1%s$2", domain));
     }
 
     public static String getApiUrl(final String pattern, final String domain, final String appendPath) {
@@ -1626,15 +1666,6 @@ public final class Utils implements Constants, TwitterConstants {
         else if (VALUE_CARD_HIGHLIGHT_OPTION_LINE.equals(option))
             return VALUE_CARD_HIGHLIGHT_OPTION_CODE_LINE;
         return VALUE_CARD_HIGHLIGHT_OPTION_CODE_BACKGROUND;
-    }
-
-    public static int getCharacterCount(final String string, final char c) {
-        if (string == null) return 0;
-        int count = 0;
-        while (string.indexOf(c, count) != -1) {
-            count++;
-        }
-        return count;
     }
 
     public static Selectable getColumnsFromProjection(final String... projection) {
@@ -2095,7 +2126,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static HttpResponse getRedirectedHttpResponse(final HttpClientWrapper client, final String url,
                                                          final String signUrl, final Authorization auth) throws TwitterException {
         if (url == null) return null;
-        final ArrayList<String> urls = new ArrayList<String>();
+        final ArrayList<String> urls = new ArrayList<>();
         urls.add(url);
         HttpResponse resp;
         try {
@@ -2248,8 +2279,12 @@ public final class Utils implements Constants, TwitterConstants {
                 return CachedUsers.TABLE_NAME;
             case TABLE_ID_CACHED_HASHTAGS:
                 return CachedHashtags.TABLE_NAME;
+            case TABLE_ID_CACHED_RELATIONSHIPS:
+                return CachedRelationships.TABLE_NAME;
             case TABLE_ID_SAVED_SEARCHES:
                 return SavedSearches.TABLE_NAME;
+            case TABLE_ID_SEARCH_HISTORY:
+                return SearchHistory.TABLE_NAME;
             default:
                 return null;
         }
@@ -2686,7 +2721,7 @@ public final class Utils implements Constants, TwitterConstants {
         if (database == null) return false;
         if (text_plain == null && text_html == null && user_id <= 0 && source == null) return false;
         final StringBuilder builder = new StringBuilder();
-        final List<String> selection_args = new ArrayList<String>();
+        final List<String> selection_args = new ArrayList<>();
         builder.append("SELECT NULL WHERE");
         if (text_plain != null) {
             selection_args.add(text_plain);
@@ -2931,14 +2966,14 @@ public final class Utils implements Constants, TwitterConstants {
         context.startActivity(intent);
     }
 
-    public static void openIncomingFriendships(final Activity activity, final long account_id) {
-        if (activity == null) return;
+    public static void openIncomingFriendships(final Context context, final long accountId) {
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openMap(final Context context, final double latitude, final double longitude) {
@@ -3018,7 +3053,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static void openStatuses(final Activity activity, final List<ParcelableStatus> statuses) {
         if (activity == null || statuses == null) return;
         final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(EXTRA_STATUSES, new ArrayList<ParcelableStatus>(statuses));
+        extras.putParcelableArrayList(EXTRA_STATUSES, new ArrayList<>(statuses));
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUSES);
@@ -3368,7 +3403,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static void openUsers(final Activity activity, final List<ParcelableUser> users) {
         if (activity == null || users == null) return;
         final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(EXTRA_USERS, new ArrayList<ParcelableUser>(users));
+        extras.putParcelableArrayList(EXTRA_USERS, new ArrayList<>(users));
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USERS);
@@ -3462,21 +3497,23 @@ public final class Utils implements Constants, TwitterConstants {
         scrollListToPosition(list, position, 0);
     }
 
-    public static void scrollListToPosition(final AbsListView list, final int position, final int offset) {
-        if (list == null) return;
+    public static void scrollListToPosition(final AbsListView absListView, final int position, final int offset) {
+        if (absListView == null) return;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            if (list instanceof ListView) {
-                ((ListView) list).setSelectionFromTop(position, offset);
+            if (absListView instanceof ListView) {
+                final ListView listView = ((ListView) absListView);
+                listView.setSelectionFromTop(position, offset);
             } else {
-                list.setSelection(position);
+                absListView.setSelection(position);
             }
-            stopListView(list);
+            stopListView(absListView);
         } else {
-            stopListView(list);
-            if (list instanceof ListView) {
-                ((ListView) list).setSelectionFromTop(position, offset);
+            stopListView(absListView);
+            if (absListView instanceof ListView) {
+                final ListView listView = ((ListView) absListView);
+                listView.setSelectionFromTop(position, offset);
             } else {
-                list.setSelection(position);
+                absListView.setSelection(position);
             }
         }
     }
@@ -3987,7 +4024,6 @@ public final class Utils implements Constants, TwitterConstants {
         final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
         try {
             if (c.moveToFirst()) return ParcelableUser.fromDirectMessageConversationEntry(c);
-
         } finally {
             c.close();
         }

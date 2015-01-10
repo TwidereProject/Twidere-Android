@@ -89,9 +89,8 @@
             android:title="@string/remember_position"/>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="load_more_from_top"
-            android:summary="@string/load_more_from_top_summary"
-            android:title="@string/load_more_from_top"/>
+            android:key="read_from_bottom"
+            android:title="@string/read_from_bottom"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="sort_timeline_by_id"

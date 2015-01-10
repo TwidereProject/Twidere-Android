@@ -35,6 +35,7 @@ import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
+import org.mariotaku.twidere.provider.TweetStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
 import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
@@ -48,6 +49,7 @@ import java.util.List;
 
 import twitter4j.DirectMessage;
 import twitter4j.GeoLocation;
+import twitter4j.Relationship;
 import twitter4j.SavedSearch;
 import twitter4j.Status;
 import twitter4j.Trend;
@@ -122,6 +124,19 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Accounts.IS_ACTIVATED, 1);
         values.put(Accounts.API_URL_FORMAT, apiUrlFormat);
         values.put(Accounts.NO_VERSION_SUFFIX, noVersionSuffix);
+        return values;
+    }
+
+    public static ContentValues createCachedRelationship(final Relationship relationship,
+                                                         final long accountId) {
+        final ContentValues values = new ContentValues();
+        values.put(CachedRelationships.ACCOUNT_ID, accountId);
+        values.put(CachedRelationships.USER_ID, relationship.getTargetUserId());
+        values.put(CachedRelationships.FOLLOWING, relationship.isSourceFollowingTarget());
+        values.put(CachedRelationships.FOLLOWED_BY, relationship.isSourceFollowedByTarget());
+        values.put(CachedRelationships.BLOCKING, relationship.isSourceBlockingTarget());
+        values.put(CachedRelationships.BLOCKED_BY, relationship.isSourceBlockedByTarget());
+        values.put(CachedRelationships.MUTING, relationship.isSourceMutingTarget());
         return values;
     }
 
@@ -215,27 +230,6 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues createMessageDraft(final long accountId, final long recipientId,
-                                                   final String text, final String imageUri) {
-        final ContentValues values = new ContentValues();
-        values.put(Drafts.ACTION_TYPE, Drafts.ACTION_SEND_DIRECT_MESSAGE);
-        values.put(Drafts.TEXT, text);
-        values.put(Drafts.ACCOUNT_IDS, ArrayUtils.toString(new long[]{accountId}, ',', false));
-        values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
-        if (imageUri != null) {
-            final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};
-            values.put(Drafts.MEDIA, JSONSerializer.toJSONArrayString(mediaArray));
-        }
-        final JSONObject extras = new JSONObject();
-        try {
-            extras.put(EXTRA_RECIPIENT_ID, recipientId);
-        } catch (final JSONException e) {
-            e.printStackTrace();
-        }
-        values.put(Drafts.ACTION_EXTRAS, extras.toString());
-        return values;
-    }
-
     public static ContentValues createFilteredUser(final ParcelableStatus status) {
         if (status == null) return null;
         final ContentValues values = new ContentValues();
@@ -261,6 +255,45 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Filters.Users.NAME, user.name);
         values.put(Filters.Users.SCREEN_NAME, user.screen_name);
         return values;
+    }
+
+    public static ContentValues createMessageDraft(final long accountId, final long recipientId,
+                                                   final String text, final String imageUri) {
+        final ContentValues values = new ContentValues();
+        values.put(Drafts.ACTION_TYPE, Drafts.ACTION_SEND_DIRECT_MESSAGE);
+        values.put(Drafts.TEXT, text);
+        values.put(Drafts.ACCOUNT_IDS, ArrayUtils.toString(new long[]{accountId}, ',', false));
+        values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
+        if (imageUri != null) {
+            final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};
+            values.put(Drafts.MEDIA, JSONSerializer.toJSONArrayString(mediaArray));
+        }
+        final JSONObject extras = new JSONObject();
+        try {
+            extras.put(EXTRA_RECIPIENT_ID, recipientId);
+        } catch (final JSONException e) {
+            e.printStackTrace();
+        }
+        values.put(Drafts.ACTION_EXTRAS, extras.toString());
+        return values;
+    }
+
+    public static ContentValues createSavedSearch(final SavedSearch savedSearch, final long accountId) {
+        final ContentValues values = new ContentValues();
+        values.put(SavedSearches.ACCOUNT_ID, accountId);
+        values.put(SavedSearches.SEARCH_ID, savedSearch.getId());
+        values.put(SavedSearches.CREATED_AT, savedSearch.getCreatedAt().getTime());
+        values.put(SavedSearches.NAME, savedSearch.getName());
+        values.put(SavedSearches.QUERY, savedSearch.getQuery());
+        return values;
+    }
+
+    public static ContentValues[] createSavedSearches(final List<SavedSearch> savedSearches, long accountId) {
+        final ContentValues[] resultValuesArray = new ContentValues[savedSearches.size()];
+        for (int i = 0, j = savedSearches.size(); i < j; i++) {
+            resultValuesArray[i] = createSavedSearch(savedSearches.get(i), accountId);
+        }
+        return resultValuesArray;
     }
 
     public static ContentValues createStatus(final Status orig, final long accountId) {
@@ -351,26 +384,6 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Drafts.MEDIA, JSONSerializer.toJSONArrayString(status.media));
         }
         return values;
-    }
-
-
-    public static ContentValues createSavedSearch(final SavedSearch savedSearch, final long accountId) {
-        final ContentValues values = new ContentValues();
-        values.put(SavedSearches.ACCOUNT_ID, accountId);
-        values.put(SavedSearches.SEARCH_ID, savedSearch.getId());
-        values.put(SavedSearches.CREATED_AT, savedSearch.getCreatedAt().getTime());
-        values.put(SavedSearches.NAME, savedSearch.getName());
-        values.put(SavedSearches.QUERY, savedSearch.getQuery());
-        return values;
-    }
-
-
-    public static ContentValues[] createSavedSearches(final List<SavedSearch> savedSearches, long accountId) {
-        final ContentValues[] resultValuesArray = new ContentValues[savedSearches.size()];
-        for (int i = 0, j = savedSearches.size(); i < j; i++) {
-            resultValuesArray[i] = createSavedSearch(savedSearches.get(i), accountId);
-        }
-        return resultValuesArray;
     }
 
     public static ContentValues[] createTrends(final List<Trends> trendsList) {

@@ -19,18 +19,11 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TweetStore.Mentions;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -40,6 +33,13 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
     @Override
     public Uri getContentUri() {
         return Mentions.CONTENT_URI;
+    }
+
+    @Override
+    protected void updateRefreshState() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter == null) return;
+        setRefreshing(twitter.isMentionsTimelineRefreshing());
     }
 
     @Override
@@ -58,31 +58,6 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null) return -1;
         return twitter.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.unregister(this);
-        super.onStop();
-    }
-
-    @Subscribe
-    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-        updateRefreshState();
-    }
-
-    private void updateRefreshState() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        if (twitter == null) return;
-        setRefreshing(twitter.isMentionsTimelineRefreshing());
     }
 
 }

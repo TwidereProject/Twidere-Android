@@ -19,10 +19,6 @@
 
 package org.mariotaku.twidere.preference;
 
-import static org.mariotaku.twidere.provider.TweetStore.CACHE_URIS;
-import static org.mariotaku.twidere.provider.TweetStore.DIRECT_MESSAGES_URIS;
-import static org.mariotaku.twidere.provider.TweetStore.STATUSES_URIS;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
@@ -32,41 +28,47 @@ import android.util.AttributeSet;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.provider.TweetStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TweetStore.Notifications;
+import org.mariotaku.twidere.provider.TweetStore.SavedSearches;
 import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
+
+import static org.mariotaku.twidere.provider.TweetStore.CACHE_URIS;
+import static org.mariotaku.twidere.provider.TweetStore.DIRECT_MESSAGES_URIS;
+import static org.mariotaku.twidere.provider.TweetStore.STATUSES_URIS;
 
 public class ClearDatabasesPreference extends AsyncTaskPreference implements Constants, OnPreferenceClickListener {
 
-	public ClearDatabasesPreference(final Context context) {
-		this(context, null);
-	}
+    public ClearDatabasesPreference(final Context context) {
+        this(context, null);
+    }
 
-	public ClearDatabasesPreference(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.preferenceStyle);
-	}
+    public ClearDatabasesPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.preferenceStyle);
+    }
 
-	public ClearDatabasesPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public ClearDatabasesPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected void doInBackground() {
-		final Context context = getContext();
-		if (context == null) return;
-		final ContentResolver resolver = context.getContentResolver();
-		for (final Uri uri : STATUSES_URIS) {
-			if (CachedStatuses.CONTENT_URI.equals(uri)) {
-				continue;
-			}
-			resolver.delete(uri, null, null);
-		}
-		for (final Uri uri : DIRECT_MESSAGES_URIS) {
-			resolver.delete(uri, null, null);
-		}
-		for (final Uri uri : CACHE_URIS) {
-			resolver.delete(uri, null, null);
-		}
-		resolver.delete(Notifications.CONTENT_URI, null, null);
-		resolver.delete(UnreadCounts.CONTENT_URI, null, null);
-	}
+    @Override
+    protected void doInBackground() {
+        final Context context = getContext();
+        if (context == null) return;
+        final ContentResolver resolver = context.getContentResolver();
+        for (final Uri uri : STATUSES_URIS) {
+            if (CachedStatuses.CONTENT_URI.equals(uri)) {
+                continue;
+            }
+            resolver.delete(uri, null, null);
+        }
+        for (final Uri uri : DIRECT_MESSAGES_URIS) {
+            resolver.delete(uri, null, null);
+        }
+        for (final Uri uri : CACHE_URIS) {
+            resolver.delete(uri, null, null);
+        }
+        resolver.delete(Notifications.CONTENT_URI, null, null);
+        resolver.delete(UnreadCounts.CONTENT_URI, null, null);
+        resolver.delete(SavedSearches.CONTENT_URI, null, null);
+    }
 
 }

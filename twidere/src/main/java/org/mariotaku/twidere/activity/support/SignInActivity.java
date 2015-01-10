@@ -26,13 +26,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.graphics.Palette;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -73,8 +70,6 @@ import twitter4j.auth.RequestToken;
 import twitter4j.auth.TwipOModeAuthorization;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.http.HttpClientWrapper;
-import twitter4j.http.HttpResponse;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createAccount;
@@ -403,7 +398,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         if (isEmpty(mAPIUrlFormat) || defaultApiChanged) {
             mAPIUrlFormat = apiUrlFormat;
         }
-        if (mAuthType == 0 || defaultApiChanged) {
+        if (defaultApiChanged) {
             mAuthType = authType;
         }
         if (defaultApiChanged) {
@@ -522,18 +517,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
 
         int analyseUserProfileColor(final User user) throws TwitterException {
             if (user == null) throw new TwitterException("Unable to get user info");
-            final HttpClientWrapper client = new HttpClientWrapper(conf);
-            final String profileImageUrl = ParseUtils.parseString(user.getProfileImageURL());
-            final HttpResponse conn = profileImageUrl != null ? client.get(profileImageUrl, null) : null;
-            final Bitmap bm = conn != null ? BitmapFactory.decodeStream(conn.asStream()) : null;
-            final int profileBackgroundColor = ParseUtils.parseColor("#" + user.getProfileLinkColor(),
-                    Color.TRANSPARENT);
-            if (bm == null) return profileBackgroundColor;
-            try {
-                return Palette.generate(bm).getVibrantColor(profileBackgroundColor);
-            } finally {
-                bm.recycle();
-            }
+            return ParseUtils.parseColor("#" + user.getProfileLinkColor(), Color.TRANSPARENT);
         }
 
     }
@@ -680,13 +664,13 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
 
         private SignInResponse authxAuth() throws TwitterException {
             final Twitter twitter = new TwitterFactory(conf).getInstance();
-            final AccessToken access_token = twitter.getOAuthAccessToken(username, password);
+            final AccessToken accessToken = twitter.getOAuthAccessToken(username, password);
             final User user = twitter.verifyCredentials();
             final long user_id = user.getId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(conf, access_token, user, Accounts.AUTH_TYPE_XAUTH, color,
+            return new SignInResponse(conf, accessToken, user, Accounts.AUTH_TYPE_XAUTH, color,
                     api_url_format, same_oauth_signing_url, no_version_suffix);
         }
 

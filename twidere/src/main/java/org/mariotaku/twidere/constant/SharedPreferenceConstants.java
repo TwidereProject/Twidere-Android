@@ -165,7 +165,7 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN)
     public static final String KEY_REMEMBER_POSITION = "remember_position";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    public static final String KEY_LOAD_MORE_FROM_TOP = "load_more_from_top";
+    public static final String KEY_READ_FROM_BOTTOM = "read_from_bottom";
     @Preference(type = INT, exportable = false)
     public static final String KEY_SAVED_TAB_POSITION = "saved_tab_position";
     @Preference(type = BOOLEAN)

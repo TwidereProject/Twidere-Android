@@ -4,6 +4,7 @@ include ':twidere.donate.nyanwp'
 include ':twidere.donate.nyanwp.wear'
 include ':twidere.component.nyan'
 include ':twidere.component.viewer.media'
+//include ':twidere.extension.streaming'
 include ':SlidingMenu', ':DragSortListView', ':MenuComponent', ':RefreshNow', ':PullToRefresh', ':MessageBubbleView'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')

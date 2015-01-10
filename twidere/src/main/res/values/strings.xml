@@ -709,5 +709,6 @@
     <string name="no_user_found">No user found</string>
     <string name="members">Members</string>
     <string name="subscribers">Subscriber</string>
+    <string name="read_from_bottom">Read from bottom</string>
 
 </resources>

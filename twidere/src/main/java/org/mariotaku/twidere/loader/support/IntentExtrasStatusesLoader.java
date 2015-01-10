@@ -31,8 +31,9 @@ public class IntentExtrasStatusesLoader extends ParcelableStatusesLoader {
 
     private final Bundle mExtras;
 
-    public IntentExtrasStatusesLoader(final Context context, final Bundle extras, final List<ParcelableStatus> data) {
-        super(context, data, -1);
+    public IntentExtrasStatusesLoader(final Context context, final Bundle extras,
+                                      final List<ParcelableStatus> data, final boolean fromUser) {
+        super(context, data, -1, fromUser);
         mExtras = extras;
     }
 

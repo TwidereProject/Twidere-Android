@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -33,15 +34,17 @@ import java.util.List;
 public class StatusesSearchFragment extends ParcelableStatusesFragment {
 
     @Override
-    public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+                                                                 final Bundle args,
+                                                                 final boolean fromUser) {
         setRefreshing(true);
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final String query = args.getString(EXTRA_QUERY);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
-        return new TweetSearchLoader(getActivity(), accountId, query, maxId, sinceId, getAdapterData(),
-                getSavedStatusesFileArgs(), tabPosition);
+        return new TweetSearchLoader(getActivity(), accountId, query, sinceId, maxId, getAdapterData(),
+                getSavedStatusesFileArgs(), tabPosition, fromUser);
     }
 
     @Override

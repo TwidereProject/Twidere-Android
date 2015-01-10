@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
@@ -30,7 +31,9 @@ import java.util.List;
 public class StatusRepliesListFragment extends StatusesSearchFragment {
 
     @Override
-    public Loader<List<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
+    public Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+                                                                 final Bundle args,
+                                                                 final boolean fromUser)  {
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
@@ -38,7 +41,7 @@ public class StatusRepliesListFragment extends StatusesSearchFragment {
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         return new StatusRepliesLoader(getActivity(), accountId, screenName, statusId, maxId,
-                sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition);
+                sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser);
     }
 
     @Override

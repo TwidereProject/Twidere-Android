@@ -23,29 +23,44 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 
 import java.util.List;
 
-public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<ParcelableStatus>> implements Constants {
+public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<ParcelableStatus>>
+        implements Constants, IExtendedLoader {
 
     private final List<ParcelableStatus> mData = new NoDuplicatesArrayList<>();
     private final boolean mFirstLoad;
     private final int mTabPosition;
+    private boolean mFromUser;
 
-    public ParcelableStatusesLoader(final Context context, final List<ParcelableStatus> data, final int tab_position) {
+    public ParcelableStatusesLoader(final Context context, final List<ParcelableStatus> data,
+                                    final int tabPosition, final boolean fromUser) {
         super(context);
         mFirstLoad = data == null;
         if (data != null) {
             mData.addAll(data);
         }
-        mTabPosition = tab_position;
+        mTabPosition = tabPosition;
+        mFromUser = fromUser;
     }
 
-    protected boolean containsStatus(final long status_id) {
+    @Override
+    public boolean isFromUser() {
+        return mFromUser;
+    }
+
+    @Override
+    public void setFromUser(boolean fromUser) {
+        mFromUser = fromUser;
+    }
+
+    protected boolean containsStatus(final long statusId) {
         for (final ParcelableStatus status : mData) {
-            if (status.id == status_id) return true;
+            if (status.id == statusId) return true;
         }
         return false;
     }

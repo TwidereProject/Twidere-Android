@@ -54,6 +54,7 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
@@ -64,9 +65,11 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.UnreadItem;
 import org.mariotaku.twidere.provider.TweetStore.Accounts;
+import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
 import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
 import org.mariotaku.twidere.provider.TweetStore.Drafts;
 import org.mariotaku.twidere.provider.TweetStore.Preferences;
+import org.mariotaku.twidere.provider.TweetStore.SearchHistory;
 import org.mariotaku.twidere.provider.TweetStore.Statuses;
 import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
@@ -109,7 +112,6 @@ import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getAccountNotificationId;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
 import static org.mariotaku.twidere.util.Utils.getActivatedAccountIds;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getNotificationUri;
 import static org.mariotaku.twidere.util.Utils.getTableId;
 import static org.mariotaku.twidere.util.Utils.getTableNameById;
@@ -158,7 +160,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     };
 
     @Override
-    public int bulkInsert(final Uri uri, @NonNull final ContentValues[] values) {
+    public int bulkInsert(final Uri uri, @NonNull final ContentValues[] valuesArray) {
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);
@@ -172,15 +174,36 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             int result = 0;
             if (table != null) {
                 mDatabaseWrapper.beginTransaction();
-                final boolean replaceOnConflict = shouldReplaceOnConflict(tableId);
-                for (final ContentValues contentValues : values) {
-                    if (replaceOnConflict) {
-                        mDatabaseWrapper.insertWithOnConflict(table, null, contentValues,
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                    } else {
-                        mDatabaseWrapper.insert(table, null, contentValues);
+                if (tableId == TABLE_ID_CACHED_USERS) {
+                    for (final ContentValues values : valuesArray) {
+                        final Expression where = Expression.equals(CachedUsers.USER_ID,
+                                values.getAsLong(CachedUsers.USER_ID));
+                        mDatabaseWrapper.update(table, values, where.getSQL(), null);
+                        mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                                SQLiteDatabase.CONFLICT_IGNORE);
+                        result++;
                     }
-                    result++;
+                } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
+                    for (final ContentValues values : valuesArray) {
+                        values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
+                        final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
+                        final String[] args = {values.getAsString(SearchHistory.QUERY)};
+                        mDatabaseWrapper.update(table, values, where.getSQL(), args);
+                        mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                                SQLiteDatabase.CONFLICT_IGNORE);
+                        result++;
+                    }
+                } else if (shouldReplaceOnConflict(tableId)) {
+                    for (final ContentValues values : valuesArray) {
+                        mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        result++;
+                    }
+                } else {
+                    for (final ContentValues values : valuesArray) {
+                        mDatabaseWrapper.insert(table, null, values);
+                        result++;
+                    }
                 }
                 mDatabaseWrapper.setTransactionSuccessful();
                 mDatabaseWrapper.endTransaction();
@@ -188,7 +211,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             if (result > 0) {
                 onDatabaseUpdated(tableId, uri);
             }
-            onNewItemsInserted(uri, tableId, values);
+            onNewItemsInserted(uri, tableId, valuesArray);
             return result;
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
@@ -262,10 +285,23 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return null;
             }
             if (table == null) return null;
-            final boolean replaceOnConflict = shouldReplaceOnConflict(tableId);
             final long rowId;
-            if (replaceOnConflict) {
-                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            if (tableId == TABLE_ID_CACHED_USERS) {
+                final Expression where = Expression.equals(CachedUsers.USER_ID,
+                        values.getAsLong(CachedUsers.USER_ID));
+                mDatabaseWrapper.update(table, values, where.getSQL(), null);
+                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                        SQLiteDatabase.CONFLICT_IGNORE);
+            } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
+                values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
+                final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
+                final String[] args = {values.getAsString(SearchHistory.QUERY)};
+                mDatabaseWrapper.update(table, values, where.getSQL(), args);
+                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                        SQLiteDatabase.CONFLICT_IGNORE);
+            } else if (shouldReplaceOnConflict(tableId)) {
+                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                        SQLiteDatabase.CONFLICT_REPLACE);
             } else {
                 rowId = mDatabaseWrapper.insert(table, null, values);
             }
@@ -432,6 +468,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);
+            checkWritePermission(tableId, table);
             int result = 0;
             if (table != null) {
                 switch (tableId) {
@@ -1365,6 +1402,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_CACHED_HASHTAGS:
             case TABLE_ID_CACHED_STATUSES:
             case TABLE_ID_CACHED_USERS:
+            case TABLE_ID_CACHED_RELATIONSHIPS:
+            case TABLE_ID_SEARCH_HISTORY:
             case TABLE_ID_FILTERED_USERS:
             case TABLE_ID_FILTERED_KEYWORDS:
             case TABLE_ID_FILTERED_SOURCES:
