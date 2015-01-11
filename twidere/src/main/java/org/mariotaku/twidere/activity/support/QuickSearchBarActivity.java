@@ -62,9 +62,9 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
-import org.mariotaku.twidere.provider.TweetStore.SavedSearches;
-import org.mariotaku.twidere.provider.TweetStore.SearchHistory;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
+import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -501,16 +501,15 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
                 final String[] selectionArgs = new String[]{queryEscaped, queryEscaped};
                 final OrderBy orderBy = new OrderBy(CachedUsers.LAST_SEEN + " DESC",
                         CachedUsers.SCREEN_NAME, CachedUsers.NAME);
-                final Cursor c = context.getContentResolver().query(CachedUsers.CONTENT_URI,
+                final Cursor usersCursor = context.getContentResolver().query(CachedUsers.CONTENT_URI,
                         CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());
-                final CachedIndices i = new CachedIndices(c);
-                c.moveToFirst();
-                while (!c.isAfterLast()) {
-                    result.add(new UserSuggestionItem(c, i));
-                    c.moveToNext();
+                final CachedIndices usersIndices = new CachedIndices(usersCursor);
+                for (int i = 0, j = Math.min(5, usersCursor.getCount()); i < j; i++) {
+                    usersCursor.moveToPosition(i);
+                    result.add(new UserSuggestionItem(usersCursor, usersIndices));
                 }
-                c.close();
+                usersCursor.close();
                 return result;
             }
             final String[] historyProjection = {SearchHistory.QUERY};
@@ -520,6 +519,7 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
                 historyCursor.moveToPosition(i);
                 result.add(new SearchHistoryItem(historyCursor.getString(0)));
             }
+            historyCursor.close();
             final String[] savedSearchesProjection = {SavedSearches.QUERY};
             final Expression savedSearchesWhere = Expression.equals(SavedSearches.ACCOUNT_ID, mAccountId);
             final Cursor savedSearchesCursor = resolver.query(SavedSearches.CONTENT_URI,

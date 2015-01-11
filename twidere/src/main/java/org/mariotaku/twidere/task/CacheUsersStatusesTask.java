@@ -27,10 +27,10 @@ import com.twitter.Extractor;
 
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.provider.TweetStore.CachedHashtags;
-import org.mariotaku.twidere.provider.TweetStore.CachedStatuses;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
-import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.TwitterWrapper.TwitterListResponse;
 
 import java.util.HashSet;

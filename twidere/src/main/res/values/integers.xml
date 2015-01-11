@@ -5,7 +5,6 @@
     <integer name="default_sliding_pane_fling_duration">900</integer>
     <integer name="nyan_star_rows">8</integer>
     <integer name="nyan_star_cols">11</integer>
-    <integer name="default_text_size">15</integer>
     <integer name="unread_count_text_size">10</integer>
     <integer name="default_multi_column_list_count">1</integer>
     <integer name="max_action_buttons">2</integer>

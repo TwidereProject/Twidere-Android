@@ -29,85 +29,85 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.AttributeSet;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ArrayUtils;
 
 public class RingtonePreference extends AutoInvalidateListPreference {
 
-	private Ringtone[] mRingtones;
-	private String[] mEntries, mValues;
+    private Ringtone[] mRingtones;
+    private String[] mEntries, mValues;
 
-	private int mSelectedItem;
+    private int mSelectedItem;
 
-	public RingtonePreference(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public RingtonePreference(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public int getSelectedItem() {
-		return mSelectedItem;
-	}
+    public int getSelectedItem() {
+        return mSelectedItem;
+    }
 
-	public Ringtone getSelectedRingtone() {
-		return mRingtones[mSelectedItem];
-	}
+    public Ringtone getSelectedRingtone() {
+        return mRingtones[mSelectedItem];
+    }
 
-	public void setSelectedItem(final int selected) {
-		mSelectedItem = selected >= 0 && selected < mValues.length ? selected : 0;
-	}
+    public void setSelectedItem(final int selected) {
+        mSelectedItem = selected >= 0 && selected < mValues.length ? selected : 0;
+    }
 
-	@Override
-	protected void onDialogClosed(final boolean positiveResult) {
-		final Ringtone ringtone = getSelectedRingtone();
-		if (ringtone != null && ringtone.isPlaying()) {
-			ringtone.stop();
-		}
-		if (positiveResult && mSelectedItem >= 0 && mSelectedItem < mValues.length) {
-			if (callChangeListener(mValues[mSelectedItem])) {
-				persistString(mValues[mSelectedItem]);
-			}
-		}
-	}
+    @Override
+    protected void onDialogClosed(final boolean positiveResult) {
+        final Ringtone ringtone = getSelectedRingtone();
+        if (ringtone != null && ringtone.isPlaying()) {
+            ringtone.stop();
+        }
+        if (positiveResult && mSelectedItem >= 0 && mSelectedItem < mValues.length) {
+            if (callChangeListener(mValues[mSelectedItem])) {
+                persistString(mValues[mSelectedItem]);
+            }
+        }
+    }
 
-	@Override
-	protected void onPrepareDialogBuilder(final Builder builder) {
-		loadRingtones(getContext());
-		setSelectedItem(ArrayUtils.indexOf(mValues, getPersistedString(null)));
-		builder.setSingleChoiceItems(getEntries(), getSelectedItem(), new OnClickListener() {
-			@Override
-			public void onClick(final DialogInterface dialog, final int which) {
-				setSelectedItem(which);
-				final Ringtone ringtone = getSelectedRingtone();
-				if (ringtone.isPlaying()) {
-					ringtone.stop();
-				}
-				ringtone.play();
-			}
-		});
-	}
+    @Override
+    protected void onPrepareDialogBuilder(final Builder builder) {
+        loadRingtones(getContext());
+        setSelectedItem(ArrayUtils.indexOf(mValues, getPersistedString(null)));
+        builder.setSingleChoiceItems(getEntries(), getSelectedItem(), new OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                setSelectedItem(which);
+                final Ringtone ringtone = getSelectedRingtone();
+                if (ringtone.isPlaying()) {
+                    ringtone.stop();
+                }
+                ringtone.play();
+            }
+        });
+    }
 
-	private void loadRingtones(final Context context) {
-		final RingtoneManager manager = new RingtoneManager(context);
-		manager.setType(RingtoneManager.TYPE_NOTIFICATION);
-		final Cursor cur = manager.getCursor();
-		cur.moveToFirst();
-		final int count = cur.getCount();
-		mRingtones = new Ringtone[count + 1];
-		mEntries = new String[count + 1];
-		mValues = new String[count + 1];
-		final Uri default_uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		final Ringtone default_ringtone = RingtoneManager.getRingtone(context, default_uri);
-		mRingtones[0] = default_ringtone;
-		mEntries[0] = context.getString(R.string.default_ringtone);
-		mValues[0] = default_uri.toString();
-		for (int i = 0; i < count; i++) {
-			final Ringtone ringtone = manager.getRingtone(i);
-			mRingtones[i + 1] = ringtone;
-			mEntries[i + 1] = ringtone.getTitle(context);
-			mValues[i + 1] = manager.getRingtoneUri(i).toString();
-		}
-		setEntries(mEntries);
-		setEntryValues(mValues);
-		cur.close();
-	}
+    private void loadRingtones(final Context context) {
+        final RingtoneManager manager = new RingtoneManager(context);
+        manager.setType(RingtoneManager.TYPE_NOTIFICATION);
+        final Cursor cur = manager.getCursor();
+        cur.moveToFirst();
+        final int count = cur.getCount();
+        mRingtones = new Ringtone[count + 1];
+        mEntries = new String[count + 1];
+        mValues = new String[count + 1];
+        final Uri default_uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        final Ringtone default_ringtone = RingtoneManager.getRingtone(context, default_uri);
+        mRingtones[0] = default_ringtone;
+        mEntries[0] = context.getString(R.string.default_ringtone);
+        mValues[0] = default_uri.toString();
+        for (int i = 0; i < count; i++) {
+            final Ringtone ringtone = manager.getRingtone(i);
+            mRingtones[i + 1] = ringtone;
+            mEntries[i + 1] = ringtone.getTitle(context);
+            mValues[i + 1] = manager.getRingtoneUri(i).toString();
+        }
+        setEntries(mEntries);
+        setEntryValues(mValues);
+        cur.close();
+    }
 
 }

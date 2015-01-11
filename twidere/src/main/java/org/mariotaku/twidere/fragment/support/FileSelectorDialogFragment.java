@@ -45,7 +45,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
-import org.mariotaku.twidere.util.ArrayUtils;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.io.File;
@@ -257,7 +257,7 @@ public class FileSelectorDialogFragment extends BaseSupportDialogFragment implem
 			super(context);
 			this.path = path;
 			this.extensions = extensions;
-			extensions_regex = extensions != null ? Pattern.compile(ArrayUtils.toString(extensions, '|', false),
+			extensions_regex = extensions != null ? Pattern.compile(TwidereArrayUtils.toString(extensions, '|', false),
 					Pattern.CASE_INSENSITIVE) : null;
 		}
 

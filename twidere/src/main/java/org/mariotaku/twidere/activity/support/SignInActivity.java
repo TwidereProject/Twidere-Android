@@ -46,7 +46,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
@@ -55,6 +55,7 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
@@ -345,7 +346,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         final boolean enable_proxy = mPreferences.getBoolean(KEY_ENABLE_PROXY, false);
         cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
         cb.setHttpClientFactory(new TwidereHttpClientFactory(mApplication));
-        if (Utils.isOfficialConsumerKeySecret(this, mConsumerKey, mConsumerSecret)) {
+        if (TwitterContentUtils.isOfficialKey(this, mConsumerKey, mConsumerSecret)) {
             Utils.setMockOfficialUserAgent(this, cb);
         } else {
             Utils.setUserAgent(this, cb);

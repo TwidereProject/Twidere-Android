@@ -35,7 +35,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
-import org.mariotaku.twidere.util.MediaPreviewUtils.OnMediaClickListener;
+import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 
 /**
  * Created by mariotaku on 14/12/17.
@@ -178,11 +178,13 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             for (int i = 0; i < rowCount; i++) {
                 final int currColumnCount = i == 0 ? firstRowColumnCount : columnCount;
                 final int columnWidth = (contentWidth - (mHorizontalSpacing * (currColumnCount - 1))) / currColumnCount;
-                heightSum = heightSum + columnWidth;
-                final int childMeasureSpec = MeasureSpec.makeMeasureSpec(columnWidth, MeasureSpec.EXACTLY);
+                final int columnHeight = columnWidth / 2;
+                heightSum = heightSum + columnHeight;
+                final int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(columnWidth, MeasureSpec.EXACTLY);
+                final int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(columnHeight, MeasureSpec.EXACTLY);
                 for (int j = 0; j < currColumnCount; j++) {
                     final int childIdx = i == 0 ? j : firstRowColumnCount + columnCount * (i - 1) + j;
-                    getChildAt(childIndices[childIdx]).measure(childMeasureSpec, childMeasureSpec);
+                    getChildAt(childIndices[childIdx]).measure(childWidthMeasureSpec, childHeightMeasureSpec);
                 }
             }
             heightSum = heightSum + (mVerticalSpacing * rowCount - 1);

@@ -30,8 +30,8 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
 import twitter4j.Twitter;

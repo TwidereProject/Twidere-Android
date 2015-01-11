@@ -28,7 +28,7 @@ import com.google.android.apps.dashclock.api.ExtensionData;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.util.UnreadCountUtils;
 
 public class DashClockHomeUnreadCountService extends DashClockExtension implements TwidereConstants {

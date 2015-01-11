@@ -35,10 +35,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.util.ArrayUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
 public class AccountSelectorActivity extends BaseSupportDialogActivity implements LoaderCallbacks<Cursor>,
         OnClickListener, OnItemClickListener {

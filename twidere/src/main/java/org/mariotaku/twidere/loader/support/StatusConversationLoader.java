@@ -35,7 +35,7 @@ import twitter4j.auth.OAuthAuthorization;
 import twitter4j.auth.XAuthAuthorization;
 import twitter4j.conf.Configuration;
 
-import static org.mariotaku.twidere.util.Utils.isOfficialConsumerKeySecret;
+import static org.mariotaku.twidere.util.TwitterContentUtils.isOfficialKey;
 import static org.mariotaku.twidere.util.Utils.shouldForceUsingPrivateAPIs;
 
 public class StatusConversationLoader extends UserMentionsLoader {
@@ -58,7 +58,7 @@ public class StatusConversationLoader extends UserMentionsLoader {
         final boolean isOAuth = auth instanceof OAuthAuthorization || auth instanceof XAuthAuthorization;
         final String consumerKey = conf.getOAuthConsumerKey(), consumerSecret = conf.getOAuthConsumerSecret();
         if (shouldForceUsingPrivateAPIs(context) || isOAuth
-                && isOfficialConsumerKeySecret(context, consumerKey, consumerSecret))
+                && isOfficialKey(context, consumerKey, consumerSecret))
             return twitter.showConversation(mInReplyToStatusId, paging);
         return Collections.emptyList();
     }

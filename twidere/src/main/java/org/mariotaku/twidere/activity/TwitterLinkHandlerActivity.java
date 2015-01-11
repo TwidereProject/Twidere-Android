@@ -11,9 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
-import org.mariotaku.twidere.util.ArrayUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;

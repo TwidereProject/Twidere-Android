@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 import twitter4j.TwitterConstants;

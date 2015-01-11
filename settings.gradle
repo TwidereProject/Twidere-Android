@@ -1,10 +1,16 @@
 include ':twidere'
+include ':twidere.component.twitter4j'
+include ':twidere.component.twitter4j.streaming'
+include ':twidere.component.common'
+include ':twidere.library.extension'
+include ':twidere.component.jsonserializer'
+include ':twidere.component.querybuilder'
 include ':twidere.wear'
 include ':twidere.donate.nyanwp'
 include ':twidere.donate.nyanwp.wear'
 include ':twidere.component.nyan'
 include ':twidere.component.viewer.media'
-//include ':twidere.extension.streaming'
+include ':twidere.extension.streaming'
 include ':SlidingMenu', ':DragSortListView', ':MenuComponent', ':RefreshNow', ':PullToRefresh', ':MessageBubbleView'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')

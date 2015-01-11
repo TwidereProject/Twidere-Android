@@ -18,6 +18,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply from: rootProject.file('signing.gradle')
 
 android {
     compileSdkVersion 21
@@ -27,8 +28,8 @@ android {
         applicationId "org.mariotaku.twidere.extension.streaming"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 12
+        versionName "1.10 (0.3.0-dev)"
     }
     buildTypes {
         release {
@@ -39,7 +40,7 @@ android {
 }
 
 dependencies {
-    compile 'org.twitter4j:twitter4j-core:4.0.2'
-    compile 'org.twitter4j:twitter4j-stream:4.0.2'
+    compile project(':twidere.library.extension')
+    compile project(':twidere.component.twitter4j.streaming')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

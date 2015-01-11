@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: rootProject.file('signing.gradle')
 
 android {
     compileSdkVersion 21
@@ -26,46 +27,6 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
     }
-    signingConfigs {
-        debug {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                Properties signingProp = new Properties()
-                signingProp.load(signingPropFile.newDataInputStream())
-                storeFile file(signingProp.get("twidere.debug.storeFile"))
-                storePassword signingProp.get("twidere.debug.storePassword")
-                keyAlias signingProp.get("twidere.debug.keyAlias")
-                keyPassword signingProp.get("twidere.debug.keyPassword")
-            }
-        }
-        release {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                Properties signingProp = new Properties()
-                signingProp.load(signingPropFile.newDataInputStream())
-                storeFile file(signingProp.get("twidere.release.storeFile"))
-                storePassword signingProp.get("twidere.release.storePassword")
-                keyAlias signingProp.get("twidere.release.keyAlias")
-                keyPassword signingProp.get("twidere.release.keyPassword")
-            }
-        }
-    }
-    buildTypes {
-        debug {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                signingConfig signingConfigs.debug
-            }
-        }
-        release {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                signingConfig signingConfigs.release
-            }
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     lintOptions {
         abortOnError false
     }
@@ -87,6 +48,7 @@ repositories {
 
 dependencies {
 //    wearApp project(':twidere.wear')
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
@@ -104,6 +66,7 @@ dependencies {
     googleCompile 'com.google.android.gms:play-services:6.5.87'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.2'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.9'
+    compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
     compile project(':twidere.component.viewer.media')
     compile project(':SlidingMenu')

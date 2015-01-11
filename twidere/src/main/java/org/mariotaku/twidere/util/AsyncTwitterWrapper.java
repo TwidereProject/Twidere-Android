@@ -33,6 +33,7 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
@@ -48,14 +49,13 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.preference.HomeRefreshContentPreference;
-import org.mariotaku.twidere.provider.TweetStore;
-import org.mariotaku.twidere.provider.TweetStore.CachedHashtags;
-import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.Mentions;
-import org.mariotaku.twidere.provider.TweetStore.SavedSearches;
-import org.mariotaku.twidere.provider.TweetStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
@@ -89,7 +89,7 @@ import twitter4j.User;
 import twitter4j.UserList;
 import twitter4j.http.HttpResponseCode;
 
-import static org.mariotaku.twidere.provider.TweetStore.STATUSES_URIS;
+import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createDirectMessage;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createStatus;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createTrends;
@@ -876,7 +876,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                         Expression.or(Expression.equals(Statuses.STATUS_ID, status_id),
                                 Expression.equals(Statuses.RETWEET_ID, status_id)));
-                for (final Uri uri : TweetStore.STATUSES_URIS) {
+                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), null);
                 }
                 return SingleResponse.getInstance(new ParcelableStatus(status, account_id, false));
@@ -1404,7 +1404,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     values.put(Statuses.IS_FAVORITE, 0);
                     final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                             Expression.or(Expression.equals(Statuses.STATUS_ID, status_id), Expression.equals(Statuses.RETWEET_ID, status_id)));
-                    for (final Uri uri : TweetStore.STATUSES_URIS) {
+                    for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                         mResolver.update(uri, values, where.getSQL(), null);
                     }
                     return SingleResponse.getInstance(new ParcelableStatus(status, account_id, false));
@@ -1555,7 +1555,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (status != null || exception.getErrorCode() == HttpResponseCode.NOT_FOUND) {
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.MY_RETWEET_ID, -1);
-                for (final Uri uri : TweetStore.STATUSES_URIS) {
+                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.delete(uri, Statuses.STATUS_ID + " = " + status_id, null);
                     mResolver.update(uri, values, Statuses.MY_RETWEET_ID + " = " + status_id, null);
                 }
@@ -2368,14 +2368,14 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final int rowsDeleted = mResolver.delete(deleteUri, deleteWhere, null);
                 // UCD
                 ProfilingUtil.profile(mContext, accountId,
-                        "Download tweets, " + ArrayUtils.toString(statusIds, ',', true));
+                        "Download tweets, " + TwidereArrayUtils.toString(statusIds, ',', true));
                 all_statuses.addAll(Arrays.asList(values));
                 // Insert previously fetched items.
                 final Uri insertUri = appendQueryParameters(uri, new NameValuePairImpl(QUERY_PARAM_NOTIFY, notify));
                 bulkInsert(mResolver, insertUri, values);
 
                 // Insert a gap.
-                final long minId = statusIds.length != 0 ? ArrayUtils.min(statusIds) : -1;
+                final long minId = statusIds.length != 0 ? TwidereArrayUtils.min(statusIds) : -1;
                 final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, response.max_id);
                 final boolean noRowsDeleted = rowsDeleted == 0;
                 final boolean insertGap = minId > 0 && (noRowsDeleted || deletedOldGap) && !response.truncated

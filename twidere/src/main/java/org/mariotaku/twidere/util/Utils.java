@@ -87,6 +87,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionProvider;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -97,11 +98,14 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONSerializer;
@@ -160,34 +164,35 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.TwidereParcelable;
-import org.mariotaku.twidere.provider.TweetStore;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.provider.TweetStore.CacheFiles;
-import org.mariotaku.twidere.provider.TweetStore.CachedHashtags;
-import org.mariotaku.twidere.provider.TweetStore.CachedImages;
-import org.mariotaku.twidere.provider.TweetStore.CachedRelationships;
-import org.mariotaku.twidere.provider.TweetStore.CachedStatuses;
-import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
-import org.mariotaku.twidere.provider.TweetStore.DNS;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.provider.TweetStore.Drafts;
-import org.mariotaku.twidere.provider.TweetStore.Filters;
-import org.mariotaku.twidere.provider.TweetStore.Filters.Users;
-import org.mariotaku.twidere.provider.TweetStore.Mentions;
-import org.mariotaku.twidere.provider.TweetStore.Notifications;
-import org.mariotaku.twidere.provider.TweetStore.Permissions;
-import org.mariotaku.twidere.provider.TweetStore.Preferences;
-import org.mariotaku.twidere.provider.TweetStore.SavedSearches;
-import org.mariotaku.twidere.provider.TweetStore.SearchHistory;
-import org.mariotaku.twidere.provider.TweetStore.Statuses;
-import org.mariotaku.twidere.provider.TweetStore.Tabs;
-import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
+import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedImages;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters.Users;
+import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
+import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
+import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
+import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
+import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
+import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -206,7 +211,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
@@ -215,6 +219,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -225,15 +230,12 @@ import javax.net.ssl.SSLException;
 
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.DirectMessage;
-import twitter4j.EntitySupport;
-import twitter4j.MediaEntity;
 import twitter4j.RateLimitStatus;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.URLEntity;
 import twitter4j.User;
 import twitter4j.UserMentionEntity;
 import twitter4j.auth.AccessToken;
@@ -250,10 +252,9 @@ import twitter4j.http.HttpResponse;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
-import static org.mariotaku.twidere.provider.TweetStore.CACHE_URIS;
-import static org.mariotaku.twidere.provider.TweetStore.DIRECT_MESSAGES_URIS;
-import static org.mariotaku.twidere.provider.TweetStore.STATUSES_URIS;
-import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
+import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
+import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
+import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 import static org.mariotaku.twidere.util.TwidereLinkify.TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES;
 
@@ -268,69 +269,69 @@ public final class Utils implements Constants, TwitterConstants {
     private static final UriMatcher LINK_HANDLER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Accounts.CONTENT_PATH, TABLE_ID_ACCOUNTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Statuses.CONTENT_PATH, TABLE_ID_STATUSES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Mentions.CONTENT_PATH, TABLE_ID_MENTIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Drafts.CONTENT_PATH, TABLE_ID_DRAFTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CachedUsers.CONTENT_PATH, TABLE_ID_CACHED_USERS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Filters.Users.CONTENT_PATH, TABLE_ID_FILTERED_USERS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Filters.Keywords.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH, TABLE_ID_ACCOUNTS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH, TABLE_ID_STATUSES);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Mentions.CONTENT_PATH, TABLE_ID_MENTIONS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH, TABLE_ID_DRAFTS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH, TABLE_ID_CACHED_USERS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Users.CONTENT_PATH, TABLE_ID_FILTERED_USERS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Keywords.CONTENT_PATH,
                 TABLE_ID_FILTERED_KEYWORDS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Filters.Sources.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Sources.CONTENT_PATH,
                 TABLE_ID_FILTERED_SOURCES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Filters.Links.CONTENT_PATH, TABLE_ID_FILTERED_LINKS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Links.CONTENT_PATH, TABLE_ID_FILTERED_LINKS);
         CONTENT_PROVIDER_URI_MATCHER
-                .addURI(TweetStore.AUTHORITY, DirectMessages.CONTENT_PATH, TABLE_ID_DIRECT_MESSAGES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DirectMessages.Inbox.CONTENT_PATH,
+                .addURI(TwidereDataStore.AUTHORITY, DirectMessages.CONTENT_PATH, TABLE_ID_DIRECT_MESSAGES);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Inbox.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_INBOX);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DirectMessages.Outbox.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Outbox.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_OUTBOX);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH + "/#/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH + "/#/#",
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATION);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH_SCREEN_NAME
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH_SCREEN_NAME
                 + "/#/*", TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DirectMessages.ConversationEntries.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.ConversationEntries.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CachedTrends.Local.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedTrends.Local.CONTENT_PATH,
                 TABLE_ID_TRENDS_LOCAL);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Tabs.CONTENT_PATH, TABLE_ID_TABS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Tabs.CONTENT_PATH, TABLE_ID_TABS);
         CONTENT_PROVIDER_URI_MATCHER
-                .addURI(TweetStore.AUTHORITY, CachedStatuses.CONTENT_PATH, TABLE_ID_CACHED_STATUSES);
+                .addURI(TwidereDataStore.AUTHORITY, CachedStatuses.CONTENT_PATH, TABLE_ID_CACHED_STATUSES);
         CONTENT_PROVIDER_URI_MATCHER
-                .addURI(TweetStore.AUTHORITY, CachedHashtags.CONTENT_PATH, TABLE_ID_CACHED_HASHTAGS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
+                .addURI(TwidereDataStore.AUTHORITY, CachedHashtags.CONTENT_PATH, TABLE_ID_CACHED_HASHTAGS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
                 TABLE_ID_CACHED_RELATIONSHIPS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, SavedSearches.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SavedSearches.CONTENT_PATH,
                 TABLE_ID_SAVED_SEARCHES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, SearchHistory.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
                 TABLE_ID_SEARCH_HISTORY);
 
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Notifications.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Notifications.CONTENT_PATH + "/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#",
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Notifications.CONTENT_PATH + "/#/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#/#",
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Permissions.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Permissions.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_PERMISSIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, DNS.CONTENT_PATH + "/*", VIRTUAL_TABLE_ID_DNS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CachedImages.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DNS.CONTENT_PATH + "/*", VIRTUAL_TABLE_ID_DNS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedImages.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_CACHED_IMAGES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, CacheFiles.CONTENT_PATH + "/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CacheFiles.CONTENT_PATH + "/*",
                 VIRTUAL_TABLE_ID_CACHE_FILES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Preferences.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Preferences.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_ALL_PREFERENCES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, Preferences.CONTENT_PATH + "/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Preferences.CONTENT_PATH + "/*",
                 VIRTUAL_TABLE_ID_PREFERENCES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, UnreadCounts.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, UnreadCounts.CONTENT_PATH + "/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.CONTENT_PATH + "/#",
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, UnreadCounts.CONTENT_PATH + "/#/#/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.CONTENT_PATH + "/#/#/*",
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, UnreadCounts.ByType.CONTENT_PATH + "/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.ByType.CONTENT_PATH + "/*",
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TweetStore.AUTHORITY, TweetStore.CONTENT_PATH_DATABASE_READY,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_READY,
                 VIRTUAL_TABLE_ID_DATABASE_READY);
 
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS, null, LINK_ID_STATUS);
@@ -443,6 +444,52 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
+    public static void addToLinearLayout(final LinearLayout container, final ImageLoaderWrapper loader,
+                                         final List<ParcelableMedia> mediaList, final long accountId,
+                                         final int maxColumnCount, final OnMediaClickListener mediaClickListener) {
+        if (container.getOrientation() != LinearLayout.VERTICAL)
+            throw new IllegalArgumentException();
+        final Context context = container.getContext();
+        final ImageLoadingHandler loadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        final ListIterator<ParcelableMedia> iterator = mediaList.listIterator();
+        final int imageCount = mediaList.size();
+        final double imageCountSqrt = Math.sqrt(imageCount);
+        final int bestColumnCount = imageCountSqrt % 1 == 0 ? (int) imageCountSqrt : maxColumnCount;
+        final int firstColumn = imageCount % bestColumnCount, fullRowCount = imageCount / bestColumnCount;
+        final int rowCount = fullRowCount + (firstColumn > 0 ? 1 : 0);
+        final View.OnClickListener clickListener = new ImageGridClickListener(mediaClickListener, accountId);
+        container.setMotionEventSplittingEnabled(false);
+        for (int currentRow = 0; currentRow < rowCount; currentRow++) {
+            final LinearLayout rowContainer = new LinearLayout(context);
+            rowContainer.setOrientation(LinearLayout.HORIZONTAL);
+            rowContainer.setMotionEventSplittingEnabled(false);
+            container.addView(rowContainer, LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            final int columnCount = currentRow == 0 && firstColumn > 0 ? firstColumn : bestColumnCount;
+            for (int currentColumn = 0; currentColumn < columnCount; currentColumn++) {
+                final ParcelableMedia media = iterator.next();
+                final View item = inflater.inflate(R.layout.grid_item_media_preview, rowContainer, false);
+                item.setTag(media);
+                if (mediaClickListener != null) {
+                    item.setOnClickListener(clickListener);
+                }
+                final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) item.getLayoutParams();
+                lp.weight = 1.0f;
+                rowContainer.addView(item, lp);
+                final ImageView imageView = (ImageView) item.findViewById(R.id.media_preview_item);
+                loader.displayPreviewImage(imageView, media.url, loadingHandler);
+            }
+        }
+    }
+
+    public static void addToLinearLayout(final LinearLayout container, final ImageLoaderWrapper loader,
+                                         final ParcelableMedia[] mediaArray, final long accountId,
+                                         final int maxColumnCount, final OnMediaClickListener listener) {
+        addToLinearLayout(container, loader, Arrays.asList(mediaArray), accountId, maxColumnCount,
+                listener);
+    }
+
     public static void announceForAccessibilityCompat(final Context context, final View view, final CharSequence text,
                                                       final Class<?> cls) {
         final AccessibilityManager accessibilityManager = (AccessibilityManager) context
@@ -497,7 +544,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static Uri buildDirectMessageConversationUri(final long account_id, final long conversation_id,
                                                         final String screen_name) {
-        if (conversation_id <= 0 && screen_name == null) return TweetStore.CONTENT_URI_NULL;
+        if (conversation_id <= 0 && screen_name == null) return TwidereDataStore.CONTENT_URI_NULL;
         final Uri.Builder builder = conversation_id > 0 ? DirectMessages.Conversation.CONTENT_URI.buildUpon()
                 : DirectMessages.Conversation.CONTENT_URI_SCREEN_NAME.buildUpon();
         builder.appendPath(String.valueOf(account_id));
@@ -1017,11 +1064,15 @@ public final class Utils implements Constants, TwitterConstants {
     public static Intent createStatusShareIntent(final Context context, final ParcelableStatus status) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        final String name = status.user_name, screenName = status.user_screen_name;
         final String timeString = formatToLongTimeString(context, status.timestamp);
-        final String subject = context.getString(R.string.share_subject_format, name, screenName, timeString);
+        final String link = String.format(Locale.ROOT, "https://twitter.com/%s/status/%d",
+                status.user_screen_name, status.id);
+        final String text = context.getString(R.string.status_share_text_format_with_link,
+                status.text_plain, link);
+        final String subject = context.getString(R.string.status_share_subject_format_with_time,
+                status.user_name, status.user_screen_name, timeString);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, status.text_plain);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         return intent;
     }
@@ -1171,32 +1222,6 @@ public final class Utils implements Constants, TwitterConstants {
         return status;
     }
 
-    public static String formatDirectMessageText(final DirectMessage message) {
-        if (message == null) return null;
-        final String text = message.getRawText();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        parseEntities(builder, message);
-        return builder.build().replace("\n", "<br/>");
-    }
-
-    public static String formatExpandedUserDescription(final User user) {
-        if (user == null) return null;
-        final String text = user.getDescription();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        final URLEntity[] urls = user.getDescriptionEntities();
-        if (urls != null) {
-            for (final URLEntity url : urls) {
-                final String expanded_url = ParseUtils.parseString(url.getExpandedURL());
-                if (expanded_url != null) {
-                    builder.addLink(expanded_url, expanded_url, url.getStart(), url.getEnd());
-                }
-            }
-        }
-        return toPlainText(builder.build().replace("\n", "<br/>"));
-    }
-
     @SuppressWarnings("deprecation")
     public static String formatSameDayTime(final Context context, final long timestamp) {
         if (context == null) return null;
@@ -1205,15 +1230,6 @@ public final class Utils implements Constants, TwitterConstants {
                     DateFormat.is24HourFormat(context) ? DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_24HOUR
                             : DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_12HOUR);
         return DateUtils.formatDateTime(context, timestamp, DateUtils.FORMAT_SHOW_DATE);
-    }
-
-    public static String formatStatusText(final Status status) {
-        if (status == null) return null;
-        final String text = status.getRawText();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        parseEntities(builder, status);
-        return builder.build().replace("\n", "<br/>");
     }
 
     @SuppressWarnings("deprecation")
@@ -1256,24 +1272,6 @@ public final class Utils implements Constants, TwitterConstants {
         format_flags |= DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
 
         return DateUtils.formatDateTime(context, timestamp, format_flags);
-    }
-
-    public static String formatUserDescription(final User user) {
-        if (user == null) return null;
-        final String text = user.getDescription();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        final URLEntity[] urls = user.getDescriptionEntities();
-        if (urls != null) {
-            for (final URLEntity url : urls) {
-                final URL expanded_url = url.getExpandedURL();
-                if (expanded_url != null) {
-                    builder.addLink(ParseUtils.parseString(expanded_url), url.getDisplayURL(), url.getStart(),
-                            url.getEnd());
-                }
-            }
-        }
-        return builder.build().replace("\n", "<br/>");
     }
 
     public static String generateBrowserUserAgent() {
@@ -1514,6 +1512,14 @@ public final class Utils implements Constants, TwitterConstants {
         }
         cur.close();
         return ids;
+    }
+
+    public static boolean isOfficialCredentials(final Context context, final ParcelableCredentials account) {
+        if (account == null) return false;
+        final boolean isOAuth = account.auth_type == Accounts.AUTH_TYPE_OAUTH
+                || account.auth_type == Accounts.AUTH_TYPE_XAUTH;
+        final String consumerKey = account.consumer_key, consumerSecret = account.consumer_secret;
+        return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
     }
 
     public static boolean setLastSeen(Context context, UserMentionEntity[] entities, long time) {
@@ -1828,20 +1834,8 @@ public final class Utils implements Constants, TwitterConstants {
             return ParseUtils.parseString(text);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String imageUploadFormat = getNonEmptyString(prefs, KEY_IMAGE_UPLOAD_FORMAT, DEFAULT_IMAGE_UPLOAD_FORMAT);
-        return imageUploadFormat.replace(FORMAT_PATTERN_LINK, ArrayUtils.toString(links, ' ', false)).replace(
+        return imageUploadFormat.replace(FORMAT_PATTERN_LINK, TwidereArrayUtils.toString(links, ' ', false)).replace(
                 FORMAT_PATTERN_TEXT, text);
-    }
-
-    @NonNull
-    public static String getInReplyToName(@NonNull final Status status) {
-        final Status orig = status.isRetweet() ? status.getRetweetedStatus() : status;
-        final long inReplyToUserId = status.getInReplyToUserId();
-        final UserMentionEntity[] entities = status.getUserMentionEntities();
-        if (entities == null) return orig.getInReplyToScreenName();
-        for (final UserMentionEntity entity : entities) {
-            if (inReplyToUserId == entity.getId()) return entity.getName();
-        }
-        return orig.getInReplyToScreenName();
     }
 
     public static File getInternalCacheDir(final Context context, final String cacheDirName) {
@@ -1926,7 +1920,7 @@ public final class Utils implements Constants, TwitterConstants {
                 list.add(key);
             }
         }
-        return ArrayUtils.fromList(list);
+        return TwidereArrayUtils.fromList(list);
     }
 
     public static long[] getNewestMessageIdsFromDatabase(final Context context, final Uri uri) {
@@ -2297,7 +2291,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int getTextCount(final String string) {
         if (string == null) return 0;
-        return ArrayUtils.toStringArray(string).length;
+        return TwidereArrayUtils.toStringArray(string).length;
     }
 
     public static int getTextCount(final TextView view) {
@@ -2534,7 +2528,7 @@ public final class Utils implements Constants, TwitterConstants {
                     cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
                 }
             }
-            if (isOfficialConsumerKeySecret(context, consumerKey, consumerSecret)) {
+            if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
                 setMockOfficialUserAgent(context, cb);
             } else {
                 setUserAgent(context, cb);
@@ -2685,7 +2679,7 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static boolean isDatabaseReady(final Context context) {
-        final Cursor c = context.getContentResolver().query(TweetStore.CONTENT_URI_DATABASE_READY, null, null, null,
+        final Cursor c = context.getContentResolver().query(TwidereDataStore.CONTENT_URI_DATABASE_READY, null, null, null,
                 null);
         try {
             return c != null;
@@ -2824,21 +2818,6 @@ public final class Utils implements Constants, TwitterConstants {
         return prefs.getBoolean("silent_notifications_at_" + now.get(Calendar.HOUR_OF_DAY), false);
     }
 
-    public static boolean isOfficialConsumerKeySecret(final Context context, final String consumerKey,
-                                                      final String consumerSecret) {
-        if (context == null || consumerKey == null || consumerSecret == null) return false;
-        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_secret_crc32);
-        final CRC32 crc32 = new CRC32();
-        final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
-        crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
-        final long value = crc32.getValue();
-        crc32.reset();
-        for (final String keySecret : keySecrets) {
-            if (Long.parseLong(keySecret, 16) == value) return true;
-        }
-        return false;
-    }
-
     public static boolean isOfficialKeyAccount(final Context context, final long accountId) {
         if (context == null) return false;
         final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
@@ -2846,7 +2825,7 @@ public final class Utils implements Constants, TwitterConstants {
         final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
         try {
             if (c.moveToPosition(0))
-                return isOfficialConsumerKeySecret(context, c.getString(0), c.getString(1));
+                return TwitterContentUtils.isOfficialKey(context, c.getString(0), c.getString(1));
         } finally {
             c.close();
         }
@@ -2859,7 +2838,7 @@ public final class Utils implements Constants, TwitterConstants {
         final Authorization auth = twitter.getAuthorization();
         final boolean isOAuth = auth instanceof OAuthAuthorization || auth instanceof XAuthAuthorization;
         final String consumerKey = conf.getOAuthConsumerKey(), consumerSecret = conf.getOAuthConsumerSecret();
-        return isOAuth && isOfficialConsumerKeySecret(context, consumerKey, consumerSecret);
+        return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
     }
 
     public static boolean isOnWifi(final Context context) {
@@ -2891,33 +2870,6 @@ public final class Utils implements Constants, TwitterConstants {
             if (id == accountId) return true;
         }
         return false;
-    }
-
-    public static int matcherEnd(final Matcher matcher, final int group) {
-        try {
-            return matcher.end(group);
-        } catch (final IllegalStateException e) {
-            // Ignore.
-        }
-        return -1;
-    }
-
-    public static String matcherGroup(final Matcher matcher, final int group) {
-        try {
-            return matcher.group(group);
-        } catch (final IllegalStateException e) {
-            // Ignore.
-        }
-        return null;
-    }
-
-    public static int matcherStart(final Matcher matcher, final int group) {
-        try {
-            return matcher.start(group);
-        } catch (final IllegalStateException e) {
-            // Ignore.
-        }
-        return -1;
     }
 
     public static int matchLinkId(final Uri uri) {
@@ -3560,7 +3512,7 @@ public final class Utils implements Constants, TwitterConstants {
         }
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);
         if (translate != null) {
-            final boolean isOfficialKey = ParcelableCredentials.isOfficialCredentials(context, account);
+            final boolean isOfficialKey = isOfficialCredentials(context, account);
             setMenuItemAvailability(menu, MENU_TRANSLATE, isOfficialKey);
         }
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION);
@@ -3821,7 +3773,7 @@ public final class Utils implements Constants, TwitterConstants {
         intent.setType("text/plain");
         final String name = status.user_name, screenName = status.user_screen_name;
         final String timeString = formatToLongTimeString(context, status.timestamp);
-        final String subject = context.getString(R.string.share_subject_format, name, screenName, timeString);
+        final String subject = context.getString(R.string.status_share_subject_format_with_time, name, screenName, timeString);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, status.text_plain);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -3907,32 +3859,6 @@ public final class Utils implements Constants, TwitterConstants {
         final ApplicationInfo appInfo = activityInfo.applicationInfo;
         if (appInfo == null) return false;
         return appInfo.metaData != null && appInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON, false);
-    }
-
-    private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
-        // Format media.
-        final MediaEntity[] mediaEntities = entities.getMediaEntities();
-        if (mediaEntities != null) {
-            for (final MediaEntity mediaEntity : mediaEntities) {
-                final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
-                final URL mediaUrl = mediaEntity.getMediaURL();
-                if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(ParseUtils.parseString(mediaUrl), mediaEntity.getDisplayURL(),
-                            start, end);
-                }
-            }
-        }
-        final URLEntity[] urlEntities = entities.getURLEntities();
-        if (urlEntities != null) {
-            for (final URLEntity urlEntity : urlEntities) {
-                final int start = urlEntity.getStart(), end = urlEntity.getEnd();
-                final URL expandedUrl = urlEntity.getExpandedURL();
-                if (expandedUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(ParseUtils.parseString(expandedUrl), urlEntity.getDisplayURL(),
-                            start, end);
-                }
-            }
-        }
     }
 
     public static int getActionBarHeight(ActionBar actionBar) {
@@ -4043,6 +3969,10 @@ public final class Utils implements Constants, TwitterConstants {
         UtilsL.setSharedElementTransition(context, window, transitionRes);
     }
 
+    public interface OnMediaClickListener {
+        void onMediaClick(View view, ParcelableMedia media, long accountId);
+    }
+
     static class UtilsL {
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -4054,5 +3984,22 @@ public final class Utils implements Constants, TwitterConstants {
             window.setSharedElementEnterTransition(transition);
             window.setSharedElementExitTransition(transition);
         }
+    }
+
+    private static class ImageGridClickListener implements View.OnClickListener {
+        private final OnMediaClickListener mListener;
+        private final long mAccountId;
+
+        ImageGridClickListener(final OnMediaClickListener listener, final long accountId) {
+            mListener = listener;
+            mAccountId = accountId;
+        }
+
+        @Override
+        public void onClick(final View v) {
+            if (mListener == null) return;
+            mListener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId);
+        }
+
     }
 }

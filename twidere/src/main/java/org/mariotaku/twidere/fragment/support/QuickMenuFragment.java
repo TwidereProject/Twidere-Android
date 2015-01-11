@@ -20,7 +20,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment.TrendsAdapter;
-import org.mariotaku.twidere.provider.TweetStore.CachedTrends;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 

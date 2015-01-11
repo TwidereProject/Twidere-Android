@@ -39,10 +39,11 @@ import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
@@ -234,7 +235,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
                     TWITTER_CONSUMER_SECRET_3);
             cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
             cb.setHttpClientFactory(new TwidereHttpClientFactory(mApplication));
-            if (Utils.isOfficialConsumerKeySecret(mActivity, consumerKey, consumerSecret)) {
+            if (TwitterContentUtils.isOfficialKey(mActivity, consumerKey, consumerSecret)) {
                 Utils.setMockOfficialUserAgent(mActivity, cb);
             } else {
                 Utils.setUserAgent(mActivity, cb);

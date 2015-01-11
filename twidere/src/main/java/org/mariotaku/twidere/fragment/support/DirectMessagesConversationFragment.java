@@ -77,10 +77,10 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
-import org.mariotaku.twidere.provider.TweetStore;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Conversation;
+import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -412,7 +412,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
         mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
         if (!isValid)
-            return new CursorLoader(getActivity(), TweetStore.CONTENT_URI_NULL, cols, null, null, null);
+            return new CursorLoader(getActivity(), TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null);
         final Uri uri = buildDirectMessageConversationUri(accountId, recipientId, null);
         return new CursorLoader(getActivity(), uri, cols, null, null, Conversation.DEFAULT_SORT_ORDER);
     }

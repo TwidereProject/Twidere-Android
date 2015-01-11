@@ -56,7 +56,7 @@ import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.preference.WizardPageHeaderPreference;
 import org.mariotaku.twidere.preference.WizardPageNavPreference;
-import org.mariotaku.twidere.provider.TweetStore.Tabs;
+import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.MathUtils;

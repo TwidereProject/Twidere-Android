@@ -8,6 +8,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.Utils;
 
 public class IncomingFriendshipsMenuDialogFragment extends UserMenuDialogFragment {
 
@@ -15,7 +16,7 @@ public class IncomingFriendshipsMenuDialogFragment extends UserMenuDialogFragmen
     protected void onPrepareItemMenu(final Menu menu, final ParcelableUser user) {
         final Context context = getThemedContext();
         final ParcelableCredentials account = ParcelableAccount.getCredentials(context, user.account_id);
-        if (ParcelableCredentials.isOfficialCredentials(context, account)) {
+        if (Utils.isOfficialCredentials(context, account)) {
             final MenuInflater inflater = new MenuInflater(context);
             inflater.inflate(R.menu.action_incoming_friendship, menu);
         }

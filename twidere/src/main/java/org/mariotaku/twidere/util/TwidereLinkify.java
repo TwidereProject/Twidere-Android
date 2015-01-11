@@ -39,9 +39,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.mariotaku.twidere.util.MediaPreviewUtils.AVAILABLE_IMAGE_SHUFFIX;
-import static org.mariotaku.twidere.util.Utils.matcherEnd;
-import static org.mariotaku.twidere.util.Utils.matcherGroup;
-import static org.mariotaku.twidere.util.Utils.matcherStart;
+import static org.mariotaku.twidere.util.RegexUtils.matcherEnd;
+import static org.mariotaku.twidere.util.RegexUtils.matcherGroup;
+import static org.mariotaku.twidere.util.RegexUtils.matcherStart;
 
 /**
  * Linkify take a piece of text and a regular expression and turns all of the

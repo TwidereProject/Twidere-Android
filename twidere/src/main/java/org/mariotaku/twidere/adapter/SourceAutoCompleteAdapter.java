@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.provider.TweetStore.CachedStatuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 
 public class SourceAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {

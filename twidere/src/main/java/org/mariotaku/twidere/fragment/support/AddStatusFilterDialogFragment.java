@@ -40,7 +40,7 @@ import com.twitter.Extractor;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
-import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;

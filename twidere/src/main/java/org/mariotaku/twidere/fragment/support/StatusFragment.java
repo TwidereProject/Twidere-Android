@@ -84,13 +84,12 @@ import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
-import org.mariotaku.twidere.util.MediaPreviewUtils;
-import org.mariotaku.twidere.util.MediaPreviewUtils.OnMediaClickListener;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
@@ -961,7 +960,7 @@ public class StatusFragment extends BaseSupportFragment
                 case MENU_TRANSLATE: {
                     final ParcelableCredentials account
                             = ParcelableAccount.getCredentials(activity, status.account_id);
-                    if (ParcelableCredentials.isOfficialCredentials(activity, account)) {
+                    if (Utils.isOfficialCredentials(activity, account)) {
                         StatusTranslateDialogFragment.show(fragment.getFragmentManager(), status);
                     } else {
                         final Resources resources = fragment.getResources();
@@ -1071,8 +1070,8 @@ public class StatusFragment extends BaseSupportFragment
                 mediaPreviewGrid.setVisibility(View.VISIBLE);
                 mediaPreviewGrid.removeAllViews();
                 final int maxColumns = resources.getInteger(R.integer.grid_column_image_preview);
-                MediaPreviewUtils.addToLinearLayout(mediaPreviewGrid, loader, status.media,
-                        status.account_id, maxColumns, adapter.getFragment());
+                Utils.addToLinearLayout(mediaPreviewGrid, loader, status.media, status.account_id,
+                        maxColumns, adapter.getFragment());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.VISIBLE);

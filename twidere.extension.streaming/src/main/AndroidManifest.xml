@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.mariotaku.twidere.extension.streaming">
 
-
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -15,7 +14,7 @@
             android:value="true"/>
         <meta-data
             android:name="org.mariotaku.twidere.extension.permissions"
-            android:value="read|write|direct_messages|accounts|refresh"/>
+            android:value="read|write|direct_messages|accounts|refresh|preferences"/>
         <meta-data
             android:name="org.mariotaku.twidere.extension.settings"
             android:value="org.mariotaku.twidere.extension.streaming.SettingsActivity"/>

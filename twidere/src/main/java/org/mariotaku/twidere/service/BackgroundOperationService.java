@@ -57,10 +57,10 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.StatusShortenResult;
 import org.mariotaku.twidere.model.UploaderMediaItem;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
-import org.mariotaku.twidere.provider.TweetStore.CachedHashtags;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.Drafts;
-import org.mariotaku.twidere.util.ArrayUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ListUtils;
@@ -326,7 +326,7 @@ public class BackgroundOperationService extends IntentService implements Constan
 
     private void saveDrafts(final ParcelableStatusUpdate status, final List<Long> account_ids) {
         final ContentValues values = ContentValuesCreator.createStatusDraft(status,
-                ArrayUtils.fromList(account_ids));
+                TwidereArrayUtils.fromList(account_ids));
         mResolver.insert(Drafts.CONTENT_URI, values);
         final String title = getString(R.string.status_not_updated);
         final String message = getString(R.string.status_not_updated_summary);

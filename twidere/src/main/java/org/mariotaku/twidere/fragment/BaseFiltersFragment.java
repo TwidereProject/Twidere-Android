@@ -49,7 +49,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.BaseSupportListFragment;
-import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 
 import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;

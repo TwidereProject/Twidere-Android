@@ -27,7 +27,7 @@ import android.net.Uri;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableLocation;
-import org.mariotaku.twidere.util.ArrayUtils;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 
 public class TwidereCommands {
@@ -98,7 +98,7 @@ public class TwidereCommands {
 				final ParcelableLocation location, final Uri image_uri, final long in_reply_to_status_id,
 				final boolean is_possibly_sensitive, final boolean delete_image) {
 			final ContentValues values = new ContentValues();
-			values.put(Constants.EXTRA_ACCOUNT_IDS, ArrayUtils.toString(account_ids, ',', false));
+			values.put(Constants.EXTRA_ACCOUNT_IDS, TwidereArrayUtils.toString(account_ids, ',', false));
 			values.put(Constants.EXTRA_TEXT, content);
 			values.put(Constants.EXTRA_LOCATION, ParcelableLocation.toString(location));
 			values.put(Constants.EXTRA_URI, ParseUtils.parseString(image_uri));

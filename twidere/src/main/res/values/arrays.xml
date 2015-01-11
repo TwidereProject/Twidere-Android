@@ -51,21 +51,6 @@
         <item>save</item>
         <item>discard</item>
     </string-array>
-    <!-- CRC32 checksum of consumer secret of official clients to check whether user is using official keys -->
-    <string-array name="values_official_consumer_secret_crc32">
-        <!--Twitter for Android-->
-        <item>6ce85096</item>
-        <!--Twitter for iPhone-->
-        <item>deffe9c7</item>
-        <!--Twitter for iPad-->
-        <item>9f00e0cb</item>
-        <!--Twitter for Mac-->
-        <item>df27640e</item>
-        <!--Twitter for Windows Phone-->
-        <item>62bd0d33</item>
-        <!--Twitter for Google TV-->
-        <item>56d8f9ff</item>
-    </string-array>
     <string-array name="entries_theme">
         <item>@string/theme_light</item>
         <item>@string/theme_dark</item>

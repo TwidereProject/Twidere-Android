@@ -58,7 +58,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
-import org.mariotaku.twidere.provider.TweetStore.Tabs;
+import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;

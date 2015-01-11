@@ -22,7 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import org.mariotaku.twidere.provider.TweetStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
 /**

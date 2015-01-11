@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
@@ -31,7 +32,7 @@ import org.mariotaku.querybuilder.OnConflict;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLInsertQuery;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
-import org.mariotaku.twidere.util.ArrayUtils;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +79,7 @@ public final class DatabaseUpgradeHelper {
                 }
             }
             if (!differenct) return;
-        } else if (oldCols == null || ArrayUtils.contentMatch(newColNames, oldCols)) return;
+        } else if (oldCols == null || TwidereArrayUtils.contentMatch(newColNames, oldCols)) return;
         if (dropDirectly) {
             db.beginTransaction();
             db.execSQL(dropTable(true, table).getSQL());
@@ -111,7 +112,7 @@ public final class DatabaseUpgradeHelper {
                                                 final String[] oldCols, final Map<String, String> colAliases, final String[] notNullCols,
                                                 final OnConflict onConflict) {
         final SQLInsertQuery.Builder qb = insertInto(onConflict, table);
-        final List<String> newInsertColsList = new ArrayList<String>();
+        final List<String> newInsertColsList = new ArrayList<>();
         for (final String newCol : newCols) {
             final String oldAliasedCol = colAliases != null ? colAliases.get(newCol) : null;
             if (ArrayUtils.contains(oldCols, newCol) || oldAliasedCol != null
@@ -120,7 +121,7 @@ public final class DatabaseUpgradeHelper {
             }
         }
         final String[] newInsertCols = newInsertColsList.toArray(new String[newInsertColsList.size()]);
-        if (!ArrayUtils.contains(newInsertCols, notNullCols)) return null;
+        if (!TwidereArrayUtils.contains(newInsertCols, notNullCols)) return null;
         qb.columns(newInsertCols);
         final Columns.Column[] oldDataCols = new Columns.Column[newInsertCols.length];
         for (int i = 0, j = oldDataCols.length; i < j; i++) {
@@ -171,14 +172,14 @@ public final class DatabaseUpgradeHelper {
                 notNullCols[count++] = column.getName();
             }
         }
-        return ArrayUtils.subArray(notNullCols, 0, count);
+        return TwidereArrayUtils.subArray(notNullCols, 0, count);
     }
 
     private static Map<String, String> getTypeMapByCreateQuery(final String query) {
         if (TextUtils.isEmpty(query)) return Collections.emptyMap();
         final int start = query.indexOf("("), end = query.lastIndexOf(")");
         if (start < 0 || end < 0) return Collections.emptyMap();
-        final HashMap<String, String> map = new HashMap<String, String>();
+        final HashMap<String, String> map = new HashMap<>();
         for (final String segment : query.substring(start + 1, end).split(",")) {
             final String trimmed = segment.trim().replaceAll(" +", " ");
             final int idx = trimmed.indexOf(" ");

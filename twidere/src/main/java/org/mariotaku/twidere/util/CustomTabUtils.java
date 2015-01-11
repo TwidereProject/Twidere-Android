@@ -47,7 +47,7 @@ import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
-import org.mariotaku.twidere.provider.TweetStore.Tabs;
+import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 
 import java.io.File;
 import java.util.ArrayList;

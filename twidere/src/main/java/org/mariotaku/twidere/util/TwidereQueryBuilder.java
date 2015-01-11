@@ -27,11 +27,11 @@ import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Selectable;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Conversation;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Inbox;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Outbox;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 
 public class TwidereQueryBuilder {
 

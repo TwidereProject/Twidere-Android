@@ -29,8 +29,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.provider.TweetStore.Notifications;
-import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
+import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,7 +85,7 @@ public class TwitterWrapper implements Constants {
         final Uri.Builder builder = UnreadCounts.CONTENT_URI.buildUpon();
         builder.appendPath(String.valueOf(position));
         builder.appendPath(String.valueOf(account_id));
-        builder.appendPath(ArrayUtils.toString(status_ids, ',', false));
+        builder.appendPath(TwidereArrayUtils.toString(status_ids, ',', false));
         result += context.getContentResolver().delete(builder.build(), null, null);
         return result;
     }

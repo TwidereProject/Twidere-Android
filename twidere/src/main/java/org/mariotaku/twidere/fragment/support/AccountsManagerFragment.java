@@ -41,12 +41,12 @@ import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Inbox;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages.Outbox;
-import org.mariotaku.twidere.provider.TweetStore.Mentions;
-import org.mariotaku.twidere.provider.TweetStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
+import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 

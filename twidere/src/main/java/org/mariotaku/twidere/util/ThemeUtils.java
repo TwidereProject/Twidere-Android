@@ -50,6 +50,7 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.menucomponent.internal.Utils;
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarMenuInfo;
 import org.mariotaku.twidere.Constants;

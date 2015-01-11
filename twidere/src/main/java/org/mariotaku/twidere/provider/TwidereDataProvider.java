@@ -53,6 +53,7 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
@@ -64,16 +65,15 @@ import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.UnreadItem;
-import org.mariotaku.twidere.provider.TweetStore.Accounts;
-import org.mariotaku.twidere.provider.TweetStore.CachedUsers;
-import org.mariotaku.twidere.provider.TweetStore.DirectMessages;
-import org.mariotaku.twidere.provider.TweetStore.Drafts;
-import org.mariotaku.twidere.provider.TweetStore.Preferences;
-import org.mariotaku.twidere.provider.TweetStore.SearchHistory;
-import org.mariotaku.twidere.provider.TweetStore.Statuses;
-import org.mariotaku.twidere.provider.TweetStore.UnreadCounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
+import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
-import org.mariotaku.twidere.util.ArrayUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ImagePreloader;
@@ -83,6 +83,7 @@ import org.mariotaku.twidere.util.PermissionsManager;
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper;
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereQueryBuilder;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -252,7 +253,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         return clearUnreadCount(ParseUtils.parseInt(segments.get(1)));
                     else if (segmentsSize == 4)
                         return removeUnreadItems(ParseUtils.parseInt(segments.get(1)),
-                                ParseUtils.parseLong(segments.get(2)), ArrayUtils.parseLongArray(segments.get(3), ','));
+                                ParseUtils.parseLong(segments.get(2)), TwidereArrayUtils.parseLongArray(segments.get(3), ','));
                     return 0;
                 }
             }
@@ -393,7 +394,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return null;
                 }
                 case VIRTUAL_TABLE_ID_PERMISSIONS: {
-                    final MatrixCursor c = new MatrixCursor(TweetStore.Permissions.MATRIX_COLUMNS);
+                    final MatrixCursor c = new MatrixCursor(TwidereDataStore.Permissions.MATRIX_COLUMNS);
                     final Map<String, String> map = mPermissionsManager.getAll();
                     for (final Map.Entry<String, String> item : map.entrySet()) {
                         c.addRow(new Object[]{item.getKey(), item.getValue()});
@@ -546,9 +547,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 // permission level.
                 final String[] credentialsCols = {Accounts.BASIC_AUTH_PASSWORD, Accounts.OAUTH_TOKEN,
                         Accounts.OAUTH_TOKEN_SECRET, Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
-                if (projection == null || ArrayUtils.contains(projection, credentialsCols)
+                if (projection == null || TwidereArrayUtils.contains(projection, credentialsCols)
                         && !checkPermission(PERMISSION_ACCOUNTS))
-                    throw new SecurityException("Access column " + ArrayUtils.toString(projection, ',', true)
+                    throw new SecurityException("Access column " + TwidereArrayUtils.toString(projection, ',', true)
                             + " in database accounts requires level PERMISSION_LEVEL_ACCOUNTS");
                 if (!checkPermission(PERMISSION_READ))
                     throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ");
@@ -885,7 +886,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (Utils.isDebugBuild()) {
             Log.d(LOGTAG, String.format("getCachedImageCursor(%s)", url));
         }
-        final MatrixCursor c = new MatrixCursor(TweetStore.CachedImages.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.CachedImages.MATRIX_COLUMNS);
         final File file = mImagePreloader.getCachedImageFile(url);
         if (url != null && file != null) {
             c.addRow(new String[]{url, file.getPath()});
@@ -918,7 +919,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Cursor getDNSCursor(final String host) {
-        final MatrixCursor c = new MatrixCursor(TweetStore.DNS.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.DNS.MATRIX_COLUMNS);
         try {
             final String address = mHostAddressResolver.resolve(host);
             if (host != null && address != null) {
@@ -937,7 +938,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Cursor getNotificationsCursor() {
-        final MatrixCursor c = new MatrixCursor(TweetStore.Notifications.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.Notifications.MATRIX_COLUMNS);
         c.addRow(new Integer[]{NOTIFICATION_ID_HOME_TIMELINE, mUnreadStatuses.size()});
         c.addRow(new Integer[]{NOTIFICATION_ID_MENTIONS_TIMELINE, mNewMentions.size()});
         c.addRow(new Integer[]{NOTIFICATION_ID_DIRECT_MESSAGES, mNewMessages.size()});
@@ -945,7 +946,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Cursor getNotificationsCursor(final int id) {
-        final MatrixCursor c = new MatrixCursor(TweetStore.Notifications.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.Notifications.MATRIX_COLUMNS);
         if (id == NOTIFICATION_ID_HOME_TIMELINE) {
             c.addRow(new Integer[]{id, mNewStatuses.size()});
         } else if (id == NOTIFICATION_ID_MENTIONS_TIMELINE) {
@@ -971,7 +972,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private int getSendersCount(final List<ParcelableDirectMessage> items) {
         if (items == null || items.isEmpty()) return 0;
-        final Set<Long> ids = new HashSet<Long>();
+        final Set<Long> ids = new HashSet<>();
         for (final ParcelableDirectMessage item : items.toArray(new ParcelableDirectMessage[items.size()])) {
             ids.add(item.sender_id);
         }
@@ -979,12 +980,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Cursor getUnreadCountsCursor() {
-        final MatrixCursor c = new MatrixCursor(TweetStore.UnreadCounts.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.UnreadCounts.MATRIX_COLUMNS);
         return c;
     }
 
     private Cursor getUnreadCountsCursor(final int position) {
-        final MatrixCursor c = new MatrixCursor(TweetStore.UnreadCounts.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.UnreadCounts.MATRIX_COLUMNS);
         final Context context = getContext();
         final SupportTabSpec tab = CustomTabUtils.getAddedTabAt(context, position);
         if (tab == null) return c;
@@ -1011,7 +1012,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Cursor getUnreadCountsCursorByType(final String type) {
-        final MatrixCursor c = new MatrixCursor(TweetStore.UnreadCounts.MATRIX_COLUMNS);
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.UnreadCounts.MATRIX_COLUMNS);
         final int count;
         if (TAB_TYPE_HOME_TIMELINE.equals(type) || TAB_TYPE_STAGGERED_HOME_TIMELINE.equals(type)) {
             count = mUnreadStatuses.size();
@@ -1030,7 +1031,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private int getUsersCount(final List<ParcelableStatus> items) {
         if (items == null || items.isEmpty()) return 0;
-        final Set<Long> ids = new HashSet<Long>();
+        final Set<Long> ids = new HashSet<>();
         for (final ParcelableStatus item : items.toArray(new ParcelableStatus[items.size()])) {
             ids.add(item.user_id);
         }
@@ -1140,7 +1141,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         switch (tableId) {
             case TABLE_ID_STATUSES: {
                 final int notifiedCount = notifyStatusesInserted(valuesArray);
-                final List<ParcelableStatus> items = new ArrayList<ParcelableStatus>(mNewStatuses);
+                final List<ParcelableStatus> items = new ArrayList<>(mNewStatuses);
                 Collections.sort(items);
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
                         getAccountIds(getContext()));
@@ -1160,7 +1161,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
                         getAccountIds(getContext()));
                 final int notifiedCount = notifyMentionsInserted(prefs, valuesArray);
-                final List<ParcelableStatus> items = new ArrayList<ParcelableStatus>(mNewMentions);
+                final List<ParcelableStatus> items = new ArrayList<>(mNewMentions);
                 Collections.sort(items);
                 for (final AccountPreferences pref : prefs) {
                     if (pref.isMentionsNotificationEnabled()) {
@@ -1329,7 +1330,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private static List<ParcelableDirectMessage> getMessagesForAccounts(final List<ParcelableDirectMessage> items,
                                                                         final long accountId) {
         if (items == null) return Collections.emptyList();
-        final List<ParcelableDirectMessage> result = new ArrayList<ParcelableDirectMessage>();
+        final List<ParcelableDirectMessage> result = new ArrayList<>();
         for (final ParcelableDirectMessage item : items.toArray(new ParcelableDirectMessage[items.size()])) {
             if (item.account_id == accountId) {
                 result.add(item);
@@ -1339,8 +1340,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private static Cursor getPreferencesCursor(final SharedPreferencesWrapper preferences, final String key) {
-        final MatrixCursor c = new MatrixCursor(TweetStore.Preferences.MATRIX_COLUMNS);
-        final Map<String, Object> map = new HashMap<String, Object>();
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.Preferences.MATRIX_COLUMNS);
+        final Map<String, Object> map = new HashMap<>();
         final Map<String, ?> all = preferences.getAll();
         if (key == null) {
             map.putAll(all);
@@ -1373,7 +1374,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private static List<ParcelableStatus> getStatusesForAccounts(final List<ParcelableStatus> items,
                                                                  final long accountId) {
         if (items == null) return Collections.emptyList();
-        final List<ParcelableStatus> result = new ArrayList<ParcelableStatus>();
+        final List<ParcelableStatus> result = new ArrayList<>();
         for (final ParcelableStatus item : items.toArray(new ParcelableStatus[items.size()])) {
             if (item.account_id == accountId) {
                 result.add(item);

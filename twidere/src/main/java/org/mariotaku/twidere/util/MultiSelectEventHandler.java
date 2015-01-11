@@ -39,7 +39,7 @@ import org.mariotaku.twidere.menu.AccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.provider.TweetStore.Filters;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -77,6 +77,7 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
 import org.mariotaku.menucomponent.internal.widget.IListPopupWindow;
@@ -93,9 +94,8 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
-import org.mariotaku.twidere.provider.TweetStore.Drafts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
-import org.mariotaku.twidere.util.ArrayUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -104,6 +104,7 @@ import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -138,7 +139,6 @@ import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getAccountName;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
 import static org.mariotaku.twidere.util.Utils.getDefaultTextSize;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
 import static org.mariotaku.twidere.util.Utils.getQuoteStatus;
 import static org.mariotaku.twidere.util.Utils.getShareStatus;
@@ -617,9 +617,9 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 handleDefaultIntent(intent);
             }
             if (mSendAccountIds == null || mSendAccountIds.length == 0) {
-                final long[] idsInPrefs = ArrayUtils.parseLongArray(
+                final long[] idsInPrefs = TwidereArrayUtils.parseLongArray(
                         mPreferences.getString(KEY_COMPOSE_ACCOUNTS, null), ',');
-                final long[] intersection = ArrayUtils.intersection(idsInPrefs, defaultAccountIds);
+                final long[] intersection = TwidereArrayUtils.intersection(idsInPrefs, defaultAccountIds);
                 mSendAccountIds = intersection.length > 0 ? intersection : defaultAccountIds;
             }
             mOriginalText = ParseUtils.parseString(mEditText.getText());
@@ -1030,7 +1030,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         if (mSendAccountIds == null) return;
         if (mShouldSaveAccounts) {
             final SharedPreferences.Editor editor = mPreferences.edit();
-            editor.putString(KEY_COMPOSE_ACCOUNTS, ArrayUtils.toString(mSendAccountIds, ',', false));
+            editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mSendAccountIds, ',', false));
             editor.apply();
         }
         mSelectAccountAccounts.setSelectedAccounts(mSendAccountIds);

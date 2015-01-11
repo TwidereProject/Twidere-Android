@@ -43,7 +43,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
-import org.mariotaku.twidere.provider.TweetStore.SearchHistory;
+import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 

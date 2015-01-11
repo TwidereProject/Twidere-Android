@@ -583,7 +583,8 @@
     <string name="N_new_mentions_quantity_other"><xliff:g id="items">%d</xliff:g> new mentions</string>
     <string name="N_new_messages_quantity_one"><xliff:g id="items">%d</xliff:g> new conversation</string>
     <string name="N_new_messages_quantity_other"><xliff:g id="items">%d</xliff:g> new conversations</string>
-    <string name="share_subject_format"><xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), at <xliff:g id="time">%3$s</xliff:g></string>
+    <string name="status_share_subject_format_with_time">Tweet from <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), at <xliff:g id="time">%3$s</xliff:g></string>
+    <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
     <string name="rate_limit">Rate limit</string>
     <string name="wizard_hint_rate_limit">If you encounter rate limit problems, please don\'t blame me, that\'s Twitter\'s policy.</string>
     <string name="preparing_database">Preparing database</string>

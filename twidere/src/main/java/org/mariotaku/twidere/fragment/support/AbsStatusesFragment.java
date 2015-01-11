@@ -173,8 +173,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                     break;
                 }
             }
-            if (pos != -1 && mAdapter.isStatus(pos) && (readFromBottom || lastVisiblePos == 0)) {
-                mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
+            if (pos != -1 && mAdapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
+                mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - mLayoutManager.getPaddingTop());
             }
         }
         setListShown(true);

@@ -18,7 +18,7 @@
  */
 
 apply plugin: 'com.android.application'
-
+apply from: rootProject.file('signing.gradle')
 
 android {
     compileSdkVersion 21
@@ -30,46 +30,6 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
-    }
-    signingConfigs {
-        debug {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                Properties signingProp = new Properties()
-                signingProp.load(signingPropFile.newDataInputStream())
-                storeFile file(signingProp.get("twidere.debug.storeFile"))
-                storePassword signingProp.get("twidere.debug.storePassword")
-                keyAlias signingProp.get("twidere.debug.keyAlias")
-                keyPassword signingProp.get("twidere.debug.keyPassword")
-            }
-        }
-        release {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                Properties signingProp = new Properties()
-                signingProp.load(signingPropFile.newDataInputStream())
-                storeFile file(signingProp.get("twidere.release.storeFile"))
-                storePassword signingProp.get("twidere.release.storePassword")
-                keyAlias signingProp.get("twidere.release.keyAlias")
-                keyPassword signingProp.get("twidere.release.keyPassword")
-            }
-        }
-    }
-    buildTypes {
-        debug {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                signingConfig signingConfigs.debug
-            }
-        }
-        release {
-            File signingPropFile = project.rootProject.file('signing.properties')
-            if (signingPropFile.exists()) {
-                signingConfig signingConfigs.release
-            }
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 }
 
