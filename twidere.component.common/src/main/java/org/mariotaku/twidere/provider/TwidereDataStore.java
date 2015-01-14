@@ -484,8 +484,10 @@ public interface TwidereDataStore {
 
         public static final String TABLE_NAME = "drafts";
         public static final String CONTENT_PATH = TABLE_NAME;
+        public static final String CONTENT_PATH_UNSENT = TABLE_NAME + "/unsent";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        public static final Uri CONTENT_URI_UNSENT = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_UNSENT);
 
         /**
          * Status content.<br>

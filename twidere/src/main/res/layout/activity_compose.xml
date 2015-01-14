@@ -27,7 +27,7 @@
     android:minHeight="@dimen/compose_min_height"
     android:minWidth="@dimen/compose_min_width"
     android:orientation="vertical"
-    android:showDividers="none">
+    android:showDividers="middle">
 
 
     <RelativeLayout

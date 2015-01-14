@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import com.twitter.Extractor;
 
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
@@ -60,12 +61,12 @@ import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ListUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.MessagesManager;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereValidator;
@@ -190,7 +191,19 @@ public class BackgroundOperationService extends IntentService implements Constan
             handleUpdateStatusIntent(intent);
         } else if (INTENT_ACTION_SEND_DIRECT_MESSAGE.equals(action)) {
             handleSendDirectMessageIntent(intent);
+        } else if (INTENT_ACTION_DISCARD_DRAFT.equals(action)) {
+            handleDiscardDraftIntent(intent);
         }
+    }
+
+    private void handleDiscardDraftIntent(Intent intent) {
+        final Uri data = intent.getData();
+        if (data == null) return;
+        mNotificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS);
+        final ContentResolver contentResolver = getContentResolver();
+        final long id = ParseUtils.parseLong(data.getLastPathSegment(), -1);
+        final Expression where = Expression.equals(Drafts._ID, id);
+        contentResolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
     }
 
     private Notification buildNotification(final String title, final String message, final int icon,
@@ -275,10 +288,22 @@ public class BackgroundOperationService extends IntentService implements Constan
         for (final ParcelableStatusUpdate item : statuses) {
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
                     updateUpdateStatusNotificaion(this, builder, 0, item));
+            final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item,
+                    ParcelableAccount.getAccountIds(item.accounts));
+            final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
+            final long draftId = ParseUtils.parseLong(draftUri.getLastPathSegment(), -1);
+            mTwitter.addSendingDraftId(draftId);
+            try {
+                Thread.sleep(15000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
             boolean failed = false;
             Exception exception = null;
-            final List<Long> failed_account_ids = ListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
+
+            final Expression where = Expression.equals(Drafts._ID, draftId);
+            final List<Long> failedAccountIds = ListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
 
             for (final SingleResponse<ParcelableStatus> response : result) {
                 if (response.getData() == null) {
@@ -287,11 +312,10 @@ public class BackgroundOperationService extends IntentService implements Constan
                         exception = response.getException();
                     }
                 } else if (response.getData().account_id > 0) {
-                    failed_account_ids.remove(response.getData().account_id);
+                    failedAccountIds.remove(response.getData().account_id);
                 }
             }
             if (result.isEmpty()) {
-                saveDrafts(item, failed_account_ids);
                 showErrorMessage(R.string.action_updating_status, getString(R.string.no_account_selected), false);
             } else if (failed) {
                 // If the status is a duplicate, there's no need to save it to
@@ -300,11 +324,15 @@ public class BackgroundOperationService extends IntentService implements Constan
                         && ((TwitterException) exception).getErrorCode() == StatusCodeMessageUtils.STATUS_IS_DUPLICATE) {
                     showErrorMessage(getString(R.string.status_is_duplicate), false);
                 } else {
-                    saveDrafts(item, failed_account_ids);
+                    final ContentValues accountIdsValues = new ContentValues();
+                    accountIdsValues.put(Drafts.ACCOUNT_IDS, ListUtils.toString(failedAccountIds, ',', false));
+                    mResolver.update(Drafts.CONTENT_URI, accountIdsValues, where.getSQL(), null);
                     showErrorMessage(R.string.action_updating_status, exception, true);
+                    displayTweetNotSendNotification();
                 }
             } else {
                 showOkMessage(R.string.status_updated, false);
+                mResolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
                 if (item.media != null) {
                     for (final ParcelableMediaUpdate media : item.media) {
                         final String path = getImagePathFromUri(this, Uri.parse(media.uri));
@@ -316,6 +344,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     }
                 }
             }
+            mTwitter.removeSendingDraftId(draftId);
             if (mPreferences.getBoolean(KEY_REFRESH_AFTER_TWEET, false)) {
                 mTwitter.refreshAll();
             }
@@ -324,10 +353,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         mNotificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS);
     }
 
-    private void saveDrafts(final ParcelableStatusUpdate status, final List<Long> account_ids) {
-        final ContentValues values = ContentValuesCreator.createStatusDraft(status,
-                TwidereArrayUtils.fromList(account_ids));
-        mResolver.insert(Drafts.CONTENT_URI, values);
+    private void displayTweetNotSendNotification() {
         final String title = getString(R.string.status_not_updated);
         final String message = getString(R.string.status_not_updated_summary);
         final Intent intent = new Intent(INTENT_ACTION_DRAFTS);
@@ -396,6 +422,9 @@ public class BackgroundOperationService extends IntentService implements Constan
         if (statusUpdate.accounts.length == 0) return Collections.emptyList();
 
         try {
+            if (true) {
+                throw new UpdateStatusException("Test");
+            }
             if (mUseUploader && mUploader == null) throw new UploaderNotFoundException(this);
             if (mUseShortener && mShortener == null) throw new ShortenerNotFoundException(this);
 

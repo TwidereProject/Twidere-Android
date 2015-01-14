@@ -21,10 +21,13 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -34,10 +37,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.StackView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -47,8 +48,9 @@ import org.mariotaku.twidere.view.iface.IColorLabelView.Helper;
  * Created by mariotaku on 14/12/8.
  */
 public class ComposeSelectAccountButton extends ViewGroup {
-    private final AccountIconsStackAdapter mAccountIconsAdapter;
+    private final AccountIconsAdapter mAccountIconsAdapter;
     private final Helper mColorLabelHelper;
+    private final InternalRecyclerView recyclerView;
 
     public ComposeSelectAccountButton(Context context) {
         this(context, null);
@@ -62,19 +64,27 @@ public class ComposeSelectAccountButton extends ViewGroup {
         super(context, attrs, defStyle);
         mColorLabelHelper = new Helper(this, context, attrs, defStyle);
         mColorLabelHelper.setIgnorePaddings(true);
-        mAccountIconsAdapter = new AccountIconsStackAdapter(context);
-        final StackView stackView = new InternalStackView(context);
-        stackView.setAdapter(mAccountIconsAdapter);
-        addView(stackView);
-//        final RecyclerView recyclerView = new InternalRecyclerView(context);
-//        final LinearLayoutManager linearLayoutManager = new MyLinearLayoutManager(context);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        linearLayoutManager.setStackFromEnd(true);
-////        linearLayoutManager.setReverseLayout(true);
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setAdapter(mAccountIconsAdapter);
-//        ViewCompat.setOverScrollMode(recyclerView, ViewCompat.OVER_SCROLL_NEVER);
-//        addView(recyclerView);
+        mAccountIconsAdapter = new AccountIconsAdapter(context);
+        recyclerView = new InternalRecyclerView(context);
+        final LinearLayoutManager linearLayoutManager = new MyLinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(mAccountIconsAdapter);
+        recyclerView.addItemDecoration(new ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+                final int pos = parent.getChildPosition(view);
+                if (pos == 0) {
+                    outRect.left = 0;
+                } else {
+                    final int count = state.getItemCount();
+                    outRect.left = -(parent.getHeight() - (parent.getWidth() - parent.getHeight()) / (count - 1));
+                }
+            }
+        });
+        ViewCompat.setOverScrollMode(recyclerView, ViewCompat.OVER_SCROLL_NEVER);
+        addView(recyclerView);
+        mAccountIconsAdapter.setSelectedAccounts(ParcelableAccount.getAccounts(context, false, false));
     }
 
     public void setSelectedAccounts(long[] accountIds) {
@@ -109,7 +119,7 @@ public class ComposeSelectAccountButton extends ViewGroup {
         if (maxWidth == 0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
-            setMeasuredDimension(resolveSize(maxWidth, widthMeasureSpec), heightMeasureSpec);
+            setMeasuredDimension(maxWidth, heightMeasureSpec);
         }
     }
 
@@ -155,7 +165,7 @@ public class ComposeSelectAccountButton extends ViewGroup {
 
         @Override
         public AccountIconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = mInflater.inflate(R.layout.adapter_item_compose_account, parent, false);
+            final View view = mInflater.inflate(R.layout.adapter_item_compose_account2, parent, false);
             return new AccountIconViewHolder(view);
         }
 
@@ -170,53 +180,8 @@ public class ComposeSelectAccountButton extends ViewGroup {
         }
 
         public void setSelectedAccounts(ParcelableAccount[] accounts) {
-            if (accounts != null) {
-//                ArrayUtils.reverse(accounts);
-            }
             mAccounts = accounts;
             notifyDataSetChanged();
-        }
-    }
-
-    private static class AccountIconsStackAdapter extends ArrayAdapter<ParcelableAccount> {
-        private final Context mContext;
-        private final LayoutInflater mInflater;
-        private final ImageLoaderWrapper mImageLoader;
-
-        public AccountIconsStackAdapter(Context context) {
-            super(context, R.layout.adapter_item_compose_account);
-            mContext = context;
-            mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final View view = super.getView(position, convertView, parent);
-            final ParcelableAccount account = getItem(position);
-            final ImageView iconView = (ImageView) view.findViewById(android.R.id.icon);
-            mImageLoader.displayProfileImage(iconView, account.profile_image_url);
-            return view;
-        }
-
-
-        public void setSelectedAccounts(ParcelableAccount[] accounts) {
-            clear();
-            if (accounts != null) {
-                addAll(accounts);
-            }
-        }
-    }
-
-    private static class InternalStackView extends StackView {
-        private InternalStackView(Context context) {
-            super(context);
-        }
-
-
-        @Override
-        public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
-            return false;
         }
     }
 
@@ -240,56 +205,15 @@ public class ComposeSelectAccountButton extends ViewGroup {
     }
 
     private static class MyLinearLayoutManager extends LinearLayoutManager {
-        private int mWidth, mHeight;
 
         public MyLinearLayoutManager(Context context) {
             super(context);
         }
 
-        private int findChildIndex(View view) {
-            for (int i = 0, j = getChildCount(); i < j; i++) {
-                if (getChildAt(i) == view) return i;
-            }
-            return -1;
-        }
-
-        @Override
-        public void measureChildWithMargins(View child, int widthUsed, int heightUsed) {
-            final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int contentWidth = mWidth - getPaddingLeft() - getPaddingRight();
-            final int contentHeight = mHeight - getPaddingTop() - getPaddingBottom();
-            final int itemCount = getItemCount();
-            final int firstVisibleItem = findFirstVisibleItemPosition();
-            final int idx = findChildIndex(child);
-            if (firstVisibleItem < 1 && idx == 0) {
-                // when firstVisibleItem is 0 or -1, assume view with idx == 0 is first view
-                if (itemCount == 1) {
-                    layoutParams.leftMargin = (contentWidth - contentHeight) / 2 - child.getPaddingLeft() - child.getPaddingRight();
-                } else {
-                    layoutParams.leftMargin = 0;
-                }
-            } else {
-                layoutParams.leftMargin = -Math.min((contentHeight * itemCount - contentWidth)
-                        / (itemCount - 1) + child.getPaddingLeft() + child.getPaddingRight(), contentHeight);
-            }
-            super.measureChildWithMargins(child, widthUsed, heightUsed);
-        }
-
         @Override
         public void onMeasure(Recycler recycler, State state, int widthSpec, int heightSpec) {
-            final int height = MeasureSpec.getSize(heightSpec), width;
-            final int itemCount = getItemCount();
-            if (itemCount > 1) {
-                width = Math.round(height * 1.5f);
-            } else if (itemCount > 0 && state.getItemCount() > 0) {
-                final View firstChild = recycler.getViewForPosition(0);
-                width = height + firstChild.getPaddingLeft() + firstChild.getPaddingRight();
-            } else {
-                width = height;
-            }
-            mWidth = width;
-            mHeight = height;
-            super.onMeasure(recycler, state, MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), heightSpec);
+            final int height = MeasureSpec.getSize(heightSpec), width = Math.round(height * 1.25f);
+            setMeasuredDimension(width, height);
         }
     }
 

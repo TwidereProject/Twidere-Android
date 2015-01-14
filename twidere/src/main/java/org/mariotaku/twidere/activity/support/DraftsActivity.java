@@ -22,6 +22,7 @@ package org.mariotaku.twidere.activity.support;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +32,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -128,7 +130,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        final Uri uri = Drafts.CONTENT_URI;
+        final Uri uri = Drafts.CONTENT_URI_UNSENT;
         final String[] cols = Drafts.COLUMNS;
         final String orderBy = Drafts.TIMESTAMP + " DESC";
         return new CursorLoader(this, uri, cols, null, null, orderBy);
@@ -195,8 +197,6 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
         }
         mAdapter = new DraftsAdapter(this);
         mListView = (ListView) findViewById(android.R.id.list);
-        mListView.setDivider(null);
-        mListView.setSelector(android.R.color.transparent);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -281,6 +281,7 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
             }
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Context context = ThemeUtils.getDialogThemedContext(getActivity());
@@ -298,9 +299,11 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
         private static final String FRAGMENT_TAG_DELETING_DRAFTS = "deleting_drafts";
         private final FragmentActivity mActivity;
         private final long[] mIds;
+        private final NotificationManager mNotificationManager;
 
         private DeleteDraftsTask(final FragmentActivity activity, final long[] ids) {
             mActivity = activity;
+            mNotificationManager = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
             mIds = ids;
         }
 
@@ -337,6 +340,10 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
             final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DELETING_DRAFTS);
             if (f instanceof DialogFragment) {
                 ((DialogFragment) f).dismiss();
+            }
+            for (long id : mIds) {
+                final String tag = Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(id)).toString();
+                mNotificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS);
             }
         }
 

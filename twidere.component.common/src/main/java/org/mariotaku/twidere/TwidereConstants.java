@@ -179,6 +179,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final int VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE = 109;
     public static final int VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP = 121;
     public static final int VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE = 122;
+    public static final int VIRTUAL_TABLE_ID_DRAFTS_UNSENT = 131;
 
     public static final int NOTIFICATION_ID_HOME_TIMELINE = 1;
     public static final int NOTIFICATION_ID_MENTIONS_TIMELINE = 2;

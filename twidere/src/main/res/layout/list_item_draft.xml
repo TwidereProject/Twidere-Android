@@ -21,15 +21,15 @@
 <org.mariotaku.twidere.view.ColorLabelLinearLayout
     android:id="@+id/content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:activatedBackgroundIndicator"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/element_spacing_small"
-    android:paddingLeft="@dimen/element_spacing_normal"
-    android:paddingRight="@dimen/element_spacing_normal"
-    android:paddingTop="@dimen/element_spacing_small"
+    android:padding="@dimen/element_spacing_normal"
+    app:ignorePadding="true"
     tools:context=".adapter.DraftsAdapter">
 
     <org.mariotaku.twidere.view.ImagePreviewContainer
@@ -84,7 +84,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             style="?android:borderlessButtonStyle"

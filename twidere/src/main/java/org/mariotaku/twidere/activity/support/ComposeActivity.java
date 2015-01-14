@@ -23,6 +23,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -47,6 +49,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Action;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -92,6 +96,7 @@ import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -511,7 +516,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             builder.media(getMedia());
         }
         final ContentValues values = ContentValuesCreator.createStatusDraft(builder.build());
-        mResolver.insert(Drafts.CONTENT_URI, values);
+        final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, values);
+        displayNewDraftNotification(text, draftUri);
     }
 
     @Override
@@ -639,6 +645,25 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     private Uri createTempImageUri() {
         final File file = new File(getCacheDir(), "tmp_image_" + System.currentTimeMillis());
         return Uri.fromFile(file);
+    }
+
+    private void displayNewDraftNotification(String text, Uri draftUri) {
+        final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setTicker(getString(R.string.draft_saved));
+        builder.setContentTitle(getString(R.string.draft_saved));
+        builder.setContentText(text);
+        builder.setSmallIcon(R.drawable.ic_stat_info);
+        builder.setAutoCancel(true);
+        final Intent draftsIntent = new Intent(this, DraftsActivity.class);
+        builder.setContentIntent(PendingIntent.getActivity(this, 0, draftsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        final Intent serviceIntent = new Intent(this, BackgroundOperationService.class);
+        serviceIntent.setAction(INTENT_ACTION_DISCARD_DRAFT);
+        serviceIntent.setData(draftUri);
+        final Action.Builder actionBuilder = new Action.Builder(R.drawable.ic_action_delete, getString(R.string.discard),
+                PendingIntent.getService(this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.addAction(actionBuilder.build());
+        nm.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS, builder.build());
     }
 
     /**
@@ -880,6 +905,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         return true;
     }
 
+    private void saveAccountSelection() {
+        if (!mShouldSaveAccounts) return;
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mAccountsAdapter.getSelectedAccounts(), ',', false));
+        editor.apply();
+    }
+
     private boolean setComposeTitle(final Intent intent) {
         final String action = intent.getAction();
         if (INTENT_ACTION_REPLY.equals(action)) {
@@ -975,13 +1007,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             return false;
         }
         return true;
-    }
-
-    private void saveAccountSelection() {
-        if (!mShouldSaveAccounts) return;
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mAccountsAdapter.getSelectedAccounts(), ',', false));
-        editor.apply();
     }
 
     private void updateMediaPreview() {
@@ -1417,6 +1442,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         }
 
         @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            mStatusContainer = view.findViewById(R.id.status_container);
+            mHolder = new StatusViewHolder(view);
+        }
+
+        @Override
         public void onActivityCreated(final Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             final Bundle args = getArguments();
@@ -1439,13 +1471,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
             mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
             mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            mStatusContainer = view.findViewById(R.id.status_container);
-            mHolder = new StatusViewHolder(view);
         }
 
 

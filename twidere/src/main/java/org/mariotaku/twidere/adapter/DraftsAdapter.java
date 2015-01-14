@@ -49,7 +49,7 @@ public class DraftsAdapter extends SimpleCursorAdapter {
     private DraftItem.CursorIndices mIndices;
 
     public DraftsAdapter(final Context context) {
-        super(context, R.layout.card_item_draft, null, new String[0], new int[0], 0);
+        super(context, R.layout.list_item_draft, null, new String[0], new int[0], 0);
         mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
     }

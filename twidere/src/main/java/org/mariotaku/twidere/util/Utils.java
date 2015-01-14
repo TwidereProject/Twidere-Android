@@ -110,7 +110,6 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
-import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.querybuilder.AllColumns;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
@@ -348,6 +347,8 @@ public final class Utils implements Constants, TwitterConstants {
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/#",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_UNSENT,
+                VIRTUAL_TABLE_ID_DRAFTS_UNSENT);
 
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS, null, LINK_ID_STATUS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER, null, LINK_ID_USER);

@@ -47,7 +47,6 @@ import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Action;
 import android.text.Html;
 import android.util.Log;
 
@@ -55,7 +54,9 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.jsonserializer.JSONFileIO;
+import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -75,7 +76,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
-import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ImagePreloader;
@@ -176,6 +177,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return 0;
             }
             int result = 0;
+            final long[] newIds = new long[valuesArray.length];
             if (table != null) {
                 mDatabaseWrapper.beginTransaction();
                 if (tableId == TABLE_ID_CACHED_USERS) {
@@ -183,9 +185,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         final Expression where = Expression.equals(CachedUsers.USER_ID,
                                 values.getAsLong(CachedUsers.USER_ID));
                         mDatabaseWrapper.update(table, values, where.getSQL(), null);
-                        mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                                SQLiteDatabase.CONFLICT_IGNORE);
-                        result++;
+                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                                values, SQLiteDatabase.CONFLICT_IGNORE);
                     }
                 } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
                     for (final ContentValues values : valuesArray) {
@@ -193,20 +194,17 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
                         final String[] args = {values.getAsString(SearchHistory.QUERY)};
                         mDatabaseWrapper.update(table, values, where.getSQL(), args);
-                        mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                                SQLiteDatabase.CONFLICT_IGNORE);
-                        result++;
+                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                                values, SQLiteDatabase.CONFLICT_IGNORE);
                     }
                 } else if (shouldReplaceOnConflict(tableId)) {
                     for (final ContentValues values : valuesArray) {
-                        mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                        result++;
+                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                                values, SQLiteDatabase.CONFLICT_REPLACE);
                     }
                 } else {
                     for (final ContentValues values : valuesArray) {
-                        mDatabaseWrapper.insert(table, null, values);
-                        result++;
+                        newIds[result++] = mDatabaseWrapper.insert(table, null, values);
                     }
                 }
                 mDatabaseWrapper.setTransactionSuccessful();
@@ -215,7 +213,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             if (result > 0) {
                 onDatabaseUpdated(tableId, uri);
             }
-            onNewItemsInserted(uri, tableId, valuesArray);
+            onNewItemsInserted(uri, tableId, valuesArray, newIds);
             return result;
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
@@ -331,7 +329,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 rowId = mDatabaseWrapper.insert(table, null, values);
             }
             onDatabaseUpdated(tableId, uri);
-            onNewItemsInserted(uri, tableId, values);
+            onNewItemsInserted(uri, tableId, values, rowId);
             return Uri.withAppendedPath(uri, String.valueOf(rowId));
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
@@ -492,6 +490,22 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                             selection, sortOrder, accountId);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
+                    return c;
+                }
+                case VIRTUAL_TABLE_ID_DRAFTS_UNSENT: {
+                    final TwidereApplication app = TwidereApplication.getInstance(getContext());
+                    final AsyncTwitterWrapper twitter = app.getTwitterWrapper();
+                    final RawItemArray sendingIds = new RawItemArray(twitter.getSendingDraftIds());
+                    final Expression where;
+                    if (selection != null) {
+                        where = Expression.and(new Expression(selection),
+                                Expression.notIn(new Column(Drafts._ID), sendingIds));
+                    } else {
+                        where = Expression.and(Expression.notIn(new Column(Drafts._ID), sendingIds));
+                    }
+                    final Cursor c = mDatabaseWrapper.query(Drafts.TABLE_NAME, projection,
+                            where.getSQL(), selectionArgs, null, null, sortOrder);
+                    setNotificationUri(c, getNotificationUri(tableId, uri));
                     return c;
                 }
             }
@@ -1174,7 +1188,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         notifyContentObserver(getNotificationUri(tableId, uri));
     }
 
-    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues... valuesArray) {
+
+    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values, final long newId) {
+        onNewItemsInserted(uri, tableId, new ContentValues[]{values}, new long[]{newId});
+
+    }
+
+    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues[] valuesArray, final long[] newIds) {
         if (uri == null || valuesArray == null || valuesArray.length == 0) return;
         preloadImages(valuesArray);
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
@@ -1232,29 +1252,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             case TABLE_ID_DRAFTS: {
-                for (ContentValues values : valuesArray) {
-                    displayNewDraftNotification(values);
-                }
                 break;
             }
         }
-    }
-
-    private void displayNewDraftNotification(ContentValues values) {
-        final Context context = getContext();
-        final NotificationManager nm = getNotificationManager();
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setTicker(context.getString(R.string.draft_saved));
-        builder.setContentTitle(context.getString(R.string.draft_saved));
-        builder.setContentText(values.getAsString(Drafts.TEXT));
-        builder.setSmallIcon(R.drawable.ic_stat_info);
-        final Intent service = new Intent(context, BackgroundOperationService.class);
-        service.setAction(INTENT_ACTION_DISCARD_DRAFT);
-        final PendingIntent discardIntent = PendingIntent.getService(context, 0, service, 0);
-        final Action.Builder actionBuilder = new Action.Builder(R.drawable.ic_action_delete,
-                context.getString(R.string.discard), discardIntent);
-        builder.addAction(actionBuilder.build());
-        nm.notify(16, builder.build());
     }
 
     private void preloadImages(final ContentValues... values) {
