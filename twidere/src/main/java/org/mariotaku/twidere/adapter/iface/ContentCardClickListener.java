@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.View;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -27,5 +28,5 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 public interface ContentCardClickListener {
     void onItemActionClick(ViewHolder holder, int id, int position);
 
-    void onItemMenuClick(ViewHolder holder, int position);
+    void onItemMenuClick(ViewHolder holder, View menuView, int position);
 }

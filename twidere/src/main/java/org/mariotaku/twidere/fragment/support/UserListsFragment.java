@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
@@ -59,13 +60,15 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         final Bundle args = getArguments();
         final FragmentActivity activity = getActivity();
         mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
-        mAdapter.addTab(UserListsListFragment.class, args, getString(R.string.lists), null, 0);
-        mAdapter.addTab(UserListMembershipsListFragment.class, args,
-                getString(R.string.lists_following_user), 0, 1);
+        mAdapter.addTab(UserListsListFragment.class, args, getString(R.string.follows), null, 0);
+        mAdapter.addTab(UserListMembershipsListFragment.class, args, getString(R.string.belongs_to), 0, 1);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
+        if (activity instanceof IThemedActivity) {
+            mPagerIndicator.setStripColor(((IThemedActivity) activity).getCurrentThemeColor());
+        }
     }
 
 

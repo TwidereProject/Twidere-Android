@@ -47,10 +47,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.LongSparseArray;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
+import android.support.v7.widget.RecyclerView.State;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,15 +67,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -77,12 +77,9 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
-import org.mariotaku.menucomponent.internal.widget.IListPopupWindow;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.DraftItem;
@@ -110,7 +107,7 @@ import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.view.ComposeSelectAccountButton;
+import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -130,7 +127,6 @@ import java.util.TreeSet;
 import static android.os.Environment.getExternalStorageState;
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseString;
-import static org.mariotaku.twidere.util.ThemeUtils.getActionBarBackground;
 import static org.mariotaku.twidere.util.ThemeUtils.getComposeThemeResource;
 import static org.mariotaku.twidere.util.ThemeUtils.getWindowContentOverlayForCompose;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
@@ -146,7 +142,7 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class ComposeActivity extends BaseSupportDialogActivity implements TextWatcher, LocationListener,
-        OnMenuItemClickListener, OnClickListener, OnEditorActionListener, OnLongClickListener, OnItemClickListener {
+        OnMenuItemClickListener, OnClickListener, OnEditorActionListener, OnLongClickListener {
 
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
 
@@ -158,52 +154,45 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
     private static final String EXTRA_TEMP_URI = "temp_uri";
     private static final String EXTRA_SHARE_SCREENSHOT = "share_screenshot";
-
-    private TwidereValidator mValidator;
     private final Extractor mExtractor = new Extractor();
-
+    private final Rect mWindowDecorHitRect = new Rect();
+    private TwidereValidator mValidator;
     private AsyncTwitterWrapper mTwitterWrapper;
     private LocationManager mLocationManager;
     private SharedPreferencesWrapper mPreferences;
     private ParcelableLocation mRecentLocation;
-
     private ContentResolver mResolver;
     private TwidereAsyncTask<Void, Void, ?> mTask;
-    private IListPopupWindow mAccountSelectorPopup;
-    private TextView mTitleView, mSubtitleView;
     private GridView mMediaPreviewGrid;
-
     private TwidereMenuBar mMenuBar;
     private EditText mEditText;
-    private ProgressBar mProgress;
     private View mSendView;
     private StatusTextCountView mSendTextCountView;
-    private ComposeSelectAccountButton mSelectAccountAccounts;
-
+    private RecyclerView mAccountSelector;
     private MediaPreviewAdapter mMediaPreviewAdapter;
-
     private boolean mIsPossiblySensitive, mShouldSaveAccounts;
-
-    private long[] mSendAccountIds;
-
     private Uri mTempPhotoUri;
     private boolean mImageUploaderUsed, mStatusShortenerUsed;
     private ParcelableStatus mInReplyToStatus;
-
     private ParcelableUser mMentionUser;
     private DraftItem mDraftItem;
     private long mInReplyToStatusId;
     private String mOriginalText;
-
-    private final Rect mWindowDecorHitRect = new Rect();
+    private AccountIconsAdapter mAccountsAdapter;
 
     @Override
-    public void afterTextChanged(final Editable s) {
+    public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
 
     }
 
     @Override
-    public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+    public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+        setMenu();
+        updateTextCount();
+    }
+
+    @Override
+    public void afterTextChanged(final Editable s) {
 
     }
 
@@ -215,6 +204,21 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     @Override
     public int getThemeResourceId() {
         return getComposeThemeResource(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        outState.putLongArray(EXTRA_ACCOUNT_IDS, mAccountsAdapter.getSelectedAccounts());
+        outState.putParcelableArrayList(EXTRA_MEDIA, new ArrayList<Parcelable>(getMediaList()));
+        outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, mIsPossiblySensitive);
+        outState.putParcelable(EXTRA_STATUS, mInReplyToStatus);
+        outState.putLong(EXTRA_STATUS_ID, mInReplyToStatusId);
+        outState.putParcelable(EXTRA_USER, mMentionUser);
+        outState.putParcelable(EXTRA_DRAFT, mDraftItem);
+        outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, mShouldSaveAccounts);
+        outState.putString(EXTRA_ORIGINAL_TEXT, mOriginalText);
+        outState.putParcelable(EXTRA_TEMP_URI, mTempPhotoUri);
+        super.onSaveInstanceState(outState);
     }
 
     public boolean handleMenuItem(final MenuItem item) {
@@ -273,10 +277,11 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                     try {
                         final String action = intent.getAction();
                         if (INTENT_ACTION_EXTENSION_COMPOSE.equals(action)) {
+                            final long[] accountIds = mAccountsAdapter.getSelectedAccounts();
                             intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(mEditText.getText()));
-                            intent.putExtra(EXTRA_ACCOUNT_IDS, mSendAccountIds);
-                            if (mSendAccountIds != null && mSendAccountIds.length > 0) {
-                                final long account_id = mSendAccountIds[0];
+                            intent.putExtra(EXTRA_ACCOUNT_IDS, accountIds);
+                            if (accountIds.length > 0) {
+                                final long account_id = accountIds[0];
                                 intent.putExtra(EXTRA_NAME, getAccountName(this, account_id));
                                 intent.putExtra(EXTRA_SCREEN_NAME, getAccountScreenName(this, account_id));
                             }
@@ -345,8 +350,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             case REQUEST_EDIT_IMAGE: {
                 if (resultCode == Activity.RESULT_OK) {
                     final Uri uri = intent.getData();
-                    if (uri != null) {
-                    } else {
+                    if (uri == null) {
                         break;
                     }
                     setMenu();
@@ -391,12 +395,15 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     }
 
     @Override
+    protected void onStop() {
+        saveAccountSelection();
+        mLocationManager.removeUpdates(this);
+        super.onStop();
+    }
+
+    @Override
     public void onClick(final View view) {
         switch (view.getId()) {
-            case R.id.close: {
-                onBackPressed();
-                break;
-            }
             case R.id.send: {
                 if (isQuotingProtectedStatus()) {
                     new RetweetProtectedStatusWarnFragment().show(getSupportFragmentManager(),
@@ -406,39 +413,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 }
                 break;
             }
-            case R.id.select_account: {
-                if (!mAccountSelectorPopup.isShowing()) {
-                    mAccountSelectorPopup.show();
-                }
-                final ListView listView = mAccountSelectorPopup.getListView();
-                listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-                listView.setOnItemClickListener(this);
-                for (int i = 0, j = listView.getCount(); i < j; i++) {
-                    final long itemId = listView.getItemIdAtPosition(i);
-                    listView.setItemChecked(i, ArrayUtils.contains(mSendAccountIds, itemId));
-                }
-                break;
-            }
         }
-    }
-
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        findViewById(R.id.close).setOnClickListener(this);
-        mEditText = (EditText) findViewById(R.id.edit_text);
-        mTitleView = (TextView) findViewById(R.id.actionbar_title);
-        mSubtitleView = (TextView) findViewById(R.id.actionbar_subtitle);
-        mMediaPreviewGrid = (GridView) findViewById(R.id.media_thumbnail_preview);
-        mMenuBar = (TwidereMenuBar) findViewById(R.id.menu_bar);
-        mProgress = (ProgressBar) findViewById(R.id.actionbar_progress_indeterminate);
-        final View composeActionBar = findViewById(R.id.compose_actionbar);
-        final View composeBottomBar = findViewById(R.id.compose_bottombar);
-        mSendView = composeBottomBar.findViewById(R.id.send);
-        mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
-        mSelectAccountAccounts = (ComposeSelectAccountButton) composeActionBar.findViewById(R.id.select_account);
-        ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
-        ViewAccessor.setBackground(composeActionBar, getActionBarBackground(this, getCurrentThemeResourceId()));
     }
 
     @Override
@@ -462,6 +437,20 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     }
 
     @Override
+    public void onStatusChanged(final String provider, final int status, final Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(final String provider) {
+    }
+
+    @Override
+    public void onProviderDisabled(final String provider) {
+        setProgressBarIndeterminateVisibility(false);
+    }
+
+    @Override
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
             case R.id.send: {
@@ -475,41 +464,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
         return handleMenuItem(item);
-    }
-
-    @Override
-    public void onProviderDisabled(final String provider) {
-        setProgressBarIndeterminateVisibility(false);
-    }
-
-    @Override
-    public void onProviderEnabled(final String provider) {
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        outState.putLongArray(EXTRA_ACCOUNT_IDS, mSendAccountIds);
-        outState.putParcelableArrayList(EXTRA_MEDIA, new ArrayList<Parcelable>(getMediaList()));
-        outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, mIsPossiblySensitive);
-        outState.putParcelable(EXTRA_STATUS, mInReplyToStatus);
-        outState.putLong(EXTRA_STATUS_ID, mInReplyToStatusId);
-        outState.putParcelable(EXTRA_USER, mMentionUser);
-        outState.putParcelable(EXTRA_DRAFT, mDraftItem);
-        outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, mShouldSaveAccounts);
-        outState.putString(EXTRA_ORIGINAL_TEXT, mOriginalText);
-        outState.putParcelable(EXTRA_TEMP_URI, mTempPhotoUri);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onStatusChanged(final String provider, final int status, final Bundle extras) {
-
-    }
-
-    @Override
-    public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-        setMenu();
-        updateTextCount();
     }
 
     @Override
@@ -527,6 +481,19 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        mEditText = (EditText) findViewById(R.id.edit_text);
+        mMediaPreviewGrid = (GridView) findViewById(R.id.media_thumbnail_preview);
+        mMenuBar = (TwidereMenuBar) findViewById(R.id.menu_bar);
+        final View composeBottomBar = findViewById(R.id.compose_bottombar);
+        mSendView = composeBottomBar.findViewById(R.id.send);
+        mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
+        mAccountSelector = (RecyclerView) findViewById(R.id.account_selector);
+        ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
+    }
+
     public void removeAllMedia(final List<ParcelableMediaUpdate> list) {
         mMediaPreviewAdapter.removeAll(list);
         updateMediaPreview();
@@ -535,7 +502,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     public void saveToDrafts() {
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final ParcelableStatusUpdate.Builder builder = new ParcelableStatusUpdate.Builder();
-        builder.accounts(ParcelableAccount.getAccounts(this, mSendAccountIds));
+        builder.accounts(ParcelableAccount.getAccounts(this, mAccountsAdapter.getSelectedAccounts()));
         builder.text(text);
         builder.inReplyToStatusId(mInReplyToStatusId);
         builder.location(mRecentLocation);
@@ -571,20 +538,14 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mMenuBar.setOnMenuItemClickListener(this);
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
-        final AccountSelectorAdapter accountAdapter = new AccountSelectorAdapter(mMenuBar.getPopupContext());
-        accountAdapter.addAll(ParcelableAccount.getAccountsList(this, false));
-        mAccountSelectorPopup = IListPopupWindow.InstanceHelper.getInstance(mMenuBar.getPopupContext());
-        mAccountSelectorPopup.setInputMethodMode(IListPopupWindow.INPUT_METHOD_NOT_NEEDED);
-        mAccountSelectorPopup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        mAccountSelectorPopup.setModal(true);
-        mAccountSelectorPopup.setContentWidth(getResources().getDimensionPixelSize(R.dimen.account_selector_popup_width));
-        mAccountSelectorPopup.setAdapter(accountAdapter);
-        mAccountSelectorPopup.setAnchorView(mSelectAccountAccounts);
-//        mSelectAccountButton.setOnTouchListener(ListPopupWindowCompat.createDragToOpenListener(
-//                mAccountSelectorPopup, mSelectAccountButton));
 
-        mSelectAccountAccounts.setOnClickListener(this);
-        mSelectAccountAccounts.setOnLongClickListener(this);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mAccountSelector.setLayoutManager(linearLayoutManager);
+        mAccountSelector.addItemDecoration(new SpacingItemDecoration(this));
+        mAccountsAdapter = new AccountIconsAdapter(this);
+        mAccountSelector.setAdapter(mAccountsAdapter);
+        mAccountsAdapter.setAccounts(ParcelableAccount.getAccounts(this, false, false));
 
         mMediaPreviewAdapter = new MediaPreviewAdapter(this);
         mMediaPreviewGrid.setAdapter(mMediaPreviewAdapter);
@@ -593,7 +554,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
-            mSendAccountIds = savedInstanceState.getLongArray(EXTRA_ACCOUNT_IDS);
+            mAccountsAdapter.setSelectedAccounts(savedInstanceState.getLongArray(EXTRA_ACCOUNT_IDS));
             mIsPossiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE);
             final ArrayList<ParcelableMediaUpdate> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA);
             if (mediaList != null) {
@@ -616,11 +577,12 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             if (!handleIntent(intent)) {
                 handleDefaultIntent(intent);
             }
-            if (mSendAccountIds == null || mSendAccountIds.length == 0) {
+            final long[] accountIds = mAccountsAdapter.getSelectedAccounts();
+            if (accountIds.length == 0) {
                 final long[] idsInPrefs = TwidereArrayUtils.parseLongArray(
                         mPreferences.getString(KEY_COMPOSE_ACCOUNTS, null), ',');
                 final long[] intersection = TwidereArrayUtils.intersection(idsInPrefs, defaultAccountIds);
-                mSendAccountIds = intersection.length > 0 ? intersection : defaultAccountIds;
+                mAccountsAdapter.setSelectedAccounts(intersection.length > 0 ? intersection : defaultAccountIds);
             }
             mOriginalText = ParseUtils.parseString(mEditText.getText());
         }
@@ -640,7 +602,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             addIntentToMenu(this, mediaMenuItem.getSubMenu(), imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION);
         }
         setMenu();
-        updateAccountSelection();
         updateMediaPreview();
     }
 
@@ -656,18 +617,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     }
 
     @Override
-    protected void onStop() {
-        if (mAccountSelectorPopup != null && mAccountSelectorPopup.isShowing()) {
-            mAccountSelectorPopup.dismiss();
-        }
-        mLocationManager.removeUpdates(this);
-        super.onStop();
-    }
-
-    @Override
     protected void onTitleChanged(final CharSequence title, final int color) {
         super.onTitleChanged(title, color);
-        mTitleView.setText(title);
     }
 
     private void addMedia(final ParcelableMediaUpdate media) {
@@ -723,6 +674,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         return list.toArray(new ParcelableMediaUpdate[list.size()]);
     }
 
+    private int getMediaCount() {
+        return mMediaPreviewAdapter.getCount();
+    }
+
     private List<ParcelableMediaUpdate> getMediaList() {
         return mMediaPreviewAdapter.getAsList();
     }
@@ -732,10 +687,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         final String action = intent.getAction();
         final boolean hasAccountIds;
         if (intent.hasExtra(EXTRA_ACCOUNT_IDS)) {
-            mSendAccountIds = intent.getLongArrayExtra(EXTRA_ACCOUNT_IDS);
+            mAccountsAdapter.setSelectedAccounts(intent.getLongArrayExtra(EXTRA_ACCOUNT_IDS));
             hasAccountIds = true;
         } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
-            mSendAccountIds = new long[]{intent.getLongExtra(EXTRA_ACCOUNT_ID, -1)};
+            mAccountsAdapter.setSelectedAccounts(intent.getLongExtra(EXTRA_ACCOUNT_ID, -1));
             hasAccountIds = true;
         } else {
             hasAccountIds = false;
@@ -773,7 +728,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mEditText.setText(draft.text);
         final int selection_end = mEditText.length();
         mEditText.setSelection(selection_end);
-        mSendAccountIds = draft.account_ids;
+        mAccountsAdapter.setSelectedAccounts(draft.account_ids);
         if (draft.media != null) {
             addMedia(Arrays.asList(draft.media));
         }
@@ -826,7 +781,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mEditText.setText("@" + user.screen_name + " ");
         final int selection_end = mEditText.length();
         mEditText.setSelection(selection_end);
-        mSendAccountIds = new long[]{user.account_id};
+        mAccountsAdapter.setSelectedAccounts(user.account_id);
         return true;
     }
 
@@ -834,7 +789,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         if (status == null || status.id <= 0) return false;
         mEditText.setText(getQuoteStatus(this, status.user_screen_name, status.text_plain));
         mEditText.setSelection(0);
-        mSendAccountIds = new long[]{status.account_id};
+        mAccountsAdapter.setSelectedAccounts(status.account_id);
         return true;
     }
 
@@ -858,7 +813,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         }
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionStart, selectionEnd);
-        mSendAccountIds = new long[]{status.account_id};
+        mAccountsAdapter.setSelectedAccounts(status.account_id);
         return true;
     }
 
@@ -874,17 +829,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             mEditText.append("@" + screenName + " ");
         }
         mEditText.setSelection(mEditText.length());
-        mSendAccountIds = new long[]{accountId};
+        mAccountsAdapter.setSelectedAccounts(accountId);
         mInReplyToStatusId = inReplyToStatusId;
         return true;
     }
 
     private boolean hasMedia() {
         return !mMediaPreviewAdapter.isEmpty();
-    }
-
-    private int getMediaCount() {
-        return mMediaPreviewAdapter.getCount();
     }
 
     private boolean isQuotingProtectedStatus() {
@@ -941,8 +892,8 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             final String display_name = UserColorNameUtils.getDisplayName(this, mInReplyToStatus.user_id, mInReplyToStatus.user_name,
                     mInReplyToStatus.user_screen_name);
             setTitle(getString(R.string.quote_user, display_name));
-            mSubtitleView.setVisibility(mInReplyToStatus.user_is_protected
-                    && mInReplyToStatus.account_id != mInReplyToStatus.user_id ? View.VISIBLE : View.GONE);
+//            mSubtitleView.setVisibility(mInReplyToStatus.user_is_protected
+//                    && mInReplyToStatus.account_id != mInReplyToStatus.user_id ? View.VISIBLE : View.GONE);
         } else if (INTENT_ACTION_EDIT_DRAFT.equals(action)) {
             if (mDraftItem == null) return false;
             setTitle(R.string.edit_draft);
@@ -1007,7 +958,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
     }
 
     private void setProgressVisibility(final boolean visible) {
-        mProgress.setVisibility(visible ? View.VISIBLE : View.GONE);
+//        mProgress.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private boolean takePhoto() {
@@ -1026,14 +977,11 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         return true;
     }
 
-    private void updateAccountSelection() {
-        if (mSendAccountIds == null) return;
-        if (mShouldSaveAccounts) {
-            final SharedPreferences.Editor editor = mPreferences.edit();
-            editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mSendAccountIds, ',', false));
-            editor.apply();
-        }
-        mSelectAccountAccounts.setSelectedAccounts(mSendAccountIds);
+    private void saveAccountSelection() {
+        if (!mShouldSaveAccounts) return;
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mAccountsAdapter.getSelectedAccounts(), ',', false));
+        editor.apply();
     }
 
     private void updateMediaPreview() {
@@ -1067,12 +1015,13 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             }
             mRecentLocation = location != null ? new ParcelableLocation(location) : null;
         }
+        final long[] accountIds = mAccountsAdapter.getSelectedAccounts();
         final boolean isQuote = INTENT_ACTION_QUOTE.equals(getIntent().getAction());
         final ParcelableLocation statusLocation = attach_location ? mRecentLocation : null;
         final boolean linkToQuotedTweet = mPreferences.getBoolean(KEY_LINK_TO_QUOTED_TWEET, true);
         final long inReplyToStatusId = !isQuote || linkToQuotedTweet ? mInReplyToStatusId : -1;
         final boolean isPossiblySensitive = hasMedia && mIsPossiblySensitive;
-        mTwitterWrapper.updateStatusAsync(mSendAccountIds, text, statusLocation, getMedia(), inReplyToStatusId,
+        mTwitterWrapper.updateStatusAsync(accountIds, text, statusLocation, getMedia(), inReplyToStatusId,
                 isPossiblySensitive);
         if (mPreferences.getBoolean(KEY_NO_CLOSE_AFTER_TWEET_SENT, false)
                 && (mInReplyToStatus == null || mInReplyToStatusId <= 0)) {
@@ -1107,158 +1056,105 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mSendTextCountView.setTextCount(validatedCount);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final ListView listView = (ListView) parent;
-        final SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
-        mSendAccountIds = new long[listView.getCheckedItemCount()];
-        for (int i = 0, j = listView.getCount(), k = 0; i < j; i++) {
-            if (checkedPositions.get(i)) {
-                mSendAccountIds[k++] = listView.getItemIdAtPosition(i);
-            }
-        }
-        updateAccountSelection();
-    }
+    static class AccountIconViewHolder extends ViewHolder implements OnClickListener {
 
-    public static class RetweetProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
-            DialogInterface.OnClickListener {
+        private final AccountIconsAdapter adapter;
+        private final ShapedImageView iconView;
+
+        public AccountIconViewHolder(AccountIconsAdapter adapter, View itemView) {
+            super(itemView);
+            this.adapter = adapter;
+            iconView = (ShapedImageView) itemView.findViewById(android.R.id.icon);
+            itemView.setOnClickListener(this);
+        }
+
+        public void showAccount(AccountIconsAdapter adapter, ParcelableAccount account, boolean isSelected) {
+            itemView.setAlpha(isSelected ? 1 : 0.7f);
+            final ImageLoaderWrapper loader = adapter.getImageLoader();
+            loader.displayProfileImage(iconView, account.profile_image_url);
+            iconView.setBorderColor(account.color);
+        }
 
         @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            final Activity activity = getActivity();
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE: {
-                    if (activity instanceof ComposeActivity) {
-                        ((ComposeActivity) activity).updateStatus();
-                    }
-                    break;
-                }
-            }
+        public void onClick(View v) {
+            adapter.toggleSelection(getPosition());
+        }
 
+
+    }
+
+    private static class AccountIconsAdapter extends Adapter<AccountIconViewHolder> {
+
+        private final LayoutInflater mInflater;
+        private final ImageLoaderWrapper mImageLoader;
+        private final LongSparseArray<Boolean> mSelection;
+
+        private ParcelableAccount[] mAccounts;
+
+        public AccountIconsAdapter(Context context) {
+            mInflater = LayoutInflater.from(context);
+            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mSelection = new LongSparseArray<>();
+        }
+
+        public ImageLoaderWrapper getImageLoader() {
+            return mImageLoader;
         }
 
         @NonNull
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            builder.setMessage(R.string.quote_protected_status_warning_message);
-            builder.setPositiveButton(R.string.send_anyway, this);
-            builder.setNegativeButton(android.R.string.cancel, null);
-            return builder.create();
-        }
-    }
-
-    public static class UnsavedTweetDialogFragment extends BaseSupportDialogFragment implements
-            DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            final Activity activity = getActivity();
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE: {
-                    if (activity instanceof ComposeActivity) {
-                        ((ComposeActivity) activity).saveToDrafts();
-                    }
-                    activity.finish();
-                    break;
-                }
-                case DialogInterface.BUTTON_NEGATIVE: {
-                    if (activity instanceof ComposeActivity) {
-                        new DiscardTweetTask((ComposeActivity) activity).executeTask();
-                    } else {
-                        activity.finish();
-                    }
-                    break;
+        public long[] getSelectedAccounts() {
+            if (mAccounts == null) return new long[0];
+            final long[] temp = new long[mAccounts.length];
+            int selectedCount = 0;
+            for (ParcelableAccount account : mAccounts) {
+                if (mSelection.get(account.account_id, false)) {
+                    temp[selectedCount++] = account.account_id;
                 }
             }
-
+            final long[] result = new long[selectedCount];
+            System.arraycopy(temp, 0, result, 0, result.length);
+            return result;
         }
 
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            builder.setMessage(R.string.unsaved_status);
-            builder.setPositiveButton(R.string.save, this);
-            builder.setNegativeButton(R.string.discard, this);
-            return builder.create();
-        }
-    }
-
-    public static class ViewStatusDialogFragment extends BaseSupportDialogFragment {
-
-        private StatusViewHolder mHolder;
-        private View mStatusContainer;
-
-        public ViewStatusDialogFragment() {
-            setStyle(STYLE_NO_TITLE, 0);
-        }
-
-        @Override
-        public void onActivityCreated(final Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            final Bundle args = getArguments();
-            if (args == null || args.getParcelable(EXTRA_STATUS) == null) {
-                dismiss();
-                return;
+        public void setSelectedAccounts(long... accountIds) {
+            mSelection.clear();
+            if (accountIds != null) {
+                for (long accountId : accountIds) {
+                    mSelection.put(accountId, true);
+                }
             }
-            final TwidereApplication application = getApplication();
-            final FragmentActivity activity = getActivity();
-            final ImageLoaderWrapper loader = application.getImageLoaderWrapper();
-            final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
-            final AsyncTwitterWrapper twitter = getTwitterWrapper();
-            final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
-                    SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
-            final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-            final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-            mHolder.displayStatus(activity, loader, handler, twitter, profileImageStyle,
-                    mediaPreviewStyle, status, null);
-            mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
-            mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
-            mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);
+            notifyDataSetChanged();
         }
 
         @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
+        public AccountIconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            final View view = mInflater.inflate(R.layout.adapter_item_compose_account, parent, false);
+            return new AccountIconViewHolder(this, view);
         }
 
         @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            mStatusContainer = view.findViewById(R.id.status_container);
-            mHolder = new StatusViewHolder(view);
-        }
-    }
-
-    private static class AccountSelectorAdapter extends BaseArrayAdapter<ParcelableAccount> {
-
-        public AccountSelectorAdapter(final Context context) {
-            super(context, android.R.layout.simple_list_item_multiple_choice);
+        public void onBindViewHolder(AccountIconViewHolder holder, int position) {
+            final ParcelableAccount account = mAccounts[position];
+            final boolean isSelected = mSelection.get(account.account_id, false);
+            holder.showAccount(this, account, isSelected);
         }
 
         @Override
-        public long getItemId(int position) {
-            return super.getItem(position).account_id;
+        public int getItemCount() {
+            return mAccounts != null ? mAccounts.length : 0;
         }
 
-        @Override
-        public boolean hasStableIds() {
-            return true;
+        public void setAccounts(ParcelableAccount[] accounts) {
+            mAccounts = accounts;
+            notifyDataSetChanged();
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final View view = super.getView(position, convertView, parent);
-            final ParcelableAccount account = getItem(position);
-            final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-            text1.setText(Utils.getAccountDisplayName(getContext(), account.account_id, isDisplayNameFirst()));
-            return view;
+        private void toggleSelection(int position) {
+            if (mAccounts == null) return;
+            final long accountId = mAccounts[position].account_id;
+            mSelection.put(accountId, !mSelection.get(accountId, false));
+            notifyDataSetChanged();
         }
-
     }
 
     private static class AddBitmapTask extends AddMediaTask {
@@ -1296,10 +1192,6 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         private final Uri src, dst;
         private final boolean delete_src;
 
-        Uri getSrc() {
-            return src;
-        }
-
         AddMediaTask(final ComposeActivity activity, final Uri src, final Uri dst, final int media_type,
                      final boolean delete_src) {
             this.activity = activity;
@@ -1328,6 +1220,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 return false;
             }
             return true;
+        }
+
+        Uri getSrc() {
+            return src;
         }
 
         @Override
@@ -1437,6 +1333,10 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         }
 
+        public List<ParcelableMediaUpdate> getAsList() {
+            return Collections.unmodifiableList(getObjects());
+        }
+
         @Override
         public View getView(final int position, final View convertView, final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
@@ -1446,10 +1346,108 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
             return view;
         }
 
-        public List<ParcelableMediaUpdate> getAsList() {
-            return Collections.unmodifiableList(getObjects());
+
+    }
+
+    public static class RetweetProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
+            DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(final DialogInterface dialog, final int which) {
+            final Activity activity = getActivity();
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    if (activity instanceof ComposeActivity) {
+                        ((ComposeActivity) activity).updateStatus();
+                    }
+                    break;
+                }
+            }
+
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(final Bundle savedInstanceState) {
+            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            builder.setMessage(R.string.quote_protected_status_warning_message);
+            builder.setPositiveButton(R.string.send_anyway, this);
+            builder.setNegativeButton(android.R.string.cancel, null);
+            return builder.create();
         }
     }
 
+    private static class SpacingItemDecoration extends ItemDecoration {
 
+        private final int mSpacingSmall, mSpacingExtraSmall;
+
+        SpacingItemDecoration(Context context) {
+            final Resources resources = context.getResources();
+            mSpacingSmall = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
+            mSpacingExtraSmall = resources.getDimensionPixelSize(R.dimen.element_spacing_xsmall);
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+            final int pos = parent.getChildPosition(view);
+            if (pos == 0) {
+                outRect.set(mSpacingSmall, mSpacingSmall, mSpacingSmall, mSpacingExtraSmall);
+            } else if (pos == parent.getAdapter().getItemCount() - 1) {
+                outRect.set(mSpacingSmall, mSpacingExtraSmall, mSpacingSmall, mSpacingSmall);
+            } else {
+                outRect.set(mSpacingSmall, mSpacingExtraSmall, mSpacingSmall, mSpacingExtraSmall);
+
+            }
+        }
+    }
+
+    public static class ViewStatusDialogFragment extends BaseSupportDialogFragment {
+
+        private StatusViewHolder mHolder;
+        private View mStatusContainer;
+
+        public ViewStatusDialogFragment() {
+            setStyle(STYLE_NO_TITLE, 0);
+        }
+
+        @Override
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
+        }
+
+        @Override
+        public void onActivityCreated(final Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            final Bundle args = getArguments();
+            if (args == null || args.getParcelable(EXTRA_STATUS) == null) {
+                dismiss();
+                return;
+            }
+            final TwidereApplication application = getApplication();
+            final FragmentActivity activity = getActivity();
+            final ImageLoaderWrapper loader = application.getImageLoaderWrapper();
+            final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
+            final AsyncTwitterWrapper twitter = getTwitterWrapper();
+            final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
+                    SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
+            final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+            final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+            mHolder.displayStatus(activity, loader, handler, twitter, profileImageStyle,
+                    mediaPreviewStyle, status, null, true);
+            mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
+            mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
+            mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            mStatusContainer = view.findViewById(R.id.status_container);
+            mHolder = new StatusViewHolder(view);
+        }
+
+
+    }
 }

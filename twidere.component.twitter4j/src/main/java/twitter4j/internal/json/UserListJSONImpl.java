@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -218,14 +218,14 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
 		}
 	}
 
-	static PagableResponseList<UserList> createPagableUserListList(final HttpResponse res, final Configuration conf)
+	static PageableResponseList<UserList> createPagableUserListList(final HttpResponse res, final Configuration conf)
 			throws TwitterException {
 		try {
 			final JSONObject json = res.asJSONObject();
 			final JSONArray list = json.getJSONArray("lists");
 			final int size = list.length();
 			@SuppressWarnings("unchecked")
-			final PagableResponseList<UserList> users = new PagableResponseListImpl<UserList>(size, json, res);
+			final PageableResponseList<UserList> users = new PageableResponseListImpl<UserList>(size, json, res);
 			for (int i = 0; i < size; i++) {
 				final JSONObject userListJson = list.getJSONObject(i);
 				final UserList userList = new UserListJSONImpl(userListJson);

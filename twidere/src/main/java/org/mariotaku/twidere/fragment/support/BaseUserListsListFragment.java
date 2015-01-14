@@ -118,8 +118,6 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
         }
         mAdapter = new ParcelableUserListsListAdapter(getActivity());
         mListView = getListView();
-        mListView.setDivider(null);
-        mListView.setSelector(android.R.color.transparent);
         mListView.setFastScrollEnabled(mPreferences.getBoolean(KEY_FAST_SCROLL_THUMB, false));
         // final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
         // if (mAccountId != account_id) {

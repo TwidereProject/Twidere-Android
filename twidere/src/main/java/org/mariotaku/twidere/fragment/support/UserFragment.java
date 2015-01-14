@@ -1256,13 +1256,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final Twitter twitter = getTwitterInstance(context, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final Relationship result = twitter.showFriendship(account_id, user_id);
-                if (result.isSourceBlockingTarget() || result.isSourceBlockedByTarget()) {
+                final Relationship relationship = twitter.showFriendship(account_id, user_id);
+                if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
                     Utils.setLastSeen(context, user_id, -1);
                 } else {
                     Utils.setLastSeen(context, user_id, System.currentTimeMillis());
                 }
-                return SingleResponse.getInstance(result);
+                Utils.updateRelationship(context, relationship, account_id);
+                return SingleResponse.getInstance(relationship);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }

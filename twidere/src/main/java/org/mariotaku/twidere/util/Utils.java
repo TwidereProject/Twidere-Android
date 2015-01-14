@@ -110,6 +110,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.menucomponent.internal.menu.MenuUtils;
+import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.querybuilder.AllColumns;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
@@ -231,6 +232,7 @@ import javax.net.ssl.SSLException;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.DirectMessage;
 import twitter4j.RateLimitStatus;
+import twitter4j.Relationship;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
@@ -262,43 +264,51 @@ public final class Utils implements Constants, TwitterConstants {
 
     private static final String UA_TEMPLATE = "Mozilla/5.0 (Linux; Android %s; %s Build/%s) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.111 Safari/537.36";
 
-    public static final Pattern PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res\\/xml\\/([\\w_]+)\\.xml");
+    public static final Pattern PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml");
 
-    public static final Pattern PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)\\/([\\w_]+)");
+    public static final Pattern PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)");
     private static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final UriMatcher LINK_HANDLER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH, TABLE_ID_ACCOUNTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH, TABLE_ID_STATUSES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Mentions.CONTENT_PATH, TABLE_ID_MENTIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH, TABLE_ID_DRAFTS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH, TABLE_ID_CACHED_USERS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Users.CONTENT_PATH, TABLE_ID_FILTERED_USERS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH,
+                TABLE_ID_ACCOUNTS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH,
+                TABLE_ID_STATUSES);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Mentions.CONTENT_PATH,
+                TABLE_ID_MENTIONS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH,
+                TABLE_ID_DRAFTS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH,
+                TABLE_ID_CACHED_USERS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Users.CONTENT_PATH,
+                TABLE_ID_FILTERED_USERS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Keywords.CONTENT_PATH,
                 TABLE_ID_FILTERED_KEYWORDS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Sources.CONTENT_PATH,
                 TABLE_ID_FILTERED_SOURCES);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Links.CONTENT_PATH, TABLE_ID_FILTERED_LINKS);
-        CONTENT_PROVIDER_URI_MATCHER
-                .addURI(TwidereDataStore.AUTHORITY, DirectMessages.CONTENT_PATH, TABLE_ID_DIRECT_MESSAGES);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Links.CONTENT_PATH,
+                TABLE_ID_FILTERED_LINKS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.CONTENT_PATH,
+                TABLE_ID_DIRECT_MESSAGES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Inbox.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_INBOX);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Outbox.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_OUTBOX);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH + "/#/#",
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATION);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH_SCREEN_NAME
-                + "/#/*", TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH_SCREEN_NAME + "/#/*",
+                TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.ConversationEntries.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedTrends.Local.CONTENT_PATH,
                 TABLE_ID_TRENDS_LOCAL);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Tabs.CONTENT_PATH, TABLE_ID_TABS);
-        CONTENT_PROVIDER_URI_MATCHER
-                .addURI(TwidereDataStore.AUTHORITY, CachedStatuses.CONTENT_PATH, TABLE_ID_CACHED_STATUSES);
-        CONTENT_PROVIDER_URI_MATCHER
-                .addURI(TwidereDataStore.AUTHORITY, CachedHashtags.CONTENT_PATH, TABLE_ID_CACHED_HASHTAGS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Tabs.CONTENT_PATH,
+                TABLE_ID_TABS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedStatuses.CONTENT_PATH,
+                TABLE_ID_CACHED_STATUSES);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedHashtags.CONTENT_PATH,
+                TABLE_ID_CACHED_HASHTAGS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
                 TABLE_ID_CACHED_RELATIONSHIPS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SavedSearches.CONTENT_PATH,
@@ -314,7 +324,8 @@ public final class Utils implements Constants, TwitterConstants {
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Permissions.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_PERMISSIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DNS.CONTENT_PATH + "/*", VIRTUAL_TABLE_ID_DNS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DNS.CONTENT_PATH + "/*",
+                VIRTUAL_TABLE_ID_DNS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedImages.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_CACHED_IMAGES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CacheFiles.CONTENT_PATH + "/*",
@@ -333,6 +344,10 @@ public final class Utils implements Constants, TwitterConstants {
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_READY,
                 VIRTUAL_TABLE_ID_DATABASE_READY);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/#",
+                VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/#",
+                VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE);
 
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS, null, LINK_ID_STATUS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER, null, LINK_ID_USER);
@@ -645,6 +660,7 @@ public final class Utils implements Constants, TwitterConstants {
         // Clean cached values.
         for (final Uri uri : CACHE_URIS) {
             final String table = getTableNameByUri(uri);
+            if (table == null) continue;
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             qb.select(new Column(BaseColumns._ID));
             qb.from(new Tables(table));
@@ -3836,6 +3852,12 @@ public final class Utils implements Constants, TwitterConstants {
             out.add(status);
         }
         return in.size() != out.size();
+    }
+
+    public static void updateRelationship(Context context, Relationship relationship, long accountId) {
+        final ContentResolver resolver = context.getContentResolver();
+        final ContentValues values = ContentValuesCreator.createCachedRelationship(relationship, accountId);
+        resolver.insert(CachedRelationships.CONTENT_URI, values);
     }
 
     private static Drawable getMetadataDrawable(final PackageManager pm, final ActivityInfo info, final String key) {

@@ -79,7 +79,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                         android:textColor="?android:textColorPrimary"
                         android:textStyle="bold"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/screen_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
 
                 </LinearLayout>
 
-                <Switch
+                <org.mariotaku.twidere.view.themed.ThemedSwitch
                     android:id="@+id/toggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

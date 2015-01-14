@@ -31,8 +31,8 @@ import org.mariotaku.jsonserializer.JSONParcelable;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import twitter4j.URLEntity;
 import twitter4j.User;
@@ -74,7 +74,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
 
     public final int background_color, link_color, text_color;
 
-    public final boolean is_cache;
+    public final boolean is_cache, is_basic;
 
     public ParcelableUser(final long account_id, final long id, final String name,
                           final String screen_name, final String profile_image_url) {
@@ -106,11 +106,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         link_color = 0;
         text_color = 0;
         is_cache = true;
-    }
-
-    @Deprecated
-    public ParcelableUser(final Cursor cursor, final long account_id) {
-        this(cursor, new CachedIndices(cursor), account_id);
+        is_basic = true;
     }
 
     public ParcelableUser(final Cursor cursor, CachedIndices indices, final long account_id) {
@@ -136,12 +132,13 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         url = indices.url != -1 ? cursor.getString(indices.url) : null;
         url_expanded = indices.url_expanded != -1 ? cursor.getString(indices.url_expanded) : null;
         profile_banner_url = indices.profile_banner_url != -1 ? cursor.getString(indices.profile_banner_url) : null;
-        is_cache = true;
         description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
         is_following = indices.is_following != -1 && cursor.getInt(indices.is_following) == 1;
         background_color = indices.background_color != -1 ? cursor.getInt(indices.background_color) : 0;
         link_color = indices.link_color != -1 ? cursor.getInt(indices.link_color) : 0;
         text_color = indices.text_color != -1 ? cursor.getInt(indices.text_color) : 0;
+        is_cache = true;
+        is_basic = indices.description_plain == -1 || indices.url == -1 || indices.location == -1;
     }
 
     public ParcelableUser(final JSONParcel in) {
@@ -167,12 +164,13 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = in.readInt("statuses_count");
         favorites_count = in.readInt("favorites_count");
         listed_count = in.readInt("listed_count");
-        is_cache = in.readBoolean("is_cache");
         url_expanded = in.readString("url_expanded");
         is_following = in.readBoolean("is_following");
         background_color = in.readInt("background_color");
         link_color = in.readInt("link_color");
         text_color = in.readInt("text_color");
+        is_cache = in.readBoolean("is_cache");
+        is_basic = in.readBoolean("is_basic");
     }
 
     public ParcelableUser(final Parcel in) {
@@ -198,12 +196,13 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = in.readInt();
         favorites_count = in.readInt();
         listed_count = in.readInt();
-        is_cache = in.readInt() == 1;
         url_expanded = in.readString();
         is_following = in.readInt() == 1;
         background_color = in.readInt();
         link_color = in.readInt();
         text_color = in.readInt();
+        is_cache = in.readInt() == 1;
+        is_basic = in.readInt() == 1;
     }
 
     public ParcelableUser(final User user, final long account_id) {
@@ -236,11 +235,12 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = user.getStatusesCount();
         favorites_count = user.getFavouritesCount();
         listed_count = user.getListedCount();
-        is_cache = false;
         is_following = user.isFollowing();
         background_color = ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0);
         link_color = ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0);
         text_color = ParseUtils.parseColor("#" + user.getProfileTextColor(), 0);
+        is_cache = false;
+        is_basic = false;
     }
 
     @Override
@@ -289,12 +289,13 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeInt(statuses_count);
         out.writeInt(favorites_count);
         out.writeInt(listed_count);
-        out.writeInt(is_cache ? 1 : 0);
         out.writeString(url_expanded);
         out.writeInt(is_following ? 1 : 0);
         out.writeInt(background_color);
         out.writeInt(link_color);
         out.writeInt(text_color);
+        out.writeInt(is_cache ? 1 : 0);
+        out.writeInt(is_basic ? 1 : 0);
     }
 
     @Override
@@ -393,12 +394,13 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeInt("statuses_count", statuses_count);
         out.writeInt("favorites_count", favorites_count);
         out.writeInt("listed_count", listed_count);
-        out.writeBoolean("is_cache", is_cache);
         out.writeString("url_expanded", url_expanded);
         out.writeBoolean("is_following", is_following);
         out.writeInt("background_color", background_color);
         out.writeInt("link_color", link_color);
         out.writeInt("text_color", text_color);
+        out.writeBoolean("is_cache", is_cache);
+        out.writeBoolean("is_basic", is_basic);
     }
 
     public static final class CachedIndices {

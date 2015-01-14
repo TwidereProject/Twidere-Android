@@ -65,7 +65,7 @@
 
     <!-- Dimensions for compose dialog -->
     <dimen name="compose_min_width">400dp</dimen>
-    <dimen name="compose_min_height">320dp</dimen>
+    <dimen name="compose_min_height">240dp</dimen>
 
     <!-- Dimensions for Tab indicator -->
     <dimen name="tab_item_minwidth_vpi">64dp</dimen>
@@ -97,5 +97,6 @@
     <dimen name="padding_profile_image_list_item">@dimen/element_spacing_small</dimen>
     <dimen name="icon_size_profile_image_dashboard_current">72dp</dimen>
     <dimen name="elevation_settings_item">0dp</dimen>
+    <dimen name="popup_width_account_selector">160dp</dimen>
 
 </resources>

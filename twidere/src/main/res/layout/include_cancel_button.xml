@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:layout_weight="1">
 
-    <org.mariotaku.twidere.view.ActionIconTextView
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
         style="?android:actionBarTabTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

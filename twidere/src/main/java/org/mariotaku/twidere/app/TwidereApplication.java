@@ -40,7 +40,6 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.otto.Bus;
 
-import org.mariotaku.gallery3d.util.GalleryUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
@@ -181,7 +180,6 @@ public class TwidereApplication extends Application implements Constants, OnShar
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         initializeAsyncTask();
-        GalleryUtils.initialize(this);
         initAccountColor(this);
         initUserColor(this);
 
@@ -251,7 +249,7 @@ public class TwidereApplication extends Application implements Constants, OnShar
         // So we load it here to comply the rule.
         try {
             Class.forName(AsyncTask.class.getName());
-        } catch (final ClassNotFoundException e) {
+        } catch (final ClassNotFoundException ignore) {
         }
     }
 

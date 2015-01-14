@@ -26,35 +26,29 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ExtensionsAdapter;
 import org.mariotaku.twidere.loader.ExtensionsListLoader;
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo;
 import org.mariotaku.twidere.util.PermissionsManager;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
-public class ExtensionsListFragment extends BaseListFragment implements Constants,
-        LoaderCallbacks<List<ExtensionInfo>>, OnItemClickListener, OnItemLongClickListener,
-        OnMenuItemClickListener {
+public class ExtensionsListFragment extends BaseListFragment implements Constants, LoaderCallbacks<List<ExtensionInfo>> {
 
     private ExtensionsAdapter mAdapter;
     private PackageManager mPackageManager;
     private PermissionsManager mPermissionsManager;
-    private ExtensionInfo mSelectedExtension;
-    private ListView mListView;
-    private PopupMenu mPopupMenu;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -63,45 +57,20 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
         mPermissionsManager = new PermissionsManager(getActivity());
         mAdapter = new ExtensionsAdapter(getActivity());
         setListAdapter(mAdapter);
-        mListView = getListView();
-        mListView.setOnItemClickListener(this);
-        mListView.setOnItemLongClickListener(this);
+        final ListView listView = getListView();
+        listView.setOnCreateContextMenuListener(this);
         getLoaderManager().initLoader(0, null, this);
         setListShown(false);
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public Loader<List<ExtensionInfo>> onCreateLoader(final int id, final Bundle args) {
         return new ExtensionsListLoader(getActivity(), mPackageManager);
-    }
-
-    @Override
-    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-        openSettings(mAdapter.getItem(position));
-    }
-
-    @Override
-    public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-        mSelectedExtension = mAdapter.getItem(position);
-        if (mSelectedExtension == null) return false;
-        mPopupMenu = PopupMenu.getInstance(getActivity(), view);
-        mPopupMenu.inflate(R.menu.action_extension);
-        final Menu menu = mPopupMenu.getMenu();
-        final MenuItem settings = menu.findItem(MENU_SETTINGS);
-        final Intent intent = mSelectedExtension.pname != null && mSelectedExtension.settings != null ? new Intent(
-                INTENT_ACTION_EXTENSION_SETTINGS) : null;
-        if (intent != null) {
-            intent.setClassName(mSelectedExtension.pname, mSelectedExtension.settings);
-        }
-        settings.setVisible(intent != null && mPackageManager.queryIntentActivities(intent, 0).size() == 1);
-        mPopupMenu.setOnMenuItemClickListener(this);
-        mPopupMenu.show();
-        return true;
-    }
-
-    @Override
-    public void onLoaderReset(final Loader<List<ExtensionInfo>> loader) {
-        mAdapter.setData(null);
     }
 
     @Override
@@ -111,26 +80,13 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
     }
 
     @Override
-    public boolean onMenuItemClick(final MenuItem item) {
-        if (mSelectedExtension == null) return false;
-        switch (item.getItemId()) {
-            case MENU_SETTINGS: {
-                openSettings(mSelectedExtension);
-                break;
-            }
-            case MENU_DELETE: {
-                final Uri packageUri = Uri.parse("package:" + mSelectedExtension.pname);
-                final Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-                startActivity(uninstallIntent);
-                break;
-            }
-            case MENU_REVOKE: {
-                mPermissionsManager.revoke(mSelectedExtension.pname);
-                mAdapter.notifyDataSetChanged();
-                break;
-            }
-        }
-        return false;
+    public void onLoaderReset(final Loader<List<ExtensionInfo>> loader) {
+        mAdapter.setData(null);
+    }
+
+    @Override
+    public void onListItemClick(final ListView l, final View v, final int position, final long id) {
+        openSettings(mAdapter.getItem(position));
     }
 
     @Override
@@ -140,11 +96,44 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
     }
 
     @Override
-    public void onStop() {
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        final MenuInflater inflater = new MenuInflater(v.getContext());
+        inflater.inflate(R.menu.action_extension, menu);
+        final AdapterContextMenuInfo adapterMenuInfo = (AdapterContextMenuInfo) menuInfo;
+        final ExtensionInfo extensionInfo = mAdapter.getItem(adapterMenuInfo.position);
+        if (extensionInfo.pname != null && extensionInfo.settings != null) {
+            final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SETTINGS);
+            intent.setClassName(extensionInfo.pname, extensionInfo.settings);
+            Utils.setMenuItemAvailability(menu, MENU_SETTINGS, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
+        } else {
+            Utils.setMenuItemAvailability(menu, MENU_SETTINGS, false);
         }
-        super.onStop();
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterContextMenuInfo adapterMenuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+        final ExtensionInfo extensionInfo = mAdapter.getItem(adapterMenuInfo.position);
+        switch (item.getItemId()) {
+            case MENU_SETTINGS: {
+                openSettings(extensionInfo);
+                break;
+            }
+            case MENU_DELETE: {
+                uninstallExtension(extensionInfo);
+                break;
+            }
+            case MENU_REVOKE: {
+                mPermissionsManager.revoke(extensionInfo.pname);
+                mAdapter.notifyDataSetChanged();
+                break;
+            }
+            default: {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean openSettings(final ExtensionInfo info) {
@@ -153,6 +142,19 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
         intent.setClassName(info.pname, info.settings);
         try {
             startActivity(intent);
+        } catch (final Exception e) {
+            Log.w(LOGTAG, e);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean uninstallExtension(final ExtensionInfo info) {
+        if (info == null) return false;
+        final Uri packageUri = Uri.parse("package:" + info.pname);
+        final Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+        try {
+            startActivity(uninstallIntent);
         } catch (final Exception e) {
             Log.w(LOGTAG, e);
             return false;

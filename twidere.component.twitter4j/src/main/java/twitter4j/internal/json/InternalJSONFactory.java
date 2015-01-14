@@ -33,7 +33,7 @@ import twitter4j.IDs;
 import twitter4j.Location;
 import twitter4j.MediaUploadResponse;
 import twitter4j.OEmbed;
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.Place;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -90,9 +90,9 @@ public interface InternalJSONFactory {
 
 	OEmbed createOEmbed(HttpResponse httpResponse) throws TwitterException;
 
-	PagableResponseList<User> createPagableUserList(HttpResponse res) throws TwitterException;
+	PageableResponseList<User> createPagableUserList(HttpResponse res) throws TwitterException;
 
-	PagableResponseList<UserList> createPagableUserListList(HttpResponse res) throws TwitterException;
+	PageableResponseList<UserList> createPagableUserListList(HttpResponse res) throws TwitterException;
 
 	Place createPlace(HttpResponse res) throws TwitterException;
 

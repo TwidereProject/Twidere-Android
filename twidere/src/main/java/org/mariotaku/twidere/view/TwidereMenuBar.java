@@ -3,6 +3,7 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff.Mode;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,9 @@ public class TwidereMenuBar extends MenuBar implements MenuBarListener, Constant
         mPopupItemColor = Utils.getContrastYIQ(popupItemBackgroundColor, colorDark, colorLight);
         mHighlightColor = isInEditMode() ? 0 : ThemeUtils.getUserAccentColor(getContext());
         setMenuBarListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setPopupStyleAttribute(android.R.attr.actionOverflowMenuStyle);
+        }
     }
 
     public void setOnMenuItemClickListener(OnMenuItemClickListener listener) {

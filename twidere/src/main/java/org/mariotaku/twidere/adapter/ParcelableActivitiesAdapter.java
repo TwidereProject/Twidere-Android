@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.View;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
@@ -35,7 +36,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     private List<ParcelableActivity> mData;
 
     public ParcelableActivitiesAdapter(Context context, boolean compact) {
-        super(context,compact);
+        super(context, compact);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     }
 
     @Override
-    public void onItemMenuClick(ViewHolder holder, int position) {
+    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
 
     }
 

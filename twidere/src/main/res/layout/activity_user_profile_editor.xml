@@ -93,7 +93,7 @@
                                     android:orientation="horizontal"
                                     android:splitMotionEvents="false">
 
-                                    <org.mariotaku.twidere.view.ActionIconTextView
+                                    <org.mariotaku.twidere.view.ActionIconThemedTextView
                                         android:id="@+id/profile_image_camera"
                                         style="?android:borderlessButtonStyle"
                                         android:layout_width="0dp"
@@ -106,7 +106,7 @@
                                         android:paddingTop="0dp"
                                         android:text="@string/photo"/>
 
-                                    <org.mariotaku.twidere.view.ActionIconTextView
+                                    <org.mariotaku.twidere.view.ActionIconThemedTextView
                                         android:id="@+id/profile_image_gallery"
                                         style="?android:borderlessButtonStyle"
                                         android:layout_width="0dp"
@@ -162,7 +162,7 @@
                                     android:orientation="horizontal"
                                     android:splitMotionEvents="false">
 
-                                    <org.mariotaku.twidere.view.ActionIconTextView
+                                    <org.mariotaku.twidere.view.ActionIconThemedTextView
                                         android:id="@+id/profile_banner_gallery"
                                         style="?android:borderlessButtonStyle"
                                         android:layout_width="0dp"
@@ -175,7 +175,7 @@
                                         android:paddingTop="0dp"
                                         android:text="@string/gallery"/>
 
-                                    <org.mariotaku.twidere.view.ActionIconTextView
+                                    <org.mariotaku.twidere.view.ActionIconThemedTextView
                                         android:id="@+id/profile_banner_remove"
                                         style="?android:borderlessButtonStyle"
                                         android:layout_width="0dp"

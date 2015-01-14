@@ -136,7 +136,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mHolder.displayStatus(activity, loader, handler, twitter, profileImageStyle,
-                mediaPreviewStyle, status, null);
+                mediaPreviewStyle, status, null, true);
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);

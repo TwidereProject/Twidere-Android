@@ -23,7 +23,7 @@ import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUserList;
 
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UserList;
@@ -43,7 +43,7 @@ public class UserListMembershipsLoader extends BaseUserListsLoader {
 	}
 
 	@Override
-	public PagableResponseList<UserList> getUserLists(final Twitter twitter) throws TwitterException {
+	public PageableResponseList<UserList> getUserLists(final Twitter twitter) throws TwitterException {
 		if (twitter == null) return null;
 		if (mUserId > 0)
 			return twitter.getUserListMemberships(mUserId, getCursor());

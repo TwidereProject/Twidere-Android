@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,6 +23,7 @@ import org.mariotaku.twidere.extension.streaming.util.TwidereHostAddressResolver
 import org.mariotaku.twidere.extension.streaming.util.Utils;
 import org.mariotaku.twidere.library.twitter4j.streaming.BuildConfig;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
@@ -163,33 +163,18 @@ public class StreamingService extends Service implements Constants, PrivateConst
 
     private boolean setTwitterInstances(final TwidereSharedPreferences prefs) {
         if (prefs == null) return false;
-        final String[] cols = new String[]{Accounts.OAUTH_TOKEN, Accounts.OAUTH_TOKEN_SECRET, Accounts.ACCOUNT_ID,
-                Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
-        final String where = Accounts.IS_ACTIVATED + " = 1" + " AND " + Accounts.AUTH_TYPE + " = "
-                + Accounts.AUTH_TYPE_OAUTH;
-        final Cursor cur = mResolver.query(Accounts.CONTENT_URI, cols, where, null, null);
-        if (cur == null) return false;
+        final List<ParcelableCredentials> accountsList = ParcelableAccount.getCredentialsList(this, true);
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, "Setting up twitter stream instances");
         }
-        final int count = cur.getCount();
-        mAccountIds = new long[count];
-        if (count == 0) {
-            cur.close();
-            return false;
-        }
-        cur.moveToFirst();
+        mAccountIds = new long[accountsList.size()];
         clearTwitterInstances();
-        final int token_idx = cur.getColumnIndex(Accounts.OAUTH_TOKEN);
-        final int secret_idx = cur.getColumnIndex(Accounts.OAUTH_TOKEN_SECRET);
-        final int account_id_idx = cur.getColumnIndex(Accounts.ACCOUNT_ID);
-        final int consumer_key_idx = cur.getColumnIndex(Accounts.CONSUMER_KEY);
-        final int consumer_secret_idx = cur.getColumnIndex(Accounts.CONSUMER_SECRET);
-        while (!cur.isAfterLast()) {
-            final String token = cur.getString(token_idx);
-            final String secret = cur.getString(secret_idx);
-            final long account_id = cur.getLong(account_id_idx);
-            mAccountIds[cur.getPosition()] = account_id;
+        for (int i = 0, j = accountsList.size(); i < j; i++) {
+            final ParcelableCredentials account = accountsList.get(i);
+            final String token = account.oauth_token;
+            final String secret = account.oauth_token_secret;
+            final long account_id = account.account_id;
+            mAccountIds[i] = account_id;
             final StreamConfigurationBuilder cb = new StreamConfigurationBuilder();
             cb.setGZIPEnabled(prefs.getBoolean(KEY_GZIP_COMPRESSING, true));
             cb.setIncludeEntitiesEnabled(true);
@@ -201,8 +186,7 @@ public class StreamingService extends Service implements Constants, PrivateConst
                     .getNonEmptyString(prefs, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_2);
             final String default_consumer_secret = Utils.getNonEmptyString(prefs, KEY_CONSUMER_SECRET,
                     TWITTER_CONSUMER_SECRET_2);
-            final String consumer_key = cur.getString(consumer_key_idx), consumer_secret = cur
-                    .getString(consumer_secret_idx);
+            final String consumer_key = account.consumer_key, consumer_secret = account.consumer_secret;
             if (!isEmpty(consumer_key) && !isEmpty(consumer_secret)) {
                 cb.setOAuthConsumerKey(consumer_key);
                 cb.setOAuthConsumerSecret(consumer_secret);
@@ -215,9 +199,7 @@ public class StreamingService extends Service implements Constants, PrivateConst
             twitter.addListener(new UserStreamListenerImpl(this, account_id));
             twitter.user();
             mTwitterInstances.add(new WeakReference<>(twitter));
-            cur.moveToNext();
         }
-        cur.close();
         return true;
     }
 

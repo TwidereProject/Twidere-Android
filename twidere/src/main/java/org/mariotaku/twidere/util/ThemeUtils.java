@@ -249,11 +249,6 @@ public class ThemeUtils implements Constants {
             ViewAccessor.setProgressTintList(progressBar, tintList);
             ViewAccessor.setProgressBackgroundTintList(progressBar, tintList);
             ViewAccessor.setIndeterminateTintList(progressBar, tintList);
-        } else if (view instanceof Switch) {
-//            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
-//            final Switch switchView = (Switch) view;
-//            DrawableCompat.setTintList(switchView.getThumbDrawable(), tintList);
-//            DrawableCompat.setTintList(switchView.getTrackDrawable(), tintList);
         } else if (view instanceof CompoundButton) {
             final ColorStateList tintList = ColorStateList.valueOf(tintColor);
             final CompoundButton compoundButton = (CompoundButton) view;
@@ -893,8 +888,8 @@ public class ThemeUtils implements Constants {
     public static void initTextView(TextView view) {
         if (view.isInEditMode()) return;
         final Context context = view.getContext();
-        view.setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
-        view.setHighlightColor(ThemeUtils.getUserHighlightColor(context));
+//        view.setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
+//        view.setHighlightColor(ThemeUtils.getUserHighlightColor(context));
         view.setTypeface(ThemeUtils.getUserTypeface(context, view.getTypeface()));
     }
 

@@ -29,6 +29,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -82,8 +83,9 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final int count = cur.getCount();
             try {
                 if (count > 0) {
+                    final CachedIndices indices = new CachedIndices(cur);
                     cur.moveToFirst();
-                    return SingleResponse.getInstance(new ParcelableUser(cur, mAccountId));
+                    return SingleResponse.getInstance(new ParcelableUser(cur, indices, mAccountId));
                 }
             } finally {
                 cur.close();

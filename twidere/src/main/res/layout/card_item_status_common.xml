@@ -24,25 +24,36 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <RelativeLayout
+    <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
-        <org.mariotaku.twidere.view.ShapedImageView
-            android:id="@+id/retweet_profile_image"
+        <Space
+            android:id="@+id/reply_retweet_space"
+            android:layout_width="@dimen/icon_size_status_profile_image"
+            android:layout_marginRight="@dimen/element_spacing_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_marginLeft="@dimen/element_spacing_normal"/>
+
+        <ImageView
+            android:id="@+id/reply_retweet_icon"
             style="?profileImageStyle"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
             android:layout_marginBottom="@dimen/element_spacing_small"
-            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginTop="@dimen/element_spacing_small"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
+            android:layout_toLeftOf="@id/reply_retweet_status"
+            android:padding="@dimen/element_spacing_small"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            tools:src="@drawable/ic_activity_action_retweet"
+            tools:visibility="visible"/>
 
-        <org.mariotaku.twidere.view.ActionIconTextView
+        <org.mariotaku.twidere.view.ActionIconThemedTextView
             android:id="@+id/reply_retweet_status"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_size_small"
@@ -50,22 +61,23 @@
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_small"
-            android:layout_toRightOf="@id/retweet_profile_image"
+            android:layout_toRightOf="@id/reply_retweet_space"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:minHeight="@dimen/element_size_small"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="10sp"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/profile_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/retweet_profile_image"
+            android:layout_alignParentLeft="true"
             android:layout_below="@id/reply_retweet_status"
             android:layout_marginTop="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_mlarge">
+            android:paddingLeft="@dimen/element_spacing_normal">
 
             <org.mariotaku.twidere.view.ShapedImageView
                 android:id="@+id/profile_image"
@@ -73,7 +85,9 @@
                 android:layout_width="@dimen/icon_size_status_profile_image"
                 android:layout_height="@dimen/icon_size_status_profile_image"
                 android:layout_centerVertical="true"
-                android:layout_margin="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
+                android:layout_marginRight="@dimen/element_spacing_small"
+                android:layout_marginTop="@dimen/element_spacing_small"
                 android:contentDescription="@string/profile_image"
                 android:scaleType="centerCrop"/>
 
@@ -103,7 +117,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -113,7 +127,7 @@
                         android:textStyle="bold"
                         tools:text="User"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/screen_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -168,7 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/profile_container"
             android:layout_below="@id/media_preview_container"
-            android:layout_marginBottom="@dimen/element_spacing_normal"
+            android:layout_marginBottom="@dimen/element_spacing_xsmall"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
@@ -191,7 +205,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <org.mariotaku.twidere.view.ActionIconTextView
+                <org.mariotaku.twidere.view.ActionIconThemedTextView
                     android:id="@+id/reply_count"
                     style="?cardActionButtonStyle"
                     android:layout_width="wrap_content"
@@ -204,7 +218,7 @@
                     android:textAppearance="?android:textAppearanceSmall"
                     app:iabActivatedColor="@color/highlight_reply"/>
 
-                <org.mariotaku.twidere.view.ActionIconTextView
+                <org.mariotaku.twidere.view.ActionIconThemedTextView
                     android:id="@+id/retweet_count"
                     style="?cardActionButtonStyle"
                     android:layout_width="wrap_content"
@@ -217,7 +231,7 @@
                     android:textAppearance="?android:textAppearanceSmall"
                     app:iabActivatedColor="@color/highlight_retweet"/>
 
-                <org.mariotaku.twidere.view.ActionIconTextView
+                <org.mariotaku.twidere.view.ActionIconThemedTextView
                     android:id="@+id/favorite_count"
                     style="?cardActionButtonStyle"
                     android:layout_width="wrap_content"
@@ -232,5 +246,5 @@
 
             </LinearLayout>
         </HorizontalScrollView>
-    </RelativeLayout>
+    </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 </merge>

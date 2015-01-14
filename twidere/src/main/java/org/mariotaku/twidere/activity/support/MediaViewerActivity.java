@@ -29,8 +29,11 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
+import com.diegocarloslima.byakugallery.lib.TouchImageView;
 
 import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
@@ -52,7 +55,7 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
     private ActionBar mActionBar;
 
     private ProgressBar mProgress;
-    private ImageView mImageView;
+    private TouchImageView mImageView;
     private MenuBar mMenuBar;
 
     private long mContentLength;
@@ -69,7 +72,7 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mImageView = (ImageView) findViewById(R.id.image_viewer);
+        mImageView = (TouchImageView) findViewById(R.id.image_viewer);
         mProgress = (ProgressBar) findViewById(R.id.progress);
         mMenuBar = (MenuBar) findViewById(R.id.menu_bar);
     }
@@ -120,7 +123,21 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
             mImageView.setVisibility(View.VISIBLE);
 //            mImageView.setBitmapRegionDecoder(data.decoder, data.bitmap);
 //            mImageView.setScale(1);
-            mImageView.setImageBitmap(data.bitmap);
+            if (data.useDecoder) {
+                TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(), null, new OnInitializeListener() {
+                    @Override
+                    public void onStartInitialization() {
+
+                    }
+
+                    @Override
+                    public void onEndInitialization() {
+
+                    }
+                });
+            } else {
+                mImageView.setImageBitmap(data.bitmap);
+            }
             mImageFile = data.file;
         } else {
             mImageView.setVisibility(View.GONE);
@@ -232,7 +249,8 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         }
 
 //        mImageView.setScaleToFit(false);
-        mImageView.addOnLayoutChangeListener(new TileImageViewLayoutListener());
+        mImageView.setMaxScale(2);
+
 
         mMenuBar.setMenuBarListener(this);
         mMenuBar.inflate(R.menu.menu_image_viewer);
@@ -240,34 +258,6 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         mMenuBar.show();
     }
 
-
-    private static class TileImageViewLayoutListener implements OnLayoutChangeListener {
-        @Override
-        public void onLayoutChange(final View v, final int left, final int top, final int right, final int bottom,
-                                   final int oldLeft, final int oldTop, final int oldRight, final int oldBottom) {
-            if (!(v instanceof TileImageView)) return;
-            final TileImageView tileView = (TileImageView) v;
-            final int baseWidth = tileView.getBaseWidth(), baseHeight = tileView.getBaseHeight();
-            final double scaleMin = getMinScale(left, top, right, bottom, baseWidth, baseHeight);
-            tileView.setScaleLimits(scaleMin, Math.max(scaleMin, 2.0));
-            final double oldScaleMin = getMinScale(oldLeft, oldTop, oldRight, oldBottom, baseWidth, baseHeight);
-            final double oldScale = tileView.getScale();
-            tileView.setScaleLimits(scaleMin, Math.max(scaleMin, 2.0));
-            if (oldScale == oldScaleMin) {
-                tileView.setScale(scaleMin);
-            }
-        }
-
-        private static double getMinScale(final int left, final int top, final int right, final int bottom,
-                                          final int baseWidth, final int baseHeight) {
-            final double viewWidth = right - left, viewHeight = bottom - top;
-            if (viewWidth <= 0 || viewHeight <= 0) return 0;
-            final double widthScale = Math.min(1, baseWidth / viewWidth), heightScale = Math.min(1, baseHeight
-                    / viewHeight);
-            return Math.min(widthScale, heightScale);
-        }
-
-    }
 
     @Override
     protected void onDestroy() {

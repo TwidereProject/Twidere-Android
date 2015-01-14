@@ -85,6 +85,7 @@ import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
+import org.mariotaku.twidere.util.StatisticUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
@@ -98,6 +99,7 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -269,7 +271,7 @@ public class StatusFragment extends BaseSupportFragment
     }
 
     @Override
-    public void onStatusMenuClick(StatusViewHolder holder, int position) {
+    public void onStatusMenuClick(StatusViewHolder holder, View itemView, int position) {
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_STATUS, mStatusAdapter.getStatus(position));
         final StatusMenuDialogFragment f = new StatusMenuDialogFragment();
@@ -323,6 +325,11 @@ public class StatusFragment extends BaseSupportFragment
             } else {
                 final int position = mStatusAdapter.findPositionById(itemId);
                 mLayoutManager.scrollToPositionWithOffset(position, top);
+            }
+            try {
+                StatisticUtils.writeStatusOpen(status, null, 0);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             setState(STATE_LOADED);
         } else {
@@ -402,6 +409,7 @@ public class StatusFragment extends BaseSupportFragment
         private final int mTextSize;
         private final int mCardBackgroundColor;
         private final boolean mIsCompact;
+        private final int mProfileImageStyle;
 
         private ParcelableStatus mStatus;
         private ParcelableCredentials mStatusAccount;
@@ -424,6 +432,7 @@ public class StatusFragment extends BaseSupportFragment
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
+            mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
             mIsCompact = compact;
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compact;
@@ -483,7 +492,7 @@ public class StatusFragment extends BaseSupportFragment
 
         @Override
         public int getProfileImageStyle() {
-            return 0;
+            return mProfileImageStyle;
         }
 
         @Override
@@ -550,8 +559,10 @@ public class StatusFragment extends BaseSupportFragment
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
             decoration.setDecorationStart(0);
             if (mReplies != null) {
+//                decoration.setDecorationEndOffset(2);
                 decoration.setDecorationEnd(getItemCount() - 2);
             } else {
+//                decoration.setDecorationEndOffset(3);
                 decoration.setDecorationEnd(getItemCount() - 3);
             }
             mFragment.mRecyclerView.invalidateItemDecorations();
@@ -602,11 +613,11 @@ public class StatusFragment extends BaseSupportFragment
                     final View view;
                     if (mIsCompact) {
                         view = mInflater.inflate(R.layout.header_status_compact, parent, false);
+                        final View cardView = view.findViewById(R.id.compact_card);
+                        cardView.setBackgroundColor(mCardBackgroundColor);
                     } else {
                         view = mInflater.inflate(R.layout.header_status, parent, false);
-                    }
-                    final CardView cardView = (CardView) view.findViewById(R.id.card);
-                    if (cardView != null) {
+                        final CardView cardView = (CardView) view.findViewById(R.id.card);
                         cardView.setCardBackgroundColor(mCardBackgroundColor);
                     }
                     return new DetailStatusViewHolder(this, view);
@@ -646,7 +657,9 @@ public class StatusFragment extends BaseSupportFragment
                 case VIEW_TYPE_LIST_STATUS: {
                     final ParcelableStatus status = getStatus(position);
                     final StatusViewHolder statusHolder = (StatusViewHolder) holder;
-                    statusHolder.displayStatus(status);
+                    // Display 'in reply to' for first item
+                    // useful to indicate whether first tweet has reply or not
+                    statusHolder.displayStatus(status, position == 0);
                     break;
                 }
             }
@@ -693,9 +706,9 @@ public class StatusFragment extends BaseSupportFragment
         }
 
         @Override
-        public void onItemMenuClick(ViewHolder holder, int position) {
+        public void onItemMenuClick(ViewHolder holder, View itemView, int position) {
             if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onStatusMenuClick((StatusViewHolder) holder, position);
+                mStatusAdapterListener.onStatusMenuClick((StatusViewHolder) holder, itemView, position);
             }
         }
 

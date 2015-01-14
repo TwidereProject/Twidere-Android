@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -353,8 +354,8 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
         static final int ITEM_VIEW_TYPE = 3;
         private final ParcelableUser mUser;
 
-        public UserSuggestionItem(Cursor c, CachedIndices i) {
-            mUser = new ParcelableUser(c, i, -1);
+        public UserSuggestionItem(Cursor c, CachedIndices i, long accountId) {
+            mUser = new ParcelableUser(c, i, accountId);
         }
 
         @Override
@@ -485,10 +486,19 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
 
         @Override
         public List<SuggestionItem> loadInBackground() {
+            final boolean emptyQuery = TextUtils.isEmpty(mQuery);
             final Context context = getContext();
             final ContentResolver resolver = context.getContentResolver();
             final List<SuggestionItem> result = new ArrayList<>();
-            if (!TextUtils.isEmpty(mQuery)) {
+            final String[] historyProjection = {SearchHistory.QUERY};
+            final Cursor historyCursor = resolver.query(SearchHistory.CONTENT_URI,
+                    historyProjection, null, null, SearchHistory.DEFAULT_SORT_ORDER);
+            for (int i = 0, j = Math.min(emptyQuery ? 3 : 2, historyCursor.getCount()); i < j; i++) {
+                historyCursor.moveToPosition(i);
+                result.add(new SearchHistoryItem(historyCursor.getString(0)));
+            }
+            historyCursor.close();
+            if (!emptyQuery) {
                 final String queryEscaped = mQuery.replace("_", "^_");
                 final SharedPreferences nicknamePrefs = context.getSharedPreferences(
                         USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -499,38 +509,31 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
                         Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                         Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
                 final String[] selectionArgs = new String[]{queryEscaped, queryEscaped};
-                final OrderBy orderBy = new OrderBy(CachedUsers.LAST_SEEN + " DESC",
+                final OrderBy orderBy = new OrderBy(CachedUsers.LAST_SEEN + " DESC", "score DESC",
                         CachedUsers.SCREEN_NAME, CachedUsers.NAME);
-                final Cursor usersCursor = context.getContentResolver().query(CachedUsers.CONTENT_URI,
-                        CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null,
+                final Uri uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId));
+                final Cursor usersCursor = context.getContentResolver().query(uri,
+                        CachedUsers.COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());
                 final CachedIndices usersIndices = new CachedIndices(usersCursor);
                 for (int i = 0, j = Math.min(5, usersCursor.getCount()); i < j; i++) {
                     usersCursor.moveToPosition(i);
-                    result.add(new UserSuggestionItem(usersCursor, usersIndices));
+                    result.add(new UserSuggestionItem(usersCursor, usersIndices, mAccountId));
                 }
                 usersCursor.close();
-                return result;
+            } else {
+                final String[] savedSearchesProjection = {SavedSearches.QUERY};
+                final Expression savedSearchesWhere = Expression.equals(SavedSearches.ACCOUNT_ID, mAccountId);
+                final Cursor savedSearchesCursor = resolver.query(SavedSearches.CONTENT_URI,
+                        savedSearchesProjection, savedSearchesWhere.getSQL(), null,
+                        SavedSearches.DEFAULT_SORT_ORDER);
+                savedSearchesCursor.moveToFirst();
+                while (!savedSearchesCursor.isAfterLast()) {
+                    result.add(new SavedSearchItem(savedSearchesCursor.getString(0)));
+                    savedSearchesCursor.moveToNext();
+                }
+                savedSearchesCursor.close();
             }
-            final String[] historyProjection = {SearchHistory.QUERY};
-            final Cursor historyCursor = resolver.query(SearchHistory.CONTENT_URI,
-                    historyProjection, null, null, SearchHistory.DEFAULT_SORT_ORDER);
-            for (int i = 0, j = Math.min(3, historyCursor.getCount()); i < j; i++) {
-                historyCursor.moveToPosition(i);
-                result.add(new SearchHistoryItem(historyCursor.getString(0)));
-            }
-            historyCursor.close();
-            final String[] savedSearchesProjection = {SavedSearches.QUERY};
-            final Expression savedSearchesWhere = Expression.equals(SavedSearches.ACCOUNT_ID, mAccountId);
-            final Cursor savedSearchesCursor = resolver.query(SavedSearches.CONTENT_URI,
-                    savedSearchesProjection, savedSearchesWhere.getSQL(), null,
-                    SavedSearches.DEFAULT_SORT_ORDER);
-            savedSearchesCursor.moveToFirst();
-            while (!savedSearchesCursor.isAfterLast()) {
-                result.add(new SavedSearchItem(savedSearchesCursor.getString(0)));
-                savedSearchesCursor.moveToNext();
-            }
-            savedSearchesCursor.close();
             return result;
         }
 

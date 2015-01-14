@@ -1,24 +1,27 @@
 /*
- * Copyright 2007 Yusuke Yamamoto
+ * Twidere - Twitter client for Android
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package twitter4j.internal.json;
 
 import org.json.JSONObject;
 
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.http.HttpResponse;
 import twitter4j.internal.util.InternalParseUtil;
 
@@ -27,12 +30,12 @@ import twitter4j.internal.util.InternalParseUtil;
  * @since Twitter4J 2.1.3
  */
 @SuppressWarnings("rawtypes")
-class PagableResponseListImpl<T> extends ResponseListImpl implements PagableResponseList {
+class PageableResponseListImpl<T> extends ResponseListImpl implements PageableResponseList {
 	private static final long serialVersionUID = 9098876089678648404L;
 	private final long previousCursor;
 	private final long nextCursor;
 
-	PagableResponseListImpl(final int size, final JSONObject json, final HttpResponse res) {
+	PageableResponseListImpl(final int size, final JSONObject json, final HttpResponse res) {
 		super(size, res);
 		this.previousCursor = InternalParseUtil.getLong("previous_cursor", json);
 		this.nextCursor = InternalParseUtil.getLong("next_cursor", json);

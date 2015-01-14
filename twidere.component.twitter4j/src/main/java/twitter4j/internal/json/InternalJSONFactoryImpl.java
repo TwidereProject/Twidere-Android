@@ -37,7 +37,7 @@ import twitter4j.IDs;
 import twitter4j.Location;
 import twitter4j.MediaUploadResponse;
 import twitter4j.OEmbed;
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.Place;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -154,12 +154,12 @@ public class InternalJSONFactoryImpl implements InternalJSONFactory {
 	}
 
 	@Override
-	public PagableResponseList<User> createPagableUserList(final HttpResponse res) throws TwitterException {
+	public PageableResponseList<User> createPagableUserList(final HttpResponse res) throws TwitterException {
 		return UserJSONImpl.createPagableUserList(res, conf);
 	}
 
 	@Override
-	public PagableResponseList<UserList> createPagableUserListList(final HttpResponse res) throws TwitterException {
+	public PageableResponseList<UserList> createPagableUserListList(final HttpResponse res) throws TwitterException {
 		return UserListJSONImpl.createPagableUserListList(res, conf);
 	}
 

@@ -22,23 +22,108 @@ package org.mariotaku.twidere.util;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.querybuilder.Join;
+import org.mariotaku.querybuilder.Join.Operation;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Selectable;
+import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 
+import java.util.Locale;
+
 public class TwidereQueryBuilder {
+
+    public static final class CachedUsersQueryBuilder {
+
+        public static SQLSelectQuery buildWithRelationship(final String[] projection,
+                                                           final String selection,
+                                                           final String sortOrder,
+                                                           final long accountId) {
+            return buildWithRelationship(Utils.getColumnsFromProjection(projection), selection,
+                    sortOrder, accountId);
+        }
+
+        public static SQLSelectQuery buildWithRelationship(final Selectable select,
+                                                           final String selection,
+                                                           final String sortOrder,
+                                                           final long accountId) {
+            final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
+            qb.select(select).from(new Tables(CachedUsers.TABLE_NAME));
+            final Column relationshipsUserId = new Column(new Table(CachedRelationships.TABLE_NAME),
+                    CachedRelationships.USER_ID);
+            final Column usersUserId = new Column(new Table(CachedUsers.TABLE_NAME),
+                    CachedRelationships.USER_ID);
+            final Column relationshipsAccountId = new Column(new Table(CachedRelationships.TABLE_NAME),
+                    CachedRelationships.ACCOUNT_ID);
+            final Expression on = Expression.and(
+                    Expression.equals(relationshipsUserId, usersUserId),
+                    Expression.equals(relationshipsAccountId, accountId)
+            );
+            qb.join(new Join(false, Operation.LEFT, new Table(CachedRelationships.TABLE_NAME), on));
+            if (selection != null) {
+                qb.where(new Expression(selection));
+            }
+            if (sortOrder != null) {
+                qb.orderBy(new OrderBy(sortOrder));
+            }
+            return qb.build();
+        }
+
+        public static SQLSelectQuery buildWithScore(final String[] projection,
+                                                    final String selection,
+                                                    final String sortOrder,
+                                                    final long accountId) {
+            final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
+            final Selectable select = Utils.getColumnsFromProjection(projection);
+            final Column[] columns = new Column[CachedUsers.COLUMNS.length + 1];
+            for (int i = 0, j = columns.length - 1; i < j; i++) {
+                final String column = CachedUsers.COLUMNS[i];
+                if (CachedUsers._ID.equals(column) || CachedUsers.USER_ID.equals(column)) {
+                    columns[i] = new Column(new Table(CachedUsers.TABLE_NAME), column, column);
+                } else {
+                    columns[i] = new Column(column);
+                }
+            }
+            final String expr = String.format(Locale.ROOT, "%s * 100 + %s * 50 - %s * 100 - %s * 100 - %s * 100",
+                    valueOrZero(CachedRelationships.FOLLOWING, CachedRelationships.FOLLOWED_BY,
+                            CachedRelationships.BLOCKING, CachedRelationships.BLOCKED_BY,
+                            CachedRelationships.MUTING));
+            columns[columns.length - 1] = new Column(expr, "score");
+            qb.select(select);
+            qb.from(buildWithRelationship(new Columns(columns), null, null, accountId));
+            if (selection != null) {
+                qb.where(new Expression(selection));
+            }
+            if (sortOrder != null) {
+                qb.orderBy(new OrderBy(sortOrder));
+            }
+            return qb.build();
+        }
+
+        private static Object[] valueOrZero(String... columns) {
+            final String[] result = new String[columns.length];
+            for (int i = 0, j = columns.length; i < j; i++) {
+                result[i] = String.format(Locale.ROOT, "CASE WHEN %s IS NULL THEN 0 ELSE %s END",
+                        columns[i], columns[i]);
+            }
+            return result;
+        }
+
+    }
 
     public static final class ConversationQueryBuilder {
 
-        public static final String buildByConversationId(final String[] projection, final long account_id,
-                                                         final long conversationId, final String selection, final String sortOrder) {
+        public static SQLSelectQuery buildByConversationId(final String[] projection, final long account_id,
+                                                           final long conversationId, final String selection, final String sortOrder) {
             final Selectable select = Utils.getColumnsFromProjection(projection);
             final SQLSelectQuery.Builder qb = SQLQueryBuilder.select(select);
             qb.from(new Tables(DirectMessages.TABLE_NAME));
@@ -54,11 +139,11 @@ public class TwidereQueryBuilder {
                 qb.where(Expression.and(accountIdWhere, conversationWhere));
             }
             qb.orderBy(new OrderBy(sortOrder != null ? sortOrder : Conversation.DEFAULT_SORT_ORDER));
-            return qb.build().getSQL();
+            return qb.build();
         }
 
-        public static final String buildByScreenName(final String[] projection, final long account_id,
-                                                     final String screen_name, final String selection, final String sortOrder) {
+        public static SQLSelectQuery buildByScreenName(final String[] projection, final long account_id,
+                                                       final String screen_name, final String selection, final String sortOrder) {
             final Selectable select = Utils.getColumnsFromProjection(projection);
             final SQLSelectQuery.Builder qb = SQLQueryBuilder.select(select);
             qb.select(select);
@@ -74,7 +159,7 @@ public class TwidereQueryBuilder {
                 qb.where(Expression.and(accountIdWhere, incomingWhere, outgoingWhere));
             }
             qb.orderBy(new OrderBy(sortOrder != null ? sortOrder : Conversation.DEFAULT_SORT_ORDER));
-            return qb.build().getSQL();
+            return qb.build();
         }
 
     }
@@ -154,12 +239,12 @@ public class TwidereQueryBuilder {
 
     public static final class DirectMessagesQueryBuilder {
 
-        public static final SQLSelectQuery build() {
+        public static SQLSelectQuery build() {
             return build(null, null, null);
         }
 
-        public static final SQLSelectQuery build(final String[] projection, final String selection,
-                                                 final String sortOrder) {
+        public static SQLSelectQuery build(final String[] projection, final String selection,
+                                           final String sortOrder) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             final Selectable select = Utils.getColumnsFromProjection(projection);
             qb.select(select).from(new Tables(DirectMessages.Inbox.TABLE_NAME));

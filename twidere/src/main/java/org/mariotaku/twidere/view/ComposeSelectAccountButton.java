@@ -22,7 +22,6 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -35,8 +34,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.StackView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
@@ -46,7 +47,7 @@ import org.mariotaku.twidere.view.iface.IColorLabelView.Helper;
  * Created by mariotaku on 14/12/8.
  */
 public class ComposeSelectAccountButton extends ViewGroup {
-    private final AccountIconsAdapter mAccountIconsAdapter;
+    private final AccountIconsStackAdapter mAccountIconsAdapter;
     private final Helper mColorLabelHelper;
 
     public ComposeSelectAccountButton(Context context) {
@@ -61,17 +62,34 @@ public class ComposeSelectAccountButton extends ViewGroup {
         super(context, attrs, defStyle);
         mColorLabelHelper = new Helper(this, context, attrs, defStyle);
         mColorLabelHelper.setIgnorePaddings(true);
-        mAccountIconsAdapter = new AccountIconsAdapter(context);
-        final RecyclerView recyclerView = new InternalRecyclerView(context);
-        final LinearLayoutManager linearLayoutManager = new MyLinearLayoutManager(context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        linearLayoutManager.setReverseLayout(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(mAccountIconsAdapter);
-        ViewCompat.setOverScrollMode(recyclerView, ViewCompat.OVER_SCROLL_NEVER);
-        addView(recyclerView);
+        mAccountIconsAdapter = new AccountIconsStackAdapter(context);
+        final StackView stackView = new InternalStackView(context);
+        stackView.setAdapter(mAccountIconsAdapter);
+        addView(stackView);
+//        final RecyclerView recyclerView = new InternalRecyclerView(context);
+//        final LinearLayoutManager linearLayoutManager = new MyLinearLayoutManager(context);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        linearLayoutManager.setStackFromEnd(true);
+////        linearLayoutManager.setReverseLayout(true);
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView.setAdapter(mAccountIconsAdapter);
+//        ViewCompat.setOverScrollMode(recyclerView, ViewCompat.OVER_SCROLL_NEVER);
+//        addView(recyclerView);
     }
 
+    public void setSelectedAccounts(long[] accountIds) {
+        final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(getContext(), accountIds);
+//        if (accounts != null) {
+//            final int[] colors = new int[accounts.length];
+//            for (int i = 0, j = colors.length; i < j; i++) {
+//                colors[i] = accounts[i].color;
+//            }
+//            mColorLabelHelper.drawEnd(colors);
+//        } else {
+//            mColorLabelHelper.drawEnd(null);
+//        }
+        mAccountIconsAdapter.setSelectedAccounts(accounts);
+    }
 
     @Override
     protected void dispatchDraw(@NonNull final Canvas canvas) {
@@ -95,15 +113,6 @@ public class ComposeSelectAccountButton extends ViewGroup {
         }
     }
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        for (int i = 0, j = getChildCount(); i < j; i++) {
-            final View child = getChildAt(i);
-            child.layout(getPaddingLeft(), getPaddingTop(), r - l - getPaddingRight(),
-                    b - t - getPaddingBottom());
-        }
-    }
-
     static class AccountIconViewHolder extends ViewHolder {
 
         private final ImageView iconView;
@@ -119,18 +128,13 @@ public class ComposeSelectAccountButton extends ViewGroup {
         }
     }
 
-    public void setSelectedAccounts(long[] accountIds) {
-        final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(getContext(), accountIds);
-        if (accounts != null) {
-            final int[] colors = new int[accounts.length];
-            for (int i = 0, j = colors.length; i < j; i++) {
-                colors[i] = accounts[i].color;
-            }
-            mColorLabelHelper.drawEnd(colors);
-        } else {
-            mColorLabelHelper.drawEnd(null);
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        for (int i = 0, j = getChildCount(); i < j; i++) {
+            final View child = getChildAt(i);
+            child.layout(getPaddingLeft(), getPaddingTop(), r - l - getPaddingRight(),
+                    b - t - getPaddingBottom());
         }
-        mAccountIconsAdapter.setSelectedAccounts(accounts);
     }
 
     private static class AccountIconsAdapter extends Adapter<AccountIconViewHolder> {
@@ -138,6 +142,12 @@ public class ComposeSelectAccountButton extends ViewGroup {
         private final LayoutInflater mInflater;
         private final ImageLoaderWrapper mImageLoader;
         private ParcelableAccount[] mAccounts;
+
+        public AccountIconsAdapter(Context context) {
+            mContext = context;
+            mInflater = LayoutInflater.from(context);
+            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        }
 
         public ImageLoaderWrapper getImageLoader() {
             return mImageLoader;
@@ -166,12 +176,67 @@ public class ComposeSelectAccountButton extends ViewGroup {
             mAccounts = accounts;
             notifyDataSetChanged();
         }
+    }
 
-        public AccountIconsAdapter(Context context) {
+    private static class AccountIconsStackAdapter extends ArrayAdapter<ParcelableAccount> {
+        private final Context mContext;
+        private final LayoutInflater mInflater;
+        private final ImageLoaderWrapper mImageLoader;
+
+        public AccountIconsStackAdapter(Context context) {
+            super(context, R.layout.adapter_item_compose_account);
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view = super.getView(position, convertView, parent);
+            final ParcelableAccount account = getItem(position);
+            final ImageView iconView = (ImageView) view.findViewById(android.R.id.icon);
+            mImageLoader.displayProfileImage(iconView, account.profile_image_url);
+            return view;
+        }
+
+
+        public void setSelectedAccounts(ParcelableAccount[] accounts) {
+            clear();
+            if (accounts != null) {
+                addAll(accounts);
+            }
+        }
+    }
+
+    private static class InternalStackView extends StackView {
+        private InternalStackView(Context context) {
+            super(context);
+        }
+
+
+        @Override
+        public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+            return false;
+        }
+    }
+
+    private static class InternalRecyclerView extends RecyclerView {
+        public InternalRecyclerView(Context context) {
+            super(context);
+            setChildrenDrawingOrderEnabled(true);
+        }
+
+        @Override
+        public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+            return false;
+        }
+
+        @Override
+        protected int getChildDrawingOrder(int childCount, int i) {
+            return childCount - i - 1;
+        }
+
+
     }
 
     private static class MyLinearLayoutManager extends LinearLayoutManager {
@@ -179,18 +244,6 @@ public class ComposeSelectAccountButton extends ViewGroup {
 
         public MyLinearLayoutManager(Context context) {
             super(context);
-        }
-
-        @Override
-        public RecyclerView.LayoutParams generateLayoutParams(Context c, AttributeSet attrs) {
-            final RecyclerView.LayoutParams layoutParams = super.generateLayoutParams(c, attrs);
-            return layoutParams;
-        }
-
-        @Override
-        public void onLayoutChildren(Recycler recycler, State state) {
-            state.getItemCount();
-            super.onLayoutChildren(recycler, state);
         }
 
         private int findChildIndex(View view) {
@@ -240,20 +293,4 @@ public class ComposeSelectAccountButton extends ViewGroup {
         }
     }
 
-    private static class InternalRecyclerView extends RecyclerView {
-        public InternalRecyclerView(Context context) {
-            super(context);
-            setChildrenDrawingOrderEnabled(true);
-        }
-
-        @Override
-        protected int getChildDrawingOrder(int childCount, int i) {
-            return childCount - i - 1;
-        }
-
-        @Override
-        public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
-            return false;
-        }
-    }
 }

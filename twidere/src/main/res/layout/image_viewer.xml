@@ -20,7 +20,7 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <it.sephiroth.android.library.imagezoom.ImageViewTouch
+    <com.diegocarloslima.byakugallery.lib.TouchImageView
         android:id="@+id/image_viewer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

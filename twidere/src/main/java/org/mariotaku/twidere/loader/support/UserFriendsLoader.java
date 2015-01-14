@@ -24,7 +24,7 @@ import android.content.Context;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import twitter4j.CursorPaging;
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -44,7 +44,7 @@ public class UserFriendsLoader extends CursorSupportUsersLoader {
 	}
 
 	@Override
-	protected PagableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
+	protected PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
 			throws TwitterException {
 		if (twitter == null) return null;
 		if (mUserId > 0)

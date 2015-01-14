@@ -22,63 +22,73 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="?android:dividerVertical"
     android:minHeight="@dimen/compose_min_height"
     android:minWidth="@dimen/compose_min_width"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:showDividers="none">
 
-    <org.mariotaku.twidere.view.ActionBarThemedContainer
-        style="?android:actionBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/activity_compose_actionbar"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/compose_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:animateLayoutChanges="true">
 
-        <RelativeLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/account_selector"
+            android:layout_width="@dimen/element_size_mlarge"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/edit_text_container"
+            android:layout_alignTop="@+id/edit_text_container"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_msmall"
+            android:paddingRight="@dimen/element_spacing_msmall"
+            android:paddingTop="@dimen/element_spacing_normal"/>
+
+        <org.mariotaku.dynamicgridview.DynamicGridView
+            android:id="@+id/media_thumbnail_preview"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:animateLayoutChanges="true">
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/edit_text_container"
+            android:layout_alignLeft="@+id/edit_text_container"
+            android:layout_alignRight="@+id/edit_text_container"
+            android:layout_alignTop="@+id/edit_text_container"
+            android:alpha="0.2"
+            android:numColumns="@integer/grid_column_image_preview"
+            android:stretchMode="columnWidth"
+            tools:listitem="@layout/grid_item_image_preview"/>
 
-            <org.mariotaku.dynamicgridview.DynamicGridView
-                android:id="@+id/media_thumbnail_preview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/edit_text_container"
-                android:layout_alignTop="@+id/edit_text_container"
-                android:alpha="0.2"
-                android:numColumns="@integer/grid_column_image_preview"
-                android:stretchMode="columnWidth"
-                tools:listitem="@layout/grid_item_image_preview"/>
-
-            <FrameLayout
-                android:id="@+id/edit_text_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/element_spacing_normal">
-
-                <org.mariotaku.twidere.view.StatusComposeEditText
-                    android:id="@+id/edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:completionThreshold="1"
-                    android:gravity="top"
-                    android:hint="@string/status_hint"
-                    android:imeOptions="actionDone"
-                    android:minLines="10"/>
-            </FrameLayout>
-        </RelativeLayout>
-
-        <org.mariotaku.twidere.view.ActionBarSplitThemedContainer
-            style="?android:actionBarSplitStyle"
+        <FrameLayout
+            android:id="@+id/edit_text_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout="@layout/activity_compose_bottombar"/>
-    </LinearLayout>
+            android:layout_marginLeft="@dimen/element_spacing_minus_small"
+            android:layout_toRightOf="@+id/account_selector"
+            android:padding="@dimen/element_spacing_normal">
 
+            <org.mariotaku.twidere.view.StatusComposeEditText
+                android:id="@+id/edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:completionThreshold="1"
+                android:gravity="top"
+                android:hint="@string/status_hint"
+                android:imeOptions="actionDone"
+                android:minLines="10"/>
+        </FrameLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="?android:panelBackground">
+
+        <include layout="@layout/activity_compose_bottombar"/>
+    </FrameLayout>
 </LinearLayout>

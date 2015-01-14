@@ -28,6 +28,7 @@
 package org.mariotaku.querybuilder.query;
 
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.querybuilder.Join;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.SQLLang;
 import org.mariotaku.querybuilder.SQLQuery;
@@ -39,7 +40,7 @@ import java.util.List;
 
 public class SQLSelectQuery implements SQLQuery, Selectable {
 
-    private final List<InternalQuery> internalQueries = new ArrayList<InternalQuery>();
+    private final List<InternalQuery> internalQueries = new ArrayList<>();
 
     private InternalQuery currentInternalQuery;
     private OrderBy orderBy;
@@ -59,7 +60,6 @@ public class SQLSelectQuery implements SQLQuery, Selectable {
             }
             final InternalQuery query = internalQueries.get(i);
             sb.append(query.getSQL());
-
         }
         if (orderBy != null) {
             sb.append(String.format("ORDER BY %s ", orderBy.getSQL()));
@@ -92,6 +92,10 @@ public class SQLSelectQuery implements SQLQuery, Selectable {
 
     void setHaving(final Expression having) {
         currentInternalQuery.setHaving(having);
+    }
+
+    void setJoin(final Join join) {
+        currentInternalQuery.setJoin(join);
     }
 
     void setLimit(final int limit) {
@@ -151,9 +155,16 @@ public class SQLSelectQuery implements SQLQuery, Selectable {
             return this;
         }
 
+
         public Builder limit(final int limit) {
             checkNotBuilt();
             query.setLimit(limit);
+            return this;
+        }
+
+        public Builder join(final Join join) {
+            checkNotBuilt();
+            query.setJoin(join);
             return this;
         }
 
@@ -204,6 +215,7 @@ public class SQLSelectQuery implements SQLQuery, Selectable {
         private boolean distinct;
         private Selectable select, from, groupBy;
         private Expression where, having;
+        private Join join;
 
         @Override
         public String getSQL() {
@@ -222,6 +234,9 @@ public class SQLSelectQuery implements SQLQuery, Selectable {
                     sb.append(String.format("FROM %s ", from.getSQL()));
                 }
             }
+            if (join != null) {
+                sb.append(String.format("%s ", join.getSQL()));
+            }
             if (where != null) {
                 sb.append(String.format("WHERE %s ", where.getSQL()));
             }
@@ -232,6 +247,10 @@ public class SQLSelectQuery implements SQLQuery, Selectable {
                 }
             }
             return sb.toString();
+        }
+
+        void setJoin(final Join join) {
+            this.join = join;
         }
 
         void setDistinct(final boolean distinct) {

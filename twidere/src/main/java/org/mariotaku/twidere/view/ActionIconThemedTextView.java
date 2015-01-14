@@ -27,26 +27,26 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 /**
  * Created by mariotaku on 14/11/20.
  */
-public class ActionIconTextView extends TextView {
+public class ActionIconThemedTextView extends ThemedTextView {
 
     private int mColor, mDisabledColor, mActivatedColor;
 
-    public ActionIconTextView(Context context) {
+    public ActionIconThemedTextView(Context context) {
         this(context, null);
     }
 
-    public ActionIconTextView(Context context, AttributeSet attrs) {
+    public ActionIconThemedTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ActionIconTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ActionIconThemedTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton);
         mColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);

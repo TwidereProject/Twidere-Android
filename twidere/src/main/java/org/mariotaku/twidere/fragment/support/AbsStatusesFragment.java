@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
@@ -37,6 +38,8 @@ import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
+import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
+
 /**
  * Created by mariotaku on 14/11/5.
  */
@@ -44,16 +47,16 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, StatusAdapterListener {
 
 
+    private final Object mStatusesBusCallback;
     private AbsStatusesAdapter<Data> mAdapter;
     private LinearLayoutManager mLayoutManager;
-
-    private final Object mStatusesBusCallback;
     private View mContentView;
     private SharedPreferences mPreferences;
     private View mProgressContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private SimpleDrawerCallback mDrawerCallback;
+
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
 
         private int mScrollState;
@@ -74,6 +77,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             }
         }
     };
+    private PopupMenu mPopupMenu;
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
@@ -231,6 +235,14 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     @Override
+    public void onDestroyView() {
+        if (mPopupMenu != null) {
+            mPopupMenu.dismiss();
+        }
+        super.onDestroyView();
+    }
+
+    @Override
     public void onGapClick(GapViewHolder holder, int position) {
         final ParcelableStatus status = mAdapter.getStatus(position);
         final long sinceId = position + 1 < mAdapter.getStatusCount() ? mAdapter.getStatus(position + 1).id : -1;
@@ -276,12 +288,15 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     @Override
-    public void onStatusMenuClick(StatusViewHolder holder, int position) {
-        final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_STATUS, mAdapter.getStatus(position));
-        final StatusMenuDialogFragment f = new StatusMenuDialogFragment();
-        f.setArguments(args);
-        f.show(getActivity().getSupportFragmentManager(), "status_menu");
+    public void onStatusMenuClick(StatusViewHolder holder, View menuView, int position) {
+        if (mPopupMenu != null) {
+            mPopupMenu.dismiss();
+        }
+        final PopupMenu popupMenu = PopupMenu.getInstance(mAdapter.getContext(), menuView);
+        popupMenu.inflate(R.menu.action_status);
+        setMenuForStatus(mAdapter.getContext(), popupMenu.getMenu(), mAdapter.getStatus(position));
+        popupMenu.show();
+        mPopupMenu = popupMenu;
     }
 
     @Override

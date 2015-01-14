@@ -21,6 +21,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -29,9 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
-        app:cardBackgroundColor="?cardItemBackgroundColor"
         app:cardCornerRadius="@dimen/corner_radius_card"
-        app:cardElevation="@dimen/elevation_card">
+        app:cardElevation="@dimen/elevation_card"
+        tools:cardBackgroundColor="?cardItemBackgroundColor">
 
         <include layout="@layout/header_status_common"/>
 

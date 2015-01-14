@@ -25,15 +25,19 @@
     android:layout_width="match_parent"
     android:layout_height="?android:actionBarSize"
     android:baselineAligned="false"
+    android:divider="?android:dividerHorizontal"
+    android:dividerPadding="@dimen/element_spacing_normal"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:showDividers="middle">
 
     <HorizontalScrollView
         android:id="@+id/bottom_menu_container"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:fadeScrollbars="false">
+        android:fadeScrollbars="false"
+        android:paddingRight="@dimen/element_spacing_normal">
 
         <org.mariotaku.twidere.view.TwidereMenuBar
             android:id="@+id/menu_bar"
@@ -43,14 +47,6 @@
             android:background="@null"
             app:maxActionItems="@integer/max_action_buttons_bottom"/>
     </HorizontalScrollView>
-
-    <View
-        android:id="@+id/bottom_send_divider"
-        android:layout_width="0.2dp"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/element_spacing_normal"
-        android:layout_weight="0"
-        android:background="#80808080"/>
 
     <include layout="@layout/action_item_compose_send"/>
 

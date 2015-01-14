@@ -195,10 +195,10 @@ public class ParcelableAccount implements Parcelable {
         return accounts;
     }
 
-    public static ParcelableCredentials getCredentials(final Context context, final long account_id) {
+    public static ParcelableCredentials getCredentials(final Context context, final long accountId) {
         if (context == null) return null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + account_id, null, null);
+                Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + accountId, null, null);
         if (cur != null) {
             try {
                 if (cur.getCount() > 0 && cur.moveToFirst()) {
@@ -211,6 +211,36 @@ public class ParcelableAccount implements Parcelable {
             }
         }
         return null;
+    }
+
+    public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly) {
+        return getCredentialsList(context, activatedOnly, false);
+    }
+
+    public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly,
+                                                                 final boolean officialKeyOnly) {
+        if (context == null) return Collections.emptyList();
+        final ArrayList<ParcelableCredentials> accounts = new ArrayList<>();
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
+                Accounts.CONTENT_URI, Accounts.COLUMNS,
+                activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, Accounts.SORT_POSITION);
+        if (cur == null) return accounts;
+        final Indices indices = new Indices(cur);
+        cur.moveToFirst();
+        while (!cur.isAfterLast()) {
+            if (officialKeyOnly) {
+                final String consumerKey = cur.getString(indices.consumer_key);
+                final String consumerSecret = cur.getString(indices.consumer_secret);
+                if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
+                    accounts.add(new ParcelableCredentials(cur, indices));
+                }
+            } else {
+                accounts.add(new ParcelableCredentials(cur, indices));
+            }
+            cur.moveToNext();
+        }
+        cur.close();
+        return accounts;
     }
 
     @Override
@@ -270,36 +300,6 @@ public class ParcelableAccount implements Parcelable {
             no_version_suffix = in.readInt() == 1;
         }
 
-
-        public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly) {
-            return getCredentialsList(context, activatedOnly, false);
-        }
-
-        public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly,
-                                                                     final boolean officialKeyOnly) {
-            if (context == null) return Collections.emptyList();
-            final ArrayList<ParcelableCredentials> accounts = new ArrayList<>();
-            final Cursor cur = ContentResolverUtils.query(context.getContentResolver(),
-                    Accounts.CONTENT_URI, Accounts.COLUMNS,
-                    activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null, null, Accounts.SORT_POSITION);
-            if (cur == null) return accounts;
-            final Indices indices = new Indices(cur);
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                if (!officialKeyOnly) {
-                    accounts.add(new ParcelableCredentials(cur, indices));
-                } else {
-                    final String consumerKey = cur.getString(indices.consumer_key);
-                    final String consumerSecret = cur.getString(indices.consumer_secret);
-                    if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
-                        accounts.add(new ParcelableCredentials(cur, indices));
-                    }
-                }
-                cur.moveToNext();
-            }
-            cur.close();
-            return accounts;
-        }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {

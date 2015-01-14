@@ -66,7 +66,8 @@ public class TwidereURLSpan extends URLSpan implements Constants {
             ds.setUnderlineText(true);
         }
         if ((highlightStyle & VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT) != 0) {
-            ds.setColor(ThemeUtils.getOptimalLinkColor(ds.linkColor, ds.getColor()));
+//            ds.setColor(ThemeUtils.getOptimalLinkColor(ds.linkColor, ds.getColor()));
+            ds.setColor(ds.linkColor);
         }
     }
 }

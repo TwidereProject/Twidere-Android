@@ -27,7 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
-import twitter4j.PagableResponseList;
+import twitter4j.PageableResponseList;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -525,14 +525,14 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
 	}
 
 	/* package */
-	static PagableResponseList<User> createPagableUserList(final HttpResponse res, final Configuration conf)
+	static PageableResponseList<User> createPagableUserList(final HttpResponse res, final Configuration conf)
 			throws TwitterException {
 		try {
 			final JSONObject json = res.asJSONObject();
 			final JSONArray list = json.getJSONArray("users");
 			final int size = list.length();
 			@SuppressWarnings("unchecked")
-			final PagableResponseList<User> users = new PagableResponseListImpl<User>(size, json, res);
+			final PageableResponseList<User> users = new PageableResponseListImpl<User>(size, json, res);
 			for (int i = 0; i < size; i++) {
 				final JSONObject userJson = list.getJSONObject(i);
 				final User user = new UserJSONImpl(userJson);

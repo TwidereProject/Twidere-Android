@@ -205,9 +205,19 @@ public interface TwidereDataStore {
     public static interface CachedUsers extends CachedValues {
 
         public static final String TABLE_NAME = "cached_users";
+
         public static final String CONTENT_PATH = TABLE_NAME;
 
+        public static final String CONTENT_PATH_WITH_RELATIONSHIP = TABLE_NAME + "/with_relationship";
+
+        public static final String CONTENT_PATH_WITH_SCORE = TABLE_NAME + "/with_score";
+
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+        public static final Uri CONTENT_URI_WITH_RELATIONSHIP = Uri.withAppendedPath(BASE_CONTENT_URI,
+                CONTENT_PATH_WITH_RELATIONSHIP);
+        public static final Uri CONTENT_URI_WITH_SCORE = Uri.withAppendedPath(BASE_CONTENT_URI,
+                CONTENT_PATH_WITH_SCORE);
 
         public static final String USER_ID = "user_id";
 
@@ -848,10 +858,10 @@ public interface TwidereDataStore {
 
         public static final String MUTING = "muting";
 
-        public static final String[] COLUMNS = {ACCOUNT_ID, USER_ID, FOLLOWING, FOLLOWED_BY, BLOCKING,
+        public static final String[] COLUMNS = {_ID, ACCOUNT_ID, USER_ID, FOLLOWING, FOLLOWED_BY, BLOCKING,
                 BLOCKED_BY, MUTING};
 
-        public static final String[] TYPES = {TYPE_INT, TYPE_INT, TYPE_BOOLEAN_DEFAULT_FALSE,
+        public static final String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_BOOLEAN_DEFAULT_FALSE,
                 TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE,
                 TYPE_BOOLEAN_DEFAULT_FALSE};
     }

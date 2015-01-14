@@ -172,7 +172,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     }
 
     @Override
-    public void onItemMenuClick(ViewHolder holder, int position) {
+    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
 
     }
 
@@ -188,6 +188,8 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 final View view;
                 if (mCompactCards) {
                     view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
+                    final View itemContent = view.findViewById(R.id.item_content);
+                    itemContent.setBackgroundColor(mCardBackgroundColor);
                 } else {
                     view = mInflater.inflate(R.layout.card_item_status, parent, false);
                     final CardView cardView = (CardView) view.findViewById(R.id.card);
@@ -240,7 +242,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 final StatusViewHolder statusViewHolder = (StatusViewHolder) holder;
                 statusViewHolder.displayStatus(getContext(), getImageLoader(),
                         getImageLoadingHandler(), getTwitterWrapper(),
-                        getProfileImageStyle(), getMediaPreviewStyle(), status, null);
+                        getProfileImageStyle(), getMediaPreviewStyle(), status, null, false);
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {

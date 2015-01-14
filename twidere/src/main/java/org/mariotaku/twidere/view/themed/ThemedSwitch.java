@@ -20,12 +20,16 @@
 package org.mariotaku.twidere.view.themed;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.os.Build;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.widget.Switch;
 
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.view.iface.IThemedView;
 
-public class ThemedSwitch extends Switch {
+public class ThemedSwitch extends Switch implements IThemedView {
 
     public ThemedSwitch(final Context context) {
         this(context, null);
@@ -36,4 +40,11 @@ public class ThemedSwitch extends Switch {
         ThemeUtils.initTextView(this);
     }
 
+    @Override
+    public void setThemeTintColor(ColorStateList color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            DrawableCompat.setTintList(getThumbDrawable(), color);
+            DrawableCompat.setTintList(getTrackDrawable(), color);
+        }
+    }
 }
