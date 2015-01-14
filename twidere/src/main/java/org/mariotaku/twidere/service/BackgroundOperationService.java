@@ -187,12 +187,16 @@ public class BackgroundOperationService extends IntentService implements Constan
     protected void onHandleIntent(final Intent intent) {
         if (intent == null) return;
         final String action = intent.getAction();
-        if (INTENT_ACTION_UPDATE_STATUS.equals(action)) {
-            handleUpdateStatusIntent(intent);
-        } else if (INTENT_ACTION_SEND_DIRECT_MESSAGE.equals(action)) {
-            handleSendDirectMessageIntent(intent);
-        } else if (INTENT_ACTION_DISCARD_DRAFT.equals(action)) {
-            handleDiscardDraftIntent(intent);
+        switch (action) {
+            case INTENT_ACTION_UPDATE_STATUS:
+                handleUpdateStatusIntent(intent);
+                break;
+            case INTENT_ACTION_SEND_DIRECT_MESSAGE:
+                handleSendDirectMessageIntent(intent);
+                break;
+            case INTENT_ACTION_DISCARD_DRAFT:
+                handleDiscardDraftIntent(intent);
+                break;
         }
     }
 
@@ -422,9 +426,6 @@ public class BackgroundOperationService extends IntentService implements Constan
         if (statusUpdate.accounts.length == 0) return Collections.emptyList();
 
         try {
-            if (true) {
-                throw new UpdateStatusException("Test");
-            }
             if (mUseUploader && mUploader == null) throw new UploaderNotFoundException(this);
             if (mUseShortener && mShortener == null) throw new ShortenerNotFoundException(this);
 
