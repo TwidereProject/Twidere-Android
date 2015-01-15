@@ -72,6 +72,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final int mProfileImageStyle, mMediaPreviewStyle;
     private final boolean mCompactCards;
     private boolean mLoadMoreIndicatorEnabled;
+    private ActivityAdapterListener mActivityAdapterListener;
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         mContext = context;
@@ -92,41 +93,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     public abstract ParcelableActivity getActivity(int position);
 
     public abstract int getActivityCount();
-
-
-    @Override
-    public void onStatusClick(StatusViewHolder holder, int position) {
-        final ParcelableActivity activity = getActivity(position);
-        final ParcelableStatus status;
-        if (activity.action == ParcelableActivity.ACTION_MENTION) {
-            status = activity.target_object_statuses[0];
-        } else {
-            status = activity.target_statuses[0];
-        }
-        Utils.openStatus(getContext(), status, null);
-    }
-
-    @Override
-    public void onUserProfileClick(StatusViewHolder holder, int position) {
-        final Context context = getContext();
-        final ParcelableActivity activity = getActivity(position);
-        final ParcelableStatus status;
-        if (activity.action == ParcelableActivity.ACTION_MENTION) {
-            status = activity.target_object_statuses[0];
-        } else {
-            status = activity.target_statuses[0];
-        }
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        if (context instanceof FragmentActivity) {
-            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-        } else {
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
-        }
-    }
 
     public abstract Data getData();
 
@@ -169,16 +135,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     public boolean hasLoadMoreIndicator() {
         return mLoadMoreIndicatorEnabled;
-    }
-
-    @Override
-    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
-
-    }
-
-    @Override
-    public void onItemActionClick(ViewHolder holder, int id, int position) {
-
     }
 
     @Override
@@ -256,8 +212,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         }
     }
 
-    protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
-
     @Override
     public int getItemViewType(int position) {
         if (position == getActivityCount()) {
@@ -286,13 +240,76 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         return getActivityCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
     }
 
+    @Override
+    public void onGapClick(ViewHolder holder, int position) {
+        if (mActivityAdapterListener != null) {
+            mActivityAdapterListener.onGapClick((GapViewHolder) holder, position);
+        }
+    }
+
+    @Override
+    public void onItemActionClick(ViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
+
+    }
+
+    @Override
+    public void onUserProfileClick(StatusViewHolder holder, int position) {
+        final Context context = getContext();
+        final ParcelableActivity activity = getActivity(position);
+        final ParcelableStatus status;
+        if (activity.action == ParcelableActivity.ACTION_MENTION) {
+            status = activity.target_object_statuses[0];
+        } else {
+            status = activity.target_statuses[0];
+        }
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        if (context instanceof FragmentActivity) {
+            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
+                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
+        } else {
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
+        }
+    }
+
+    @Override
+    public void onStatusClick(StatusViewHolder holder, int position) {
+        final ParcelableActivity activity = getActivity(position);
+        final ParcelableStatus status;
+        if (activity.action == ParcelableActivity.ACTION_MENTION) {
+            status = activity.target_object_statuses[0];
+        } else {
+            status = activity.target_statuses[0];
+        }
+        Utils.openStatus(getContext(), status, null);
+    }
+
+    public void setListener(ActivityAdapterListener listener) {
+        mActivityAdapterListener = listener;
+    }
+
     public void setLoadMoreIndicatorEnabled(boolean enabled) {
         if (mLoadMoreIndicatorEnabled == enabled) return;
         mLoadMoreIndicatorEnabled = enabled;
         notifyDataSetChanged();
     }
 
+    protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
+
     protected abstract int getActivityAction(int position);
+
+
+    public static interface ActivityAdapterListener {
+        void onGapClick(GapViewHolder holder, int position);
+
+    }
 
     private static class StubViewHolder extends ViewHolder {
 
@@ -309,5 +326,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
             text2.setText(activity.toString());
         }
     }
+
 
 }

@@ -48,6 +48,7 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final boolean mCompactCards;
     private boolean mLoadMoreIndicatorEnabled;
     private StatusAdapterListener mStatusAdapterListener;
+    private boolean mShowInReplyTo;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
         mContext = context;
@@ -63,38 +64,12 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        setShowInReplyTo(true);
     }
 
     public abstract D getData();
 
-    public boolean isStatus(int position) {
-        return position < getStatusCount();
-    }
-
     public abstract void setData(D data);
-
-    @Override
-    public void onUserProfileClick(StatusViewHolder holder, int position) {
-        final Context context = getContext();
-        final ParcelableStatus status = getStatus(position);
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        if (context instanceof FragmentActivity) {
-            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-        } else {
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
-        }
-    }
-
-    @Override
-    public final void onStatusClick(StatusViewHolder holder, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onStatusClick(holder, position);
-        }
-    }
 
     @Override
     public ImageLoaderWrapper getImageLoader() {
@@ -133,6 +108,20 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
 
     public boolean hasLoadMoreIndicator() {
         return mLoadMoreIndicatorEnabled;
+    }
+
+    public boolean isShowInReplyTo() {
+        return mShowInReplyTo;
+    }
+
+    public void setShowInReplyTo(boolean showInReplyTo) {
+        if (mShowInReplyTo == showInReplyTo) return;
+        mShowInReplyTo = showInReplyTo;
+        notifyDataSetChanged();
+    }
+
+    public boolean isStatus(int position) {
+        return position < getStatusCount();
     }
 
     @Override
@@ -212,7 +201,30 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
-    public void setEventListener(StatusAdapterListener listener) {
+    @Override
+    public void onUserProfileClick(StatusViewHolder holder, int position) {
+        final Context context = getContext();
+        final ParcelableStatus status = getStatus(position);
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        if (context instanceof FragmentActivity) {
+            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
+                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
+        } else {
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
+        }
+    }
+
+    @Override
+    public final void onStatusClick(StatusViewHolder holder, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusClick(holder, position);
+        }
+    }
+
+    public void setListener(StatusAdapterListener listener) {
         mStatusAdapterListener = listener;
     }
 

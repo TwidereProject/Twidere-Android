@@ -19,9 +19,11 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
@@ -33,6 +35,13 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
     @Override
     public Uri getContentUri() {
         return Mentions.CONTENT_URI;
+    }
+
+    @Override
+    protected CursorStatusesAdapter onCreateAdapter(Context context, boolean compact) {
+        final CursorStatusesAdapter adapter = super.onCreateAdapter(context, compact);
+        adapter.setShowInReplyTo(false);
+        return adapter;
     }
 
     @Override

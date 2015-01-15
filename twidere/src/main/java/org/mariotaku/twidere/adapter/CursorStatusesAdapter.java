@@ -65,7 +65,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     @Override
     protected void bindStatus(StatusViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        holder.displayStatus(mCursor, mIndices, true);
+        holder.displayStatus(mCursor, mIndices, isShowInReplyTo());
     }
 
     @Override

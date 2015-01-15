@@ -39,20 +39,23 @@ import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.AbsActivitiesAdapter.ActivityAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
+import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
+import org.mariotaku.twidere.view.holder.GapViewHolder;
 
 /**
  * Created by mariotaku on 14/11/5.
  */
 public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment implements LoaderCallbacks<Data>,
-        OnRefreshListener, DrawerCallback, RefreshScrollTopInterface {
+        OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, ActivityAdapterListener {
 
 
     private final Object mStatusesBusCallback;
@@ -110,6 +113,14 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
     }
 
     @Override
+    public void onGapClick(GapViewHolder holder, int position) {
+        final ParcelableActivity activity = mAdapter.getActivity(position);
+        final long[] accountIds = {activity.account_id};
+        final long[] maxIds = {activity.min_position};
+        getActivities(accountIds, maxIds, null);
+    }
+
+    @Override
     public void scrollBy(float dy) {
         mDrawerCallback.scrollBy(dy);
     }
@@ -133,7 +144,7 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
         return mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
+    public abstract int getActivities(long[] accountIds, long[] maxIds, long[] sinceIds);
 
     public boolean isRefreshing() {
         return mSwipeRefreshLayout.isRefreshing();
@@ -160,6 +171,7 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
         mAdapter = onCreateAdapter(context, compact);
         mAdapter.setLoadMoreIndicatorEnabled(true);
+        mAdapter.setListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);

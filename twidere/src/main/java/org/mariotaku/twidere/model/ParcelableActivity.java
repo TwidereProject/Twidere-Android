@@ -65,8 +65,9 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
 
     public final ParcelableUserList[] target_object_user_lists;
     public final ParcelableStatus[] target_object_statuses;
+    public final boolean is_gap;
 
-    public ParcelableActivity(final Activity activity, final long account_id) {
+    public ParcelableActivity(final Activity activity, final long account_id, boolean is_gap) {
         this.account_id = account_id;
         timestamp = activity.getCreatedAt().getTime();
         action = activity.getAction().getActionId();
@@ -124,6 +125,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
         } else {
             target_object_user_lists = null;
         }
+        this.is_gap = is_gap;
     }
 
     public ParcelableActivity(final JSONParcel in) {
@@ -138,6 +140,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
         target_user_lists = in.readParcelableArray("target_user_lists", ParcelableUserList.JSON_CREATOR);
         target_object_user_lists = in.readParcelableArray("target_object_user_lists", ParcelableUserList.JSON_CREATOR);
         target_object_statuses = in.readParcelableArray("target_object_statuses", ParcelableStatus.JSON_CREATOR);
+        is_gap = in.readBoolean("is_gap", false);
     }
 
     @Override
@@ -179,6 +182,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
         out.writeParcelableArray("target_user_lists", target_user_lists);
         out.writeParcelableArray("target_object_user_lists", target_object_user_lists);
         out.writeParcelableArray("target_object_statuses", target_object_statuses);
+        out.writeBoolean("is_gap", is_gap);
     }
 
 

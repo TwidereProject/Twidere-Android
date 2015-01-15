@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment<List<ParcelableActivity>> {
 
     @Override
-    public int getStatuses(long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+    public int getActivities(long[] accountIds, final long[] maxIds, final long[] sinceIds) {
         final Bundle args = new Bundle(getArguments());
         args.putLongArray(EXTRA_ACCOUNT_IDS, accountIds);
         args.putLongArray(EXTRA_MAX_IDS, maxIds);
@@ -74,19 +74,20 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
     protected void onLoadMoreStatuses() {
         final IActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
         final long[] maxIds = new long[]{adapter.getActivity(adapter.getActivityCount() - 1).min_position};
-        getStatuses(getAccountIds(), maxIds, null);
+        getActivities(getAccountIds(), maxIds, null);
     }
 
     @Override
     public boolean triggerRefresh() {
         final IActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
         final long[] accountIds = getAccountIds();
-        if (adapter.getActivityCount() > 0) {
-            final long[] sinceIds = new long[]{adapter.getActivity(0).max_position};
-            getStatuses(accountIds, null, sinceIds);
-        } else {
-            getStatuses(accountIds, null, null);
-        }
+//        if (adapter.getActivityCount() > 0) {
+//            final long[] sinceIds = new long[]{adapter.getActivity(0).max_position};
+//            getActivities(accountIds, null, sinceIds);
+//        } else {
+//            getActivities(accountIds, null, null);
+//        }
+        getActivities(accountIds, null, null);
         return true;
     }
 

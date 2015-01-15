@@ -44,7 +44,6 @@ import java.util.Set;
  */
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
-
     private long mLastId;
 
     public final void deleteStatus(final long statusId) {

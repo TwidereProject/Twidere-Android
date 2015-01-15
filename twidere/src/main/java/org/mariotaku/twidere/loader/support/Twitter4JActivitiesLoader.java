@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.util.Pair;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -105,17 +106,23 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
             e.printStackTrace();
             return new CopyOnWriteArrayList<>(data);
         }
-//        final long minStatusId = activities.isEmpty() ? -1 : Collections.min(activities).getId();
-//        final boolean insertGap = minStatusId > 0 && activities.size() > 1 && !data.isEmpty() && !truncated;
+        final Pair<Long, Long> minId;
+        if (activities.isEmpty()) {
+            minId = new Pair<>(-1L, -1L);
+        } else {
+            final Activity minActivity = Collections.min(activities);
+            minId = new Pair<>(minActivity.getMinPosition(), minActivity.getMaxPosition());
+        }
+        final boolean insertGap = minId.first > 0 && minId.second > 0 && activities.size() > 1
+                && !data.isEmpty() && !truncated;
 //        mHandler.post(CacheUsersStatusesTask.getRunnable(context, new StatusListResponse(mAccountIds, activities)));
         for (final Activity activity : activities) {
-            final long id = activity.getMaxPosition();
-            deleteStatus(data, id);
-//            final boolean deleted = deleteStatus(data, id);
-//            final boolean isGap = minStatusId == id && insertGap && !deleted;
-            data.add(new ParcelableActivity(activity, mAccountIds));
+            final long min = activity.getMinPosition(), max = activity.getMaxPosition();
+            final boolean deleted = deleteStatus(data, max);
+            final boolean isGap = minId.first == min && minId.second == max && insertGap && !deleted;
+            data.add(new ParcelableActivity(activity, mAccountIds, isGap));
         }
-        final ParcelableActivity[] array = data.toArray(new ParcelableActivity[data.size()]);
+//        final ParcelableActivity[] array = data.toArray(new ParcelableActivity[data.size()]);
 //        for (int i = 0, size = array.length; i < size; i++) {
 //            final ParcelableActivity status = array[i];
 //            if (shouldFilterActivity(mDatabase, status) && !status.is_gap && i != size - 1) {

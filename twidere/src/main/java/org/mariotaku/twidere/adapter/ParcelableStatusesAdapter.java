@@ -26,7 +26,7 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     @Override
     protected void bindStatus(StatusViewHolder holder, int position) {
-        holder.displayStatus(getStatus(position), true);
+        holder.displayStatus(getStatus(position), isShowInReplyTo());
     }
 
     @Override
