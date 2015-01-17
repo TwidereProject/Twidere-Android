@@ -19,20 +19,16 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.SharedElementCallback;
-import android.support.v4.view.WindowCompat;
-import android.support.v4.view.WindowInsetsCompat;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,8 +50,6 @@ import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
-
-import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
@@ -127,8 +121,8 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
     }
 
@@ -142,21 +136,21 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         requestWindowFeatures(getWindow(), linkId, data);
         setUiOptions(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             setActionBarBackground(actionBar, linkId, data);
         }
         setContentView(R.layout.activity_content_fragment);
         setStatusBarColor(linkId, data);
-        setTaskinfo(linkId, data);
-        setProgressBarIndeterminateVisibility(false);
+        setTaskInfo(linkId, data);
+        setSupportProgressBarIndeterminateVisibility(false);
         if (data == null || !showFragment(linkId, data)) {
             finish();
         }
     }
 
-    private void setTaskinfo(int linkId, Uri uri) {
+    private void setTaskInfo(int linkId, Uri uri) {
         switch (linkId) {
             case LINK_ID_USER: {
                 break;
@@ -390,7 +384,7 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
 
     @Override
     public int getControlBarHeight() {
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         return actionBar != null ? actionBar.getHeight() : 0;
     }
 

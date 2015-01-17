@@ -120,6 +120,15 @@ public class ImageLoaderWrapper implements Constants {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions);
     }
 
+
+    public void displayImage(final ImageView view, final String url, DisplayImageOptions options) {
+        mImageLoader.displayImage(url, view, options);
+    }
+
+    public DisplayImageOptions getProfileImageDisplayOptions() {
+        return mProfileImageDisplayOptions;
+    }
+
     public void displayProfileImage(final ImageView view, final String url, final ImageLoadingListener listener) {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions, listener);
     }
