@@ -38,14 +38,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <org.mariotaku.twidere.view.TabPagerIndicator
-            android:id="@+id/main_tabs"
-            style="?android:actionBarStyle"
+        <org.mariotaku.twidere.view.TwidereToolbar
+            android:id="@+id/actionbar"
+            style="?actionBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="?android:actionBarSize"
-            android:layout_weight="0"
-            app:tabExpandEnabled="true"
-            app:tabHorizontalPadding="@dimen/element_spacing_normal"/>
+            android:layout_height="?actionBarSize"
+            app:contentInsetEnd="0dp"
+            app:contentInsetStart="0dp">
+
+            <org.mariotaku.twidere.view.TabPagerIndicator
+                android:id="@+id/main_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:tabExpandEnabled="true"
+                app:tabHorizontalPadding="@dimen/element_spacing_normal"/>
+
+        </org.mariotaku.twidere.view.TwidereToolbar>
 
         <View
             android:id="@+id/actionbar_overlay"

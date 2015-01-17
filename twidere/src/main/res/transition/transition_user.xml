@@ -21,16 +21,16 @@
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_shortAnimTime">
-    <changeBounds>
+    <changeBounds android:duration="@android:integer/config_shortAnimTime">
         <targets>
             <target android:targetId="@id/profile_image"/>
             <target android:targetId="@id/profile_type"/>
         </targets>
     </changeBounds>
-    <autoTransition>
-        <targets>
-            <target android:targetId="@id/profile_banner"/>
-            <target android:targetId="@id/view_pager_tabs"/>
-        </targets>
-    </autoTransition>
+    <!--<autoTransition>-->
+    <!--<targets>-->
+    <!--<target android:targetId="@id/profile_banner"/>-->
+    <!--<target android:targetId="@id/view_pager_tabs"/>-->
+    <!--</targets>-->
+    <!--</autoTransition>-->
 </transitionSet>

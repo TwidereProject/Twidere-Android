@@ -22,7 +22,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:divider="?android:dividerVertical"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -82,17 +84,13 @@
         </LinearLayout>
     </ScrollView>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="#40808080"/>
-
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/button_bar_height"
+        android:divider="?android:dividerHorizontal"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
         <Button
             android:id="@+id/accept"
@@ -102,11 +100,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/accept_permission_request"/>
-
-        <View
-            android:layout_width="0.2dp"
-            android:layout_height="match_parent"
-            android:background="#40808080"/>
 
         <Button
             android:id="@+id/deny"

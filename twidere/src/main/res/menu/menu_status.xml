@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/reply"
         android:icon="@drawable/ic_action_reply"
-        android:showAsAction="always"
-        android:title="@string/reply"/>
+        android:title="@string/reply"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/retweet_submenu"
         android:icon="@drawable/ic_action_retweet"
-        android:showAsAction="always"
-        android:title="@string/retweet">
+        android:title="@string/retweet"
+        app:showAsAction="always">
         <menu>
             <item
                 android:id="@id/retweet"
@@ -25,14 +26,14 @@
     <item
         android:id="@id/favorite"
         android:icon="@drawable/ic_action_star"
-        android:showAsAction="always"
-        android:title="@string/favorite"/>
+        android:title="@string/favorite"
+        app:showAsAction="always"/>
     <item
         android:id="@id/share"
-        android:actionProviderClass="org.mariotaku.twidere.menu.StatusShareProvider"
         android:icon="@drawable/ic_action_share"
-        android:showAsAction="ifRoom"
-        android:title="@string/share"/>
+        android:title="@string/share"
+        app:actionProviderClass="org.mariotaku.twidere.menu.StatusShareProvider"
+        app:showAsAction="always"/>
     <item
         android:id="@id/copy"
         android:icon="@drawable/ic_action_copy"

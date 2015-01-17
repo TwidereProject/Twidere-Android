@@ -46,7 +46,6 @@
     <item name="view_user_list" type="id"/>
     <item name="up" type="id"/>
     <item name="down" type="id"/>
-    <item name="multi_select" type="id"/>
     <item name="copy" type="id"/>
     <item name="right_pane" type="id"/>
     <item name="right_pane_container" type="id"/>

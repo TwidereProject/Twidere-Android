@@ -23,7 +23,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -215,10 +214,6 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
     public void onScrollStateChanged(final AbsListView view, final int scrollState) {
     }
 
-    protected UserListMenuDialogFragment createMenuDialog() {
-        return new UserListMenuDialogFragment();
-    }
-
     @Override
     protected void onReachedBottom() {
         if (!mLoadMoreAutomatically) return;
@@ -227,13 +222,7 @@ abstract class BaseUserListsListFragment extends BasePullToRefreshListFragment i
 
     private void showMenu(final View view, final ParcelableUserList userList) {
         mSelectedUserList = userList;
-        final FragmentActivity activity = getActivity();
-        if (activity == null || activity.isFinishing() || view == null || userList == null) return;
-        final UserListMenuDialogFragment df = createMenuDialog();
-        final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_USER_LIST, userList);
-        df.setArguments(args);
-        df.show(getChildFragmentManager(), "user_list_menu");
+        //TODO show menu
     }
 
 }

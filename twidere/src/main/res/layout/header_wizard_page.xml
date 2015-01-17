@@ -22,7 +22,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:divider="?android:dividerVertical"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
     <TextView
         android:id="@android:id/title"
@@ -34,12 +36,6 @@
         android:textColor="?android:colorActivatedHighlight"
         android:textSize="@dimen/text_size_wizard_title"
         android:textStyle="italic"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#40808080"
-        android:padding="@dimen/element_spacing_normal"/>
 
     <TextView
         android:id="@android:id/summary"

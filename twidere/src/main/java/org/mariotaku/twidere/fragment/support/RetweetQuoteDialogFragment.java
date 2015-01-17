@@ -101,7 +101,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
 
         holder.displayStatus(context, loader, handler, twitter, profileImageStyle, mediaPreviewStyle,
-                getStatus(), null, true);
+                true, getStatus(), null, true);
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);

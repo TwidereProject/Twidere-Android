@@ -35,43 +35,28 @@
         app:cardCornerRadius="@dimen/corner_radius_card"
         app:cardElevation="@dimen/elevation_card">
 
-        <LinearLayout
+        <org.mariotaku.twidere.view.ColorLabelLinearLayout
+            android:id="@+id/user_list_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/element_spacing_normal"
             android:splitMotionEvents="false">
 
-            <org.mariotaku.twidere.view.ColorLabelRelativeLayout
-                android:id="@+id/profile"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/element_spacing_normal"
-                app:ignorePadding="true">
-
-                <org.mariotaku.twidere.view.ShapedImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="@dimen/icon_size_card_details"
-                    android:layout_height="@dimen/icon_size_card_details"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/profile_image"
-                    android:foreground="?android:selectableItemBackground"
-                    android:scaleType="fitCenter"
-                    tools:src="@drawable/ic_profile_image_default"/>
+                android:padding="@dimen/element_spacing_normal">
 
                 <LinearLayout
                     android:id="@+id/name_container"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/profile_image"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/element_spacing_normal">
+                    android:orientation="vertical">
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/list_name"
@@ -88,22 +73,33 @@
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="?android:attr/textColorSecondary"/>
                 </LinearLayout>
-            </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
+
+                <org.mariotaku.twidere.view.ShapedImageView
+                    android:id="@+id/profile_image"
+                    style="?profileImageStyle"
+                    android:layout_width="@dimen/icon_size_card_details"
+                    android:layout_height="@dimen/icon_size_card_details"
+                    android:layout_weight="0"
+                    android:contentDescription="@string/profile_image"
+                    android:foreground="?android:selectableItemBackground"
+                    android:scaleType="fitCenter"
+                    tools:src="@drawable/ic_profile_image_default"/>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.2dp"
-                android:background="#40808080"/>
+                android:background="?android:dividerVertical"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/element_spacing_small"
+                android:padding="@dimen/element_spacing_normal"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorSecondary"
                 tools:text="@string/sample_status_text"/>
-        </LinearLayout>
+        </org.mariotaku.twidere.view.ColorLabelLinearLayout>
     </android.support.v7.widget.CardView>
 
 </FrameLayout>

@@ -21,7 +21,7 @@ package org.mariotaku.twidere.menu;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.ActionProvider;
+import android.support.v4.view.ActionProvider;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;

@@ -18,19 +18,22 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="?android:dividerVertical"
+    android:orientation="vertical"
+    android:showDividers="middle"
     tools:context=".activity.DonateActivity">
 
     <TableLayout
         android:id="@+id/table_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/divider"
         android:layout_gravity="center"
+        android:layout_weight="1"
         android:gravity="center">
 
         <TableRow
@@ -82,19 +85,12 @@
         </TableRow>
     </TableLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:layout_above="@+id/donate"
-        android:background="#40808080"/>
-
     <Button
         android:id="@+id/donate"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_bar_height"
-        android:layout_alignParentBottom="true"
+        android:layout_weight="0"
         android:background="?android:selectableItemBackground"
         android:text="@string/donate"/>
 
-</RelativeLayout>
+</LinearLayout>

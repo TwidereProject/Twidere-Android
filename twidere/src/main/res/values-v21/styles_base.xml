@@ -20,28 +20,28 @@
 
 <resources>
 
-    <style name="Widget.Base" parent="android:Widget.Material"/>
+    <!--<style name="Widget.Base" parent="android:Widget.Material"/>-->
 
-    <style name="Widget.Base.ActionButton.Overflow" parent="android:Widget.Material.ActionButton.Overflow"/>
+    <!--<style name="Widget.Base.ActionButton.Overflow" parent="android:Widget.Material.ActionButton.Overflow"/>-->
 
-    <style name="Widget.Base.ActionButton" parent="android:Widget.Material.ActionButton"/>
+    <!--<style name="Widget.Base.ActionButton" parent="android:Widget.Material.ActionButton"/>-->
 
-    <style name="Widget.Base.Light.ActionButton.Overflow" parent="android:Widget.Material.Light.ActionButton.Overflow"/>
+    <!--<style name="Widget.Base.Light.ActionButton.Overflow" parent="android:Widget.Material.Light.ActionButton.Overflow"/>-->
 
-    <style name="Widget.Base.Light.ActionButton" parent="android:Widget.Material.Light.ActionButton"/>
+    <!--<style name="Widget.Base.Light.ActionButton" parent="android:Widget.Material.Light.ActionButton"/>-->
 
-    <style name="Widget.Base.Light" parent="android:Widget.Material.Light"/>
+    <!--<style name="Widget.Base.Light" parent="android:Widget.Material.Light"/>-->
 
-    <style name="Widget.Base.Light.ImageButton" parent="android:Widget.Material.Light.ImageButton"/>
+    <!--<style name="Widget.Base.Light.ImageButton" parent="android:Widget.Material.Light.ImageButton"/>-->
 
-    <style name="Widget.Base.ImageButton" parent="android:Widget.Material.ImageButton"/>
+    <!--<style name="Widget.Base.ImageButton" parent="android:Widget.Material.ImageButton"/>-->
 
-    <style name="Widget.Base.ActionBar" parent="android:Widget.Material.ActionBar"/>
+    <!--<style name="Widget.Base.ActionBar" parent="android:Widget.Material.ActionBar"/>-->
 
-    <style name="Widget.Base.ActionBar.Solid" parent="android:Widget.Material.ActionBar.Solid"/>
+    <!--<style name="Widget.Base.ActionBar.Solid" parent="android:Widget.Material.ActionBar.Solid"/>-->
 
-    <style name="Widget.Base.Light.ActionBar.Solid" parent="android:Widget.Material.Light.ActionBar.Solid"/>
+    <!--<style name="Widget.Base.Light.ActionBar.Solid" parent="android:Widget.Material.Light.ActionBar.Solid"/>-->
 
-    <style name="Widget.Base.Light.ActionBar.Solid.Inverse" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse"/>
+    <!--<style name="Widget.Base.Light.ActionBar.Solid.Inverse" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse"/>-->
 
 </resources>

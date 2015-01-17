@@ -35,9 +35,6 @@ import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
 
-import org.mariotaku.menucomponent.widget.MenuBar;
-import org.mariotaku.menucomponent.widget.MenuBar.MenuBarListener;
-import org.mariotaku.tileimageview.widget.TileImageView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.loader.support.TileImageLoader;
@@ -49,14 +46,13 @@ import java.io.File;
 
 public final class MediaViewerActivity extends BaseSupportActivity implements Constants,
         TileImageLoader.DownloadListener, LoaderManager.LoaderCallbacks<TileImageLoader.Result>,
-        OnMenuVisibilityListener, MenuBarListener {
+        OnMenuVisibilityListener {
 
 
     private ActionBar mActionBar;
 
     private ProgressBar mProgress;
     private TouchImageView mImageView;
-    private MenuBar mMenuBar;
 
     private long mContentLength;
 
@@ -70,11 +66,10 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
 
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mImageView = (TouchImageView) findViewById(R.id.image_viewer);
         mProgress = (ProgressBar) findViewById(R.id.progress);
-        mMenuBar = (MenuBar) findViewById(R.id.menu_bar);
     }
 
     @Override
@@ -150,7 +145,7 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         updateShareIntent();
     }
 
-    @Override
+//    @Override
     public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_SAVE: {
@@ -252,10 +247,6 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         mImageView.setMaxScale(2);
 
 
-        mMenuBar.setMenuBarListener(this);
-        mMenuBar.inflate(R.menu.menu_image_viewer);
-        mMenuBar.setIsBottomBar(true);
-        mMenuBar.show();
     }
 
 
@@ -307,31 +298,21 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
 
 
     void updateShareIntent() {
-        final MenuItem item = mMenuBar.getMenu().findItem(MENU_SHARE);
-        if (item == null || !item.hasSubMenu()) return;
-        final SubMenu subMenu = item.getSubMenu();
-        subMenu.clear();
-        final Intent intent = getIntent();
-        final Uri uri = intent.getData();
-        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        if (mImageFile != null && mImageFile.exists()) {
-            shareIntent.setType("image/*");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mImageFile));
-        } else {
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, uri.toString());
-        }
-        Utils.addIntentToMenu(this, subMenu, shareIntent);
-    }
-
-    @Override
-    public void onPreShowMenu(Menu menu) {
-
-    }
-
-    @Override
-    public void onPostShowMenu(Menu menu) {
-
+//        final MenuItem item = mMenuBar.getMenu().findItem(MENU_SHARE);
+//        if (item == null || !item.hasSubMenu()) return;
+//        final SubMenu subMenu = item.getSubMenu();
+//        subMenu.clear();
+//        final Intent intent = getIntent();
+//        final Uri uri = intent.getData();
+//        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//        if (mImageFile != null && mImageFile.exists()) {
+//            shareIntent.setType("image/*");
+//            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mImageFile));
+//        } else {
+//            shareIntent.setType("text/plain");
+//            shareIntent.putExtra(Intent.EXTRA_TEXT, uri.toString());
+//        }
+//        Utils.addIntentToMenu(this, subMenu, shareIntent);
     }
 
 }

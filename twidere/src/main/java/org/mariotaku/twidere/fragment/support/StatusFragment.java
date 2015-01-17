@@ -38,6 +38,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,8 +50,8 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -93,7 +94,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextView;
-import org.mariotaku.twidere.view.TwidereMenuBar;
 import org.mariotaku.twidere.view.TwitterCardContainer;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
@@ -121,7 +121,6 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
-import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
 import static org.mariotaku.twidere.util.Utils.startStatusShareChooser;
@@ -156,7 +155,7 @@ public class StatusFragment extends BaseSupportFragment
             final long maxId = args.getLong(EXTRA_MAX_ID, -1);
             final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
             final StatusRepliesLoader loader = new StatusRepliesLoader(getActivity(), accountId,
-                    screenName, statusId, maxId, sinceId, null, null, 0, false);
+                    screenName, statusId, maxId, sinceId, null, null, 0, true);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
             return loader;
         }
@@ -272,11 +271,7 @@ public class StatusFragment extends BaseSupportFragment
 
     @Override
     public void onStatusMenuClick(StatusViewHolder holder, View itemView, int position) {
-        final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_STATUS, mStatusAdapter.getStatus(position));
-        final StatusMenuDialogFragment f = new StatusMenuDialogFragment();
-        f.setArguments(args);
-        f.show(getActivity().getSupportFragmentManager(), "status_menu");
+        //TODO show status menu
     }
 
     @Override
@@ -526,6 +521,11 @@ public class StatusFragment extends BaseSupportFragment
         @Override
         public void setData(List<ParcelableStatus> data) {
 
+        }
+
+        @Override
+        public boolean shouldShowAccountsColor() {
+            return false;
         }
 
         @Override
@@ -814,13 +814,14 @@ public class StatusFragment extends BaseSupportFragment
         }
     }
 
-    private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener, OnMenuItemClickListener {
+    private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener,
+            ActionMenuView.OnMenuItemClickListener {
 
         private final StatusAdapter adapter;
 
         private final CardView cardView;
 
-        private final TwidereMenuBar menuBar;
+        private final ActionMenuView menuBar;
         private final TextView nameView, screenNameView;
         private final StatusTextView textView;
         private final ShapedImageView profileImageView;
@@ -842,7 +843,7 @@ public class StatusFragment extends BaseSupportFragment
             super(itemView);
             this.adapter = adapter;
             cardView = (CardView) itemView.findViewById(R.id.card);
-            menuBar = (TwidereMenuBar) itemView.findViewById(R.id.menu_bar);
+            menuBar = (ActionMenuView) itemView.findViewById(R.id.menu_bar);
             nameView = (TextView) itemView.findViewById(R.id.name);
             screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
             textView = (StatusTextView) itemView.findViewById(R.id.text);
@@ -1111,13 +1112,16 @@ public class StatusFragment extends BaseSupportFragment
 //                final FragmentTransaction ft = fm.beginTransaction();
             }
 
-            setMenuForStatus(context, menuBar.getMenu(), status, adapter.getStatusAccount());
-            menuBar.show();
+            Utils.setMenuForStatus(context, menuBar.getMenu(), status, adapter.getStatusAccount());
         }
 
         private void initViews() {
+//            menuBar.setOnMenuItemClickListener(this);
             menuBar.setOnMenuItemClickListener(this);
-            menuBar.inflate(R.menu.menu_status);
+            final FragmentActivity activity = adapter.getFragment().getActivity();
+            final MenuInflater inflater = activity.getMenuInflater();
+            inflater.inflate(R.menu.menu_status, menuBar.getMenu());
+            ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_STATUS_SHARE);
             mediaPreviewLoad.setOnClickListener(this);
             profileContainer.setOnClickListener(this);
 

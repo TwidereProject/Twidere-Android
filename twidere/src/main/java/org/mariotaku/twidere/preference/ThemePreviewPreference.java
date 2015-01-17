@@ -23,16 +23,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
+import android.support.v7.internal.view.SupportMenuInflater;
+import android.support.v7.widget.ActionMenuView;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.mariotaku.menucomponent.widget.MenuBar;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -86,7 +88,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final View windowContentOverlayView = view.findViewById(R.id.theme_preview_window_content_overlay);
         final View actionBarView = view.findViewById(R.id.actionbar);
         final TextView actionBarTitleView = (TextView) view.findViewById(R.id.actionbar_title);
-        final MenuBar actionBarSplitView = (MenuBar) view.findViewById(R.id.menu_bar);
+        final ActionMenuView actionBarSplitView = (ActionMenuView) view.findViewById(R.id.menu_bar);
         final View statusContentView = view.findViewById(R.id.theme_preview_status_content);
 
         final int defaultTextSize = getDefaultTextSize(context);
@@ -98,9 +100,8 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
 
         actionBarTitleView.setTextAppearance(context, titleTextAppearance);
         actionBarSplitView.setEnabled(false);
-        actionBarSplitView.inflate(R.menu.menu_status);
-        actionBarSplitView.setIsBottomBar(true);
-        actionBarSplitView.show();
+        final MenuInflater inflater = new SupportMenuInflater(context);
+        inflater.inflate(R.menu.menu_status, actionBarSplitView.getMenu());
         if (statusContentView != null) {
             ViewAccessor.setBackground(statusContentView, ThemeUtils.getWindowBackground(context));
 

@@ -36,7 +36,9 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
@@ -59,36 +61,29 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class ShapedImageView extends ImageView {
 
-
-    @IntDef({SHAPE_CIRCLE, SHAPE_RECTANGLE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ShapeStyle {
-    }
-
     @ShapeStyle
     public static final int SHAPE_CIRCLE = 0x1;
     @ShapeStyle
     public static final int SHAPE_RECTANGLE = 0x2;
-
     private static final int SHADOW_START_COLOR = 0x37000000;
-
     private static final boolean USE_OUTLINE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     private static final boolean OUTLINE_DRAW = false;
-
     private final Matrix mMatrix;
     private final RectF mSource;
     private final RectF mDestination;
     private final RectF mTempDestination;
     private final Paint mBitmapPaint;
+    private final Paint mSolidColorPaint;
     private final Paint mBorderPaint;
     private final Paint mBackgroundPaint;
-
     private boolean mBorderEnabled;
     private Bitmap mShadowBitmap;
     private float mShadowRadius;
-
     private int mStyle;
     private float mCornerRadius, mCornerRadiusRatio;
+    private RectF mTransitionSource, mTransitionDestination;
+    private int mStrokeWidth, mBorderAlpha;
+    private int[] mBorderColors;
 
     public ShapedImageView(Context context) {
         this(context, null, 0);
@@ -96,13 +91,6 @@ public class ShapedImageView extends ImageView {
 
     public ShapedImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-    }
-
-    @Override
-    public void setBackgroundColor(int color) {
-        mBackgroundPaint.setColor(0xFF000000 | color);
-        mBackgroundPaint.setAlpha(Color.alpha(color));
-        invalidate();
     }
 
     public ShapedImageView(Context context, AttributeSet attrs, int defStyle) {
@@ -118,6 +106,7 @@ public class ShapedImageView extends ImageView {
         mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitmapPaint.setFilterBitmap(true);
         mBitmapPaint.setDither(true);
+        mSolidColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setStyle(Paint.Style.STROKE);
@@ -154,10 +143,6 @@ public class ShapedImageView extends ImageView {
         }
     }
 
-    public void setCornerRadiusRatio(float ratio) {
-        mCornerRadiusRatio = ratio;
-    }
-
     /**
      * Given the source bitmap and a canvas, draws the bitmap through a circular
      * mask. Only draws a circle with diameter equal to the destination width.
@@ -168,9 +153,19 @@ public class ShapedImageView extends ImageView {
      * @param dest   The destination bound on the canvas.
      */
     public void drawBitmapWithCircleOnCanvas(Bitmap bitmap, Canvas canvas,
-                                             RectF source, RectF dest) {
+                                             RectF source, @NonNull RectF dest) {
+        if (bitmap == null) {
+            if (getStyle() == SHAPE_CIRCLE) {
+                canvas.drawCircle(dest.centerX(), dest.centerY(), Math.min(dest.width(), dest.height()) / 2f,
+                        mSolidColorPaint);
+            } else {
+                final float cornerRadius = getCalculatedCornerRadius();
+                canvas.drawRoundRect(dest, cornerRadius, cornerRadius, mSolidColorPaint);
+            }
+            return;
+        }
         // Draw bitmap through shader first.
-        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
+        final BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
                 Shader.TileMode.CLAMP);
         mMatrix.reset();
 
@@ -226,9 +221,17 @@ public class ShapedImageView extends ImageView {
         mStyle = style;
     }
 
+    public void setBorderColors(int... colors) {
+        mBorderAlpha = 0xff;
+        mBorderColors = colors;
+        updateBorderShader();
+        invalidate();
+    }
+
     public void setBorderColor(int color) {
-        mBorderPaint.setARGB(Color.alpha(color), Color.red(color), Color.green(color),
-                Color.blue(color));
+        mBorderAlpha = Color.alpha(color);
+        mBorderColors = new int[]{color};
+        updateBorderShader();
         invalidate();
     }
 
@@ -239,7 +242,20 @@ public class ShapedImageView extends ImageView {
 
     public void setBorderWidth(int width) {
         mBorderPaint.setStrokeWidth(width);
+        mStrokeWidth = width;
         invalidate();
+    }
+
+    public void setCornerRadiusRatio(float ratio) {
+        mCornerRadiusRatio = ratio;
+    }
+
+    public void setTransitionDestination(RectF dstBounds) {
+        mTransitionDestination = dstBounds;
+    }
+
+    public void setTransitionSource(RectF srcBounds) {
+        mTransitionSource = srcBounds;
     }
 
     @Override
@@ -275,32 +291,25 @@ public class ShapedImageView extends ImageView {
                 if (drawable.getCurrent() != null) {
                     bitmapDrawable = (BitmapDrawable) drawable.getCurrent();
                 }
-            } else {
+            } else if (drawable instanceof BitmapDrawable) {
                 bitmapDrawable = (BitmapDrawable) drawable;
+            } else if (drawable instanceof ColorDrawable) {
+                mSolidColorPaint.setColor(((ColorDrawable) drawable).getColor());
             }
 
-            if (bitmapDrawable == null) {
-                return;
+            Bitmap bitmap = null;
+            if (bitmapDrawable != null) {
+                bitmap = bitmapDrawable.getBitmap();
             }
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            if (bitmap == null) {
-                return;
+            if (bitmap != null) {
+                mSource.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
             }
-
-            mSource.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
             drawBitmapWithCircleOnCanvas(bitmap, canvas, mSource, mDestination);
         }
 
         // Then draw the border.
         if (mBorderEnabled) {
-            if (getStyle() == SHAPE_CIRCLE) {
-                canvas.drawCircle(mDestination.centerX(), mDestination.centerY(),
-                        mDestination.width() / 2f - mBorderPaint.getStrokeWidth() / 2, mBorderPaint);
-            } else {
-                final float radius = getCalculatedCornerRadius();
-                canvas.drawRoundRect(mDestination, radius, radius, mBorderPaint);
-            }
+            drawBorder(canvas);
         }
     }
 
@@ -314,14 +323,26 @@ public class ShapedImageView extends ImageView {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        updateShadowBitmap();
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        updateShadowBitmap();
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
+    }
+
+    @Override
+    public void setBackgroundColor(int color) {
+        mBackgroundPaint.setColor(0xFF000000 | color);
+        mBackgroundPaint.setAlpha(Color.alpha(color));
+        invalidate();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -346,6 +367,37 @@ public class ShapedImageView extends ImageView {
         updateShadowBitmap();
     }
 
+    private void drawBorder(@NonNull final Canvas canvas) {
+        final RectF transitionSrc = mTransitionSource, transitionDst = mTransitionDestination;
+        if (transitionSrc != null && transitionDst != null) {
+            final float progress = 1 - (mDestination.width() - transitionDst.width())
+                    / (transitionSrc.width() - transitionDst.width());
+            mBorderPaint.setStrokeWidth(mStrokeWidth * progress);
+            mBorderPaint.setAlpha(Math.round(mBorderAlpha * progress));
+            ViewCompat.setTranslationZ(this, -ViewCompat.getElevation(this) * (1 - progress));
+        } else {
+            mBorderPaint.setStrokeWidth(mStrokeWidth);
+            mBorderPaint.setAlpha(mBorderAlpha);
+            ViewCompat.setTranslationZ(this, 0);
+        }
+        if (getStyle() == SHAPE_CIRCLE) {
+            canvas.drawCircle(mDestination.centerX(), mDestination.centerY(),
+                    mDestination.width() / 2f - mBorderPaint.getStrokeWidth() / 2, mBorderPaint);
+        } else {
+            final float radius = getCalculatedCornerRadius();
+            canvas.drawRoundRect(mDestination, radius, radius, mBorderPaint);
+        }
+    }
+
+    private float getCalculatedCornerRadius() {
+        if (mCornerRadiusRatio > 0) {
+            return Math.min(getWidth(), getHeight()) * mCornerRadiusRatio;
+        } else if (mCornerRadius > 0) {
+            return mCornerRadius;
+        }
+        return 0;
+    }
+
     private float getCornerRadius() {
         return mCornerRadius;
     }
@@ -362,6 +414,7 @@ public class ShapedImageView extends ImageView {
     }
 
     private void updateShadowBitmap() {
+        updateBorderShader();
         if (USE_OUTLINE) return;
         final int width = getWidth(), height = getHeight();
         if (width <= 0 || height <= 0) return;
@@ -385,6 +438,34 @@ public class ShapedImageView extends ImageView {
         invalidate();
     }
 
+    private void updateBorderShader() {
+        final int[] colors = mBorderColors;
+        if (colors == null || colors.length == 0) {
+            mBorderPaint.setShader(null);
+            return;
+        }
+        mDestination.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
+                getHeight() - getPaddingBottom());
+        final float cx = mDestination.centerX(), cy = mDestination.centerY();
+        final int[] sweepColors = new int[colors.length * 2];
+        final float[] positions = new float[colors.length * 2];
+        for (int i = 0, j = colors.length; i < j; i++) {
+            sweepColors[i * 2] = sweepColors[i * 2 + 1] = colors[i];
+            positions[i * 2] = i == 0 ? 0 : i / (float) j;
+            positions[i * 2 + 1] = i == j - 1 ? 1 : (i + 1) / (float) j;
+        }
+        final SweepGradient shader = new SweepGradient(cx, cy, sweepColors, positions);
+        final Matrix matrix = new Matrix();
+        matrix.setRotate(90, cx, cy);
+        shader.setLocalMatrix(matrix);
+        mBorderPaint.setShader(shader);
+    }
+
+    @IntDef({SHAPE_CIRCLE, SHAPE_RECTANGLE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ShapeStyle {
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static class CircularOutlineProvider extends ViewOutlineProvider {
         @Override
@@ -406,14 +487,5 @@ public class ShapedImageView extends ImageView {
                 outline.setRoundRect(contentLeft, contentTop, contentRight, contentBottom, radius);
             }
         }
-    }
-
-    private float getCalculatedCornerRadius() {
-        if (mCornerRadiusRatio > 0) {
-            return Math.min(getWidth(), getHeight()) * mCornerRadiusRatio;
-        } else if (mCornerRadius > 0) {
-            return mCornerRadius;
-        }
-        return 0;
     }
 }

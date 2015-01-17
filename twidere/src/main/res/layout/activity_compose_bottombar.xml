@@ -21,7 +21,6 @@
 <LinearLayout
     android:id="@+id/compose_bottombar"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?android:actionBarSize"
     android:baselineAligned="false"
@@ -31,29 +30,44 @@
     android:orientation="horizontal"
     android:showDividers="middle">
 
-    <!--<org.mariotaku.twidere.view.ComposeSelectAccountButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="0"-->
-        <!--android:padding="@dimen/element_spacing_small"/>-->
-
-    <HorizontalScrollView
-        android:id="@+id/bottom_menu_container"
-        android:layout_width="0dp"
+    <android.support.v7.widget.ActionMenuView
+        android:id="@+id/menu_bar"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:fadeScrollbars="false"
-        android:paddingRight="@dimen/element_spacing_normal">
+        android:background="@null"/>
 
-        <org.mariotaku.twidere.view.TwidereMenuBar
-            android:id="@+id/menu_bar"
+    <LinearLayout
+        android:id="@+id/send"
+        style="?android:actionButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:contentDescription="@string/send"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingLeft="@dimen/element_spacing_large"
+        android:paddingRight="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal">
+
+        <org.mariotaku.twidere.view.StatusTextCountView
+            android:id="@+id/status_text_count"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@null"
-            app:maxActionItems="@integer/max_action_buttons_bottom"/>
-    </HorizontalScrollView>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="@dimen/element_size_small"
+            android:textAppearance="?android:textAppearanceSmall"/>
 
-    <include layout="@layout/action_item_compose_send"/>
+        <org.mariotaku.twidere.view.ActionIconView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/send"
+            android:cropToPadding="false"
+            android:padding="@dimen/element_spacing_xsmall"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_action_send"/>
 
+    </LinearLayout>
 </LinearLayout>

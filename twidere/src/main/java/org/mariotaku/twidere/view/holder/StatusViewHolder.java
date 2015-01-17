@@ -124,13 +124,14 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
         displayStatus(adapter.getContext(), adapter.getImageLoader(),
                 adapter.getImageLoadingHandler(), adapter.getTwitterWrapper(),
-                adapter.getProfileImageStyle(), adapter.getMediaPreviewStyle(), status, null,
-                displayInReplyTo);
+                adapter.getProfileImageStyle(), adapter.getMediaPreviewStyle(),
+                adapter.shouldShowAccountsColor(), status, null, displayInReplyTo);
     }
 
     public void displayStatus(final Context context, final ImageLoaderWrapper loader,
                               final ImageLoadingHandler handler, final AsyncTwitterWrapper twitter,
                               final int profileImageStyle, final int mediaPreviewStyle,
+                              final boolean displayAccountsColor,
                               @NonNull final ParcelableStatus status,
                               @Nullable final TranslationResult translation,
                               final boolean displayInReplyTo) {
@@ -156,9 +157,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
         if (typeIconRes != 0) {
             profileTypeView.setImageResource(typeIconRes);
+//            profileTypeView.setBackgroundResource(typeIconRes);
             profileTypeView.setVisibility(View.VISIBLE);
         } else {
             profileTypeView.setImageDrawable(null);
+//            profileTypeView.setBackgroundResource(0);
             profileTypeView.setVisibility(View.GONE);
         }
 
@@ -168,6 +171,12 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         final int userColor = UserColorNameUtils.getUserColor(context, status.user_id);
         itemContent.drawStart(userColor);
+
+        if (displayAccountsColor) {
+            itemContent.drawEnd(Utils.getAccountColor(context, status.account_id));
+        } else {
+            itemContent.drawEnd();
+        }
         profileImageView.setStyle(profileImageStyle);
 
         loader.displayProfileImage(profileImageView, status.user_profile_image_url);
@@ -284,6 +293,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         final int userColor = UserColorNameUtils.getUserColor(context, user_id);
         itemContent.drawStart(userColor);
+
+        if (adapter.shouldShowAccountsColor()) {
+            itemContent.drawEnd(Utils.getAccountColor(context, account_id));
+        } else {
+            itemContent.drawEnd();
+        }
+
         profileImageView.setStyle(adapter.getProfileImageStyle());
 
         loader.displayProfileImage(profileImageView, user_profile_image_url);

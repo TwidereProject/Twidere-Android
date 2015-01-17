@@ -56,6 +56,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
@@ -70,7 +71,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.UserColorNameUtils;
-import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
+import org.mariotaku.twidere.view.ColorLabelLinearLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.TabPagerIndicator;
@@ -96,7 +97,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     private ImageView mProfileImageView;
     private TextView mListNameView, mCreatedByView, mDescriptionView, mErrorMessageView;
     private View mErrorRetryContainer, mProgressContainer;
-    private ColorLabelRelativeLayout mProfileContainer;
+    private ColorLabelLinearLayout mUserListDetails;
     private Button mRetryButton;
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
@@ -184,20 +185,19 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     public void displayUserList(final ParcelableUserList userList) {
         if (userList == null || getActivity() == null) return;
         getLoaderManager().destroyLoader(0);
-        final boolean isMyself = userList.account_id == userList.user_id;
         mErrorRetryContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUserList = userList;
-        mProfileContainer.drawEnd(getAccountColor(getActivity(), userList.account_id));
+        mUserListDetails.drawEnd(getAccountColor(getActivity(), userList.account_id));
         mListNameView.setText(userList.name);
-        final String display_name = UserColorNameUtils.getDisplayName(getActivity(), userList.user_id, userList.user_name,
-                userList.user_screen_name, false);
-        mCreatedByView.setText(getString(R.string.created_by, display_name));
+        final String displayName = UserColorNameUtils.getDisplayName(getActivity(), userList.user_id,
+                userList.user_name, userList.user_screen_name, false);
+        mCreatedByView.setText(getString(R.string.created_by, displayName));
         final String description = userList.description;
-        mDescriptionView.setVisibility(isMyself || !isEmpty(description) ? View.VISIBLE : View.GONE);
+        mDescriptionView.setVisibility(isEmpty(description) ? View.GONE : View.VISIBLE);
         mDescriptionView.setText(description);
-        final TwidereLinkify linkify = new TwidereLinkify(
-                new OnLinkClickHandler(getActivity(), getMultiSelectManager()));
+        final TwidereLinkify linkify = new TwidereLinkify(new OnLinkClickHandler(getActivity(),
+                getMultiSelectManager()));
         linkify.applyAllLinks(mDescriptionView, userList.account_id, false);
         mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
         mProfileImageLoader.displayProfileImage(mProfileImageView, userList.user_profile_image_url);
@@ -275,11 +275,16 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mViewPager.setAdapter(mPagerAdapter);
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
+        if (activity instanceof IThemedActivity) {
+            mPagerIndicator.setStripColor(((IThemedActivity) activity).getCurrentThemeColor());
+        } else {
+
+        }
 
         mTwitterWrapper = getApplication().getTwitterWrapper();
         mProfileImageLoader = getApplication().getImageLoaderWrapper();
         mProfileImageView.setOnClickListener(this);
-        mProfileContainer.setOnClickListener(this);
+        mUserListDetails.setOnClickListener(this);
         mRetryButton.setOnClickListener(this);
         getUserListInfo(false);
 
@@ -474,7 +479,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         final View headerView = mHeaderDrawerLayout.getHeader();
         final View contentView = mHeaderDrawerLayout.getContent();
         mCardView = (CardView) headerView.findViewById(R.id.card);
-        mProfileContainer = (ColorLabelRelativeLayout) headerView.findViewById(R.id.profile);
+        mUserListDetails = (ColorLabelLinearLayout) headerView.findViewById(R.id.user_list_details);
         mListNameView = (TextView) headerView.findViewById(R.id.list_name);
         mCreatedByView = (TextView) headerView.findViewById(R.id.created_by);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);

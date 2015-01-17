@@ -42,4 +42,28 @@ public class ColorUtils {
         return Color.argb(alpha, r, g, b);
     }
 
+    public static int getContrastYIQ(int color, int colorDark, int colorLight) {
+        return getContrastYIQ(color, 128, colorDark, colorLight);
+    }
+
+    public static int getContrastYIQ(int color) {
+        return getContrastYIQ(color, 128);
+    }
+
+    public static int getContrastYIQ(int color, int threshold) {
+        return getContrastYIQ(color, threshold, Color.BLACK, Color.WHITE);
+    }
+
+    /**
+     * Get most contrasting color
+     *
+     * @param color Input color, alpha channel will be disposed.
+     * @return {@link android.graphics.Color#WHITE} or {@link android.graphics.Color#BLACK}
+     * @see <a href='http://24ways.org/2010/calculating-color-contrast/'>Calculating Color Contrast</a>
+     */
+    public static int getContrastYIQ(int color, int threshold, int colorDark, int colorLight) {
+        final int r = Color.red(color), g = Color.green(color), b = Color.blue(color);
+        final int yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= threshold) ? colorDark : colorLight;
+    }
 }

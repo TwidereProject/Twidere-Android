@@ -16,4 +16,5 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, StatusClick
 
     void setData(Data data);
 
+    boolean shouldShowAccountsColor();
 }

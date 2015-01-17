@@ -196,9 +196,9 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                     status = activity.target_statuses[0];
                 }
                 final StatusViewHolder statusViewHolder = (StatusViewHolder) holder;
-                statusViewHolder.displayStatus(getContext(), getImageLoader(),
-                        getImageLoadingHandler(), getTwitterWrapper(),
-                        getProfileImageStyle(), getMediaPreviewStyle(), status, null, false);
+                statusViewHolder.displayStatus(getContext(), getImageLoader(), getImageLoadingHandler(),
+                        getTwitterWrapper(), getProfileImageStyle(), getMediaPreviewStyle(), false,
+                        status, null, false);
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {

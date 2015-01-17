@@ -23,7 +23,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="?android:dividerVertical"
     android:orientation="vertical"
+    android:showDividers="middle"
     tools:context=".activity.EditCustomTabActivity">
 
     <ScrollView
@@ -144,12 +146,6 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:layout_weight="0"
-        android:background="#40808080"/>
 
     <Button
         android:id="@+id/save"

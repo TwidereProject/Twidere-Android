@@ -1331,10 +1331,11 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
 
     @Override
     public QueryResult search(final Query query) throws TwitterException {
-        return factory.createQueryResult(
-                get(conf.getRestBaseURL() + ENDPOINT_SEARCH_TWEETS, conf.getSigningRestBaseURL()
-                        + ENDPOINT_SEARCH_TWEETS, query.asHttpParameterArray(INCLUDE_ENTITIES,
-                        INCLUDE_RTS, INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT)), query);
+        final String url = conf.getRestBaseURL() + ENDPOINT_SEARCH_TWEETS;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_SEARCH_TWEETS;
+        return factory.createQueryResult(get(url, signUrl,
+                query.asHttpParameterArray(INCLUDE_ENTITIES, INCLUDE_RTS, INCLUDE_REPLY_COUNT,
+                        INCLUDE_DESCENDENT_REPLY_COUNT)), query);
     }
 
     @Override

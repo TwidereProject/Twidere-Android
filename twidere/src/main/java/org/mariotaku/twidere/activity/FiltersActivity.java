@@ -19,13 +19,9 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -36,10 +32,15 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBar.TabListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,7 +80,8 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
     private SharedPreferences mPreferences;
 
     @Override
-    public void onContentChanged() {
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mViewPager = (ViewPager) findViewById(R.id.pager);
     }
 
@@ -154,7 +156,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         setContentView(R.layout.activity_filters);
-        mActionBar = getActionBar();
+        mActionBar = getSupportActionBar();
         mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -245,6 +247,7 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
 
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());

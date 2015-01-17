@@ -66,8 +66,6 @@ public class AccountSelectorActivity extends BaseSupportDialogActivity implement
 
     private boolean mFirstCreated;
 
-    private View mSelectAccountDivider;
-
     private View mSelectAccountButtons;
 
     @Override
@@ -89,10 +87,9 @@ public class AccountSelectorActivity extends BaseSupportDialogActivity implement
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mListView = (ListView) findViewById(android.R.id.list);
-        mSelectAccountDivider = findViewById(R.id.select_account_divider);
         mSelectAccountButtons = findViewById(R.id.select_account_buttons);
     }
 
@@ -140,7 +137,6 @@ public class AccountSelectorActivity extends BaseSupportDialogActivity implement
         if (isSingleSelection) {
             mListView.setOnItemClickListener(this);
         }
-        mSelectAccountDivider.setVisibility(isSingleSelection ? View.GONE : View.VISIBLE);
         mSelectAccountButtons.setVisibility(isSingleSelection ? View.GONE : View.VISIBLE);
         mListView.setAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);

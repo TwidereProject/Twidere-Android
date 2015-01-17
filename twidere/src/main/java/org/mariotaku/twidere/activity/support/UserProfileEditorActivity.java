@@ -185,8 +185,8 @@ public class UserProfileEditorActivity extends BaseSupportActivity implements On
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mProgressContainer = findViewById(R.id.progress_container);
         mContent = findViewById(R.id.content);
         mProfileBannerView = (ImageView) findViewById(R.id.profile_banner);

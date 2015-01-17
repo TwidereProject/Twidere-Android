@@ -22,6 +22,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:showDividers="middle"
+    android:divider="?android:dividerVertical"
     android:orientation="vertical">
 
     <FrameLayout
@@ -31,11 +33,6 @@
 
         <include layout="@layout/layout_api_editor"/>
     </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="#40808080"/>
 
     <Button
         android:id="@+id/save"

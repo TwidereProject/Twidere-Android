@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
@@ -30,9 +31,18 @@ public class BadgeView extends View {
     public BadgeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(Color.WHITE);
+        final TypedArray a = context.obtainStyledAttributes(attrs,
+                new int[]{android.R.attr.textColor, android.R.attr.text});
+        setColor(a.getColor(0, Color.WHITE));
+        setText(a.getString(1));
         mTextPaint.setTextAlign(Align.CENTER);
         mTextBounds = new Rect();
+    }
+
+
+    public void setColor(int color) {
+        mTextPaint.setColor(color);
+        invalidate();
     }
 
     public void setText(String text) {

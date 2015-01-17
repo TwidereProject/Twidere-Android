@@ -50,7 +50,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import org.mariotaku.menucomponent.widget.PopupMenu;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
@@ -81,7 +80,6 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
     private DraftsAdapter mAdapter;
     private ListView mListView;
 
-    private PopupMenu mPopupMenu;
 
     private float mTextSize;
 
@@ -226,9 +224,6 @@ public class DraftsActivity extends BaseSupportActivity implements LoaderCallbac
 
     @Override
     protected void onStop() {
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
-        }
         super.onStop();
     }
 

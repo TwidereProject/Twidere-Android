@@ -73,6 +73,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
             where = accountWhere;
         }
         final String selection = processWhere(where).getSQL();
+        getAdapter().setShowAccountsColor(accountIds.length > 1);
         return new ExtendedCursorLoader(context, uri, Statuses.COLUMNS, selection, null, sortOrder, fromUser);
     }
 

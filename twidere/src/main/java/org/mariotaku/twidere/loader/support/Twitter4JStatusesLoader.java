@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.util.Log;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -74,7 +75,6 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
     public final List<ParcelableStatus> loadInBackground() {
         final File serializationFile = getSerializationFile();
         final List<ParcelableStatus> data = getData();
-        if (!isFromUser()) return data;
         if (isFirstLoad() && getTabPosition() >= 0 && serializationFile != null) {
             final List<ParcelableStatus> cached = getCachedData(serializationFile);
             if (cached != null) {
@@ -87,6 +87,7 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
                 return new CopyOnWriteArrayList<>(data);
             }
         }
+        if (!isFromUser()) return data;
         final List<Status> statuses;
         final boolean truncated;
         final Context context = getContext();
@@ -105,7 +106,7 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
             truncated = truncateStatuses(getStatuses(getTwitter(), paging), statuses, mSinceId);
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
             return new CopyOnWriteArrayList<>(data);
         }
         final long minStatusId = statuses.isEmpty() ? -1 : Collections.min(statuses).getId();

@@ -46,7 +46,7 @@
             android:layout_marginBottom="@dimen/element_spacing_small"
             android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginTop="@dimen/element_spacing_small"
-            android:layout_toLeftOf="@id/reply_retweet_status"
+            android:layout_toLeftOf="@+id/reply_retweet_status"
             android:padding="@dimen/element_spacing_small"
             android:scaleType="centerInside"
             android:visibility="gone"
@@ -91,7 +91,7 @@
                 android:contentDescription="@string/profile_image"
                 android:scaleType="centerCrop"/>
 
-            <ImageView
+            <org.mariotaku.twidere.view.BoundsImageView
                 android:id="@+id/profile_type"
                 android:layout_width="@dimen/icon_size_profile_type"
                 android:layout_height="@dimen/icon_size_profile_type"

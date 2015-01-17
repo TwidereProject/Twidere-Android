@@ -29,7 +29,9 @@
         android:id="@+id/user_lists_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="?android:dividerVertical"
         android:orientation="vertical"
+        android:showDividers="middle"
         android:visibility="gone">
 
         <ListView
@@ -46,11 +48,6 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.2dp"
-                android:background="#40808080"/>
-
             <Button
                 android:id="@+id/create_list"
                 style="?android:borderlessButtonStyle"
@@ -66,7 +63,9 @@
         android:id="@+id/users_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="?android:dividerVertical"
         android:orientation="vertical"
+        android:showDividers="middle"
         tools:context=".activity.UserListSelectorActivity">
 
         <LinearLayout
@@ -106,10 +105,6 @@
                     android:src="@android:drawable/ic_menu_search"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.2dp"
-                android:background="#40808080"/>
         </LinearLayout>
 
         <ListView

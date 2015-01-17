@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.ActionBar;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -42,8 +41,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -87,6 +88,7 @@ import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.ActivityAccessor;
 import org.mariotaku.twidere.util.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.HotKeyHandler;
 import org.mariotaku.twidere.util.MathUtils;
@@ -160,6 +162,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     private int mTabDisplayOption;
     private float mPagerPosition;
+    private Toolbar mActionBar;
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -242,8 +245,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
+        mActionBar = (Toolbar) findViewById(R.id.actionbar);
+        mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
@@ -258,7 +263,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
         final MenuItem itemProgress = menu.findItem(MENU_PROGRESS);
-        mSmartBarProgress = (ProgressBar) itemProgress.getActionView().findViewById(android.R.id.progress);
+        mSmartBarProgress = (ProgressBar) MenuItemCompat.getActionView(itemProgress).findViewById(android.R.id.progress);
         updateActionsButton();
         return true;
     }
@@ -396,11 +401,15 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public boolean onSearchRequested() {
-        final Bundle appSearchData = new Bundle();
-        if (mSelectedAccountToSearch != null) {
-            appSearchData.putLong(EXTRA_ACCOUNT_ID, mSelectedAccountToSearch.account_id);
-        }
-        startSearch(null, false, appSearchData, false);
+//        final Bundle appSearchData = new Bundle();
+//        if (mSelectedAccountToSearch != null) {
+//            appSearchData.putLong(EXTRA_ACCOUNT_ID, mSelectedAccountToSearch.account_id);
+//            openSearch(this, mSelectedAccountToSearch.accountId, query);
+//        }
+//        startSearch(null, false, appSearchData, false);
+        final Intent intent = new Intent(this, QuickSearchBarActivity.class);
+//        intent.putExtra(EXTRA_ACCOUNT_ID, account.account_id);
+        startActivity(intent);
         return true;
     }
 
@@ -475,6 +484,11 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public int getThemeResourceId() {
+        return ThemeUtils.getNoActionBarThemeResource(this);
+    }
+
     /**
      * Called when the context is first created.
      */
@@ -485,9 +499,6 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        window.requestFeature(Window.FEATURE_NO_TITLE);
-        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        window.requestFeature(Window.FEATURE_ACTION_MODE_OVERLAY);
         super.onCreate(savedInstanceState);
         if (!isDatabaseReady(this)) {
             Toast.makeText(this, R.string.preparing_database_toast, Toast.LENGTH_SHORT).show();
@@ -515,11 +526,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             finish();
             return;
         }
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
         setContentView(R.layout.activity_home);
+        setSupportActionBar(mActionBar);
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONCREATE));
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         mTabDisplayOption = getTabDisplayOptionInt(this);
@@ -568,8 +576,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
         if (ThemeUtils.isColoredActionBar(themeResId)) {
-            final int contrastColor = Utils.getContrastYIQ(themeColor, 192);
-            ViewAccessor.setBackground(mTabIndicator, new ColorDrawable(themeColor));
+            final int contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
+            ViewAccessor.setBackground(mActionBar, new ColorDrawable(themeColor));
             homeActionButton.setButtonColor(themeColor);
             homeActionButton.setIconColor(contrastColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(contrastColor);
@@ -582,7 +590,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         } else {
             final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
             final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());
-            ViewAccessor.setBackground(mTabIndicator, ThemeUtils.getActionBarBackground(this, themeResId));
+            ViewAccessor.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId));
             homeActionButton.setButtonColor(backgroundColor);
             homeActionButton.setIconColor(foregroundColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);

@@ -21,9 +21,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/pages_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -52,12 +53,29 @@
             android:layout_below="@id/view_pager_tabs"/>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/pages_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Blocked"
-        android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/pages_error_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <org.mariotaku.twidere.view.ActionIconView
+            android:id="@+id/pages_error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="?android:textColorSecondary"
+            android:src="@drawable/ic_error_generic"/>
+
+        <TextView
+            android:id="@+id/pages_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:textAppearance="?android:textAppearanceMedium"/>
+    </LinearLayout>
+
 
 </FrameLayout>

@@ -7,23 +7,23 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
-    <style name="Theme.Blank" parent="Theme.Base.NoActionBar">
+    <style name="Theme.Blank" parent="Theme.Compat.Base.NoActionBar">
 
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
-    <style name="Theme.Blank.Translucent" parent="Theme.Base.NoActionBar">
+    <style name="Theme.Blank.Translucent" parent="Theme.Compat.Base.NoActionBar">
 
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
-    <style name="Theme.Blank.Dialog" parent="Theme.Base.Dialog"/>
+    <style name="Theme.Blank.Dialog" parent="Theme.Compat.Base.Dialog"/>
 
-    <style name="Theme.Twidere.Dark" parent="Theme.Base">
+    <style name="Theme.Twidere.Dark" parent="Theme.Compat.Base">
 
         <!-- Colors -->
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>-->
@@ -50,7 +50,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light" parent="Theme.Base.Light.DarkActionBar">
+    <style name="Theme.Twidere.Light" parent="Theme.Compat.Base.Light.DarkActionBar">
 
         <!-- Colors -->
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
@@ -87,8 +87,8 @@
         <item name="android:windowShowWallpaper">true</item>
     </style>
 
-    <style name="Theme.Twidere.Light.Transparent">
 
+    <style name="Theme.Twidere.Light.Transparent">
         <!-- Colors -->
         <item name="android:colorBackgroundCacheHint">@null</item>
 
@@ -96,7 +96,6 @@
         <!--<item name="android:windowBackground">@color/bg_color_transparent_light</item>-->
         <item name="android:windowShowWallpaper">true</item>
     </style>
-
 
     <style name="Theme.Twidere.Dark.SolidBackground">
 
@@ -118,7 +117,57 @@
         <!--<item name="android:actionBarItemBackground">@drawable/list_selector_white</item>-->
     </style>
 
-    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Base.Dialog">
+    <style name="Theme.Twidere.Dark.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">#f8f8f8</item>
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
+        <item name="menuIconColorActionBar">@color/action_icon_light</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+    </style>
+
+    <style name="Theme.Twidere.Dark.Transparent.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.Transparent.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="Theme.Twidere.Dark.SolidBackground.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.SolidBackground.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Compat.Base.Dialog">
 
         <!-- Custom view styles -->
 
@@ -135,7 +184,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Base.Light.Dialog">
+    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Compat.Base.Light.Dialog">
 
         <!-- Custom view styles -->
 
@@ -153,6 +202,7 @@
     </style>
 
     <style name="Theme.Twidere.Dark.Compose">
+        <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/dialog_full_holo_dark</item>
@@ -166,6 +216,7 @@
     </style>
 
     <style name="Theme.Twidere.Light.Compose">
+        <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/dialog_full_holo_light</item>
@@ -179,6 +230,7 @@
     </style>
 
     <style name="Theme.Twidere.Light.QuickSearchBar" parent="Theme.Twidere.Light.Dialog">
+        <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
@@ -186,13 +238,13 @@
     </style>
 
     <style name="Theme.Twidere.Dark.QuickSearchBar" parent="Theme.Twidere.Dark.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
-    <style name="Theme.Twidere.Viewer" parent="Theme.Base">
+    <style name="Theme.Twidere.Viewer" parent="Theme.Compat.Base">
 
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
@@ -245,7 +297,7 @@
         <!-- Window attributes -->
     </style>
 
-    <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Base">
+    <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Compat.Base">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -254,7 +306,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Base.Light">
+    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Compat.Base.Light">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -263,10 +315,10 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Test" parent="Theme.Base">
+    <style name="Theme.Test" parent="Theme.Compat.Base">
     </style>
 
-    <style name="Theme.Nyan" parent="Theme.Base.NoActionBar">
+    <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>
     </style>
 

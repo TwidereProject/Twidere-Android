@@ -21,9 +21,14 @@ package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.SharedElementCallback;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
@@ -34,6 +39,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.MainFrameLayout.FitSystemWindowsCallback;
+import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.util.ArrayList;
 

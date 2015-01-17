@@ -66,8 +66,8 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
 	}
 
 	@Override
-	public void onContentChanged() {
-		super.onContentChanged();
+	public void onSupportContentChanged() {
+		super.onSupportContentChanged();
 		mIconView = (ImageView) findViewById(android.R.id.icon);
 		mNameView = (TextView) findViewById(android.R.id.text1);
 		mDescriptionView = (TextView) findViewById(android.R.id.text2);

@@ -38,9 +38,5 @@
         android:icon="@drawable/ic_action_delete"
         android:title="@string/delete"
         android:visible="false"/>
-    <item
-        android:id="@id/multi_select"
-        android:icon="@drawable/ic_action_checked"
-        android:title="@string/multi_select"/>
 
 </menu>

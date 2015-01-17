@@ -99,8 +99,8 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mEditAPIUrlFormat = (EditText) findViewById(R.id.api_url_format);
         mEditAuthType = (RadioGroup) findViewById(R.id.auth_type);
         mButtonOAuth = (RadioButton) findViewById(R.id.oauth);

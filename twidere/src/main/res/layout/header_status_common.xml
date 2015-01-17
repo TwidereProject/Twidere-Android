@@ -309,11 +309,9 @@
 
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.TwidereMenuBar
+    <android.support.v7.widget.ActionMenuView
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
-        android:splitMotionEvents="false"
-        app:maxActionItems="@integer/max_action_buttons_bottom"/>
+        android:layout_height="?android:actionBarSize"/>
 
 </LinearLayout>

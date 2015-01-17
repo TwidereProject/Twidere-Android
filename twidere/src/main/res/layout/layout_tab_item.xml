@@ -63,6 +63,6 @@
         android:gravity="center"
         android:padding="@dimen/element_spacing_xsmall"
         android:singleLine="true"
-        android:textColor="?android:textColorPrimary"/>
+        android:textColor="@android:color/white"/>
 
 </view>

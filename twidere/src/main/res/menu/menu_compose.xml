@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@id/select_account"
+        android:icon="@drawable/ic_action_accounts"
+        android:title="@string/select_accounts"
+        app:actionProviderClass="org.mariotaku.twidere.menu.ComposeAccountActionProvider"
+        app:showAsAction="always"/>
     <item
         android:id="@id/take_photo"
         android:icon="@drawable/ic_action_camera"
-        android:showAsAction="ifRoom"
-        android:title="@string/take_photo"/>
+        android:title="@string/take_photo"
+        app:showAsAction="always"/>
     <item
         android:id="@id/add_image"
         android:icon="@drawable/ic_action_gallery"
-        android:showAsAction="ifRoom"
-        android:title="@string/add_image"/>
+        android:title="@string/add_image"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/media_menu"
         android:icon="@drawable/ic_action_gallery"
-        android:showAsAction="ifRoom"
         android:title="@string/media"
-        android:visible="false">
+        android:visible="false"
+        app:showAsAction="always">
         <menu>
             <item
                 android:id="@+id/take_photo_sub_item"
@@ -40,20 +47,21 @@
     <item
         android:id="@id/view"
         android:icon="@drawable/ic_action_reply"
-        android:showAsAction="ifRoom"
         android:title="@string/original_status"
-        android:visible="false"/>
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/add_location"
         android:checkable="true"
         android:enabled="false"
         android:icon="@drawable/ic_action_my_location"
-        android:showAsAction="ifRoom"
-        android:title="@string/location"/>
+        android:title="@string/location"
+        android:visible="false"
+        app:showAsAction="always"/>
     <item
         android:id="@id/drafts"
         android:icon="@drawable/ic_action_draft"
-        android:showAsAction="ifRoom"
-        android:title="@string/drafts"/>
+        android:title="@string/drafts"
+        app:showAsAction="always"/>
 
 </menu>

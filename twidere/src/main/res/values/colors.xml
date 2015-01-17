@@ -13,7 +13,6 @@
     <color name="text_link_holo_dark">#909090</color>
     <color name="text_link_holo_light">#707070</color>
     <color name="accent_white">#ffffff</color>
-    <color name="divider_color">#40808080</color>
     <color name="action_icon_dark">#99333333</color>
     <color name="action_icon_dark_disabled">#4D333333</color>
     <color name="action_icon_light">#CCFFFFFF</color>

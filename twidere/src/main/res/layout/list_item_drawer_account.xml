@@ -83,35 +83,4 @@
             android:layout_weight="0"/>
     </LinearLayout>
 
-    <!--<View-->
-    <!--android:id="@+id/profile_divider"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0.4dp"-->
-    <!--android:layout_below="@+id/profile_container"-->
-    <!--android:layout_margin="@dimen/element_spacing_small"-->
-    <!--android:background="#40808080"/>-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/profile_divider"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:padding="@dimen/element_spacing_small">-->
-
-    <!--<org.mariotaku.twidere.view.themed.ThemedTextView-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="1"-->
-    <!--android:text="@string/show_in_timeline"-->
-    <!--android:textAppearance="?android:textAppearanceMedium"-->
-    <!--android:textSize="@dimen/accounts_drawer_switch_label_size"/>-->
-
-    <!--<org.mariotaku.twidere.view.themed.ThemedSwitch-->
-    <!--android:id="@+id/toggle"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="right"/>-->
-    <!--</LinearLayout>-->
-
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

@@ -21,6 +21,11 @@ public class MainFrameLayout extends TintedStatusFrameLayout {
     }
 
     @Override
+    public void setPadding(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
+    }
+
+    @Override
     public void setStatusBarHeight(int height) {
         setPadding(0, height, 0, 0);
         super.setStatusBarHeight(height);

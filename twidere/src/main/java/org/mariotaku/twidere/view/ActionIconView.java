@@ -27,8 +27,13 @@ public class ActionIconView extends ImageView {
 
     public ActionIconView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.colorForeground});
-        mDefaultColor = a.getColor(0, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.color,
+                android.R.attr.colorForeground});
+        if (a.hasValue(0)) {
+            mDefaultColor = a.getColor(0, 0);
+        } else {
+            mDefaultColor = a.getColor(1, 0);
+        }
         setColorFilter(mDefaultColor, Mode.SRC_ATOP);
         a.recycle();
     }

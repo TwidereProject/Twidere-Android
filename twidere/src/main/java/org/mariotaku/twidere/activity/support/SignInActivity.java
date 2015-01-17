@@ -181,8 +181,8 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mEditUsername = (EditText) findViewById(R.id.username);
         mEditPassword = (EditText) findViewById(R.id.password);
         mSignInButton = (Button) findViewById(R.id.sign_in);

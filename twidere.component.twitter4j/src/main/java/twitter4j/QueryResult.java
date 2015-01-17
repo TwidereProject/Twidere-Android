@@ -18,25 +18,23 @@ package twitter4j;
 
 /**
  * A data interface representing search API response
- * 
+ *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public interface QueryResult {
-	double getCompletedIn();
+public interface QueryResult extends ResponseList<Status> {
+    double getCompletedIn();
 
-	long getMaxId();
+    long getMaxId();
 
-	int getPage();
+    int getPage();
 
-	String getQuery();
+    String getQuery();
 
-	String getRefreshUrl();
+    String getRefreshUrl();
 
-	int getResultsPerPage();
+    int getResultsPerPage();
 
-	long getSinceId();
+    long getSinceId();
 
-	Status[] getStatuses();
-
-	String getWarning();
+    String getWarning();
 }
