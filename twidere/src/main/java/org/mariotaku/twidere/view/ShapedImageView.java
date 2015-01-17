@@ -295,6 +295,8 @@ public class ShapedImageView extends ImageView {
                 bitmapDrawable = (BitmapDrawable) drawable;
             } else if (drawable instanceof ColorDrawable) {
                 mSolidColorPaint.setColor(((ColorDrawable) drawable).getColor());
+            } else {
+                mSolidColorPaint.setColor(0);
             }
 
             Bitmap bitmap = null;
@@ -325,7 +327,7 @@ public class ShapedImageView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        updateShadowBitmap();
+        updateBounds();
     }
 
     @Override
@@ -357,14 +359,14 @@ public class ShapedImageView extends ImageView {
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
         super.setPadding(left, top, right, bottom);
-        updateShadowBitmap();
+        updateBounds();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void setPaddingRelative(int start, int top, int end, int bottom) {
         super.setPaddingRelative(start, top, end, bottom);
-        updateShadowBitmap();
+        updateBounds();
     }
 
     private void drawBorder(@NonNull final Canvas canvas) {
@@ -413,8 +415,12 @@ public class ShapedImageView extends ImageView {
         }
     }
 
-    private void updateShadowBitmap() {
+    private void updateBounds() {
         updateBorderShader();
+        updateShadowBitmap();
+    }
+
+    private void updateShadowBitmap() {
         if (USE_OUTLINE) return;
         final int width = getWidth(), height = getHeight();
         if (width <= 0 || height <= 0) return;

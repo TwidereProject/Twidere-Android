@@ -182,6 +182,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - mLayoutManager.getPaddingTop());
             }
         }
+        if (data instanceof IExtendedLoader) {
+            ((IExtendedLoader) data).setFromUser(false);
+        }
         setListShown(true);
     }
 

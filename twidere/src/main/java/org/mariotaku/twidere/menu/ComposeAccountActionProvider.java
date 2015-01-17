@@ -21,8 +21,6 @@ package org.mariotaku.twidere.menu;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.ActionProvider;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +97,7 @@ public class ComposeAccountActionProvider extends ActionProvider implements OnCl
         } else {
             mCountView.setText(String.valueOf(accounts.length));
             mImageLoader.cancelDisplayTask(mProfileImageView);
-            mProfileImageView.setImageDrawable(new ColorDrawable(Color.WHITE));
+            mProfileImageView.setImageDrawable(null);
             mProfileImageView.setBorderColors(Utils.getAccountColors(accounts));
         }
     }

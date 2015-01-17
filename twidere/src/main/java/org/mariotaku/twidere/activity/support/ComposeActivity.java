@@ -429,7 +429,15 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
                 }
                 break;
             }
+            case R.id.account_selector_container: {
+                setAccountSelectorVisible(false);
+                break;
+            }
         }
+    }
+
+    private void setAccountSelectorVisible(boolean visible) {
+        mAccountSelectorContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -554,6 +562,7 @@ public class ComposeActivity extends BaseSupportDialogActivity implements TextWa
         mMenuBar.setOnMenuItemClickListener(this);
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
+        mAccountSelectorContainer.setOnClickListener(this);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

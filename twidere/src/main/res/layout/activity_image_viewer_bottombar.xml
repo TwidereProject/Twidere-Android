@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 
-<org.mariotaku.twidere.view.TwidereMenuBar
+<android.support.v7.widget.ActionMenuView
     android:id="@+id/menu_bar"
     style="?android:actionBarSplitStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
