@@ -55,7 +55,7 @@
                 android:paddingLeft="@dimen/element_spacing_small"
                 android:paddingRight="@dimen/element_spacing_small"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="?android:textColorPrimary"
                 tools:text="Line 1\nLine 2\nLine 3"/>
         </LinearLayout>
 
@@ -88,7 +88,7 @@
                 android:paddingRight="@dimen/element_spacing_small"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="?android:textColorPrimary"
                 tools:text="Zhengzhou China"/>
         </LinearLayout>
 
@@ -122,7 +122,7 @@
                 android:paddingRight="@dimen/element_spacing_small"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="?android:textColorPrimary"
                 tools:text="mariotaku.org"/>
         </LinearLayout>
 
@@ -155,7 +155,7 @@
                 android:paddingRight="@dimen/element_spacing_small"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="?android:textColorPrimary"
                 tools:text="July 18, 2009 17:00 (20 tweets per day)"/>
         </LinearLayout>
 

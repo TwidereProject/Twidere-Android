@@ -21,9 +21,9 @@
 <LinearLayout
     android:id="@+id/advanced_api_config"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/advanced_api_config_label"
     android:orientation="vertical"
     android:paddingLeft="@dimen/element_spacing_normal">
 
@@ -45,32 +45,28 @@
         android:text="@string/no_version_suffix"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/consumer_key"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/consumer_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="@string/consumer_key"
         android:inputType="text|textVisiblePassword"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        app:baseColor="?android:textColorPrimary"
+        app:floatingLabel="normal"
+        app:floatingLabelText="@string/consumer_key"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/consumer_secret"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/consumer_secret"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="@string/consumer_secret"
         android:inputType="text|textVisiblePassword"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        app:baseColor="?android:textColorPrimary"
+        app:floatingLabel="normal"
+        app:floatingLabelText="@string/consumer_secret"/>
 
 </LinearLayout>

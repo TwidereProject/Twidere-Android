@@ -65,7 +65,6 @@
 
     <!-- Dimensions for compose dialog -->
     <dimen name="compose_min_width">400dp</dimen>
-    <dimen name="compose_min_height">240dp</dimen>
 
     <!-- Dimensions for Tab indicator -->
     <dimen name="tab_item_minwidth_vpi">64dp</dimen>

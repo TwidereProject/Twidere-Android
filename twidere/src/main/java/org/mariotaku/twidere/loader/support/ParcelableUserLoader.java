@@ -77,9 +77,17 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         final Twitter twitter = getTwitterInstance(context, mAccountId, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
-            final String where = CachedUsers.USER_ID + " = " + mUserId + " OR " + CachedUsers.SCREEN_NAME + " = '"
-                    + mScreenName + "'";
-            final Cursor cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS, where, null, null);
+            final Expression where;
+            final String[] whereArgs;
+            if (mUserId > 0) {
+                where = Expression.equals(CachedUsers.USER_ID, mUserId);
+                whereArgs = null;
+            } else {
+                where = Expression.equalsArgs(CachedUsers.SCREEN_NAME);
+                whereArgs = new String[]{mScreenName};
+            }
+            final Cursor cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS,
+                    where.getSQL(), whereArgs, null);
             final int count = cur.getCount();
             try {
                 if (count > 0) {

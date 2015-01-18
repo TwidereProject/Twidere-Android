@@ -167,7 +167,7 @@
     </style>
 
 
-    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Compat.Base.Dialog">
+    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Base.Dialog">
 
         <!-- Custom view styles -->
 
@@ -184,7 +184,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Compat.Base.Light.Dialog">
+    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Base.Light.Dialog">
 
         <!-- Custom view styles -->
 

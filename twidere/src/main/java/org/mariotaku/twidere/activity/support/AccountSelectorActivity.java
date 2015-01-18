@@ -87,8 +87,8 @@ public class AccountSelectorActivity extends BaseSupportDialogActivity implement
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mListView = (ListView) findViewById(android.R.id.list);
         mSelectAccountButtons = findViewById(R.id.select_account_buttons);
     }

@@ -101,8 +101,8 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mUsersListContainer = findViewById(R.id.users_list_container);
         mUserListsContainer = findViewById(R.id.user_lists_container);
         mEditScreenName = (AutoCompleteTextView) findViewById(R.id.edit_screen_name);

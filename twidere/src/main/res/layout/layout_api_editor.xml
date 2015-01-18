@@ -21,7 +21,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/api_editor_content"
@@ -112,28 +112,6 @@
             </RadioGroup>
         </HorizontalScrollView>
 
-        <LinearLayout
-            android:id="@+id/advanced_api_config_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/advanced_api_config_label"
-                style="?android:borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/expander_close_holo"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:text="@string/advanced"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <include
-                layout="@layout/layout_api_editor_advanced_fields"
-                android:visibility="gone"/>
-        </LinearLayout>
+        <include layout="@layout/layout_api_editor_advanced_fields"/>
     </LinearLayout>
 </ScrollView>

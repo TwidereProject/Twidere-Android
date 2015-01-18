@@ -689,7 +689,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
 
     @Override
     public int getThemeResourceId() {
-        return ThemeUtils.getSettingsThemeResource(this);
+        return ThemeUtils.getThemeResource(this);
     }
 
     static class SignInResponse {

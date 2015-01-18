@@ -3,10 +3,12 @@
 
     <style name="Widget.CardActionButton" parent="Widget.Base.ImageButton">
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:color">?android:textColorSecondary</item>
     </style>
 
     <style name="Widget.Light.CardActionButton" parent="Widget.Base.ImageButton">
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:color">?android:textColorSecondary</item>
     </style>
 
     <style name="Widget.ProfileImage.Large">

@@ -65,6 +65,7 @@ dependencies {
     compile 'dnsjava:dnsjava:2.1.6'
     compile 'com.commonsware.cwac:merge:1.1.1'
     compile 'com.diegocarloslima:byakugallery:0.1.0'
+    compile 'com.rengwuxian.materialedittext:library:1.8.2'
     googleCompile 'com.google.android.gms:play-services:6.5.87'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'

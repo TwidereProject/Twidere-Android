@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ImagePickerActivity extends ThemedFragmentActivity {
+public class ImagePickerActivity extends ThemedActionBarActivity {
 
 	public static final int REQUEST_PICK_IMAGE = 101;
 	public static final int REQUEST_TAKE_PHOTO = 102;

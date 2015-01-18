@@ -63,6 +63,7 @@
         <org.mariotaku.twidere.view.ActionIconView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:color="?android:textColorSecondary"
             android:contentDescription="@string/send"
             android:cropToPadding="false"
             android:padding="@dimen/element_spacing_xsmall"

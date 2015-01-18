@@ -17,10 +17,6 @@ public class ActionIconView extends ImageView {
         this(context, null);
     }
 
-    public int getDefaultColor() {
-        return mDefaultColor;
-    }
-
     public ActionIconView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -36,5 +32,9 @@ public class ActionIconView extends ImageView {
         }
         setColorFilter(mDefaultColor, Mode.SRC_ATOP);
         a.recycle();
+    }
+
+    public int getDefaultColor() {
+        return mDefaultColor;
     }
 }

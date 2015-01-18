@@ -32,111 +32,122 @@ import org.mariotaku.twidere.view.themed.ThemedMultiAutoCompleteTextView;
 
 public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView implements InputType {
 
-	private UserHashtagAutoCompleteAdapter mAdapter;
+    private UserHashtagAutoCompleteAdapter mAdapter;
 
-	public StatusComposeEditText(final Context context) {
-		this(context, null);
-	}
+    public StatusComposeEditText(final Context context) {
+        this(context, null);
+    }
 
-	public StatusComposeEditText(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.autoCompleteTextViewStyle);
-	}
+    public StatusComposeEditText(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.autoCompleteTextViewStyle);
+    }
 
-	public StatusComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-		mAdapter = new UserHashtagAutoCompleteAdapter(this);
-		setTokenizer(new ScreenNameTokenizer());
-		setMovementMethod(ArrowKeyMovementMethod.getInstance());
-		setRawInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_CAP_SENTENCES | TYPE_TEXT_FLAG_MULTI_LINE);
-	}
+    public StatusComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+        mAdapter = new UserHashtagAutoCompleteAdapter(this);
+        setTokenizer(new ScreenNameTokenizer());
+        setMovementMethod(ArrowKeyMovementMethod.getInstance());
+        setRawInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_CAP_SENTENCES | TYPE_TEXT_FLAG_MULTI_LINE);
+    }
 
-	@Override
-	protected void onAttachedToWindow() {
-		super.onAttachedToWindow();
-		if (mAdapter == null || mAdapter.isCursorClosed()) {
-			mAdapter = new UserHashtagAutoCompleteAdapter(this);
-		}
-		setAdapter(mAdapter);
-	}
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (mAdapter == null || mAdapter.isCursorClosed()) {
+            mAdapter = new UserHashtagAutoCompleteAdapter(this);
+        }
+        setAdapter(mAdapter);
+    }
 
-	@Override
-	protected void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-		if (mAdapter != null) {
-			mAdapter.closeCursor();
-			mAdapter = null;
-		}
-		setAdapter(mAdapter);
-	}
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mAdapter != null) {
+            mAdapter.closeCursor();
+            mAdapter = null;
+        }
+//        setAdapter(null);
+    }
 
-	@Override
-	protected void replaceText(final CharSequence text) {
-		super.replaceText(text);
-		append(" ");
-	}
+    @Override
+    protected void replaceText(final CharSequence text) {
+        super.replaceText(text);
+        append(" ");
+    }
 
-	private static class ScreenNameTokenizer implements Tokenizer {
+    @Override
+    protected int computeVerticalScrollRange() {
+        return super.computeVerticalScrollRange();
+    }
 
-		@Override
-		public int findTokenEnd(final CharSequence text, final int cursor) {
-			int i = cursor;
-			final int len = text.length();
+    @Override
+    protected int computeVerticalScrollExtent() {
+        return super.computeVerticalScrollExtent();
+    }
 
-			while (i < len) {
-				if (text.charAt(i) == ' ')
-					return i;
-				else {
-					i++;
-				}
-			}
+    private static class ScreenNameTokenizer implements Tokenizer {
 
-			return len;
-		}
+        @Override
+        public int findTokenEnd(final CharSequence text, final int cursor) {
+            int i = cursor;
+            final int len = text.length();
 
-		@Override
-		public int findTokenStart(final CharSequence text, final int cursor) {
-			int start = cursor;
+            while (i < len) {
+                if (text.charAt(i) == ' ')
+                    return i;
+                else {
+                    i++;
+                }
+            }
 
-			while (start > 0 && text.charAt(start - 1) != ' ') {
-				start--;
-			}
+            return len;
+        }
 
-			while (start < cursor && text.charAt(start) == ' ') {
-				start++;
-			}
+        @Override
+        public int findTokenStart(final CharSequence text, final int cursor) {
+            int start = cursor;
 
-			if (start < cursor && isToken(text.charAt(start))) {
-				start++;
-			} else {
-				start = cursor;
-			}
+            while (start > 0 && text.charAt(start - 1) != ' ') {
+                start--;
+            }
 
-			return start;
-		}
+            while (start < cursor && text.charAt(start) == ' ') {
+                start++;
+            }
 
-		@Override
-		public CharSequence terminateToken(final CharSequence text) {
-			int i = text.length();
+            if (start < cursor && isToken(text.charAt(start))) {
+                start++;
+            } else {
+                start = cursor;
+            }
 
-			while (i > 0 && isToken(text.charAt(i - 1))) {
-				i--;
-			}
+            return start;
+        }
 
-			if (i > 0 && text.charAt(i - 1) == ' ' || !(text instanceof Spanned)) return text;
-			final SpannableString sp = new SpannableString(text);
-			TextUtils.copySpansFrom((Spanned) text, 0, text.length(), Object.class, sp, 0);
-			return sp;
-		}
+        @Override
+        public CharSequence terminateToken(final CharSequence text) {
+            int i = text.length();
 
-		private static boolean isToken(final char character) {
-			switch (character) {
-				case '\uff20':
-				case '@':
-				case '\uff03':
-				case '#':
-					return true;
-			}
-			return false;
-		}
-	}
+            while (i > 0 && isToken(text.charAt(i - 1))) {
+                i--;
+            }
+
+            if (i > 0 && text.charAt(i - 1) == ' ' || !(text instanceof Spanned)) return text;
+            final SpannableString sp = new SpannableString(text);
+            TextUtils.copySpansFrom((Spanned) text, 0, text.length(), Object.class, sp, 0);
+            return sp;
+        }
+
+        private static boolean isToken(final char character) {
+            switch (character) {
+                case '\uff20':
+                case '@':
+                case '\uff03':
+                case '#':
+                    return true;
+            }
+            return false;
+        }
+    }
+
 }

@@ -35,7 +35,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
@@ -57,9 +56,6 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
     private EditText mEditConsumerKey, mEditConsumerSecret;
     private RadioGroup mEditAuthType;
     private RadioButton mButtonOAuth, mButtonxAuth, mButtonBasic, mButtonTwipOMode;
-    private TextView mAdvancedAPIConfigLabel;
-    private View mAdvancedAPIConfigContainer;
-    private View mAdvancedAPIConfigView;
     private Button mSaveButton;
     private View mAPIFormatHelpButton;
 
@@ -67,7 +63,9 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         final int authType = getCheckedAuthType(checkedId);
         final boolean isOAuth = authType == Accounts.AUTH_TYPE_OAUTH || authType == Accounts.AUTH_TYPE_XAUTH;
-        mAdvancedAPIConfigContainer.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
+        mEditSameOAuthSigningUrl.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
+        mEditConsumerKey.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
+        mEditConsumerSecret.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -84,13 +82,6 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
                 saveAndFinish();
                 break;
             }
-            case R.id.advanced_api_config_label: {
-                final boolean isVisible = mAdvancedAPIConfigView.isShown();
-                final int compoundRes = isVisible ? R.drawable.expander_close_holo : R.drawable.expander_open_holo;
-                mAdvancedAPIConfigLabel.setCompoundDrawablesWithIntrinsicBounds(compoundRes, 0, 0, 0);
-                mAdvancedAPIConfigView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-                break;
-            }
             case R.id.api_url_format_help: {
                 Toast.makeText(this, R.string.api_url_format_help, Toast.LENGTH_LONG).show();
                 break;
@@ -99,17 +90,14 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mEditAPIUrlFormat = (EditText) findViewById(R.id.api_url_format);
         mEditAuthType = (RadioGroup) findViewById(R.id.auth_type);
         mButtonOAuth = (RadioButton) findViewById(R.id.oauth);
         mButtonxAuth = (RadioButton) findViewById(R.id.xauth);
         mButtonBasic = (RadioButton) findViewById(R.id.basic);
         mButtonTwipOMode = (RadioButton) findViewById(R.id.twip_o);
-        mAdvancedAPIConfigContainer = findViewById(R.id.advanced_api_config_container);
-        mAdvancedAPIConfigLabel = (TextView) findViewById(R.id.advanced_api_config_label);
-        mAdvancedAPIConfigView = findViewById(R.id.advanced_api_config);
         mEditSameOAuthSigningUrl = (CheckBox) findViewById(R.id.same_oauth_signing_url);
         mEditNoVersionSuffix = (CheckBox) findViewById(R.id.no_version_suffix);
         mEditConsumerKey = (EditText) findViewById(R.id.consumer_key);
@@ -191,7 +179,6 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         }
 
         mEditAuthType.setOnCheckedChangeListener(this);
-        mAdvancedAPIConfigLabel.setOnClickListener(this);
         mSaveButton.setOnClickListener(this);
         mAPIFormatHelpButton.setOnClickListener(this);
 

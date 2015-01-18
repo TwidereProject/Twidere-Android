@@ -65,8 +65,8 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountsManagerActivity;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.DraftsActivity;
-import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
+import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -78,6 +78,7 @@ import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
+import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.util.ArrayList;
 
@@ -438,13 +439,13 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     static class AccountProfileImageViewHolder extends ViewHolder implements OnClickListener {
 
         private final AccountSelectorAdapter adapter;
-        private final ImageView icon;
+        private final ShapedImageView icon;
 
         public AccountProfileImageViewHolder(AccountSelectorAdapter adapter, View itemView) {
             super(itemView);
             this.adapter = adapter;
             itemView.setOnClickListener(this);
-            icon = (ImageView) itemView.findViewById(android.R.id.icon);
+            icon = (ShapedImageView) itemView.findViewById(android.R.id.icon);
         }
 
         @Override
@@ -461,6 +462,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         private Cursor mCursor;
         private Indices mIndices;
         private long mSelectedAccountId;
+        private int mSelectedAccountIndex;
 
         AccountSelectorAdapter(Context context, AccountsDashboardFragment fragment) {
             mInflater = LayoutInflater.from(context);
@@ -473,7 +475,23 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             if (cursor != null) {
                 mIndices = new Indices(cursor);
             }
+            updateSelectedAccountIndex();
             notifyDataSetChanged();
+        }
+
+        private void updateSelectedAccountIndex() {
+            final Cursor c = mCursor;
+            final Indices i = mIndices;
+            mSelectedAccountIndex = -1;
+            if (c != null && i != null && c.moveToFirst()) {
+                while (!c.isAfterLast()) {
+                    if (c.getLong(mIndices.account_id) == mSelectedAccountId) {
+                        mSelectedAccountIndex = c.getPosition();
+                        break;
+                    }
+                    c.moveToNext();
+                }
+            }
         }
 
         public ParcelableAccount getSelectedAccount() {
@@ -495,6 +513,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
         public void setSelectedAccountId(long accountId) {
             mSelectedAccountId = accountId;
+            updateSelectedAccountIndex();
             notifyDataSetChanged();
         }
 
@@ -507,12 +526,14 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         @Override
         public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
             final Cursor c = mCursor;
-            c.moveToPosition(position);
-            if (c.getLong(mIndices.account_id) == mSelectedAccountId) {
-                c.moveToNext();
+            if (mSelectedAccountIndex != -1 && position >= mSelectedAccountIndex) {
+                c.moveToPosition(position + 1);
+            } else {
+                c.moveToPosition(position);
             }
             holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
             mImageLoader.displayProfileImage(holder.icon, c.getString(mIndices.profile_image_url));
+            holder.icon.setBorderColor(c.getInt(mIndices.color));
         }
 
         @Override
@@ -523,10 +544,12 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
         private void dispatchItemSelected(int position) {
             final Cursor c = mCursor;
-            c.moveToPosition(position);
-            if (c.getLong(mIndices.account_id) != mSelectedAccountId || c.moveToNext()) {
-                mFragment.onAccountSelected(new ParcelableAccount(c, mIndices));
+            if (mSelectedAccountIndex != -1 && position >= mSelectedAccountIndex) {
+                c.moveToPosition(position + 1);
+            } else {
+                c.moveToPosition(position);
             }
+            mFragment.onAccountSelected(new ParcelableAccount(c, mIndices));
         }
     }
 

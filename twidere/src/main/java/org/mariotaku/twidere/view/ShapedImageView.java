@@ -221,18 +221,12 @@ public class ShapedImageView extends ImageView {
         mStyle = style;
     }
 
-    public void setBorderColors(int... colors) {
-        mBorderAlpha = 0xff;
-        mBorderColors = colors;
-        updateBorderShader();
-        invalidate();
+    public void setBorderColor(int color) {
+        setBorderColorsInternal(Color.alpha(color), color);
     }
 
-    public void setBorderColor(int color) {
-        mBorderAlpha = Color.alpha(color);
-        mBorderColors = new int[]{color};
-        updateBorderShader();
-        invalidate();
+    public void setBorderColors(int... colors) {
+        setBorderColorsInternal(0xff, colors);
     }
 
     public void setBorderEnabled(boolean enabled) {
@@ -325,12 +319,6 @@ public class ShapedImageView extends ImageView {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        updateBounds();
-    }
-
-    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
     }
@@ -338,6 +326,12 @@ public class ShapedImageView extends ImageView {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        updateBounds();
     }
 
     @Override
@@ -415,6 +409,37 @@ public class ShapedImageView extends ImageView {
         }
     }
 
+    private void setBorderColorsInternal(int alpha, int... colors) {
+        mBorderAlpha = alpha;
+        mBorderColors = colors;
+        updateBorderShader();
+        invalidate();
+    }
+
+    private void updateBorderShader() {
+        final int[] colors = mBorderColors;
+        if (colors == null || colors.length == 0) {
+            mBorderPaint.setShader(null);
+            mBorderAlpha = 0;
+            return;
+        }
+        mDestination.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
+                getHeight() - getPaddingBottom());
+        final float cx = mDestination.centerX(), cy = mDestination.centerY();
+        final int[] sweepColors = new int[colors.length * 2];
+        final float[] positions = new float[colors.length * 2];
+        for (int i = 0, j = colors.length; i < j; i++) {
+            sweepColors[i * 2] = sweepColors[i * 2 + 1] = colors[i];
+            positions[i * 2] = i == 0 ? 0 : i / (float) j;
+            positions[i * 2 + 1] = i == j - 1 ? 1 : (i + 1) / (float) j;
+        }
+        final SweepGradient shader = new SweepGradient(cx, cy, sweepColors, positions);
+        final Matrix matrix = new Matrix();
+        matrix.setRotate(90, cx, cy);
+        shader.setLocalMatrix(matrix);
+        mBorderPaint.setShader(shader);
+    }
+
     private void updateBounds() {
         updateBorderShader();
         updateShadowBitmap();
@@ -442,29 +467,6 @@ public class ShapedImageView extends ImageView {
         paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
         canvas.drawOval(rect, paint);
         invalidate();
-    }
-
-    private void updateBorderShader() {
-        final int[] colors = mBorderColors;
-        if (colors == null || colors.length == 0) {
-            mBorderPaint.setShader(null);
-            return;
-        }
-        mDestination.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
-                getHeight() - getPaddingBottom());
-        final float cx = mDestination.centerX(), cy = mDestination.centerY();
-        final int[] sweepColors = new int[colors.length * 2];
-        final float[] positions = new float[colors.length * 2];
-        for (int i = 0, j = colors.length; i < j; i++) {
-            sweepColors[i * 2] = sweepColors[i * 2 + 1] = colors[i];
-            positions[i * 2] = i == 0 ? 0 : i / (float) j;
-            positions[i * 2 + 1] = i == j - 1 ? 1 : (i + 1) / (float) j;
-        }
-        final SweepGradient shader = new SweepGradient(cx, cy, sweepColors, positions);
-        final Matrix matrix = new Matrix();
-        matrix.setRotate(90, cx, cy);
-        shader.setLocalMatrix(matrix);
-        mBorderPaint.setShader(shader);
     }
 
     @IntDef({SHAPE_CIRCLE, SHAPE_RECTANGLE})

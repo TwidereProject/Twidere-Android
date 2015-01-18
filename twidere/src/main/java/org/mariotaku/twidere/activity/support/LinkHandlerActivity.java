@@ -284,7 +284,7 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
                 break;
             }
             case LINK_ID_USER_FRIENDS: {
-                setTitle(R.string.action_following);
+                setTitle(R.string.following);
                 break;
             }
             case LINK_ID_USER_BLOCKS: {

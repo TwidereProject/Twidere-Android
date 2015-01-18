@@ -845,6 +845,9 @@ public class ThemeUtils implements Constants {
             case R.style.Theme_Twidere_Dark_Dialog:
             case R.style.Theme_Twidere_Dark_Compose:
             case R.style.Theme_Twidere_Dark_Transparent:
+            case R.style.Theme_Twidere_Dark_NoActionBar:
+            case R.style.Theme_Twidere_Dark_SolidBackground_NoActionBar:
+            case R.style.Theme_Twidere_Dark_Transparent_NoActionBar:
                 return true;
         }
         return false;

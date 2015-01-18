@@ -24,8 +24,8 @@ public class ActivityPickerActivity extends BaseSupportDialogActivity implements
     private ListView mListView;
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mListView = (ListView) findViewById(android.R.id.list);
     }
 

@@ -79,8 +79,8 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
     private GetRequestTokenTask mTask;
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mWebView = (WebView) findViewById(R.id.webview);
         mProgressContainer = findViewById(R.id.progress_container);
     }

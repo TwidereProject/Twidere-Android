@@ -84,14 +84,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="?android:textColorPrimary"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/screen_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textAppearance="?android:textAppearanceSmall"/>
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorPrimary"/>
         </LinearLayout>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
