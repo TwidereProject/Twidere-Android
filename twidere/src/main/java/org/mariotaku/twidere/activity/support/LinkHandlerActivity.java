@@ -257,6 +257,15 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
     }
 
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        final boolean result = super.getSystemWindowsInsets(insets);
+        if (result) {
+            insets.bottom = 0;
+        }
+        return result;
+    }
+
     private boolean showFragment(final int linkId, final Uri uri) {
         final Intent intent = getIntent();
         intent.setExtrasClassLoader(getClassLoader());

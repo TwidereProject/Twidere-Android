@@ -36,6 +36,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.content.res.Resources.Theme;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -3928,7 +3929,9 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int getActionBarHeight(Context context) {
         final TypedValue tv = new TypedValue();
-        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+        final Theme theme = context.getTheme();
+        final int attr = context instanceof ActionBarActivity ? R.attr.actionBarSize : android.R.attr.actionBarSize;
+        if (theme.resolveAttribute(attr, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
         return 0;

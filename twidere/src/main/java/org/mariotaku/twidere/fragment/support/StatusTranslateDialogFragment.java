@@ -135,8 +135,13 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-        mHolder.displayStatus(activity, loader, handler, twitter, profileImageStyle,
-                mediaPreviewStyle, true, status, null, true);
+        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
+        final boolean nicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
+        final boolean displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+
+        mHolder.displayStatus(activity, loader, handler, twitter, displayMediaPreview, true,
+                true, nameFirst, nicknameOnly, profileImageStyle, mediaPreviewStyle, status, null);
+
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);

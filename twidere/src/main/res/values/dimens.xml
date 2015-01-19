@@ -98,4 +98,6 @@
     <dimen name="elevation_settings_item">0dp</dimen>
     <dimen name="popup_width_account_selector">160dp</dimen>
 
+    <dimen name="line_width_compose_account_profile_image">2dp</dimen>
+
 </resources>

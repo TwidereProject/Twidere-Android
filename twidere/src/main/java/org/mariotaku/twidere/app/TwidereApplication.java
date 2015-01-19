@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.app;
 
-import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -69,10 +69,10 @@ import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startProfilingServiceIfNeeded;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
-public class TwidereApplication extends Application implements Constants, OnSharedPreferenceChangeListener {
+public class TwidereApplication extends MultiDexApplication implements Constants,
+        OnSharedPreferenceChangeListener {
 
     private Handler mHandler;
-
     private ImageLoaderWrapper mImageLoaderWrapper;
     private ImageLoader mImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
@@ -139,6 +139,16 @@ public class TwidereApplication extends Application implements Constants, OnShar
     public ImageLoaderWrapper getImageLoaderWrapper() {
         if (mImageLoaderWrapper != null) return mImageLoaderWrapper;
         return mImageLoaderWrapper = new ImageLoaderWrapper(getImageLoader());
+    }
+
+    public static TwidereApplication getInstance(final Context context) {
+        if (context == null) return null;
+        final Context app = context.getApplicationContext();
+        return app instanceof TwidereApplication ? (TwidereApplication) app : null;
+    }
+
+    public Bus getMessageBus() {
+        return mMessageBus;
     }
 
     public MessagesManager getMessagesManager() {
@@ -251,16 +261,6 @@ public class TwidereApplication extends Application implements Constants, OnShar
             Class.forName(AsyncTask.class.getName());
         } catch (final ClassNotFoundException ignore) {
         }
-    }
-
-    public Bus getMessageBus() {
-        return mMessageBus;
-    }
-
-    public static TwidereApplication getInstance(final Context context) {
-        if (context == null) return null;
-        final Context app = context.getApplicationContext();
-        return app instanceof TwidereApplication ? (TwidereApplication) app : null;
     }
 
 }

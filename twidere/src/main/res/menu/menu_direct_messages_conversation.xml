@@ -18,10 +18,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item_profile_image"
-        android:actionLayout="@layout/action_item_messages_conversation_profile_image"
-        android:showAsAction="always"
-        android:title="@string/user"/>
+        android:title="@string/user"
+        app:actionLayout="@layout/action_item_messages_conversation_profile_image"
+        app:showAsAction="always"/>
 </menu>

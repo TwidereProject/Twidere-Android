@@ -787,6 +787,8 @@ public interface TwidereDataStore {
 
         public static final String CARD = "card";
 
+        public static final String CARD_NAME = "card_type";
+
         public static final String SORT_ORDER_TIMESTAMP_DESC = STATUS_TIMESTAMP + " DESC";
 
         public static final String SORT_ORDER_STATUS_ID_DESC = STATUS_ID + " DESC";
@@ -800,7 +802,7 @@ public interface TwidereDataStore {
                 DESCENDENT_REPLY_COUNT, RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID,
                 RETWEETED_BY_USER_NAME, RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE,
                 MY_RETWEET_ID, IS_RETWEET, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
-                IS_POSSIBLY_SENSITIVE, MEDIA, FIRST_MEDIA, MENTIONS, CARD};
+                IS_POSSIBLY_SENSITIVE, MEDIA, FIRST_MEDIA, MENTIONS, CARD_NAME, CARD};
 
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
@@ -808,7 +810,7 @@ public interface TwidereDataStore {
                 TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT};
+                TYPE_TEXT, TYPE_TEXT};
 
     }
 

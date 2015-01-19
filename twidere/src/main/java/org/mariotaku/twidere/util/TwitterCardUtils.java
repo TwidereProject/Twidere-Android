@@ -32,16 +32,20 @@ public class TwitterCardUtils {
 
     private static final TwitterCardFragmentFactory sFactory = TwitterCardFragmentFactory.getInstance();
 
+    public static final String CARD_NAME_PLAYER = "player";
+    public static final String CARD_NAME_AUDIO = "audio";
+    public static final String CARD_NAME_ANIMATED_GIF = "animated_gif";
+
     public static Fragment createCardFragment(ParcelableCardEntity card) {
-        if ("player".equals(card.name)) {
+        if (CARD_NAME_PLAYER.equals(card.name)) {
             final Fragment playerFragment = sFactory.createPlayerFragment(card);
             if (playerFragment != null) return playerFragment;
             return TwitterCardFragmentFactory.createGenericPlayerFragment(card);
-        } else if ("audio".equals(card.name)) {
+        } else if (CARD_NAME_AUDIO.equals(card.name)) {
             final Fragment playerFragment = sFactory.createAudioFragment(card);
             if (playerFragment != null) return playerFragment;
             return TwitterCardFragmentFactory.createGenericPlayerFragment(card);
-        } else if ("animated_gif".equals(card.name)) {
+        } else if (CARD_NAME_ANIMATED_GIF.equals(card.name)) {
             final Fragment playerFragment = sFactory.createAnimatedGifFragment(card);
             if (playerFragment != null) return playerFragment;
             return TwitterCardFragmentFactory.createGenericPlayerFragment(card);
@@ -65,7 +69,7 @@ public class TwitterCardUtils {
 
     public static boolean isCardSupported(ParcelableCardEntity card) {
         if (card == null) return false;
-        return "player".equals(card.name) || "audio".equals(card.name) || "animated_gif".equals(card.name);
+        return CARD_NAME_PLAYER.equals(card.name) || CARD_NAME_AUDIO.equals(card.name) || CARD_NAME_ANIMATED_GIF.equals(card.name);
     }
 
 }

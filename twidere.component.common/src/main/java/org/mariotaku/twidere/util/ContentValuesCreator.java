@@ -31,6 +31,7 @@ import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -362,6 +363,11 @@ public final class ContentValuesCreator implements TwidereConstants {
         final ParcelableUserMention[] mentions = ParcelableUserMention.fromStatus(status);
         if (mentions != null) {
             values.put(Statuses.MENTIONS, JSONSerializer.toJSONArrayString(mentions));
+        }
+        final ParcelableCardEntity card = ParcelableCardEntity.fromCardEntity(status.getCard(), accountId);
+        if (card != null) {
+            values.put(Statuses.CARD_NAME, card.name);
+            values.put(Statuses.CARD, JSONSerializer.toJSONObjectString(card));
         }
         return values;
     }

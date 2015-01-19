@@ -33,8 +33,8 @@ import org.mariotaku.jsonserializer.JSONParcelable;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.content.ContentValuesUtils;
 
 import java.util.Arrays;
@@ -107,7 +107,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
 
     public final String retweeted_by_name, retweeted_by_screen_name, retweeted_by_profile_image,
             text_html, text_plain, user_name, user_screen_name, in_reply_to_name, in_reply_to_screen_name,
-            source, user_profile_image_url, text_unescaped, first_media;
+            source, user_profile_image_url, text_unescaped, first_media, card_name;
 
     public final ParcelableLocation location;
 
@@ -156,6 +156,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         mentions = ParcelableUserMention.fromJSONString(values.getAsString(Statuses.MENTIONS));
         first_media = values.getAsString(Statuses.FIRST_MEDIA);
         card = ParcelableCardEntity.fromJSONString(values.getAsString(Statuses.CARD));
+        card_name = card != null ? card.name : null;
     }
 
     public ParcelableStatus(final Cursor c, final CursorIndices idx) {
@@ -200,6 +201,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         mentions = idx.mentions != -1 ? ParcelableUserMention.fromJSONString(c.getString(idx.mentions)) : null;
         first_media = idx.first_media != -1 ? c.getString(idx.first_media) : null;
         card = idx.card != -1 ? ParcelableCardEntity.fromJSONString(c.getString(idx.card)) : null;
+        card_name = card != null ? card.name : null;
     }
 
     public ParcelableStatus(final JSONParcel in) {
@@ -241,6 +243,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         mentions = in.readParcelableArray("mentions", ParcelableUserMention.JSON_CREATOR);
         first_media = media != null && media.length > 0 ? media[0].url : null;
         card = in.readParcelable("card", ParcelableCardEntity.JSON_CREATOR);
+        card_name = card != null ? card.name : null;
     }
 
     public ParcelableStatus(final Parcel in) {
@@ -282,6 +285,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         mentions = in.createTypedArray(ParcelableUserMention.CREATOR);
         first_media = media != null && media.length > 0 ? media[0].url : null;
         card = in.readParcelable(ParcelableCardEntity.class.getClassLoader());
+        card_name = card != null ? card.name : null;
     }
 
     public ParcelableStatus(final ParcelableStatus orig, final long override_my_retweet_id,
@@ -324,6 +328,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         mentions = orig.mentions;
         first_media = orig.first_media;
         card = orig.card;
+        card_name = card != null ? card.name : null;
     }
 
     public ParcelableStatus(final Status orig, final long account_id, final boolean is_gap) {
@@ -370,6 +375,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
         first_media = media != null && media.length > 0 ? media[0].url : null;
         card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
+        card_name = card != null ? card.name : null;
     }
 
     @Override
@@ -541,7 +547,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 retweeted_by_user_screen_name, retweeted_by_user_profile_image, retweet_id, retweet_timestamp,
                 retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
                 descendent_reply_count, is_possibly_sensitive, is_following, media, first_media, mentions,
-                card;
+                card_name, card;
 
         @Override
         public String toString() {
@@ -625,6 +631,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             media = cursor.getColumnIndex(Statuses.MEDIA);
             first_media = cursor.getColumnIndex(Statuses.FIRST_MEDIA);
             mentions = cursor.getColumnIndex(Statuses.MENTIONS);
+            card_name = cursor.getColumnIndex(Statuses.CARD_NAME);
             card = cursor.getColumnIndex(Statuses.MENTIONS);
         }
 

@@ -716,5 +716,6 @@
     <string name="belongs_to">Belongs to</string>
     <string name="blocked_by_user_summary">You were blocked by <xliff:g id="name">%s</xliff:g></string>
     <string name="select_accounts">Select accounts</string>
+    <string name="media_preview">Media preview</string>
 
 </resources>

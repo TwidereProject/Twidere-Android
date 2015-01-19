@@ -71,6 +71,9 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final int mTextSize;
     private final int mProfileImageStyle, mMediaPreviewStyle;
     private final boolean mCompactCards;
+    private final boolean mDisplayMediaPreview;
+    private final boolean mNameFirst;
+    private final boolean mNicknameOnly;
     private boolean mLoadMoreIndicatorEnabled;
     private ActivityAdapterListener mActivityAdapterListener;
 
@@ -88,6 +91,9 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+        mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
+        mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
     }
 
     public abstract ParcelableActivity getActivity(int position);
@@ -135,6 +141,14 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     public boolean hasLoadMoreIndicator() {
         return mLoadMoreIndicatorEnabled;
+    }
+
+    public boolean isNameFirst() {
+        return mNameFirst;
+    }
+
+    public boolean isNicknameOnly() {
+        return mNicknameOnly;
     }
 
     @Override
@@ -197,8 +211,8 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 }
                 final StatusViewHolder statusViewHolder = (StatusViewHolder) holder;
                 statusViewHolder.displayStatus(getContext(), getImageLoader(), getImageLoadingHandler(),
-                        getTwitterWrapper(), getProfileImageStyle(), getMediaPreviewStyle(), false,
-                        status, null, false);
+                        getTwitterWrapper(), isMediaPreviewDisplayed(), false, false, isNameFirst(),
+                        isNicknameOnly(), getProfileImageStyle(), getMediaPreviewStyle(), status, null);
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
@@ -304,6 +318,10 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
 
     protected abstract int getActivityAction(int position);
+
+    private boolean isMediaPreviewDisplayed() {
+        return mDisplayMediaPreview;
+    }
 
 
     public static interface ActivityAdapterListener {

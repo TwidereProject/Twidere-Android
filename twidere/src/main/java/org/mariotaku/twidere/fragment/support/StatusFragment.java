@@ -90,6 +90,7 @@ import org.mariotaku.twidere.util.StatisticUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -299,8 +300,10 @@ public class StatusFragment extends BaseSupportFragment
     @Override
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-//        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        getView().setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        final View view = getView();
+        if (view != null) {
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
     }
 
     @Override
@@ -405,6 +408,7 @@ public class StatusFragment extends BaseSupportFragment
         private final int mCardBackgroundColor;
         private final boolean mIsCompact;
         private final int mProfileImageStyle;
+        private final boolean mDisplayMediaPreview;
 
         private ParcelableStatus mStatus;
         private ParcelableCredentials mStatusAccount;
@@ -429,6 +433,7 @@ public class StatusFragment extends BaseSupportFragment
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
             mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
             mIsCompact = compact;
+            mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compact;
             } else {
@@ -483,6 +488,11 @@ public class StatusFragment extends BaseSupportFragment
         public long getStatusId(int position) {
             final ParcelableStatus status = getStatus(position);
             return status != null ? status.hashCode() : position;
+        }
+
+        @Override
+        public boolean isMediaPreviewEnabled() {
+            return mDisplayMediaPreview;
         }
 
         @Override
@@ -827,11 +837,12 @@ public class StatusFragment extends BaseSupportFragment
         private final ShapedImageView profileImageView;
         private final ImageView profileTypeView;
         private final TextView timeSourceView;
-        private final TextView replyRetweetStatusView;
+        private final TextView retweetedByView;
         private final View repliesContainer, retweetsContainer, favoritesContainer;
         private final TextView repliesCountView, retweetsCountView, favoritesCountView;
 
         private final View profileContainer;
+        private final View retweetedByContainer;
         private final View mediaPreviewContainer;
         private final View mediaPreviewLoad;
         private final LinearLayout mediaPreviewGrid;
@@ -850,7 +861,8 @@ public class StatusFragment extends BaseSupportFragment
             profileImageView = (ShapedImageView) itemView.findViewById(R.id.profile_image);
             profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
             timeSourceView = (TextView) itemView.findViewById(R.id.time_source);
-            replyRetweetStatusView = (TextView) itemView.findViewById(R.id.reply_retweet_status);
+            retweetedByView = (TextView) itemView.findViewById(R.id.retweeted_by);
+            retweetedByContainer = itemView.findViewById(R.id.retweeted_by_container);
             repliesContainer = itemView.findViewById(R.id.replies_container);
             retweetsContainer = itemView.findViewById(R.id.retweets_container);
             favoritesContainer = itemView.findViewById(R.id.favorites_container);
@@ -891,6 +903,14 @@ public class StatusFragment extends BaseSupportFragment
                     final Fragment fragment = adapter.getFragment();
                     final FragmentActivity activity = fragment.getActivity();
                     Utils.openStatusRetweeters(activity, status.account_id, status.id);
+                    break;
+                }
+                case R.id.retweeted_by_container: {
+                    final ParcelableStatus status = adapter.getStatus(getPosition());
+                    if (status.retweet_id > 0) {
+                        Utils.openUserProfile(adapter.getContext(), status.account_id, status.user_id,
+                                status.user_screen_name, null);
+                    }
                     break;
                 }
             }
@@ -1024,6 +1044,17 @@ public class StatusFragment extends BaseSupportFragment
             final ImageLoaderWrapper loader = adapter.getImageLoader();
             final boolean nameFirst = adapter.isNameFirst();
             final boolean nicknameOnly = adapter.isNicknameOnly();
+
+            if (status.retweet_id > 0) {
+                final String retweetedBy = UserColorNameUtils.getDisplayName(context, status.retweeted_by_id,
+                        status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst, nicknameOnly);
+                retweetedByView.setText(context.getString(R.string.name_retweeted, retweetedBy));
+                retweetedByContainer.setVisibility(View.VISIBLE);
+            } else {
+                retweetedByView.setText(null);
+                retweetedByContainer.setVisibility(View.GONE);
+            }
+
             final String nickname = getUserNickname(context, status.user_id, true);
             if (TextUtils.isEmpty(nickname)) {
                 nameView.setText(status.user_name);
@@ -1124,8 +1155,8 @@ public class StatusFragment extends BaseSupportFragment
             ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_STATUS_SHARE);
             mediaPreviewLoad.setOnClickListener(this);
             profileContainer.setOnClickListener(this);
-
             retweetsContainer.setOnClickListener(this);
+            retweetedByContainer.setOnClickListener(this);
 
             final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);

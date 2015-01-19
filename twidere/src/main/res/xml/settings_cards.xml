@@ -21,7 +21,11 @@
         android:order="23"
         android:summary="@string/nickname_only_summary"
         android:title="@string/nickname_only"/>
-
+    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        android:defaultValue="false"
+        android:key="media_preview"
+        android:order="24"
+        android:title="@string/media_preview"/>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"

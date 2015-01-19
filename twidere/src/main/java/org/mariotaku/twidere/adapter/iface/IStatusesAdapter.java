@@ -14,6 +14,12 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, StatusClick
 
     long getStatusId(int position);
 
+    boolean isMediaPreviewEnabled();
+
+    boolean isNameFirst();
+
+    boolean isNicknameOnly();
+
     void setData(Data data);
 
     boolean shouldShowAccountsColor();

@@ -1454,24 +1454,24 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
 
     private static class SpacingItemDecoration extends ItemDecoration {
 
-        private final int mSpacingSmall, mSpacingExtraSmall;
+        private final int mSpacingSmall, mSpacingNormal;
 
         SpacingItemDecoration(Context context) {
             final Resources resources = context.getResources();
             mSpacingSmall = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
-            mSpacingExtraSmall = resources.getDimensionPixelSize(R.dimen.element_spacing_xsmall);
+            mSpacingNormal = resources.getDimensionPixelSize(R.dimen.element_spacing_normal);
         }
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
             final int pos = parent.getChildPosition(view);
             if (pos == 0) {
-                outRect.set(0, mSpacingSmall, 0, mSpacingExtraSmall);
+                outRect.set(0, mSpacingNormal, 0, 0);
             } else if (pos == parent.getAdapter().getItemCount() - 1) {
-                outRect.set(0, mSpacingExtraSmall, 0, mSpacingSmall);
+                outRect.set(0, 0, 0, mSpacingNormal);
             } else {
-                outRect.set(0, mSpacingExtraSmall, 0, mSpacingExtraSmall);
-
+//                outRect.set(0, mSpacingSmall, 0, mSpacingSmall);
+                outRect.set(0, 0, 0, 0);
             }
         }
     }
@@ -1515,8 +1515,12 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
             final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
             final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
             final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-            mHolder.displayStatus(activity, loader, handler, twitter, profileImageStyle,
-                    mediaPreviewStyle, true, status, null, true);
+            final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
+            final boolean nicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
+            final boolean displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+
+            mHolder.displayStatus(activity, loader, handler, twitter, displayMediaPreview, true,
+                    true, nameFirst, nicknameOnly, profileImageStyle, mediaPreviewStyle, status, null);
             mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
             mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
             mStatusContainer.findViewById(R.id.reply_retweet_status).setVisibility(View.GONE);

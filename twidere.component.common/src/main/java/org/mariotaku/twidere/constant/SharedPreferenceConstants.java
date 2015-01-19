@@ -287,6 +287,8 @@ public interface SharedPreferenceConstants {
     @Preference(type = STRING, hasDefault = true, defaultString = VALUE_MEDIA_PREVIEW_STYLE_CROP)
     public static final String KEY_MEDIA_PREVIEW_STYLE = "media_preview_style";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    public static final String KEY_MEDIA_PREVIEW = "media_preview";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_SORT_TIMELINE_BY_ID = "sort_timeline_by_id";
     @Preference(type = STRING, hasDefault = true)
     public static final String KEY_PROFILE_IMAGE_STYLE = "profile_image_style";

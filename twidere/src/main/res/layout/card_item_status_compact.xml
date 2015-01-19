@@ -125,7 +125,7 @@
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="10sp"/>
+                        tools:textSize="10sp"/>
                 </LinearLayout>
 
                 <org.mariotaku.twidere.view.ShortTimeView
@@ -134,7 +134,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textSize="10sp"/>
+                    tools:textSize="10sp"/>
+
+                <org.mariotaku.twidere.view.ActionIconView
+                    android:id="@+id/extra_type"
+                    android:layout_width="@dimen/element_size_small"
+                    android:layout_height="@dimen/element_size_small"
+                    android:layout_weight="0"
+                    android:color="?android:textColorSecondary"
+                    tools:src="@drawable/ic_action_gallery"/>
+
             </LinearLayout>
 
             <org.mariotaku.twidere.view.CardMediaContainer

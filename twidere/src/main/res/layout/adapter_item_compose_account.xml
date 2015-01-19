@@ -18,13 +18,15 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <org.mariotaku.twidere.view.SquareShapedImageView
+    android:id="@android:id/icon"
+    style="?profileImageStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@android:id/icon"
-    style="?profileImageStyle"
-    tools:layout_width="48dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/element_spacing_small"
+    android:layout_marginBottom="@dimen/element_spacing_small"
     app:sivBorder="true"
-    app:sivBorderWidth="1.5dp"/>
+    app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
+    tools:layout_width="48dp"/>

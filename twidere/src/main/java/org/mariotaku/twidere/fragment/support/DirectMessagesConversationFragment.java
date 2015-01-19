@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +33,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -65,6 +66,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.activity.support.ImagePickerActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.DirectMessagesConversationAdapter;
@@ -190,8 +192,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        final FragmentActivity activity = getActivity();
-        final ActionBar actionBar = activity.getActionBar();
+        final BaseSupportActivity activity = (BaseSupportActivity) getActivity();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) throw new NullPointerException();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -350,7 +352,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_direct_messages_conversation, menu);
-        final View profileImageItemView = menu.findItem(R.id.item_profile_image).getActionView();
+        final View profileImageItemView = MenuItemCompat.getActionView(menu.findItem(R.id.item_profile_image));
         profileImageItemView.setOnClickListener(this);
         mProfileImageContainer = (IColorLabelView) profileImageItemView;
         mRecipientProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.recipient_profile_image);
@@ -633,8 +635,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     }
 
     private void updateActionBar() {
-        final FragmentActivity activity = getActivity();
-        final ActionBar actionBar = activity.getActionBar();
+        final BaseSupportActivity activity = (BaseSupportActivity) getActivity();
+        final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) return;
         actionBar.setDisplayOptions(mRecipient != null ? ActionBar.DISPLAY_SHOW_TITLE : ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);

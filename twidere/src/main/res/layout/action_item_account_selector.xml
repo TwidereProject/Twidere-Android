@@ -18,7 +18,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareFrameLayout
+<RelativeLayout
     style="?android:actionButtonStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,29 +26,33 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:paddingBottom="@dimen/element_spacing_normal"
-    android:paddingLeft="@dimen/element_spacing_mlarge"
+    android:paddingBottom="@dimen/element_spacing_msmall"
+    android:paddingLeft="@dimen/element_spacing_small"
     android:paddingRight="@dimen/element_spacing_small"
-    android:paddingTop="@dimen/element_spacing_normal"
+    android:paddingTop="@dimen/element_spacing_msmall"
     tools:layout_height="?actionBarSize"
     tools:showIn="@layout/menu_compose">
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <org.mariotaku.twidere.view.SquareShapedImageView
         android:id="@+id/account_profile_image"
         style="?profileImageStyle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         app:sivBackgroundColor="?android:colorBackground"
         app:sivBorder="true"
-        app:sivBorderWidth="1.5dp"
+        app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
         tools:src="@drawable/ic_profile_image_default"/>
 
     <org.mariotaku.twidere.view.BadgeView
         android:id="@+id/accounts_count"
+        android:layout_alignTop="@id/account_profile_image"
+        android:layout_alignBottom="@id/account_profile_image"
+        android:layout_alignRight="@id/account_profile_image"
+        android:layout_alignLeft="@id/account_profile_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:textColor="?android:colorForeground"/>
 
-</org.mariotaku.twidere.view.SquareFrameLayout>
+</RelativeLayout>
