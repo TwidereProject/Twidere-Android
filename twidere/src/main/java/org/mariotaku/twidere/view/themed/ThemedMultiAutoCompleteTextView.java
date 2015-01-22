@@ -28,7 +28,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.iface.IThemedView;
 
-public class ThemedMultiAutoCompleteTextView extends MultiAutoCompleteTextView  implements IThemedView {
+public class ThemedMultiAutoCompleteTextView extends MultiAutoCompleteTextView implements IThemedView {
 
     public ThemedMultiAutoCompleteTextView(final Context context) {
         this(context, null);
@@ -46,5 +46,7 @@ public class ThemedMultiAutoCompleteTextView extends MultiAutoCompleteTextView  
     @Override
     public void setThemeTintColor(ColorStateList color) {
         ViewAccessor.setBackgroundTintList(this, color);
+        setLinkTextColor(color);
+        setHighlightColor(color.getDefaultColor());
     }
 }

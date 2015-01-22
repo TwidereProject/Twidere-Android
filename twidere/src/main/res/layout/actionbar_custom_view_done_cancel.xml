@@ -16,18 +16,27 @@
   -->
 
 
-
-<LinearLayout
-    style="?android:actionBarStyle"
+<org.mariotaku.twidere.view.TwidereToolbar
+    android:id="@+id/done_bar"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="?android:attr/dividerVertical"
-    android:dividerPadding="12dp"
-    android:orientation="horizontal"
-    android:showDividers="middle">
+    android:layout_height="?actionBarSize"
+    style="?actionBarStyle"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp">
 
-    <include layout="@layout/include_cancel_button"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="?android:attr/dividerVertical"
+        android:dividerPadding="12dp"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
-    <include layout="@layout/include_done_button"/>
-</LinearLayout>
+        <include layout="@layout/include_cancel_button"/>
+
+        <include layout="@layout/include_done_button"/>
+    </LinearLayout>
+
+</org.mariotaku.twidere.view.TwidereToolbar>

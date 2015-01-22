@@ -440,9 +440,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         mProfileImageLoader.displayProfileImage(mProfileImageView, getOriginalTwitterProfileImage(user.profile_image_url));
         if (userColor != 0) {
-            setUserColor(userColor);
+            setUserUiColor(userColor);
         } else {
-            setUserColor(user.link_color);
+            setUserUiColor(user.link_color);
         }
         final int defWidth = res.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
@@ -1223,7 +1223,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         actionBar.setBackgroundDrawable(mActionBarBackground);
     }
 
-    private void setUserColor(int color) {
+    private void setUserUiColor(int color) {
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
@@ -1402,11 +1402,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         public void setColor(int color) {
             mColor = color;
-            final float[] hsv = new float[3];
-            Color.colorToHSV(color, hsv);
-            hsv[2] = Math.min(hsv[2], 0.8f);
-            final int processedColor = Color.HSVToColor(hsv);
-            mColorDrawable.setColor(processedColor);
+            mColorDrawable.setColor(color);
             mLineDrawable.setColor(color);
             setFactor(mFactor);
         }

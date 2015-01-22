@@ -52,7 +52,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Action;
 import android.support.v4.util.LongSparseArray;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,8 +87,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
-import org.mariotaku.twidere.menu.ComposeAccountActionProvider;
-import org.mariotaku.twidere.menu.ComposeAccountActionProvider.InvokedListener;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableLocation;
@@ -116,6 +113,7 @@ import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -150,7 +148,7 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class ComposeActivity extends ThemedActionBarActivity implements TextWatcher, LocationListener,
-        OnMenuItemClickListener, OnClickListener, OnEditorActionListener, OnLongClickListener, InvokedListener {
+        OnMenuItemClickListener, View.OnClickListener, OnEditorActionListener, OnLongClickListener {
 
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
 
@@ -188,14 +186,16 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
     private long mInReplyToStatusId;
     private String mOriginalText;
     private AccountIconsAdapter mAccountsAdapter;
-    private ComposeAccountActionProvider mAccountActionProvider;
+    private ShapedImageView mProfileImageView;
+    private BadgeView mCountView;
+    private View mAccountSelectorButton;
+    private ImageLoaderWrapper mImageLoader;
 
     @Override
     public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
 
     }
 
-    @Override
     public void onInvoked() {
         final boolean isVisible = mAccountSelectorContainer.getVisibility() == View.VISIBLE;
         mAccountSelectorContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
@@ -433,6 +433,11 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
                 setAccountSelectorVisible(false);
                 break;
             }
+            case R.id.account_selector_button: {
+                final boolean isVisible = mAccountSelectorContainer.getVisibility() == View.VISIBLE;
+                mAccountSelectorContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                break;
+            }
         }
     }
 
@@ -514,6 +519,9 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
         mAccountSelector = (RecyclerView) findViewById(R.id.account_selector);
         mAccountSelectorContainer = findViewById(R.id.account_selector_container);
+        mProfileImageView = (ShapedImageView) findViewById(R.id.account_profile_image);
+        mCountView = (BadgeView) findViewById(R.id.accounts_count);
+        mAccountSelectorButton = findViewById(R.id.account_selector_button);
         ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
     }
 
@@ -544,9 +552,12 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         super.onCreate(savedInstanceState);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mPreferences = SharedPreferencesWrapper.getInstance(this, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mTwitterWrapper = TwidereApplication.getInstance(this).getTwitterWrapper();
+
+        final TwidereApplication app = TwidereApplication.getInstance(this);
+        mTwitterWrapper = app.getTwitterWrapper();
         mResolver = getContentResolver();
         mValidator = new TwidereValidator(this);
+        mImageLoader = app.getImageLoaderWrapper();
         setContentView(R.layout.activity_compose);
         setProgressBarIndeterminateVisibility(false);
         setFinishOnTouchOutside(false);
@@ -563,6 +574,7 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
         mEditText.addTextChangedListener(this);
         mAccountSelectorContainer.setOnClickListener(this);
+        mAccountSelectorButton.setOnClickListener(this);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -619,8 +631,6 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
 
         final Menu menu = mMenuBar.getMenu();
         getMenuInflater().inflate(R.menu.menu_compose, menu);
-        mAccountActionProvider = (ComposeAccountActionProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
-        mAccountActionProvider.setInvokedListener(this);
         ThemeUtils.wrapMenuIcon(mMenuBar);
 
         mSendView.setOnClickListener(this);
@@ -635,6 +645,20 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         setMenu();
         updateMediaPreview();
         notifyAccountSelectionChanged();
+    }
+
+    public void setSelectedAccounts(ParcelableAccount... accounts) {
+        if (accounts.length == 1) {
+            mCountView.setText(null);
+            final ParcelableAccount account = accounts[0];
+            mImageLoader.displayProfileImage(mProfileImageView, account.profile_image_url);
+            mProfileImageView.setBorderColor(account.color);
+        } else {
+            mCountView.setText(String.valueOf(accounts.length));
+            mImageLoader.cancelDisplayTask(mProfileImageView);
+            mProfileImageView.setImageDrawable(null);
+            mProfileImageView.setBorderColors(Utils.getAccountColors(accounts));
+        }
     }
 
     @Override
@@ -1228,7 +1252,8 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
     }
 
     private void notifyAccountSelectionChanged() {
-        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
+        setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
+//        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
     }
 
     private static class AddBitmapTask extends AddMediaTask {

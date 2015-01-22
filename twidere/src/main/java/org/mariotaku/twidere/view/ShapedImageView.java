@@ -203,13 +203,28 @@ public class ShapedImageView extends ImageView {
         shader.setLocalMatrix(mMatrix);
         mBitmapPaint.setShader(shader);
 
-        if (getStyle() == SHAPE_CIRCLE) {
-            canvas.drawCircle(dest.centerX(), dest.centerY(), Math.min(dest.width(), dest.height()) / 2f,
-                    mBitmapPaint);
+
+        if (mBorderEnabled) {
+            final float inset = mBorderPaint.getStrokeWidth() / 2;
+            if (getStyle() == SHAPE_CIRCLE) {
+                final float circleRadius = Math.min(dest.width(), dest.height()) / 2f - inset / 2;
+                canvas.drawCircle(dest.centerX(), dest.centerY(), circleRadius, mBitmapPaint);
+            } else {
+                final float cornerRadius = getCalculatedCornerRadius();
+                dest.inset(inset, inset);
+                canvas.drawRoundRect(dest, cornerRadius, cornerRadius, mBitmapPaint);
+                dest.inset(-inset, -inset);
+            }
         } else {
-            final float cornerRadius = getCalculatedCornerRadius();
-            canvas.drawRoundRect(dest, cornerRadius, cornerRadius, mBitmapPaint);
+            if (getStyle() == SHAPE_CIRCLE) {
+                final float circleRadius = Math.min(dest.width(), dest.height()) / 2f;
+                canvas.drawCircle(dest.centerX(), dest.centerY(), circleRadius, mBitmapPaint);
+            } else {
+                final float cornerRadius = getCalculatedCornerRadius();
+                canvas.drawRoundRect(dest, cornerRadius, cornerRadius, mBitmapPaint);
+            }
         }
+
     }
 
     @ShapeStyle
@@ -305,7 +320,7 @@ public class ShapedImageView extends ImageView {
 
         // Then draw the border.
         if (mBorderEnabled) {
-            drawBorder(canvas);
+            drawBorder(canvas, mDestination);
         }
     }
 
@@ -346,8 +361,10 @@ public class ShapedImageView extends ImageView {
     public void setBackground(Drawable background) {
     }
 
+    @Deprecated
     @Override
     public void setBackgroundDrawable(Drawable background) {
+        // No-op
     }
 
     @Override
@@ -363,25 +380,30 @@ public class ShapedImageView extends ImageView {
         updateBounds();
     }
 
-    private void drawBorder(@NonNull final Canvas canvas) {
+    private void drawBorder(@NonNull final Canvas canvas, @NonNull final RectF dest) {
         final RectF transitionSrc = mTransitionSource, transitionDst = mTransitionDestination;
+        final float strokeWidth;
         if (transitionSrc != null && transitionDst != null) {
-            final float progress = 1 - (mDestination.width() - transitionDst.width())
+            final float progress = 1 - (dest.width() - transitionDst.width())
                     / (transitionSrc.width() - transitionDst.width());
-            mBorderPaint.setStrokeWidth(mStrokeWidth * progress);
+            strokeWidth = mStrokeWidth * progress;
             mBorderPaint.setAlpha(Math.round(mBorderAlpha * progress));
             ViewCompat.setTranslationZ(this, -ViewCompat.getElevation(this) * (1 - progress));
         } else {
-            mBorderPaint.setStrokeWidth(mStrokeWidth);
+            strokeWidth = mStrokeWidth;
             mBorderPaint.setAlpha(mBorderAlpha);
             ViewCompat.setTranslationZ(this, 0);
         }
+        mBorderPaint.setStrokeWidth(strokeWidth);
         if (getStyle() == SHAPE_CIRCLE) {
-            canvas.drawCircle(mDestination.centerX(), mDestination.centerY(),
-                    mDestination.width() / 2f - mBorderPaint.getStrokeWidth() / 2, mBorderPaint);
+            final float circleRadius = Math.min(dest.width(), dest.height()) / 2f - strokeWidth / 2;
+            canvas.drawCircle(dest.centerX(), dest.centerY(), circleRadius, mBorderPaint);
         } else {
             final float radius = getCalculatedCornerRadius();
-            canvas.drawRoundRect(mDestination, radius, radius, mBorderPaint);
+            final float inset = mStrokeWidth / 2;
+            dest.inset(inset, inset);
+            canvas.drawRoundRect(dest, radius, radius, mBorderPaint);
+            dest.inset(-inset, -inset);
         }
     }
 
@@ -392,10 +414,6 @@ public class ShapedImageView extends ImageView {
             return mCornerRadius;
         }
         return 0;
-    }
-
-    private float getCornerRadius() {
-        return mCornerRadius;
     }
 
     public void setCornerRadius(float radius) {
@@ -462,10 +480,18 @@ public class ShapedImageView extends ImageView {
         paint.setColor(Color.WHITE);
         paint.setShadowLayer(radius, 0, radius * 1.5f / 2, SHADOW_START_COLOR);
         final RectF rect = new RectF(radius, radius, size - radius, size - radius);
-        canvas.drawOval(rect, paint);
-        paint.setShadowLayer(0, 0, 0, 0);
-        paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
-        canvas.drawOval(rect, paint);
+        if (getStyle() == SHAPE_CIRCLE) {
+            canvas.drawOval(rect, paint);
+            paint.setShadowLayer(0, 0, 0, 0);
+            paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
+            canvas.drawOval(rect, paint);
+        } else {
+            final float cr = getCalculatedCornerRadius();
+            canvas.drawRoundRect(rect, cr, cr, paint);
+            paint.setShadowLayer(0, 0, 0, 0);
+            paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
+            canvas.drawRoundRect(rect, cr, cr, paint);
+        }
         invalidate();
     }
 

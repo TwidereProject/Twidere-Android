@@ -386,12 +386,35 @@
     </FrameLayout>
 
 
-    <org.mariotaku.twidere.view.ActionBarThemedContainer
+    <!--<org.mariotaku.twidere.view.ActionBarThemedContainer-->
+    <!--android:id="@+id/done_bar_container"-->
+    <!--style="?actionBarStyle"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?actionBarSize"-->
+    <!--android:layout="@layout/actionbar_custom_view_done_cancel"/>-->
+
+    <org.mariotaku.twidere.view.TwidereToolbar
         android:id="@+id/done_bar"
-        style="?android:actionBarStyle"
+        style="?actionBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
-        android:layout="@layout/actionbar_custom_view_done_cancel"/>
+        android:layout_height="?actionBarSize"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="?android:attr/dividerVertical"
+            android:dividerPadding="12dp"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <include layout="@layout/include_cancel_button"/>
+
+            <include layout="@layout/include_done_button"/>
+        </LinearLayout>
+
+    </org.mariotaku.twidere.view.TwidereToolbar>
 
     <View
         android:id="@+id/actionbar_overlay"
@@ -399,6 +422,5 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/done_bar"/>
-
 
 </RelativeLayout>

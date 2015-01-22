@@ -98,12 +98,14 @@ public class CardEntityJSONImpl implements CardEntity {
 
         private static BindingValue valueOf(String name, JSONObject json) throws JSONException {
             final String type = json.optString("type");
-            if ("STRING".equals(type)) {
+            if (TYPE_STRING.equals(type)) {
                 return new StringValueImpl(name, json);
-            } else if ("IMAGE".equals(type)) {
+            } else if (TYPE_IMAGE.equals(type)) {
                 return new ImageValueImpl(name, json);
-            } else if ("USER".equals(type)) {
+            } else if (TYPE_USER.equals(type)) {
                 return new UserValueImpl(name, json);
+            } else if (TYPE_BOOLEAN.equals(type)) {
+                return new BooleanValueImpl(name, json);
             }
             throw new UnsupportedOperationException(String.format("Unsupported type %s", type));
         }
@@ -156,6 +158,30 @@ public class CardEntityJSONImpl implements CardEntity {
                     ", url='" + url + '\'' +
                     '}';
         }
+    }
+
+    private static final class BooleanValueImpl extends BindingValueImpl implements BooleanValue {
+
+        @Override
+        public String toString() {
+            return "BooleanValueImpl{" +
+                    "value=" + value +
+                    '}';
+        }
+
+        private final boolean value;
+
+        BooleanValueImpl(String name, JSONObject json) throws JSONException {
+            super(name, json);
+            this.value = json.getBoolean("boolean_value");
+        }
+
+        @Override
+        public boolean getValue() {
+            return value;
+        }
+
+
     }
 
     private static final class StringValueImpl extends BindingValueImpl implements StringValue {

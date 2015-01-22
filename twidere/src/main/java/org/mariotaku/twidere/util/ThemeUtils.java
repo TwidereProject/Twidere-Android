@@ -316,7 +316,6 @@ public class ThemeUtils implements Constants {
     }
 
     private static void applyColorTintForView(View view, int tintColor) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         if (view instanceof IThemedView) {
             final ColorStateList tintList = ColorStateList.valueOf(tintColor);
             ((IThemedView) view).setThemeTintColor(tintList);
@@ -344,11 +343,25 @@ public class ThemeUtils implements Constants {
     }
 
     public static Drawable getActionBarBackground(final Context context, final int themeRes) {
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
+        final TypedArray a1 = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
+                R.attr.actionBarStyle, themeRes);
+        try {
+            if (a1.hasValue(0)) {
+                return applyActionBarDrawable(context, a1.getDrawable(0), isTransparentBackground(themeRes));
+            }
+        } finally {
+            a1.recycle();
+        }
+        final TypedArray a2 = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
                 android.R.attr.actionBarStyle, themeRes);
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
-        return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
+        try {
+            if (a2.hasValue(0)) {
+                return applyActionBarDrawable(context, a2.getDrawable(0), isTransparentBackground(themeRes));
+            }
+        } finally {
+            a2.recycle();
+        }
+        return null;
     }
 
     public static Drawable getActionBarBackground(final Context context, final int themeRes,
@@ -364,15 +377,31 @@ public class ThemeUtils implements Constants {
         return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
     }
 
-    public static Context getActionBarContext(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.actionBarTheme,
+    public static int getActionBarThemeResource(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarTheme,
+                R.attr.actionBarWidgetTheme, android.R.attr.actionBarTheme,
                 android.R.attr.actionBarWidgetTheme});
         final int resId;
-        try {
+        if (a.hasValue(0) || a.hasValue(1)) {
             resId = a.hasValue(0) ? a.getResourceId(0, 0) : a.getResourceId(1, 0);
-        } finally {
-            a.recycle();
+        } else {
+            resId = a.hasValue(2) ? a.getResourceId(2, 0) : a.getResourceId(3, 0);
         }
+        a.recycle();
+        return resId;
+    }
+
+    public static Context getActionBarContext(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarTheme,
+                R.attr.actionBarWidgetTheme, android.R.attr.actionBarTheme,
+                android.R.attr.actionBarWidgetTheme});
+        final int resId;
+        if (a.hasValue(0) || a.hasValue(1)) {
+            resId = a.hasValue(0) ? a.getResourceId(0, 0) : a.getResourceId(1, 0);
+        } else {
+            resId = a.hasValue(2) ? a.getResourceId(2, 0) : a.getResourceId(3, 0);
+        }
+        a.recycle();
         if (resId == 0) return context;
         return new ContextThemeWrapper(context, resId);
     }
@@ -708,7 +737,6 @@ public class ThemeUtils implements Constants {
             else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(background))
                 return R.style.Theme_Twidere_Light_Transparent_NoActionBar;
             return R.style.Theme_Twidere_Light_NoActionBar;
-
         } else if (VALUE_THEME_NAME_DARK.equals(name)) {
             if (VALUE_THEME_BACKGROUND_SOLID.equals(background))
                 return R.style.Theme_Twidere_Dark_SolidBackground_NoActionBar;

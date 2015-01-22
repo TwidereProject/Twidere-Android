@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 21
         versionCode 99
         versionName "0.3.0-dev"
@@ -32,10 +32,10 @@ android {
     }
     productFlavors {
         google {
-            versionName = android.defaultConfig.versionName + '-google'
+            versionName = versionName + '-google'
         }
         fdroid {
-            versionName = android.defaultConfig.versionName + '-fdroid'
+            versionName = versionName + '-fdroid'
         }
     }
 }

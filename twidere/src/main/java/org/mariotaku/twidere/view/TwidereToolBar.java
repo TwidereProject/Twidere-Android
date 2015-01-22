@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.ThemeUtils;
 
 /**
  * Created by mariotaku on 15/1/16.
@@ -40,8 +41,12 @@ public class TwidereToolbar extends Toolbar {
     }
 
     public TwidereToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{R.attr.elevation}, defStyleAttr, 0);
+        super(getThemedContext(context, attrs, defStyleAttr), attrs, defStyleAttr);
+        final TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{R.attr.elevation}, defStyleAttr, 0);
         ViewCompat.setElevation(this, a.getDimension(0, 0));
+    }
+
+    private static Context getThemedContext(Context context, AttributeSet attrs, int defStyleAttr) {
+        return ThemeUtils.getActionBarContext(context);
     }
 }

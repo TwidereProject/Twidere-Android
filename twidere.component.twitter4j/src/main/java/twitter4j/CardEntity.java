@@ -36,6 +36,11 @@ public interface CardEntity extends Serializable {
 
     public interface BindingValue extends Serializable {
 
+        public static final String TYPE_STRING = "STRING";
+        public static final String TYPE_IMAGE = "IMAGE";
+        public static final String TYPE_USER = "USER";
+        public static final String TYPE_BOOLEAN = "BOOLEAN";
+
         String getName();
 
         String getType();
@@ -48,6 +53,10 @@ public interface CardEntity extends Serializable {
 
     public interface StringValue extends BindingValue {
         String getValue();
+    }
+
+    public interface BooleanValue extends BindingValue {
+        boolean getValue();
     }
 
     public interface ImageValue extends BindingValue {

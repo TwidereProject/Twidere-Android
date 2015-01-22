@@ -65,20 +65,15 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/element_spacing_small">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:text="@string/location"
-                android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+            <org.mariotaku.twidere.view.ActionIconView
+                android:layout_width="@dimen/element_size_small"
+                android:layout_height="@dimen/element_size_small"
+                android:color="?android:textColorPrimary"
+                android:src="@drawable/ic_action_location"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/location"
@@ -98,20 +93,15 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/element_spacing_small">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:text="@string/url"
-                android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+            <org.mariotaku.twidere.view.ActionIconView
+                android:layout_width="@dimen/element_size_small"
+                android:layout_height="@dimen/element_size_small"
+                android:color="?android:textColorPrimary"
+                android:src="@drawable/ic_action_web"/>
 
             <org.mariotaku.twidere.view.HandleSpanClickTextView
                 android:id="@+id/url"
@@ -132,20 +122,15 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/element_spacing_small">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:text="@string/created_at"
-                android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+            <org.mariotaku.twidere.view.ActionIconView
+                android:layout_width="@dimen/element_size_small"
+                android:layout_height="@dimen/element_size_small"
+                android:color="?android:textColorPrimary"
+                android:src="@drawable/ic_action_time"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/created_at"
@@ -156,7 +141,7 @@
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"
-                tools:text="July 18, 2009 17:00 (20 tweets per day)"/>
+                tools:text="July 17, 2009 18:35 (20 tweets per day)"/>
         </LinearLayout>
 
         <View

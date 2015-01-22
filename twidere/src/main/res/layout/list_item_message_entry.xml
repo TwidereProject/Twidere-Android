@@ -21,10 +21,13 @@
 <org.mariotaku.twidere.view.ColorLabelRelativeLayout
     android:id="@+id/content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:padding="@dimen/element_spacing_normal"
+    app:ignorePadding="true"
     tools:context=".adapter.DirectMessagesEntryAdapter">
 
     <org.mariotaku.twidere.view.ShapedImageView

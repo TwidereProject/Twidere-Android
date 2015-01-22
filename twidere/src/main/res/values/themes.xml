@@ -119,50 +119,32 @@
 
     <style name="Theme.Twidere.Dark.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Twidere.Light.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">#f8f8f8</item>
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_dark</item>
-        <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
-        <item name="menuIconColorActionBar">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+    <style name="Theme.Twidere.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Twidere.Dark.Transparent.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Twidere.Light.Transparent.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
 
     <style name="Theme.Twidere.Dark.SolidBackground.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Twidere.Light.SolidBackground.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 

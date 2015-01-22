@@ -924,10 +924,6 @@ public class StatusFragment extends BaseSupportFragment
             final AsyncTwitterWrapper twitter = fragment.getTwitterWrapper();
             final FragmentActivity activity = fragment.getActivity();
             switch (item.getItemId()) {
-                case MENU_SHARE: {
-                    startStatusShareChooser(activity, status);
-                    break;
-                }
                 case MENU_COPY: {
                     if (ClipboardUtils.setText(activity, status.text_plain)) {
                         showOkMessage(activity, R.string.text_copied, false);

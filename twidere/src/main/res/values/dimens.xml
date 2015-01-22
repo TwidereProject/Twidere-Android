@@ -22,7 +22,7 @@
     <dimen name="icon_size_list_item">56dp</dimen>
     <dimen name="icon_size_list_item_small">42dp</dimen>
     <dimen name="icon_size_card_list_item">48dp</dimen>
-    <dimen name="icon_size_card_details">56dp</dimen>
+    <dimen name="icon_size_card_details">@dimen/element_size_mlarge</dimen>
     <dimen name="icon_size_wizard_large">240dp</dimen>
     <dimen name="icon_size_user_profile">84dp</dimen>
     <dimen name="profile_image_size_activity_small">32dp</dimen>

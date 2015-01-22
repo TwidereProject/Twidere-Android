@@ -43,6 +43,7 @@ import java.util.Date;
 
 import twitter4j.CardEntity;
 import twitter4j.CardEntity.BindingValue;
+import twitter4j.CardEntity.BooleanValue;
 import twitter4j.CardEntity.ImageValue;
 import twitter4j.CardEntity.StringValue;
 import twitter4j.CardEntity.UserValue;
@@ -767,13 +768,16 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 this.name = in.readString("name");
                 this.type = in.readString("type");
                 switch (type) {
-                    case "STRING":
+                    case BindingValue.TYPE_STRING:
                         value = in.readString("value");
                         break;
-                    case "IMAGE":
+                    case BindingValue.TYPE_BOOLEAN:
+                        value = in.readBoolean("value");
+                        break;
+                    case BindingValue.TYPE_IMAGE:
                         value = in.readParcelable("value", ParcelableImageValue.JSON_CREATOR);
                         break;
-                    case "USER":
+                    case BindingValue.TYPE_USER:
                         value = in.readParcelable("value", ParcelableUserValue.JSON_CREATOR);
                         break;
                     default:
@@ -791,13 +795,16 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 name = bindingValue.getName();
                 type = bindingValue.getType();
                 switch (type) {
-                    case "STRING":
+                    case BindingValue.TYPE_STRING:
                         value = ((StringValue) bindingValue).getValue();
                         break;
-                    case "IMAGE":
+                    case BindingValue.TYPE_BOOLEAN:
+                        value = ((BooleanValue) bindingValue).getValue();
+                        break;
+                    case BindingValue.TYPE_IMAGE:
                         value = new ParcelableImageValue((ImageValue) bindingValue);
                         break;
-                    case "USER":
+                    case BindingValue.TYPE_USER:
                         value = new ParcelableUserValue((UserValue) bindingValue);
                         break;
                     default:

@@ -37,7 +37,7 @@
         tools:visiblity="visible">
 
         <Space
-            android:layout_width="@dimen/element_size_mlarge"
+            android:layout_width="@dimen/icon_size_card_list_item"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_profile_image_detail_page"/>
 
@@ -64,8 +64,8 @@
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/profile_image"
             style="?profileImageStyle"
-            android:layout_width="@dimen/element_size_mlarge"
-            android:layout_height="@dimen/element_size_mlarge"
+            android:layout_width="@dimen/icon_size_card_details"
+            android:layout_height="@dimen/icon_size_card_details"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/padding_profile_image_detail_page"
@@ -321,7 +321,7 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.ActionMenuView
+    <org.mariotaku.twidere.view.TwidereActionMenuView
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"/>

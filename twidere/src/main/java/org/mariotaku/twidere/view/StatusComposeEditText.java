@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -28,9 +29,10 @@ import android.text.method.ArrowKeyMovementMethod;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.view.iface.IThemedView;
 import org.mariotaku.twidere.view.themed.ThemedMultiAutoCompleteTextView;
 
-public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView implements InputType {
+public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView implements IThemedView {
 
     private UserHashtagAutoCompleteAdapter mAdapter;
 
@@ -47,7 +49,8 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
         mAdapter = new UserHashtagAutoCompleteAdapter(this);
         setTokenizer(new ScreenNameTokenizer());
         setMovementMethod(ArrowKeyMovementMethod.getInstance());
-        setRawInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_CAP_SENTENCES | TYPE_TEXT_FLAG_MULTI_LINE);
+        setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
     }
 
     @Override

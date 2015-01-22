@@ -110,10 +110,7 @@
                 android:layout_width="?actionBarSize"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
-                android:layout_marginLeft="@dimen/element_spacing_xsmall"
-                android:overScrollMode="never"
-                android:paddingLeft="@dimen/element_spacing_msmall"
-                android:paddingRight="@dimen/element_spacing_msmall"/>
+                android:overScrollMode="never"/>
         </FrameLayout>
 
     </RelativeLayout>

@@ -56,6 +56,11 @@ public class StatusShareProvider extends ActionProvider implements Constants {
     }
 
     @Override
+    public boolean onPerformDefaultAction() {
+        return true;
+    }
+
+    @Override
     public boolean hasSubMenu() {
         return true;
     }

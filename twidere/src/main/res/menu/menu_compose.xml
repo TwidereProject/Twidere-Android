@@ -3,12 +3,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@id/select_account"
-        android:icon="@drawable/ic_action_accounts"
-        android:title="@string/select_accounts"
-        app:actionProviderClass="org.mariotaku.twidere.menu.ComposeAccountActionProvider"
-        app:showAsAction="always"/>
-    <item
         android:id="@id/take_photo"
         android:icon="@drawable/ic_action_camera"
         android:title="@string/take_photo"

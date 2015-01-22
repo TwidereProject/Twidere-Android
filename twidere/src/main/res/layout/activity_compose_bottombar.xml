@@ -22,25 +22,72 @@
     android:id="@+id/compose_bottombar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:actionBarSize"
+    android:layout_height="?actionBarSize"
     android:baselineAligned="false"
     android:divider="?android:dividerHorizontal"
     android:dividerPadding="@dimen/element_spacing_normal"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:showDividers="middle">
+    android:showDividers="middle"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.ActionMenuView
-        android:id="@+id/menu_bar"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@null"/>
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            style="?actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:id="@+id/account_selector_button"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="@dimen/element_spacing_msmall">
+
+            <org.mariotaku.twidere.view.SquareShapedImageView
+                android:id="@+id/account_profile_image"
+                style="?profileImageStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:sivBackgroundColor="?android:colorBackground"
+                app:sivBorder="true"
+                app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
+                tools:src="@drawable/ic_profile_image_default"/>
+
+            <org.mariotaku.twidere.view.BadgeView
+                android:id="@+id/accounts_count"
+                android:layout_alignTop="@id/account_profile_image"
+                android:layout_alignBottom="@id/account_profile_image"
+                android:layout_alignRight="@id/account_profile_image"
+                android:layout_alignLeft="@id/account_profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:textColor="?android:colorForeground"/>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/account_selector_button">
+
+            <org.mariotaku.twidere.view.TwidereActionMenuView
+                android:id="@+id/menu_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@null"/>
+        </HorizontalScrollView>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/send"
-        style="?android:actionButtonStyle"
+        style="?actionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
