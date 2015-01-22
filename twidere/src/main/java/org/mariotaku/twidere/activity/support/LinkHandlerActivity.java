@@ -121,12 +121,6 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
-        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
-    }
-
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
@@ -150,18 +144,72 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
     }
 
-    private void setTaskInfo(int linkId, Uri uri) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mMultiSelectHandler.dispatchOnStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mMultiSelectHandler.dispatchOnStop();
+        super.onStop();
+    }
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        final boolean result = super.getSystemWindowsInsets(insets);
+        if (result) {
+            insets.bottom = 0;
+        }
+        return result;
+    }
+
+    @Override
+    public void fitSystemWindows(Rect insets) {
+        super.fitSystemWindows(insets);
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
+        if (fragment instanceof IBaseFragment) {
+            ((IBaseFragment) fragment).requestFitSystemWindows();
+        }
+    }
+
+    @Override
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
+        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
+    }
+
+    public final void setSubtitle(CharSequence subtitle) {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) return;
+        actionBar.setSubtitle(subtitle);
+    }
+
+    private void requestWindowFeatures(Window window, int linkId, Uri uri) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        window.requestFeature(Window.FEATURE_ACTION_MODE_OVERLAY);
+        final int transitionRes;
         switch (linkId) {
             case LINK_ID_USER: {
+                transitionRes = R.transition.transition_user;
                 break;
             }
+//            case LINK_ID_STATUS: {
+//                transitionRes = R.transition.transition_status;
+//                break;
+//            }
             default: {
-                if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
-                    ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null,
-                            getCurrentThemeColor()));
-                }
+                transitionRes = 0;
                 break;
             }
+        }
+        if (transitionRes != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && !ThemeUtils.isTransparentBackground(this)) {
+            Utils.setSharedElementTransition(this, window, transitionRes);
         }
     }
 
@@ -199,51 +247,18 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         }
     }
 
-    private void requestWindowFeatures(Window window, int linkId, Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        window.requestFeature(Window.FEATURE_ACTION_MODE_OVERLAY);
-        final int transitionRes;
+    private void setTaskInfo(int linkId, Uri uri) {
         switch (linkId) {
             case LINK_ID_USER: {
-                transitionRes = R.transition.transition_user;
                 break;
             }
-//            case LINK_ID_STATUS: {
-//                transitionRes = R.transition.transition_status;
-//                break;
-//            }
             default: {
-                transitionRes = 0;
+                if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
+                    ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null,
+                            getCurrentThemeColor()));
+                }
                 break;
             }
-        }
-        if (transitionRes != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && !ThemeUtils.isTransparentBackground(this)) {
-            Utils.setSharedElementTransition(this, window, transitionRes);
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mMultiSelectHandler.dispatchOnStart();
-    }
-
-    @Override
-    protected void onStop() {
-        mMultiSelectHandler.dispatchOnStop();
-        super.onStop();
-    }
-
-    @Override
-    public void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
-        if (fragment instanceof IBaseFragment) {
-            ((IBaseFragment) fragment).requestFitSystemWindows();
         }
     }
 
@@ -255,15 +270,6 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
                 break;
             }
         }
-    }
-
-    @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        final boolean result = super.getSystemWindowsInsets(insets);
-        if (result) {
-            insets.bottom = 0;
-        }
-        return result;
     }
 
     private boolean showFragment(final int linkId, final Uri uri) {
@@ -370,7 +376,7 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
             }
             case LINK_ID_SEARCH: {
                 setTitle(android.R.string.search_go);
-//                setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY));
+                setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY));
                 break;
             }
         }
