@@ -45,8 +45,8 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.net.ApacheHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
-import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -234,7 +234,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
             final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET,
                     TWITTER_CONSUMER_SECRET_3);
             cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
-            cb.setHttpClientFactory(new TwidereHttpClientFactory(mApplication));
+            cb.setHttpClientFactory(new ApacheHttpClientFactory(mApplication));
             if (TwitterContentUtils.isOfficialKey(mActivity, consumerKey, consumerSecret)) {
                 Utils.setMockOfficialUserAgent(mActivity, cb);
             } else {

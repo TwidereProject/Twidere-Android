@@ -230,10 +230,12 @@
 
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
-        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowBackground">@color/bg_color_media_viewer</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="windowActionBar">false</item>
 
-        <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -245,16 +247,6 @@
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="menuIconColorActionBar">?menuIconColor</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-    </style>
-
-    <style name="Theme.Twidere.Viewer.Transparent">
-
-        <!-- Colors -->
-        <item name="android:colorBackgroundCacheHint">@null</item>
-
-        <!-- Window attributes -->
-        <!--<item name="android:windowBackground">@color/bg_color_transparent_light</item>-->
-        <item name="android:windowShowWallpaper">true</item>
     </style>
 
     <style name="Theme.Twidere.Drawer.Dark" parent="Theme.Twidere.Dark">

@@ -290,8 +290,8 @@ public final class TwidereLinkify implements Constants {
     private void applyLink(final String url, final String orig, final int start, final int end,
                            final Spannable text, final long accountId, final int type, final boolean sensitive,
                            final OnLinkClickListener listener) {
-        final TwidereURLSpan span = new TwidereURLSpan(url, orig, accountId, type, sensitive, listener,
-                mHighlightOption);
+        final TwidereURLSpan span = new TwidereURLSpan(url, orig, accountId, type, sensitive,
+                mHighlightOption, start, end, listener);
         text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
@@ -305,6 +305,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     public interface OnLinkClickListener {
-        public void onLinkClick(String link, String orig, long account_id, int type, boolean sensitive);
+        public void onLinkClick(String link, String orig, long account_id, int type,
+                                boolean sensitive, int start, int end);
     }
 }

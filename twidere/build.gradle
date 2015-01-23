@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
-        minSdkVersion 21
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 99
         versionName "0.3.0-dev"
@@ -66,6 +66,7 @@ dependencies {
     compile 'com.commonsware.cwac:merge:1.1.1'
     compile 'com.diegocarloslima:byakugallery:0.1.0'
     compile 'com.rengwuxian.materialedittext:library:1.8.2'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
     googleCompile 'com.google.android.gms:play-services:6.5.87'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'

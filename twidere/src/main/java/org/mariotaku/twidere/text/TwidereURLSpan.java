@@ -25,7 +25,6 @@ import android.text.style.URLSpan;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
 public class TwidereURLSpan extends URLSpan implements Constants {
@@ -35,28 +34,27 @@ public class TwidereURLSpan extends URLSpan implements Constants {
     private final String url, orig;
     private final boolean sensitive;
     private final OnLinkClickListener listener;
-
-    public TwidereURLSpan(final String url, final long accountId, final int type, final boolean sensitive,
-                          final OnLinkClickListener listener, final int highlightStyle) {
-        this(url, null, accountId, type, sensitive, listener, highlightStyle);
-    }
+    private final int start, end;
 
     public TwidereURLSpan(final String url, final String orig, final long accountId, final int type,
-                          final boolean sensitive, final OnLinkClickListener listener, final int highlightStyle) {
+                          final boolean sensitive, final int highlightStyle, int start, int end,
+                          final OnLinkClickListener listener) {
         super(url);
         this.url = url;
         this.orig = orig;
         this.accountId = accountId;
         this.type = type;
         this.sensitive = sensitive;
-        this.listener = listener;
         this.highlightStyle = highlightStyle;
+        this.start = start;
+        this.end = end;
+        this.listener = listener;
     }
 
     @Override
     public void onClick(@NonNull final View widget) {
         if (listener != null) {
-            listener.onLinkClick(url, orig, accountId, type, sensitive);
+            listener.onLinkClick(url, orig, accountId, type, sensitive, start, end);
         }
     }
 
@@ -66,7 +64,6 @@ public class TwidereURLSpan extends URLSpan implements Constants {
             ds.setUnderlineText(true);
         }
         if ((highlightStyle & VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT) != 0) {
-//            ds.setColor(ThemeUtils.getOptimalLinkColor(ds.linkColor, ds.getColor()));
             ds.setColor(ds.linkColor);
         }
     }

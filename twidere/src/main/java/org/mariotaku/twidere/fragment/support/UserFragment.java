@@ -94,6 +94,7 @@ import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -145,7 +146,6 @@ import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getOriginalTwitterProfileImage;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
-import static org.mariotaku.twidere.util.Utils.openImage;
 import static org.mariotaku.twidere.util.Utils.openIncomingFriendships;
 import static org.mariotaku.twidere.util.Utils.openMutesUsers;
 import static org.mariotaku.twidere.util.Utils.openStatus;
@@ -993,14 +993,16 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.profile_image: {
-                final String profile_image_url_string = getOriginalTwitterProfileImage(mUser.profile_image_url);
-                openImage(activity, user.account_id, profile_image_url_string, false);
+                final String url = getOriginalTwitterProfileImage(user.profile_image_url);
+                final ParcelableMedia[] media = {ParcelableMedia.newImage(url, url)};
+                Utils.openMedia(activity, user.account_id, false, null, media);
                 break;
             }
             case R.id.profile_banner: {
-                final String profile_banner_url = mUser.profile_banner_url;
-                if (profile_banner_url == null) return;
-                openImage(getActivity(), user.account_id, profile_banner_url + "/ipad_retina", false);
+                if (user.profile_banner_url == null) return;
+                final String url = user.profile_banner_url + "/ipad_retina";
+                final ParcelableMedia[] media = {ParcelableMedia.newImage(url, url)};
+                Utils.openMedia(activity, user.account_id, false, null, media);
                 break;
             }
             case R.id.listed_container: {
@@ -1026,7 +1028,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onLinkClick(final String link, final String orig, final long account_id, final int type,
-                            final boolean sensitive) {
+                            final boolean sensitive, int start, int end) {
         final ParcelableUser user = mUser;
         if (user == null) return;
         switch (type) {

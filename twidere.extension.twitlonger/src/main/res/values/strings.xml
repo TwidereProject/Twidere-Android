@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+	<string name="description">TwitLonger extension by Mariotaku</string>
+	<string name="app_name">Twidere TwitLonger Extension</string>
+	<string name="extension_post_name">Post TwitLonger tweet</string>
+	<string name="extension_reader_name">Read TwitLonger tweet</string>
+	<string name="title">TwitLonger</string>
+	<string name="share">Share</string>
+	<string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
+	<string name="error_unknown_error">Error: Unknown error, this is probably a bug.</string>
+	<string name="more_applications">More applications</string>
+	<string name="donate">Donate</string>
+	<string name="about">About</string>
+
+</resources>

@@ -191,7 +191,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
         if (displayMediaPreview) {
             mediaPreviewContainer.setStyle(mediaPreviewStyle);
-            mediaPreviewContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
+            if (media != null && media.length > 0) {
+                mediaPreviewContainer.setVisibility(View.VISIBLE);
+            } else {
+                mediaPreviewContainer.setVisibility(View.GONE);
+            }
             mediaPreviewContainer.displayMedia(media, loader, status.account_id, null, handler);
         } else {
             mediaPreviewContainer.setVisibility(View.GONE);
@@ -243,10 +247,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
 
     private void displayExtraTypeIcon(String cardName, int mediaLength) {
         if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
-            extraTypeView.setImageResource(R.drawable.ic_action_play_circle);
+            extraTypeView.setImageResource(R.drawable.ic_action_music);
             extraTypeView.setVisibility(View.VISIBLE);
         } else if (TwitterCardUtils.CARD_NAME_ANIMATED_GIF.equals(cardName)) {
-            extraTypeView.setImageResource(R.drawable.ic_action_play_circle);
+            extraTypeView.setImageResource(R.drawable.ic_action_movie);
             extraTypeView.setVisibility(View.VISIBLE);
         } else if (TwitterCardUtils.CARD_NAME_PLAYER.equals(cardName)) {
             extraTypeView.setImageResource(R.drawable.ic_action_play_circle);

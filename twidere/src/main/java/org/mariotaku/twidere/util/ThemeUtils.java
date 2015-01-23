@@ -825,8 +825,7 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getViewerThemeResource(final Context context) {
-        final boolean isTransparent = VALUE_THEME_BACKGROUND_TRANSPARENT.equals(getThemeBackgroundOption(context));
-        return isTransparent ? R.style.Theme_Twidere_Viewer_Transparent : R.style.Theme_Twidere_Viewer;
+        return R.style.Theme_Twidere_Viewer;
     }
 
     public static Drawable getWindowBackground(final Context context) {
@@ -901,7 +900,8 @@ public class ThemeUtils implements Constants {
         switch (themeRes) {
             case R.style.Theme_Twidere_Dark_Transparent:
             case R.style.Theme_Twidere_Light_Transparent:
-            case R.style.Theme_Twidere_Viewer_Transparent:
+            case R.style.Theme_Twidere_Dark_Transparent_NoActionBar:
+            case R.style.Theme_Twidere_Light_Transparent_NoActionBar:
                 return true;
         }
         return false;

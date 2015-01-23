@@ -61,8 +61,8 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.net.ApacheHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
-import org.mariotaku.twidere.util.net.TwidereHttpClientFactory;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
@@ -355,7 +355,7 @@ public class SignInActivity extends BaseSupportActivity implements TwitterConsta
         final boolean ignore_ssl_error = mPreferences.getBoolean(KEY_IGNORE_SSL_ERROR, false);
         final boolean enable_proxy = mPreferences.getBoolean(KEY_ENABLE_PROXY, false);
         cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
-        cb.setHttpClientFactory(new TwidereHttpClientFactory(mApplication));
+        cb.setHttpClientFactory(new ApacheHttpClientFactory(mApplication));
         if (TwitterContentUtils.isOfficialKey(this, mConsumerKey, mConsumerSecret)) {
             Utils.setMockOfficialUserAgent(this, cb);
         } else {

@@ -25,11 +25,11 @@ import android.content.Intent;
 import android.net.Uri;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
 import edu.ucdavis.earlybird.ProfilingUtil;
 
-import static org.mariotaku.twidere.util.Utils.openImage;
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 import static org.mariotaku.twidere.util.Utils.openUserListDetails;
@@ -47,7 +47,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
     @Override
     public void onLinkClick(final String link, final String orig, final long account_id, final int type,
-                            final boolean sensitive) {
+                            final boolean sensitive, int start, int end) {
         if (context == null || (manager != null && manager.isActive())) return;
         // UCD
         ProfilingUtil.profile(context, account_id, "Click, " + link + ", " + type);
@@ -63,7 +63,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
             }
             case TwidereLinkify.LINK_TYPE_LINK: {
                 if (MediaPreviewUtils.isLinkSupported(link)) {
-                    openImage(context, account_id, link, sensitive);
+                    openMedia(account_id, sensitive, link, start, end);
                 } else {
                     openLink(link);
                 }
@@ -90,6 +90,11 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
         }
+    }
+
+    protected void openMedia(long account_id, boolean sensitive, String link, int start, int end) {
+        final ParcelableMedia[] media = {ParcelableMedia.newImage(link, link)};
+        Utils.openMedia(context, account_id, sensitive, null, media);
     }
 
     protected void openLink(final String link) {

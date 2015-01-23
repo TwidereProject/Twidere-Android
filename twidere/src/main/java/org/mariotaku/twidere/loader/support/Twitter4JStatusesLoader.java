@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
@@ -103,7 +105,11 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
                 paging.setSinceId(mSinceId - 1);
             }
             statuses = new ArrayList<>();
-            truncated = truncateStatuses(getStatuses(getTwitter(), paging), statuses, mSinceId);
+            final Twitter twitter = getTwitter();
+            if (twitter == null) {
+                throw new TwitterException("Account is null");
+            }
+            truncated = truncateStatuses(getStatuses(twitter, paging), statuses, mSinceId);
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
             Log.w(LOGTAG, e);
@@ -137,8 +143,10 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
         mComparator = comparator;
     }
 
-    protected abstract List<Status> getStatuses(Twitter twitter, Paging paging) throws TwitterException;
+    @NonNull
+    protected abstract List<Status> getStatuses(@NonNull Twitter twitter, Paging paging) throws TwitterException;
 
+    @Nullable
     protected final Twitter getTwitter() {
         return getTwitterInstance(mContext, mAccountId, true, true);
     }

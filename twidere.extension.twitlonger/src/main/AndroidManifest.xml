@@ -1,0 +1,95 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="org.mariotaku.twidere.extension.twitlonger">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="false"
+        android:description="@string/description"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme">
+        <meta-data
+            android:name="org.mariotaku.twidere.extension"
+            android:value="true"/>
+
+        <activity
+            android:name=".TwitLongerPostActivity"
+            android:label="@string/extension_post_name">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EXTENSION_COMPOSE"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TwitLongerReaderActivity"
+            android:label="@string/extension_reader_name">
+            <meta-data
+                android:name="org.mariotaku.twidere.extension"
+                android:value="true"/>
+            <meta-data
+                android:name="org.mariotaku.twidere.extension.icon"
+                android:resource="@drawable/ic_extension_twitlonger"/>
+
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EXTENSION_OPEN_STATUS"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSEABLE"/>
+
+                <data
+                    android:host="tl.gd"
+                    android:pathPattern=".*"
+                    android:scheme="http"/>
+                <data
+                    android:host="tl.gd"
+                    android:pathPattern=".*"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.twitlonger.com"
+                    android:pathPattern="show/.*"
+                    android:scheme="http"/>
+                <data
+                    android:host="www.twitlonger.com"
+                    android:pathPattern="show/.*"
+                    android:scheme="https"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EXTENSION_SETTINGS"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".TwitLongerService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EXTENSION_SHORTEN_TWEET"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".TLStatusShortenerService"
+            android:permission="org.mariotaku.twidere.permission.SHORTEN_STATUS">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EXTENSION_SHORTEN_STATUS"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

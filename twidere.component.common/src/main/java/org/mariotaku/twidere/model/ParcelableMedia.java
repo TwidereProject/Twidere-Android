@@ -2,6 +2,8 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -51,13 +53,17 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         }
     };
 
-    public final String url, media_url;
+    @NonNull
+    public final String media_url;
+
+    @Nullable
+    public final String page_url;
     public final int start, end, type;
     public final int width, height;
 
     public ParcelableMedia(final JSONParcel in) {
-        url = in.readString("url");
         media_url = in.readString("media_url");
+        page_url = in.readString("page_url");
         start = in.readInt("start");
         end = in.readInt("end");
         type = in.readInt("type");
@@ -66,7 +72,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
     }
 
     public ParcelableMedia(final MediaEntity entity) {
-        url = ParseUtils.parseString(entity.getMediaURL());
+        page_url = ParseUtils.parseString(entity.getMediaURL());
         media_url = ParseUtils.parseString(entity.getMediaURL());
         start = entity.getStart();
         end = entity.getEnd();
@@ -77,7 +83,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
     }
 
     public ParcelableMedia(final Parcel in) {
-        url = in.readString();
+        page_url = in.readString();
         media_url = in.readString();
         start = in.readInt();
         end = in.readInt();
@@ -86,8 +92,9 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         height = in.readInt();
     }
 
-    private ParcelableMedia(final String url, final String media_url, final int start, final int end, final int type) {
-        this.url = url;
+    private ParcelableMedia(@NonNull final String media_url, @Nullable final String page_url,
+                            final int start, final int end, final int type) {
+        this.page_url = page_url;
         this.media_url = media_url;
         this.start = start;
         this.end = end;
@@ -102,9 +109,46 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableMedia that = (ParcelableMedia) o;
+
+        if (end != that.end) return false;
+        if (start != that.start) return false;
+        if (type != that.type) return false;
+        if (!media_url.equals(that.media_url)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = media_url.hashCode();
+        result = 31 * result + start;
+        result = 31 * result + end;
+        result = 31 * result + type;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ParcelableMedia{" +
+                "media_url='" + media_url + '\'' +
+                ", page_url='" + page_url + '\'' +
+                ", start=" + start +
+                ", end=" + end +
+                ", type=" + type +
+                ", width=" + width +
+                ", height=" + height +
+                '}';
+    }
+
+    @Override
     public void writeToParcel(final JSONParcel out) {
-        out.writeString("url", url);
         out.writeString("media_url", media_url);
+        out.writeString("page_url", page_url);
         out.writeInt("start", start);
         out.writeInt("end", end);
         out.writeInt("type", type);
@@ -114,7 +158,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(url);
+        dest.writeString(page_url);
         dest.writeString(media_url);
         dest.writeInt(start);
         dest.writeInt(end);
@@ -147,7 +191,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
                 final String expanded = ParseUtils.parseString(url.getExpandedURL());
                 final String media_url = MediaPreviewUtils.getSupportedLink(expanded);
                 if (expanded != null && media_url != null) {
-                    list.add(new ParcelableMedia(expanded, media_url, url.getStart(), url.getEnd(), TYPE_IMAGE));
+                    list.add(new ParcelableMedia(media_url, expanded, url.getStart(), url.getEnd(), TYPE_IMAGE));
                 }
             }
         }
@@ -165,7 +209,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
     }
 
     public static ParcelableMedia newImage(final String media_url, final String url) {
-        return new ParcelableMedia(url, media_url, 0, 0, TYPE_IMAGE);
+        return new ParcelableMedia(media_url, url, 0, 0, TYPE_IMAGE);
     }
 
     public static class MediaSize {

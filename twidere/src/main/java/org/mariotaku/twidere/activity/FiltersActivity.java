@@ -278,7 +278,6 @@ public class FiltersActivity extends BaseSupportActivity implements TabListener,
         }
 
         private void buildDialog(final Builder builder) {
-            // TODO Auto-generated method stub
 
         }
     }

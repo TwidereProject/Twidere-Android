@@ -142,7 +142,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         recipient_profile_image_url = recipient_profile_image_url_string;
         text_unescaped = toPlainText(text_html);
         media = ParcelableMedia.fromEntities(message);
-        first_media = media != null && media.length > 0 ? media[0].url : null;
+        first_media = media != null && media.length > 0 ? media[0].page_url : null;
     }
 
     public ParcelableDirectMessage(final Parcel in) {
@@ -162,7 +162,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         recipient_profile_image_url = in.readString();
         text_unescaped = in.readString();
         media = in.createTypedArray(ParcelableMedia.CREATOR);
-        first_media = media != null && media.length > 0 ? media[0].url : null;
+        first_media = media != null && media.length > 0 ? media[0].page_url : null;
     }
 
     @Override

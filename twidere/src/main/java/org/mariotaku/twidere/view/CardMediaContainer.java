@@ -110,7 +110,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             }
             if (i < k) {
                 final ParcelableMedia media = mediaArray[i];
-                loader.displayPreviewImage(imageView, media.url, loadingHandler);
+                loader.displayPreviewImage(imageView, media.page_url, loadingHandler);
                 child.setVisibility(VISIBLE);
                 if (i == j - 1) {
                     final TextView moreIndicator = (TextView) child.findViewById(R.id.more_media);

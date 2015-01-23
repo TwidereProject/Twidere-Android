@@ -87,7 +87,9 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             return (int) diff;
         }
     };
-
+    public final long id, account_id, timestamp, user_id, retweet_id, retweeted_by_id, retweet_timestamp,
+            retweet_count, favorite_count, reply_count, descendent_reply_count, in_reply_to_status_id,
+            in_reply_to_user_id, my_retweet_id;
     public static final Comparator<ParcelableStatus> REVERSE_ID_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
@@ -98,11 +100,6 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             return (int) diff;
         }
     };
-
-    public final long id, account_id, timestamp, user_id, retweet_id, retweeted_by_id, retweet_timestamp,
-            retweet_count, favorite_count, reply_count, descendent_reply_count, in_reply_to_status_id,
-            in_reply_to_user_id, my_retweet_id;
-
     public final boolean is_gap, is_retweet, is_favorite, is_possibly_sensitive, user_is_following, user_is_protected,
             user_is_verified;
 
@@ -242,7 +239,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         text_unescaped = in.readString("text_unescaped");
         user_is_following = in.readBoolean("is_following");
         mentions = in.readParcelableArray("mentions", ParcelableUserMention.JSON_CREATOR);
-        first_media = media != null && media.length > 0 ? media[0].url : null;
+        first_media = media != null && media.length > 0 ? media[0].page_url : null;
         card = in.readParcelable("card", ParcelableCardEntity.JSON_CREATOR);
         card_name = card != null ? card.name : null;
     }
@@ -284,7 +281,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         in_reply_to_user_id = in.readLong();
         in_reply_to_name = in.readString();
         mentions = in.createTypedArray(ParcelableUserMention.CREATOR);
-        first_media = media != null && media.length > 0 ? media[0].url : null;
+        first_media = media != null && media.length > 0 ? media[0].page_url : null;
         card = in.readParcelable(ParcelableCardEntity.class.getClassLoader());
         card_name = card != null ? card.name : null;
     }
@@ -374,7 +371,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         my_retweet_id = retweeted_by_id == account_id ? id : status.getCurrentUserRetweet();
         is_possibly_sensitive = status.isPossiblySensitive();
         mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
-        first_media = media != null && media.length > 0 ? media[0].url : null;
+        first_media = media != null && media.length > 0 ? media[0].page_url : null;
         card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
         card_name = card != null ? card.name : null;
     }
@@ -494,47 +491,6 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeParcelable("card", card);
     }
 
-    @Override
-    public void writeToParcel(final Parcel out, final int flags) {
-        out.writeLong(id);
-        out.writeLong(account_id);
-        out.writeLong(timestamp);
-        out.writeLong(user_id);
-        out.writeLong(retweet_id);
-        out.writeLong(retweet_timestamp);
-        out.writeLong(retweeted_by_id);
-        out.writeLong(retweet_count);
-        out.writeLong(favorite_count);
-        out.writeLong(reply_count);
-        out.writeLong(descendent_reply_count);
-        out.writeLong(in_reply_to_status_id);
-        out.writeInt(is_gap ? 1 : 0);
-        out.writeInt(is_retweet ? 1 : 0);
-        out.writeInt(is_favorite ? 1 : 0);
-        out.writeInt(user_is_protected ? 1 : 0);
-        out.writeInt(user_is_verified ? 1 : 0);
-        out.writeString(retweeted_by_name);
-        out.writeString(retweeted_by_screen_name);
-        out.writeString(retweeted_by_profile_image);
-        out.writeString(text_html);
-        out.writeString(text_plain);
-        out.writeString(user_name);
-        out.writeString(user_screen_name);
-        out.writeString(in_reply_to_screen_name);
-        out.writeString(source);
-        out.writeString(user_profile_image_url);
-        out.writeTypedArray(media, flags);
-        out.writeParcelable(location, flags);
-        out.writeLong(my_retweet_id);
-        out.writeInt(is_possibly_sensitive ? 1 : 0);
-        out.writeInt(user_is_following ? 1 : 0);
-        out.writeString(text_unescaped);
-        out.writeLong(in_reply_to_user_id);
-        out.writeString(in_reply_to_name);
-        out.writeTypedArray(mentions, flags);
-        out.writeParcelable(card, flags);
-    }
-
     private static long getTime(final Date date) {
         return date != null ? date.getTime() : 0;
     }
@@ -549,49 +505,6 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
                 descendent_reply_count, is_possibly_sensitive, is_following, media, first_media, mentions,
                 card_name, card;
-
-        @Override
-        public String toString() {
-            return "CursorIndices{" +
-                    "_id=" + _id +
-                    ", account_id=" + account_id +
-                    ", status_id=" + status_id +
-                    ", status_timestamp=" + status_timestamp +
-                    ", user_name=" + user_name +
-                    ", user_screen_name=" + user_screen_name +
-                    ", text_html=" + text_html +
-                    ", text_plain=" + text_plain +
-                    ", text_unescaped=" + text_unescaped +
-                    ", user_profile_image_url=" + user_profile_image_url +
-                    ", is_favorite=" + is_favorite +
-                    ", is_retweet=" + is_retweet +
-                    ", is_gap=" + is_gap +
-                    ", location=" + location +
-                    ", is_protected=" + is_protected +
-                    ", is_verified=" + is_verified +
-                    ", in_reply_to_status_id=" + in_reply_to_status_id +
-                    ", in_reply_to_user_id=" + in_reply_to_user_id +
-                    ", in_reply_to_user_name=" + in_reply_to_user_name +
-                    ", in_reply_to_user_screen_name=" + in_reply_to_user_screen_name +
-                    ", my_retweet_id=" + my_retweet_id +
-                    ", retweeted_by_user_name=" + retweeted_by_user_name +
-                    ", retweeted_by_user_screen_name=" + retweeted_by_user_screen_name +
-                    ", retweet_id=" + retweet_id +
-                    ", retweet_timestamp=" + retweet_timestamp +
-                    ", retweeted_by_user_id=" + retweeted_by_user_id +
-                    ", user_id=" + user_id +
-                    ", source=" + source +
-                    ", retweet_count=" + retweet_count +
-                    ", favorite_count=" + favorite_count +
-                    ", reply_count=" + reply_count +
-                    ", descendent_reply_count=" + descendent_reply_count +
-                    ", is_possibly_sensitive=" + is_possibly_sensitive +
-                    ", is_following=" + is_following +
-                    ", media=" + media +
-                    ", first_media=" + first_media +
-                    ", mentions=" + mentions +
-                    '}';
-        }
 
         public CursorIndices(final Cursor cursor) {
             _id = cursor.getColumnIndex(Statuses._ID);
@@ -636,16 +549,93 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             card = cursor.getColumnIndex(Statuses.MENTIONS);
         }
 
+        @Override
+        public String toString() {
+            return "CursorIndices{" +
+                    "_id=" + _id +
+                    ", account_id=" + account_id +
+                    ", status_id=" + status_id +
+                    ", status_timestamp=" + status_timestamp +
+                    ", user_name=" + user_name +
+                    ", user_screen_name=" + user_screen_name +
+                    ", text_html=" + text_html +
+                    ", text_plain=" + text_plain +
+                    ", text_unescaped=" + text_unescaped +
+                    ", user_profile_image_url=" + user_profile_image_url +
+                    ", is_favorite=" + is_favorite +
+                    ", is_retweet=" + is_retweet +
+                    ", is_gap=" + is_gap +
+                    ", location=" + location +
+                    ", is_protected=" + is_protected +
+                    ", is_verified=" + is_verified +
+                    ", in_reply_to_status_id=" + in_reply_to_status_id +
+                    ", in_reply_to_user_id=" + in_reply_to_user_id +
+                    ", in_reply_to_user_name=" + in_reply_to_user_name +
+                    ", in_reply_to_user_screen_name=" + in_reply_to_user_screen_name +
+                    ", my_retweet_id=" + my_retweet_id +
+                    ", retweeted_by_user_name=" + retweeted_by_user_name +
+                    ", retweeted_by_user_screen_name=" + retweeted_by_user_screen_name +
+                    ", retweet_id=" + retweet_id +
+                    ", retweet_timestamp=" + retweet_timestamp +
+                    ", retweeted_by_user_id=" + retweeted_by_user_id +
+                    ", user_id=" + user_id +
+                    ", source=" + source +
+                    ", retweet_count=" + retweet_count +
+                    ", favorite_count=" + favorite_count +
+                    ", reply_count=" + reply_count +
+                    ", descendent_reply_count=" + descendent_reply_count +
+                    ", is_possibly_sensitive=" + is_possibly_sensitive +
+                    ", is_following=" + is_following +
+                    ", media=" + media +
+                    ", first_media=" + first_media +
+                    ", mentions=" + mentions +
+                    '}';
+        }
+
+    }
+
+    @Override
+    public void writeToParcel(final Parcel out, final int flags) {
+        out.writeLong(id);
+        out.writeLong(account_id);
+        out.writeLong(timestamp);
+        out.writeLong(user_id);
+        out.writeLong(retweet_id);
+        out.writeLong(retweet_timestamp);
+        out.writeLong(retweeted_by_id);
+        out.writeLong(retweet_count);
+        out.writeLong(favorite_count);
+        out.writeLong(reply_count);
+        out.writeLong(descendent_reply_count);
+        out.writeLong(in_reply_to_status_id);
+        out.writeInt(is_gap ? 1 : 0);
+        out.writeInt(is_retweet ? 1 : 0);
+        out.writeInt(is_favorite ? 1 : 0);
+        out.writeInt(user_is_protected ? 1 : 0);
+        out.writeInt(user_is_verified ? 1 : 0);
+        out.writeString(retweeted_by_name);
+        out.writeString(retweeted_by_screen_name);
+        out.writeString(retweeted_by_profile_image);
+        out.writeString(text_html);
+        out.writeString(text_plain);
+        out.writeString(user_name);
+        out.writeString(user_screen_name);
+        out.writeString(in_reply_to_screen_name);
+        out.writeString(source);
+        out.writeString(user_profile_image_url);
+        out.writeTypedArray(media, flags);
+        out.writeParcelable(location, flags);
+        out.writeLong(my_retweet_id);
+        out.writeInt(is_possibly_sensitive ? 1 : 0);
+        out.writeInt(user_is_following ? 1 : 0);
+        out.writeString(text_unescaped);
+        out.writeLong(in_reply_to_user_id);
+        out.writeString(in_reply_to_name);
+        out.writeTypedArray(mentions, flags);
+        out.writeParcelable(card, flags);
     }
 
     public static final class ParcelableCardEntity implements TwidereParcelable {
-
-        public static ParcelableValueItem getValue(ParcelableCardEntity entity, String key) {
-            for (ParcelableValueItem item : entity.values) {
-                if (item.name.equals(key)) return item;
-            }
-            return null;
-        }
 
         public static final Parcelable.Creator<ParcelableCardEntity> CREATOR = new Parcelable.Creator<ParcelableCardEntity>() {
             @Override
@@ -658,7 +648,6 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 return new ParcelableCardEntity[size];
             }
         };
-
         public static final JSONParcelable.Creator<ParcelableCardEntity> JSON_CREATOR = new JSONParcelable.Creator<ParcelableCardEntity>() {
             @Override
             public ParcelableCardEntity createFromParcel(final JSONParcel in) {
@@ -681,6 +670,15 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             users = src.createTypedArray(ParcelableUser.CREATOR);
         }
 
+        @Override
+        public String toString() {
+            return "ParcelableCardEntity{" +
+                    "name='" + name + '\'' +
+                    ", users=" + Arrays.toString(users) +
+                    ", values=" + Arrays.toString(values) +
+                    '}';
+        }
+
         public ParcelableCardEntity(JSONParcel src) {
             name = src.readString("name");
             values = src.readParcelableArray("values", ParcelableValueItem.JSON_CREATOR);
@@ -701,30 +699,10 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             }
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
         public static ParcelableCardEntity fromCardEntity(CardEntity card, long account_id) {
             if (card == null) return null;
             return new ParcelableCardEntity(card, account_id);
         }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(name);
-            dest.writeTypedArray(values, flags);
-            dest.writeTypedArray(users, flags);
-        }
-
-        @Override
-        public void writeToParcel(JSONParcel dest) {
-            dest.writeString("name", name);
-            dest.writeParcelableArray("values", values);
-            dest.writeParcelableArray("users", users);
-        }
-
 
         public static ParcelableCardEntity fromJSONString(final String json) {
             if (TextUtils.isEmpty(json)) return null;
@@ -735,158 +713,11 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             }
         }
 
-
-        public static final class ParcelableValueItem implements TwidereParcelable {
-
-            public static final Parcelable.Creator<ParcelableValueItem> CREATOR = new Parcelable.Creator<ParcelableValueItem>() {
-                @Override
-                public ParcelableValueItem createFromParcel(final Parcel in) {
-                    return new ParcelableValueItem(in);
-                }
-
-                @Override
-                public ParcelableValueItem[] newArray(final int size) {
-                    return new ParcelableValueItem[size];
-                }
-            };
-
-            public static final JSONParcelable.Creator<ParcelableValueItem> JSON_CREATOR = new JSONParcelable.Creator<ParcelableValueItem>() {
-                @Override
-                public ParcelableValueItem createFromParcel(final JSONParcel in) {
-                    return new ParcelableValueItem(in);
-                }
-
-                @Override
-                public ParcelableValueItem[] newArray(final int size) {
-                    return new ParcelableValueItem[size];
-                }
-            };
-            public final String name, type;
-            public final Object value;
-
-            public ParcelableValueItem(JSONParcel in) {
-                this.name = in.readString("name");
-                this.type = in.readString("type");
-                switch (type) {
-                    case BindingValue.TYPE_STRING:
-                        value = in.readString("value");
-                        break;
-                    case BindingValue.TYPE_BOOLEAN:
-                        value = in.readBoolean("value");
-                        break;
-                    case BindingValue.TYPE_IMAGE:
-                        value = in.readParcelable("value", ParcelableImageValue.JSON_CREATOR);
-                        break;
-                    case BindingValue.TYPE_USER:
-                        value = in.readParcelable("value", ParcelableUserValue.JSON_CREATOR);
-                        break;
-                    default:
-                        throw new UnsupportedOperationException();
-                }
+        public static ParcelableValueItem getValue(ParcelableCardEntity entity, String key) {
+            for (ParcelableValueItem item : entity.values) {
+                if (item.name.equals(key)) return item;
             }
-
-            public ParcelableValueItem(Parcel in) {
-                this.name = in.readString();
-                this.type = in.readString();
-                this.value = in.readValue(ParcelableValueItem.class.getClassLoader());
-            }
-
-            public ParcelableValueItem(BindingValue bindingValue) {
-                name = bindingValue.getName();
-                type = bindingValue.getType();
-                switch (type) {
-                    case BindingValue.TYPE_STRING:
-                        value = ((StringValue) bindingValue).getValue();
-                        break;
-                    case BindingValue.TYPE_BOOLEAN:
-                        value = ((BooleanValue) bindingValue).getValue();
-                        break;
-                    case BindingValue.TYPE_IMAGE:
-                        value = new ParcelableImageValue((ImageValue) bindingValue);
-                        break;
-                    case BindingValue.TYPE_USER:
-                        value = new ParcelableUserValue((UserValue) bindingValue);
-                        break;
-                    default:
-                        value = null;
-                        break;
-                }
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(name);
-                dest.writeString(type);
-                dest.writeValue(value);
-            }
-
-            @Override
-            public void writeToParcel(JSONParcel dest) {
-                dest.writeString("name", name);
-                dest.writeString("type", type);
-                dest.writeObject("value", value);
-            }
-        }
-
-
-        public static final class ParcelableUserValue implements TwidereParcelable {
-
-            public static final Parcelable.Creator<ParcelableUserValue> CREATOR = new Parcelable.Creator<ParcelableUserValue>() {
-                @Override
-                public ParcelableUserValue createFromParcel(final Parcel in) {
-                    return new ParcelableUserValue(in);
-                }
-
-                @Override
-                public ParcelableUserValue[] newArray(final int size) {
-                    return new ParcelableUserValue[size];
-                }
-            };
-
-            public static final JSONParcelable.Creator<ParcelableUserValue> JSON_CREATOR = new JSONParcelable.Creator<ParcelableUserValue>() {
-                @Override
-                public ParcelableUserValue createFromParcel(final JSONParcel in) {
-                    return new ParcelableUserValue(in);
-                }
-
-                @Override
-                public ParcelableUserValue[] newArray(final int size) {
-                    return new ParcelableUserValue[size];
-                }
-            };
-            public final long id;
-
-            public ParcelableUserValue(JSONParcel in) {
-                this.id = in.readLong("id");
-            }
-
-            public ParcelableUserValue(Parcel in) {
-                this.id = in.readLong();
-            }
-
-            public ParcelableUserValue(UserValue value) {
-                this.id = value.getUserId();
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeLong(id);
-            }
-
-            @Override
-            public void writeToParcel(JSONParcel dest) {
-                dest.writeLong("id", id);
-            }
+            return null;
         }
 
         public static final class ParcelableImageValue implements TwidereParcelable {
@@ -954,5 +785,187 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 dest.writeString("url", url);
             }
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final class ParcelableUserValue implements TwidereParcelable {
+
+            public static final Parcelable.Creator<ParcelableUserValue> CREATOR = new Parcelable.Creator<ParcelableUserValue>() {
+                @Override
+                public ParcelableUserValue createFromParcel(final Parcel in) {
+                    return new ParcelableUserValue(in);
+                }
+
+                @Override
+                public ParcelableUserValue[] newArray(final int size) {
+                    return new ParcelableUserValue[size];
+                }
+            };
+
+            public static final JSONParcelable.Creator<ParcelableUserValue> JSON_CREATOR = new JSONParcelable.Creator<ParcelableUserValue>() {
+                @Override
+                public ParcelableUserValue createFromParcel(final JSONParcel in) {
+                    return new ParcelableUserValue(in);
+                }
+
+                @Override
+                public ParcelableUserValue[] newArray(final int size) {
+                    return new ParcelableUserValue[size];
+                }
+            };
+            public final long id;
+
+            public ParcelableUserValue(JSONParcel in) {
+                this.id = in.readLong("id");
+            }
+
+            public ParcelableUserValue(Parcel in) {
+                this.id = in.readLong();
+            }
+
+            public ParcelableUserValue(UserValue value) {
+                this.id = value.getUserId();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeLong(id);
+            }
+
+            @Override
+            public void writeToParcel(JSONParcel dest) {
+                dest.writeLong("id", id);
+            }
+        }
+
+        public static final class ParcelableValueItem implements TwidereParcelable {
+
+            public static final Parcelable.Creator<ParcelableValueItem> CREATOR = new Parcelable.Creator<ParcelableValueItem>() {
+                @Override
+                public ParcelableValueItem createFromParcel(final Parcel in) {
+                    return new ParcelableValueItem(in);
+                }
+
+                @Override
+                public ParcelableValueItem[] newArray(final int size) {
+                    return new ParcelableValueItem[size];
+                }
+            };
+            public static final JSONParcelable.Creator<ParcelableValueItem> JSON_CREATOR = new JSONParcelable.Creator<ParcelableValueItem>() {
+                @Override
+                public ParcelableValueItem createFromParcel(final JSONParcel in) {
+                    return new ParcelableValueItem(in);
+                }
+
+                @Override
+                public ParcelableValueItem[] newArray(final int size) {
+                    return new ParcelableValueItem[size];
+                }
+            };
+
+            public final String name, type;
+            public final Object value;
+
+            public ParcelableValueItem(JSONParcel in) {
+                this.name = in.readString("name");
+                this.type = in.readString("type");
+                switch (type) {
+                    case BindingValue.TYPE_STRING:
+                        value = in.readString("value");
+                        break;
+                    case BindingValue.TYPE_BOOLEAN:
+                        value = in.readBoolean("value");
+                        break;
+                    case BindingValue.TYPE_IMAGE:
+                        value = in.readParcelable("value", ParcelableImageValue.JSON_CREATOR);
+                        break;
+                    case BindingValue.TYPE_USER:
+                        value = in.readParcelable("value", ParcelableUserValue.JSON_CREATOR);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException();
+                }
+            }
+
+            public ParcelableValueItem(Parcel in) {
+                this.name = in.readString();
+                this.type = in.readString();
+                this.value = in.readValue(ParcelableValueItem.class.getClassLoader());
+            }
+
+            public ParcelableValueItem(BindingValue bindingValue) {
+                name = bindingValue.getName();
+                type = bindingValue.getType();
+                switch (type) {
+                    case BindingValue.TYPE_STRING:
+                        value = ((StringValue) bindingValue).getValue();
+                        break;
+                    case BindingValue.TYPE_BOOLEAN:
+                        value = ((BooleanValue) bindingValue).getValue();
+                        break;
+                    case BindingValue.TYPE_IMAGE:
+                        value = new ParcelableImageValue((ImageValue) bindingValue);
+                        break;
+                    case BindingValue.TYPE_USER:
+                        value = new ParcelableUserValue((UserValue) bindingValue);
+                        break;
+                    default:
+                        value = null;
+                        break;
+                }
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public String toString() {
+                return "ParcelableValueItem{" +
+                        "name='" + name + '\'' +
+                        ", type='" + type + '\'' +
+                        ", value=" + value +
+                        '}';
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(name);
+                dest.writeString(type);
+                dest.writeValue(value);
+            }
+
+            @Override
+            public void writeToParcel(JSONParcel dest) {
+                dest.writeString("name", name);
+                dest.writeString("type", type);
+                dest.writeObject("value", value);
+            }
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeTypedArray(values, flags);
+            dest.writeTypedArray(users, flags);
+        }
+
+        @Override
+        public void writeToParcel(JSONParcel dest) {
+            dest.writeString("name", name);
+            dest.writeParcelableArray("values", values);
+            dest.writeParcelableArray("users", users);
+        }
+
     }
+
 }

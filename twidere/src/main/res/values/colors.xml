@@ -24,5 +24,6 @@
     <color name="unread_color">@color/material_red</color>
     <color name="branding_color">@color/material_light_blue</color>
     <color name="bg_color_tab_pressed">#40808080</color>
+    <color name="bg_color_media_viewer">#a0000000</color>
 
 </resources>

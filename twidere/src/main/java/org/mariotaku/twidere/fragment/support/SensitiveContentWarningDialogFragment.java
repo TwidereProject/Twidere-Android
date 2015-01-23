@@ -19,47 +19,51 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.Utils.openImageDirectly;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
+
+import static org.mariotaku.twidere.util.Utils.openMediaDirectly;
 
 public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFragment implements
-		DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener {
 
-	@Override
-	public void onClick(final DialogInterface dialog, final int which) {
-		switch (which) {
-			case DialogInterface.BUTTON_POSITIVE: {
-				final Context context = getActivity();
-				final Bundle args = getArguments();
-				if (args == null || context == null) return;
-				final Uri uri = args.getParcelable(EXTRA_URI);
-				final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-				openImageDirectly(context, accountId, ParseUtils.parseString(uri));
-				break;
-			}
-		}
+    @Override
+    public void onClick(final DialogInterface dialog, final int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE: {
+                final Context context = getActivity();
+                final Bundle args = getArguments();
+                if (args == null || context == null) return;
+                final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+                final ParcelableMedia current = args.getParcelable(EXTRA_CURRENT_MEDIA);
+                final ParcelableMedia[] media = Utils.newParcelableArray(args.getParcelableArray(EXTRA_MEDIA),
+                        ParcelableMedia.CREATOR);
+                openMediaDirectly(context, accountId, current, media);
+                break;
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public Dialog onCreateDialog(final Bundle savedInstanceState) {
-		final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-		builder.setTitle(android.R.string.dialog_alert_title);
-		builder.setMessage(R.string.sensitive_content_warning);
-		builder.setPositiveButton(android.R.string.ok, this);
-		builder.setNegativeButton(android.R.string.cancel, null);
-		return builder.create();
-	}
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setMessage(R.string.sensitive_content_warning);
+        builder.setPositiveButton(android.R.string.ok, this);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        return builder.create();
+    }
 
 }

@@ -32,7 +32,7 @@ public interface IntentConstants {
     public static final String INTENT_ACTION_REPLY_MULTIPLE = INTENT_PACKAGE_PREFIX + "REPLY_MULTIPLE";
     public static final String INTENT_ACTION_SETTINGS = INTENT_PACKAGE_PREFIX + "SETTINGS";
     public static final String INTENT_ACTION_SELECT_ACCOUNT = INTENT_PACKAGE_PREFIX + "SELECT_ACCOUNT";
-    public static final String INTENT_ACTION_VIEW_IMAGE = INTENT_PACKAGE_PREFIX + "VIEW_IMAGE";
+    public static final String INTENT_ACTION_VIEW_MEDIA = INTENT_PACKAGE_PREFIX + "VIEW_MEDIA";
     public static final String INTENT_ACTION_FILTERS = INTENT_PACKAGE_PREFIX + "FILTERS";
     public static final String INTENT_ACTION_TWITTER_LOGIN = INTENT_PACKAGE_PREFIX + "TWITTER_LOGIN";
     public static final String INTENT_ACTION_DRAFTS = INTENT_PACKAGE_PREFIX + "DRAFTS";
@@ -203,6 +203,7 @@ public interface IntentConstants {
     public static final String EXTRA_INTENT = "intent";
     public static final String EXTRA_BLACKLIST = "blacklist";
     public static final String EXTRA_MEDIA = "media";
+    public static final String EXTRA_CURRENT_MEDIA = "current_media";
     public static final String EXTRA_EXTRAS = "extras";
     public static final String EXTRA_MY_FOLLOWING_ONLY = "my_following_only";
     public static final String EXTRA_RESTART_ACTIVITY = "restart_activity";

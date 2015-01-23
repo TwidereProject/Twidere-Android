@@ -85,8 +85,8 @@ import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
-import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.StatisticUtils;
+import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
@@ -124,7 +124,6 @@ import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
-import static org.mariotaku.twidere.util.Utils.startStatusShareChooser;
 
 /**
  * Created by mariotaku on 14/12/5.
@@ -285,7 +284,9 @@ public class StatusFragment extends BaseSupportFragment
 
     @Override
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
-        Utils.openImageDirectly(getActivity(), accountId, media.url);
+        final ParcelableStatus status = mStatusAdapter.getStatus();
+        if (status == null) return;
+        Utils.openMediaDirectly(getActivity(), accountId, media, status.media);
     }
 
     @Override
@@ -1063,7 +1064,9 @@ public class StatusFragment extends BaseSupportFragment
             screenNameView.setText("@" + status.user_screen_name);
 
             textView.setText(Html.fromHtml(status.text_html));
-            final TwidereLinkify linkify = new TwidereLinkify(new OnLinkClickHandler(context, null));
+            final StatusLinkClickHandler linkClickHandler = new StatusLinkClickHandler(context, null);
+            linkClickHandler.setStatus(status);
+            final TwidereLinkify linkify = new TwidereLinkify(linkClickHandler);
             linkify.applyAllLinks(textView, status.account_id, status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 
