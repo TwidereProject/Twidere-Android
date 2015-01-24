@@ -79,7 +79,7 @@ public class TintedStatusFrameLayout extends FrameLayout {
     }
 
     @Override
-    protected boolean fitSystemWindows(Rect insets) {
+    protected boolean fitSystemWindows(@NonNull Rect insets) {
         setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
         final Context context = getContext();
         if (context instanceof FitSystemWindowsCallback) {

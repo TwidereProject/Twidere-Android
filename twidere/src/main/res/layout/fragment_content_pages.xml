@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:color="?android:textColorSecondary"
-            android:src="@drawable/ic_error_generic"/>
+            android:src="@drawable/ic_info_error_generic"/>
 
         <TextView
             android:id="@+id/pages_error_text"

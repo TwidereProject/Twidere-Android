@@ -23,6 +23,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -245,6 +246,7 @@ public class DirectMessagesFragment extends BasePullToRefreshListFragment implem
             updateRefreshState();
         }
     }
+
 
     protected long getAccountId() {
         final Bundle args = getArguments();

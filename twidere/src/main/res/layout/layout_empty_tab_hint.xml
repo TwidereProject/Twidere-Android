@@ -19,15 +19,33 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <org.mariotaku.twidere.view.themed.ThemedTextView
+    <LinearLayout
         android:id="@+id/empty_tab_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/no_tab_hint"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.mariotaku.twidere.view.ActionIconView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="?android:textColorSecondary"
+            android:src="@drawable/ic_info_tab"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:gravity="center"
+            android:text="@string/edit_tabs"
+            android:textAppearance="?android:textAppearanceMedium"/>
+    </LinearLayout>
 
 </merge>

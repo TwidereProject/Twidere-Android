@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.mariotaku.twidere"
+<manifest package="org.mariotaku.twidere"
+          xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto">
 
     <uses-sdk/>
@@ -171,10 +171,10 @@
         </activity>
         <activity
             android:name=".activity.support.QuickSearchBarActivity"
+            android:label="@android:string/search_go"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Blank.Dialog"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@android:string/search_go">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.GLOBAL_SEARCH"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -569,9 +569,16 @@
         </activity>
         <activity
             android:name=".activity.TestActivity"
+            android:enabled="false"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Test"
-            android:windowSoftInputMode="adjustResize"/>
+            android:label="Twidere test"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.NyanActivity"
             android:launchMode="singleTop"

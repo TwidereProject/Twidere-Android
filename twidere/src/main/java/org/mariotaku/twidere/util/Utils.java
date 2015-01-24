@@ -2527,8 +2527,8 @@ public final class Utils implements Constants, TwitterConstants {
             final ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
             if (apacheHttp) {
-//                cb.setHttpClientFactory(new ApacheHttpClientFactory(app));
-                cb.setHttpClientFactory(new OkHttpClientFactory());
+                cb.setHttpClientFactory(new ApacheHttpClientFactory(app));
+//                cb.setHttpClientFactory(new OkHttpClientFactory());
             }
             cb.setHttpConnectionTimeout(connection_timeout);
             cb.setGZIPEnabled(enableGzip);

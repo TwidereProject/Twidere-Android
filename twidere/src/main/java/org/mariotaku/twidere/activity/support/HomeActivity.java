@@ -66,9 +66,11 @@ import com.squareup.otto.Subscribe;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.DataProfilingSettingsActivity;
+import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
@@ -85,6 +87,7 @@ import org.mariotaku.twidere.util.ActivityAccessor;
 import org.mariotaku.twidere.util.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
+import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.HotKeyHandler;
 import org.mariotaku.twidere.util.MathUtils;
@@ -107,7 +110,6 @@ import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.CustomTabUtils.getAddedTabPosition;
-import static org.mariotaku.twidere.util.CustomTabUtils.getHomeTabs;
 import static org.mariotaku.twidere.util.Utils.cleanDatabasesByItemLimit;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
@@ -301,6 +303,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
+        mEmptyTabHint.setOnClickListener(this);
         setTabPosition(initialTabPosition);
         setupSlidingMenu();
         setupBars();
@@ -409,6 +412,13 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         switch (v.getId()) {
             case R.id.action_buttons: {
                 triggerActionsClick();
+                break;
+            }
+            case R.id.empty_tab_hint: {
+                final Intent intent = new Intent(this, SettingsActivity.class);
+                intent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
+                intent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs);
+                startActivityForResult(intent, REQUEST_SETTINGS);
                 break;
             }
         }
@@ -697,7 +707,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     private void setupHomeTabs() {
         mPagerAdapter.clear();
-        mPagerAdapter.addTabs(getHomeTabs(this));
+        mPagerAdapter.addTabs(CustomTabUtils.getHomeTabs(this));
         final boolean hasNoTab = mPagerAdapter.getCount() == 0;
         mEmptyTabHint.setVisibility(hasNoTab ? View.VISIBLE : View.GONE);
         mViewPager.setVisibility(hasNoTab ? View.GONE : View.VISIBLE);

@@ -425,11 +425,10 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        final View view = getView();
-        if (view != null) {
-            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
+//        final View view = getView();
+//        if (view != null) {
+//            view.setPadding(insets.left, view.getPaddingTop(), insets.right, insets.bottom);
+//        }
     }
 
     @Override

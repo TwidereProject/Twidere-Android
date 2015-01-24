@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
-import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -128,17 +127,8 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
             if (data.hasData()) {
                 mImageView.setVisibility(View.VISIBLE);
                 if (data.useDecoder) {
-                    TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(), null, new OnInitializeListener() {
-                        @Override
-                        public void onStartInitialization() {
-
-                        }
-
-                        @Override
-                        public void onEndInitialization() {
-
-                        }
-                    });
+                    TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(),
+                            null, null);
                 } else {
                     mImageView.setImageBitmap(data.bitmap);
                 }

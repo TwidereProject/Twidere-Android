@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.ActionBar;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -81,8 +81,8 @@ public class OpenStreetMapViewerActivity extends BaseSupportActivity implements 
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
         mMapView = (MapView) findViewById(R.id.map_view);
     }
 
@@ -102,7 +102,7 @@ public class OpenStreetMapViewerActivity extends BaseSupportActivity implements 
         }
         mLatitude = latitude;
         mLongitude = longitude;
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
