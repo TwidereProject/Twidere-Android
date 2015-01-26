@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.util;
+package org.mariotaku.twidere.util.accessor;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

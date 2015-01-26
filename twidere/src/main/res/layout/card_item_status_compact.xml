@@ -35,7 +35,7 @@
         android:paddingRight="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_normal">
 
-        <ImageView
+        <org.mariotaku.twidere.view.ActionIconView
             android:id="@+id/reply_retweet_icon"
             style="?profileImageStyle"
             android:layout_width="@dimen/element_size_small"
@@ -43,6 +43,7 @@
             android:layout_alignRight="@id/profile_image"
             android:layout_alignTop="@id/reply_retweet_status"
             android:layout_marginLeft="@dimen/element_spacing_small"
+            android:color="?android:textColorSecondary"
             android:padding="@dimen/element_spacing_small"
             android:scaleType="centerInside"
             android:visibility="gone"

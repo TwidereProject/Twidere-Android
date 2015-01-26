@@ -35,7 +35,9 @@ import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -69,7 +71,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.activity.support.ImagePickerActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
-import org.mariotaku.twidere.adapter.DirectMessagesConversationAdapter;
+import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -99,7 +101,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.mariotaku.twidere.util.Utils.buildDirectMessageConversationUri;
-import static org.mariotaku.twidere.util.Utils.configBaseCardAdapter;
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 public class DirectMessagesConversationFragment extends BaseSupportFragment implements
@@ -115,7 +116,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     private SharedPreferences mPreferences;
     private SharedPreferences mMessageDrafts;
 
-    private ListView mMessagesListView, mUsersSearchList;
+    private RecyclerView mMessagesListView;
+    private ListView mUsersSearchList;
     private EditText mEditText;
     private StatusTextCountView mTextCountView;
     private View mSendButton;
@@ -136,9 +138,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     private boolean mLoadMoreAutomatically;
     private String mImageUri;
 
-    private Locale mLocale;
 
-    private DirectMessagesConversationAdapter mAdapter;
+    private MessageConversationAdapter mAdapter;
     private SimpleParcelableUsersAdapter mUsersSearchAdapter;
 
     private ParcelableAccount mAccount;
@@ -191,6 +192,9 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final View view = getView();
+        if (view == null) throw new AssertionError();
+        final Context viewContext = view.getContext();
         setHasOptionsMenu(true);
         final BaseSupportActivity activity = (BaseSupportActivity) getActivity();
         final ActionBar actionBar = activity.getSupportActionBar();
@@ -203,7 +207,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mUserQuery = (EditText) actionBarView.findViewById(R.id.user_query);
         mQueryButton = actionBarView.findViewById(R.id.query_button);
         final List<ParcelableAccount> accounts = ParcelableAccount.getAccountsList(activity, false);
-        final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(actionBar.getThemedContext(), R.layout.spinner_item_account_icon);
+        final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(mAccountSpinner.getContext(), R.layout.spinner_item_account_icon);
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user);
         accountsSpinnerAdapter.addAll(accounts);
         mAccountSpinner.setAdapter(accountsSpinnerAdapter);
@@ -231,14 +235,12 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mImageLoader = TwidereApplication.getInstance(getActivity()).getImageLoaderWrapper();
         mTwitterWrapper = getTwitterWrapper();
         mValidator = new TwidereValidator(getActivity());
-        mLocale = getResources().getConfiguration().locale;
-        mAdapter = new DirectMessagesConversationAdapter(getActivity());
+        mAdapter = new MessageConversationAdapter(getActivity());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(viewContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setStackFromEnd(true);
+        mMessagesListView.setLayoutManager(layoutManager);
         mMessagesListView.setAdapter(mAdapter);
-        mMessagesListView.setDivider(null);
-        mMessagesListView.setSelector(android.R.color.transparent);
-        mMessagesListView.setFastScrollEnabled(mPreferences.getBoolean(KEY_FAST_SCROLL_THUMB, false));
-        mMessagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-        mMessagesListView.setStackFromBottom(true);
 
         mUsersSearchAdapter = new SimpleParcelableUsersAdapter(activity);
         mUsersSearchList.setAdapter(mUsersSearchAdapter);
@@ -425,10 +427,9 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-//        final View view = getView();
-//        if (view != null) {
-//            view.setPadding(insets.left, view.getPaddingTop(), insets.right, insets.bottom);
-//        }
+        final View view = getView();
+        if (view == null) return;
+        view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
     }
 
     @Override
@@ -453,12 +454,12 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        mAdapter.setCursor(null);
     }
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mAdapter.swapCursor(cursor);
+        mAdapter.setCursor(cursor);
     }
 
     @Override
@@ -526,7 +527,6 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     @Override
     public void onResume() {
         super.onResume();
-        configBaseCardAdapter(getActivity(), mAdapter);
         final String previewScaleType = Utils.getNonEmptyString(mPreferences, KEY_MEDIA_PREVIEW_STYLE,
                 ScaleType.CENTER_CROP.name());
         mAdapter.setImagePreviewScaleType(previewScaleType);
@@ -591,13 +591,13 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mUsersSearchProgress = view.findViewById(R.id.users_search_progress);
         mUsersSearchList = (ListView) view.findViewById(R.id.users_search_list);
         mUsersSearchEmpty = view.findViewById(R.id.users_search_empty);
         mUsersSearchEmptyText = (TextView) view.findViewById(R.id.users_search_empty_text);
-        mMessagesListView = (ListView) view.findViewById(android.R.id.list);
+        mMessagesListView = (RecyclerView) view.findViewById(R.id.recycler_view);
         final View inputSendContainer = view.findViewById(R.id.input_send_container);
         mConversationContainer = view.findViewById(R.id.conversation_container);
         mRecipientSelectorContainer = view.findViewById(R.id.recipient_selector_container);

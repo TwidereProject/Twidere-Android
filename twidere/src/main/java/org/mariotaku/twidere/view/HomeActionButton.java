@@ -24,14 +24,12 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Outline;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -39,6 +37,8 @@ import android.widget.ProgressBar;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.accessor.ViewAccessor.OutlineCompat;
+import org.mariotaku.twidere.util.accessor.ViewAccessor.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.helper.PressElevateViewHelper;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
@@ -63,7 +63,7 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
         inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions, this);
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
-        setOutlineProvider(new HomeActionButtonOutlineProvider());
+        ViewAccessor.setOutlineProvider(this, new HomeActionButtonOutlineProvider());
         setClipToOutline(true);
         setButtonColor(Color.WHITE);
     }
@@ -119,9 +119,10 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
         mHelper.updateButtonState();
     }
 
-    private static class HomeActionButtonOutlineProvider extends ViewOutlineProvider {
+    private static class HomeActionButtonOutlineProvider extends ViewOutlineProviderCompat {
+
         @Override
-        public void getOutline(View view, Outline outline) {
+        public void getOutline(View view, OutlineCompat outline) {
             final int width = view.getWidth(), height = view.getHeight();
             final int size = Math.min(width, height);
             final int left = (width - size) / 2, top = (height - size) / 2;

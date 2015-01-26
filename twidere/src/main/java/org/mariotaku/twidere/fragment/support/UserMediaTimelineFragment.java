@@ -114,8 +114,8 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     }

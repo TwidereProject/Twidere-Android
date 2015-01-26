@@ -21,11 +21,11 @@ package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 
-public interface IDirectMessagesAdapter extends IBaseCardAdapter {
+public interface IDirectMessagesAdapter {
 
-	public ParcelableDirectMessage findItem(long id);
+    public ParcelableDirectMessage findItem(long id);
 
-	public void setDisplayImagePreview(boolean display);
+    public void setDisplayImagePreview(boolean display);
 
-	public void setImagePreviewScaleType(String scaleType);
+    public void setImagePreviewScaleType(String scaleType);
 }

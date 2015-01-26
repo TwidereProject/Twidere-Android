@@ -137,6 +137,11 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
         }
     }
 
+    @Override
+    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+
+    }
+
     protected void fitSystemWindows(Rect insets) {
         Utils.makeListFragmentFitsSystemWindows(this, insets);
     }
@@ -205,8 +210,9 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public final void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        onBaseViewCreated(view, savedInstanceState);
         requestFitSystemWindows();
     }
 

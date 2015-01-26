@@ -26,6 +26,10 @@ import android.graphics.Color;
  */
 public class ColorUtils {
 
+    public static int getYIQLuminance(int color) {
+        final int r = Color.red(color), g = Color.green(color), b = Color.blue(color);
+        return (r * 299 + g * 587 + b * 114) / 1000;
+    }
 
     public static void colorToYIQ(int color, int[] yiq) {
         final int r = Color.red(color), g = Color.green(color), b = Color.blue(color);

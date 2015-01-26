@@ -19,6 +19,7 @@
   -->
 
 <FrameLayout
+    android:id="@+id/fragment_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,7 +30,9 @@
         android:id="@+id/conversation_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="?android:dividerVertical"
         android:orientation="vertical"
+        android:showDividers="middle"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -39,8 +42,8 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <ListView
-                android:id="@android:id/list"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
@@ -80,8 +83,8 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/users_search_empty_text"

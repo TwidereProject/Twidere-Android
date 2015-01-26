@@ -216,12 +216,12 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mContentView = view.findViewById(R.id.fragment_content);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

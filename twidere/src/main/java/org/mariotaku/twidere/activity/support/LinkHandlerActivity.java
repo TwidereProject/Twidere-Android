@@ -38,12 +38,13 @@ import android.view.WindowManager.LayoutParams;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.util.ActivityAccessor;
-import org.mariotaku.twidere.util.ActivityAccessor.TaskDescriptionCompat;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -158,16 +159,19 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
         final boolean result = super.getSystemWindowsInsets(insets);
-        if (result) {
-            insets.bottom = 0;
-        }
+//        if (result) {
+//            insets.bottom = 0;
+//        }
         return result;
     }
 
     @Override
     public void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-        mMainContent.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
+        if (fragment instanceof IBaseFragment) {
+            ((IBaseFragment) fragment).requestFitSystemWindows();
+        }
     }
 
     @Override

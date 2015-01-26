@@ -83,8 +83,8 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
-import org.mariotaku.twidere.util.ActivityAccessor;
-import org.mariotaku.twidere.util.ActivityAccessor.TaskDescriptionCompat;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
@@ -115,7 +115,7 @@ import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getTabDisplayOptionInt;
 import static org.mariotaku.twidere.util.Utils.isDatabaseReady;
-import static org.mariotaku.twidere.util.Utils.openDirectMessagesConversation;
+import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 import static org.mariotaku.twidere.util.Utils.openSearch;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
@@ -766,7 +766,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
             startActivity(new Intent(INTENT_ACTION_COMPOSE));
         } else {
             if (classEquals(DirectMessagesFragment.class, tab.cls)) {
-                openDirectMessagesConversation(this, -1, -1);
+                openMessageConversation(this, -1, -1);
             } else if (classEquals(TrendsSuggectionsFragment.class, tab.cls)) {
                 openSearchView(null);
             } else {

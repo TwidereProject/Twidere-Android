@@ -1086,11 +1086,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.user_profile_drawer);
         final View headerView = mHeaderDrawerLayout.getHeader();
         final View contentView = mHeaderDrawerLayout.getContent();
-        super.onViewCreated(view, savedInstanceState);
         mCardContent = headerView.findViewById(R.id.card_content);
         mErrorRetryContainer = headerView.findViewById(R.id.error_retry_container);
         mProgressContainer = headerView.findViewById(R.id.progress_container);

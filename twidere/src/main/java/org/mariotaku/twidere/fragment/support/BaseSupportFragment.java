@@ -41,8 +41,9 @@ import org.mariotaku.twidere.util.MultiSelectManager;
 public class BaseSupportFragment extends Fragment implements IBaseFragment, Constants {
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        onBaseViewCreated(view, savedInstanceState);
         requestFitSystemWindows();
     }
 
@@ -134,6 +135,11 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         if (callback.getSystemWindowsInsets(insets)) {
             fitSystemWindows(insets);
         }
+    }
+
+    @Override
+    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+
     }
 
     @Override

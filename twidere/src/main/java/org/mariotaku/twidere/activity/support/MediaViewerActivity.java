@@ -152,8 +152,8 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         }
 
         @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
+        public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onBaseViewCreated(view, savedInstanceState);
             mImageView = (TouchImageView) view.findViewById(R.id.image_view);
             mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
         }

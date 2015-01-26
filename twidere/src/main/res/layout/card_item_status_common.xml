@@ -29,24 +29,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
+        android:paddingTop="@dimen/element_spacing_small"
         android:orientation="vertical">
 
         <Space
             android:id="@+id/reply_retweet_space"
             android:layout_width="@dimen/icon_size_status_profile_image"
             android:layout_height="@dimen/element_size_small"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/reply_retweet_status"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_small"/>
 
-        <ImageView
+        <org.mariotaku.twidere.view.ActionIconView
             android:id="@+id/reply_retweet_icon"
             style="?profileImageStyle"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
-            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:layout_alignTop="@id/reply_retweet_status"
             android:layout_marginLeft="@dimen/element_spacing_small"
-            android:layout_marginTop="@dimen/element_spacing_small"
             android:layout_toLeftOf="@+id/reply_retweet_status"
+            android:color="?android:textColorSecondary"
             android:padding="@dimen/element_spacing_small"
             android:scaleType="centerInside"
             android:visibility="gone"
@@ -56,15 +59,14 @@
         <org.mariotaku.twidere.view.ActionIconThemedTextView
             android:id="@+id/reply_retweet_status"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/element_size_small"
-            android:layout_marginBottom="@dimen/element_spacing_minus_normal"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_marginTop="@dimen/element_spacing_small"
             android:layout_toRightOf="@id/reply_retweet_space"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:minHeight="@dimen/element_size_small"
+            tools:text="Mariotaku and 10 others retweeted this"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:visibility="gone"
@@ -75,8 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/reply_retweet_status"
-            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:layout_below="@+id/reply_retweet_status"
             android:paddingLeft="@dimen/element_spacing_normal">
 
             <org.mariotaku.twidere.view.ShapedImageView

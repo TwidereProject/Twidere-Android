@@ -290,8 +290,8 @@ public class StatusFragment extends BaseSupportFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mStatusContent = view.findViewById(R.id.status_content);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressContainer = view.findViewById(R.id.progress_container);

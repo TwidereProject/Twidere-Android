@@ -20,7 +20,9 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:showIn="@layout/fragment_messages_conversation"
     android:layout_height="wrap_content"
     android:gravity="bottom"
     android:orientation="horizontal">
@@ -31,6 +33,7 @@
         android:layout_width="?android:actionBarSize"
         android:layout_height="?android:actionBarSize"
         android:layout_weight="0"
+        android:color="?android:textColorSecondary"
         android:contentDescription="@string/add_image"
         android:scaleType="centerInside"
         android:src="@drawable/ic_action_gallery"/>
@@ -59,6 +62,7 @@
         <org.mariotaku.twidere.view.ActionIconView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:color="?android:textColorSecondary"
             android:contentDescription="@string/send"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_send"/>

@@ -27,6 +27,7 @@ import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -41,6 +42,8 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 import org.mariotaku.twidere.view.iface.IExtendedView.TouchInterceptor;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
@@ -75,9 +78,16 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final int themeResource = ThemeUtils.getThemeResource(context);
         final Context theme = new ContextThemeWrapper(context, themeResource);
         final LayoutInflater inflater = LayoutInflater.from(theme);
-        final View view = inflater.inflate(R.layout.theme_preview, parent, false);
-        setPreviewView(theme, view.findViewById(R.id.theme_preview_content), themeResource);
-        return view;
+        try {
+            final View view = inflater.inflate(R.layout.theme_preview, parent, false);
+            setPreviewView(theme, view.findViewById(R.id.theme_preview_content), themeResource);
+            return view;
+        } catch (InflateException e) {
+            if (e.getCause() instanceof InvocationTargetException) {
+                e.getCause().getCause().printStackTrace();
+            }
+            throw e;
+        }
     }
 
     private static void setPreviewView(final Context context, final View view, final int themeRes) {

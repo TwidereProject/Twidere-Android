@@ -90,8 +90,8 @@ public class QuickMenuFragment extends BaseSupportFragment {
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(android.R.id.list);
         mSlidingUpPanel = (SlidingUpPanelLayout) view.findViewById(R.id.activities_drawer);
         mActivitiesConfigButton = (ImageButton) view.findViewById(R.id.activities_config_button);
