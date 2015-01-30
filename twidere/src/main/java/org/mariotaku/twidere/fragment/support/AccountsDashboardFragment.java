@@ -103,7 +103,8 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private TextView mAppMenuSectionView;
     private View mAccountSelectorView;
     private RecyclerView mAccountsSelector;
-    private ImageView mAccountProfileBannerView, mAccountProfileImageView;
+    private ImageView mAccountProfileBannerView;
+    private ShapedImageView mAccountProfileImageView;
     private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
     private Switch mAccountsToggle;
     private View mAccountProfileContainer;
@@ -317,7 +318,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAccountsSelector.setLayoutManager(layoutManager);
         mAccountsSelector.setAdapter(mAccountsAdapter);
         mAccountProfileContainer = mAccountSelectorView.findViewById(R.id.profile_container);
-        mAccountProfileImageView = (ImageView) mAccountSelectorView.findViewById(R.id.profile_image);
+        mAccountProfileImageView = (ShapedImageView) mAccountSelectorView.findViewById(R.id.profile_image);
         mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.account_profile_banner);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
         mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
@@ -391,6 +392,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAccountProfileScreenNameView.setText("@" + account.screen_name);
         mAccountsToggle.setChecked(account.is_activated);
         mImageLoader.displayProfileImage(mAccountProfileImageView, account.profile_image_url);
+        mAccountProfileImageView.setBorderColors(account.color);
         final int bannerWidth = mAccountProfileBannerView.getWidth();
         final Resources res = getResources();
         final int defWidth = res.getDisplayMetrics().widthPixels;

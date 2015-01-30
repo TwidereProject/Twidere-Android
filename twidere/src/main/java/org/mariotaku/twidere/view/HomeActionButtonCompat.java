@@ -83,6 +83,36 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
     }
 
+    public void setIcon(final Bitmap bm) {
+        mIconView.setImageBitmap(bm);
+    }
+
+    public void setIcon(final Drawable drawable) {
+        mIconView.setImageDrawable(drawable);
+    }
+
+    public void setIcon(final int resId) {
+        mIconView.setImageResource(resId);
+    }
+
+    @Override
+    public void setIconColor(int color, Mode mode) {
+        mIconView.setColorFilter(color, mode);
+    }
+
+    public void setShowProgress(final boolean showProgress) {
+        mProgressBar.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+        mIconView.setVisibility(showProgress ? View.GONE : View.VISIBLE);
+    }
+
+    public void setTitle(final CharSequence title) {
+        setContentDescription(title);
+    }
+
+    public void setTitle(final int title) {
+        setTitle(getResources().getText(title));
+    }
+
     private static class FloatingActionDrawable extends Drawable {
 
 
@@ -95,23 +125,11 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
         private Paint mColorPaint;
         private Rect mBounds;
 
-        @Override
-        protected void onBoundsChange(Rect bounds) {
-            super.onBoundsChange(bounds);
-            mBounds.set(bounds);
-            updateBitmap();
-        }
-
         public FloatingActionDrawable(View view, float radius) {
             mView = view;
             mRadius = radius;
             mColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mBounds = new Rect();
-        }
-
-        @Override
-        public int getIntrinsicHeight() {
-            return -1;
         }
 
         @Override
@@ -125,24 +143,6 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
                         bounds.width() - mView.getPaddingRight(), bounds.height() - mView.getPaddingBottom());
                 canvas.drawOval(rect, mColorPaint);
             }
-        }
-
-        private void updateBitmap() {
-            final Rect bounds = mBounds;
-            if (bounds.isEmpty()) return;
-            mBitmap = Bitmap.createBitmap(bounds.width(), bounds.height(), Config.ARGB_8888);
-            Canvas canvas = new Canvas(mBitmap);
-            final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setColor(Color.WHITE);
-            final float radius = mRadius;
-            paint.setShadowLayer(radius, 0, radius * 1.5f / 2, SHADOW_START_COLOR);
-            final RectF rect = new RectF(mView.getPaddingLeft(), mView.getPaddingTop(),
-                    bounds.width() - mView.getPaddingRight(), bounds.height() - mView.getPaddingBottom());
-            canvas.drawOval(rect, paint);
-            paint.setShadowLayer(0, 0, 0, 0);
-            paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
-            canvas.drawOval(rect, paint);
-            invalidateSelf();
         }
 
         @Override
@@ -162,7 +162,19 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
         }
 
         @Override
+        protected void onBoundsChange(Rect bounds) {
+            super.onBoundsChange(bounds);
+            mBounds.set(bounds);
+            updateBitmap();
+        }
+
+        @Override
         public int getIntrinsicWidth() {
+            return -1;
+        }
+
+        @Override
+        public int getIntrinsicHeight() {
             return -1;
         }
 
@@ -170,36 +182,24 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
             mColorPaint.setColor(color);
             invalidateSelf();
         }
-    }
 
-    @Override
-    public void setIconColor(int color, Mode mode) {
-        mIconView.setColorFilter(color, mode);
-    }
-
-    public void setIcon(final Bitmap bm) {
-        mIconView.setImageBitmap(bm);
-    }
-
-    public void setIcon(final Drawable drawable) {
-        mIconView.setImageDrawable(drawable);
-    }
-
-    public void setIcon(final int resId) {
-        mIconView.setImageResource(resId);
-    }
-
-    public void setShowProgress(final boolean showProgress) {
-        mProgressBar.setVisibility(showProgress ? View.VISIBLE : View.GONE);
-        mIconView.setVisibility(showProgress ? View.GONE : View.VISIBLE);
-    }
-
-    public void setTitle(final CharSequence title) {
-        setContentDescription(title);
-    }
-
-    public void setTitle(final int title) {
-        setTitle(getResources().getText(title));
+        private void updateBitmap() {
+            final Rect bounds = mBounds;
+            if (bounds.isEmpty()) return;
+            mBitmap = Bitmap.createBitmap(bounds.width(), bounds.height(), Config.ARGB_8888);
+            Canvas canvas = new Canvas(mBitmap);
+            final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setColor(Color.WHITE);
+            final float radius = mRadius;
+            paint.setShadowLayer(radius, 0, radius * 1.5f / 2, SHADOW_START_COLOR);
+            final RectF rect = new RectF(mView.getPaddingLeft(), mView.getPaddingTop(),
+                    bounds.width() - mView.getPaddingRight(), bounds.height() - mView.getPaddingBottom());
+            canvas.drawOval(rect, paint);
+            paint.setShadowLayer(0, 0, 0, 0);
+            paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
+            canvas.drawOval(rect, paint);
+            invalidateSelf();
+        }
     }
 
 }

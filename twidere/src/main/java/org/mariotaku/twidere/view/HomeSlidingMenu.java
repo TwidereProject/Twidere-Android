@@ -48,15 +48,15 @@ public class HomeSlidingMenu extends SlidingMenu implements Constants {
     }
 
     @Override
-    protected CustomViewBehind newCustomViewBehind(final Context context) {
-        if (isInEditMode()) return super.newCustomViewBehind(context);
-        return new MyCustomViewBehind(context, this);
-    }
-
-    @Override
     protected boolean fitSystemWindows(Rect insets) {
         mActivity.setSystemWindowInsets(insets);
         return false;
+    }
+
+    @Override
+    protected CustomViewBehind newCustomViewBehind(final Context context) {
+        if (isInEditMode()) return super.newCustomViewBehind(context);
+        return new MyCustomViewBehind(context, this);
     }
 
     private ViewPager getViewPager() {

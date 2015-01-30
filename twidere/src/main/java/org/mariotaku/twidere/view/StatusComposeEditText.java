@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -54,6 +53,16 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
     }
 
     @Override
+    protected int computeVerticalScrollRange() {
+        return super.computeVerticalScrollRange();
+    }
+
+    @Override
+    protected int computeVerticalScrollExtent() {
+        return super.computeVerticalScrollExtent();
+    }
+
+    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (mAdapter == null || mAdapter.isCursorClosed()) {
@@ -78,33 +87,7 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
         append(" ");
     }
 
-    @Override
-    protected int computeVerticalScrollRange() {
-        return super.computeVerticalScrollRange();
-    }
-
-    @Override
-    protected int computeVerticalScrollExtent() {
-        return super.computeVerticalScrollExtent();
-    }
-
     private static class ScreenNameTokenizer implements Tokenizer {
-
-        @Override
-        public int findTokenEnd(final CharSequence text, final int cursor) {
-            int i = cursor;
-            final int len = text.length();
-
-            while (i < len) {
-                if (text.charAt(i) == ' ')
-                    return i;
-                else {
-                    i++;
-                }
-            }
-
-            return len;
-        }
 
         @Override
         public int findTokenStart(final CharSequence text, final int cursor) {
@@ -125,6 +108,22 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
             }
 
             return start;
+        }
+
+        @Override
+        public int findTokenEnd(final CharSequence text, final int cursor) {
+            int i = cursor;
+            final int len = text.length();
+
+            while (i < len) {
+                if (text.charAt(i) == ' ')
+                    return i;
+                else {
+                    i++;
+                }
+            }
+
+            return len;
         }
 
         @Override

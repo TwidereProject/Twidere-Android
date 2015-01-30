@@ -39,11 +39,9 @@ public class ShortTimeView extends ThemedTextView implements Constants, OnShared
     private static final long TICKER_DURATION = 5000L;
 
     private final Runnable mTicker;
-
+    private final SharedPreferences mPreferences;
     private boolean mShowAbsoluteTime;
     private long mTime;
-
-    private final SharedPreferences mPreferences;
 
     public ShortTimeView(final Context context) {
         this(context, null);

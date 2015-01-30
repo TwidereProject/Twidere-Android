@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.location.Criteria;
 import android.location.Location;
@@ -52,6 +53,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Action;
 import android.support.v4.util.LongSparseArray;
+import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,6 +62,7 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -86,7 +89,6 @@ import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableLocation;
@@ -112,7 +114,7 @@ import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
-import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextCountView;
@@ -190,6 +192,10 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
     private BadgeView mCountView;
     private View mAccountSelectorButton;
     private ImageLoaderWrapper mImageLoader;
+    private View mLocationContainer;
+    private ActionIconView mLocationIcon;
+    private SupportMenuInflater mMenuInflater;
+    private Toolbar mToolbar;
 
     @Override
     public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
@@ -252,15 +258,7 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
                 break;
             }
             case MENU_ADD_LOCATION: {
-                final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-                if (!attachLocation) {
-                    getLocation();
-                } else {
-                    mLocationManager.removeUpdates(this);
-                }
-                mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, !attachLocation).apply();
-                setMenu();
-                updateTextCount();
+                toggleLocation();
                 break;
             }
             case MENU_DRAFTS: {
@@ -334,6 +332,29 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
             }
         }
         return true;
+    }
+
+
+    private void toggleLocation() {
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        if (!attachLocation) {
+            getLocation();
+        } else {
+            mLocationManager.removeUpdates(this);
+        }
+        mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, !attachLocation).apply();
+        setMenu();
+        updateLocationState();
+        updateTextCount();
+    }
+
+    private void updateLocationState() {
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        if (attachLocation) {
+            mLocationIcon.setColorFilter(getCurrentThemeColor(), Mode.SRC_ATOP);
+        } else {
+            mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
+        }
     }
 
     @Override
@@ -438,6 +459,10 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
                 mAccountSelectorContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
                 break;
             }
+            case R.id.location_container: {
+                toggleLocation();
+                break;
+            }
         }
     }
 
@@ -511,6 +536,7 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
     @Override
     public void onSupportContentChanged() {
         super.onSupportContentChanged();
+        mToolbar = (Toolbar) findViewById(R.id.compose_actionbar);
         mEditText = (EditText) findViewById(R.id.edit_text);
         mMediaPreviewGrid = (GridView) findViewById(R.id.media_thumbnail_preview);
         mMenuBar = (ActionMenuView) findViewById(R.id.menu_bar);
@@ -522,6 +548,8 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         mProfileImageView = (ShapedImageView) findViewById(R.id.account_profile_image);
         mCountView = (BadgeView) findViewById(R.id.accounts_count);
         mAccountSelectorButton = findViewById(R.id.account_selector_button);
+        mLocationContainer = findViewById(R.id.location_container);
+        mLocationIcon = (ActionIconView) findViewById(R.id.location_icon);
         ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
     }
 
@@ -559,7 +587,8 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         mValidator = new TwidereValidator(this);
         mImageLoader = app.getImageLoaderWrapper();
         setContentView(R.layout.activity_compose);
-        setProgressBarIndeterminateVisibility(false);
+        setSupportActionBar(mToolbar);
+        setSupportProgressBarIndeterminateVisibility(false);
         setFinishOnTouchOutside(false);
         final long[] defaultAccountIds = getAccountIds(this);
         if (defaultAccountIds.length <= 0) {
@@ -575,6 +604,7 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
         mEditText.addTextChangedListener(this);
         mAccountSelectorContainer.setOnClickListener(this);
         mAccountSelectorButton.setOnClickListener(this);
+        mLocationContainer.setOnClickListener(this);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -643,6 +673,7 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
             addIntentToMenu(this, mediaMenuItem.getSubMenu(), imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION);
         }
         setMenu();
+        updateLocationState();
         updateMediaPreview();
         notifyAccountSelectionChanged();
     }
@@ -997,24 +1028,6 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
     private void setMenu() {
         if (mMenuBar == null) return;
         final Menu menu = mMenuBar.getMenu();
-        final MenuItem itemAttachLocation = menu.findItem(MENU_ADD_LOCATION);
-        if (itemAttachLocation != null) {
-            final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-            final int menuHighlight = ThemeUtils.getUserAccentColor(this);
-            if (attachLocation && getLocation()) {
-                itemAttachLocation.setChecked(true);
-                ActionIconDrawable.setMenuHighlight(itemAttachLocation, new TwidereMenuInfo(true, menuHighlight));
-            } else {
-                setProgressVisibility(false);
-                mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, false).apply();
-                itemAttachLocation.setChecked(false);
-                ActionIconDrawable.setMenuHighlight(itemAttachLocation, new TwidereMenuInfo(false, menuHighlight));
-            }
-        }
-        final MenuItem viewItem = menu.findItem(MENU_VIEW);
-        if (viewItem != null) {
-            viewItem.setVisible(mInReplyToStatus != null);
-        }
         final boolean hasMedia = hasMedia(), hasInReplyTo = mInReplyToStatus != null;
 
         /*

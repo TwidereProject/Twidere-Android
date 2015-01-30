@@ -20,6 +20,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -53,7 +54,9 @@
                 android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_marginBottom="@dimen/element_spacing_mlarge"
-                android:layout_marginTop="@dimen/element_spacing_mlarge"/>
+                android:layout_marginTop="@dimen/element_spacing_mlarge"
+                app:sivBorder="true"
+                app:sivBorderWidth="2dp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/other_accounts_list"

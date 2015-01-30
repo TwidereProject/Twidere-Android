@@ -31,8 +31,8 @@ public class UserListViewListHolder extends ViewListHolder {
     public final IColorLabelView content;
     public final ImageView profile_image;
     public final TextView name, description, created_by, members_count, subscribers_count;
-    private float text_size;
     public int position;
+    private float text_size;
 
     public UserListViewListHolder(final View view) {
         super(view);

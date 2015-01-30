@@ -25,22 +25,22 @@ import android.widget.CheckBox;
 
 public class ActivatedCheckBox extends CheckBox {
 
-	public ActivatedCheckBox(final Context context) {
-		super(context);
-	}
+    public ActivatedCheckBox(final Context context) {
+        super(context);
+    }
 
-	public ActivatedCheckBox(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public ActivatedCheckBox(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public ActivatedCheckBox(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public ActivatedCheckBox(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	public void setActivated(final boolean activated) {
-		super.setActivated(activated);
-		setChecked(activated);
-	}
+    @Override
+    public void setActivated(final boolean activated) {
+        super.setActivated(activated);
+        setChecked(activated);
+    }
 
 }

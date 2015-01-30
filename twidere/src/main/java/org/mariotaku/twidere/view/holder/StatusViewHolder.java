@@ -84,43 +84,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
     }
 
-    public void setOnClickListeners() {
-        setStatusClickListener(adapter);
-    }
-
-    public static interface StatusClickListener extends ContentCardClickListener {
-
-        void onUserProfileClick(StatusViewHolder holder, int position);
-
-        void onStatusClick(StatusViewHolder holder, int position);
-    }
-
-    public void setStatusClickListener(StatusClickListener listener) {
-        statusClickListener = listener;
-        itemView.findViewById(R.id.item_content).setOnClickListener(this);
-        itemView.findViewById(R.id.item_menu).setOnClickListener(this);
-
-        itemView.setOnClickListener(this);
-        profileImageView.setOnClickListener(this);
-        mediaPreviewContainer.setOnClickListener(this);
-        replyCountView.setOnClickListener(this);
-        retweetCountView.setOnClickListener(this);
-        favoriteCountView.setOnClickListener(this);
-    }
-
-    public void setupViewOptions() {
-        setTextSize(adapter.getTextSize());
-    }
-
-    public void setTextSize(final float textSize) {
-        nameView.setTextSize(textSize);
-        textView.setTextSize(textSize);
-        screenNameView.setTextSize(textSize * 0.85f);
-        timeView.setTextSize(textSize * 0.85f);
-        replyRetweetView.setTextSize(textSize * 0.75f);
-        replyCountView.setTextSize(textSize);
-        replyCountView.setTextSize(textSize);
-        favoriteCountView.setTextSize(textSize);
+    public void displaySampleStatus() {
+        nameView.setText("User");
+        screenNameView.setText("@user");
+        timeView.setTime(System.currentTimeMillis());
+        textView.setText(R.string.sample_status_text);
+        mediaPreviewContainer.displayMedia(R.drawable.profile_image_nyan_sakamoto,
+                R.drawable.profile_image_nyan_sakamoto_santa);
     }
 
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
@@ -244,25 +214,6 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         }
         displayExtraTypeIcon(status.card_name, status.media != null ? status.media.length : 0);
     }
-
-    private void displayExtraTypeIcon(String cardName, int mediaLength) {
-        if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
-            extraTypeView.setImageResource(R.drawable.ic_action_music);
-            extraTypeView.setVisibility(View.VISIBLE);
-        } else if (TwitterCardUtils.CARD_NAME_ANIMATED_GIF.equals(cardName)) {
-            extraTypeView.setImageResource(R.drawable.ic_action_movie);
-            extraTypeView.setVisibility(View.VISIBLE);
-        } else if (TwitterCardUtils.CARD_NAME_PLAYER.equals(cardName)) {
-            extraTypeView.setImageResource(R.drawable.ic_action_play_circle);
-            extraTypeView.setVisibility(View.VISIBLE);
-        } else if (mediaLength > 0) {
-            extraTypeView.setImageResource(R.drawable.ic_action_gallery);
-            extraTypeView.setVisibility(View.VISIBLE);
-        } else {
-            extraTypeView.setVisibility(View.GONE);
-        }
-    }
-
 
     public void displayStatus(@NonNull Cursor cursor, @NonNull CursorIndices indices,
                               final boolean displayInReplyTo) {
@@ -407,15 +358,6 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         return profileTypeView;
     }
 
-    public void displaySampleStatus() {
-        nameView.setText("User");
-        screenNameView.setText("@user");
-        timeView.setTime(System.currentTimeMillis());
-        textView.setText(R.string.sample_status_text);
-        mediaPreviewContainer.displayMedia(R.drawable.profile_image_nyan_sakamoto,
-                R.drawable.profile_image_nyan_sakamoto_santa);
-    }
-
     @Override
     public void onClick(View v) {
         if (statusClickListener == null) return;
@@ -440,5 +382,62 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
                 break;
             }
         }
+    }
+
+    public void setOnClickListeners() {
+        setStatusClickListener(adapter);
+    }
+
+    public void setStatusClickListener(StatusClickListener listener) {
+        statusClickListener = listener;
+        itemView.findViewById(R.id.item_content).setOnClickListener(this);
+        itemView.findViewById(R.id.item_menu).setOnClickListener(this);
+
+        itemView.setOnClickListener(this);
+        profileImageView.setOnClickListener(this);
+        mediaPreviewContainer.setOnClickListener(this);
+        replyCountView.setOnClickListener(this);
+        retweetCountView.setOnClickListener(this);
+        favoriteCountView.setOnClickListener(this);
+    }
+
+    public void setTextSize(final float textSize) {
+        nameView.setTextSize(textSize);
+        textView.setTextSize(textSize);
+        screenNameView.setTextSize(textSize * 0.85f);
+        timeView.setTextSize(textSize * 0.85f);
+        replyRetweetView.setTextSize(textSize * 0.75f);
+        replyCountView.setTextSize(textSize);
+        replyCountView.setTextSize(textSize);
+        favoriteCountView.setTextSize(textSize);
+    }
+
+    public void setupViewOptions() {
+        setTextSize(adapter.getTextSize());
+    }
+
+    private void displayExtraTypeIcon(String cardName, int mediaLength) {
+        if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
+            extraTypeView.setImageResource(R.drawable.ic_action_music);
+            extraTypeView.setVisibility(View.VISIBLE);
+        } else if (TwitterCardUtils.CARD_NAME_ANIMATED_GIF.equals(cardName)) {
+            extraTypeView.setImageResource(R.drawable.ic_action_movie);
+            extraTypeView.setVisibility(View.VISIBLE);
+        } else if (TwitterCardUtils.CARD_NAME_PLAYER.equals(cardName)) {
+            extraTypeView.setImageResource(R.drawable.ic_action_play_circle);
+            extraTypeView.setVisibility(View.VISIBLE);
+        } else if (mediaLength > 0) {
+            extraTypeView.setImageResource(R.drawable.ic_action_gallery);
+            extraTypeView.setVisibility(View.VISIBLE);
+        } else {
+            extraTypeView.setVisibility(View.GONE);
+        }
+    }
+
+    public static interface StatusClickListener extends ContentCardClickListener {
+
+        void onStatusClick(StatusViewHolder holder, int position);
+
+        void onUserProfileClick(StatusViewHolder holder, int position);
     }
 }

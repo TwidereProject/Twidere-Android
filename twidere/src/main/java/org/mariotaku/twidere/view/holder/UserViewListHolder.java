@@ -30,58 +30,58 @@ import org.mariotaku.twidere.view.iface.IColorLabelView;
 public class UserViewListHolder extends ViewListHolder {
 
     public final IColorLabelView content;
-	public final ImageView profile_image, profile_type;
-	public final TextView name, screen_name, description, location, url, statuses_count, followers_count,
-			friends_count;
-	private boolean account_color_enabled;
-	private float text_size;
-	public int position;
+    public final ImageView profile_image, profile_type;
+    public final TextView name, screen_name, description, location, url, statuses_count, followers_count,
+            friends_count;
+    public int position;
+    private boolean account_color_enabled;
+    private float text_size;
 
-	public UserViewListHolder(final View view) {
-		super(view);
+    public UserViewListHolder(final View view) {
+        super(view);
         content = (IColorLabelView) view.findViewById(R.id.content);
-		profile_image = (ImageView) findViewById(R.id.profile_image);
+        profile_image = (ImageView) findViewById(R.id.profile_image);
         profile_type = (ImageView) findViewById(R.id.profile_type);
-		name = (TextView) findViewById(R.id.name);
-		screen_name = (TextView) findViewById(R.id.screen_name);
-		description = (TextView) findViewById(R.id.description);
-		location = (TextView) findViewById(R.id.location);
-		url = (TextView) findViewById(R.id.url);
-		statuses_count = (TextView) findViewById(R.id.statuses_count);
-		followers_count = (TextView) findViewById(R.id.followers_count);
-		friends_count = (TextView) findViewById(R.id.friends_count);
-	}
+        name = (TextView) findViewById(R.id.name);
+        screen_name = (TextView) findViewById(R.id.screen_name);
+        description = (TextView) findViewById(R.id.description);
+        location = (TextView) findViewById(R.id.location);
+        url = (TextView) findViewById(R.id.url);
+        statuses_count = (TextView) findViewById(R.id.statuses_count);
+        followers_count = (TextView) findViewById(R.id.followers_count);
+        friends_count = (TextView) findViewById(R.id.friends_count);
+    }
 
-	public void setAccountColor(final int color) {
-		content.drawEnd(account_color_enabled ? color : Color.TRANSPARENT);
-	}
+    public void setAccountColor(final int color) {
+        content.drawEnd(account_color_enabled ? color : Color.TRANSPARENT);
+    }
 
-	public void setAccountColorEnabled(final boolean enabled) {
-		account_color_enabled = enabled;
-		if (!account_color_enabled) {
-			content.drawEnd(Color.TRANSPARENT);
-		}
-	}
+    public void setAccountColorEnabled(final boolean enabled) {
+        account_color_enabled = enabled;
+        if (!account_color_enabled) {
+            content.drawEnd(Color.TRANSPARENT);
+        }
+    }
 
-	public void setHighlightColor(final int color) {
-		content.drawBackground(color);
-	}
+    public void setHighlightColor(final int color) {
+        content.drawBackground(color);
+    }
 
-	public void setTextSize(final float text_size) {
-		if (this.text_size == text_size) return;
-		this.text_size = text_size;
-		description.setTextSize(text_size);
-		name.setTextSize(text_size);
-		screen_name.setTextSize(text_size * 0.75f);
-		location.setTextSize(text_size);
-		url.setTextSize(text_size);
-		statuses_count.setTextSize(text_size);
-		followers_count.setTextSize(text_size);
-		friends_count.setTextSize(text_size);
-	}
+    public void setTextSize(final float text_size) {
+        if (this.text_size == text_size) return;
+        this.text_size = text_size;
+        description.setTextSize(text_size);
+        name.setTextSize(text_size);
+        screen_name.setTextSize(text_size * 0.75f);
+        location.setTextSize(text_size);
+        url.setTextSize(text_size);
+        statuses_count.setTextSize(text_size);
+        followers_count.setTextSize(text_size);
+        friends_count.setTextSize(text_size);
+    }
 
-	public void setUserColor(final int color) {
-		content.drawStart(color);
-	}
+    public void setUserColor(final int color) {
+        content.drawStart(color);
+    }
 
 }

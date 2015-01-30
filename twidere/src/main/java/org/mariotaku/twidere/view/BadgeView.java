@@ -61,6 +61,14 @@ public class BadgeView extends View {
         invalidate();
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (!mTextBounds.isEmpty()) {
+            canvas.drawText(mText, mTextX, mTextY, mTextPaint);
+        }
+    }
+
     private void updateTextPosition() {
         final int width = getWidth(), height = getHeight();
         if (width == 0 || height == 0) return;
@@ -76,14 +84,6 @@ public class BadgeView extends View {
             mTextY = contentHeight / 2 + getPaddingTop() + mTextBounds.height() / 2;
         } else {
             mTextBounds.setEmpty();
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (!mTextBounds.isEmpty()) {
-            canvas.drawText(mText, mTextX, mTextY, mTextPaint);
         }
     }
 }

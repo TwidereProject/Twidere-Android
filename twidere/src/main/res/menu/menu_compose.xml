@@ -43,7 +43,7 @@
         android:icon="@drawable/ic_action_reply"
         android:title="@string/original_status"
         android:visible="false"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
     <item
         android:id="@id/add_location"
         android:checkable="true"

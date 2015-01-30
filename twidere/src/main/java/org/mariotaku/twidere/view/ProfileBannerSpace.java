@@ -33,6 +33,12 @@ public class ProfileBannerSpace extends View {
         mSystemWindowsInsets = new Rect();
     }
 
+    @Override
+    protected boolean fitSystemWindows(Rect insets) {
+        mSystemWindowsInsets.set(insets);
+        return super.fitSystemWindows(insets);
+    }
+
     /**
      * Draw nothing.
      *
@@ -40,12 +46,6 @@ public class ProfileBannerSpace extends View {
      */
     @Override
     public void draw(final Canvas canvas) {
-    }
-
-    @Override
-    protected boolean fitSystemWindows(Rect insets) {
-        mSystemWindowsInsets.set(insets);
-        return super.fitSystemWindows(insets);
     }
 
     @Override

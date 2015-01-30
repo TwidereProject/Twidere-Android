@@ -22,10 +22,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/compose_activity"
     android:layout_height="wrap_content"
     android:minWidth="@dimen/compose_min_width"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/compose_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"/>
 
     <RelativeLayout
         android:id="@+id/compose_content"
@@ -80,6 +85,7 @@
 
                 <org.mariotaku.twidere.view.ActionIconView
                     android:layout_width="@dimen/element_size_small"
+                    android:id="@+id/location_icon"
                     android:layout_height="@dimen/element_size_small"
                     android:layout_marginLeft="@dimen/element_spacing_normal"
                     android:layout_marginRight="@dimen/element_spacing_normal"

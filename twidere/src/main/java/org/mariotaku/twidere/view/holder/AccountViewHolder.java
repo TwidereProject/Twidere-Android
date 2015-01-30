@@ -50,11 +50,11 @@ public class AccountViewHolder {
         content.drawEnd(color);
     }
 
-    public void setSortEnabled(boolean enabled) {
-        drag_handle.setVisibility(enabled ? View.VISIBLE : View.GONE);
-    }
-
     public void setIsDefault(final boolean is_default) {
         default_indicator.setVisibility(is_default ? View.VISIBLE : View.GONE);
+    }
+
+    public void setSortEnabled(boolean enabled) {
+        drag_handle.setVisibility(enabled ? View.VISIBLE : View.GONE);
     }
 }

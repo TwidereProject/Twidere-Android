@@ -20,11 +20,8 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
-import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.ActionMenuView;
 import android.util.AttributeSet;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by mariotaku on 15/1/22.

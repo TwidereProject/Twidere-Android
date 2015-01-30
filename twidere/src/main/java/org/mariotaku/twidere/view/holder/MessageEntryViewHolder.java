@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
-import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.view.ShortTimeView;
@@ -40,11 +39,10 @@ import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class MessageEntryViewHolder extends ViewHolder implements OnClickListener {
 
-    private final MessageEntriesAdapter adapter;
-
     public final ImageView profileImageView;
     public final TextView nameView, screenNameView, textView;
     public final ShortTimeView timeView;
+    private final MessageEntriesAdapter adapter;
     private float text_size;
     private boolean account_color_enabled;
 

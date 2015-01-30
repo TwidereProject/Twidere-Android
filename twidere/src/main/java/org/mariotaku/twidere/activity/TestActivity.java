@@ -23,12 +23,14 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 
 public class TestActivity extends Activity implements Constants {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test);
     }
 
 }

@@ -24,10 +24,10 @@ import android.widget.CheckBox;
 
 public final class CheckableTwoLineWithIconViewHolder extends TwoLineWithIconViewHolder {
 
-	public final CheckBox checkbox;
+    public final CheckBox checkbox;
 
-	public CheckableTwoLineWithIconViewHolder(final View view) {
-		super(view);
-		checkbox = (CheckBox) findViewById(android.R.id.checkbox);
-	}
+    public CheckableTwoLineWithIconViewHolder(final View view) {
+        super(view);
+        checkbox = (CheckBox) findViewById(android.R.id.checkbox);
+    }
 }

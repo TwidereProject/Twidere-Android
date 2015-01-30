@@ -50,6 +50,15 @@ public class BottomDividerFrameLayout extends FrameLayout {
     }
 
     @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        final Drawable divider = mDividerDrawable;
+        if (divider != null) {
+            divider.draw(canvas);
+        }
+    }
+
+    @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         final Drawable divider = mDividerDrawable;
@@ -57,15 +66,6 @@ public class BottomDividerFrameLayout extends FrameLayout {
             final int drawableLeft = 0, drawableRight = drawableLeft + getMeasuredWidth();
             final int drawableBottom = getMeasuredHeight(), drawableTop = drawableBottom - divider.getIntrinsicHeight();
             divider.setBounds(drawableLeft, drawableTop, drawableRight, drawableBottom);
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        final Drawable divider = mDividerDrawable;
-        if (divider != null) {
-            divider.draw(canvas);
         }
     }
 }

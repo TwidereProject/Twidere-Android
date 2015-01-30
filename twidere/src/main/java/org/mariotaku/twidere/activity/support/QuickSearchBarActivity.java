@@ -52,6 +52,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
@@ -68,8 +69,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener;
+import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener.DismissCallbacks;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +84,7 @@ import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
  * Created by mariotaku on 15/1/6.
  */
 public class QuickSearchBarActivity extends BaseSupportActivity implements OnClickListener,
-        OnEditorActionListener, LoaderCallbacks<List<SuggestionItem>>, TextWatcher, OnItemSelectedListener, OnItemClickListener {
+        OnEditorActionListener, LoaderCallbacks<List<SuggestionItem>>, TextWatcher, OnItemSelectedListener, OnItemClickListener, DismissCallbacks {
 
     private Spinner mAccountSpinner;
     private EditText mSearchQuery;
@@ -91,6 +95,27 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+    }
+
+    @Override
+    public boolean canDismiss(int position) {
+        return position < getHistorySize(mSearchQuery.getText());
+    }
+
+    @Override
+    public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+        final long[] ids = new long[reverseSortedPositions.length];
+        for (int i = 0, j = reverseSortedPositions.length; i < j; i++) {
+            final int position = reverseSortedPositions[i];
+            final SearchHistoryItem item = (SearchHistoryItem) mUsersSearchAdapter.getItem(position);
+            mUsersSearchAdapter.removeItemAt(position);
+            ids[i] = item.getCursorId();
+        }
+        final ContentResolver cr = getContentResolver();
+        final Long[] idsObject = ArrayUtils.toObject(ids);
+        ContentResolverUtils.bulkDelete(cr, SearchHistory.CONTENT_URI, SearchHistory._ID, idsObject,
+                null, false);
+        getSupportLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -134,6 +159,9 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
         mUsersSearchAdapter = new SuggestionsAdapter(this);
         mSuggestionsList.setAdapter(mUsersSearchAdapter);
         mSuggestionsList.setOnItemClickListener(this);
+        final SwipeDismissListViewTouchListener listener = new SwipeDismissListViewTouchListener(mSuggestionsList, this);
+        mSuggestionsList.setOnTouchListener(listener);
+        mSuggestionsList.setOnScrollListener(listener.makeScrollListener());
         mSearchSubmit.setOnClickListener(this);
         mSearchQuery.setOnEditorActionListener(this);
         mSearchQuery.addTextChangedListener(this);
@@ -272,9 +300,15 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
     static class SearchHistoryItem extends BaseClickableItem {
 
         static final int ITEM_VIEW_TYPE = 1;
+        private final long mCursorId;
         private final String mQuery;
 
-        public SearchHistoryItem(String query) {
+        public long getCursorId() {
+            return mCursorId;
+        }
+
+        public SearchHistoryItem(long cursorId, String query) {
+            mCursorId = cursorId;
             mQuery = query;
         }
 
@@ -467,10 +501,20 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
             return mNicknameOnly;
         }
 
+        public void removeItemAt(int position) {
+            if (mData == null) return;
+            mData.remove(position);
+            notifyDataSetChanged();
+        }
+
         public void setData(List<SuggestionItem> data) {
             mData = data;
             notifyDataSetChanged();
         }
+    }
+
+    private static int getHistorySize(CharSequence query) {
+        return TextUtils.isEmpty(query) ? 3 : 2;
     }
 
     public static class SuggestionsLoader extends AsyncTaskLoader<List<SuggestionItem>> {
@@ -490,12 +534,12 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
             final Context context = getContext();
             final ContentResolver resolver = context.getContentResolver();
             final List<SuggestionItem> result = new ArrayList<>();
-            final String[] historyProjection = {SearchHistory.QUERY};
+            final String[] historyProjection = {SearchHistory._ID, SearchHistory.QUERY};
             final Cursor historyCursor = resolver.query(SearchHistory.CONTENT_URI,
                     historyProjection, null, null, SearchHistory.DEFAULT_SORT_ORDER);
-            for (int i = 0, j = Math.min(emptyQuery ? 3 : 2, historyCursor.getCount()); i < j; i++) {
+            for (int i = 0, j = Math.min(getHistorySize(mQuery), historyCursor.getCount()); i < j; i++) {
                 historyCursor.moveToPosition(i);
-                result.add(new SearchHistoryItem(historyCursor.getString(0)));
+                result.add(new SearchHistoryItem(historyCursor.getLong(0), historyCursor.getString(1)));
             }
             historyCursor.close();
             if (!emptyQuery) {

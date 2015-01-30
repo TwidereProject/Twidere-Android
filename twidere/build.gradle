@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 apply from: rootProject.file('signing.gradle')
 
@@ -10,7 +12,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 99
-        versionName "0.3.0-dev"
+        versionName "0.3.0"
         multiDexEnabled true
     }
     compileOptions {
@@ -32,10 +34,14 @@ android {
     }
     productFlavors {
         google {
-            versionName = versionName + '-google'
         }
         fdroid {
-            versionName = versionName + '-fdroid'
+        }
+    }
+    buildTypes {
+        debug {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
+            versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
         }
     }
 }

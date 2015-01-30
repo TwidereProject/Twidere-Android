@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
     private TouchInterceptor mTouchInterceptor;
     private OnSizeChangedListener mOnSizeChangedListener;
     private OnSelectionChangeListener mOnSelectionChangeListener;
+    private OnFitSystemWindowsListener mOnFitSystemWindowsListener;
 
     public StatusTextView(final Context context) {
         super(context);
@@ -27,25 +29,8 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
     }
 
     @Override
-    public final boolean dispatchTouchEvent(@NonNull final MotionEvent event) {
-        if (mTouchInterceptor != null) {
-            final boolean ret = mTouchInterceptor.dispatchTouchEvent(this, event);
-            if (ret) return true;
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
-    @Override
-    public final boolean onTouchEvent(@NonNull final MotionEvent event) {
-        if (mTouchInterceptor != null) {
-            final boolean ret = mTouchInterceptor.onTouchEvent(this, event);
-            if (ret) return true;
-        }
-        return super.onTouchEvent(event);
-    }
-
-    public void setOnSelectionChangeListener(final OnSelectionChangeListener l) {
-        mOnSelectionChangeListener = l;
+    public void setOnFitSystemWindowsListener(OnFitSystemWindowsListener listener) {
+        mOnFitSystemWindowsListener = listener;
     }
 
     @Override
@@ -58,6 +43,35 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
         mTouchInterceptor = listener;
     }
 
+    public void setOnSelectionChangeListener(final OnSelectionChangeListener l) {
+        mOnSelectionChangeListener = l;
+    }
+
+    @Override
+    protected boolean fitSystemWindows(@NonNull Rect insets) {
+        if (mOnFitSystemWindowsListener != null) {
+            mOnFitSystemWindowsListener.onFitSystemWindows(insets);
+        }
+        return super.fitSystemWindows(insets);
+    }
+
+    @Override
+    public final boolean dispatchTouchEvent(@NonNull final MotionEvent event) {
+        if (mTouchInterceptor != null) {
+            final boolean ret = mTouchInterceptor.dispatchTouchEvent(this, event);
+            if (ret) return true;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected final void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (mOnSizeChangedListener != null) {
+            mOnSizeChangedListener.onSizeChanged(this, w, h, oldw, oldh);
+        }
+    }
+
     @Override
     protected void onSelectionChanged(final int selStart, final int selEnd) {
         super.onSelectionChanged(selStart, selEnd);
@@ -67,11 +81,12 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
     }
 
     @Override
-    protected final void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (mOnSizeChangedListener != null) {
-            mOnSizeChangedListener.onSizeChanged(this, w, h, oldw, oldh);
+    public final boolean onTouchEvent(@NonNull final MotionEvent event) {
+        if (mTouchInterceptor != null) {
+            final boolean ret = mTouchInterceptor.onTouchEvent(this, event);
+            if (ret) return true;
         }
+        return super.onTouchEvent(event);
     }
 
     public interface OnSelectionChangeListener {

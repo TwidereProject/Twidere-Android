@@ -150,62 +150,6 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
         }
     }
 
-    private Spanned getTitleStringAboutMe(int stringRes, int stringResMulti, ParcelableUser[] sources) {
-        if (sources == null || sources.length == 0) return null;
-        final Context context = adapter.getContext();
-        final Resources resources = context.getResources();
-        final Configuration configuration = resources.getConfiguration();
-        final SpannableString firstDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                sources[0]));
-        firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if (sources.length == 1) {
-            final String format = context.getString(stringRes);
-            return SpanFormatter.format(configuration.locale, format, firstDisplayName);
-        } else if (sources.length == 2) {
-            final String format = context.getString(stringResMulti);
-            final SpannableString secondDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context, sources[1]));
-            secondDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return SpanFormatter.format(configuration.locale, format, firstDisplayName,
-                    secondDisplayName);
-        } else {
-            final int othersCount = sources.length - 1;
-            final SpannableString nOthers = new SpannableString(resources.getQuantityString(R.plurals.N_others, othersCount, othersCount));
-            nOthers.setSpan(new StyleSpan(Typeface.BOLD), 0, nOthers.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            final String format = context.getString(stringResMulti);
-            return SpanFormatter.format(configuration.locale, format, firstDisplayName, nOthers);
-        }
-    }
-
-
-    private Spanned getTitleStringByFriends(int stringRes, int stringResMulti, ParcelableUser[] sources, ParcelableUser[] targets) {
-        if (sources == null || sources.length == 0) return null;
-        final Context context = adapter.getContext();
-        final Resources resources = context.getResources();
-        final Configuration configuration = resources.getConfiguration();
-        final SpannableString firstSourceName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                sources[0]));
-        firstSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        final SpannableString firstTargetName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                targets[0]));
-        firstTargetName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstTargetName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if (sources.length == 1) {
-            final String format = context.getString(stringRes);
-            return SpanFormatter.format(configuration.locale, format, firstSourceName, firstTargetName);
-        } else if (sources.length == 2) {
-            final String format = context.getString(stringResMulti);
-            final SpannableString secondSourceName = new SpannableString(UserColorNameUtils.getDisplayName(context, sources[1]));
-            secondSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return SpanFormatter.format(configuration.locale, format, firstSourceName,
-                    secondSourceName, firstTargetName);
-        } else {
-            final int othersCount = sources.length - 1;
-            final SpannableString nOthers = new SpannableString(resources.getQuantityString(R.plurals.N_others, othersCount, othersCount));
-            nOthers.setSpan(new StyleSpan(Typeface.BOLD), 0, nOthers.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            final String format = context.getString(stringResMulti);
-            return SpanFormatter.format(configuration.locale, format, firstSourceName, nOthers, firstTargetName);
-        }
-    }
-
     public void setTextSize(float textSize) {
         titleView.setTextSize(textSize);
         summaryView.setTextSize(textSize * 0.85f);
@@ -242,6 +186,61 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             profileImageMoreNumber.setText(context.getString(R.string.and_more, moreNumber));
         } else {
             profileImageMoreNumber.setVisibility(View.GONE);
+        }
+    }
+
+    private Spanned getTitleStringAboutMe(int stringRes, int stringResMulti, ParcelableUser[] sources) {
+        if (sources == null || sources.length == 0) return null;
+        final Context context = adapter.getContext();
+        final Resources resources = context.getResources();
+        final Configuration configuration = resources.getConfiguration();
+        final SpannableString firstDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context,
+                sources[0]));
+        firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (sources.length == 1) {
+            final String format = context.getString(stringRes);
+            return SpanFormatter.format(configuration.locale, format, firstDisplayName);
+        } else if (sources.length == 2) {
+            final String format = context.getString(stringResMulti);
+            final SpannableString secondDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context, sources[1]));
+            secondDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return SpanFormatter.format(configuration.locale, format, firstDisplayName,
+                    secondDisplayName);
+        } else {
+            final int othersCount = sources.length - 1;
+            final SpannableString nOthers = new SpannableString(resources.getQuantityString(R.plurals.N_others, othersCount, othersCount));
+            nOthers.setSpan(new StyleSpan(Typeface.BOLD), 0, nOthers.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            final String format = context.getString(stringResMulti);
+            return SpanFormatter.format(configuration.locale, format, firstDisplayName, nOthers);
+        }
+    }
+
+    private Spanned getTitleStringByFriends(int stringRes, int stringResMulti, ParcelableUser[] sources, ParcelableUser[] targets) {
+        if (sources == null || sources.length == 0) return null;
+        final Context context = adapter.getContext();
+        final Resources resources = context.getResources();
+        final Configuration configuration = resources.getConfiguration();
+        final SpannableString firstSourceName = new SpannableString(UserColorNameUtils.getDisplayName(context,
+                sources[0]));
+        firstSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        final SpannableString firstTargetName = new SpannableString(UserColorNameUtils.getDisplayName(context,
+                targets[0]));
+        firstTargetName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstTargetName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (sources.length == 1) {
+            final String format = context.getString(stringRes);
+            return SpanFormatter.format(configuration.locale, format, firstSourceName, firstTargetName);
+        } else if (sources.length == 2) {
+            final String format = context.getString(stringResMulti);
+            final SpannableString secondSourceName = new SpannableString(UserColorNameUtils.getDisplayName(context, sources[1]));
+            secondSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return SpanFormatter.format(configuration.locale, format, firstSourceName,
+                    secondSourceName, firstTargetName);
+        } else {
+            final int othersCount = sources.length - 1;
+            final SpannableString nOthers = new SpannableString(resources.getQuantityString(R.plurals.N_others, othersCount, othersCount));
+            nOthers.setSpan(new StyleSpan(Typeface.BOLD), 0, nOthers.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            final String format = context.getString(stringResMulti);
+            return SpanFormatter.format(configuration.locale, format, firstSourceName, nOthers, firstTargetName);
         }
     }
 

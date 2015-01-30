@@ -80,18 +80,10 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         a.recycle();
     }
 
-    private void setTabShowDivider(boolean showDivider) {
-        if (showDivider) {
-            addItemDecoration(mItemDecoration);
-        } else {
-            removeItemDecoration(mItemDecoration);
-        }
-    }
-
-
     public TabPagerIndicator(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
 
     public TabPagerIndicator(Context context) {
         this(context, null);
@@ -239,6 +231,14 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         notifyDataSetChanged();
     }
 
+    private void setTabShowDivider(boolean showDivider) {
+        if (showDivider) {
+            addItemDecoration(mItemDecoration);
+        } else {
+            removeItemDecoration(mItemDecoration);
+        }
+    }
+
     private void setVerticalPadding(int padding) {
         mVerticalPadding = padding;
         notifyDataSetChanged();
@@ -249,80 +249,46 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
     public @interface DisplayOption {
     }
 
-    private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> {
+    public static final class ItemLayout extends RelativeLayout {
 
-        private final TabPagerIndicator mIndicator;
-        private final SparseIntArray mUnreadCounts;
-        private Context mItemContext;
-        private LayoutInflater mInflater;
+        private final Paint mStripPaint;
 
-        private TabProvider mTabProvider;
-        private int mStripColor, mIconColor;
-        private boolean mDisplayBadge;
+        private boolean mIsCurrent;
+        private int mStripColor;
+        private int mStripHeight;
 
-        public TabPagerIndicatorAdapter(TabPagerIndicator indicator) {
-            mIndicator = indicator;
-            mUnreadCounts = new SparseIntArray();
+        public ItemLayout(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            mStripPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            setWillNotDraw(false);
         }
 
-        public Context getItemContext() {
-            return mItemContext;
+        public void setIsCurrent(boolean isCurrent) {
+            if (mIsCurrent == isCurrent) return;
+            mIsCurrent = isCurrent;
+            invalidate();
         }
 
-        public void setItemContext(Context itemContext) {
-            mItemContext = itemContext;
-            mInflater = LayoutInflater.from(itemContext);
+        public void setStripColor(int stripColor) {
+            if (mStripColor == stripColor) return;
+            mStripColor = stripColor;
+            mStripPaint.setColor(stripColor);
+            invalidate();
         }
 
-        @Override
-        public TabItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (mIndicator == null) throw new IllegalStateException("item context not set");
-            final View view = mInflater.inflate(R.layout.layout_tab_item, parent, false);
-            return new TabItemHolder(mIndicator, view);
-        }
-
-        @Override
-        public void onBindViewHolder(TabItemHolder holder, int position) {
-            final Drawable icon = mTabProvider.getPageIcon(position);
-            final CharSequence title = mTabProvider.getPageTitle(position);
-            holder.setTabData(icon, title, mIndicator.getCurrentItem() == position);
-            holder.setPadding(mIndicator.getTabHorizontalPadding(), mIndicator.getTabVerticalPadding());
-            holder.setStripHeight(mIndicator.getStripHeight());
-            holder.setStripColor(mStripColor);
-            holder.setIconColor(mIconColor);
-            holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge);
-            holder.setDisplayOption(mIndicator.isIconDisplayed(), mIndicator.isLabelDisplayed());
+        public void setStripHeight(int stripHeight) {
+            if (mStripHeight == stripHeight) return;
+            mStripHeight = stripHeight;
+            invalidate();
         }
 
         @Override
-        public int getItemCount() {
-            if (mTabProvider == null) return 0;
-            return mTabProvider.getCount();
-        }
-
-        public void setBadge(int position, int count) {
-            mUnreadCounts.put(position, count);
-            notifyDataSetChanged();
-        }
-
-        public void setDisplayBadge(boolean display) {
-            mDisplayBadge = display;
-            notifyDataSetChanged();
-        }
-
-        public void setIconColor(int color) {
-            mIconColor = color;
-            notifyDataSetChanged();
-        }
-
-        public void setStripColor(int color) {
-            mStripColor = color;
-            notifyDataSetChanged();
-        }
-
-        public void setTabProvider(TabProvider tabProvider) {
-            mTabProvider = tabProvider;
-            notifyDataSetChanged();
+        protected void onDraw(Canvas canvas) {
+            if (mIsCurrent) {
+                final int width = canvas.getWidth(), height = canvas.getHeight();
+                canvas.drawRect(0, height - mStripHeight, width, height, mStripPaint);
+            }
+            super.onDraw(canvas);
         }
     }
 
@@ -419,46 +385,80 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         }
     }
 
-    public static final class ItemLayout extends RelativeLayout {
+    private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> {
 
-        private final Paint mStripPaint;
+        private final TabPagerIndicator mIndicator;
+        private final SparseIntArray mUnreadCounts;
+        private Context mItemContext;
+        private LayoutInflater mInflater;
 
-        private boolean mIsCurrent;
-        private int mStripColor;
-        private int mStripHeight;
+        private TabProvider mTabProvider;
+        private int mStripColor, mIconColor;
+        private boolean mDisplayBadge;
 
-        public ItemLayout(Context context, AttributeSet attrs) {
-            super(context, attrs);
-            mStripPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            setWillNotDraw(false);
+        public TabPagerIndicatorAdapter(TabPagerIndicator indicator) {
+            mIndicator = indicator;
+            mUnreadCounts = new SparseIntArray();
         }
 
-        public void setIsCurrent(boolean isCurrent) {
-            if (mIsCurrent == isCurrent) return;
-            mIsCurrent = isCurrent;
-            invalidate();
+        public Context getItemContext() {
+            return mItemContext;
         }
 
-        public void setStripColor(int stripColor) {
-            if (mStripColor == stripColor) return;
-            mStripColor = stripColor;
-            mStripPaint.setColor(stripColor);
-            invalidate();
-        }
-
-        public void setStripHeight(int stripHeight) {
-            if (mStripHeight == stripHeight) return;
-            mStripHeight = stripHeight;
-            invalidate();
+        public void setItemContext(Context itemContext) {
+            mItemContext = itemContext;
+            mInflater = LayoutInflater.from(itemContext);
         }
 
         @Override
-        protected void onDraw(Canvas canvas) {
-            if (mIsCurrent) {
-                final int width = canvas.getWidth(), height = canvas.getHeight();
-                canvas.drawRect(0, height - mStripHeight, width, height, mStripPaint);
-            }
-            super.onDraw(canvas);
+        public TabItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (mIndicator == null) throw new IllegalStateException("item context not set");
+            final View view = mInflater.inflate(R.layout.layout_tab_item, parent, false);
+            return new TabItemHolder(mIndicator, view);
+        }
+
+        @Override
+        public void onBindViewHolder(TabItemHolder holder, int position) {
+            final Drawable icon = mTabProvider.getPageIcon(position);
+            final CharSequence title = mTabProvider.getPageTitle(position);
+            holder.setTabData(icon, title, mIndicator.getCurrentItem() == position);
+            holder.setPadding(mIndicator.getTabHorizontalPadding(), mIndicator.getTabVerticalPadding());
+            holder.setStripHeight(mIndicator.getStripHeight());
+            holder.setStripColor(mStripColor);
+            holder.setIconColor(mIconColor);
+            holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge);
+            holder.setDisplayOption(mIndicator.isIconDisplayed(), mIndicator.isLabelDisplayed());
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mTabProvider == null) return 0;
+            return mTabProvider.getCount();
+        }
+
+        public void setBadge(int position, int count) {
+            mUnreadCounts.put(position, count);
+            notifyDataSetChanged();
+        }
+
+        public void setDisplayBadge(boolean display) {
+            mDisplayBadge = display;
+            notifyDataSetChanged();
+        }
+
+        public void setIconColor(int color) {
+            mIconColor = color;
+            notifyDataSetChanged();
+        }
+
+        public void setStripColor(int color) {
+            mStripColor = color;
+            notifyDataSetChanged();
+        }
+
+        public void setTabProvider(TabProvider tabProvider) {
+            mTabProvider = tabProvider;
+            notifyDataSetChanged();
         }
     }
 }

@@ -256,6 +256,10 @@ public class ShapedImageView extends ImageView {
         invalidate();
     }
 
+    public void setCornerRadius(float radius) {
+        mCornerRadius = radius;
+    }
+
     public void setCornerRadiusRatio(float ratio) {
         mCornerRadiusRatio = ratio;
     }
@@ -415,10 +419,6 @@ public class ShapedImageView extends ImageView {
             return mCornerRadius;
         }
         return 0;
-    }
-
-    public void setCornerRadius(float radius) {
-        mCornerRadius = radius;
     }
 
     private void initOutlineProvider() {

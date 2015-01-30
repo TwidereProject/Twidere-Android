@@ -17,19 +17,22 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -38,6 +41,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.loader.support.TileImageLoader;
+import org.mariotaku.twidere.loader.support.TileImageLoader.DownloadListener;
 import org.mariotaku.twidere.loader.support.TileImageLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -77,12 +81,19 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
     }
 
     public static final class MediaPageFragment extends BaseSupportFragment
-            implements TileImageLoader.DownloadListener, LoaderManager.LoaderCallbacks<TileImageLoader.Result> {
+            implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener {
 
         private TouchImageView mImageView;
         private ProgressBar mProgressBar;
         private boolean mLoaderInitialized;
         private long mContentLength;
+
+        @Override
+        public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onBaseViewCreated(view, savedInstanceState);
+            mImageView = (TouchImageView) view.findViewById(R.id.image_view);
+            mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
+        }
 
         @Override
         public Loader<Result> onCreateLoader(final int id, final Bundle args) {
@@ -95,8 +106,66 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         }
 
         @Override
+        public void onLoadFinished(final Loader<TileImageLoader.Result> loader, final TileImageLoader.Result data) {
+            if (data.hasData()) {
+                mImageView.setVisibility(View.VISIBLE);
+                if (data.useDecoder) {
+                    TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(),
+                            null, new OnInitializeListener() {
+                                @Override
+                                public void onStartInitialization() {
+
+                                }
+
+                                @Override
+                                public void onEndInitialization() {
+                                    mImageView.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            updateScaleLimit();
+                                        }
+                                    });
+                                }
+                            });
+                } else {
+                    mImageView.setImageBitmap(data.bitmap);
+                    updateScaleLimit();
+                }
+            } else {
+                mImageView.setVisibility(View.GONE);
+                Utils.showErrorMessage(getActivity(), null, data.exception, true);
+            }
+            mProgressBar.setVisibility(View.GONE);
+            mProgressBar.setProgress(0);
+            invalidateOptionsMenu();
+        }
+
+        @Override
+        public void onLoaderReset(final Loader<TileImageLoader.Result> loader) {
+
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_media_page, container, false);
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            loadImage();
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            mImageView.addOnLayoutChangeListener(this);
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            mImageView.removeOnLayoutChangeListener(this);
         }
 
         @Override
@@ -116,31 +185,6 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
             mProgressBar.setMax(total > 0 ? (int) (total / 1024) : 0);
         }
 
-
-        @Override
-        public void onLoaderReset(final Loader<TileImageLoader.Result> loader) {
-
-        }
-
-        @Override
-        public void onLoadFinished(final Loader<TileImageLoader.Result> loader, final TileImageLoader.Result data) {
-            if (data.hasData()) {
-                mImageView.setVisibility(View.VISIBLE);
-                if (data.useDecoder) {
-                    TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(),
-                            null, null);
-                } else {
-                    mImageView.setImageBitmap(data.bitmap);
-                }
-            } else {
-                mImageView.setVisibility(View.GONE);
-                Utils.showErrorMessage(getActivity(), null, data.exception, true);
-            }
-            mProgressBar.setVisibility(View.GONE);
-            mProgressBar.setProgress(0);
-            invalidateOptionsMenu();
-        }
-
         @Override
         public void onProgressUpdate(final long downloaded) {
             if (mContentLength == 0) {
@@ -152,16 +196,8 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         }
 
         @Override
-        public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onBaseViewCreated(view, savedInstanceState);
-            mImageView = (TouchImageView) view.findViewById(R.id.image_view);
-            mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
-        }
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
 
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            loadImage();
         }
 
         private void loadImage() {
@@ -172,6 +208,18 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
             } else {
                 getLoaderManager().restartLoader(0, getArguments(), this);
             }
+        }
+
+        private void updateScaleLimit() {
+            final int viewWidth = mImageView.getWidth(), viewHeight = mImageView.getHeight();
+            final Drawable drawable = mImageView.getDrawable();
+            if (drawable == null || viewWidth <= 0 || viewHeight <= 0) return;
+            final int drawableWidth = drawable.getIntrinsicWidth();
+            final int drawableHeight = drawable.getIntrinsicHeight();
+            if (drawableWidth <= 0 || drawableHeight <= 0) return;
+            final float widthRatio = viewWidth / (float) drawableWidth;
+            final float heightRatio = viewHeight / (float) drawableHeight;
+            mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
         }
     }
 

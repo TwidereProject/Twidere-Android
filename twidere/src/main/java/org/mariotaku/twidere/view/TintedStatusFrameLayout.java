@@ -72,20 +72,30 @@ public class TintedStatusFrameLayout extends FrameLayout {
         updateAlpha();
     }
 
+    public void setDrawColor(boolean color) {
+        mDrawColor = color;
+        invalidate();
+    }
+
+    public void setDrawShadow(boolean shadow) {
+        mDrawShadow = shadow;
+        invalidate();
+    }
+
+    public void setFactor(float f) {
+        mFactor = f;
+        updateAlpha();
+    }
+
     public void setShadowColor(int color) {
         mShadowPaint.setColor(color);
         mShadowAlpha = Color.alpha(color);
         updateAlpha();
     }
 
-    @Override
-    protected boolean fitSystemWindows(@NonNull Rect insets) {
-        setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
-        final Context context = getContext();
-        if (context instanceof FitSystemWindowsCallback) {
-            ((FitSystemWindowsCallback) context).fitSystemWindows(insets);
-        }
-        return super.fitSystemWindows(insets);
+    public void setStatusBarHeight(int height) {
+        mStatusBarHeight = height;
+        invalidate();
     }
 
     @Override
@@ -99,24 +109,14 @@ public class TintedStatusFrameLayout extends FrameLayout {
         canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mDrawColor ? mColorPaint : mBlackPaint);
     }
 
-    public void setStatusBarHeight(int height) {
-        mStatusBarHeight = height;
-        invalidate();
-    }
-
-    public void setFactor(float f) {
-        mFactor = f;
-        updateAlpha();
-    }
-
-    public void setDrawShadow(boolean shadow) {
-        mDrawShadow = shadow;
-        invalidate();
-    }
-
-    public void setDrawColor(boolean color) {
-        mDrawColor = color;
-        invalidate();
+    @Override
+    protected boolean fitSystemWindows(@NonNull Rect insets) {
+        setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
+        final Context context = getContext();
+        if (context instanceof FitSystemWindowsCallback) {
+            ((FitSystemWindowsCallback) context).fitSystemWindows(insets);
+        }
+        return super.fitSystemWindows(insets);
     }
 
     private void updateAlpha() {

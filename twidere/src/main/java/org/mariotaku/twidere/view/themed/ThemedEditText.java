@@ -30,18 +30,18 @@ import org.mariotaku.twidere.view.iface.IThemedView;
 
 public class ThemedEditText extends EditText implements IThemedView {
 
-	public ThemedEditText(final Context context) {
-		this(context, null);
-	}
+    public ThemedEditText(final Context context) {
+        this(context, null);
+    }
 
-	public ThemedEditText(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.editTextStyle);
-	}
+    public ThemedEditText(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.editTextStyle);
+    }
 
-	public ThemedEditText(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
+    public ThemedEditText(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
         ThemeUtils.initTextView(this);
-	}
+    }
 
     @Override
     public void setThemeTintColor(ColorStateList color) {

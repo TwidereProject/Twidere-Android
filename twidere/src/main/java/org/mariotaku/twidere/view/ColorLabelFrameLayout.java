@@ -28,65 +28,65 @@ import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 public class ColorLabelFrameLayout extends FrameLayout implements IColorLabelView {
 
-	private final Helper mHelper;
+    private final Helper mHelper;
 
-	public ColorLabelFrameLayout(final Context context) {
-		this(context, null);
-	}
+    public ColorLabelFrameLayout(final Context context) {
+        this(context, null);
+    }
 
-	public ColorLabelFrameLayout(final Context context, final AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    public ColorLabelFrameLayout(final Context context, final AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	public ColorLabelFrameLayout(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-		mHelper = new Helper(this, context, attrs, defStyle);
-	}
+    public ColorLabelFrameLayout(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+        mHelper = new Helper(this, context, attrs, defStyle);
+    }
 
-	@Override
-	public void drawBackground(final int color) {
-		mHelper.drawBackground(color);
-	}
+    @Override
+    public void drawBackground(final int color) {
+        mHelper.drawBackground(color);
+    }
 
-	@Override
-	public void drawBottom(final int... colors) {
-		mHelper.drawBottom(colors);
-	}
+    @Override
+    public void drawBottom(final int... colors) {
+        mHelper.drawBottom(colors);
+    }
 
-	@Override
-	public void drawEnd(final int... colors) {
-		mHelper.drawEnd(colors);
-	}
+    @Override
+    public void drawEnd(final int... colors) {
+        mHelper.drawEnd(colors);
+    }
 
-	@Override
-	public void drawLabel(final int[] start, final int[] end, final int[] top, final int[] bottom, final int background) {
-		mHelper.drawLabel(start, end, top, bottom, background);
-	}
+    @Override
+    public void drawLabel(final int[] start, final int[] end, final int[] top, final int[] bottom, final int background) {
+        mHelper.drawLabel(start, end, top, bottom, background);
+    }
 
-	@Override
-	public void drawStart(final int... colors) {
-		mHelper.drawStart(colors);
-	}
+    @Override
+    public void drawStart(final int... colors) {
+        mHelper.drawStart(colors);
+    }
 
-	@Override
-	public void drawTop(final int... colors) {
-		mHelper.drawTop(colors);
-	}
+    @Override
+    public void drawTop(final int... colors) {
+        mHelper.drawTop(colors);
+    }
 
-	@Override
-	public boolean isPaddingsIgnored() {
-		return mHelper.isPaddingsIgnored();
-	}
+    @Override
+    public boolean isPaddingsIgnored() {
+        return mHelper.isPaddingsIgnored();
+    }
 
-	@Override
-	public void setIgnorePaddings(final boolean ignorePaddings) {
-		mHelper.setIgnorePaddings(ignorePaddings);
-	}
+    @Override
+    public void setIgnorePaddings(final boolean ignorePaddings) {
+        mHelper.setIgnorePaddings(ignorePaddings);
+    }
 
-	@Override
-	protected void dispatchDraw(final Canvas canvas) {
-		mHelper.dispatchDrawBackground(canvas);
-		super.dispatchDraw(canvas);
-		mHelper.dispatchDrawLabels(canvas);
-	}
+    @Override
+    protected void dispatchDraw(final Canvas canvas) {
+        mHelper.dispatchDrawBackground(canvas);
+        super.dispatchDraw(canvas);
+        mHelper.dispatchDrawLabels(canvas);
+    }
 }

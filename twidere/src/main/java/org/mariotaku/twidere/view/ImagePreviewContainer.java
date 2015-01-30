@@ -25,24 +25,24 @@ import android.widget.FrameLayout;
 
 public class ImagePreviewContainer extends FrameLayout {
 
-	public ImagePreviewContainer(final Context context) {
-		this(context, null);
-	}
+    public ImagePreviewContainer(final Context context) {
+        this(context, null);
+    }
 
-	public ImagePreviewContainer(final Context context, final AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    public ImagePreviewContainer(final Context context, final AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	public ImagePreviewContainer(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public ImagePreviewContainer(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-		final int width = MeasureSpec.getSize(widthMeasureSpec), height = width / 2;
-		final int hSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-		super.onMeasure(widthMeasureSpec, hSpec);
-		setMeasuredDimension(width, height);
-	}
+    @Override
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        final int width = MeasureSpec.getSize(widthMeasureSpec), height = width / 2;
+        final int hSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        super.onMeasure(widthMeasureSpec, hSpec);
+        setMeasuredDimension(width, height);
+    }
 
 }

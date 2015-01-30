@@ -26,23 +26,23 @@ import org.mariotaku.twidere.Constants;
 
 public class ViewListHolder implements Constants {
 
-	public View view;
+    public View view;
 
-	public ViewListHolder(final View view) {
-		if (view == null) throw new NullPointerException();
-		this.view = view;
-	}
+    public ViewListHolder(final View view) {
+        if (view == null) throw new NullPointerException();
+        this.view = view;
+    }
 
-	public View findViewById(final int id) {
-		return view.findViewById(id);
-	}
+    public View findViewById(final int id) {
+        return view.findViewById(id);
+    }
 
-	public Context getContext() {
-		return view.getContext();
-	}
+    public Context getContext() {
+        return view.getContext();
+    }
 
-	protected String getString(final int resId, final Object... formatArgs) {
-		return getContext().getString(resId, formatArgs);
-	}
+    protected String getString(final int resId, final Object... formatArgs) {
+        return getContext().getString(resId, formatArgs);
+    }
 
 }
