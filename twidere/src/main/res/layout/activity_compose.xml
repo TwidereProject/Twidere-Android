@@ -27,11 +27,6 @@
     android:minWidth="@dimen/compose_min_width"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/compose_actionbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"/>
-
     <RelativeLayout
         android:id="@+id/compose_content"
         android:layout_width="match_parent"

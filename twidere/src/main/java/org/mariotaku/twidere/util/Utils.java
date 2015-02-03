@@ -202,9 +202,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.util.net.ApacheHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
-import org.mariotaku.twidere.util.net.ssl.OkHttpClientFactory;
+import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
@@ -1801,8 +1800,7 @@ public final class Utils implements Constants, TwitterConstants {
         if (userAgent != null) {
             cb.setHttpUserAgent(userAgent);
         }
-        cb.setHttpClientFactory(new ApacheHttpClientFactory(context));
-//        cb.setHttpClientFactory(new OkHttpClientFactory());
+        cb.setHttpClientFactory(new OkHttpClientFactory(context));
         return new HttpClientWrapper(cb.build());
     }
 
@@ -2527,8 +2525,7 @@ public final class Utils implements Constants, TwitterConstants {
             final ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
             if (apacheHttp) {
-                cb.setHttpClientFactory(new ApacheHttpClientFactory(app));
-//                cb.setHttpClientFactory(new OkHttpClientFactory());
+                cb.setHttpClientFactory(new OkHttpClientFactory(context));
             }
             cb.setHttpConnectionTimeout(connection_timeout);
             cb.setGZIPEnabled(enableGzip);

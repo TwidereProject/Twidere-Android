@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import org.apache.http.conn.util.InetAddressUtilsHC4;
+import org.apache.http.conn.util.InetAddressUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.HostsFileParser;
 import org.mariotaku.twidere.util.Utils;
@@ -191,7 +191,7 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
 
     private static boolean isValidIpAddress(final String address) {
         if (isEmpty(address)) return false;
-        return InetAddressUtilsHC4.isIPv4Address(address) || InetAddressUtilsHC4.isIPv6Address(address);
+        return InetAddressUtils.isIPv4Address(address) || InetAddressUtils.isIPv6Address(address);
     }
 
     private static class HostCache extends LinkedHashMap<String, String> {

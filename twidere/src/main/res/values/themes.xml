@@ -183,31 +183,16 @@
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.Compose">
+    <style name="Theme.Twidere.Dark.Compose" parent="Theme.Compat.Base.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/dialog_full_holo_dark</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="Theme.Twidere.Light.Compose">
+    <style name="Theme.Twidere.Light.Compose" parent="Theme.Compat.Base.Light.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/dialog_full_holo_light</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
-
     </style>
 
     <style name="Theme.Twidere.Light.QuickSearchBar" parent="Theme.Twidere.Light.Dialog">

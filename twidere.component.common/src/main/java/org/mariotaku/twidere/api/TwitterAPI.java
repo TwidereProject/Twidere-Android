@@ -17,20 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.net.ssl;
+package org.mariotaku.twidere.api;
 
-import org.mariotaku.twidere.util.net.OkHttpClientImpl;
+import org.mariotaku.twidere.model.ParcelableAccount;
 
-import twitter4j.http.HttpClient;
-import twitter4j.http.HttpClientConfiguration;
-import twitter4j.http.HttpClientFactory;
+import retrofit.http.GET;
 
 /**
- * Created by mariotaku on 15/1/22.
+ * Created by mariotaku on 15/2/3.
  */
-public class OkHttpClientFactory implements HttpClientFactory {
-    @Override
-    public HttpClient getInstance(HttpClientConfiguration conf) {
-        return new OkHttpClientImpl(conf);
-    }
+public interface TwitterAPI {
+
+    @GET("/account/verify_credentials.json")
+    ParcelableAccount verifyCredentials();
+
 }

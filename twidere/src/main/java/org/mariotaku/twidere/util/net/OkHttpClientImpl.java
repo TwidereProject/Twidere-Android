@@ -20,53 +20,57 @@
 package org.mariotaku.twidere.util.net;
 
 import android.net.Uri;
-import android.util.Log;
 
+import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Protocol;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Request.Builder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.mariotaku.twidere.TwidereConstants;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import twitter4j.TwitterException;
 import twitter4j.auth.Authorization;
+import twitter4j.http.HostAddressResolver;
 import twitter4j.http.HttpClient;
 import twitter4j.http.HttpClientConfiguration;
 import twitter4j.http.HttpParameter;
 import twitter4j.http.HttpRequest;
 import twitter4j.http.HttpResponse;
+import twitter4j.http.RequestMethod;
 
 /**
  * Created by mariotaku on 15/1/22.
  */
 public class OkHttpClientImpl implements HttpClient, TwidereConstants {
 
+    public static final MediaType APPLICATION_FORM_URLENCODED = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8");
     private final HttpClientConfiguration conf;
     private final OkHttpClient client;
+    private final HostAddressResolver resolver;
 
     public OkHttpClientImpl(HttpClientConfiguration conf) {
         this.conf = conf;
+        this.resolver = conf.getHostAddressResolverFactory().getInstance(conf);
         this.client = createHttpClient(conf);
-    }
-
-    private OkHttpClient createHttpClient(HttpClientConfiguration conf) {
-        final OkHttpClient client = new OkHttpClient();
-        if (conf.isSSLErrorIgnored()) {
-        }
-        return client;
     }
 
     @Override
@@ -82,59 +86,34 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
                 builder.header("Authorization", authHeader);
             }
         }
-        final String url;
         try {
-            switch (req.getMethod()) {
-                case GET: {
-                    url = getUrl(req);
-                    builder.get();
-                    break;
-                }
-                case POST: {
-                    url = req.getURL();
-                    builder.post(getRequestBody(req.getParameters()));
-                    break;
-                }
-                case DELETE: {
-                    url = getUrl(req);
-                    builder.delete();
-                    break;
-                }
-                case HEAD: {
-                    url = getUrl(req);
-                    builder.head();
-                    break;
-                }
-                case PUT: {
-                    url = req.getURL();
-                    builder.put(getRequestBody(req.getParameters()));
-                    break;
-                }
-                default: {
-                    throw new AssertionError();
-                }
-            }
-            builder.url(url);
+            setupRequestBuilder(builder, req);
             final Response response = client.newCall(builder.build()).execute();
-            Log.d(TwidereConstants.LOGTAG, String.format("OkHttpClient finished a request to %s with %s protocol", url, response.protocol().name()));
             return new OkHttpResponse(conf, null, response);
         } catch (IOException e) {
             throw new TwitterException(e);
         }
     }
 
-    private String getUrl(HttpRequest req) {
-        final Uri.Builder uri = Uri.parse(req.getURL()).buildUpon();
-        for (HttpParameter param : req.getParameters()) {
-            uri.appendQueryParameter(param.getName(), param.getValue());
-        }
-        return uri.build().toString();
+    @Override
+    public void shutdown() {
+
     }
 
-    public static final MediaType APPLICATION_FORM_URLENCODED = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8");
-    public static final MediaType MULTIPART_FORM_DATA = MediaType.parse("multipart/form-data; charset=UTF-8");
+    private OkHttpClient createHttpClient(HttpClientConfiguration conf) {
+        final OkHttpClient client = new OkHttpClient();
+        final boolean ignoreSSLError = conf.isSSLErrorIgnored();
+        client.setHostnameVerifier(new HostResolvedHostnameVerifier(ignoreSSLError));
+        client.setSslSocketFactory(new HostResolvedSSLSocketFactory(resolver, ignoreSSLError));
+        client.setSocketFactory(new HostResolvedSocketFactory(resolver));
+        if (conf.isProxyConfigured()) {
+            client.setProxy(new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(conf.getHttpProxyHost(),
+                    conf.getHttpProxyPort())));
+        }
+        return client;
+    }
 
-    private RequestBody getRequestBody(HttpParameter[] params) {
+    private RequestBody getRequestBody(HttpParameter[] params) throws IOException {
         if (params == null) return null;
         if (!HttpParameter.containsFile(params)) {
             return RequestBody.create(APPLICATION_FORM_URLENCODED, HttpParameter.encodeParameters(params));
@@ -148,12 +127,71 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
                 return RequestBody.create(MediaType.parse(param.getContentType()), param.getFile());
             }
         }
-        return null;
+        String boundary = String.format("----%s", UUID.randomUUID().toString());
+        final MediaType mediaType = MediaType.parse("multipart/form-data; boundary=" + boundary);
+        boundary = "--" + boundary;
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        for (final HttpParameter param : params) {
+            os.write(String.format("%s\r\n", boundary).getBytes("UTF-8"));
+            if (param.isFile()) {
+                os.write(String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n", param.getName(), param.getFileName()).getBytes("UTF-8"));
+                os.write(String.format("Content-Type: %s\r\n\r\n", param.getContentType()).getBytes("UTF-8"));
+                final BufferedInputStream in = new BufferedInputStream(param.hasFileBody() ?
+                        param.getFileBody() : new FileInputStream(param.getFile()));
+                byte[] buff = new byte[8192];
+                while (in.read(buff) != -1) {
+                    os.write(buff);
+                }
+                in.close();
+            } else {
+                os.write(String.format("Content-Disposition: form-data; name=\"%s\"\r\n", param.getName()).getBytes("UTF-8"));
+                os.write("Content-Type: text/plain; charset=UTF-8\r\n\r\n".getBytes("UTF-8"));
+                os.write(param.getValue().getBytes("UTF-8"));
+            }
+            os.write("\r\n".getBytes("UTF-8"));
+        }
+        os.write(String.format("%s--\r\n", boundary).getBytes("UTF-8"));
+        return RequestBody.create(mediaType, os.toByteArray());
     }
 
-    @Override
-    public void shutdown() {
-
+    private void setupRequestBuilder(Builder builder, HttpRequest req) throws IOException {
+        final Uri.Builder uriBuilder = Uri.parse(req.getURL()).buildUpon();
+        final RequestMethod method = req.getMethod();
+        if (method != RequestMethod.POST && method != RequestMethod.PUT) {
+            final HttpParameter[] parameters = req.getParameters();
+            if (parameters != null) {
+                for (HttpParameter param : parameters) {
+                    uriBuilder.appendQueryParameter(param.getName(), param.getValue());
+                }
+            }
+        }
+        final Uri uri = uriBuilder.build();
+        switch (req.getMethod()) {
+            case GET: {
+                builder.get();
+                break;
+            }
+            case POST: {
+                builder.post(getRequestBody(req.getParameters()));
+                break;
+            }
+            case DELETE: {
+                builder.delete();
+                break;
+            }
+            case HEAD: {
+                builder.head();
+                break;
+            }
+            case PUT: {
+                builder.put(getRequestBody(req.getParameters()));
+                break;
+            }
+            default: {
+                throw new AssertionError();
+            }
+        }
+        builder.url(uri.toString());
     }
 
     private static class OkHttpResponse extends HttpResponse {

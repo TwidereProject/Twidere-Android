@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.mariotaku.twidere"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:installLocation="auto">
+<manifest
+    package="org.mariotaku.twidere"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto">
 
     <uses-sdk/>
 
@@ -569,9 +570,8 @@
         </activity>
         <activity
             android:name=".activity.TestActivity"
-            android:enabled="true"
+            android:enabled="false"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog"
             android:label="Twidere test"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
