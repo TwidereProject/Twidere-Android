@@ -2653,12 +2653,14 @@ public final class Utils implements Constants, TwitterConstants {
         try {
             while (!cur.isAfterLast()) {
                 final String consumerSecret = cur.getString(indices.consumer_secret);
-                final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
-                crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
-                final long value = crc32.getValue();
-                crc32.reset();
-                for (final String keySecret : keySecrets) {
-                    if (Long.parseLong(keySecret, 16) == value) return true;
+                if (consumerSecret != null) {
+                    final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
+                    crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
+                    final long value = crc32.getValue();
+                    crc32.reset();
+                    for (final String keySecret : keySecrets) {
+                        if (Long.parseLong(keySecret, 16) == value) return true;
+                    }
                 }
                 cur.moveToNext();
             }
