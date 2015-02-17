@@ -25,8 +25,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    app:dragView="@+id/activities_header_title"
-    app:panelHeight="@dimen/header_height_quick_menu">
+    app:umanoDragView="@+id/activities_header_title"
+    app:umanoPanelHeight="@dimen/header_height_quick_menu">
 
     <FrameLayout
         android:id="@+id/quick_menu_content"

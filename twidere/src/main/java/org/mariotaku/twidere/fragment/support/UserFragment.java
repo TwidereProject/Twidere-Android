@@ -772,6 +772,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mentionItem.setTitle(getString(R.string.mention_user_name, UserColorNameUtils.getDisplayName(getActivity(), user)));
         }
         Utils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
+        Utils.setMenuItemAvailability(menu, R.id.incoming_friendships, isMyself);
 //        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
 //        followItem.setVisible(!isMyself);
 //        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself

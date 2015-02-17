@@ -53,6 +53,10 @@ repositories {
     maven { url 'https://repo.commonsware.com.s3.amazonaws.com' }
 }
 
+configurations.all {
+    exclude group: 'org.yaml', module: 'snakeyaml'
+}
+
 dependencies {
 //    wearApp project(':twidere.wear')
     compile 'com.android.support:multidex:1.0.1'
@@ -61,9 +65,9 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.android.support:palette-v7:21.0.3'
-    compile 'com.sothree.slidinguppanel:library:2.0.4'
-    compile 'com.twitter:twitter-text:1.9.9'
-    aarLinkSources 'com.twitter:twitter-text:1.9.9:sources@jar'
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
+    compile 'com.twitter:twitter-text:1.11.1'
+    aarLinkSources 'com.twitter:twitter-text:1.11.1:sources@jar'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'org.apache.commons:commons-csv:1.1'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'

@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="64dip"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFFEF3"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/iconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="5dip"
+            android:background="#00000000"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dip"
+                android:paddingRight="8dip"
+                android:paddingTop="10dip"
+                android:paddingBottom="2dip"
+                android:singleLine="true"
+                android:textColor="#FF4C06"
+                android:textSize="17dip" />
+
+            <TextView
+                android:id="@+id/descText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dip"
+                android:paddingRight="8dip"
+                android:singleLine="true"
+                android:textColor="#7b7b7b"
+                android:textSize="13dip" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

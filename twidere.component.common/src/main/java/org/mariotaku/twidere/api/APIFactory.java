@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.api;
 
+import org.mariotaku.twidere.model.ParcelableUser;
+
 import java.lang.reflect.Type;
 
 import retrofit.RestAdapter;
@@ -43,8 +45,10 @@ public class APIFactory {
     private static class ParcelableDataConverter implements Converter {
         @Override
         public Object fromBody(TypedInput typedInput, Type type) throws ConversionException {
-//            Class<?> typeClass = (Class<?>) type;
-//            typeClass.isAssignableFrom();
+            Class<?> typeClass = (Class<?>) type;
+            if (typeClass.isAssignableFrom(ParcelableUser.class)) {
+
+            }
             return null;
         }
 

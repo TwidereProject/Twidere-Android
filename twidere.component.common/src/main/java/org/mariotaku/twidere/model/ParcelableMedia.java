@@ -4,16 +4,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONParcel;
 import org.mariotaku.jsonserializer.JSONParcelable;
-import org.mariotaku.jsonserializer.JSONSerializer;
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SimpleValueSerializer;
+import org.mariotaku.twidere.util.SimpleValueSerializer.Reader;
+import org.mariotaku.twidere.util.SimpleValueSerializer.SerializationException;
+import org.mariotaku.twidere.util.SimpleValueSerializer.SimpleValueSerializable;
+import org.mariotaku.twidere.util.SimpleValueSerializer.Writer;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +29,7 @@ import twitter4j.MediaEntity.Size;
 import twitter4j.URLEntity;
 
 @SuppressWarnings("unused")
-public class ParcelableMedia implements Parcelable, JSONParcelable {
+public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueSerializable {
 
     public static final int TYPE_IMAGE = 1;
 
@@ -53,13 +57,30 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         }
     };
 
+    public static final SimpleValueSerializer.Creator<ParcelableMedia> SIMPLE_CREATOR = new SimpleValueSerializer.Creator<ParcelableMedia>() {
+        @Override
+        public ParcelableMedia create(final SimpleValueSerializer.Reader reader) throws SerializationException {
+            return new ParcelableMedia(reader);
+        }
+
+        @Override
+        public ParcelableMedia[] newArray(final int size) {
+            return new ParcelableMedia[size];
+        }
+    };
+
     @NonNull
-    public final String media_url;
+    public String media_url;
 
     @Nullable
-    public final String page_url;
-    public final int start, end, type;
-    public final int width, height;
+    public String page_url;
+    public int start, end, type;
+    public int width, height;
+
+
+    public ParcelableMedia() {
+
+    }
 
     public ParcelableMedia(final JSONParcel in) {
         media_url = in.readString("media_url");
@@ -103,6 +124,45 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         this.height = 0;
     }
 
+    public ParcelableMedia(Reader reader) throws SerializationException {
+        while (reader.hasKeyValue()) {
+            switch (reader.nextKey()) {
+                case "media_url": {
+                    media_url = reader.nextString();
+                    break;
+                }
+                case "page_url": {
+                    page_url = reader.nextString();
+                    break;
+                }
+                case "start": {
+                    start = reader.nextInt();
+                    break;
+                }
+                case "end": {
+                    end = reader.nextInt();
+                    break;
+                }
+                case "type": {
+                    type = reader.nextInt();
+                    break;
+                }
+                case "width": {
+                    width = reader.nextInt();
+                    break;
+                }
+                case "height": {
+                    height = reader.nextInt();
+                    break;
+                }
+                default: {
+                    reader.skipValue();
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -132,6 +192,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         return result;
     }
 
+
     @Override
     public String toString() {
         return "ParcelableMedia{" +
@@ -143,6 +204,17 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
                 ", width=" + width +
                 ", height=" + height +
                 '}';
+    }
+
+    @Override
+    public void write(Writer writer) {
+        writer.write("media_url", media_url);
+        writer.write("page_url", page_url);
+        writer.write("start", String.valueOf(start));
+        writer.write("end", String.valueOf(end));
+        writer.write("type", String.valueOf(type));
+        writer.write("width", String.valueOf(width));
+        writer.write("height", String.valueOf(height));
     }
 
     @Override
@@ -199,14 +271,6 @@ public class ParcelableMedia implements Parcelable, JSONParcelable {
         return list.toArray(new ParcelableMedia[list.size()]);
     }
 
-    public static ParcelableMedia[] fromJSONString(final String json) {
-        if (TextUtils.isEmpty(json)) return null;
-        try {
-            return JSONSerializer.createArray(JSON_CREATOR, new JSONArray(json));
-        } catch (final JSONException e) {
-            return null;
-        }
-    }
 
     public static ParcelableMedia newImage(final String media_url, final String url) {
         return new ParcelableMedia(media_url, url, 0, 0, TYPE_IMAGE);

@@ -21,6 +21,7 @@ import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -248,7 +249,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final String in_reply_to_screen_name = cursor.getString(indices.in_reply_to_user_screen_name);
         final String card_name = cursor.getString(indices.card_name);
 
-        final ParcelableMedia[] media = ParcelableMedia.fromJSONString(cursor.getString(indices.media));
+        final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
 
         if (retweet_id > 0) {
             final String retweetedBy = UserColorNameUtils.getDisplayName(context, retweeted_by_id,

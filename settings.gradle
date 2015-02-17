@@ -1,4 +1,4 @@
-include ':twidere'
+include ':twidere', ':twidere.component.api.twitter', ':twidere.extension.push.xiaomi'
 include ':twidere.component.twitter4j'
 include ':twidere.component.twitter4j.streaming'
 include ':twidere.component.common'

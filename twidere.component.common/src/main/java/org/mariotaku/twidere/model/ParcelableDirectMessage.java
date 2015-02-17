@@ -23,10 +23,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SimpleValueSerializer;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -74,8 +76,6 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
 
     public final String sender_profile_image_url, recipient_profile_image_url;
 
-    public final String first_media;
-
     public final ParcelableMedia[] media;
 
     public ParcelableDirectMessage(final ContentValues values) {
@@ -94,8 +94,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         id = getAsLong(values, DirectMessages.MESSAGE_ID, -1);
         is_outgoing = getAsBoolean(values, DirectMessages.IS_OUTGOING, false);
         account_id = getAsLong(values, DirectMessages.ACCOUNT_ID, -1);
-        media = ParcelableMedia.fromJSONString(values.getAsString(DirectMessages.MEDIA));
-        first_media = values.getAsString(DirectMessages.FIRST_MEDIA);
+        media = SimpleValueSerializer.fromSerializedString(values.getAsString(DirectMessages.MEDIA_LIST), ParcelableMedia.SIMPLE_CREATOR);
     }
 
     public ParcelableDirectMessage(final Cursor c, final CursorIndices idx) {
@@ -116,8 +115,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
                 : null;
         recipient_profile_image_url = idx.recipient_profile_image_url != -1 ? c
                 .getString(idx.recipient_profile_image_url) : null;
-        media = ParcelableMedia.fromJSONString(idx.media != -1 ? c.getString(idx.media) : null);
-        first_media = idx.first_media != -1 ? c.getString(idx.first_media) : null;
+        media = SimpleValueSerializer.fromSerializedString(idx.media != -1 ? c.getString(idx.media) : null, ParcelableMedia.SIMPLE_CREATOR);
     }
 
     public ParcelableDirectMessage(final DirectMessage message, final long account_id, final boolean is_outgoing) {
@@ -142,7 +140,6 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         recipient_profile_image_url = recipient_profile_image_url_string;
         text_unescaped = toPlainText(text_html);
         media = ParcelableMedia.fromEntities(message);
-        first_media = media != null && media.length > 0 ? media[0].page_url : null;
     }
 
     public ParcelableDirectMessage(final Parcel in) {
@@ -162,12 +159,10 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         recipient_profile_image_url = in.readString();
         text_unescaped = in.readString();
         media = in.createTypedArray(ParcelableMedia.CREATOR);
-        first_media = media != null && media.length > 0 ? media[0].page_url : null;
     }
 
     @Override
-    public int compareTo(final ParcelableDirectMessage another) {
-        if (another == null) return 0;
+    public int compareTo(@NonNull final ParcelableDirectMessage another) {
         final long diff = another.id - id;
         if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
@@ -238,7 +233,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
 
         public final int account_id, message_id, message_timestamp, sender_name, sender_screen_name, text, text_plain,
                 recipient_name, recipient_screen_name, sender_profile_image_url, is_outgoing,
-                recipient_profile_image_url, sender_id, recipient_id, media, first_media;
+                recipient_profile_image_url, sender_id, recipient_id, media;
 
         public CursorIndices(final Cursor cursor) {
             account_id = cursor.getColumnIndex(DirectMessages.ACCOUNT_ID);
@@ -255,8 +250,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
             recipient_screen_name = cursor.getColumnIndex(DirectMessages.RECIPIENT_SCREEN_NAME);
             sender_profile_image_url = cursor.getColumnIndex(DirectMessages.SENDER_PROFILE_IMAGE_URL);
             recipient_profile_image_url = cursor.getColumnIndex(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL);
-            media = cursor.getColumnIndex(DirectMessages.MEDIA);
-            first_media = cursor.getColumnIndex(DirectMessages.FIRST_MEDIA);
+            media = cursor.getColumnIndex(DirectMessages.MEDIA_LIST);
         }
     }
 }

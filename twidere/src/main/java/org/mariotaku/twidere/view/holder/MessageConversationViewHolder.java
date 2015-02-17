@@ -35,6 +35,7 @@ import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -75,7 +76,7 @@ public class MessageConversationViewHolder extends ViewHolder {
 
         final long accountId = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.message_timestamp);
-        final ParcelableMedia[] media = ParcelableMedia.fromJSONString(cursor.getString(indices.media));
+        final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
         text.setText(Html.fromHtml(cursor.getString(indices.text)));
         linkify.applyAllLinks(text, accountId, false);
         text.setMovementMethod(null);

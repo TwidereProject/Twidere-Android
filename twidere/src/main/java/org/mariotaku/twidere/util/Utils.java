@@ -202,8 +202,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
+import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
@@ -3170,7 +3170,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     }
 
-    public static void openUserListDetails(final Context context, final long accountId, final int listId,
+    public static void openUserListDetails(final Context context, final long accountId, final long listId,
                                            final long userId, final String screenName, final String listName) {
         if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();

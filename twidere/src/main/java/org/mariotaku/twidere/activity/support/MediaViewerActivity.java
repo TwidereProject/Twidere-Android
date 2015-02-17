@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
@@ -220,6 +221,7 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
             final float widthRatio = viewWidth / (float) drawableWidth;
             final float heightRatio = viewHeight / (float) drawableHeight;
             mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
+            mImageView.setScaleType(ScaleType.CENTER_INSIDE);
         }
     }
 

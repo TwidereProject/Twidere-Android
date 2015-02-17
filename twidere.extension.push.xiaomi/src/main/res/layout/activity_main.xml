@@ -1,0 +1,177 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dip">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/set_alias"
+                    android:text="@string/set_alias"
+                    android:textSize="@dimen/textbtnsize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/set_padding"
+                    android:paddingRight="@dimen/set_padding"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/subscribe_topic"
+                    android:text="@string/subscribe_topic"
+                    android:textSize="@dimen/textbtnsize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/set_padding"
+                    android:paddingRight="@dimen/set_padding"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/set_accept_time"
+                android:text="@string/set_accept_time"
+                android:textSize="@dimen/textbtnsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/set_padding"
+                android:paddingRight="@dimen/set_padding"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dip">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/unset_alias"
+                    android:text="@string/unset_alias"
+                    android:textSize="@dimen/textbtnsize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/set_padding"
+                    android:paddingRight="@dimen/set_padding"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/unsubscribe_topic"
+                    android:text="@string/unsubscribe_topic"
+                    android:textSize="@dimen/textbtnsize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/set_padding"
+                    android:paddingRight="@dimen/set_padding"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/pause_push"
+                android:text="@string/pause_push"
+                android:textSize="@dimen/textbtnsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/set_padding"
+                android:paddingRight="@dimen/set_padding"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reset_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#F0E5D0"
+        android:visibility="gone"
+        android:padding="1dip">
+
+        <Button
+            android:id="@+id/reset"
+            android:text="@string/reset"
+            android:gravity="left|center"
+            android:textSize="@dimen/textbtnsize"
+            android:textColor="#666666"
+            android:textColorHighlight="#333333"
+            android:background="#FFFAE7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dip"
+            android:paddingRight="@dimen/set_padding"
+            android:drawableLeft="@drawable/ic_tip"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dip"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/log"
+            android:textSize="@dimen/textsize"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:singleLine="false"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"/>
+    </ScrollView>
+
+</LinearLayout>

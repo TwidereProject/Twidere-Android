@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api;
 
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableUser;
 
 import retrofit.http.GET;
 
@@ -29,6 +29,6 @@ import retrofit.http.GET;
 public interface TwitterAPI {
 
     @GET("/account/verify_credentials.json")
-    ParcelableAccount verifyCredentials();
+    ParcelableUser verifyCredentials();
 
 }

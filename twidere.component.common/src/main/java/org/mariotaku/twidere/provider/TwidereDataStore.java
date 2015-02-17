@@ -334,17 +334,15 @@ public interface TwidereDataStore {
         public static final String SENDER_PROFILE_IMAGE_URL = "sender_profile_image_url";
         public static final String RECIPIENT_PROFILE_IMAGE_URL = "recipient_profile_image_url";
 
-        public static final String MEDIA = "media";
-
-        public static final String FIRST_MEDIA = "first_media";
+        public static final String MEDIA_LIST = "media_list";
 
         public static final String[] COLUMNS = new String[]{_ID, ACCOUNT_ID, MESSAGE_ID, MESSAGE_TIMESTAMP,
                 SENDER_ID, RECIPIENT_ID, IS_OUTGOING, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, SENDER_NAME,
                 RECIPIENT_NAME, SENDER_SCREEN_NAME, RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
-                RECIPIENT_PROFILE_IMAGE_URL, MEDIA, FIRST_MEDIA};
+                RECIPIENT_PROFILE_IMAGE_URL, MEDIA_LIST};
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
         public static final String DEFAULT_SORT_ORDER = MESSAGE_ID + " DESC";
 
@@ -779,11 +777,9 @@ public interface TwidereDataStore {
 
         public static final String MY_RETWEET_ID = "my_retweet_id";
 
-        public static final String MEDIA = "media";
+        public static final String MEDIA_LIST = "media_list";
 
-        public static final String FIRST_MEDIA = "first_media";
-
-        public static final String MENTIONS = "mentions";
+        public static final String MENTIONS_LIST = "mentions_list";
 
         public static final String CARD = "card";
 
@@ -802,15 +798,14 @@ public interface TwidereDataStore {
                 DESCENDENT_REPLY_COUNT, RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID,
                 RETWEETED_BY_USER_NAME, RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE,
                 MY_RETWEET_ID, IS_RETWEET, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
-                IS_POSSIBLY_SENSITIVE, MEDIA, FIRST_MEDIA, MENTIONS, CARD_NAME, CARD};
+                IS_POSSIBLY_SENSITIVE, MEDIA_LIST, MENTIONS_LIST, CARD_NAME, CARD};
 
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT};
+                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
     }
 

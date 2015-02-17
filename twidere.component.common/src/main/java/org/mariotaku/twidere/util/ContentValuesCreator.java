@@ -201,8 +201,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
         final ParcelableMedia[] mediaArray = ParcelableMedia.fromEntities(message);
         if (mediaArray != null) {
-            values.put(DirectMessages.MEDIA, JSONSerializer.toJSONArrayString(mediaArray));
-            values.put(DirectMessages.FIRST_MEDIA, mediaArray[0].page_url);
+            values.put(DirectMessages.MEDIA_LIST, SimpleValueSerializer.toSerializedString(mediaArray));
         }
         return values;
     }
@@ -225,8 +224,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, message.sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, message.recipient_profile_image_url);
         if (message.media != null) {
-            values.put(Statuses.MEDIA, JSONSerializer.toJSONArrayString(message.media));
-            values.put(Statuses.FIRST_MEDIA, message.media[0].page_url);
+            values.put(Statuses.MEDIA_LIST, SimpleValueSerializer.toSerializedString(message.media));
         }
         return values;
     }
@@ -357,12 +355,11 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.IS_FAVORITE, status.isFavorited());
         final ParcelableMedia[] media = ParcelableMedia.fromEntities(status);
         if (media != null) {
-            values.put(Statuses.MEDIA, JSONSerializer.toJSONArrayString(media));
-            values.put(Statuses.FIRST_MEDIA, media[0].page_url);
+            values.put(Statuses.MEDIA_LIST, SimpleValueSerializer.toSerializedString(media));
         }
         final ParcelableUserMention[] mentions = ParcelableUserMention.fromStatus(status);
         if (mentions != null) {
-            values.put(Statuses.MENTIONS, JSONSerializer.toJSONArrayString(mentions));
+            values.put(Statuses.MENTIONS_LIST, SimpleValueSerializer.toSerializedString(mentions));
         }
         final ParcelableCardEntity card = ParcelableCardEntity.fromCardEntity(status.getCard(), accountId);
         if (card != null) {

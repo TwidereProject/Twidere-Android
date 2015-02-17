@@ -222,7 +222,7 @@ public final class HttpParameter implements Comparable<HttpParameter> {
      * Percent-Encoding</a>
      */
     public static String encode(final String value) {
-        String encoded = null;
+        String encoded;
         try {
             encoded = URLEncoder.encode(value, "UTF-8");
         } catch (final UnsupportedEncodingException ignore) {

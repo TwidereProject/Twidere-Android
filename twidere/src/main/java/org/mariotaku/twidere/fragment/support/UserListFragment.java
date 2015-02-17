@@ -57,6 +57,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
@@ -85,6 +86,7 @@ import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.Utils.openUserListDetails;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 
@@ -253,6 +255,17 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 mTwitterWrapper.addUserListMembersAsync(mUserList.account_id, mUserList.id, user);
                 return;
             }
+            case REQUEST_SELECT_ACCOUNT: {
+                final ParcelableUserList userList = mUserList;
+                if (userList == null) return;
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data == null || !data.hasExtra(EXTRA_ID)) return;
+                    final long accountId = data.getLongExtra(EXTRA_ID, -1);
+                    openUserListDetails(getActivity(), accountId, userList.id, userList.user_id,
+                            userList.user_screen_name, userList.name);
+                }
+                break;
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -399,6 +412,13 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                     twitter.createUserListSubscriptionAsync(userList.account_id, userList.id);
                 }
                 return true;
+            }
+            case MENU_OPEN_WITH_ACCOUNT: {
+                final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
+                intent.setClass(getActivity(), AccountSelectorActivity.class);
+                intent.putExtra(EXTRA_SINGLE_SELECTION, true);
+                startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
+                break;
             }
             default: {
                 if (item.getIntent() != null) {
