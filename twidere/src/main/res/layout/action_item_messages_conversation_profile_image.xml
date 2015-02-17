@@ -25,23 +25,13 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:padding="@dimen/element_spacing_msmall"
     app:ignorePadding="true">
-
-    <org.mariotaku.twidere.view.SquareCircularImageView
-        android:id="@+id/sender_profile_image"
-        style="?profileImageStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/element_spacing_minus_large"
-        android:layout_toRightOf="@+id/recipient_profile_image"
-        android:visibility="gone"/>
 
     <org.mariotaku.twidere.view.SquareCircularImageView
         style="?profileImageStyle"
         android:id="@+id/recipient_profile_image"
         android:layout_width="wrap_content"
+        android:layout_margin="@dimen/element_spacing_msmall"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"/>
 

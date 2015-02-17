@@ -22,7 +22,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <com.diegocarloslima.byakugallery.lib.GalleryViewPager
+    <org.mariotaku.twidere.view.GalleryViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

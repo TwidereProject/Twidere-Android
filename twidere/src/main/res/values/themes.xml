@@ -210,7 +210,7 @@
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
-    <style name="Theme.Twidere.Viewer" parent="Theme.Compat.Base">
+    <style name="Theme.Twidere.Viewer" parent="Theme.AppCompat">
 
         <!-- Window attributes -->
         <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
@@ -218,7 +218,8 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
 
 
         <!-- Card UI styles -->

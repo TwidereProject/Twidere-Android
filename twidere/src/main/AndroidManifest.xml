@@ -388,7 +388,7 @@
             android:name=".activity.support.MediaViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:label="@string/view_image"
+            android:label="@string/media"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.Viewer">
             <intent-filter>

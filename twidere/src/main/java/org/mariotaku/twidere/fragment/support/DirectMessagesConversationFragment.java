@@ -124,7 +124,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     private ImageView mAddImageButton;
     private View mConversationContainer, mRecipientSelectorContainer;
     private Spinner mAccountSpinner;
-    private ImageView mSenderProfileImageView, mRecipientProfileImageView;
+    private ImageView mRecipientProfileImageView;
     private EditText mUserQuery;
     private View mUsersSearchProgress;
     private View mQueryButton;
@@ -330,17 +330,14 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     }
 
     private void updateProfileImage() {
-        if (mProfileImageContainer == null || mRecipientProfileImageView == null
-                || mSenderProfileImageView == null) {
+        if (mProfileImageContainer == null || mRecipientProfileImageView == null) {
             return;
         }
         mProfileImageContainer.setVisibility(mRecipient != null ? View.VISIBLE : View.GONE);
         if (mAccount != null && mRecipient != null) {
-            mImageLoader.displayProfileImage(mSenderProfileImageView, mAccount.profile_image_url);
             mImageLoader.displayProfileImage(mRecipientProfileImageView, mRecipient.profile_image_url);
             mProfileImageContainer.drawEnd(mAccount.color);
         } else {
-            mImageLoader.cancelDisplayTask(mSenderProfileImageView);
             mImageLoader.cancelDisplayTask(mRecipientProfileImageView);
         }
         final FragmentActivity activity = getActivity();
@@ -358,7 +355,6 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         profileImageItemView.setOnClickListener(this);
         mProfileImageContainer = (IColorLabelView) profileImageItemView;
         mRecipientProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.recipient_profile_image);
-        mSenderProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.sender_profile_image);
     }
 
     @Override

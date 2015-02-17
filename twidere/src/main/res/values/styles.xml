@@ -26,7 +26,7 @@
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
-    <style name="Widget.Twidere.Viewer.ActionBar" parent="Widget.Base.ActionBar">
+    <style name="Widget.Twidere.Viewer.ActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">#80000000</item>
         <item name="android:backgroundSplit">#80000000</item>
     </style>

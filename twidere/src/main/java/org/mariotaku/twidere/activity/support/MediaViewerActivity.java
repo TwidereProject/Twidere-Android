@@ -34,7 +34,6 @@ import android.widget.ProgressBar;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
-import com.diegocarloslima.byakugallery.lib.TouchImageView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -47,11 +46,17 @@ import org.mariotaku.twidere.loader.support.TileImageLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.TouchImageView;
 
-public final class MediaViewerActivity extends BaseSupportActivity implements Constants {
+public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants {
 
     private ViewPager mViewPager;
     private MediaPagerAdapter mAdapter;
+
+    @Override
+    public int getThemeColor() {
+        return ThemeUtils.getUserAccentColor(this);
+    }
 
     @Override
     public int getThemeResourceId() {
@@ -64,6 +69,7 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
         setContentView(R.layout.activity_media_viewer);
         mAdapter = new MediaPagerAdapter(this);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.element_spacing_normal));
         final Intent intent = getIntent();
         final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
         final ParcelableMedia[] media = Utils.newParcelableArray(intent.getParcelableArrayExtra(EXTRA_MEDIA), ParcelableMedia.CREATOR);
@@ -221,7 +227,7 @@ public final class MediaViewerActivity extends BaseSupportActivity implements Co
             final float widthRatio = viewWidth / (float) drawableWidth;
             final float heightRatio = viewHeight / (float) drawableHeight;
             mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
-            mImageView.setScaleType(ScaleType.CENTER_INSIDE);
+            mImageView.resetScale();
         }
     }
 
