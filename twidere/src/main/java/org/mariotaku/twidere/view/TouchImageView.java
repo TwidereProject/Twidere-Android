@@ -61,6 +61,7 @@ public class TouchImageView extends ImageView {
 
     private final FlingScroller mFlingScroller = new FlingScroller();
     private boolean mIsAnimatingBack;
+    private ZoomListener mZoomListener;
 
     public TouchImageView(Context context) {
         this(context, null);
@@ -91,7 +92,8 @@ public class TouchImageView extends ImageView {
 
                 final float minScale = getMinScale();
                 // If we have already zoomed in, we should return to our initial scale value (minScale). Otherwise, scale to full size
-                final float targetScale = mScale > minScale ? minScale : mMaxScale;
+                final boolean shouldZoomOut = mScale > minScale;
+                final float targetScale = shouldZoomOut ? minScale : mMaxScale;
 
                 // First, we try to keep the focused point in the same position when the animation ends
                 final float desiredTranslationX = e.getX() - (e.getX() - mTranslationX) * (targetScale / mScale);
@@ -106,6 +108,13 @@ public class TouchImageView extends ImageView {
                 animation.setDuration(DOUBLE_TAP_ANIMATION_DURATION);
                 startAnimation(animation);
 
+                if (mZoomListener != null) {
+                    if (shouldZoomOut) {
+                        mZoomListener.onZoomOut();
+                    } else {
+                        mZoomListener.onZoomIn();
+                    }
+                }
                 return true;
             }
 
@@ -510,5 +519,15 @@ public class TouchImageView extends ImageView {
 
             ViewCompat.postInvalidateOnAnimation(TouchImageView.this);
         }
+    }
+
+    public void setZoomListener(ZoomListener listener) {
+        mZoomListener = listener;
+    }
+
+    public static interface ZoomListener {
+        void onZoomOut();
+
+        void onZoomIn();
     }
 }

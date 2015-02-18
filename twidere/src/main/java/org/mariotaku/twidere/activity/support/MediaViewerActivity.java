@@ -25,11 +25,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
-import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
@@ -47,11 +50,13 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TouchImageView;
+import org.mariotaku.twidere.view.TouchImageView.ZoomListener;
 
-public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants {
+public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants, OnPageChangeListener {
 
     private ViewPager mViewPager;
     private MediaPagerAdapter mAdapter;
+    private ActionBar mActionBar;
 
     @Override
     public int getThemeColor() {
@@ -64,12 +69,30 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     }
 
     @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setBarVisibility(true);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_media_viewer);
         mAdapter = new MediaPagerAdapter(this);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.element_spacing_normal));
+        mViewPager.setOnPageChangeListener(this);
         final Intent intent = getIntent();
         final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
         final ParcelableMedia[] media = Utils.newParcelableArray(intent.getParcelableArrayExtra(EXTRA_MEDIA), ParcelableMedia.CREATOR);
@@ -87,8 +110,19 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public static final class MediaPageFragment extends BaseSupportFragment
-            implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener {
+            implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener, ZoomListener {
 
         private TouchImageView mImageView;
         private ProgressBar mProgressBar;
@@ -100,6 +134,12 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             super.onBaseViewCreated(view, savedInstanceState);
             mImageView = (TouchImageView) view.findViewById(R.id.image_view);
             mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
+        }
+
+        @Override
+        public void onClick(View v) {
+            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+            activity.toggleBar();
         }
 
         @Override
@@ -160,6 +200,8 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+            mImageView.setOnClickListener(this);
+            mImageView.setZoomListener(this);
             loadImage();
         }
 
@@ -207,6 +249,18 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         }
 
+        @Override
+        public void onZoomOut() {
+            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+            activity.setBarVisibility(true);
+        }
+
+        @Override
+        public void onZoomIn() {
+            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+            activity.setBarVisibility(false);
+        }
+
         private void loadImage() {
             getLoaderManager().destroyLoader(0);
             if (!mLoaderInitialized) {
@@ -229,6 +283,26 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
             mImageView.resetScale();
         }
+    }
+
+    private void toggleBar() {
+        setBarVisibility(!isBarShowing());
+    }
+
+
+    private void setBarVisibility(boolean visible) {
+        if (mActionBar == null) return;
+        if (visible) {
+            mActionBar.show();
+        } else {
+            mActionBar.hide();
+        }
+    }
+
+
+    private boolean isBarShowing() {
+        if (mActionBar == null) return false;
+        return mActionBar.isShowing();
     }
 
     private static class MediaPagerAdapter extends SupportFixedFragmentStatePagerAdapter {

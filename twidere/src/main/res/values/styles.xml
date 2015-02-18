@@ -27,8 +27,8 @@
     </style>
 
     <style name="Widget.Twidere.Viewer.ActionBar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">#80000000</item>
-        <item name="android:backgroundSplit">#80000000</item>
+        <item name="background">@drawable/bg_viewer_actionbar</item>
+        <item name="backgroundSplit">@drawable/bg_viewer_actionbar</item>
     </style>
 
     <style name="Widget.Twidere.ImageButton.Borderless" parent="Widget.Base.ImageButton">
