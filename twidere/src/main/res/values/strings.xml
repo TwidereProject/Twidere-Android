@@ -720,5 +720,6 @@
     <string name="edit_tabs">Edit tabs</string>
     <string name="no_location">No location</string>
     <string name="getting_location">Getting location</string>
+    <string name="save_to_gallery">Save to gallery</string>
 
 </resources>

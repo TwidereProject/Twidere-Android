@@ -28,6 +28,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -69,6 +71,17 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
@@ -81,6 +94,12 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
     }
 
     @Override
@@ -104,24 +123,25 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
     }
 
-    @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+    private boolean isBarShowing() {
+        if (mActionBar == null) return false;
+        return mActionBar.isShowing();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                finish();
-                return true;
-            }
+    private void setBarVisibility(boolean visible) {
+        if (mActionBar == null) return;
+        if (visible) {
+            mActionBar.show();
+        } else {
+            mActionBar.hide();
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    public static final class MediaPageFragment extends BaseSupportFragment
+    private void toggleBar() {
+        setBarVisibility(!isBarShowing());
+    }
+
+    public static final class ImagePageFragment extends BaseSupportFragment
             implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener, ZoomListener {
 
         private TouchImageView mImageView;
@@ -198,8 +218,14 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
 
         @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.menu_media_viewer_image_page, menu);
+        }
+
+        @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+            setHasOptionsMenu(true);
             mImageView.setOnClickListener(this);
             mImageView.setZoomListener(this);
             loadImage();
@@ -285,26 +311,6 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
     }
 
-    private void toggleBar() {
-        setBarVisibility(!isBarShowing());
-    }
-
-
-    private void setBarVisibility(boolean visible) {
-        if (mActionBar == null) return;
-        if (visible) {
-            mActionBar.show();
-        } else {
-            mActionBar.hide();
-        }
-    }
-
-
-    private boolean isBarShowing() {
-        if (mActionBar == null) return false;
-        return mActionBar.isShowing();
-    }
-
     private static class MediaPagerAdapter extends SupportFixedFragmentStatePagerAdapter {
 
         private final MediaViewerActivity mActivity;
@@ -327,7 +333,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             final Bundle args = new Bundle();
             args.putLong(EXTRA_ACCOUNT_ID, mAccountId);
             args.putParcelable(EXTRA_MEDIA, mMedia[position]);
-            return Fragment.instantiate(mActivity, MediaPageFragment.class.getName(), args);
+            return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
         }
 
         public void setMedia(long accountId, ParcelableMedia[] media) {
