@@ -39,6 +39,8 @@ import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+
 import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 
 /**
@@ -280,8 +282,16 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 if (twitter == null) return;
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    //spice
+                    SpiceProfilingUtil.profile(getActivity(), status.account_id, status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.log(getActivity(),status.id + ",Unfavor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                    //end
                 } else {
                     twitter.createFavoriteAsync(status.account_id, status.id);
+                    //spice
+                    SpiceProfilingUtil.profile(getActivity(),status.account_id, status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.log(getActivity(),status.id + ",Favor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                    //end
                 }
                 break;
             }

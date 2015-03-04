@@ -28,6 +28,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import edu.tsinghua.spice.Utilies.TypeMapingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.Utils.openStatus;
@@ -51,6 +53,9 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         if (context == null || (manager != null && manager.isActive())) return;
         // UCD
         ProfilingUtil.profile(context, account_id, "Click, " + link + ", " + type);
+        //spice
+        SpiceProfilingUtil.profile(context, account_id, account_id + ",Visit," + link + "," + TypeMapingUtil.getLinkType(type));
+        //end
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {

@@ -107,9 +107,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import edu.tsinghua.spice.Utilies.TypeMapingUtil;
 import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
+import static android.text.TextUtils.substring;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
@@ -154,9 +157,11 @@ public class StatusFragment extends BaseSupportFragment
             final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
             final long maxId = args.getLong(EXTRA_MAX_ID, -1);
             final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+
             final StatusRepliesLoader loader = new StatusRepliesLoader(getActivity(), accountId,
                     screenName, statusId, maxId, sinceId, null, null, 0, true);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
+
             return loader;
         }
 
@@ -287,6 +292,12 @@ public class StatusFragment extends BaseSupportFragment
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
         Utils.openMediaDirectly(getActivity(), accountId, media, status.media);
+        //spice
+        SpiceProfilingUtil.log(getActivity(),
+                status.id + ",Clicked,"  + accountId + "," + status.user_id  + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp );
+        SpiceProfilingUtil.profile(getActivity(),accountId,
+                status.id + ",Clicked,"  + accountId + "," + status.user_id  + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);
+        //end
     }
 
     @Override
@@ -357,6 +368,19 @@ public class StatusFragment extends BaseSupportFragment
         }
         getLoaderManager().initLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
         mRepliesLoaderInitialized = true;
+        //spice
+        if (status.media != null) {
+            SpiceProfilingUtil.profile(getActivity(), status.account_id,
+                    status.id + ",Preview," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(status.media[0].type) + "," + status.timestamp );
+            SpiceProfilingUtil.log(getActivity(),
+                    status.id + ",Preview," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(status.media[0].type) + "," + status.timestamp );
+        }   else {
+            SpiceProfilingUtil.profile(getActivity(), status.account_id,
+                    status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + status.timestamp );
+            SpiceProfilingUtil.log(getActivity(),status.account_id + ",Words," + status.user_id + "," + status.text_plain.length() + "," + status.timestamp );
+        }
+        //end
+
     }
 
     private void setConversation(List<ParcelableStatus> data) {
@@ -954,8 +978,18 @@ public class StatusFragment extends BaseSupportFragment
                 case MENU_FAVORITE: {
                     if (status.is_favorite) {
                         twitter.destroyFavoriteAsync(status.account_id, status.id);
+                        //spice
+                        SpiceProfilingUtil.profile(adapter.getContext(),
+                                status.account_id, status.id + ",Unfavor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                        SpiceProfilingUtil.log(adapter.getContext(),status.id + ",Unfavor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                        //end
                     } else {
                         twitter.createFavoriteAsync(status.account_id, status.id);
+                        //spice
+                        SpiceProfilingUtil.profile(adapter.getContext(),
+                                status.account_id, status.id + ",Favor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                        SpiceProfilingUtil.log(adapter.getContext(),status.id + ",Favor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                        //end
                     }
                     break;
                 }

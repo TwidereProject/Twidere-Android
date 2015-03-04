@@ -56,6 +56,9 @@ public class DataProfilingSettingsFragment extends BaseFragment implements OnCli
 		mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 		if (mPreferences.contains(KEY_UCD_DATA_PROFILING)) {
 			mCheckBox.setChecked(mPreferences.getBoolean(KEY_UCD_DATA_PROFILING, false));
+            //spice
+            mCheckBox.setChecked(mPreferences.getBoolean(KEY_SPICE_DATA_PROFILING, false));
+            //end
 		}
 		mSaveButton.setOnClickListener(this);
 		mPreviewButton.setOnClickListener(this);
@@ -68,6 +71,10 @@ public class DataProfilingSettingsFragment extends BaseFragment implements OnCli
 				final SharedPreferences.Editor editor = mPreferences.edit();
 				editor.putBoolean(KEY_UCD_DATA_PROFILING, mCheckBox.isChecked());
 				editor.putBoolean(KEY_SHOW_UCD_DATA_PROFILING_REQUEST, false);
+                //spice
+                editor.putBoolean(KEY_SPICE_DATA_PROFILING, mCheckBox.isChecked());
+                editor.putBoolean(KEY_SHOW_SPICE_DATA_PROFILING_REQUEST, false);
+                //end
 				editor.commit();
 				getActivity().onBackPressed();
 				break;

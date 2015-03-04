@@ -31,9 +31,12 @@ import android.util.Log;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.Utils;
 
+import edu.tsinghua.spice.Utilies.NetworkStateUtil;
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
 
-	private static final String RECEIVER_LOGTAG = LOGTAG + "." + "Connectivity";
+	private static final String RECEIVER_LOGTAG = LOGTAG + "." + "ConnectivityStateReceiver";
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
@@ -43,5 +46,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
 		if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
 		startProfilingServiceIfNeeded(context);
 		startRefreshServiceIfNeeded(context);
+        //spice
+        SpiceProfilingUtil.profile(context,SpiceProfilingUtil.FILE_NAME_ONWIFI, NetworkStateUtil.getConnectedType(context));
 	}
 }
