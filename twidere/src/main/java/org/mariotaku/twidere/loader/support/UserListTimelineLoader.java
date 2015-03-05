@@ -38,10 +38,10 @@ public class UserListTimelineLoader extends Twitter4JStatusesLoader {
 
     private final long mUserId;
     private final String mScreenName, mListName;
-    private final int mListId;
+    private final long mListId;
     private final boolean mFiltersForRts;
 
-    public UserListTimelineLoader(final Context context, final long accountId, final int listId,
+    public UserListTimelineLoader(final Context context, final long accountId, final long listId,
                                   final long userId, final String screenName, final String listName,
                                   final long sinceId, final long maxId, final List<ParcelableStatus> data,
                                   final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
