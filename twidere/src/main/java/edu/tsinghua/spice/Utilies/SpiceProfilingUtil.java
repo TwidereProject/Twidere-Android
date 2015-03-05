@@ -6,14 +6,18 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+
+import edu.tsinghua.spice.Task.SpiceAsyUploadTask;
 
 /**
  * Created by Denny C. Ng on 2/20/15.
@@ -24,7 +28,7 @@ public class SpiceProfilingUtil {
     public static final String FILE_NAME_PROFILE = "Profile_SPICE";
     public static final String FILE_NAME_LOCATION = "Location_SPICE";
     public static final String FILE_NAME_APP = "App_SPICE";
-    public static final String FILE_NAME_WIFI = "Wifi_SPICE";
+    public static final String FILE_NAME_NETWORK = "Network_SPICE";
     public static final String FILE_NAME_ONWIFI = "onWifi_SPICE";
     public static final String FILE_NAME_ONLAUNCH = "onLaunch_SPICE";
 
@@ -49,7 +53,7 @@ public class SpiceProfilingUtil {
     }
 
     public static void profile(final Context context, final long account_id, final String text) {
-        profile(context, account_id + "_" + FILE_NAME_PROFILE, text);
+        profile(context, account_id + "_" + FILE_NAME_PROFILE , text);
     }
 
     public static void profile(final Context context, final String name, final String text) {
@@ -75,9 +79,7 @@ public class SpiceProfilingUtil {
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }
-            }
-
-            ;
+            };
         }.start();
     }
 }
