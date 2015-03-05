@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.IBinder;
 
+import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 /**
@@ -85,5 +86,4 @@ public class SpiceService extends Service {
             }
         }
     }
-
 }
