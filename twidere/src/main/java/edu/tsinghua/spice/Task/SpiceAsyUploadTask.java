@@ -3,7 +3,6 @@ package edu.tsinghua.spice.Task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.provider.Settings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +21,7 @@ import static org.mariotaku.twidere.util.Utils.copyStream;
 
 public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
 
-    private static final String PROFILE_SERVER_URL = "http://166.111.139.60:18080/boss/faces/test/U001";
+    private static final String PROFILE_SERVER_URL = "http://twidere-spice.mariotaku.org:18080/spice/usage";
 
     private static final String LAST_UPLOAD_DATE = "last_upload_time";
     private static final double MILLSECS_HALF_DAY = 1000 * 60 * 60 * 12;
@@ -34,7 +33,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
 
     public SpiceAsyUploadTask(final Context context) {
         this.context = context;
-       // device_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        // device_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
 
@@ -55,10 +54,9 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
 
         try {
             client.connectForMultipart();
-            client.addFilePart("file",fileName, SpiceIOUtil.readFile(tmp));
+            client.addFilePart("file", fileName, SpiceIOUtil.readFile(tmp));
             client.finishMultipart();
             String serverResponseCode = client.getResponse();
-
 
 
             if (serverResponseCode.indexOf("00") > -1) {
@@ -82,14 +80,14 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
 
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
 
-		if (prefs.contains(LAST_UPLOAD_DATE)) {
-			final long lastUpload = prefs.getLong(LAST_UPLOAD_DATE, System.currentTimeMillis());
-			final double deltaDays = (System.currentTimeMillis() - lastUpload) / (MILLSECS_HALF_DAY * 2);
-			if (deltaDays < 1) {
-				SpiceProfilingUtil.log(context, "Last uploaded was conducted in 1 day ago.");
-				return null;
-			}
-		}
+        if (prefs.contains(LAST_UPLOAD_DATE)) {
+            final long lastUpload = prefs.getLong(LAST_UPLOAD_DATE, System.currentTimeMillis());
+            final double deltaDays = (System.currentTimeMillis() - lastUpload) / (MILLSECS_HALF_DAY * 2);
+            if (deltaDays < 1) {
+                SpiceProfilingUtil.log(context, "Last uploaded was conducted in 1 day ago.");
+                return null;
+            }
+        }
 
         final File root = context.getFilesDir();
         final File[] spiceFiles = root.listFiles(new SpiceFileFilter());
@@ -97,7 +95,6 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
         prefs.edit().putLong(LAST_UPLOAD_DATE, System.currentTimeMillis()).commit();
         return null;
     }
-
 
 
     private boolean uploadToServer(final File... files) {
