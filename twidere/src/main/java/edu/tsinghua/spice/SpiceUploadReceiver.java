@@ -25,12 +25,6 @@ public class SpiceUploadReceiver extends BroadcastReceiver {
         final boolean isWifi = Utils.isOnWifi(context.getApplicationContext());
         final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());
 
-        if (WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION.equals(action)) {
-            final boolean wifi = intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false);
-            SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_WIFI, wifi ? "connected"  : "disconnected");
-            SpiceProfilingUtil.log(context, wifi ? "connected" : "disconnected" );
-        }
-
         if (isWifi && isCharging) {
             new SpiceAsyUploadTask(context).execute();
         }
