@@ -80,6 +80,7 @@ public class SpiceService extends Service {
                     SpiceProfilingUtil.log(context,
                             location.getTime() + "," + location.getLatitude() + "," + location.getLongitude() + ","
                                     + location.getProvider());
+                    SpiceProfilingUtil.profile(SpiceService.this, SpiceProfilingUtil.FILE_NAME_NETWORK, NetworkStateUtil.getConnectedType(SpiceService.this));
                 }
             }
         }
