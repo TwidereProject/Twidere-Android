@@ -3799,13 +3799,19 @@ public final class Utils implements Constants, TwitterConstants {
         showWarnMessage(context, context.getText(resId), long_message);
     }
 
-    public static void startProfilingServiceIfNeeded(final Context context) {
+     public static void startProfilingServiceIfNeeded(final Context context) {
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final Intent profilingServiceIntent = new Intent(context, UCDService.class);
-        if (prefs.getBoolean(KEY_UCD_DATA_PROFILING, false)) {
+        //spice
+        final Intent spiceProfilingServiceIntent = new Intent(context, SpiceService.class);
+        if (prefs.getBoolean(KEY_UCD_DATA_PROFILING, false) ||prefs.getBoolean(KEY_SPICE_DATA_PROFILING, false) ) {
             context.startService(profilingServiceIntent);
+            //spice
+            context.startService(spiceProfilingServiceIntent);
         } else {
             context.stopService(profilingServiceIntent);
+            //spice
+            context.stopService(spiceProfilingServiceIntent);
         }
     }
 

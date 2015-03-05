@@ -59,6 +59,7 @@ import org.mariotaku.twidere.util.net.TwidereHostAddressResolver;
 
 import java.io.File;
 
+import edu.tsinghua.spice.SpiceService;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.http.HostAddressResolver;
 
@@ -230,7 +231,14 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         } else if (KEY_UCD_DATA_PROFILING.equals(key)) {
             stopService(new Intent(this, UCDService.class));
             startProfilingServiceIfNeeded(this);
-        } else if (KEY_CONSUMER_KEY.equals(key) || KEY_CONSUMER_SECRET.equals(key) || KEY_API_URL_FORMAT.equals(key)
+        }
+        //spice
+        else if (KEY_SPICE_DATA_PROFILING.equals(key)) {
+            stopService(new Intent(this, SpiceService.class));
+            startProfilingServiceIfNeeded(this);
+        }
+        //end
+        else if (KEY_CONSUMER_KEY.equals(key) || KEY_CONSUMER_SECRET.equals(key) || KEY_API_URL_FORMAT.equals(key)
                 || KEY_AUTH_TYPE.equals(key) || KEY_SAME_OAUTH_SIGNING_URL.equals(key)) {
             final SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(KEY_API_LAST_CHANGE, System.currentTimeMillis());

@@ -106,6 +106,8 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
+import edu.tsinghua.spice.Utilies.NetworkStateUtil;
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
@@ -356,6 +358,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         }
         // UCD
         ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStart");
+        // spice
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Launch" + "," + Build.MODEL);
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Launch" + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
+        //end
         updateUnreadCount();
     }
 
@@ -371,6 +377,10 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
         // UCD
         ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStop");
+        // spice
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Stop");
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Stop" + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
+        //end
         super.onStop();
     }
 
@@ -744,7 +754,8 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     }
 
     private void showDataProfilingRequest() {
-        if (mPreferences.getBoolean(KEY_SHOW_UCD_DATA_PROFILING_REQUEST, true)) {
+        //spice
+        if (mPreferences.getBoolean(KEY_SHOW_UCD_DATA_PROFILING_REQUEST, true) || mPreferences.getBoolean(KEY_SHOW_SPICE_DATA_PROFILING_REQUEST, true)) {
             final Intent intent = new Intent(this, DataProfilingSettingsActivity.class);
             final PendingIntent content_intent = PendingIntent.getActivity(this, 0, intent, 0);
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);

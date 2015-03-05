@@ -223,7 +223,11 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, exportable = false)
     public static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
     @Preference(type = BOOLEAN, exportable = false)
+    public static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
+    @Preference(type = BOOLEAN, exportable = false)
     public static final String KEY_SHOW_UCD_DATA_PROFILING_REQUEST = "show_ucd_data_profiling_request";
+    @Preference(type = BOOLEAN, exportable = false)
+    public static final String KEY_SHOW_SPICE_DATA_PROFILING_REQUEST = "show_spice_data_profiling_request";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_DISPLAY_SENSITIVE_CONTENTS = "display_sensitive_contents";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)

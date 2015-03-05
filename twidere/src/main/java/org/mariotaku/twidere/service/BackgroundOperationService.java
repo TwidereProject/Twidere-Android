@@ -51,6 +51,7 @@ import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -82,6 +83,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import edu.tsinghua.spice.Utilies.TypeMapingUtil;
 import twitter4j.MediaUploadResponse;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -187,6 +190,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     protected void onHandleIntent(final Intent intent) {
         if (intent == null) return;
         final String action = intent.getAction();
+
         switch (action) {
             case INTENT_ACTION_UPDATE_STATUS:
                 handleUpdateStatusIntent(intent);
@@ -257,6 +261,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         startForeground(NOTIFICATION_ID_SEND_DIRECT_MESSAGE, notification);
         final SingleResponse<ParcelableDirectMessage> result = sendDirectMessage(builder, accountId, recipientId, text,
                 imageUri);
+
         if (result.getData() != null && result.getData().id > 0) {
             final ContentValues values = ContentValuesCreator.createDirectMessage(result.getData());
             final String delete_where = DirectMessages.ACCOUNT_ID + " = " + accountId + " AND "
@@ -264,6 +269,8 @@ public class BackgroundOperationService extends IntentService implements Constan
             mResolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
             mResolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
+
+
         } else {
             final ContentValues values = createMessageDraft(accountId, recipientId, text, imageUri);
             mResolver.insert(Drafts.CONTENT_URI, values);
@@ -297,6 +304,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
             final long draftId = ParseUtils.parseLong(draftUri.getLastPathSegment(), -1);
             mTwitter.addSendingDraftId(draftId);
+
             try {
                 Thread.sleep(15000L);
             } catch (InterruptedException e) {
@@ -305,11 +313,13 @@ public class BackgroundOperationService extends IntentService implements Constan
             final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
             boolean failed = false;
             Exception exception = null;
-
             final Expression where = Expression.equals(Drafts._ID, draftId);
             final List<Long> failedAccountIds = ListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
 
+
+
             for (final SingleResponse<ParcelableStatus> response : result) {
+
                 if (response.getData() == null) {
                     failed = true;
                     if (exception == null) {
@@ -317,8 +327,23 @@ public class BackgroundOperationService extends IntentService implements Constan
                     }
                 } else if (response.getData().account_id > 0) {
                     failedAccountIds.remove(response.getData().account_id);
+                    //spice
+                    if (response.getData().media == null) {
+                        SpiceProfilingUtil.log(this.getBaseContext(), response.getData().id + ",Tweet," + response.getData().account_id + ","
+                                + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id);
+                        SpiceProfilingUtil.profile(this.getBaseContext(), response.getData().account_id, response.getData().id + ",Tweet," + response.getData().account_id + ","
+                                + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id);
+                    }   else
+                        for (final ParcelableMedia spiceMedia : response.getData().media) {
+                            SpiceProfilingUtil.log(this.getBaseContext(), response.getData().id + ",Media," + response.getData().account_id + ","
+                                    + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type));
+                            SpiceProfilingUtil.profile(this.getBaseContext(), response.getData().account_id, response.getData().id + ",Media," + response.getData().account_id + ","
+                                    + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type));
+                        }
+                    //end
                 }
             }
+
             if (result.isEmpty()) {
                 showErrorMessage(R.string.action_updating_status, getString(R.string.no_account_selected), false);
             } else if (failed) {
@@ -392,6 +417,10 @@ public class BackgroundOperationService extends IntentService implements Constan
                         true);
             }
             Utils.setLastSeen(this, recipientId, System.currentTimeMillis());
+
+
+
+
             return SingleResponse.getInstance(directMessage);
         } catch (final IOException e) {
             return SingleResponse.getInstance(e);

@@ -79,6 +79,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
 import twitter4j.DirectMessage;
 import twitter4j.Paging;
@@ -2394,6 +2395,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 // UCD
                 ProfilingUtil.profile(mContext, accountId,
                         "Download tweets, " + TwidereArrayUtils.toString(statusIds, ',', true));
+                //spice
+                SpiceProfilingUtil.profile(mContext, accountId, accountId + ",Refresh," + TwidereArrayUtils.toString(statusIds, ',', true));
+                //end
                 all_statuses.addAll(Arrays.asList(values));
                 // Insert previously fetched items.
                 final Uri insertUri = appendQueryParameters(uri, new NameValuePairImpl(QUERY_PARAM_NOTIFY, notify));
