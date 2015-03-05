@@ -21,20 +21,18 @@ package org.mariotaku.twidere.util.net;
 
 import android.net.Uri;
 
-import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Request.Builder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.util.Utils;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -44,7 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import twitter4j.TwitterException;
@@ -118,40 +115,24 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
         if (!HttpParameter.containsFile(params)) {
             return RequestBody.create(APPLICATION_FORM_URLENCODED, HttpParameter.encodeParameters(params));
         }
-        if (params.length == 1) {
-            final HttpParameter param = params[0];
-            if (param.hasFileBody()) {
-                final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                return RequestBody.create(MediaType.parse(param.getContentType()), os.toByteArray());
-            } else {
-                return RequestBody.create(MediaType.parse(param.getContentType()), param.getFile());
-            }
-        }
-        String boundary = String.format("----%s", UUID.randomUUID().toString());
-        final MediaType mediaType = MediaType.parse("multipart/form-data; boundary=" + boundary);
-        boundary = "--" + boundary;
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        final MultipartBuilder builder = new MultipartBuilder();
         for (final HttpParameter param : params) {
-            os.write(String.format("%s\r\n", boundary).getBytes("UTF-8"));
             if (param.isFile()) {
-                os.write(String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n", param.getName(), param.getFileName()).getBytes("UTF-8"));
-                os.write(String.format("Content-Type: %s\r\n\r\n", param.getContentType()).getBytes("UTF-8"));
-                final BufferedInputStream in = new BufferedInputStream(param.hasFileBody() ?
-                        param.getFileBody() : new FileInputStream(param.getFile()));
-                byte[] buff = new byte[8192];
-                while (in.read(buff) != -1) {
-                    os.write(buff);
+                RequestBody requestBody;
+                if (param.hasFileBody()) {
+                    final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    Utils.copyStream(param.getFileBody(), os);
+                    requestBody = RequestBody.create(MediaType.parse(param.getContentType()), os.toByteArray());
+                    os.close();
+                } else {
+                    requestBody = RequestBody.create(MediaType.parse(param.getContentType()), param.getFile());
                 }
-                in.close();
+                builder.addFormDataPart(param.getName(), param.getFileName(), requestBody);
             } else {
-                os.write(String.format("Content-Disposition: form-data; name=\"%s\"\r\n", param.getName()).getBytes("UTF-8"));
-                os.write("Content-Type: text/plain; charset=UTF-8\r\n\r\n".getBytes("UTF-8"));
-                os.write(param.getValue().getBytes("UTF-8"));
+                builder.addFormDataPart(param.getName(), param.getValue());
             }
-            os.write("\r\n".getBytes("UTF-8"));
         }
-        os.write(String.format("%s--\r\n", boundary).getBytes("UTF-8"));
-        return RequestBody.create(mediaType, os.toByteArray());
+        return builder.build();
     }
 
     private void setupRequestBuilder(Builder builder, HttpRequest req) throws IOException {
