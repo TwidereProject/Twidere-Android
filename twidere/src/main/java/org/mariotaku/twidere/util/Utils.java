@@ -234,6 +234,7 @@ import java.util.zip.CRC32;
 
 import javax.net.ssl.SSLException;
 
+import edu.tsinghua.spice.SpiceService;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.DirectMessage;
 import twitter4j.RateLimitStatus;
