@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
@@ -90,9 +91,13 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
                 return Result.nullInstance();
             try {
                 // from SD cache
-                if (ImageValidator.checkImageValidity(cacheFile))
-                    return decodeBitmapOnly(cacheFile, true);
-
+                final int cachedValidity = ImageValidator.checkImageValidity(cacheFile);
+                if (ImageValidator.isValid(cachedValidity)) {
+                    // The file is corrupted, so we remove it from
+                    // cache.
+                    return decodeBitmapOnly(cacheFile,
+                            ImageValidator.isValidForRegionDecoder(cachedValidity));
+                }
                 final InputStream is = mDownloader.getStream(url, new AccountExtra(mAccountId));
                 if (is == null) return Result.nullInstance();
                 final long length = is.available();
@@ -105,16 +110,16 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
                     IoUtils.closeSilently(is);
                     IoUtils.closeSilently(os);
                 }
-                if (!ImageValidator.checkImageValidity(cacheFile)) {
+                final int downloadedValidity = ImageValidator.checkImageValidity(cacheFile);
+                if (ImageValidator.isValid(downloadedValidity)) {
                     // The file is corrupted, so we remove it from
                     // cache.
-                    final Result result = decodeBitmapOnly(cacheFile, false);
-                    if (cacheFile.isFile()) {
-                        cacheFile.delete();
-                    }
-                    return result;
+                    return decodeBitmapOnly(cacheFile,
+                            ImageValidator.isValidForRegionDecoder(downloadedValidity));
+                } else {
+                    cacheFile.delete();
+                    throw new IOException();
                 }
-                return decodeBitmapOnly(cacheFile, true);
             } catch (final Exception e) {
                 mHandler.post(new DownloadErrorRunnable(this, mListener, e));
                 return Result.getInstance(cacheFile, e);
@@ -122,7 +127,8 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             final File file = new File(mUri.getPath());
             try {
-                return decodeBitmapOnly(file, true);
+                return decodeBitmapOnly(file,
+                        ImageValidator.isValidForRegionDecoder(ImageValidator.checkImageValidity(file)));
             } catch (final Exception e) {
                 return Result.getInstance(file, e);
             }
@@ -140,7 +146,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         o.inJustDecodeBounds = false;
         o.inSampleSize = BitmapUtils.computeSampleSize(mFallbackSize / Math.max(width, height));
         final Bitmap bitmap = BitmapFactory.decodeFile(path, o);
-        return Result.getInstance(useDecoder, bitmap, Exif.getOrientation(file), file);
+        return Result.getInstance(useDecoder, bitmap, o, Exif.getOrientation(file), file);
     }
 
     @Override
@@ -173,14 +179,16 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
     public static class Result {
         public final Bitmap bitmap;
+        public final Options options;
         public final File file;
         public final Exception exception;
         public final boolean useDecoder;
         public final int orientation;
 
-        public Result(final boolean useDecoder, final Bitmap bitmap, final int orientation,
+        public Result(final boolean useDecoder, final Bitmap bitmap, final Options options, final int orientation,
                       final File file, final Exception exception) {
             this.bitmap = bitmap;
+            this.options = options;
             this.file = file;
             this.useDecoder = useDecoder;
             this.orientation = orientation;
@@ -191,21 +199,21 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
             return bitmap != null || useDecoder;
         }
 
-        public static Result getInstance(final Bitmap bitmap, final int orientation, final File file) {
-            return new Result(false, bitmap, orientation, file, null);
+        public static Result getInstance(final Bitmap bitmap, final Options options, final int orientation, final File file) {
+            return new Result(false, bitmap, options, orientation, file, null);
         }
 
-        public static Result getInstance(final boolean useDecoder, final Bitmap bitmap,
+        public static Result getInstance(final boolean useDecoder, final Bitmap bitmap, final Options options,
                                          final int orientation, final File file) {
-            return new Result(useDecoder, bitmap, orientation, file, null);
+            return new Result(useDecoder, bitmap, options, orientation, file, null);
         }
 
         public static Result getInstance(final File file, final Exception e) {
-            return new Result(false, null, 0, file, e);
+            return new Result(false, null, null, 0, file, e);
         }
 
         public static Result nullInstance() {
-            return new Result(false, null, 0, null, null);
+            return new Result(false, null, null, 0, null, null);
         }
     }
 

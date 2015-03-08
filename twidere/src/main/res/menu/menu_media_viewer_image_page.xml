@@ -21,14 +21,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@id/refresh"
         android:icon="@drawable/ic_action_refresh"
         app:showAsAction="ifRoom"
         android:title="@string/refresh"/>
     <item
-        android:icon="@drawable/ic_action_save"
+        android:id="@id/share"
+        android:icon="@drawable/ic_action_share"
         app:showAsAction="ifRoom"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        android:title="@string/share"/>
+    <item
+        android:id="@id/save"
+        android:icon="@drawable/ic_action_save"
         android:title="@string/save_to_gallery"/>
     <item
+        android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
         android:title="@string/open_in_browser"/>
 </menu>

@@ -78,6 +78,7 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:1.8.2'
     compile 'com.pnikosis:materialish-progress:1.4'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
     aarLinkSources 'com.squareup.okhttp:okhttp:2.2.0:sources@jar'
     googleCompile 'com.google.android.gms:play-services:6.5.87'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'

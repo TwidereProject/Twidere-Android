@@ -54,7 +54,7 @@ public class ImagePreloader implements Constants {
     public File getCachedImageFile(final String url) {
         if (url == null) return null;
         final File cache = mDiskCache.get(url);
-        if (ImageValidator.checkImageValidity(cache))
+        if (ImageValidator.isValid(ImageValidator.checkImageValidity(cache)))
             return cache;
         else {
             preloadImage(url);
