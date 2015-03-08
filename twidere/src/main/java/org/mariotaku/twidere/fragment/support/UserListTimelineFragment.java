@@ -39,7 +39,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
                                                                  final boolean fromUser) {
         setRefreshing(true);
         if (args == null) return null;
-        final int listId = args.getInt(EXTRA_LIST_ID, -1);
+        final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
@@ -55,7 +55,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
         if (args == null) return null;
-        final int listId = args.getInt(EXTRA_LIST_ID, -1);
+        final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
