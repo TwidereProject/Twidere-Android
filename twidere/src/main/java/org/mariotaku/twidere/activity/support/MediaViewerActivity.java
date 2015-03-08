@@ -24,9 +24,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +55,13 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TouchImageView;
 import org.mariotaku.twidere.view.TouchImageView.ZoomListener;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import pl.droidsonroids.gif.GifDrawable;
 
 public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants, OnPageChangeListener {
 
@@ -176,6 +185,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         public void onLoadFinished(final Loader<TileImageLoader.Result> loader, final TileImageLoader.Result data) {
             if (data.hasData()) {
                 mImageView.setVisibility(View.VISIBLE);
+                mImageView.setTag(data.file);
                 if (data.useDecoder) {
                     TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(),
                             null, new OnInitializeListener() {
@@ -194,11 +204,24 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                                     });
                                 }
                             });
+                } else if ("image/gif".equals(data.options.outMimeType)) {
+                    try {
+                        final FileDescriptor fd = new RandomAccessFile(data.file, "r").getFD();
+                        mImageView.setImageDrawable(new GifDrawable(fd));
+                    } catch (IOException e) {
+                        mImageView.setImageDrawable(null);
+                        mImageView.setTag(null);
+                        mImageView.setVisibility(View.GONE);
+                        Utils.showErrorMessage(getActivity(), null, e, true);
+                    }
+                    updateScaleLimit();
                 } else {
                     mImageView.setImageBitmap(data.bitmap);
                     updateScaleLimit();
                 }
             } else {
+                mImageView.setImageDrawable(null);
+                mImageView.setTag(null);
                 mImageView.setVisibility(View.GONE);
                 Utils.showErrorMessage(getActivity(), null, data.exception, true);
             }
@@ -218,8 +241,53 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
 
         @Override
+        public void onPrepareOptionsMenu(Menu menu) {
+            super.onPrepareOptionsMenu(menu);
+            final Object imageTag = mImageView.getTag();
+            final boolean isLoading = getLoaderManager().hasRunningLoaders();
+            final boolean hasImage = imageTag instanceof File;
+            Utils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
+            Utils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
+            Utils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
+            if (hasImage) {
+                final MenuItem shareItem = menu.findItem(R.id.share);
+                final ShareActionProvider shareProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+                final File file = (File) imageTag;
+                final Intent intent = new Intent(Intent.ACTION_SEND);
+                final Uri fileUri = Uri.fromFile(file);
+                intent.setDataAndType(fileUri, Utils.getImageMimeType(file));
+                intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                shareProvider.setShareIntent(intent);
+            }
+        }
+
+        @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             inflater.inflate(R.menu.menu_media_viewer_image_page, menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.open_in_browser: {
+                    final ParcelableMedia media = getMedia();
+                    final Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    if (media.page_url != null) {
+                        intent.setData(Uri.parse(media.page_url));
+                    } else {
+                        intent.setData(Uri.parse(media.media_url));
+                    }
+                    startActivity(intent);
+                    return true;
+                }
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+        private ParcelableMedia getMedia() {
+            final Bundle args = getArguments();
+            return args.getParcelable(EXTRA_MEDIA);
         }
 
         @Override

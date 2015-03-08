@@ -28,6 +28,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
@@ -84,9 +85,9 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     }
 
     public void invalidateOptionsMenu() {
-        final Activity activity = getActivity();
+        final FragmentActivity activity = getActivity();
         if (activity == null) return;
-        activity.invalidateOptionsMenu();
+        activity.supportInvalidateOptionsMenu();
     }
 
     public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {
