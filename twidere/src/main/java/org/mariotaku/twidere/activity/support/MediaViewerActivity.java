@@ -235,7 +235,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public void onLoaderReset(final Loader<TileImageLoader.Result> loader) {
-
+            final Drawable drawable = mImageView.getDrawable();
+            if (drawable instanceof GifDrawable) {
+                ((GifDrawable) drawable).recycle();
+            }
         }
 
         @Override

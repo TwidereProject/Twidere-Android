@@ -36,18 +36,4 @@ public class TwidereActionMenuView extends ActionMenuView {
         super(context, attrs);
     }
 
-//    @Override
-//    public boolean post(Runnable action) {
-//        try {
-//            final Class<?> actionCls = action.getClass();
-//            final Field popupField = actionCls.getField("mPopup");
-//            popupField.setAccessible(true);
-//            final Object popupObject = popupField.get(action);
-//            if (popupObject instanceof MenuPopupHelper) {
-//                ((MenuPopupHelper) popupObject).setForceShowIcon(true);
-//            }
-//        } catch (NoSuchFieldException | IllegalAccessException ignore) {
-//        }
-//        return super.post(action);
-//    }
 }

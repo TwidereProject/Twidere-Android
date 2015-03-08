@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,6 +24,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -70,9 +72,12 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            final FragmentActivity activity = getActivity();
+            if (activity instanceof BaseSupportActivity) {
+//                ((BaseSupportActivity) activity).setControlBarOffset(dx);
+            }
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            if (isRefreshing()) return;
-            if (mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
+            if (!isRefreshing() && mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
                     && layoutManager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
                 onLoadMoreStatuses();
             }
