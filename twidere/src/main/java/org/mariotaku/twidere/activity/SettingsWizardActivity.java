@@ -171,6 +171,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
         mAdapter.addTab(WizardPageThemeFragment.class, null, getString(R.string.theme), null, 0);
         mAdapter.addTab(WizardPageTabsFragment.class, null, getString(R.string.tabs), null, 0);
         mAdapter.addTab(WizardPageCardsFragment.class, null, getString(R.string.cards), null, 0);
+        mAdapter.addTab(WizardPageUsageStatisticsFragment.class, null, getString(R.string.usage_statistics), null, 0);
         mAdapter.addTab(WizardPageHintsFragment.class, null, getString(R.string.hints), null, 0);
         mAdapter.addTab(WizardPageFinishedFragment.class, null, getString(R.string.wizard_page_finished_title), null, 0);
     }
@@ -282,6 +283,30 @@ public class SettingsWizardActivity extends Activity implements Constants {
             return view;
         }
 
+    }
+
+    public static class WizardPageUsageStatisticsFragment extends BaseWizardPageFragment {
+
+
+        @Override
+        protected int getHeaderSummary() {
+            return R.string.wizard_page_usage_statistics_text;
+        }
+
+        @Override
+        protected int getHeaderTitle() {
+            return R.string.usage_statistics;
+        }
+
+        @Override
+        protected int getNextPageTitle() {
+            return R.string.next;
+        }
+
+        @Override
+        protected int getPreferenceResource() {
+            return R.xml.settings_wizard_page_usage_statistics;
+        }
     }
 
     public static class WizardPageHintsFragment extends BaseWizardPageFragment {

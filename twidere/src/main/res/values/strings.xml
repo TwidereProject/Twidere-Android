@@ -511,6 +511,7 @@
     <string name="wizard_page_tabs_unchanged_message">You can add tabs in &quot;Settings&quot; - &quot;Tabs&quot;</string>
     <string name="wizard_page_cards_text">Config card items.</string>
     <string name="wizard_page_hints_text">Here are some useful hints.</string>
+    <string name="wizard_page_usage_statistics_text">Twidere took part in some research project that needs some usage data.</string>
     <string name="wizard_page_finished_title">Finished</string>
     <string name="wizard_page_finished_text">Now Twidere is ready for use.</string>
     <string name="invalid_tab">Invalid tab</string>
@@ -721,5 +722,8 @@
     <string name="no_location">No location</string>
     <string name="getting_location">Getting location</string>
     <string name="save_to_gallery">Save to gallery</string>
+    <string name="usage_statistics">Usage statistics</string>
+    <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
+    <string name="research_tsinghua_spice">Tsinghua Spice</string>
 
 </resources>
