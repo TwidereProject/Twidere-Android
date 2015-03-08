@@ -7,12 +7,13 @@ public interface IControlBarActivity {
 
     public void setControlBarOffset(float offset);
 
+    public void setControlBarVisibleAnimate(boolean visible);
+
     public float getControlBarOffset();
 
     public int getControlBarHeight();
 
     public void moveControlBarBy(float delta);
-
 
     public void notifyControlBarOffsetChanged();
 

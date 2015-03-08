@@ -426,9 +426,9 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
 
     @Override
     public void onScrollDistanceChanged(int delta, int total) {
-        final FragmentActivity a = getActivity();
-        if (a instanceof IControlBarActivity && getTabPosition() >= 0 && getUserVisibleHint()) {
-            ((IControlBarActivity) a).moveControlBarBy(delta);
-        }
+//        final FragmentActivity a = getActivity();
+//        if (a instanceof IControlBarActivity && getTabPosition() >= 0 && getUserVisibleHint()) {
+//            ((IControlBarActivity) a).moveControlBarBy(delta);
+//        }
     }
 }

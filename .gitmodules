@@ -13,3 +13,6 @@
 [submodule "libraries/MessageBubbleView"]
 	path = libraries/MessageBubbleView
 	url = https://github.com/mariotaku/MessageBubbleView.git
+[submodule "libraries/ColorPicker"]
+	path = libraries/ColorPicker
+	url = https://github.com/uucky/ColorPicker-Android.git

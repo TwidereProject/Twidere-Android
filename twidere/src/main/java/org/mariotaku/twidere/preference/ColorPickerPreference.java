@@ -32,8 +32,9 @@ import android.widget.ImageView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.dialog.ColorPickerDialog;
-import org.mariotaku.twidere.view.ColorPickerView;
+import org.mariotaku.twidere.util.ColorUtils;
+
+import me.uucky.colorpicker.ColorPickerDialog;
 
 public class ColorPickerPreference extends Preference implements DialogInterface.OnClickListener, Constants {
 
@@ -111,13 +112,20 @@ public class ColorPickerPreference extends Preference implements DialogInterface
     protected void onBindView(@NonNull final View view) {
         super.onBindView(view);
         final ImageView imageView = (ImageView) view.findViewById(R.id.color);
-        imageView.setImageBitmap(ColorPickerView.getColorPreviewBitmap(getContext(), getValue(), false));
+        imageView.setImageBitmap(ColorUtils.getColorPreviewBitmap(getContext(), getValue(), false));
     }
 
     @Override
     protected void onClick() {
         if (mDialog != null && mDialog.isShowing()) return;
-        mDialog = new ColorPickerDialog(getContext(), getValue(), mAlphaSliderEnabled);
+        final Context context = getContext();
+        mDialog = new ColorPickerDialog(context);
+        final Resources res = context.getResources();
+        for (int presetColor : PRESET_COLORS) {
+            mDialog.addColor(res.getColor(presetColor));
+        }
+        mDialog.setInitialColor(getValue());
+        mDialog.setAlphaEnabled(mAlphaSliderEnabled);
         mDialog.setButton(DialogInterface.BUTTON_POSITIVE, mResources.getString(android.R.string.ok), this);
         mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, mResources.getString(android.R.string.cancel), this);
         mDialog.show();
