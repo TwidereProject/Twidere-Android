@@ -40,7 +40,7 @@ public class CreateUserListDialogFragment extends BaseSupportDialogFragment impl
 	private CheckBox mPublicCheckBox;
 	private String mName, mDescription;
 	private long mAccountId;
-	private int mListId;
+	private long mListId;
 	private boolean mIsPublic = true;
 	private AsyncTwitterWrapper mTwitterWrapper;
 
@@ -88,7 +88,7 @@ public class CreateUserListDialogFragment extends BaseSupportDialogFragment impl
 	@Override
 	public void onSaveInstanceState(final Bundle outState) {
 		outState.putLong(EXTRA_ACCOUNT_ID, mAccountId);
-		outState.putInt(EXTRA_LIST_ID, mListId);
+		outState.putLong(EXTRA_LIST_ID, mListId);
 		outState.putString(EXTRA_LIST_NAME, mName);
 		outState.putString(EXTRA_DESCRIPTION, mDescription);
 		outState.putBoolean(EXTRA_IS_PUBLIC, mIsPublic);

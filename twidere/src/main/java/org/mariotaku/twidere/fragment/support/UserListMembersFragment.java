@@ -62,12 +62,12 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment impl
     @Override
     public CursorSupportUsersLoader newLoaderInstance(final Context context, final Bundle args) {
         if (args == null) return null;
-        final int list_id = args.getInt(EXTRA_LIST_ID, -1);
-        final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-        final long user_id = args.getLong(EXTRA_USER_ID, -1);
-        final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-        final String list_name = args.getString(EXTRA_LIST_NAME);
-        return new UserListMembersLoader(context, account_id, list_id, user_id, screen_name, list_name,
+        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final String listName = args.getString(EXTRA_LIST_NAME);
+        return new UserListMembersLoader(context, accountId, listId, userId, screenName, listName,
                 getNextCursor(), getData());
     }
 
@@ -81,12 +81,12 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment impl
         }
         super.onActivityCreated(savedInstanceState);
         if (mUserList == null && args != null) {
-            final int list_id = args.getInt(EXTRA_LIST_ID, -1);
-            final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            final long user_id = args.getLong(EXTRA_USER_ID, -1);
-            final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-            final String list_name = args.getString(EXTRA_LIST_NAME);
-            new GetUserListTask(account_id, list_id, list_name, user_id, screen_name).executeTask();
+            final long listId = args.getLong(EXTRA_LIST_ID, -1);
+            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String screenName = args.getString(EXTRA_SCREEN_NAME);
+            final String listName = args.getString(EXTRA_LIST_NAME);
+            new GetUserListTask(accountId, listId, listName, userId, screenName).executeTask();
         }
     }
 
@@ -132,34 +132,34 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment impl
 
     private class GetUserListTask extends TwidereAsyncTask<Void, Void, ParcelableUserList> {
 
-        private final long account_id, user_id;
-        private final int list_id;
-        private final String screen_name, list_name;
+        private final long accountId, userId;
+        private final long listId;
+        private final String screenName, listName;
 
-        private GetUserListTask(final long account_id, final int list_id, final String list_name, final long user_id,
-                                final String screen_name) {
-            this.account_id = account_id;
-            this.user_id = user_id;
-            this.list_id = list_id;
-            this.screen_name = screen_name;
-            this.list_name = list_name;
+        private GetUserListTask(final long accountId, final long listId, final String listName, final long userId,
+                                final String screenName) {
+            this.accountId = accountId;
+            this.userId = userId;
+            this.listId = listId;
+            this.screenName = screenName;
+            this.listName = listName;
         }
 
         @Override
         protected ParcelableUserList doInBackground(final Void... params) {
-            final Twitter twitter = getTwitterInstance(getActivity(), account_id, true);
+            final Twitter twitter = getTwitterInstance(getActivity(), accountId, true);
             if (twitter == null) return null;
             try {
                 final UserList list;
-                if (list_id > 0) {
-                    list = twitter.showUserList(list_id);
-                } else if (user_id > 0) {
-                    list = twitter.showUserList(list_name, user_id);
-                } else if (screen_name != null) {
-                    list = twitter.showUserList(list_name, screen_name);
+                if (listId > 0) {
+                    list = twitter.showUserList(listId);
+                } else if (userId > 0) {
+                    list = twitter.showUserList(listName, userId);
+                } else if (screenName != null) {
+                    list = twitter.showUserList(listName, screenName);
                 } else
                     return null;
-                return new ParcelableUserList(list, account_id);
+                return new ParcelableUserList(list, accountId);
             } catch (final TwitterException e) {
                 e.printStackTrace();
                 return null;

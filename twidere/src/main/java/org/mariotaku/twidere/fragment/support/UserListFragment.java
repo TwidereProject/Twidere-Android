@@ -462,7 +462,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         setProgressBarIndeterminateVisibility(true);
         final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
         final long userId = args != null ? args.getLong(EXTRA_USER_ID, -1) : -1;
-        final int listId = args != null ? args.getInt(EXTRA_LIST_ID, -1) : -1;
+        final long listId = args != null ? args.getLong(EXTRA_LIST_ID, -1) : -1;
         final String listName = args != null ? args.getString(EXTRA_LIST_NAME) : null;
         final String screenName = args != null ? args.getString(EXTRA_SCREEN_NAME) : null;
         final boolean omitIntentExtra = args == null || args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
@@ -541,13 +541,13 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             tabArgs.putLong(EXTRA_ACCOUNT_ID, userList.account_id);
             tabArgs.putLong(EXTRA_USER_ID, userList.user_id);
             tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
-            tabArgs.putInt(EXTRA_LIST_ID, (int) userList.id);
+            tabArgs.putLong(EXTRA_LIST_ID, userList.id);
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);
         } else {
             tabArgs.putLong(EXTRA_ACCOUNT_ID, args.getLong(EXTRA_ACCOUNT_ID, -1));
             tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
-            tabArgs.putInt(EXTRA_LIST_ID, args.getInt(EXTRA_LIST_ID, -1));
+            tabArgs.putLong(EXTRA_LIST_ID, args.getLong(EXTRA_LIST_ID, -1));
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
         }
         mPagerAdapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0);
@@ -630,11 +630,11 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         private final boolean mOmitIntentExtra;
         private final Bundle mExtras;
         private final long mAccountId, mUserId;
-        private final int mListId;
+        private final long mListId;
         private final String mScreenName, mListName;
 
         private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                         final long accountId, final int listId, final String listName, final long userId,
+                                         final long accountId, final long listId, final String listName, final long userId,
                                          final String screenName) {
             super(context);
             mOmitIntentExtra = omitIntentExtra;

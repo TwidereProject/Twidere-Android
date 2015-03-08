@@ -913,14 +913,14 @@ public final class Utils implements Constants, TwitterConstants {
             case LINK_ID_USER_LIST: {
                 fragment = new UserListFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
-                final String param_list_id = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if (isEmpty(param_list_id)
-                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(param_user_id)))
+                if (isEmpty(paramListId)
+                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(param_list_id));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
+                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -947,7 +947,7 @@ public final class Utils implements Constants, TwitterConstants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(paramListId));
+                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
                 args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
@@ -962,7 +962,7 @@ public final class Utils implements Constants, TwitterConstants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(paramListId));
+                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
                 args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
@@ -977,7 +977,7 @@ public final class Utils implements Constants, TwitterConstants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putInt(EXTRA_LIST_ID, ParseUtils.parseInt(paramListId));
+                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
                 args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
