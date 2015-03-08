@@ -18,21 +18,22 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ColorLabelRelativeLayout
+<org.mariotaku.twidere.view.ColorLabelFrameLayout
     style="?android:actionButtonStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:clickable="true"
+    android:padding="0dp"
     app:ignorePadding="true">
 
-    <org.mariotaku.twidere.view.SquareCircularImageView
-        style="?profileImageStyle"
+    <org.mariotaku.twidere.view.SquareShapedImageView
         android:id="@+id/recipient_profile_image"
+        style="?profileImageStyle"
         android:layout_width="wrap_content"
-        android:layout_margin="@dimen/element_spacing_msmall"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"/>
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/element_spacing_msmall"/>
 
-</org.mariotaku.twidere.view.ColorLabelRelativeLayout>
+</org.mariotaku.twidere.view.ColorLabelFrameLayout>
