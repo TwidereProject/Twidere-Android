@@ -38,6 +38,5 @@ android {
 }
 
 dependencies {
-    compile project(':twidere.component.api.twitter')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

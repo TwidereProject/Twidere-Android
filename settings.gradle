@@ -1,4 +1,4 @@
-include ':twidere', ':twidere.component.api.twitter', ':twidere.extension.push.xiaomi'
+include ':twidere'
 include ':twidere.component.twitter4j'
 include ':twidere.component.twitter4j.streaming'
 include ':twidere.component.common'
@@ -11,6 +11,7 @@ include ':twidere.donate.nyanwp.wear'
 include ':twidere.component.nyan'
 include ':twidere.extension.streaming'
 include ':twidere.extension.twitlonger'
+include ':twidere.extension.push.xiaomi'
 include ':SlidingMenu', ':DragSortListView', ':RefreshNow', ':PullToRefresh', ':MessageBubbleView', ':ColorPicker'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')

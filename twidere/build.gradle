@@ -80,7 +80,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.2'
     aarLinkSources 'com.squareup.okhttp:okhttp:2.2.0:sources@jar'
-    googleCompile 'com.google.android.gms:play-services:6.5.87'
+    googleCompile 'com.google.android.gms:play-services-maps:6.5.87'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.10'
