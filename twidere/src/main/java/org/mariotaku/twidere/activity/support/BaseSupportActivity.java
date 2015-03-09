@@ -183,11 +183,6 @@ public class BaseSupportActivity extends ThemedActionBarActivity implements Cons
     }
 
     @Override
-    public void moveControlBarBy(float delta) {
-
-    }
-
-    @Override
     public void notifyControlBarOffsetChanged() {
         final float offset = getControlBarOffset();
         for (final ControlBarOffsetListener l : mControlBarOffsetListeners) {
