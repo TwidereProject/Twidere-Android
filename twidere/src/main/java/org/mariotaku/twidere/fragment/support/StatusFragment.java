@@ -85,7 +85,6 @@ import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
-import org.mariotaku.twidere.util.StatisticUtils;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -100,7 +99,6 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -112,7 +110,6 @@ import edu.tsinghua.spice.Utilies.TypeMapingUtil;
 import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
-import static android.text.TextUtils.substring;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
@@ -294,9 +291,9 @@ public class StatusFragment extends BaseSupportFragment
         Utils.openMediaDirectly(getActivity(), accountId, media, status.media);
         //spice
         SpiceProfilingUtil.log(getActivity(),
-                status.id + ",Clicked,"  + accountId + "," + status.user_id  + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp );
-        SpiceProfilingUtil.profile(getActivity(),accountId,
-                status.id + ",Clicked,"  + accountId + "," + status.user_id  + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);
+        SpiceProfilingUtil.profile(getActivity(), accountId,
+                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);
         //end
     }
 
@@ -336,11 +333,6 @@ public class StatusFragment extends BaseSupportFragment
                 final int position = mStatusAdapter.findPositionById(itemId);
                 mLayoutManager.scrollToPositionWithOffset(position, top);
             }
-            try {
-                StatisticUtils.writeStatusOpen(status, null, 0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             setState(STATE_LOADED);
         } else {
             //TODO show errors
@@ -371,13 +363,13 @@ public class StatusFragment extends BaseSupportFragment
         //spice
         if (status.media != null) {
             SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                    status.id + ",Preview," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(status.media[0].type) + "," + status.timestamp );
+                    status.id + ",Preview," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(status.media[0].type) + "," + status.timestamp);
             SpiceProfilingUtil.log(getActivity(),
-                    status.id + ",Preview," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(status.media[0].type) + "," + status.timestamp );
-        }   else {
+                    status.id + ",Preview," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(status.media[0].type) + "," + status.timestamp);
+        } else {
             SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                    status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + status.timestamp );
-            SpiceProfilingUtil.log(getActivity(),status.account_id + ",Words," + status.user_id + "," + status.text_plain.length() + "," + status.timestamp );
+                    status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.text_plain.length() + "," + status.timestamp);
+            SpiceProfilingUtil.log(getActivity(), status.account_id + ",Words," + status.user_id + "," + status.text_plain.length() + "," + status.timestamp);
         }
         //end
 
@@ -980,15 +972,15 @@ public class StatusFragment extends BaseSupportFragment
                         twitter.destroyFavoriteAsync(status.account_id, status.id);
                         //spice
                         SpiceProfilingUtil.profile(adapter.getContext(),
-                                status.account_id, status.id + ",Unfavor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
-                        SpiceProfilingUtil.log(adapter.getContext(),status.id + ",Unfavor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                                status.account_id, status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
                         //end
                     } else {
                         twitter.createFavoriteAsync(status.account_id, status.id);
                         //spice
                         SpiceProfilingUtil.profile(adapter.getContext(),
-                                status.account_id, status.id + ",Favor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
-                        SpiceProfilingUtil.log(adapter.getContext(),status.id + ",Favor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                                status.account_id, status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
                         //end
                     }
                     break;
