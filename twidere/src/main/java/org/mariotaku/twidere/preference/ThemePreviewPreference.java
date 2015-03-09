@@ -25,6 +25,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.InflateException;
@@ -98,20 +99,24 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final View windowContentOverlayView = view.findViewById(R.id.theme_preview_window_content_overlay);
         final View actionBarView = view.findViewById(R.id.actionbar);
         final TextView actionBarTitleView = (TextView) view.findViewById(R.id.actionbar_title);
-        final ActionMenuView actionBarSplitView = (ActionMenuView) view.findViewById(R.id.menu_bar);
+        final ActionMenuView menuBar = (ActionMenuView) view.findViewById(R.id.menu_bar);
         final View statusContentView = view.findViewById(R.id.theme_preview_status_content);
+        final CardView cardView = (CardView) view.findViewById(R.id.card);
 
         final int defaultTextSize = getDefaultTextSize(context);
         final int titleTextAppearance = ThemeUtils.getTitleTextAppearance(context);
+        final int cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
 
         ViewAccessor.setBackground(windowBackgroundView, ThemeUtils.getWindowBackground(context));
         ViewAccessor.setBackground(windowContentOverlayView, ThemeUtils.getWindowContentOverlay(context));
         ViewAccessor.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes));
+        cardView.setCardBackgroundColor(cardBackgroundColor);
 
         actionBarTitleView.setTextAppearance(context, titleTextAppearance);
-        actionBarSplitView.setEnabled(false);
+        menuBar.setEnabled(false);
         final MenuInflater inflater = new SupportMenuInflater(context);
-        inflater.inflate(R.menu.menu_status, actionBarSplitView.getMenu());
+        inflater.inflate(R.menu.menu_status, menuBar.getMenu());
+        ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_STATUS_SHARE);
         if (statusContentView != null) {
             ViewAccessor.setBackground(statusContentView, ThemeUtils.getWindowBackground(context));
 

@@ -168,6 +168,11 @@ public class BaseSupportActivity extends ThemedActionBarActivity implements Cons
     }
 
     @Override
+    public void setControlBarVisibleAnimate(boolean visible) {
+
+    }
+
+    @Override
     public float getControlBarOffset() {
         return 0;
     }
@@ -175,11 +180,6 @@ public class BaseSupportActivity extends ThemedActionBarActivity implements Cons
     @Override
     public int getControlBarHeight() {
         return 0;
-    }
-
-    @Override
-    public void moveControlBarBy(float delta) {
-
     }
 
     @Override

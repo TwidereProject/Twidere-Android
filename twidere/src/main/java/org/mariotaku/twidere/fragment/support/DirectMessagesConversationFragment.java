@@ -373,7 +373,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
                 final ParcelableUser recipient = mRecipient;
                 if (recipient == null) return;
                 final Bundle options = Utils.makeSceneTransitionOption(getActivity(),
-                        new Pair<>(view, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
+                        new Pair<View, String>(mRecipientProfileImageView,
+                                UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
                 Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
                         recipient.screen_name, options);
                 break;

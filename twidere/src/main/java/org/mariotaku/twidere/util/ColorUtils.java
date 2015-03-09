@@ -19,12 +19,63 @@
 
 package org.mariotaku.twidere.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * Created by mariotaku on 15/1/8.
  */
 public class ColorUtils {
+
+    public static Bitmap getColorPreviewBitmap(final Context context, final int color, final boolean border) {
+        if (context == null) return null;
+        final float density = context.getResources().getDisplayMetrics().density;
+        final int width = (int) (32 * density), height = (int) (32 * density);
+
+        final Bitmap bm = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bm);
+
+        final int rectrangleSize = (int) (density * 5);
+        final int numRectanglesHorizontal = (int) Math.ceil(width / rectrangleSize);
+        final int numRectanglesVertical = (int) Math.ceil(height / rectrangleSize);
+        final Rect r = new Rect();
+        boolean verticalStartWhite = true;
+        for (int i = 0; i <= numRectanglesVertical; i++) {
+
+            boolean isWhite = verticalStartWhite;
+            for (int j = 0; j <= numRectanglesHorizontal; j++) {
+
+                r.top = i * rectrangleSize;
+                r.left = j * rectrangleSize;
+                r.bottom = r.top + rectrangleSize;
+                r.right = r.left + rectrangleSize;
+                final Paint paint = new Paint();
+                paint.setColor(isWhite ? Color.WHITE : Color.GRAY);
+
+                canvas.drawRect(r, paint);
+
+                isWhite = !isWhite;
+            }
+
+            verticalStartWhite = !verticalStartWhite;
+
+        }
+        canvas.drawColor(color);
+        if (border) {
+            final Paint paint = new Paint();
+            paint.setColor(Color.WHITE);
+            paint.setStrokeWidth(1f * density);
+            final float[] points = new float[]{0, 0, width, 0, 0, 0, 0, height, width, 0, width, height, 0, height,
+                    width, height};
+            canvas.drawLines(points, paint);
+        }
+        return bm;
+    }
 
     public static int getYIQLuminance(int color) {
         final int r = Color.red(color), g = Color.green(color), b = Color.blue(color);

@@ -43,12 +43,12 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
@@ -403,8 +403,4 @@ public class LinkHandlerActivity extends BaseSupportActivity implements OnClickL
         return actionBar != null ? actionBar.getHeight() : 0;
     }
 
-    @Override
-    public void moveControlBarBy(float delta) {
-
-    }
 }

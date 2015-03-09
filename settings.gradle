@@ -11,10 +11,11 @@ include ':twidere.donate.nyanwp.wear'
 include ':twidere.component.nyan'
 include ':twidere.extension.streaming'
 include ':twidere.extension.twitlonger'
-include ':SlidingMenu', ':DragSortListView', ':RefreshNow', ':PullToRefresh', ':MessageBubbleView'
+include ':SlidingMenu', ':DragSortListView', ':RefreshNow', ':PullToRefresh', ':MessageBubbleView', ':ColorPicker'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')
 project(':DragSortListView').projectDir = file('libraries/DragSortListView/library')
 project(':RefreshNow').projectDir = file('libraries/RefreshNow/library')
 project(':PullToRefresh').projectDir = file('libraries/PullToRefresh/library')
 project(':MessageBubbleView').projectDir = file('libraries/MessageBubbleView/library')
+project(':ColorPicker').projectDir = file('libraries/ColorPicker/library')

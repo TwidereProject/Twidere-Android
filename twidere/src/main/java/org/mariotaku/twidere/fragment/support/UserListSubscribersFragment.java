@@ -30,12 +30,12 @@ public class UserListSubscribersFragment extends CursorSupportUsersListFragment 
 	@Override
 	public CursorSupportUsersLoader newLoaderInstance(final Context context, final Bundle args) {
 		if (args == null) return null;
-		final int list_id = args.getInt(EXTRA_LIST_ID, -1);
-		final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		final long user_id = args.getLong(EXTRA_USER_ID, -1);
-		final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-		final String list_name = args.getString(EXTRA_LIST_NAME);
-		return new UserListSubscribersLoader(context, account_id, list_id, user_id, screen_name, list_name,
+		final long listId = args.getLong(EXTRA_LIST_ID, -1);
+		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+		final long userId = args.getLong(EXTRA_USER_ID, -1);
+		final String screenName = args.getString(EXTRA_SCREEN_NAME);
+		final String listName = args.getString(EXTRA_LIST_NAME);
+		return new UserListSubscribersLoader(context, accountId, listId, userId, screenName, listName,
 				getNextCursor(), getData());
 	}
 

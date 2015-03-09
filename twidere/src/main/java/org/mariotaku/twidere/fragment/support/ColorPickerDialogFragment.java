@@ -21,87 +21,97 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.dialog.ColorPickerDialog;
 import org.mariotaku.twidere.fragment.iface.IDialogFragmentCallback;
 
+import me.uucky.colorpicker.ColorPickerDialog;
+
 public final class ColorPickerDialogFragment extends BaseSupportDialogFragment implements
-		DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener {
 
-	@Override
-	public void onCancel(final DialogInterface dialog) {
-		super.onCancel(dialog);
-		final FragmentActivity a = getActivity();
-		if (a instanceof Callback) {
-			((Callback) a).onCancelled();
-		}
-	}
+    @Override
+    public void onCancel(final DialogInterface dialog) {
+        super.onCancel(dialog);
+        final FragmentActivity a = getActivity();
+        if (a instanceof Callback) {
+            ((Callback) a).onCancelled();
+        }
+    }
 
-	@Override
-	public void onClick(final DialogInterface dialog, final int which) {
-		final FragmentActivity a = getActivity();
-		final Dialog d = getDialog();
-		if (!(a instanceof Callback) || !(d instanceof ColorPickerDialog)) return;
-		switch (which) {
-			case DialogInterface.BUTTON_POSITIVE: {
-				final int color = ((ColorPickerDialog) d).getColor();
-				((Callback) a).onColorSelected(color);
-				break;
-			}
-			case DialogInterface.BUTTON_NEUTRAL: {
-				((Callback) a).onColorCleared();
-				break;
-			}
-		}
-	}
+    @Override
+    public void onClick(final DialogInterface dialog, final int which) {
+        final FragmentActivity a = getActivity();
+        final Dialog d = getDialog();
+        if (!(a instanceof Callback) || !(d instanceof ColorPickerDialog)) return;
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE: {
+                final int color = ((ColorPickerDialog) d).getColor();
+                ((Callback) a).onColorSelected(color);
+                break;
+            }
+            case DialogInterface.BUTTON_NEUTRAL: {
+                ((Callback) a).onColorCleared();
+                break;
+            }
+        }
+    }
 
-	@Override
-	public Dialog onCreateDialog(final Bundle savedInstanceState) {
-		final int color;
-		final Bundle args = getArguments();
-		if (savedInstanceState != null) {
-			color = savedInstanceState.getInt(EXTRA_COLOR, Color.WHITE);
-		} else {
-			color = args.getInt(EXTRA_COLOR, Color.WHITE);
-		}
-		final boolean showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true);
-		final ColorPickerDialog d = new ColorPickerDialog(getActivity(), color, showAlphaSlider);
-		d.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), this);
-		if (args.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
-			d.setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.clear), this);
-		}
-		d.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), this);
-		return d;
-	}
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final int color;
+        final Bundle args = getArguments();
+        if (savedInstanceState != null) {
+            color = savedInstanceState.getInt(EXTRA_COLOR, Color.WHITE);
+        } else {
+            color = args.getInt(EXTRA_COLOR, Color.WHITE);
+        }
+        final boolean showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true);
+        final ColorPickerDialog d = new ColorPickerDialog(getActivity());
+        final Resources res = getResources();
+        for (int presetColor : PRESET_COLORS) {
+            d.addColor(res.getColor(presetColor));
+        }
+        d.setInitialColor(color);
+        d.setAlphaEnabled(showAlphaSlider);
+        d.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), this);
+        if (args.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
+            d.setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.clear), this);
+        }
+        d.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), this);
+        return d;
+    }
 
-	@Override
-	public void onDismiss(final DialogInterface dialog) {
-		super.onDismiss(dialog);
-		final FragmentActivity a = getActivity();
-		if (a instanceof Callback) {
-			((Callback) a).onDismissed();
-		}
-	}
+    @Override
+    public void onDismiss(final DialogInterface dialog) {
+        super.onDismiss(dialog);
+        final FragmentActivity a = getActivity();
+        if (a instanceof Callback) {
+            ((Callback) a).onDismissed();
+        }
+    }
 
-	@Override
-	public void onSaveInstanceState(final Bundle outState) {
-		final Dialog d = getDialog();
-		if (d instanceof ColorPickerDialog) {
-			outState.putInt(EXTRA_COLOR, ((ColorPickerDialog) d).getColor());
-		}
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        final Dialog d = getDialog();
+        if (d instanceof ColorPickerDialog) {
+            outState.putInt(EXTRA_COLOR, ((ColorPickerDialog) d).getColor());
+        }
+        super.onSaveInstanceState(outState);
+    }
 
-	public static interface Callback extends IDialogFragmentCallback {
+    public static interface Callback extends IDialogFragmentCallback {
 
-		public void onColorCleared();
+        public void onColorCleared();
 
-		public void onColorSelected(int color);
+        public void onColorSelected(int color);
 
-	}
+    }
 
 }

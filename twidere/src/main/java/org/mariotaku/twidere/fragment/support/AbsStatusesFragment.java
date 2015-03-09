@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,12 +18,14 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.BaseSupportActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -31,6 +34,7 @@ import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -72,14 +76,26 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+            if (Math.abs(dy) > mTouchSlop) {
+                setControlVisible(dy < 0);
+            }
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            if (isRefreshing()) return;
-            if (mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
+            if (!isRefreshing() && mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
                     && layoutManager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
                 onLoadMoreStatuses();
             }
         }
     };
+    private int mTouchSlop;
+
+    private void setControlVisible(boolean visible) {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof BaseSupportActivity) {
+            ((BaseSupportActivity) activity).setControlBarVisibleAnimate(visible);
+        }
+    }
+
     private PopupMenu mPopupMenu;
 
     protected AbsStatusesFragment() {
@@ -209,9 +225,14 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mDrawerCallback = new SimpleDrawerCallback(mRecyclerView);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
+        final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
+        final int colorRes = ColorUtils.getContrastYIQ(backgroundColor,
+                R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
+        mSwipeRefreshLayout.setProgressBackgroundColor(colorRes);
         mAdapter = onCreateAdapter(context, compact);
         mLayoutManager = new LinearLayoutManager(context);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -333,7 +354,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     @Override
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-        mContentView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        float density = getResources().getDisplayMetrics().density;
+        // 40: SwipeRefreshLayout.CIRCLE_DIAMETER
+        final int swipeStart = insets.top - Math.round(40 * density);
+        // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
+        final int swipeDistance = Math.round(64 * density);
+        mSwipeRefreshLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance);
     }
 
     @Override

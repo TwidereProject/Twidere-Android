@@ -19,6 +19,9 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.ObjectAnimator;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -43,6 +46,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
+import android.util.Property;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -60,6 +64,8 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -68,6 +74,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.DataProfilingSettingsActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
@@ -83,8 +90,6 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
@@ -95,6 +100,8 @@ import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UnreadCountUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
@@ -122,8 +129,8 @@ import static org.mariotaku.twidere.util.Utils.openSearch;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class HomeActivity extends BaseSupportActivity implements OnClickListener, OnPageChangeListener,
-        SupportFragmentCallback, SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener,
-        OnLongClickListener {
+        SupportFragmentCallback, OnOpenedListener, OnClosedListener,
+        OnLongClickListener, AnimatorListener {
 
     private final Handler mHandler = new Handler();
 
@@ -160,6 +167,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     private int mTabDisplayOption;
     private float mPagerPosition;
     private Toolbar mActionBar;
+    private int mControlAnimationDirection;
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -169,6 +177,25 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
     @Override
     public Fragment getCurrentVisibleFragment() {
         return mCurrentVisibleFragment;
+    }
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        mControlAnimationDirection = 0;
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+        mControlAnimationDirection = 0;
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+
     }
 
     @Override
@@ -192,10 +219,35 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
                 && ((RefreshScrollTopInterface) f).triggerRefresh();
     }
 
+    private static final long DURATION = 200l;
+
+    @Override
+    public void setControlBarVisibleAnimate(boolean visible) {
+        if (mControlAnimationDirection != 0) return;
+        final ObjectAnimator animator;
+        final float offset = getControlBarOffset();
+        if (visible) {
+            if (offset >= 1) return;
+            animator = ObjectAnimator.ofFloat(this, ControlBarOffsetProperty.SINGLETON, offset, 1);
+        } else {
+            if (offset <= 0) return;
+            animator = ObjectAnimator.ofFloat(this, ControlBarOffsetProperty.SINGLETON, offset, 0);
+        }
+        animator.addListener(this);
+        animator.setDuration(DURATION);
+        animator.start();
+        mControlAnimationDirection = visible ? 1 : -1;
+    }
+
     @Override
     public void setControlBarOffset(float offset) {
         mTabsContainer.setTranslationY(getControlBarHeight() * (offset - 1));
-        mActionsButton.setTranslationY(mActionsButton.getHeight() * (1 - offset));
+        final ViewGroup.LayoutParams lp = mActionsButton.getLayoutParams();
+        if (lp instanceof MarginLayoutParams) {
+            mActionsButton.setTranslationY((((MarginLayoutParams) lp).bottomMargin + mActionsButton.getHeight()) * (1 - offset));
+        } else {
+            mActionsButton.setTranslationY(mActionsButton.getHeight() * (1 - offset));
+        }
         notifyControlBarOffsetChanged();
     }
 
@@ -490,11 +542,6 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-        final float pagerPosition = position + positionOffset;
-        if (!Float.isNaN(mPagerPosition)) {
-            setControlBarOffset(MathUtils.clamp(getControlBarOffset() + Math.abs(pagerPosition - mPagerPosition), 1, 0));
-        }
-        mPagerPosition = pagerPosition;
     }
 
     @Override
@@ -520,7 +567,7 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     @Override
     public void onPageScrollStateChanged(final int state) {
-
+        setControlBarVisibleAnimate(true);
     }
 
     public void openSearchView(final ParcelableAccount account) {
@@ -923,4 +970,21 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
         notifyControlBarOffsetChanged();
     }
 
+    private static class ControlBarOffsetProperty extends Property<IControlBarActivity, Float> {
+        public static final ControlBarOffsetProperty SINGLETON = new ControlBarOffsetProperty();
+
+        @Override
+        public void set(IControlBarActivity object, Float value) {
+            object.setControlBarOffset(value);
+        }
+
+        public ControlBarOffsetProperty() {
+            super(Float.TYPE, null);
+        }
+
+        @Override
+        public Float get(IControlBarActivity object) {
+            return object.getControlBarOffset();
+        }
+    }
 }

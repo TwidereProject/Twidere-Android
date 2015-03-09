@@ -100,9 +100,8 @@ public class SaveImageTask extends AsyncTask<Void, Void, File> implements Consta
             final MimeTypeMap map = MimeTypeMap.getSingleton();
             final String extension = map.getExtensionFromMimeType(mimeType);
             if (extension == null) return null;
-            final String nameToSave = name.indexOf(".") != -1 ? name : name + "." + extension;
+            final String nameToSave = name.contains(".") ? name : name + "." + extension;
             final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            if (pubDir == null) return null;
             final File saveDir = new File(pubDir, "Twidere");
             if (!saveDir.isDirectory() && !saveDir.mkdirs()) return null;
             final File saveFile = new File(saveDir, nameToSave);

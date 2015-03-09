@@ -178,7 +178,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             for (int i = 0; i < rowCount; i++) {
                 final int currColumnCount = i == 0 ? firstRowColumnCount : columnCount;
                 final int columnWidth = (contentWidth - (mHorizontalSpacing * (currColumnCount - 1))) / currColumnCount;
-                final int columnHeight = columnWidth / 2;
+                final int columnHeight = columnWidth;
                 heightSum = heightSum + columnHeight;
                 final int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(columnWidth, MeasureSpec.EXACTLY);
                 final int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(columnHeight, MeasureSpec.EXACTLY);

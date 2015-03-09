@@ -40,6 +40,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
+import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
+import org.mariotaku.twidere.util.message.StatusListChangedEvent;
+import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
@@ -79,14 +84,37 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     protected Object createMessageBusCallback() {
-        return new Object() {
+        return new ParcelableStatusesBusCallback();
+    }
 
 
-            @Subscribe
-            public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-                updateRefreshState();
-            }
-        };
+    protected class ParcelableStatusesBusCallback {
+
+        @Subscribe
+        public void notifyTaskStateChanged(TaskStateChangedEvent event) {
+            updateRefreshState();
+        }
+
+        @Subscribe
+        public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
+        }
+
+        @Subscribe
+        public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
+        }
+
+        @Subscribe
+        public void notifyStatusDestroyed(StatusDestroyedEvent event) {
+        }
+
+        @Subscribe
+        public void notifyStatusListChanged(StatusListChangedEvent event) {
+        }
+
+        @Subscribe
+        public void notifyStatusRetweeted(StatusRetweetedEvent event) {
+        }
+
     }
 
     @Override
