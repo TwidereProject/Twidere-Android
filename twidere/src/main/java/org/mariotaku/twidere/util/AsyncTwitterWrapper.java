@@ -42,6 +42,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableLocation;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -80,6 +81,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import edu.tsinghua.spice.Utilies.TypeMapingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
 import twitter4j.DirectMessage;
 import twitter4j.Paging;
@@ -2329,10 +2331,30 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 bus.post(new StatusRetweetedEvent(status));
                 //spice
-                SpiceProfilingUtil.log(getContext(),status.id + ",Retweet," + account_id + ","
-                        + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
-                SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",Retweet," + account_id + ","
-                        + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
+                if (status.media == null) {
+                    SpiceProfilingUtil.log(getContext(),status.id + ",Retweet," + account_id + ","
+                            + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
+                    SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",Retweet," + account_id + ","
+                            + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
+                } else {
+                    for (final ParcelableMedia spiceMedia : status.media) {
+                        if(TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
+                            SpiceProfilingUtil.log(getContext(),status.id + ",RetweetM," + account_id + ","
+                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height);
+                            SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetM," + account_id + ","
+                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height);
+                        } else {
+                            SpiceProfilingUtil.log(getContext(),status.id + ",RetweetO," + account_id + ","
+                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type));
+                            SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetO," + account_id + ","
+                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type));
+                        }
+                    }
+                }
                 //end
                 mMessagesManager.showOkMessage(R.string.status_retweeted, false);
             } else {
