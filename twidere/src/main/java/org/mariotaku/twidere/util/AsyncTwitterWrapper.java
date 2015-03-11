@@ -2328,6 +2328,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 bus.post(new StatusRetweetedEvent(status));
+                //spice
+                SpiceProfilingUtil.log(getContext(),status.id + ",Retweet," + account_id + ","
+                        + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
+                SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",Retweet," + account_id + ","
+                        + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
+                //end
                 mMessagesManager.showOkMessage(R.string.status_retweeted, false);
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_retweeting, result.getException(), true);
