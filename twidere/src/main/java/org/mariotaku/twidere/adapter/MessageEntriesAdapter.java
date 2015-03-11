@@ -28,24 +28,29 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.MessageEntryViewHolder;
 
-import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
-import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NICKNAME_ONLY;
-
-public class MessageEntriesAdapter extends Adapter<ViewHolder> implements OnClickListener {
+public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Constants, IContentCardAdapter, OnClickListener {
 
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ImageLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final boolean mNicknameOnly;
+    private final int mTextSize;
+    private final int mProfileImageStyle;
+    private final int mMediaPreviewStyle;
     private Cursor mCursor;
     private MessageEntriesAdapterListener mListener;
 
@@ -53,8 +58,43 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements OnClic
         return mContext;
     }
 
+    @Override
+    public ImageLoadingHandler getImageLoadingHandler() {
+        return null;
+    }
+
+    @Override
+    public int getProfileImageStyle() {
+        return mProfileImageStyle;
+    }
+
+    @Override
+    public int getMediaPreviewStyle() {
+        return mMediaPreviewStyle;
+    }
+
+    @Override
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return null;
+    }
+
+    @Override
+    public float getTextSize() {
+        return mTextSize;
+    }
+
     public ImageLoaderWrapper getImageLoader() {
         return mImageLoader;
+    }
+
+    @Override
+    public boolean isGapItem(int position) {
+        return false;
+    }
+
+    @Override
+    public void onGapClick(ViewHolder holder, int position) {
+
     }
 
     public boolean isNicknameOnly() {
@@ -72,6 +112,16 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements OnClic
         final Cursor c = mCursor;
         c.moveToPosition(position);
         ((MessageEntryViewHolder) holder).displayMessage(c);
+    }
+
+    @Override
+    public void onItemActionClick(ViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
+
     }
 
     public void onMessageClick(int position) {
@@ -97,8 +147,12 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements OnClic
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
         mImageLoader = app.getImageLoaderWrapper();
-        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mNicknameOnly = prefs.getBoolean(KEY_NICKNAME_ONLY, false);
+        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
+                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+        mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
     }
 
     public static class DirectMessageEntry {

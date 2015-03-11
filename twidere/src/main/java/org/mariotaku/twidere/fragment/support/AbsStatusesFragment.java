@@ -67,6 +67,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
 
         private int mScrollState;
+        private int mScrollSum;
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -76,9 +77,14 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-            if (Math.abs(dy) > mTouchSlop) {
+            //Reset mScrollSum when scrolling in reverse direction
+            if (dy * mScrollSum < 0) {
+                mScrollSum = 0;
+            }
+            mScrollSum += dy;
+            if (Math.abs(mScrollSum) > mTouchSlop) {
                 setControlVisible(dy < 0);
+                mScrollSum = 0;
             }
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (!isRefreshing() && mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
@@ -153,6 +159,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     public void setRefreshing(boolean refreshing) {
+        if (refreshing == mSwipeRefreshLayout.isRefreshing()) return;
         mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
@@ -305,13 +312,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
                     //spice
                     SpiceProfilingUtil.profile(getActivity(), status.account_id, status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
-                    SpiceProfilingUtil.log(getActivity(),status.id + ",Unfavor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                    SpiceProfilingUtil.log(getActivity(), status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
                     //end
                 } else {
                     twitter.createFavoriteAsync(status.account_id, status.id);
                     //spice
-                    SpiceProfilingUtil.profile(getActivity(),status.account_id, status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
-                    SpiceProfilingUtil.log(getActivity(),status.id + ",Favor,"  + status.account_id + "," + status.user_id  + "," + status.timestamp);
+                    SpiceProfilingUtil.profile(getActivity(), status.account_id, status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.log(getActivity(), status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
                     //end
                 }
                 break;

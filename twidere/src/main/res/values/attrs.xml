@@ -10,8 +10,11 @@
         <attr name="menuIconColorActionBar" format="color"/>
         <attr name="messageBubbleColor" format="color"/>
         <attr name="cardItemBackgroundColor" format="color"/>
-        <attr name="ignorePadding" format="boolean"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="ColorLabelView" >
+        <attr name="ignorePadding" format="boolean"/>
+        <attr name="backgroundColor" format="color"/>
     </declare-styleable>
     <declare-styleable name="TabPagerIndicator">
         <attr name="tabStripColor" format="color"/>

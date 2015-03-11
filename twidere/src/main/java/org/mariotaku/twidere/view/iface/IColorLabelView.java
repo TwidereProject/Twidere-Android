@@ -68,8 +68,11 @@ public interface IColorLabelView {
 
         public Helper(final View view, final Context context, final AttributeSet attrs, final int defStyle) {
             mView = view;
-            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Twidere);
-            mIgnorePadding = a.getBoolean(R.styleable.Twidere_ignorePadding, false);
+            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ColorLabelView);
+            mIgnorePadding = a.getBoolean(R.styleable.ColorLabelView_ignorePadding, false);
+            if (a.hasValue(R.styleable.ColorLabelView_backgroundColor)) {
+                drawBackground(a.getColor(R.styleable.ColorLabelView_backgroundColor, 0));
+            }
             a.recycle();
             final Resources res = context.getResources();
             mDensity = res.getDisplayMetrics().density;

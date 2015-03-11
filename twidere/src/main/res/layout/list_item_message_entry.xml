@@ -30,6 +30,7 @@
     android:orientation="horizontal"
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
+    app:backgroundColor="?cardItemBackgroundColor"
     app:ignorePadding="true"
     tools:context=".adapter.DirectMessagesEntryAdapter">
 
@@ -74,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
                 tools:text="Mariotaku Lee"/>
 
             <org.mariotaku.twidere.view.HandleSpanClickTextView

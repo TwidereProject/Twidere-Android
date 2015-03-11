@@ -2,16 +2,15 @@ import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
 apply plugin: 'aar-link-sources'
+apply from: rootProject.file('global.gradle')
 apply from: rootProject.file('signing.gradle')
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 99
         versionName "0.3.0"
         multiDexEnabled true

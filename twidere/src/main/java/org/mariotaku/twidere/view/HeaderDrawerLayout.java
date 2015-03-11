@@ -152,7 +152,9 @@ public class HeaderDrawerLayout extends ViewGroup {
 
     public int getHeaderTop() {
         return mContainer.getTop();
-    }    @Override
+    }
+
+    @Override
     public void computeScroll() {
         boolean invalidate = mDragHelper.continueSettling(true);
         if (!mTouchDown && mScroller.computeScrollOffset()) {
@@ -187,7 +189,9 @@ public class HeaderDrawerLayout extends ViewGroup {
 
     private boolean canScrollCallback(float dy) {
         return mDrawerCallback.canScroll(dy);
-    }    @Override
+    }
+
+    @Override
     protected void onFinishInflate() {
         if (getChildCount() != 1) {
             throw new IllegalArgumentException("Add subview by XML is not allowed.");
@@ -263,7 +267,9 @@ public class HeaderDrawerLayout extends ViewGroup {
 
     private void setScrollingHeaderByGesture(boolean scrolling) {
         mScrollingHeaderByGesture = scrolling;
-    }    @Override
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final View child = getChildAt(0);
 
@@ -542,11 +548,5 @@ public class HeaderDrawerLayout extends ViewGroup {
             mParent.notifyOffsetChanged();
         }
     }
-
-
-
-
-
-
 
 }

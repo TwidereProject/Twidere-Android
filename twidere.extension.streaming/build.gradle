@@ -18,12 +18,10 @@
  */
 
 apply plugin: 'com.android.application'
+apply from: rootProject.file('global.gradle')
 apply from: rootProject.file('signing.gradle')
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "org.mariotaku.twidere.extension.streaming"
         minSdkVersion 14

@@ -16,28 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-apply plugin: 'com.android.application'
-apply from: rootProject.file('global.gradle')
-apply from: rootProject.file('signing.gradle')
-
 android {
-    defaultConfig {
-        applicationId "org.mariotaku.extension.twitlonger"
-        minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 6
-        versionName "1.5"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    compile project(':twidere.library.extension')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compileSdkVersion 22
+    buildToolsVersion '22'
 }
