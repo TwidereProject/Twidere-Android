@@ -168,7 +168,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
         if (data != null && data.getCount() > 0 && mAccountsAdapter.getSelectedAccountId() <= 0) {
             data.moveToFirst();
-            mAccountsAdapter.setSelectedAccountId(data.getLong(data.getColumnIndex(Accounts.ACCOUNT_ID)));
+            mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1));
         }
         mAccountsAdapter.changeCursor(data);
         updateAccountOptionsSeparatorLabel();
