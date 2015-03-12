@@ -59,11 +59,10 @@ configurations.all {
 dependencies {
 //    wearApp project(':twidere.wear')
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:21.0.3'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:cardview-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:21.0.3'
-    compile 'com.android.support:palette-v7:21.0.3'
+    compile 'com.android.support:support-v13:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'com.twitter:twitter-text:1.11.1'
     aarLinkSources 'com.twitter:twitter-text:1.11.1:sources@jar'

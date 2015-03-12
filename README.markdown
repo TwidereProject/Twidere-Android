@@ -51,7 +51,7 @@ Thanks to their excellent design!
 * [Commons Lang](http://commons.apache.org/proper/commons-lang/), Copyright 2001-2013 The Apache Software Foundation
 * [SwipeBackLayout](https://github.com/Issacw0ng/SwipeBackLayout), Copyright 2013 Issac Wong
 * [Crouton](https://github.com/keyboardsurfer/Crouton), Copyright 2013 Benjamin Weiss at Neofonie Mobile GmbH.
-* [twitter-text-java](https://github.com/twitter/twitter-text-java), Copyright 2011 Twitter, Inc.
+* [twitter-text-java](https://github.com/twitter/twitter-text), Copyright 2014 Twitter, Inc and other contributors
 * [Twitter4J](https://github.com/yusuke/twitter4j), Copyright 2007-2013 Yusuke Yamamoto
 * [dnsjava](http://www.xbill.org/dnsjava/), Copyright 1999-2005, Brian Wellington
 * [HttpMime](http://hc.apache.org/httpcomponents-client-ga/httpmime/), Copyright 1999-2013 The Apache Software Foundation
@@ -63,8 +63,7 @@ Thanks to their excellent design!
 * [cwac-merge](https://github.com/commonsguy/cwac-merge), Copyright 2013 CommonsWare
 * [cwac-sacklist](https://github.com/commonsguy/cwac-sacklist), Copyright 2013 CommonsWare
 * [SlidingMenu](https://github.com/mariotaku/SlidingMenu) ([Original](https://github.com/jfeinstein10/SlidingMenu)), Copyright 2012 Jeremy Feinstein
-* [holoaccent](https://github.com/negusoft/holoaccent), Copyright 2013 NEGU Soft
-* [IconicDroid](https://github.com/mariotaku/IconicDroid) ([Original](https://github.com/atermenji/IconicDroid)), Copyright 2013 Artur Termenji
+* [ColorPicker](https://github.com/uucky/ColorPicker-Android), Copyright 2015 Uucky & Mariotaku
 
 ---
 
