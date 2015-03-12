@@ -140,6 +140,7 @@ public interface IntentConstants {
     public static final String EXTRA_IDS = "ids";
     public static final String EXTRA_IS_SHARE = "is_share";
     public static final String EXTRA_STATUS = "status";
+    public static final String EXTRA_MESSAGE = "message";
     public static final String EXTRA_STATUS_JSON = "status_json";
     public static final String EXTRA_STATUSES = "statuses";
     public static final String EXTRA_DRAFT = "draft";

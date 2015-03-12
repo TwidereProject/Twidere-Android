@@ -1094,17 +1094,23 @@ public final class Utils implements Constants, TwitterConstants {
     public static Intent createStatusShareIntent(final Context context, final ParcelableStatus status) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        final String timeString = formatToLongTimeString(context, status.timestamp);
-        final String link = String.format(Locale.ROOT, "https://twitter.com/%s/status/%d",
-                status.user_screen_name, status.id);
-        final String text = context.getString(R.string.status_share_text_format_with_link,
-                status.text_plain, link);
-        final String subject = context.getString(R.string.status_share_subject_format_with_time,
-                status.user_name, status.user_screen_name, timeString);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, text);
+        intent.putExtra(Intent.EXTRA_SUBJECT, getStatusShareText(context, status));
+        intent.putExtra(Intent.EXTRA_TEXT, getStatusShareSubject(context, status));
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         return intent;
+    }
+
+    public static String getStatusShareText(final Context context, final ParcelableStatus status) {
+        final String link = String.format(Locale.ROOT, "https://twitter.com/%s/status/%d",
+                status.user_screen_name, status.id);
+        return context.getString(R.string.status_share_text_format_with_link,
+                status.text_plain, link);
+    }
+
+    public static String getStatusShareSubject(final Context context, ParcelableStatus status) {
+        final String timeString = formatToLongTimeString(context, status.timestamp);
+        return context.getString(R.string.status_share_subject_format_with_time,
+                status.user_name, status.user_screen_name, timeString);
     }
 
     public static Intent createTakePhotoIntent(final Uri uri) {
@@ -2925,6 +2931,24 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
+                                 final ParcelableDirectMessage message, final ParcelableMedia current,
+                                 final ParcelableMedia[] media) {
+        openMedia(context, accountId, isPossiblySensitive, null, message, current, media);
+    }
+
+    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
+                                 final ParcelableStatus status, final ParcelableMedia current,
+                                 final ParcelableMedia[] media) {
+        openMedia(context, accountId, isPossiblySensitive, status, null, current, media);
+    }
+
+    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
+                                 final ParcelableMedia current, final ParcelableMedia[] media) {
+        openMedia(context, accountId, isPossiblySensitive, null, null, current, media);
+    }
+
+    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
+                                 final ParcelableStatus status, final ParcelableDirectMessage message,
                                  final ParcelableMedia current, final ParcelableMedia[] media) {
         if (context == null || media == null) return;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -2936,11 +2960,13 @@ public final class Utils implements Constants, TwitterConstants {
             final Bundle args = new Bundle();
             args.putLong(EXTRA_ACCOUNT_ID, accountId);
             args.putParcelable(EXTRA_CURRENT_MEDIA, current);
+            args.putParcelable(EXTRA_STATUS, status);
+            args.putParcelable(EXTRA_MESSAGE, message);
             args.putParcelableArray(EXTRA_MEDIA, media);
             fragment.setArguments(args);
             fragment.show(fm, "sensitive_content_warning");
         } else {
-            openMediaDirectly(context, accountId, current, media);
+            openMediaDirectly(context, accountId, status, message, current, media);
         }
     }
 
@@ -2952,13 +2978,28 @@ public final class Utils implements Constants, TwitterConstants {
         return result;
     }
 
+
     public static void openMediaDirectly(final Context context, final long accountId,
+                                         final ParcelableStatus status, final ParcelableMedia current,
+                                         final ParcelableMedia[] media) {
+        openMediaDirectly(context, accountId, status, null, current, media);
+    }
+
+    public static void openMediaDirectly(final Context context, final long accountId,
+                                         final ParcelableDirectMessage message, final ParcelableMedia current,
+                                         final ParcelableMedia[] media) {
+        openMediaDirectly(context, accountId, null, message, current, media);
+    }
+
+    public static void openMediaDirectly(final Context context, final long accountId,
+                                         final ParcelableStatus status, final ParcelableDirectMessage message,
                                          final ParcelableMedia current, final ParcelableMedia[] media) {
         if (context == null || media == null) return;
         final Intent intent = new Intent(INTENT_ACTION_VIEW_MEDIA);
         intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
         intent.putExtra(EXTRA_CURRENT_MEDIA, current);
         intent.putExtra(EXTRA_MEDIA, media);
+        intent.putExtra(EXTRA_STATUS, status);
         intent.setClass(context, MediaViewerActivity.class);
         context.startActivity(intent);
     }

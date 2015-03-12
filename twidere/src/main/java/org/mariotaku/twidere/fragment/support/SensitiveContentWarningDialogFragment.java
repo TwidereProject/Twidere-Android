@@ -28,6 +28,7 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 
@@ -45,9 +46,10 @@ public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFrag
                 if (args == null || context == null) return;
                 final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
                 final ParcelableMedia current = args.getParcelable(EXTRA_CURRENT_MEDIA);
+                final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
                 final ParcelableMedia[] media = Utils.newParcelableArray(args.getParcelableArray(EXTRA_MEDIA),
                         ParcelableMedia.CREATOR);
-                openMediaDirectly(context, accountId, current, media);
+                openMediaDirectly(context, accountId, status, current, media);
                 break;
             }
         }

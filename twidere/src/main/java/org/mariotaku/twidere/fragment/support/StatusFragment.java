@@ -288,7 +288,7 @@ public class StatusFragment extends BaseSupportFragment
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
-        Utils.openMediaDirectly(getActivity(), accountId, media, status.media);
+        Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media);
         //spice
         SpiceProfilingUtil.log(getActivity(),
                 status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);

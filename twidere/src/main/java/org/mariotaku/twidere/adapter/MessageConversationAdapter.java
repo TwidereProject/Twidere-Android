@@ -172,7 +172,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
             case R.id.media_preview: {
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.media == null) return;
-                openMedia(mContext, message.account_id, false, null, message.media);
+                openMedia(mContext, message.account_id, false, message, null, message.media);
             }
         }
     }

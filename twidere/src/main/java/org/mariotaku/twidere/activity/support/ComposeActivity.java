@@ -485,8 +485,20 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
 
     @Override
     public void onLocationChanged(final Location location) {
-        if (mRecentLocation == null) {
-            mRecentLocation = location != null ? new ParcelableLocation(location) : null;
+        if (location != null) {
+            mRecentLocation = new ParcelableLocation(location);
+        } else {
+            mRecentLocation = null;
+        }
+        updateLocationText();
+    }
+
+    private void updateLocationText() {
+        if (mRecentLocation != null) {
+            mLocationText.setText(String.format("%.3f, %.3f", mRecentLocation.latitude,
+                    mRecentLocation.longitude));
+        } else {
+            mLocationText.setText(R.string.unknown_location);
         }
     }
 
@@ -1094,19 +1106,24 @@ public class ComposeActivity extends ThemedActionBarActivity implements TextWatc
             mEditText.setError(getString(R.string.error_message_no_content));
             return;
         }
-        final boolean attach_location = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        if (mRecentLocation == null && attach_location) {
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        if (mRecentLocation == null && attachLocation) {
             final Location location;
             if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             } else {
                 location = null;
             }
-            mRecentLocation = location != null ? new ParcelableLocation(location) : null;
+            if (location != null) {
+                mRecentLocation = new ParcelableLocation(location);
+            } else {
+                mRecentLocation = null;
+            }
+            updateLocationText();
         }
         final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
         final boolean isQuote = INTENT_ACTION_QUOTE.equals(getIntent().getAction());
-        final ParcelableLocation statusLocation = attach_location ? mRecentLocation : null;
+        final ParcelableLocation statusLocation = attachLocation ? mRecentLocation : null;
         final boolean linkToQuotedTweet = mPreferences.getBoolean(KEY_LINK_TO_QUOTED_TWEET, true);
         final long inReplyToStatusId = !isQuote || linkToQuotedTweet ? mInReplyToStatusId : -1;
         final boolean isPossiblySensitive = hasMedia && mIsPossiblySensitive;

@@ -37,6 +37,9 @@ import twitter4j.TranslationResult;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 /**
+ *
+ * IDE gives me warning if I don't change default comment, so I write this XD
+ *
  * Created by mariotaku on 14/11/19.
  */
 public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClickListener {

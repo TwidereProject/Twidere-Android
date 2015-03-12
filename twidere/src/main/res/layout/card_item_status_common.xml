@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:orientation="vertical"
-        android:paddingTop="@dimen/element_spacing_small">
+        android:paddingTop="@dimen/element_spacing_small"
+        app:ignorePadding="true">
 
         <Space
             android:id="@+id/reply_retweet_space"
@@ -198,11 +199,11 @@
 
 
         <LinearLayout
-            android:layout_below="@+id/text"
-            android:layout_alignLeft="@+id/profile_container"
             android:id="@+id/action_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_container"
+            android:layout_below="@+id/text"
             android:gravity="center_vertical|left"
             android:orientation="horizontal">
 
@@ -247,13 +248,13 @@
         <org.mariotaku.twidere.view.ActionIconView
             android:id="@+id/extra_type"
             android:layout_width="@dimen/element_size_small"
-            android:layout_below="@+id/text"
             android:layout_height="@dimen/element_size_small"
-            android:layout_gravity="center|right"
-            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_alignBottom="@+id/action_buttons"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/action_buttons"
-            android:layout_alignBottom="@+id/action_buttons"
+            android:layout_below="@+id/text"
+            android:layout_gravity="center|right"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:layout_weight="0"
             android:color="?android:textColorSecondary"

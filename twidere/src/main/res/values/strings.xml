@@ -725,5 +725,6 @@
     <string name="usage_statistics">Usage statistics</string>
     <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
     <string name="research_tsinghua_spice">Tsinghua Spice</string>
+    <string name="unknown_location">Unknown location</string>
 
 </resources>
