@@ -290,7 +290,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             lastVisibleTop = 0;
         }
         mAdapter.setData(data);
-        if (!(data instanceof IExtendedLoader) || ((IExtendedLoader) data).isFromUser()) {
+        if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             mAdapter.setLoadMoreIndicatorEnabled(hasMoreData(data));
             int pos = -1;
             for (int i = 0; i < mAdapter.getItemCount(); i++) {
@@ -303,14 +303,17 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - mLayoutManager.getPaddingTop());
             }
         }
-        if (data instanceof IExtendedLoader) {
-            ((IExtendedLoader) data).setFromUser(false);
+        if (loader instanceof IExtendedLoader) {
+            ((IExtendedLoader) loader).setFromUser(false);
         }
         setListShown(true);
     }
 
     @Override
     public void onLoaderReset(Loader<Data> loader) {
+        if (loader instanceof IExtendedLoader) {
+            ((IExtendedLoader) loader).setFromUser(false);
+        }
     }
 
     public abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
