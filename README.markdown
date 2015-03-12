@@ -57,13 +57,17 @@ Thanks to their excellent design!
 * [HttpMime](http://hc.apache.org/httpcomponents-client-ga/httpmime/), Copyright 1999-2013 The Apache Software Foundation
 * [ACRA](http://github.com/ACRA/acra), Copyright 2013 Kevin Gaudin
 * [drag-sort-listview](https://github.com/bauerca/drag-sort-listview), Copyright 2012 Carl Bauer
-* [MenuComponent-Android](https://github.com/mariotaku/MenuComponent-Android), Copyright 2014 Mariotaku Lee
-* [RefreshNow-Android](https://github.com/mariotaku/RefreshNow-Android), Copyright 2014 Mariotaku Lee
 * [AndroidStaggeredGrid](https://github.com/etsy/AndroidStaggeredGrid), Copyright 2013 Etsy
 * [cwac-merge](https://github.com/commonsguy/cwac-merge), Copyright 2013 CommonsWare
 * [cwac-sacklist](https://github.com/commonsguy/cwac-sacklist), Copyright 2013 CommonsWare
 * [SlidingMenu](https://github.com/mariotaku/SlidingMenu) ([Original](https://github.com/jfeinstein10/SlidingMenu)), Copyright 2012 Jeremy Feinstein
 * [ColorPicker](https://github.com/uucky/ColorPicker-Android), Copyright 2015 Uucky & Mariotaku
+* [OkHttp](https://github.com/square/okhttp), Copyright 2014 Square, Inc
+* [Otto](https://github.com/square/otto), Copyright 2012 Square, Inc; Copyright 2010 Google, Inc
+* [ByakuGallery](https://github.com/diegocarloslima/ByakuGallery), Copyright 2013 Diego Carlos Lima
+* [MaterialEditText](https://github.com/rengwuxian/MaterialEditText), Copyright 2014 rengwuxian
+* [Material-ish Progress](https://github.com/pnikosis/materialish-progress), Copyright 2014 Nico Hormazábal
+* [android-gif-drawable](https://github.com/koral--/android-gif-drawable/), Copyright 2015 koral--
 
 ---
 
