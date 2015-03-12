@@ -382,7 +382,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
         if (attachLocation) {
             mLocationIcon.setColorFilter(getCurrentThemeColor(), Mode.SRC_ATOP);
-            mLocationText.setText(R.string.getting_location);
+            mLocationText.setText(R.string.ellipsis);
         } else {
             mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
             mLocationText.setText(R.string.no_location);

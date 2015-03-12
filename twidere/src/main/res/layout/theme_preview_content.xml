@@ -43,24 +43,26 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <LinearLayout
+        <org.mariotaku.twidere.view.TwidereToolbar
             android:id="@+id/actionbar"
+            style="?actionBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="?android:actionBarSize"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="?actionBarSize"
+            android:gravity="center_vertical"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <org.mariotaku.twidere.view.ActionBarTitleView
-                android:id="@+id/actionbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/app_name"
-                android:textAppearance="?android:textAppearanceMedium"/>
-        </LinearLayout>
+            <include layout="@layout/theme_preview_status_content"/>
 
-        <include layout="@layout/theme_preview_status_content"/>
+            <View
+                android:id="@+id/actionbar_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+
     </LinearLayout>
 
 </merge>

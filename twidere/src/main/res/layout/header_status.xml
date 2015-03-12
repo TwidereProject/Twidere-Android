@@ -30,9 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
+        app:cardBackgroundColor="?cardItemBackgroundColor"
         app:cardCornerRadius="@dimen/corner_radius_card"
-        app:cardElevation="@dimen/elevation_card"
-        tools:cardBackgroundColor="?cardItemBackgroundColor">
+        app:cardElevation="@dimen/elevation_card">
 
         <include layout="@layout/header_status_common"/>
 
