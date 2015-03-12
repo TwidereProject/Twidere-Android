@@ -30,7 +30,7 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.BaseWebViewFragment;
 
-public class BrowserActivity extends BaseSupportActivity {
+public class BrowserActivity extends BaseActionBarActivity {
 
     private Uri mUri = Uri.parse("about:blank");
 

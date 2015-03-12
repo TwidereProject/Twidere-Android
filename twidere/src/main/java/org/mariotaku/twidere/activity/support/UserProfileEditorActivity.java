@@ -69,7 +69,7 @@ import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 
-public class UserProfileEditorActivity extends BaseSupportActivity implements OnSizeChangedListener, TextWatcher,
+public class UserProfileEditorActivity extends BaseActionBarActivity implements OnSizeChangedListener, TextWatcher,
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>> {
 
     private static final int LOADER_ID_USER = 1;

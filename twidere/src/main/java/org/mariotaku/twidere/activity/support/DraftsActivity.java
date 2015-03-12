@@ -71,7 +71,7 @@ import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultTextSize;
 
-public class DraftsActivity extends BaseSupportActivity implements LoaderCallbacks<Cursor>, OnItemClickListener,
+public class DraftsActivity extends BaseActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener,
         MultiChoiceModeListener {
 
     private ContentResolver mResolver;

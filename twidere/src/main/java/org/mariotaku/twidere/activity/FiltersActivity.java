@@ -49,7 +49,7 @@ import android.widget.AutoCompleteTextView;
 
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseSupportActivity;
+import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
@@ -68,7 +68,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 
-public class FiltersActivity extends BaseSupportActivity implements TabListener, OnPageChangeListener {
+public class FiltersActivity extends BaseActionBarActivity implements TabListener, OnPageChangeListener {
 
     private static final String EXTRA_AUTO_COMPLETE_TYPE = "auto_complete_type";
     private static final int AUTO_COMPLETE_TYPE_SOURCES = 2;

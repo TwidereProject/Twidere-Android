@@ -27,7 +27,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.support.BaseSupportActivity;
+import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -82,8 +82,8 @@ public class BaseFragment extends Fragment implements Constants {
 
     public void setProgressBarIndeterminateVisibility(final boolean visible) {
         final Activity activity = getActivity();
-        if (activity instanceof BaseSupportActivity) {
-            ((BaseSupportActivity) activity).setProgressBarIndeterminateVisibility(visible);
+        if (activity instanceof BaseActionBarActivity) {
+            ((BaseActionBarActivity) activity).setProgressBarIndeterminateVisibility(visible);
         }
     }
 

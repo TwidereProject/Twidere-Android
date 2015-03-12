@@ -28,7 +28,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.support.BaseSupportActivity;
+import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -424,8 +424,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     private void setControlVisible(boolean visible) {
         final FragmentActivity activity = getActivity();
-        if (activity instanceof BaseSupportActivity) {
-            ((BaseSupportActivity) activity).setControlBarVisibleAnimate(visible);
+        if (activity instanceof BaseActionBarActivity) {
+            ((BaseActionBarActivity) activity).setControlBarVisibleAnimate(visible);
         }
     }
 

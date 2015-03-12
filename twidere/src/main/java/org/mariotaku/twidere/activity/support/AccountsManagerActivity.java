@@ -15,7 +15,7 @@ import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
 /**
  * Created by mariotaku on 14/10/26.
  */
-public class AccountsManagerActivity extends BaseSupportActivity {
+public class AccountsManagerActivity extends BaseActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {

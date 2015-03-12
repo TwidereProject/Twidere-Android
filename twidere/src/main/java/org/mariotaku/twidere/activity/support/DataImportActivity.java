@@ -18,7 +18,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class DataImportActivity extends BaseSupportActivity implements FileSelectorDialogFragment.Callback,
+public class DataImportActivity extends BaseActionBarActivity implements FileSelectorDialogFragment.Callback,
 		DataExportImportTypeSelectorDialogFragment.Callback {
 
 	private ImportSettingsTask mImportSettingsTask;

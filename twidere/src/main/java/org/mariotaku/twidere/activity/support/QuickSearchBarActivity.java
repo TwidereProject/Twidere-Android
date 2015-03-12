@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -74,6 +75,8 @@ import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener.DismissCallb
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
+import org.mariotaku.twidere.view.ExtendedRelativeLayout;
+import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,14 +86,17 @@ import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 /**
  * Created by mariotaku on 15/1/6.
  */
-public class QuickSearchBarActivity extends BaseSupportActivity implements OnClickListener,
-        OnEditorActionListener, LoaderCallbacks<List<SuggestionItem>>, TextWatcher, OnItemSelectedListener, OnItemClickListener, DismissCallbacks {
+public class QuickSearchBarActivity extends ThemedFragmentActivity implements OnClickListener,
+        OnEditorActionListener, LoaderCallbacks<List<SuggestionItem>>, TextWatcher,
+        OnItemSelectedListener, OnItemClickListener, DismissCallbacks, OnFitSystemWindowsListener {
 
     private Spinner mAccountSpinner;
     private EditText mSearchQuery;
     private View mSearchSubmit;
     private ListView mSuggestionsList;
     private SuggestionsAdapter mUsersSearchAdapter;
+    private ExtendedRelativeLayout mMainContent;
+    private Rect mSystemWindowsInsets = new Rect();
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -119,6 +125,12 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
     }
 
     @Override
+    public void onFitSystemWindows(Rect insets) {
+        mSystemWindowsInsets.set(insets);
+        updateWindowAttributes();
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final SuggestionItem item = mUsersSearchAdapter.getItem(position);
         item.onItemClick(this, position);
@@ -132,6 +144,11 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public int getThemeColor() {
+        return ThemeUtils.getUserAccentColor(this, getThemeResourceId());
     }
 
     @Override
@@ -156,6 +173,7 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
                 mAccountSpinner.setSelection(index);
             }
         }
+        mMainContent.setOnFitSystemWindowsListener(this);
         mUsersSearchAdapter = new SuggestionsAdapter(this);
         mSuggestionsList.setAdapter(mUsersSearchAdapter);
         mSuggestionsList.setOnItemClickListener(this);
@@ -186,8 +204,9 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
+        mMainContent = (ExtendedRelativeLayout) findViewById(R.id.main_content);
         mAccountSpinner = (Spinner) findViewById(R.id.account_spinner);
         mSearchQuery = (EditText) findViewById(R.id.search_query);
         mSearchSubmit = findViewById(R.id.search_submit);
@@ -248,6 +267,7 @@ public class QuickSearchBarActivity extends BaseSupportActivity implements OnCli
         final Window window = getWindow();
         final WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+        attributes.y = mSystemWindowsInsets.top;
         window.setAttributes(attributes);
     }
 

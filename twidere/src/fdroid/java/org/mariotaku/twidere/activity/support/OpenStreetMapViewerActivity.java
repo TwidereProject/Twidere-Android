@@ -43,7 +43,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenStreetMapViewerActivity extends BaseSupportActivity implements Constants {
+public class OpenStreetMapViewerActivity extends BaseActionBarActivity implements Constants {
 
     private MapView mMapView;
     private double mLatitude, mLongitude;

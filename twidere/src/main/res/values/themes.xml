@@ -187,12 +187,16 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:panelColorBackground">#3c3c3c</item>
+        <item name="android:dividerVertical">@drawable/divider_compose_vertical_dark</item>
     </style>
 
     <style name="Theme.Twidere.Light.Compose" parent="Theme.Compat.Base.Light.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:panelColorBackground">#e5e5e5</item>
+        <item name="android:dividerVertical">@drawable/divider_compose_vertical_light</item>
     </style>
 
     <style name="Theme.Twidere.Light.QuickSearchBar" parent="Theme.Twidere.Light.Dialog">

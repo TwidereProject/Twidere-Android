@@ -68,7 +68,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseSupportActivity;
+import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
 import org.mariotaku.twidere.activity.support.ImagePickerActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
@@ -196,7 +196,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         if (view == null) throw new AssertionError();
         final Context viewContext = view.getContext();
         setHasOptionsMenu(true);
-        final BaseSupportActivity activity = (BaseSupportActivity) getActivity();
+        final BaseActionBarActivity activity = (BaseActionBarActivity) getActivity();
         final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) throw new NullPointerException();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
@@ -632,7 +632,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     }
 
     private void updateActionBar() {
-        final BaseSupportActivity activity = (BaseSupportActivity) getActivity();
+        final BaseActionBarActivity activity = (BaseActionBarActivity) getActivity();
         final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) return;
         actionBar.setDisplayOptions(mRecipient != null ? ActionBar.DISPLAY_SHOW_TITLE : ActionBar.DISPLAY_SHOW_CUSTOM,

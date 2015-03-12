@@ -128,7 +128,7 @@ import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 import static org.mariotaku.twidere.util.Utils.openSearch;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
-public class HomeActivity extends BaseSupportActivity implements OnClickListener, OnPageChangeListener,
+public class HomeActivity extends BaseActionBarActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, OnOpenedListener, OnClosedListener,
         OnLongClickListener, AnimatorListener {
 

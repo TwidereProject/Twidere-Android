@@ -121,8 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:background="?android:colorBackground"
-        android:divider="?dividerVertical"
+        android:background="?android:panelColorBackground"
+        android:divider="?android:dividerVertical"
         android:orientation="vertical"
         android:showDividers="beginning">
 

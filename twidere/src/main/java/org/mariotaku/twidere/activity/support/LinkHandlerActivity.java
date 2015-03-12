@@ -54,7 +54,7 @@ import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
 
-public class LinkHandlerActivity extends BaseSupportActivity implements OnClickListener,
+public class LinkHandlerActivity extends BaseActionBarActivity implements OnClickListener,
         OnLongClickListener, SystemWindowsInsetsCallback, IControlBarActivity {
 
     private MultiSelectEventHandler mMultiSelectHandler;
