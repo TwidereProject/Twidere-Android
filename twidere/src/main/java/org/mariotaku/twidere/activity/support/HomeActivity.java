@@ -955,21 +955,6 @@ public class HomeActivity extends BaseSupportActivity implements OnClickListener
 
     }
 
-    public void moveControlBarBy(float delta) {
-        final int min = -getControlBarHeight(), max = 0;
-        mTabsContainer.setTranslationY(MathUtils.clamp(mTabsContainer.getTranslationY() + delta, max, min));
-        final ViewGroup.LayoutParams ablp = mActionsButton.getLayoutParams();
-        final int totalHeight;
-        if (ablp instanceof MarginLayoutParams) {
-            final MarginLayoutParams mlp = (MarginLayoutParams) ablp;
-            totalHeight = mActionsButton.getHeight() + mlp.topMargin + mlp.bottomMargin;
-        } else {
-            totalHeight = mActionsButton.getHeight();
-        }
-        mActionsButton.setTranslationY(MathUtils.clamp(mActionsButton.getTranslationY() - delta, totalHeight, 0));
-        notifyControlBarOffsetChanged();
-    }
-
     private static class ControlBarOffsetProperty extends Property<IControlBarActivity, Float> {
         public static final ControlBarOffsetProperty SINGLETON = new ControlBarOffsetProperty();
 

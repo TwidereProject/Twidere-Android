@@ -207,7 +207,8 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mUserQuery = (EditText) actionBarView.findViewById(R.id.user_query);
         mQueryButton = actionBarView.findViewById(R.id.query_button);
         final List<ParcelableAccount> accounts = ParcelableAccount.getAccountsList(activity, false);
-        final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(mAccountSpinner.getContext(), R.layout.spinner_item_account_icon);
+        final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(
+                actionBar.getThemedContext(), R.layout.spinner_item_account_icon);
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user);
         accountsSpinnerAdapter.addAll(accounts);
         mAccountSpinner.setAdapter(accountsSpinnerAdapter);

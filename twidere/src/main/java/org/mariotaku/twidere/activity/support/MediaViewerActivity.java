@@ -29,6 +29,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnMenuVisibilityListener;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -146,6 +147,8 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         } else {
             mActionBar.hide();
         }
+
+        findViewById(R.id.media_status).setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void toggleBar() {

@@ -18,15 +18,23 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       android:layout_width="match_parent"
-       tools:menu="menu_media_viewer_image_page"
-       android:layout_height="match_parent">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    tools:menu="menu_media_viewer_image_page"
+    android:layout_height="match_parent">
 
     <org.mariotaku.twidere.view.MediaViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</merge>
+    <View
+        android:id="@+id/media_status"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:background="#f00"/>
+
+</FrameLayout>
