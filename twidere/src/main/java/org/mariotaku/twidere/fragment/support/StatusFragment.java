@@ -381,7 +381,7 @@ public class StatusFragment extends BaseSupportFragment
         }
         getLoaderManager().initLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
         mRepliesLoaderInitialized = true;
-        //spice
+         //spice
         if (status.media == null) {
             SpiceProfilingUtil.profile(getActivity(), status.account_id,
                     status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
@@ -393,19 +393,19 @@ public class StatusFragment extends BaseSupportFragment
                 if (TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height + ","
+                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
                                     + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height + ","
+                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
                                     + status.timestamp);
                 } else {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + status.timestamp);
+                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + status.timestamp);
+                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
                 }
             }
         }
