@@ -38,6 +38,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.okhttp.internal.TwidereOkHttpPlatform;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
@@ -186,6 +187,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         }
         setTheme(ThemeUtils.getThemeResource(this));
         super.onCreate();
+//        TwidereOkHttpPlatform.applyHack(this);
         mHandler = new Handler();
         mMessageBus = new Bus();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);

@@ -534,7 +534,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     cr.delete(SavedSearches.CONTENT_URI, where.getSQL(), null);
                     ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values);
                 } catch (TwitterException e) {
-                    e.printStackTrace();
+                    Log.w(LOGTAG, e);
                 }
             }
             return SingleResponse.getInstance();
@@ -2332,21 +2332,21 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 bus.post(new StatusRetweetedEvent(status));
                 //spice
                 if (status.media == null) {
-                    SpiceProfilingUtil.log(getContext(),status.id + ",Retweet," + account_id + ","
+                    SpiceProfilingUtil.log(getContext(), status.id + ",Retweet," + account_id + ","
                             + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
                     SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",Retweet," + account_id + ","
                             + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
                 } else {
                     for (final ParcelableMedia spiceMedia : status.media) {
-                        if(TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
-                            SpiceProfilingUtil.log(getContext(),status.id + ",RetweetM," + account_id + ","
+                        if (TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
+                            SpiceProfilingUtil.log(getContext(), status.id + ",RetweetM," + account_id + ","
                                     + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height);
                             SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetM," + account_id + ","
                                     + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height);
                         } else {
-                            SpiceProfilingUtil.log(getContext(),status.id + ",RetweetO," + account_id + ","
+                            SpiceProfilingUtil.log(getContext(), status.id + ",RetweetO," + account_id + ","
                                     + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + spiceMedia.media_url + "," + TypeMapingUtil.getMediaType(spiceMedia.type));
                             SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetO," + account_id + ","

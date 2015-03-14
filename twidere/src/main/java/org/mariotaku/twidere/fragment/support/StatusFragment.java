@@ -29,6 +29,11 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -85,6 +90,7 @@ import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -129,7 +135,8 @@ import static org.mariotaku.twidere.util.Utils.showOkMessage;
  * Created by mariotaku on 14/12/5.
  */
 public class StatusFragment extends BaseSupportFragment
-        implements LoaderCallbacks<SingleResponse<ParcelableStatus>>, OnMediaClickListener, StatusAdapterListener {
+        implements LoaderCallbacks<SingleResponse<ParcelableStatus>>, OnMediaClickListener,
+        StatusAdapterListener, CreateNdefMessageCallback {
 
     private static final int LOADER_ID_DETAIL_STATUS = 1;
     private static final int LOADER_ID_STATUS_REPLIES = 2;
@@ -174,6 +181,19 @@ public class StatusFragment extends BaseSupportFragment
     };
 
     @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+        final ParcelableStatus status = getStatus();
+        if (status == null) return null;
+        return new NdefMessage(new NdefRecord[]{
+                NdefRecord.createUri(LinkCreator.getStatusTwitterLink(status.user_screen_name, status.id)),
+        });
+    }
+
+    private ParcelableStatus getStatus() {
+        return mStatusAdapter.getStatus();
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case REQUEST_SET_COLOR: {
@@ -214,6 +234,7 @@ public class StatusFragment extends BaseSupportFragment
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
+        initNdefCallback();
         mLayoutManager = new StatusListLinearLayoutManager(context, mRecyclerView);
         mItemDecoration = new DividerItemDecoration(context, mLayoutManager.getOrientation());
         if (compact) {
@@ -364,12 +385,12 @@ public class StatusFragment extends BaseSupportFragment
         if (status.media == null) {
             SpiceProfilingUtil.profile(getActivity(), status.account_id,
                     status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                    + "," + status.text_plain.length() + "," + status.timestamp);
+                            + "," + status.text_plain.length() + "," + status.timestamp);
             SpiceProfilingUtil.log(getActivity(), status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                     + "," + status.text_plain.length() + "," + status.timestamp);
         } else {
             for (final ParcelableMedia spiceMedia : status.media) {
-                if(TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
+                if (TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height + ","
@@ -1209,6 +1230,18 @@ public class StatusFragment extends BaseSupportFragment
 
 
     }
+
+
+    private void initNdefCallback() {
+        try {
+            final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(getActivity());
+            if (adapter == null) return;
+            adapter.setNdefPushMessageCallback(this, getActivity());
+        } catch (SecurityException e) {
+            Log.w(LOGTAG, e);
+        }
+    }
+
 
     private static class StatusListLinearLayoutManager extends LinearLayoutManager {
 

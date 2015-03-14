@@ -746,8 +746,9 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
                     selection = null;
                     selectionArgs = null;
                 }
-                final OrderBy orderBy = new OrderBy(CachedUsers.LAST_SEEN + " DESC",
-                        CachedUsers.SCREEN_NAME, CachedUsers.NAME);
+                final String[] order = {CachedUsers.LAST_SEEN, CachedUsers.SCREEN_NAME, CachedUsers.NAME};
+                final boolean[] ascending = {false, true, true};
+                final OrderBy orderBy = new OrderBy(order, ascending);
                 final Cursor c = context.getContentResolver().query(CachedUsers.CONTENT_URI,
                         CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());

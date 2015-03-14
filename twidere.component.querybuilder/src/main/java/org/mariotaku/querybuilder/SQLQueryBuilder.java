@@ -28,6 +28,7 @@
 package org.mariotaku.querybuilder;
 
 import org.mariotaku.querybuilder.query.SQLAlterTableQuery;
+import org.mariotaku.querybuilder.query.SQLCreateIndexQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTableQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTriggerQuery;
 import org.mariotaku.querybuilder.query.SQLCreateViewQuery;
@@ -63,6 +64,10 @@ public class SQLQueryBuilder {
     public static SQLCreateViewQuery.Builder createView(final boolean temporary, final boolean createIfNotExists,
                                                         final String name) {
         return new SQLCreateViewQuery.Builder().createView(temporary, createIfNotExists, name);
+    }
+
+    public static SQLCreateIndexQuery.Builder createIndex(final boolean unique, final boolean createIfNotExists) {
+        return new SQLCreateIndexQuery.Builder().createIndex(unique, createIfNotExists);
     }
 
 

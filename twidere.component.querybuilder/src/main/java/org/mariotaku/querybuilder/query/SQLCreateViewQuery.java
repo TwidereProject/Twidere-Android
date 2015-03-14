@@ -59,6 +59,7 @@ public class SQLCreateViewQuery implements SQLQuery {
 
         @Override
         public SQLCreateViewQuery build() {
+            buildCalled = true;
             return query;
         }
 

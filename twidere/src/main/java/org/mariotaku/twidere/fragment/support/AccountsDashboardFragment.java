@@ -37,12 +37,16 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.internal.view.SupportMenuInflater;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -70,6 +74,7 @@ import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.menu.SupportAccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.Indices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -89,6 +94,7 @@ import static org.mariotaku.twidere.util.Utils.openUserProfile;
 public class AccountsDashboardFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor>,
         OnSharedPreferenceChangeListener, OnCheckedChangeListener, ImageLoadingListener, OnClickListener {
 
+    private static final int MENU_GROUP_ACCOUNT_TOGGLE = 101;
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
 
@@ -106,7 +112,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private ImageView mAccountProfileBannerView;
     private ShapedImageView mAccountProfileImageView;
     private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
-    private Switch mAccountsToggle;
+    private ActionMenuView mAccountsToggleMenu;
     private View mAccountProfileContainer;
 
     private Context mThemedContext;
@@ -166,10 +172,26 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
-        if (data != null && data.getCount() > 0 && mAccountsAdapter.getSelectedAccountId() <= 0) {
+        final Menu menu = mAccountsToggleMenu.getMenu();
+        final SupportAccountActionProvider provider = (SupportAccountActionProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
+        final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
+        if (data != null) {
             data.moveToFirst();
-            mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1));
+            final Indices indices = new Indices(data);
+            long defaultId = -1;
+            while (!data.isAfterLast()) {
+                final ParcelableAccount account = new ParcelableAccount(data, indices);
+                accounts.add(account);
+                if (defaultId < 0 && account.is_activated) {
+                    defaultId = account.account_id;
+                }
+                data.moveToNext();
+            }
+            if (mAccountsAdapter.getSelectedAccountId() <= 0) {
+                mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
+            }
         }
+        provider.setAccounts(accounts.toArray(new ParcelableAccount[accounts.size()]));
         mAccountsAdapter.changeCursor(data);
         updateAccountOptionsSeparatorLabel();
         updateDefaultAccountState();
@@ -310,7 +332,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAccountsAdapter = new AccountSelectorAdapter(context, this);
         mAccountOptionsAdapter = new AccountOptionsAdapter(context);
         mAppMenuAdapter = new AppMenuAdapter(context);
-        mAppMenuSectionView = newSectionView(context, R.string.more);
+        mAppMenuSectionView = Utils.newSectionView(context, R.string.more);
         mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, listView, false);
         mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.other_accounts_list);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
@@ -322,11 +344,12 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.account_profile_banner);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
         mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
-        mAccountsToggle = (Switch) mAccountSelectorView.findViewById(R.id.toggle);
+        mAccountsToggleMenu = (ActionMenuView) mAccountSelectorView.findViewById(R.id.toggle_menu);
+        final SupportMenuInflater menuInflater = new SupportMenuInflater(context);
+        menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, mAccountsToggleMenu.getMenu());
 
         mAccountProfileContainer.setOnClickListener(this);
 
-        mAccountsToggle.setOnCheckedChangeListener(this);
         mAdapter.addView(mAccountSelectorView, false);
         mAdapter.addAdapter(mAccountOptionsAdapter);
         mAdapter.addView(mAppMenuSectionView, false);
@@ -370,14 +393,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         return mThemedContext = new ContextThemeWrapper(context, themeResource);
     }
 
-    private static TextView newSectionView(final Context context, final int titleRes) {
-        final TextView textView = new TextView(context, null, android.R.attr.listSeparatorTextViewStyle);
-        if (titleRes != 0) {
-            textView.setText(titleRes);
-        }
-        return textView;
-    }
-
     private void onAccountSelected(ParcelableAccount account) {
         mAccountsAdapter.setSelectedAccountId(account.account_id);
         updateAccountOptionsSeparatorLabel();
@@ -390,7 +405,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         }
         mAccountProfileNameView.setText(account.name);
         mAccountProfileScreenNameView.setText("@" + account.screen_name);
-        mAccountsToggle.setChecked(account.is_activated);
         mImageLoader.displayProfileImage(mAccountProfileImageView, account.profile_image_url);
         mAccountProfileImageView.setBorderColors(account.color);
         final int bannerWidth = mAccountProfileBannerView.getWidth();

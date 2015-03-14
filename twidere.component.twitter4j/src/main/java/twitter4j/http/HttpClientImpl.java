@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
@@ -261,12 +262,12 @@ public class HttpClientImpl extends HttpClientBase implements HttpClient, HttpRe
             throw new IOException("Invalid URI " + url_string);
         }
         final String host = url_orig.getHost(), authority = url_orig.getAuthority();
-        final String resolved_host = resolver != null ? resolver.resolve(host) : null;
-        con = (HttpURLConnection) new URL(resolved_host != null ? url_string.replace("://" + host, "://"
-                + resolved_host) : url_string).openConnection(proxy);
-        if (resolved_host != null && !host.equals(resolved_host)) {
-            con.setRequestProperty("Host", authority);
-        }
+        final InetAddress[] resolved_host = resolver != null ? resolver.resolve(host) : InetAddress.getAllByName(host);
+        con = (HttpURLConnection) new URL(resolved_host.length > 0 ? url_string.replace("://" + host, "://"
+                + resolved_host[0].getHostAddress()) : url_string).openConnection(proxy);
+//        if (resolved_host != null && !host.equals(resolved_host)) {
+//            con.setRequestProperty("Host", authority);
+//        }
         if (CONF.getHttpConnectionTimeout() > 0) {
             con.setConnectTimeout(CONF.getHttpConnectionTimeout());
         }

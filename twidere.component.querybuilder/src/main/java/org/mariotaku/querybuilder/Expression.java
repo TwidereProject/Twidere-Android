@@ -47,19 +47,27 @@ public class Expression implements SQLLang {
     }
 
     public static Expression equals(final Column l, final Column r) {
-        return new Expression(String.format(Locale.US, "%s = %s", l.getSQL(), r.getSQL()));
+        return new Expression(String.format(Locale.ROOT, "%s = %s", l.getSQL(), r.getSQL()));
+    }
+
+    public static Expression equals(final Column l, final Selectable r) {
+        return new Expression(String.format(Locale.ROOT, "%s = (%s)", l.getSQL(), r.getSQL()));
+    }
+
+    public static Expression equals(final String l, final Selectable r) {
+        return new Expression(String.format(Locale.ROOT, "%s = (%s)", l, r.getSQL()));
     }
 
     public static Expression equals(final Column l, final long r) {
-        return new Expression(String.format(Locale.US, "%s = %d", l.getSQL(), r));
+        return new Expression(String.format(Locale.ROOT, "%s = %d", l.getSQL(), r));
     }
 
     public static Expression equals(final Column l, final String r) {
-        return new Expression(String.format(Locale.US, "%s = '%s'", l.getSQL(), r));
+        return new Expression(String.format(Locale.ROOT, "%s = '%s'", l.getSQL(), r));
     }
 
     public static Expression equals(final String l, final long r) {
-        return new Expression(String.format(Locale.US, "%s = %d", l, r));
+        return new Expression(String.format(Locale.ROOT, "%s = %d", l, r));
     }
 
     public static Expression in(final Column column, final Selectable in) {
@@ -67,7 +75,7 @@ public class Expression implements SQLLang {
     }
 
     public static Expression notEquals(final String l, final long r) {
-        return new Expression(String.format(Locale.US, "%s != %d", l, r));
+        return new Expression(String.format(Locale.ROOT, "%s != %d", l, r));
     }
 
     public static Expression notEquals(final String l, final String r) {
@@ -101,7 +109,7 @@ public class Expression implements SQLLang {
     }
 
     public static Expression equalsArgs(String l) {
-        return new Expression(String.format(Locale.US, "%s = ?", l));
+        return new Expression(String.format(Locale.ROOT, "%s = ?", l));
     }
 
     public static Expression isNull(Column column) {
@@ -113,12 +121,12 @@ public class Expression implements SQLLang {
     }
 
     public static Expression likeRaw(final Column column, final String pattern, final String escape) {
-        return new Expression(String.format(Locale.US, "%s LIKE %s ESCAPE '%s'", column.getSQL(), pattern, escape));
+        return new Expression(String.format(Locale.ROOT, "%s LIKE %s ESCAPE '%s'", column.getSQL(), pattern, escape));
     }
 
 
     public static Expression likeRaw(final Column column, final String pattern) {
-        return new Expression(String.format(Locale.US, "%s LIKE %s", column.getSQL(), pattern));
+        return new Expression(String.format(Locale.ROOT, "%s LIKE %s", column.getSQL(), pattern));
     }
 
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
@@ -37,9 +38,8 @@ import twitter4j.TranslationResult;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 /**
- *
  * IDE gives me warning if I don't change default comment, so I write this XD
- *
+ * <p/>
  * Created by mariotaku on 14/11/19.
  */
 public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
@@ -217,7 +217,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         } else {
             favoriteCountView.setText(null);
         }
-        displayExtraTypeIcon(status.card_name, status.media != null ? status.media.length : 0);
+        displayExtraTypeIcon(status.card_name, status.media, status.location);
     }
 
     public void displayStatus(@NonNull Cursor cursor, @NonNull CursorIndices indices,
@@ -253,7 +253,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         final String in_reply_to_screen_name = cursor.getString(indices.in_reply_to_user_screen_name);
         final String card_name = cursor.getString(indices.card_name);
 
-        final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
+        final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(
+                cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
+        final ParcelableLocation location = ParcelableLocation.fromString(
+                cursor.getString(indices.location));
 
         if (retweet_id > 0) {
             final String retweetedBy = UserColorNameUtils.getDisplayName(context, retweeted_by_id,
@@ -348,7 +351,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         } else {
             favoriteCountView.setText(null);
         }
-        displayExtraTypeIcon(card_name, media != null ? media.length : 0);
+        displayExtraTypeIcon(card_name, media, location);
     }
 
     public CardView getCardView() {
@@ -421,7 +424,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         setTextSize(adapter.getTextSize());
     }
 
-    private void displayExtraTypeIcon(String cardName, int mediaLength) {
+    private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location) {
         if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
             extraTypeView.setImageResource(R.drawable.ic_action_music);
             extraTypeView.setVisibility(View.VISIBLE);
@@ -431,8 +434,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         } else if (TwitterCardUtils.CARD_NAME_PLAYER.equals(cardName)) {
             extraTypeView.setImageResource(R.drawable.ic_action_play_circle);
             extraTypeView.setVisibility(View.VISIBLE);
-        } else if (mediaLength > 0) {
+        } else if (media != null && media.length > 0) {
             extraTypeView.setImageResource(R.drawable.ic_action_gallery);
+            extraTypeView.setVisibility(View.VISIBLE);
+        } else if (location != null && location.isValid()) {
+            extraTypeView.setImageResource(R.drawable.ic_action_location);
             extraTypeView.setVisibility(View.VISIBLE);
         } else {
             extraTypeView.setVisibility(View.GONE);

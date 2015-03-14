@@ -178,6 +178,7 @@ public class SQLCreateTriggerQuery implements SQLQuery {
 
         @Override
         public SQLCreateTriggerQuery build() {
+            buildCalled = true;
             return query;
         }
 

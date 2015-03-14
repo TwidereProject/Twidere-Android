@@ -97,6 +97,7 @@ import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -975,12 +976,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private Cursor getDNSCursor(final String host) {
         final MatrixCursor c = new MatrixCursor(TwidereDataStore.DNS.MATRIX_COLUMNS);
         try {
-            final String address = mHostAddressResolver.resolve(host);
-            if (host != null && address != null) {
-                c.addRow(new String[]{host, address});
+            final InetAddress[] addresses = mHostAddressResolver.resolve(host);
+            for (InetAddress address : addresses) {
+                c.addRow(new String[]{host, address.getHostAddress()});
             }
-        } catch (final IOException e) {
-
+        } catch (final IOException ignore) {
+            if (Utils.isDebugBuild()) {
+                Log.w(LOGTAG, ignore);
+            }
         }
         return c;
     }

@@ -32,7 +32,7 @@
         android:id="@id/share"
         android:icon="@drawable/ic_action_share"
         android:title="@string/share"
-        app:actionProviderClass="org.mariotaku.twidere.menu.StatusShareProvider"
+        app:actionProviderClass="org.mariotaku.twidere.menu.SupportStatusShareProvider"
         app:showAsAction="always"/>
     <item
         android:id="@id/copy"

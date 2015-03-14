@@ -164,7 +164,7 @@ import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
-import org.mariotaku.twidere.menu.StatusShareProvider;
+import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
@@ -648,8 +648,8 @@ public final class Utils implements Constants, TwitterConstants {
                 final Expression account_where = new Expression(Statuses.ACCOUNT_ID + " = " + account_id);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(Statuses._ID)).from(new Tables(table));
-                qb.where(new Expression(Statuses.ACCOUNT_ID + " = " + account_id));
-                qb.orderBy(new OrderBy(Statuses.STATUS_ID + " DESC"));
+                qb.where(Expression.equals(Statuses.ACCOUNT_ID, account_id));
+                qb.orderBy(new OrderBy(Statuses.STATUS_ID, false));
                 qb.limit(itemLimit);
                 final Expression where = Expression.and(Expression.notIn(new Column(Statuses._ID), qb.build()), account_where);
                 resolver.delete(uri, where.getSQL(), null);
@@ -659,8 +659,8 @@ public final class Utils implements Constants, TwitterConstants {
                 final Expression account_where = new Expression(DirectMessages.ACCOUNT_ID + " = " + account_id);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(DirectMessages._ID)).from(new Tables(table));
-                qb.where(new Expression(DirectMessages.ACCOUNT_ID + " = " + account_id));
-                qb.orderBy(new OrderBy(DirectMessages.MESSAGE_ID + " DESC"));
+                qb.where(Expression.equals(DirectMessages.ACCOUNT_ID, account_id));
+                qb.orderBy(new OrderBy(DirectMessages.MESSAGE_ID, false));
                 qb.limit(itemLimit);
                 final Expression where = Expression.and(Expression.notIn(new Column(DirectMessages._ID), qb.build()), account_where);
                 resolver.delete(uri, where.getSQL(), null);
@@ -673,7 +673,7 @@ public final class Utils implements Constants, TwitterConstants {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             qb.select(new Column(BaseColumns._ID));
             qb.from(new Tables(table));
-            qb.orderBy(new OrderBy(BaseColumns._ID + " DESC"));
+            qb.orderBy(new OrderBy(BaseColumns._ID, false));
             qb.limit(itemLimit * 20);
             final Expression where = Expression.notIn(new Column(BaseColumns._ID), qb.build());
             resolver.delete(uri, where.getSQL(), null);
@@ -1101,10 +1101,9 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static String getStatusShareText(final Context context, final ParcelableStatus status) {
-        final String link = String.format(Locale.ROOT, "https://twitter.com/%s/status/%d",
-                status.user_screen_name, status.id);
+        final Uri link = LinkCreator.getStatusTwitterLink(status.user_screen_name, status.id);
         return context.getString(R.string.status_share_text_format_with_link,
-                status.text_plain, link);
+                status.text_plain, link.toString());
     }
 
     public static String getStatusShareSubject(final Context context, ParcelableStatus status) {
@@ -1556,6 +1555,16 @@ public final class Utils implements Constants, TwitterConstants {
                 || account.auth_type == Accounts.AUTH_TYPE_XAUTH;
         final String consumerKey = account.consumer_key, consumerSecret = account.consumer_secret;
         return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
+    }
+
+    public static TextView newSectionView(final Context context, final int titleRes) {
+        return newSectionView(context, titleRes != 0 ? context.getString(titleRes) : null);
+    }
+
+    public static TextView newSectionView(final Context context, final CharSequence title) {
+        final TextView textView = new TextView(context, null, android.R.attr.listSeparatorTextViewStyle);
+        textView.setText(title);
+        return textView;
     }
 
     public static boolean setLastSeen(Context context, UserMentionEntity[] entities, long time) {
@@ -3053,18 +3062,15 @@ public final class Utils implements Constants, TwitterConstants {
         builder.authority(AUTHORITY_SEARCH);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
         builder.appendQueryParameter(QUERY_PARAM_QUERY, query);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        final Uri uri = builder.build();
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
     }
 
     public static void openStatus(final Context context, final long accountId, final long statusId) {
         if (context == null || accountId <= 0 || statusId <= 0) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_STATUS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        final Uri uri = LinkCreator.getTwidereStatusLink(accountId, statusId);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
     }
 
@@ -3387,17 +3393,8 @@ public final class Utils implements Constants, TwitterConstants {
     public static void openUserProfile(final Context context, final long accountId, final long userId,
                                        final String screenName, final Bundle activityOptions) {
         if (context == null || accountId <= 0 || userId <= 0 && isEmpty(screenName)) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        final Uri uri = LinkCreator.getTwidereUserLink(accountId, userId, screenName);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         if (context instanceof Activity) {
             ActivityCompat.startActivity((Activity) context, intent, activityOptions);
         } else {
@@ -3613,8 +3610,8 @@ public final class Utils implements Constants, TwitterConstants {
                 EXTRA_STATUS, EXTRA_STATUS_JSON, status);
         final MenuItem shareItem = menu.findItem(R.id.share);
         final ActionProvider shareProvider = MenuItemCompat.getActionProvider(shareItem);
-        if (shareProvider instanceof StatusShareProvider) {
-            ((StatusShareProvider) shareProvider).setStatus(status);
+        if (shareProvider instanceof SupportStatusShareProvider) {
+            ((SupportStatusShareProvider) shareProvider).setStatus(status);
         } else if (shareProvider instanceof ShareActionProvider) {
             final Intent shareIntent = createStatusShareIntent(context, status);
             ((ShareActionProvider) shareProvider).setShareIntent(shareIntent);

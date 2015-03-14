@@ -573,8 +573,9 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                         Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                         Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
                 final String[] selectionArgs = new String[]{queryEscaped, queryEscaped};
-                final OrderBy orderBy = new OrderBy(CachedUsers.LAST_SEEN + " DESC", "score DESC",
-                        CachedUsers.SCREEN_NAME, CachedUsers.NAME);
+                final String[] order = {CachedUsers.LAST_SEEN, "score", CachedUsers.SCREEN_NAME, CachedUsers.NAME};
+                final boolean[] ascending = {false, false, true, true};
+                final OrderBy orderBy = new OrderBy(order, ascending);
                 final Uri uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId));
                 final Cursor usersCursor = context.getContentResolver().query(uri,
                         CachedUsers.COLUMNS, selection != null ? selection.getSQL() : null,

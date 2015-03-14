@@ -46,6 +46,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:cardBackgroundColor="?cardItemBackgroundColor"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="false"
@@ -200,6 +201,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/element_spacing_normal"
+                    app:cardBackgroundColor="?cardItemBackgroundColor"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="false"
@@ -300,6 +302,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/element_spacing_normal"
+                    app:cardBackgroundColor="?cardItemBackgroundColor"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="false"

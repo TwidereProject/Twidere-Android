@@ -2,7 +2,7 @@
 <!--
   ~ Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -18,17 +18,15 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.RightDrawerFrameLayout
-    android:id="@+id/right_drawer_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <fragment
-        android:id="@+id/right_drawer"
-        class="org.mariotaku.twidere.fragment.support.QuickMenuFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_quick_menu"/>
-</org.mariotaku.twidere.view.RightDrawerFrameLayout>
+    <item
+        android:id="@id/select_account"
+        android:icon="@drawable/ic_action_user"
+        android:title="@string/select_account"
+        app:actionProviderClass="org.mariotaku.twidere.menu.SupportAccountActionProvider"
+        app:showAsAction="always"/>
+
+
+</menu>

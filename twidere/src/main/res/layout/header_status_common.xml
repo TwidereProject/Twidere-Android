@@ -34,10 +34,11 @@
         android:clickable="true"
         android:paddingLeft="@dimen/element_spacing_small"
         android:paddingRight="@dimen/element_spacing_small"
+        android:layout_marginBottom="@dimen/element_spacing_minus_normal"
         tools:visiblity="visible">
 
         <Space
-            android:layout_width="@dimen/icon_size_card_list_item"
+            android:layout_width="@dimen/element_spacing_large"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_profile_image_detail_page"/>
 

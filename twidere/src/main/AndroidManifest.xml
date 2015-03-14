@@ -22,6 +22,9 @@
         android:name="android.hardware.touchscreen"
         android:required="false"/>
     <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false"/>
+    <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true"/>
 
@@ -32,6 +35,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"/>
@@ -548,6 +552,7 @@
                     android:scheme="https"/>
 
                 <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util.net;
 
+import android.net.SSLCertificateSocketFactory;
 import android.net.Uri;
 
 import com.squareup.okhttp.Headers;
@@ -28,21 +29,27 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request.Builder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.internal.Internal;
+import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
+
+import javax.net.SocketFactory;
 
 import twitter4j.TwitterException;
 import twitter4j.auth.Authorization;
@@ -101,12 +108,28 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
         final OkHttpClient client = new OkHttpClient();
         final boolean ignoreSSLError = conf.isSSLErrorIgnored();
         client.setHostnameVerifier(new HostResolvedHostnameVerifier(ignoreSSLError));
-        client.setSslSocketFactory(new HostResolvedSSLSocketFactory(resolver, ignoreSSLError));
-        client.setSocketFactory(new HostResolvedSocketFactory(resolver));
+        if (ignoreSSLError) {
+            client.setSslSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
+        } else {
+            client.setSslSocketFactory(SSLCertificateSocketFactory.getDefault(0, null));
+        }
+        client.setSocketFactory(SocketFactory.getDefault());
+
         if (conf.isProxyConfigured()) {
             client.setProxy(new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(conf.getHttpProxyHost(),
                     conf.getHttpProxyPort())));
         }
+        Internal.instance.setNetwork(client, new Network() {
+            @Override
+            public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {
+                try {
+                    return resolver.resolve(host);
+                } catch (IOException e) {
+                    if (e instanceof UnknownHostException) throw (UnknownHostException) e;
+                    throw new UnknownHostException("Unable to resolve address " + e.getMessage());
+                }
+            }
+        });
         return client;
     }
 

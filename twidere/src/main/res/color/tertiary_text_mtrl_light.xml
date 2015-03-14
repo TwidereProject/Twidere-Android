@@ -2,7 +2,7 @@
 <!--
   ~ Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -18,17 +18,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.RightDrawerFrameLayout
-    android:id="@+id/right_drawer_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:color="#b0b0b0"/>
+    <item android:state_window_focused="false" android:color="#808080"/>
+    <item android:state_pressed="true" android:color="#808080"/>
+    <item android:state_selected="true" android:color="#808080"/>
+    <item android:color="#969696"/> <!-- not selected -->
+</selector>
 
-    <fragment
-        android:id="@+id/right_drawer"
-        class="org.mariotaku.twidere.fragment.support.QuickMenuFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_quick_menu"/>
-</org.mariotaku.twidere.view.RightDrawerFrameLayout>

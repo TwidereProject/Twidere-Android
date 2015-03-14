@@ -42,6 +42,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
+import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -104,6 +110,7 @@ import org.mariotaku.twidere.text.TextAlphaSpan;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -160,7 +167,8 @@ import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
         OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,
-        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback {
+        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback,
+        CreateNdefMessageCallback {
 
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
@@ -220,7 +228,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     private void updateRefreshState() {
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         if (user == null) return;
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final boolean is_creating_friendship = twitter != null
@@ -317,7 +325,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public void onLoadFinished(final Loader<SingleResponse<Relationship>> loader,
                                    final SingleResponse<Relationship> data) {
             mFollowProgress.setVisibility(View.GONE);
-            final ParcelableUser user = mUser;
+            final ParcelableUser user = getUser();
             final Relationship relationship = data.getData();
             mRelationship = relationship;
             if (user == null) return;
@@ -566,7 +574,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         switch (requestCode) {
             case REQUEST_SET_COLOR: {
                 if (user == null) return;
@@ -644,6 +652,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileImageLoader = getApplication().getImageLoaderWrapper();
         final FragmentActivity activity = getActivity();
 
+        initNdefCallback();
+
         activity.setEnterSharedElementCallback(new SharedElementCallback() {
 
             @Override
@@ -715,6 +725,25 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         setupUserPages();
     }
 
+    private void initNdefCallback() {
+        try {
+            final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(getActivity());
+            if (adapter == null) return;
+            adapter.setNdefPushMessageCallback(this, getActivity());
+        } catch (SecurityException e) {
+            Log.w(LOGTAG, e);
+        }
+    }
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+        final ParcelableUser user = getUser();
+        if (user == null) return null;
+        return new NdefMessage(new NdefRecord[]{
+                NdefRecord.createUri(LinkCreator.getUserTwitterLink(user.screen_name)),
+        });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -725,9 +754,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Subscribe
     public void notifyProfileUpdated(ProfileUpdatedEvent event) {
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         if (user == null || !user.equals(event.user)) return;
         displayUser(event.user);
+    }
+
+    public ParcelableUser getUser() {
+        return mUser;
     }
 
     @Override
@@ -739,7 +772,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        outState.putParcelable(EXTRA_USER, mUser);
+        outState.putParcelable(EXTRA_USER, getUser());
         super.onSaveInstanceState(outState);
     }
 
@@ -763,7 +796,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onPrepareOptionsMenu(final Menu menu) {
         if (!shouldUseNativeMenu() || !menu.hasVisibleItems()) return;
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         final Relationship relationship = mRelationship;
         if (twitter == null || user == null) return;
         final boolean isMyself = user.account_id == user.id;
@@ -827,7 +860,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         final Relationship relationship = mRelationship;
         if (user == null || twitter == null) return false;
         switch (item.getItemId()) {
@@ -964,7 +997,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onClick(final View view) {
         final FragmentActivity activity = getActivity();
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         if (activity == null || user == null) return;
         switch (view.getId()) {
             case R.id.retry: {
@@ -1030,7 +1063,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onLinkClick(final String link, final String orig, final long account_id, final int type,
                             final boolean sensitive, int start, int end) {
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
@@ -1156,7 +1189,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private void getFriendship() {
         mRelationship = null;
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
@@ -1187,7 +1220,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private void updateFollowProgressState() {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final ParcelableUser user = mUser;
+        final ParcelableUser user = getUser();
         if (twitter == null || user == null) {
             mFollowButton.setVisibility(View.GONE);
             mFollowProgress.setVisibility(View.GONE);

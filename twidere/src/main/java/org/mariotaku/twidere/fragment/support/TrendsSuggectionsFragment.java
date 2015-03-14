@@ -76,9 +76,9 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
     @Override
     public void onListItemClick(final ListView l, final View v, final int position, final long id) {
         if (mMultiSelectManager.isActive()) return;
-        final Cursor cur = (Cursor) mTrendsAdapter.getItem(position - l.getHeaderViewsCount());
-        if (cur == null) return;
-        openTweetSearch(getActivity(), mAccountId, cur.getString(cur.getColumnIndex(CachedTrends.NAME)));
+        final String trend = mTrendsAdapter.getItem(position - l.getHeaderViewsCount());
+        if (trend == null) return;
+        openTweetSearch(getActivity(), mAccountId, trend);
     }
 
     @Override
@@ -126,6 +126,23 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
     }
 
     static class TrendsAdapter extends SimpleCursorAdapter {
+        private int mNameIdx;
+
+        @Override
+        public String getItem(int position) {
+            final Cursor c = getCursor();
+            if (c != null && !c.isClosed() && c.moveToPosition(position))
+                return c.getString(mNameIdx);
+            return null;
+        }
+
+        @Override
+        public Cursor swapCursor(Cursor c) {
+            if (c != null) {
+                mNameIdx = c.getColumnIndex(CachedTrends.NAME);
+            }
+            return super.swapCursor(c);
+        }
 
         public TrendsAdapter(final Context context) {
             super(context, android.R.layout.simple_list_item_1, null, new String[]{CachedTrends.NAME},

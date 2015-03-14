@@ -19,67 +19,58 @@
 
 package org.mariotaku.twidere.extension.streaming.util;
 
-import static android.text.TextUtils.isEmpty;
-
-import java.util.LinkedHashMap;
+import android.content.Context;
+import android.util.Log;
 
 import org.mariotaku.twidere.Twidere;
 import org.mariotaku.twidere.extension.streaming.BuildConfig;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+
 import twitter4j.http.HostAddressResolver;
-import android.content.Context;
-import android.util.Log;
 
 public class TwidereHostAddressResolver implements HostAddressResolver {
 
-	private static final String RESOLVER_LOGTAG = "Twidere.Streaming.HostAddressResolver";
+    private static final String RESOLVER_LOGTAG = "Twidere.Streaming.Host";
 
-	private final HostCache mHostCache = new HostCache(512);
-	private final Context mContext;
+    private final HostCache mHostCache = new HostCache(512);
+    private final Context mContext;
 
-	public TwidereHostAddressResolver(final Context context) {
-		mContext = context;
-	}
+    public TwidereHostAddressResolver(final Context context) {
+        mContext = context;
+    }
 
-	@Override
-	public String resolve(final String host) {
-		if (host == null) return null;
-		// First, I'll try to load address cached.
-		if (mHostCache.containsKey(host)) {
-			if (BuildConfig.DEBUG) {
-				Log.d(RESOLVER_LOGTAG, "Got cached address " + mHostCache.get(host) + " for host " + host);
-			}
-			return mHostCache.get(host);
-		}
-		final String address = Twidere.resolveHost(mContext, host);
-		if (isValidIpAddress(address)) {
-			if (BuildConfig.DEBUG) {
-				Log.d(RESOLVER_LOGTAG, "Resolved address " + address + " for host " + host);
-			}
-			return address;
-		}
-		if (BuildConfig.DEBUG) {
-			Log.w(RESOLVER_LOGTAG, "Resolve address " + host + " failed, using original host");
-		}
-		return host;
-	}
+    @Override
+    public InetAddress[] resolve(final String host) throws UnknownHostException {
+        if (host == null) return null;
+        // First, I'll try to load address cached.
+        final InetAddress[] cached = mHostCache.get(host);
+        if (cached != null) {
+            if (BuildConfig.DEBUG) {
+                Log.d(RESOLVER_LOGTAG, "Got cached " + Arrays.toString(cached));
+            }
+            return cached;
+        }
+        final InetAddress[] resolved = Twidere.resolveHost(mContext, host);
+        mHostCache.put(host, resolved);
+        return resolved;
+    }
 
-	static boolean isValidIpAddress(final String address) {
-		return !isEmpty(address);
-	}
+    private static class HostCache extends LinkedHashMap<String, InetAddress[]> {
 
-	private static class HostCache extends LinkedHashMap<String, String> {
+        private static final long serialVersionUID = -9216545511009449147L;
 
-		private static final long serialVersionUID = -9216545511009449147L;
+        HostCache(final int initialCapacity) {
+            super(initialCapacity);
+        }
 
-		HostCache(final int initialCapacity) {
-			super(initialCapacity);
-		}
-
-		@Override
-		public String put(final String key, final String value) {
-			if (value == null) return value;
-			return super.put(key, value);
-		}
-	}
+        @Override
+        public InetAddress[] put(final String key, final InetAddress[] value) {
+            if (value == null) return null;
+            return super.put(key, value);
+        }
+    }
 }

@@ -29,16 +29,25 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ComposingStatus;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
+
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import static android.text.TextUtils.isEmpty;
 
+@SuppressWarnings("unused")
 public final class Twidere implements TwidereConstants {
 
     public static void appendComposeActivityText(final Activity activity, final String text) {
@@ -142,7 +151,8 @@ public final class Twidere implements TwidereConstants {
                 }
                 c.moveToNext();
             }
-        } catch (final SecurityException e) {
+        } catch (final SecurityException ignore) {
+
         } finally {
             c.close();
         }
@@ -162,17 +172,35 @@ public final class Twidere implements TwidereConstants {
         activity.finish();
     }
 
-    public static String resolveHost(final Context context, final String host) {
-        if (context == null || host == null) return null;
+    private static InetAddress fromAddressString(String host, String address) throws UnknownHostException {
+        InetAddress inetAddress = InetAddress.getByName(address);
+        if (inetAddress instanceof Inet4Address) {
+            return Inet4Address.getByAddress(host, inetAddress.getAddress());
+        } else if (inetAddress instanceof Inet6Address) {
+            return Inet6Address.getByAddress(host, inetAddress.getAddress());
+        }
+        throw new UnknownHostException("Bad address " + host + " = " + address);
+    }
+
+    @NonNull
+    public static InetAddress[] resolveHost(final Context context, final String host) throws UnknownHostException {
+        if (context == null || host == null) return InetAddress.getAllByName(host);
         final ContentResolver resolver = context.getContentResolver();
-        final Uri uri = Uri.withAppendedPath(TwidereDataStore.DNS.CONTENT_URI, host);
-        final Cursor cur = resolver.query(uri, TwidereDataStore.DNS.MATRIX_COLUMNS, null, null, null);
-        if (cur == null) return null;
+        final Uri uri = Uri.withAppendedPath(DNS.CONTENT_URI, host);
+        final Cursor cur = resolver.query(uri, DNS.MATRIX_COLUMNS, null, null, null);
+        if (cur == null) return InetAddress.getAllByName(host);
         try {
-            if (cur.getCount() == 0) return null;
-            final int addr_idx = cur.getColumnIndex(TwidereDataStore.DNS.ADDRESS);
             cur.moveToFirst();
-            return cur.getString(addr_idx);
+            final ArrayList<InetAddress> addresses = new ArrayList<>();
+            final int idxHost = cur.getColumnIndex(DNS.HOST), idxAddr = cur.getColumnIndex(DNS.ADDRESS);
+            while (!cur.isAfterLast()) {
+                addresses.add(fromAddressString(cur.getString(idxHost), cur.getString(idxAddr)));
+                cur.moveToNext();
+            }
+            if (addresses.isEmpty()) {
+                throw new UnknownHostException("Unknown host " + host);
+            }
+            return addresses.toArray(new InetAddress[addresses.size()]);
         } finally {
             cur.close();
         }

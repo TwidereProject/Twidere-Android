@@ -1,9 +1,10 @@
 package twitter4j.http;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 public interface HostAddressResolver {
 
-	public String resolve(String host) throws IOException;
+    public InetAddress[] resolve(String host) throws IOException;
 
 }

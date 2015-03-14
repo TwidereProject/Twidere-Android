@@ -35,12 +35,12 @@ import static org.mariotaku.twidere.util.Utils.createStatusShareIntent;
 /**
  * Created by mariotaku on 14/12/7.
  */
-public class StatusShareProvider extends ActionProvider implements Constants {
+public class SupportStatusShareProvider extends ActionProvider implements Constants {
 
     private final Context mContext;
     private ParcelableStatus mStatus;
 
-    public StatusShareProvider(Context context) {
+    public SupportStatusShareProvider(Context context) {
         super(context);
         mContext = context;
     }

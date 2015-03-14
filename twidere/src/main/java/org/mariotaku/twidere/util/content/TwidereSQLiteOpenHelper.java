@@ -24,9 +24,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
+import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.NewColumn;
 import org.mariotaku.querybuilder.SQLQueryBuilder;
+import org.mariotaku.querybuilder.Table;
+import org.mariotaku.querybuilder.query.SQLCreateIndexQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTableQuery;
 import org.mariotaku.querybuilder.query.SQLCreateViewQuery;
 import org.mariotaku.twidere.Constants;
@@ -85,11 +89,26 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(Tabs.TABLE_NAME, Tabs.COLUMNS, Tabs.TYPES, true));
         db.execSQL(createTable(SavedSearches.TABLE_NAME, SavedSearches.COLUMNS, SavedSearches.TYPES, true));
         db.execSQL(createTable(SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true));
-        db.execSQL(createDirectMessagesView().getSQL());
-        db.execSQL(createDirectMessageConversationEntriesView().getSQL());
+
+        createViews(db);
+
+        createIndices(db);
+
         db.setTransactionSuccessful();
         db.endTransaction();
     }
+
+    private void createIndices(SQLiteDatabase db) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        db.execSQL(createIndex("statuses_index", Statuses.TABLE_NAME, new String[]{Statuses.ACCOUNT_ID}, true));
+        db.execSQL(createIndex("mentions_index", Mentions.TABLE_NAME, new String[]{Statuses.ACCOUNT_ID}, true));
+    }
+
+    private void createViews(SQLiteDatabase db) {
+        db.execSQL(createDirectMessagesView().getSQL());
+        db.execSQL(createDirectMessageConversationEntriesView().getSQL());
+    }
+
 
     @Override
     public void onDowngrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
@@ -166,8 +185,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         safeUpgrade(db, SavedSearches.TABLE_NAME, SavedSearches.COLUMNS, SavedSearches.TYPES, true, null);
         safeUpgrade(db, SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true, null);
         db.beginTransaction();
-        db.execSQL(createDirectMessagesView().getSQL());
-        db.execSQL(createDirectMessageConversationEntriesView().getSQL());
+        createViews(db);
+        createIndices(db);
         db.setTransactionSuccessful();
         db.endTransaction();
     }
@@ -176,6 +195,14 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
                                       final boolean createIfNotExists) {
         final SQLCreateTableQuery.Builder qb = SQLQueryBuilder.createTable(createIfNotExists, tableName);
         qb.columns(NewColumn.createNewColumns(columns, types));
+        return qb.buildSQL();
+    }
+
+    private static String createIndex(final String indexName, final String tableName, final String[] columns,
+                                      final boolean createIfNotExists) {
+        final SQLCreateIndexQuery.Builder qb = SQLQueryBuilder.createIndex(false, createIfNotExists);
+        qb.name(indexName);
+        qb.on(new Table(tableName), new Columns(columns));
         return qb.buildSQL();
     }
 

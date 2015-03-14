@@ -95,8 +95,9 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 
     @Subscribe
     public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-//        updateRefreshState();
+        updateRefreshState();
     }
+
 
     @Override
     public void onEntryClick(int position, DirectMessageEntry entry) {
@@ -105,7 +106,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 
     @Override
     public void onRefresh() {
-        if (isRefreshing()) return;
         new TwidereAsyncTask<Void, Void, long[][]>() {
 
             @Override
@@ -291,7 +291,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     public void setUserVisibleHint(final boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-//            updateRefreshState();
+            updateRefreshState();
         }
     }
 
@@ -319,11 +319,15 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 //        loadMoreMessages();
 //    }
 
-//    protected void updateRefreshState() {
-//        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-//        if (twitter == null || !getUserVisibleHint()) return;
-//        setRefreshing(twitter.isReceivedDirectMessagesRefreshing() || twitter.isSentDirectMessagesRefreshing());
-//    }
+    protected void updateRefreshState() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter == null || !getUserVisibleHint()) return;
+        setRefreshing(twitter.isReceivedDirectMessagesRefreshing() || twitter.isSentDirectMessagesRefreshing());
+    }
+
+    public void setRefreshing(boolean refreshing) {
+        mSwipeRefreshLayout.setRefreshing(refreshing);
+    }
 
     public boolean isRefreshing() {
         return mSwipeRefreshLayout.isRefreshing();
@@ -346,30 +350,31 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
             counts.add(id);
         }
     }
-//
-//    private void loadMoreMessages() {
-//        if (isRefreshing()) return;
-//        new TwidereAsyncTask<Void, Void, long[][]>() {
-//
-//            @Override
-//            protected long[][] doInBackground(final Void... params) {
-//                final long[][] result = new long[3][];
-//                result[0] = getActivatedAccountIds(getActivity());
-//                result[1] = getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
-//                result[2] = getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Outbox.CONTENT_URI);
-//                return result;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(final long[][] result) {
-//                final AsyncTwitterWrapper twitter = getTwitterWrapper();
-//                if (twitter == null) return;
-//                twitter.getReceivedDirectMessagesAsync(result[0], result[1], null);
-//                twitter.getSentDirectMessagesAsync(result[0], result[2], null);
-//            }
-//
-//        }.executeTask();
-//    }
+
+    //
+    private void loadMoreMessages() {
+        if (isRefreshing()) return;
+        new TwidereAsyncTask<Void, Void, long[][]>() {
+
+            @Override
+            protected long[][] doInBackground(final Void... params) {
+                final long[][] result = new long[3][];
+                result[0] = Utils.getActivatedAccountIds(getActivity());
+                result[1] = Utils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
+                result[2] = Utils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Outbox.CONTENT_URI);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(final long[][] result) {
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (twitter == null) return;
+                twitter.getReceivedDirectMessagesAsync(result[0], result[1], null);
+                twitter.getSentDirectMessagesAsync(result[0], result[2], null);
+            }
+
+        }.executeTask();
+    }
 
     private MessageEntriesAdapter getAdapter() {
         return mAdapter;
