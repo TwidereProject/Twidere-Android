@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
 import javax.net.SocketFactory;
@@ -107,13 +108,13 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
     private OkHttpClient createHttpClient(HttpClientConfiguration conf) {
         final OkHttpClient client = new OkHttpClient();
         final boolean ignoreSSLError = conf.isSSLErrorIgnored();
-        client.setHostnameVerifier(new HostResolvedHostnameVerifier(ignoreSSLError));
         if (ignoreSSLError) {
             client.setSslSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
         } else {
             client.setSslSocketFactory(SSLCertificateSocketFactory.getDefault(0, null));
         }
         client.setSocketFactory(SocketFactory.getDefault());
+        client.setConnectTimeout(conf.getHttpConnectionTimeout(), TimeUnit.MILLISECONDS);
 
         if (conf.isProxyConfigured()) {
             client.setProxy(new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(conf.getHttpProxyHost(),

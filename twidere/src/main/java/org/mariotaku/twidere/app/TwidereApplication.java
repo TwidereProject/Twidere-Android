@@ -38,7 +38,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
-import com.squareup.okhttp.internal.TwidereOkHttpPlatform;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;

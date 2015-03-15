@@ -139,7 +139,7 @@ public class QuickMenuFragment extends BaseSupportFragment implements OnFitSyste
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final ListAdapter adapter = mAdapter.getAdapter(position);
         if (adapter instanceof TrendsAdapter) {
-            openTweetSearch(getActivity(), getAccountId(), (String) adapter.getItem(position));
+            openTweetSearch(getActivity(), getAccountId(), (String) mAdapter.getItem(position));
         }
     }
 

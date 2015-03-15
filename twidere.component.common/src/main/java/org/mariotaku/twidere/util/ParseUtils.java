@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import static android.text.TextUtils.isEmpty;
@@ -192,6 +193,17 @@ public final class ParseUtils {
     private static boolean shouldPutLong(final String key) {
         return IntentConstants.EXTRA_ACCOUNT_ID.equals(key) || IntentConstants.EXTRA_USER_ID.equals(key) || IntentConstants.EXTRA_STATUS_ID.equals(key)
                 || IntentConstants.EXTRA_LIST_ID.equals(key);
+    }
+
+    public static String parsePrettyDecimal(double num, int decimalDigits) {
+        String result = String.format(Locale.US, "%." + decimalDigits + "f", num);
+        int dotIdx = result.lastIndexOf('.');
+        if (dotIdx == -1) return result;
+        int i;
+        for (i = result.length() - 1; i >= 0; i--) {
+            if (result.charAt(i) != '0') break;
+        }
+        return result.substring(0, i == dotIdx ? dotIdx : i + 1);
     }
 
     public static int parseColor(String str, int def) {

@@ -367,14 +367,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     private void toggleLocation() {
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        if (!attachLocation) {
-            getLocation();
-        } else {
-            mLocationManager.removeUpdates(this);
-        }
         mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, !attachLocation).apply();
-        setMenu();
+        startLocationUpdateIfEnabled();
         updateLocationState();
+        setMenu();
         updateTextCount();
     }
 
@@ -382,7 +378,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
         if (attachLocation) {
             mLocationIcon.setColorFilter(getCurrentThemeColor(), Mode.SRC_ATOP);
-            mLocationText.setText(R.string.ellipsis);
         } else {
             mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
             mLocationText.setText(R.string.no_location);
@@ -516,21 +511,16 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     @Override
     public void onLocationChanged(final Location location) {
-        if (location != null) {
-            mRecentLocation = new ParcelableLocation(location);
-        } else {
-            mRecentLocation = null;
-        }
-        updateLocationText();
+        setRecentLocation(ParcelableLocation.fromLocation(location));
     }
 
-    private void updateLocationText() {
-        if (mRecentLocation != null) {
-            mLocationText.setText(String.format("%.3f, %.3f", mRecentLocation.latitude,
-                    mRecentLocation.longitude));
+    private void setRecentLocation(ParcelableLocation location) {
+        if (location != null) {
+            mLocationText.setText(location.getHumanReadableString(3));
         } else {
             mLocationText.setText(R.string.unknown_location);
         }
+        mRecentLocation = location;
     }
 
     @Override
@@ -750,6 +740,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         super.onStart();
         mImageUploaderUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_MEDIA_UPLOADER, null));
         mStatusShortenerUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_STATUS_SHORTENER, null));
+        startLocationUpdateIfEnabled();
         setMenu();
         updateTextCount();
         final int text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
@@ -805,23 +796,28 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
      * the best provider of data (GPS, WiFi/cell phone tower lookup, some other
      * mechanism) and finds the last known location.
      */
-    private boolean getLocation() {
+    private boolean startLocationUpdateIfEnabled() {
+        final LocationManager lm = mLocationManager;
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        if (!attachLocation) {
+            lm.removeUpdates(this);
+            return false;
+        }
         final Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        final String provider = mLocationManager.getBestProvider(criteria, true);
-
+        final String provider = lm.getBestProvider(criteria, true);
         if (provider != null) {
+            mLocationText.setText(R.string.getting_location);
+            lm.requestLocationUpdates(provider, 0, 0, this);
             final Location location;
-            if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             } else {
-                location = mLocationManager.getLastKnownLocation(provider);
+                location = lm.getLastKnownLocation(provider);
             }
-            if (location == null) {
-                mLocationManager.requestLocationUpdates(provider, 0, 0, this);
-                setProgressVisibility(true);
+            if (location != null) {
+                onLocationChanged(location);
             }
-            mRecentLocation = location != null ? new ParcelableLocation(location) : null;
         } else {
             Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
         }
@@ -831,10 +827,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     private ParcelableMediaUpdate[] getMedia() {
         final List<ParcelableMediaUpdate> list = getMediaList();
         return list.toArray(new ParcelableMediaUpdate[list.size()]);
-    }
-
-    private int getMediaCount() {
-        return mMediaPreviewAdapter.getCount();
     }
 
     private List<ParcelableMediaUpdate> getMediaList() {
@@ -1106,7 +1098,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 //        mMenuBar.show();
     }
 
-    private void setProgressVisibility(final boolean visible) {
+    private void setProgressVisible(final boolean visible) {
 //        mProgress.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
@@ -1148,20 +1140,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             return;
         }
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        if (mRecentLocation == null && attachLocation) {
-            final Location location;
-            if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                location = null;
-            }
-            if (location != null) {
-                mRecentLocation = new ParcelableLocation(location);
-            } else {
-                mRecentLocation = null;
-            }
-            updateLocationText();
-        }
+//        if (mRecentLocation == null && attachLocation) {
+//            final Location location;
+//            if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+//                location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//            } else {
+//                location = null;
+//            }
+//            if (location != null) {
+//                mRecentLocation = new ParcelableLocation(location);
+//            }
+//            setRecentLocation();
+//        }
         final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
         final boolean isQuote = INTENT_ACTION_QUOTE.equals(getIntent().getAction());
         final ParcelableLocation statusLocation = attachLocation ? mRecentLocation : null;
@@ -1224,7 +1214,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         public void onClick(View v) {
-            adapter.toggleSelection(getPosition());
+            adapter.toggleSelection(getAdapterPosition());
         }
 
 
@@ -1398,7 +1388,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            activity.setProgressVisibility(false);
+            activity.setProgressVisible(false);
             activity.addMedia(new ParcelableMediaUpdate(dst.toString(), media_type));
             activity.setMenu();
             activity.updateTextCount();
@@ -1409,7 +1399,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         protected void onPreExecute() {
-            activity.setProgressVisibility(true);
+            activity.setProgressVisible(true);
         }
     }
 
@@ -1445,7 +1435,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            mActivity.setProgressVisibility(false);
+            mActivity.setProgressVisible(false);
             mActivity.removeAllMedia(Arrays.asList(mMedia));
             mActivity.setMenu();
             if (!result) {
@@ -1455,7 +1445,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         protected void onPreExecute() {
-            mActivity.setProgressVisibility(true);
+            mActivity.setProgressVisible(true);
         }
     }
 
@@ -1484,13 +1474,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         protected void onPostExecute(final Void result) {
-            mActivity.setProgressVisibility(false);
+            mActivity.setProgressVisible(false);
             mActivity.finish();
         }
 
         @Override
         protected void onPreExecute() {
-            mActivity.setProgressVisibility(true);
+            mActivity.setProgressVisible(true);
         }
     }
 
@@ -1560,13 +1550,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-            final int pos = parent.getChildPosition(view);
+            final int pos = parent.getChildAdapterPosition(view);
             if (pos == 0) {
                 outRect.set(0, mSpacingNormal, 0, 0);
             } else if (pos == parent.getAdapter().getItemCount() - 1) {
                 outRect.set(0, 0, 0, mSpacingNormal);
             } else {
-//                outRect.set(0, mSpacingSmall, 0, mSpacingSmall);
                 outRect.set(0, 0, 0, 0);
             }
         }
