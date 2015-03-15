@@ -21,7 +21,7 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     @Override
     public boolean isGapItem(int position) {
-        return getStatus(position).is_gap && position != getStatusCount() - 1;
+        return getStatus(position).is_gap && position != getStatusesCount() - 1;
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     @Override
     public ParcelableStatus getStatus(int position) {
-        if (position == getStatusCount()) return null;
+        if (position == getStatusesCount()) return null;
         return mData.get(position);
     }
 
     @Override
-    public int getStatusCount() {
+    public int getStatusesCount() {
         if (mData == null) return 0;
         return mData.size();
     }
@@ -44,13 +44,13 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
 
     @Override
     public long getItemId(int position) {
-        if (position == getStatusCount()) return position;
+        if (position == getStatusesCount()) return position;
         return mData.get(position).hashCode();
     }
 
     @Override
     public long getStatusId(int position) {
-        if (position == getStatusCount()) return -1;
+        if (position == getStatusesCount()) return -1;
         return mData.get(position).id;
     }
 

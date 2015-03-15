@@ -36,6 +36,8 @@ public interface IContentCardAdapter extends IGapSupportedAdapter, ContentCardCl
 
     ImageLoadingHandler getImageLoadingHandler();
 
+    int getItemCount();
+
     @ShapeStyle
     int getProfileImageStyle();
 
@@ -45,4 +47,7 @@ public interface IContentCardAdapter extends IGapSupportedAdapter, ContentCardCl
 
     float getTextSize();
 
+    boolean hasLoadMoreIndicator();
+
+    void setLoadMoreIndicatorEnabled(boolean enabled);
 }

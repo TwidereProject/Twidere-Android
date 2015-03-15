@@ -48,7 +48,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
 
     @Override
     public long getItemId(int position) {
-        if (position == getStatusCount()) return -1;
+        if (position == getStatusesCount()) return -1;
         final Cursor c = mCursor;
         if (c != null && !c.isClosed() && c.moveToPosition(position)) {
             final long account_id = c.getLong(mIndices.account_id);
@@ -70,7 +70,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
 
     @Override
     public ParcelableStatus getStatus(int position) {
-        if (hasLoadMoreIndicator() && position == getStatusCount() - 1) return null;
+        if (hasLoadMoreIndicator() && position == getStatusesCount() - 1) return null;
         final Cursor c = mCursor;
         if (c != null && !c.isClosed() && c.moveToPosition(position)) {
             return new ParcelableStatus(c, mIndices);
@@ -79,14 +79,14 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     }
 
     @Override
-    public int getStatusCount() {
+    public int getStatusesCount() {
         if (mCursor == null) return 0;
         return mCursor.getCount();
     }
 
     @Override
     public long getStatusId(int position) {
-        if (position == getStatusCount()) return position;
+        if (position == getStatusesCount()) return position;
         final Cursor c = mCursor;
         if (c != null && !c.isClosed() && c.moveToPosition(position)) {
             return c.getLong(mIndices.status_id);

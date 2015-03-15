@@ -58,6 +58,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -1101,7 +1103,7 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static String getStatusShareText(final Context context, final ParcelableStatus status) {
-        final Uri link = LinkCreator.getStatusTwitterLink(status.user_screen_name, status.id);
+        final Uri link = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
         return context.getString(R.string.status_share_text_format_with_link,
                 status.text_plain, link.toString());
     }
@@ -3375,6 +3377,18 @@ public final class Utils implements Constants, TwitterConstants {
     public static void openUserListTimeline(final Activity activity, final ParcelableUserList list) {
         if (activity == null || list == null) return;
         openUserListTimeline(activity, list.account_id, list.id, list.user_id, list.user_screen_name, list.name);
+    }
+
+    public static boolean setNdefPushMessageCallback(Activity activity, CreateNdefMessageCallback callback) {
+        try {
+            final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
+            if (adapter == null) return false;
+            adapter.setNdefPushMessageCallback(callback, activity);
+            return true;
+        } catch (SecurityException e) {
+            Log.w(LOGTAG, e);
+        }
+        return false;
     }
 
     public static void openUserMentions(final Activity activity, final long account_id, final String screen_name) {

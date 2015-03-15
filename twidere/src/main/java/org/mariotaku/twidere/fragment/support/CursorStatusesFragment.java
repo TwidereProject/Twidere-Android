@@ -161,7 +161,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     }
 
     @Override
-    protected void onLoadMoreStatuses() {
+    public void onLoadMoreContents() {
         new TwidereAsyncTask<Void, Void, long[][]>() {
 
             @Override

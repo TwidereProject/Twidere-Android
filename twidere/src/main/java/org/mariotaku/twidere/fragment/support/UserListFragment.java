@@ -29,6 +29,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -67,6 +71,7 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -290,6 +295,18 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         final FragmentActivity activity = getActivity();
 
+        Utils.setNdefPushMessageCallback(activity, new CreateNdefMessageCallback() {
+
+            @Override
+            public NdefMessage createNdefMessage(NfcEvent event) {
+                final ParcelableUserList userList = getUserList();
+                if (userList == null) return null;
+                return new NdefMessage(new NdefRecord[]{
+                        NdefRecord.createUri(LinkCreator.getTwitterUserListLink(userList.user_screen_name, userList.name)),
+                });
+            }
+        });
+
         mHeaderDrawerLayout.setDrawerCallback(this);
 
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager());
@@ -311,6 +328,10 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         getUserListInfo(false);
 
         setupUserPages();
+    }
+
+    private ParcelableUserList getUserList() {
+        return mUserList;
     }
 
     @Override

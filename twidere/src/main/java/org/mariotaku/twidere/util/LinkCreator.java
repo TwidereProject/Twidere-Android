@@ -30,7 +30,7 @@ public class LinkCreator implements Constants {
 
     private static final String AUTHORITY_TWITTER = "twitter.com";
 
-    public static Uri getStatusTwitterLink(String screenName, long statusId) {
+    public static Uri getTwitterStatusLink(String screenName, long statusId) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_HTTPS);
         builder.authority(AUTHORITY_TWITTER);
@@ -67,7 +67,16 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    public static Uri getUserTwitterLink(String screenName) {
+    public static Uri getTwitterUserListLink(String userScreenName, String listName) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_HTTPS);
+        builder.authority(AUTHORITY_TWITTER);
+        builder.appendPath(userScreenName);
+        builder.appendPath(listName);
+        return builder.build();
+    }
+
+    public static Uri getTwitterUserLink(String screenName) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_HTTPS);
         builder.authority(AUTHORITY_TWITTER);

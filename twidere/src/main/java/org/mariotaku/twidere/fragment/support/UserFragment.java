@@ -44,10 +44,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
-import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -167,8 +165,7 @@ import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
         OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,
-        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback,
-        CreateNdefMessageCallback {
+        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback {
 
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
@@ -652,7 +649,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileImageLoader = getApplication().getImageLoaderWrapper();
         final FragmentActivity activity = getActivity();
 
-        initNdefCallback();
+        Utils.setNdefPushMessageCallback(activity, new CreateNdefMessageCallback() {
+
+            @Override
+            public NdefMessage createNdefMessage(NfcEvent event) {
+                final ParcelableUser user = getUser();
+                if (user == null) return null;
+                return new NdefMessage(new NdefRecord[]{
+                        NdefRecord.createUri(LinkCreator.getTwitterUserLink(user.screen_name)),
+                });
+            }
+        });
 
         activity.setEnterSharedElementCallback(new SharedElementCallback() {
 
@@ -723,25 +730,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         setupBaseActionBar();
 
         setupUserPages();
-    }
-
-    private void initNdefCallback() {
-        try {
-            final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(getActivity());
-            if (adapter == null) return;
-            adapter.setNdefPushMessageCallback(this, getActivity());
-        } catch (SecurityException e) {
-            Log.w(LOGTAG, e);
-        }
-    }
-
-    @Override
-    public NdefMessage createNdefMessage(NfcEvent event) {
-        final ParcelableUser user = getUser();
-        if (user == null) return null;
-        return new NdefMessage(new NdefRecord[]{
-                NdefRecord.createUri(LinkCreator.getUserTwitterLink(user.screen_name)),
-        });
     }
 
     @Override
