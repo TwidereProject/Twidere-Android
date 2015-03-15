@@ -582,8 +582,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         mEditText = (EditText) findViewById(R.id.edit_text);
         mMediaPreviewGrid = (GridView) findViewById(R.id.media_thumbnail_preview);
         mMenuBar = (ActionMenuView) findViewById(R.id.menu_bar);
-        final View composeBottomBar = findViewById(R.id.compose_bottombar);
-        mSendView = composeBottomBar.findViewById(R.id.send);
+        mSendView = findViewById(R.id.send);
         mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
         mAccountSelector = (RecyclerView) findViewById(R.id.account_selector);
         mAccountSelectorContainer = findViewById(R.id.account_selector_container);

@@ -3,5 +3,6 @@
 
     <bool name="shadow_slidable">false</bool>
     <bool name="is_large_screen">true</bool>
+    <bool name="relative_behind_width">false</bool>
 
 </resources>

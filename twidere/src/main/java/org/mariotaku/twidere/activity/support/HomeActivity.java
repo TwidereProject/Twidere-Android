@@ -29,6 +29,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
@@ -772,13 +773,18 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     private void setupSlidingMenu() {
         if (mSlidingMenu == null) return;
-        final int marginThreshold = getResources().getDimensionPixelSize(R.dimen.default_sliding_menu_margin_threshold);
+        final Resources res = getResources();
+        final int marginThreshold = res.getDimensionPixelSize(R.dimen.default_sliding_menu_margin_threshold);
+        final boolean relativeBehindWidth = res.getBoolean(R.bool.relative_behind_width);
         mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
         mSlidingMenu.setShadowWidthRes(R.dimen.default_sliding_menu_shadow_width);
         mSlidingMenu.setShadowDrawable(R.drawable.shadow_left);
         mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
-//        mSlidingMenu.setBehindWidthRes(R.dimen.drawer_width_home);
-        mSlidingMenu.setBehindOffsetRes(R.dimen.drawer_offset_home);
+        if (relativeBehindWidth) {
+            mSlidingMenu.setBehindOffsetRes(R.dimen.drawer_offset_home);
+        } else {
+            mSlidingMenu.setBehindWidthRes(R.dimen.drawer_width_home);
+        }
         mSlidingMenu.setTouchmodeMarginThreshold(marginThreshold);
         mSlidingMenu.setFadeDegree(0.5f);
         mSlidingMenu.setMenu(R.layout.drawer_home_accounts);

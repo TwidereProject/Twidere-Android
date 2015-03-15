@@ -7,5 +7,6 @@
     <bool name="default_shadow_slidable">true</bool>
     <bool name="shadow_slidable">true</bool>
     <bool name="has_font_family">false</bool>
+    <bool name="relative_behind_width">true</bool>
 
 </resources>

@@ -19,7 +19,6 @@
   -->
 
 <LinearLayout
-    android:id="@+id/compose_bottombar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
@@ -32,7 +31,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -72,9 +71,7 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/account_selector_button">
+            android:layout_height="match_parent">
 
             <org.mariotaku.twidere.view.TwidereActionMenuView
                 android:id="@+id/menu_bar"
@@ -83,7 +80,7 @@
                 android:layout_gravity="center"
                 android:background="@null"/>
         </HorizontalScrollView>
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/send"
