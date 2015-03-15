@@ -215,6 +215,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         if (getActivity() == null) return;
         mFirstVisibleItem = -1;
         mAdapter.setCursor(cursor);
+        mAdapter.setLoadMoreIndicatorEnabled(cursor != null && cursor.getCount() > 0);
 //        mAdapter.setShowAccountColor(getActivatedAccountIds(getActivity()).length > 1);
         setListShown(true);
     }
