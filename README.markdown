@@ -1,20 +1,18 @@
 #Twidere - Twitter client, ∞#
 
-Twidere is a powerful twitter client for Android 1.6+ [<sup><font color=red>1</font></sup>](#note1) , which gives you a full Holo experience and nearly full Twitter's feature.
+Twidere is a powerful twitter client for Android 4.0+, which gives you a full Material experience and nearly complete (and even better) Twitter feature.
 
 ---
 
 ## Features ##
 
-* Pure & Clean Holo design works for both ICS and pre-ICS devices
-* Four themes [<sup><font color=red>2</font></sup>](#note2) (Light theme with colored ActionBar, Dark theme, Light theme, Light theme with dark ActionBar), theme color will change if you're using CM9+/AOKP
-* Dual pane layout for Tablets
-* Image preview (disabled by default in order to reduce network usage)
-* Built in image viewer and map viewer
-* Custom tabs
-* Profile banner (header) image support
+* Pure & Clean Material design works for both Lollipop and Lollipop devices
+* Dark/Light theme, with theme color support
+* Media preview
+* Built in image viewer (with animated gif support) and map viewer
+* All tabs are customizable
 * Direct messages with conversation style
-* Filters (mute unwanted tweets)
+* Very powerful filters (mute unwanted tweets)
 * Drafts feature
 * Extension support like [Twicca](http://twicca.r246.jp/), but more friendly to users and developers
 * t.co link auto expanding
@@ -116,7 +114,3 @@ Buy me a bread or anything you want :)
 ---
 
 ## Notes ##
-
-<a name="note1" id="md-anchor"><sup>1</sup></a> : There're two versions, one for Android 4.0+, another for Android 1.6 to Android 3.2, there will be less feature for legacy devices, but both of them has Holo style.
-
-<a name="note2" id="md-anchor"><sup>2</sup></a> : Legacy device only support Dark and Light with dark ActionBar theme.
