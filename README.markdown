@@ -1,6 +1,6 @@
 #Twidere - Twitter client, ∞#
 
-![Travis status](https://api.travis-ci.org/TwidereProject/Twidere-Android.png)
+[![Travis status](https://api.travis-ci.org/TwidereProject/Twidere-Android.png)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 
 Twidere is a powerful twitter client for Android 4.0+, which gives you a full Material experience and nearly complete (and even better) Twitter feature.
 
