@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/mention"
         android:icon="@drawable/ic_action_at"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/mention_this_user"/>
     <item
         android:id="@id/send_direct_message"

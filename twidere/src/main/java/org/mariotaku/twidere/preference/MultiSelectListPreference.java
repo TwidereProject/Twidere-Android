@@ -64,7 +64,7 @@ abstract class MultiSelectListPreference extends DialogPreference implements OnM
 				for (int i = 0; i < length; i++) {
 					editor.putBoolean(mKeys[i], mValues[i]);
 				}
-				editor.commit();
+				editor.apply();
 				break;
 		}
 

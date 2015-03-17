@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import twitter4j.http.HostAddressResolver;
 
@@ -79,6 +80,7 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
         mLocalMappingOnly = localOnly;
     }
 
+    @SuppressWarnings("unused")
     public synchronized void removeCachedHost(final String host) {
         mHostCache.remove(host);
     }
@@ -206,7 +208,7 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
 
     private static boolean hostMatches(final String host, final String rule) {
         if (rule == null || host == null) return false;
-        if (rule.startsWith(".")) return host.toLowerCase().endsWith(rule.toLowerCase());
+        if (rule.startsWith(".")) return host.matches("(?i).*" + Pattern.quote(rule));
         return host.equalsIgnoreCase(rule);
     }
 

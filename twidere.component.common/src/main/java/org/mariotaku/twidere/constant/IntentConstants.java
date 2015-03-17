@@ -209,6 +209,7 @@ public interface IntentConstants {
     public static final String EXTRA_MY_FOLLOWING_ONLY = "my_following_only";
     public static final String EXTRA_RESTART_ACTIVITY = "restart_activity";
     public static final String EXTRA_FROM_USER = "from_user";
+    public static final String EXTRA_SHOW_MEDIA_PREVIEW = "show_media_preview";
     public static final String EXTRA_BITMAP = "bitmap";
     public static final String EXTRA_SOURCE = "source";
     public static final String EXTRA_DESTINATION = "destination";

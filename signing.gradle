@@ -18,6 +18,14 @@
  */
 apply plugin: 'com.android.application'
 
+/**
+ * Gradle script for signing applications
+ * Just apply this script to your application build.gradle file.
+ * DON'T FORGET TO IGNORE signing.properties FROM YOUR VERSION CONTROL!!!
+ *
+ * @author Mariotaku Lee <mariotaku.lee@gmail.com>
+ */
+
 android {
 
     signingConfigs {

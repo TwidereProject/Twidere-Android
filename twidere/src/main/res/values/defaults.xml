@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="default_tab_display_option" translatable="false">icon</string>
-    <string name="profile_image_size" translatable="false">normal</string>
+    <string name="default_tab_display_option">icon</string>
+    <string name="profile_image_size">normal</string>
 
 </resources>

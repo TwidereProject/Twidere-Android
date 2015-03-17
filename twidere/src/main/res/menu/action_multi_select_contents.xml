@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/select_account"
         android:actionProviderClass="org.mariotaku.twidere.menu.AccountActionProvider"
         android:icon="@drawable/ic_action_user"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/select_account"/>
     <item
         android:id="@id/reply"
         android:icon="@drawable/ic_action_reply"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/reply"/>
     <item
         android:id="@+id/mute_submenu"
         android:icon="@drawable/ic_action_speaker_muted"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/add_to_filter">
         <menu>
             <item
@@ -30,7 +31,7 @@
     <item
         android:id="@+id/block_submenu"
         android:icon="@drawable/ic_action_block"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/block">
         <menu>
             <item
@@ -45,7 +46,7 @@
     <item
         android:id="@+id/report_spam_submenu"
         android:icon="@drawable/ic_action_warning"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/report_for_spam">
         <menu>
             <item

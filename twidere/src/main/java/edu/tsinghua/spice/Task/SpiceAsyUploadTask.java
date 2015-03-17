@@ -59,7 +59,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
             String serverResponseCode = client.getResponse();
 
 
-            if (serverResponseCode.indexOf("00") > -1) {
+            if (serverResponseCode.contains("00")) {
                 SpiceProfilingUtil.log(context, "server has already received file " + tmp.getName());
                 tmp.delete();
             } else {
@@ -92,7 +92,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
         final File root = context.getFilesDir();
         final File[] spiceFiles = root.listFiles(new SpiceFileFilter());
         uploadToServer(spiceFiles);
-        prefs.edit().putLong(LAST_UPLOAD_DATE, System.currentTimeMillis()).commit();
+        prefs.edit().putLong(LAST_UPLOAD_DATE, System.currentTimeMillis()).apply();
         return null;
     }
 
@@ -119,11 +119,11 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
                 copyStream(is, os);
                 is.close();
                 os.close();
+                success = true;
             } catch (final IOException e) {
                 e.printStackTrace();
                 success = false;
             }
-            success = true;
 
             if (success && tmp.renameTo(profile) && tmp.delete()) {
                 SpiceProfilingUtil.log(context, "put profile back success");

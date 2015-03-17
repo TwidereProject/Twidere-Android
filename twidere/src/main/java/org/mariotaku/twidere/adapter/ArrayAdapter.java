@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A concrete BaseAdapter that is backed by an array of arbitrary
@@ -47,6 +48,7 @@ import java.util.List;
  * or to have some of data besides toString() results fill the views,
  * override {@link #getView(int, View, ViewGroup)} to return the type of view you want.
  */
+@SuppressWarnings("unused")
 public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     /**
      * Contains the list of objects that represent the data of this ArrayAdapter.
@@ -162,7 +164,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
      *
      * @param items The items to add at the end of the array.
      */
-    public void addAll(T... items) {
+    @SafeVarargs
+    public final void addAll(T... items) {
         synchronized (mLock) {
             if (mOriginalValues != null) {
                 Collections.addAll(mOriginalValues, items);
@@ -437,7 +440,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
                 results.values = list;
                 results.count = list.size();
             } else {
-                String prefixString = prefix.toString().toLowerCase();
+                String prefixString = prefix.toString().toLowerCase(Locale.getDefault());
 
                 ArrayList<T> values;
                 synchronized (mLock) {
@@ -449,7 +452,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 
                 for (int i = 0; i < count; i++) {
                     final T value = values.get(i);
-                    final String valueText = value.toString().toLowerCase();
+                    final String valueText = value.toString().toLowerCase(Locale.getDefault());
 
                     // First match against the whole, non-splitted value
                     if (valueText.startsWith(prefixString)) {
@@ -459,8 +462,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
                         final int wordCount = words.length;
 
                         // Start at index 0, in case valueText starts with space(s)
-                        for (int k = 0; k < wordCount; k++) {
-                            if (words[k].startsWith(prefixString)) {
+                        for (String word : words) {
+                            if (word.startsWith(prefixString)) {
                                 newValues.add(value);
                                 break;
                             }

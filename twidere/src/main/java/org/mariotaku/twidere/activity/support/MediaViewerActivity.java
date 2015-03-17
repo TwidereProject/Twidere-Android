@@ -47,9 +47,9 @@ import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListe
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.ComposeActivity.ViewStatusDialogFragment;
 import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
+import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.loader.support.TileImageLoader;
 import org.mariotaku.twidere.loader.support.TileImageLoader.DownloadListener;
 import org.mariotaku.twidere.loader.support.TileImageLoader.Result;
@@ -144,6 +144,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             final Fragment f = new ViewStatusDialogFragment();
             final Bundle args = new Bundle();
             args.putParcelable(EXTRA_STATUS, intent.getParcelableExtra(EXTRA_STATUS));
+            args.putBoolean(EXTRA_SHOW_MEDIA_PREVIEW, false);
             f.setArguments(args);
             ft.replace(R.id.media_status, f);
             ft.commit();

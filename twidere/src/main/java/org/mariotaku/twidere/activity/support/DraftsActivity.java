@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -39,6 +38,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -98,7 +98,7 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
                 final Cursor c = mAdapter.getCursor();
                 if (c == null || c.isClosed()) return false;
                 final SparseBooleanArray checked = mListView.getCheckedItemPositions();
-                final List<DraftItem> list = new ArrayList<DraftItem>();
+                final List<DraftItem> list = new ArrayList<>();
                 final DraftItem.CursorIndices indices = new DraftItem.CursorIndices(c);
                 for (int i = 0, j = checked.size(); i < j; i++) {
                     if (checked.valueAt(i) && c.moveToPosition(checked.keyAt(i))) {
@@ -189,7 +189,7 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
         setContentView(R.layout.activity_drafts);
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

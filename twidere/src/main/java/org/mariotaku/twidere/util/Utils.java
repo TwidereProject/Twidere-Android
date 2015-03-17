@@ -3956,6 +3956,10 @@ public final class Utils implements Constants, TwitterConstants {
         resolver.insert(CachedRelationships.CONTENT_URI, values);
     }
 
+    public static boolean useShareScreenshot() {
+        return false;
+    }
+
     private static Drawable getMetadataDrawable(final PackageManager pm, final ActivityInfo info, final String key) {
         if (pm == null || info == null || info.metaData == null || key == null || !info.metaData.containsKey(key))
             return null;

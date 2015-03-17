@@ -75,7 +75,7 @@ public class DataProfilingSettingsFragment extends BaseFragment implements OnCli
                 editor.putBoolean(KEY_SPICE_DATA_PROFILING, mCheckBox.isChecked());
                 editor.putBoolean(KEY_SHOW_SPICE_DATA_PROFILING_REQUEST, false);
                 //end
-				editor.commit();
+				editor.apply();
 				getActivity().onBackPressed();
 				break;
 			}

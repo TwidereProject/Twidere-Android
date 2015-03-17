@@ -36,7 +36,7 @@ import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
 
-	private static final String RECEIVER_LOGTAG = LOGTAG + "." + "ConnectivityStateReceiver";
+	private static final String RECEIVER_LOGTAG = LOGTAG + "." + "Connectivity";
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {

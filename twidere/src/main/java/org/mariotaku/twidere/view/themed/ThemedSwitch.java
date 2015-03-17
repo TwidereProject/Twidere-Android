@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view.themed;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
@@ -43,8 +44,14 @@ public class ThemedSwitch extends Switch implements IThemedView {
     @Override
     public void setThemeTintColor(ColorStateList color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            DrawableCompat.setTintList(getThumbDrawable(), color);
-            DrawableCompat.setTintList(getTrackDrawable(), color);
+            setDrawableTint(color);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void setDrawableTint(ColorStateList color) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
+        DrawableCompat.setTintList(getThumbDrawable(), color);
+        DrawableCompat.setTintList(getTrackDrawable(), color);
     }
 }
