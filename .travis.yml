@@ -23,3 +23,9 @@ android:
     # - sys-img-x86-android-17
 
 script: ./gradlew build
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y python2.7
+
+after_success: ./scripts/travis_upload_release_to_github.py
