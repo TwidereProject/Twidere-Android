@@ -56,10 +56,16 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            if (rootProject.file('signing.properties').exists()
+                    || System.getenv('DEBUG_KEYSTORE_BASE64') != null) {
+                signingConfig signingConfigs.debug
+            }
         }
         release {
-            signingConfig signingConfigs.release
+            if (rootProject.file('signing.properties').exists()
+                    || System.getenv('RELEASE_KEYSTORE_BASE64') != null) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 
