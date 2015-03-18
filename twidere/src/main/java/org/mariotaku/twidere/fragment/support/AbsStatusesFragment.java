@@ -157,7 +157,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
         final int colorRes = ColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
-        mSwipeRefreshLayout.setProgressBackgroundColor(colorRes);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
         mAdapter = onCreateAdapter(context, compact);
         mLayoutManager = new LinearLayoutManager(context);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -304,13 +304,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     public void onStatusActionClick(StatusViewHolder holder, int id, int position) {
         final ParcelableStatus status = mAdapter.getStatus(position);
         if (status == null) return;
+        final FragmentActivity activity = getActivity();
         switch (id) {
             case R.id.reply_count: {
-                final Context context = getActivity();
                 final Intent intent = new Intent(INTENT_ACTION_REPLY);
-                intent.setPackage(context.getPackageName());
+                intent.setPackage(activity.getPackageName());
                 intent.putExtra(EXTRA_STATUS, status);
-                context.startActivity(intent);
+                activity.startActivity(intent);
                 break;
             }
             case R.id.retweet_count: {
@@ -323,14 +323,18 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
                     //spice
-                    SpiceProfilingUtil.profile(getActivity(), status.account_id, status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
-                    SpiceProfilingUtil.log(getActivity(), status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.profile(activity, status.account_id, status.id + ",Unfavor,"
+                            + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.log(activity, status.id + ",Unfavor," + status.account_id
+                            + "," + status.user_id + "," + status.timestamp);
                     //end
                 } else {
                     twitter.createFavoriteAsync(status.account_id, status.id);
                     //spice
-                    SpiceProfilingUtil.profile(getActivity(), status.account_id, status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
-                    SpiceProfilingUtil.log(getActivity(), status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.profile(activity, status.account_id, status.id + ",Favor,"
+                            + status.account_id + "," + status.user_id + "," + status.timestamp);
+                    SpiceProfilingUtil.log(activity, status.id + ",Favor," + status.account_id
+                            + "," + status.user_id + "," + status.timestamp);
                     //end
                 }
                 break;

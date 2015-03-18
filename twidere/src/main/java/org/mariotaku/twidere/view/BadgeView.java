@@ -35,6 +35,7 @@ public class BadgeView extends View {
                 new int[]{android.R.attr.textColor, android.R.attr.text});
         setColor(a.getColor(0, Color.WHITE));
         setText(a.getString(1));
+        a.recycle();
         mTextPaint.setTextAlign(Align.CENTER);
         mTextBounds = new Rect();
     }

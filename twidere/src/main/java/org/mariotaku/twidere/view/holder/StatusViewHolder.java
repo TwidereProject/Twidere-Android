@@ -103,7 +103,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
                 adapter.isMediaPreviewEnabled(), adapter.shouldShowAccountsColor(),
                 displayInReplyTo, adapter.isNameFirst(), adapter.isNicknameOnly(),
                 adapter.getProfileImageStyle(), adapter.getMediaPreviewStyle(),
-                status, null);
+                status, null, displayInReplyTo);
     }
 
     public void displayStatus(@NonNull final Context context,
@@ -114,7 +114,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
                               final boolean displayInReplyTo, boolean nameFirst, boolean nicknameOnly,
                               final int profileImageStyle, final int mediaPreviewStyle,
                               @NonNull final ParcelableStatus status,
-                              @Nullable final TranslationResult translation) {
+                              @Nullable final TranslationResult translation, boolean shouldDisplayExtraType) {
         final ParcelableMedia[] media = status.media;
 
         replyRetweetIcon.setColorFilter(replyRetweetView.getCurrentTextColor(), Mode.SRC_ATOP);
@@ -217,7 +217,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
         } else {
             favoriteCountView.setText(null);
         }
-        displayExtraTypeIcon(status.card_name, status.media, status.location);
+        if (shouldDisplayExtraType) {
+            displayExtraTypeIcon(status.card_name, status.media, status.location);
+        } else {
+            extraTypeView.setVisibility(View.GONE);
+        }
     }
 
     public void displayStatus(@NonNull Cursor cursor, @NonNull CursorIndices indices,

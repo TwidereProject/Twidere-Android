@@ -25,6 +25,7 @@ public class ComponentStatePreference extends CheckBoxPreference {
 		super(context, attrs, defStyle);
 		final TypedArray a = context.obtainStyledAttributes(attrs, new int[] { android.R.attr.name });
 		final String name = a.getString(0);
+        a.recycle();
 		if (name == null) throw new NullPointerException();
 		mPackageManager = context.getPackageManager();
 		mComponentName = new ComponentName(context.getPackageName(), name);

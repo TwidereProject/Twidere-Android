@@ -141,7 +141,7 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
             lookup.run();
             final int result = lookup.getResult();
             if (result != Lookup.SUCCESSFUL) {
-                throw new IOException("Could not find " + host);
+                throw new UnknownHostException("Unable to resolve " + host + ", " + lookup.getErrorString());
             }
             records = lookup.getAnswers();
             final ArrayList<InetAddress> resolvedAddresses = new ArrayList<>();

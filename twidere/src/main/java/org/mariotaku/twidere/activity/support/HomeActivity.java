@@ -581,7 +581,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         if (fragment instanceof AccountsDashboardFragment) {
             ((AccountsDashboardFragment) fragment).setStatusBarHeight(insets.top);
         }
-        //TODO
         mColorStatusFrameLayout.setStatusBarHeight(insets.top);
     }
 

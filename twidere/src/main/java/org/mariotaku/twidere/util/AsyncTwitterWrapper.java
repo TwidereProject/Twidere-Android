@@ -2122,6 +2122,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final boolean truncated = truncateStatuses(getStatuses(twitter, paging), statuses, sinceId);
                     storeStatus(accountId, statuses, maxId, truncated, true);
                 } catch (final TwitterException e) {
+                    Log.w(LOGTAG, e);
                     result.add(new StatusListResponse(accountId, e));
                 }
                 idx++;

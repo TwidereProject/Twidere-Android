@@ -63,6 +63,7 @@ public class MessageConversationViewHolder extends ViewHolder {
         textColorPrimaryInverse = a.getColor(1, 0);
         textColorSecondary = a.getColor(2, 0);
         textColorSecondaryInverse = a.getColor(3, 0);
+        a.recycle();
         messageContent = (MessageBubbleView) itemView.findViewById(R.id.message_content);
         text = (TextView) itemView.findViewById(R.id.text);
         time = (TextView) itemView.findViewById(R.id.time);

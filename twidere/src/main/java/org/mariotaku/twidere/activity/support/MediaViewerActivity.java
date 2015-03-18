@@ -145,6 +145,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             final Bundle args = new Bundle();
             args.putParcelable(EXTRA_STATUS, intent.getParcelableExtra(EXTRA_STATUS));
             args.putBoolean(EXTRA_SHOW_MEDIA_PREVIEW, false);
+            args.putBoolean(EXTRA_SHOW_EXTRA_TYPE, false);
             f.setArguments(args);
             ft.replace(R.id.media_status, f);
             ft.commit();
@@ -312,6 +313,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                 }
                 case R.id.save: {
                     saveToGallery();
+                    return true;
+                }
+                case R.id.refresh: {
+                    loadImage();
                     return true;
                 }
             }

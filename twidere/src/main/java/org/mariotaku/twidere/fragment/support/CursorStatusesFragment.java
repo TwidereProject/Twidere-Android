@@ -140,7 +140,12 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     }
 
     protected void reloadStatuses() {
-        getLoaderManager().restartLoader(0, getArguments(), this);
+        final Bundle args = new Bundle(), fragmentArgs = getArguments();
+        if (fragmentArgs != null) {
+            args.putAll(fragmentArgs);
+            args.putBoolean(EXTRA_FROM_USER, true);
+        }
+        getLoaderManager().restartLoader(0, args, this);
     }
 
     @Override

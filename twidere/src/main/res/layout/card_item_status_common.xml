@@ -189,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/profile_container"
             android:layout_below="@id/media_preview_container"
-            android:layout_marginBottom="@dimen/element_spacing_xsmall"
+            android:layout_marginBottom="@dimen/element_spacing_small"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"

@@ -30,8 +30,6 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader;
  */
 public class ExtendedCursorLoader extends CursorLoader implements IExtendedLoader {
 
-    private boolean mFromUser;
-
     public ExtendedCursorLoader(Context context) {
         super(context);
     }
@@ -43,12 +41,12 @@ public class ExtendedCursorLoader extends CursorLoader implements IExtendedLoade
 
     @Override
     public boolean isFromUser() {
-        return mFromUser;
+        return true;
     }
 
     @Override
     public void setFromUser(boolean fromUser) {
-        mFromUser = fromUser;
+        //No-op
     }
 
 }

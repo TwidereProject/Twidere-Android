@@ -18,12 +18,13 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<item
-		android:id="@id/center"
-		android:icon="@drawable/ic_action_my_location"
-		android:showAsAction="always"
-		android:title="@string/center"/>
+    <item
+        android:id="@id/center"
+        android:icon="@drawable/ic_action_my_location"
+        app:showAsAction="always"
+        android:title="@string/center"/>
 
 </menu>

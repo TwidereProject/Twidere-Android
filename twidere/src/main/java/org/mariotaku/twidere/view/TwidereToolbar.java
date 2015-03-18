@@ -44,6 +44,7 @@ public class TwidereToolbar extends Toolbar {
         super(getThemedContext(context, attrs, defStyleAttr), attrs, defStyleAttr);
         final TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{R.attr.elevation}, defStyleAttr, 0);
         ViewCompat.setElevation(this, a.getDimension(0, 0));
+        a.recycle();
     }
 
     private static Context getThemedContext(Context context, AttributeSet attrs, int defStyleAttr) {
