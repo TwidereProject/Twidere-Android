@@ -40,6 +40,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -47,6 +48,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -55,13 +57,13 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.FiltersActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
@@ -86,6 +88,8 @@ import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mariotaku.twidere.util.Utils.openUserFavorites;
 import static org.mariotaku.twidere.util.Utils.openUserLists;
@@ -117,6 +121,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     private Context mThemedContext;
     private ImageLoaderWrapper mImageLoader;
+    private SupportAccountActionProvider mAccountActionProvider;
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -173,8 +178,10 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
         final Menu menu = mAccountsToggleMenu.getMenu();
-        final SupportAccountActionProvider provider = (SupportAccountActionProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
+        mAccountActionProvider = (SupportAccountActionProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
+        mAccountActionProvider.setExclusive(false);
         final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
+        final Set<Long> activatedIds = new HashSet<>();
         if (data != null) {
             data.moveToFirst();
             final Indices indices = new Indices(data);
@@ -182,8 +189,11 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             while (!data.isAfterLast()) {
                 final ParcelableAccount account = new ParcelableAccount(data, indices);
                 accounts.add(account);
-                if (defaultId < 0 && account.is_activated) {
-                    defaultId = account.account_id;
+                if (account.is_activated) {
+                    if (defaultId < 0) {
+                        defaultId = account.account_id;
+                    }
+                    activatedIds.add(account.account_id);
                 }
                 data.moveToNext();
             }
@@ -191,7 +201,9 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
                 mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
             }
         }
-        provider.setAccounts(accounts.toArray(new ParcelableAccount[accounts.size()]));
+        mAccountActionProvider.setAccounts(accounts.toArray(new ParcelableAccount[accounts.size()]));
+        mAccountActionProvider.setSelectedAccountIds(ArrayUtils.toPrimitive(activatedIds.toArray(new Long[activatedIds.size()])));
+
         mAccountsAdapter.changeCursor(data);
         updateAccountOptionsSeparatorLabel();
         updateDefaultAccountState();
@@ -212,12 +224,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
                 case MENU_SEARCH: {
-//                    final FragmentActivity a = getActivity();
-//                    if (a instanceof HomeActivity) {
-//                        ((HomeActivity) a).openSearchView(account);
-//                    } else {
-//                        getActivity().onSearchRequested();
-//                    }
                     final Intent intent = new Intent(getActivity(), QuickSearchBarActivity.class);
                     intent.putExtra(EXTRA_ACCOUNT_ID, account.account_id);
                     startActivity(intent);
@@ -347,6 +353,19 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAccountsToggleMenu = (ActionMenuView) mAccountSelectorView.findViewById(R.id.toggle_menu);
         final SupportMenuInflater menuInflater = new SupportMenuInflater(context);
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, mAccountsToggleMenu.getMenu());
+        mAccountsToggleMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getGroupId() != SupportAccountActionProvider.MENU_GROUP) return false;
+                final ParcelableAccount[] accounts = mAccountActionProvider.getAccounts();
+                final ParcelableAccount account = accounts[item.getOrder()];
+                final ContentValues values = new ContentValues();
+                values.put(Accounts.IS_ACTIVATED, !account.is_activated);
+                final String where = Accounts.ACCOUNT_ID + " = " + account.account_id;
+                mResolver.update(Accounts.CONTENT_URI, values, where, null);
+                return true;
+            }
+        });
 
         mAccountProfileContainer.setOnClickListener(this);
 

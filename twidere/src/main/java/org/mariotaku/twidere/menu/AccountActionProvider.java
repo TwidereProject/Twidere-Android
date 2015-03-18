@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableAccount;
 
@@ -17,7 +18,8 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
 
     private ParcelableAccount[] mAccounts;
 
-    private long mAccountId;
+    private long[] mAccountIds;
+    private boolean mExclusive;
 
     public AccountActionProvider(final Context context, final ParcelableAccount[] accounts) {
         super(context);
@@ -45,27 +47,38 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
 
     @Override
     public void onPrepareSubMenu(final SubMenu subMenu) {
-        if (mAccounts == null) return;
         subMenu.removeGroup(MENU_GROUP);
-        for (final ParcelableAccount account : mAccounts) {
-            final MenuItem item = subMenu.add(MENU_GROUP, Menu.NONE, 0, account.name);
+        if (mAccounts == null) return;
+        for (int i = 0, j = mAccounts.length; i < j; i++) {
+            final ParcelableAccount account = mAccounts[i];
+            final MenuItem item = subMenu.add(MENU_GROUP, Menu.NONE, i, account.name);
             final Intent intent = new Intent();
             intent.putExtra(EXTRA_ACCOUNT, account);
             item.setIntent(intent);
         }
-        subMenu.setGroupCheckable(MENU_GROUP, true, true);
+        subMenu.setGroupCheckable(MENU_GROUP, true, mExclusive);
+        if (mAccountIds == null) return;
         for (int i = 0, j = subMenu.size(); i < j; i++) {
             final MenuItem item = subMenu.getItem(i);
             final Intent intent = item.getIntent();
             final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
-            if (account.account_id == mAccountId) {
+            if (ArrayUtils.contains(mAccountIds, account.account_id)) {
                 item.setChecked(true);
             }
         }
     }
 
-    public void setAccountId(final long accountId) {
-        mAccountId = accountId;
+    public boolean isExclusive() {
+        return mExclusive;
+    }
+
+
+    public void setExclusive(boolean exclusive) {
+        mExclusive = exclusive;
+    }
+
+    public void setSelectedAccountIds(final long... accountIds) {
+        mAccountIds = accountIds;
     }
 
 }
