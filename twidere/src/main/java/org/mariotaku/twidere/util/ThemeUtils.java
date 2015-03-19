@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -34,7 +33,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableStringBuilder;
@@ -199,8 +197,31 @@ public class ThemeUtils implements Constants {
                 k++;
             }
         }
+    }
 
 
+    public static void wrapMenuIcon(Context context, Menu menu, int... excludeGroups) {
+        final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
+        wrapMenuIcon(context, backgroundColor, backgroundColor, menu, excludeGroups);
+    }
+
+    public static void wrapMenuIcon(Context context, int backgroundColor, int popupBackgroundColor,
+                                    Menu menu, int... excludeGroups) {
+        final Resources resources = context.getResources();
+        final int colorDark = resources.getColor(R.color.action_icon_dark);
+        final int colorLight = resources.getColor(R.color.action_icon_light);
+        final int itemColor = ColorUtils.getContrastYIQ(backgroundColor, colorDark, colorLight);
+        final int popupItemColor = ColorUtils.getContrastYIQ(popupBackgroundColor, colorDark, colorLight);
+        for (int i = 0, j = menu.size(), k = 0; i < j; i++) {
+            final MenuItem item = menu.getItem(i);
+            wrapMenuItemIcon(item, itemColor, excludeGroups);
+            if (item.hasSubMenu()) {
+                wrapMenuIcon(menu, popupItemColor, popupItemColor, excludeGroups);
+            }
+            if (item.isVisible()) {
+                k++;
+            }
+        }
     }
 
     public static void applyThemeAlphaToDrawable(final Context context, final Drawable d) {
@@ -906,31 +927,6 @@ public class ThemeUtils implements Constants {
                 return true;
         }
         return false;
-    }
-
-    public static void notifyStatusBarColorChanged(final Context context, final int themeResource,
-                                                   final int accentColor, final int backgroundAlpha) {
-        final Intent intent = new Intent("com.mohammadag.colouredstatusbar.ChangeStatusBarColor");
-//        if (isColoredActionBar(themeResource)) {
-//            intent.putExtra("status_bar_color", backgroundAlpha << 24 | accentColor);
-//        } else {
-//            if (isLightActionBar(themeResource)) {
-//                intent.putExtra("status_bar_color", backgroundAlpha << 24 | 0xFFDDDDDD);
-//            } else {
-//                intent.putExtra("status_bar_color", backgroundAlpha << 24 | 0xFF222222);
-//            }
-//        }
-//        if (isLightActionBar(themeResource)) {
-//            intent.putExtra("status_bar_icons_color", Color.DKGRAY);
-//        } else {
-//            intent.putExtra("status_bar_icons_color", Color.WHITE);
-//        }
-        // Please note that these are not yet implemented!!!
-        // You're free to include them in your code so that when they
-        // are implemented, your app will work out of the box.
-        intent.putExtra("navigation_bar_color", Color.BLACK);
-        intent.putExtra("navigation_bar_icon_color", Color.WHITE);
-        context.sendOrderedBroadcast(intent, null);
     }
 
     public static void overrideActivityCloseAnimation(final Activity activity) {

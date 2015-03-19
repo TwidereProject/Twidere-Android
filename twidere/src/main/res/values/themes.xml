@@ -186,6 +186,7 @@
     <style name="Theme.Twidere.Dark.Compose" parent="Theme.Compat.Base.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
+
         <item name="android:windowNoTitle">true</item>
         <item name="android:panelColorBackground">#3c3c3c</item>
         <item name="android:dividerVertical">@drawable/divider_compose_vertical_dark</item>
@@ -196,6 +197,7 @@
     <style name="Theme.Twidere.Light.Compose" parent="Theme.Compat.Base.Light.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
+
         <item name="android:windowNoTitle">true</item>
         <item name="android:panelColorBackground">#e5e5e5</item>
         <item name="android:dividerVertical">@drawable/divider_compose_vertical_light</item>

@@ -729,5 +729,6 @@
     <string name="ellipsis">…</string>
     <string name="designed_by">Designed by</string>
     <string name="designer_name">Uucky Lee</string>
+    <string name="import_export_settings">Import/Export settings</string>
 
 </resources>

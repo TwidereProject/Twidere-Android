@@ -218,6 +218,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        ThemeUtils.wrapMenuIcon(this, menu);
         return true;
     }
 

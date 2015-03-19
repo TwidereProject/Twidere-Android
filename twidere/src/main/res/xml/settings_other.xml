@@ -35,20 +35,16 @@
         android:title="@string/compose_now_action"/>
 
     <Preference
-        android:fragment="org.mariotaku.twidere.fragment.DataProfilingSettingsFragment"
+        android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:key="data_profiling_settings"
-        android:title="@string/data_profiling"/>
-
-    <Preference android:title="@string/import_settings">
-        <intent
-            android:targetClass="org.mariotaku.twidere.activity.support.DataImportActivity"
-            android:targetPackage="org.mariotaku.twidere"/>
+        android:title="@string/data_profiling">
+        <extra
+            android:name="resid"
+            android:value="@xml/settings_usage_statistics"/>
     </Preference>
 
-    <Preference android:title="@string/export_settings">
-        <intent
-            android:targetClass="org.mariotaku.twidere.activity.support.DataExportActivity"
-            android:targetPackage="org.mariotaku.twidere"/>
-    </Preference>
+    <org.mariotaku.twidere.preference.SettingsImportExportPreference
+        android:title="@string/import_export_settings"
+        android:key="import_export_settings"/>
 
 </PreferenceScreen>

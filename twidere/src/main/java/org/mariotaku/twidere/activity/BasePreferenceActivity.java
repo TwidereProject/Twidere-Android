@@ -98,7 +98,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, 0, 0xFF);
         setTheme(mCurrentThemeResource = getThemeResourceId());
         super.onCreate(savedInstanceState);
         setActionBarBackground();
@@ -109,8 +108,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
         super.onResume();
         if (isThemeChanged()) {
             restart();
-        } else {
-            ThemeUtils.notifyStatusBarColorChanged(this, mCurrentThemeResource, 0, 0xFF);
         }
     }
 
