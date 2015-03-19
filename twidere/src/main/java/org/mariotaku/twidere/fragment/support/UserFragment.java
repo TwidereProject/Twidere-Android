@@ -338,6 +338,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mPagesErrorContainer.setVisibility(View.VISIBLE);
                     final String displayName = UserColorNameUtils.getDisplayName(getActivity(), user);
                     mPagesErrorText.setText(getString(R.string.blocked_by_user_summary, displayName));
+                    mPagesErrorIcon.setImageResource(R.drawable.ic_info_error_generic);
+                    mPagesContent.setVisibility(View.GONE);
+                } else if (!relationship.isSourceFollowingTarget()) {
+                    mPagesErrorContainer.setVisibility(View.VISIBLE);
+                    final String displayName = UserColorNameUtils.getDisplayName(getActivity(), user);
+                    mPagesErrorText.setText(getString(R.string.user_protected_summary, displayName));
+                    mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
                     mPagesContent.setVisibility(View.GONE);
                 } else {
                     mPagesErrorContainer.setVisibility(View.GONE);
@@ -1147,6 +1154,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
         mPagesContent = view.findViewById(R.id.pages_content);
         mPagesErrorContainer = view.findViewById(R.id.pages_error_container);
+        mPagesErrorIcon = (ImageView) view.findViewById(R.id.pages_error_icon);
         mPagesErrorText = (TextView) view.findViewById(R.id.pages_error_text);
     }
 

@@ -732,5 +732,6 @@
     <string name="import_export_settings">Import/Export settings</string>
     <string name="usage_statistics_header_summary">Twidere took part in some research project, join these projects will make Twidere and some other application better.</string>
     <string name="no_tab">No tab</string>
+    <string name="user_protected_summary">You need to send follow request to this protected user to see tweets</string>
 
 </resources>

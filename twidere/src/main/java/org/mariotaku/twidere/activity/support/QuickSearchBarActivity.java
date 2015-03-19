@@ -417,6 +417,10 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             return ITEM_VIEW_TYPE;
         }
 
+        public ParcelableUser getUser() {
+            return mUser;
+        }
+
         @Override
         public void onItemClick(QuickSearchBarActivity activity, int position) {
             Utils.openUserProfile(activity, mUser, null);
@@ -440,12 +444,53 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             final String nick = getUserNickname(context, user.id);
             text1.setText(TextUtils.isEmpty(nick) ? user.name : adapter.isNicknameOnly() ? nick :
                     context.getString(R.string.name_with_nickname, user.name, nick));
+            text2.setVisibility(View.VISIBLE);
             text2.setText("@" + user.screen_name);
+            icon.clearColorFilter();
             loader.displayProfileImage(icon, user.profile_image_url);
-
         }
     }
 
+    static class UserScreenNameItem extends BaseClickableItem {
+
+        static final int ITEM_VIEW_TYPE = 3;
+        private final String mScreenName;
+        private final long mAccountId;
+
+        public UserScreenNameItem(String screenName, long accountId) {
+            mScreenName = screenName;
+            mAccountId = accountId;
+        }
+
+        @Override
+        public int getItemViewType() {
+            return ITEM_VIEW_TYPE;
+        }
+
+        @Override
+        public void onItemClick(QuickSearchBarActivity activity, int position) {
+            Utils.openUserProfile(activity, mAccountId, -1, mScreenName, null);
+            activity.finish();
+        }
+
+        @Override
+        public final int getItemLayoutResource() {
+            return R.layout.list_item_suggestion_user;
+        }
+
+        @Override
+        public void bindView(SuggestionsAdapter adapter, View view, int position) {
+            final ImageLoaderWrapper loader = adapter.getImageLoader();
+            final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
+            final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+            final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+            text1.setText('@' + mScreenName);
+            text2.setVisibility(View.GONE);
+            icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
+            loader.cancelDisplayTask(icon);
+            icon.setImageResource(R.drawable.ic_action_user);
+        }
+    }
 
     public static class SuggestionsAdapter extends BaseAdapter {
 
@@ -581,9 +626,19 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                         CachedUsers.COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());
                 final CachedIndices usersIndices = new CachedIndices(usersCursor);
+                final int screenNamePos = result.size();
+                boolean hasName = false;
                 for (int i = 0, j = Math.min(5, usersCursor.getCount()); i < j; i++) {
                     usersCursor.moveToPosition(i);
-                    result.add(new UserSuggestionItem(usersCursor, usersIndices, mAccountId));
+                    final UserSuggestionItem userSuggestionItem = new UserSuggestionItem(usersCursor, usersIndices, mAccountId);
+                    final ParcelableUser user = userSuggestionItem.getUser();
+                    result.add(userSuggestionItem);
+                    if (user.screen_name.equalsIgnoreCase(mQuery)) {
+                        hasName = true;
+                    }
+                }
+                if (!hasName) {
+                    result.add(screenNamePos, new UserScreenNameItem(mQuery, mAccountId));
                 }
                 usersCursor.close();
             } else {
