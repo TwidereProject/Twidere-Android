@@ -26,16 +26,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.MainFrameLayout.FitSystemWindowsCallback;
 
 /**
  * Created by mariotaku on 14/11/26.
  */
-public class TintedStatusFrameLayout extends FrameLayout {
+public class TintedStatusFrameLayout extends ExtendedFrameLayout {
 
     private final Paint mBlackPaint, mShadowPaint, mColorPaint;
 
@@ -112,10 +110,6 @@ public class TintedStatusFrameLayout extends FrameLayout {
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
-        final Context context = getContext();
-        if (context instanceof FitSystemWindowsCallback) {
-            ((FitSystemWindowsCallback) context).fitSystemWindows(insets);
-        }
         return super.fitSystemWindows(insets);
     }
 

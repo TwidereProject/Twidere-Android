@@ -344,6 +344,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mTabDisplayOption = getTabDisplayOptionInt(this);
         final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
 
+        mColorStatusFrameLayout.setOnFitSystemWindowsListener(this);
         ThemeUtils.applyBackground(mTabIndicator);
         mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, 1);
         mViewPager.setAdapter(mPagerAdapter);

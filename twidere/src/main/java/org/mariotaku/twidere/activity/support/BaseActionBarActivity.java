@@ -34,13 +34,13 @@ import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.view.MainFrameLayout.FitSystemWindowsCallback;
+import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
 import java.util.ArrayList;
 
 @SuppressLint("Registered")
 public class BaseActionBarActivity extends ThemedActionBarActivity implements Constants,
-        FitSystemWindowsCallback, SystemWindowsInsetsCallback, IControlBarActivity {
+        OnFitSystemWindowsListener, SystemWindowsInsetsCallback, IControlBarActivity {
 
     private boolean mInstanceStateSaved, mIsVisible, mIsOnTop;
 
@@ -159,7 +159,7 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     }
 
     @Override
-    public void fitSystemWindows(Rect insets) {
+    public void onFitSystemWindows(Rect insets) {
         mSystemWindowsInsets = new Rect(insets);
     }
 

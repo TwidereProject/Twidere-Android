@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -2248,6 +2249,15 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
+    public static Activity findActivity(Context context) {
+        if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return findActivity(((ContextWrapper) context).getBaseContext());
+        }
+        return null;
+    }
+
     public static String getTabDisplayOption(final Context context) {
         if (context == null) return null;
         final String defaultOption = context.getString(R.string.default_tab_display_option);
@@ -3970,7 +3980,7 @@ public final class Utils implements Constants, TwitterConstants {
         return appInfo.metaData != null && appInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON, false);
     }
 
-    public static int getActionBarHeight(ActionBar actionBar) {
+    public static int getActionBarHeight(@Nullable ActionBar actionBar) {
         if (actionBar == null) return 0;
         final Context context = actionBar.getThemedContext();
         final TypedValue tv = new TypedValue();
@@ -3982,7 +3992,7 @@ public final class Utils implements Constants, TwitterConstants {
         return 0;
     }
 
-    public static int getActionBarHeight(android.support.v7.app.ActionBar actionBar) {
+    public static int getActionBarHeight(@Nullable android.support.v7.app.ActionBar actionBar) {
         if (actionBar == null) return 0;
         final Context context = actionBar.getThemedContext();
         final TypedValue tv = new TypedValue();

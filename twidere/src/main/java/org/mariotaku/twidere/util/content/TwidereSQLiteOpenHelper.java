@@ -102,6 +102,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         db.execSQL(createIndex("statuses_index", Statuses.TABLE_NAME, new String[]{Statuses.ACCOUNT_ID}, true));
         db.execSQL(createIndex("mentions_index", Mentions.TABLE_NAME, new String[]{Statuses.ACCOUNT_ID}, true));
+        db.execSQL(createIndex("messages_inbox_index", DirectMessages.Inbox.TABLE_NAME, new String[]{DirectMessages.ACCOUNT_ID}, true));
+        db.execSQL(createIndex("messages_outbox_index", DirectMessages.Outbox.TABLE_NAME, new String[]{DirectMessages.ACCOUNT_ID}, true));
     }
 
     private void createViews(SQLiteDatabase db) {

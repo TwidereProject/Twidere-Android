@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
@@ -136,6 +137,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
             setActionBarBackground(actionBar, linkId, data);
         }
         setContentView(R.layout.activity_content_fragment);
+        mMainContent.setOnFitSystemWindowsListener(this);
         setStatusBarColor(linkId, data);
         setTaskInfo(linkId, data);
         setSupportProgressBarIndeterminateVisibility(false);
@@ -157,17 +159,8 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
     }
 
     @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        final boolean result = super.getSystemWindowsInsets(insets);
-//        if (result) {
-//            insets.bottom = 0;
-//        }
-        return result;
-    }
-
-    @Override
-    public void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
+    public void onFitSystemWindows(Rect insets) {
+        super.onFitSystemWindows(insets);
         final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
         if (fragment instanceof IBaseFragment) {
             ((IBaseFragment) fragment).requestFitSystemWindows();
@@ -190,8 +183,8 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        window.requestFeature(Window.FEATURE_ACTION_MODE_OVERLAY);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         final int transitionRes;
         switch (linkId) {
             case LINK_ID_USER: {

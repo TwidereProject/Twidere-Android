@@ -11,12 +11,15 @@ import android.view.MenuItem;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
+import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
 /**
  * Accounts manager
  * Created by mariotaku on 14/10/26.
  */
 public class AccountsManagerActivity extends BaseActionBarActivity {
+
+    private TintedStatusFrameLayout mMainContent;
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -30,6 +33,12 @@ public class AccountsManagerActivity extends BaseActionBarActivity {
     }
 
     @Override
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
+        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final ActionBar actionBar = getSupportActionBar();
@@ -37,6 +46,7 @@ public class AccountsManagerActivity extends BaseActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.activity_content_fragment);
+        mMainContent.setOnFitSystemWindowsListener(this);
         final FragmentManager fm = getSupportFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.main_content, new AccountsManagerFragment());
@@ -44,8 +54,8 @@ public class AccountsManagerActivity extends BaseActionBarActivity {
     }
 
     @Override
-    public void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
+    public void onFitSystemWindows(Rect insets) {
+        super.onFitSystemWindows(insets);
         final FragmentManager fm = getSupportFragmentManager();
         final Fragment f = fm.findFragmentById(R.id.main_content);
         if (f instanceof IBaseFragment) {
