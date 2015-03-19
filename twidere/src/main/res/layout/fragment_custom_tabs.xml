@@ -17,24 +17,73 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<com.mobeta.android.dslv.DragSortListView
-    android:id="@android:id/list"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
     android:layout_height="match_parent"
-    app:collapsed_height="2dp"
-    app:drag_enabled="true"
-    app:drag_handle_id="@+id/drag_handle"
-    app:drag_scroll_start="0.33"
-    app:float_alpha="0.6"
-    app:float_background_color="@android:color/transparent"
-    app:max_drag_scroll_speed="0.5"
-    app:remove_enabled="false"
-    app:slide_shuffle_speed="0.3"
-    app:sort_enabled="true"
-    app:track_drag_sort="true"
-    app:use_default_controller="true"
-    tools:context=".fragment.CustomTabsFragment"/>
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list_container">
+
+        <com.mobeta.android.dslv.DragSortListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:collapsed_height="2dp"
+            tools:visibility="gone"
+            app:drag_enabled="true"
+            app:drag_handle_id="@+id/drag_handle"
+            app:drag_scroll_start="0.33"
+            app:float_alpha="0.6"
+            app:float_background_color="@android:color/transparent"
+            app:max_drag_scroll_speed="0.5"
+            app:remove_enabled="false"
+            app:slide_shuffle_speed="0.3"
+            app:sort_enabled="true"
+            app:track_drag_sort="true"
+            app:use_default_controller="true"
+            tools:context=".fragment.CustomTabsFragment"/>
+
+        <LinearLayout
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:visibility="visible">
+
+            <org.mariotaku.twidere.view.ActionIconView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:color="?android:textColorSecondary"
+                android:src="@drawable/ic_info_tab"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:gravity="center"
+                android:text="@string/no_tab"
+                android:textAppearance="?android:textAppearanceMedium"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progress_container">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@android:id/progress"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+</FrameLayout>

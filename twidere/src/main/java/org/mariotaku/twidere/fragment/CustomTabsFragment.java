@@ -33,6 +33,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -44,6 +45,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.mobeta.android.dslv.DragSortListView;
@@ -76,14 +79,16 @@ import static org.mariotaku.twidere.util.CustomTabUtils.isTabAdded;
 import static org.mariotaku.twidere.util.CustomTabUtils.isTabTypeValid;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 
-public class CustomTabsFragment extends BaseListFragment implements LoaderCallbacks<Cursor>,
-        MultiChoiceModeListener, DropListener {
+public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<Cursor>,
+        MultiChoiceModeListener, DropListener, OnItemClickListener {
 
     private ContentResolver mResolver;
 
-    private DragSortListView mListView;
-
     private CustomTabsAdapter mAdapter;
+
+    private DragSortListView mListView;
+    private View mEmptyView;
+    private View mListContainer, mProgressContainer;
 
     @Override
     public void drop(final int from, final int to) {
@@ -112,17 +117,47 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         mResolver = getContentResolver();
-        final Activity activity = getActivity();
-        final Context context = getView().getContext();
+        final View view = getView();
+        if (view == null) throw new AssertionError();
+        final Context context = view.getContext();
         mAdapter = new CustomTabsAdapter(context);
-        setListAdapter(mAdapter);
-        setEmptyText(getString(R.string.no_tab_hint));
-        mListView = (DragSortListView) getListView();
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(this);
         mListView.setDropListener(this);
+        mListView.setOnItemClickListener(this);
+        mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(mEmptyView);
         getLoaderManager().initLoader(0, null, this);
         setListShown(false);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final Cursor c = mAdapter.getCursor();
+        c.moveToPosition(mAdapter.getCursorPosition(position));
+        final Intent intent = new Intent(INTENT_ACTION_EDIT_TAB);
+        intent.setClass(getActivity(), CustomTabEditorActivity.class);
+        intent.putExtra(EXTRA_ID, c.getLong(c.getColumnIndex(Tabs._ID)));
+        intent.putExtra(EXTRA_TYPE, c.getString(c.getColumnIndex(Tabs.TYPE)));
+        intent.putExtra(EXTRA_NAME, c.getString(c.getColumnIndex(Tabs.NAME)));
+        intent.putExtra(EXTRA_ICON, c.getString(c.getColumnIndex(Tabs.ICON)));
+        intent.putExtra(EXTRA_EXTRAS, c.getString(c.getColumnIndex(Tabs.EXTRAS)));
+        startActivityForResult(intent, REQUEST_EDIT_TAB);
+    }
+
+    private void setListShown(boolean shown) {
+        mListContainer.setVisibility(shown ? View.VISIBLE : View.GONE);
+        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
+    }
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mListView = (DragSortListView) view.findViewById(android.R.id.list);
+        mEmptyView = view.findViewById(android.R.id.empty);
+        mListContainer = view.findViewById(R.id.list_container);
+        mProgressContainer = view.findViewById(R.id.progress_container);
     }
 
     @Override
@@ -174,12 +209,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View view = inflater.inflate(android.R.layout.list_content, null, false);
-        final ListView originalList = (ListView) view.findViewById(android.R.id.list);
-        final ViewGroup listContainer = (ViewGroup) originalList.getParent();
-        listContainer.removeView(originalList);
-        inflater.inflate(R.layout.fragment_custom_tabs, listContainer, true);
-        return view;
+        return inflater.inflate(R.layout.fragment_custom_tabs, container, false);
     }
 
     @Override
@@ -193,19 +223,6 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
         updateTitle(mode);
     }
 
-    @Override
-    public void onListItemClick(final ListView l, final View v, final int position, final long id) {
-        final Cursor c = mAdapter.getCursor();
-        c.moveToPosition(mAdapter.getCursorPosition(position));
-        final Intent intent = new Intent(INTENT_ACTION_EDIT_TAB);
-        intent.setClass(getActivity(), CustomTabEditorActivity.class);
-        intent.putExtra(EXTRA_ID, c.getLong(c.getColumnIndex(Tabs._ID)));
-        intent.putExtra(EXTRA_TYPE, c.getString(c.getColumnIndex(Tabs.TYPE)));
-        intent.putExtra(EXTRA_NAME, c.getString(c.getColumnIndex(Tabs.NAME)));
-        intent.putExtra(EXTRA_ICON, c.getString(c.getColumnIndex(Tabs.ICON)));
-        intent.putExtra(EXTRA_EXTRAS, c.getString(c.getColumnIndex(Tabs.EXTRAS)));
-        startActivityForResult(intent, REQUEST_EDIT_TAB);
-    }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
@@ -246,7 +263,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
             final SubMenu subMenu = itemAdd.getSubMenu();
             subMenu.clear();
             final HashMap<String, CustomTabConfiguration> map = getConfiguraionMap();
-            final List<Entry<String, CustomTabConfiguration>> tabs = new ArrayList<Entry<String, CustomTabConfiguration>>(
+            final List<Entry<String, CustomTabConfiguration>> tabs = new ArrayList<>(
                     map.entrySet());
             Collections.sort(tabs, CustomTabConfigurationComparator.SINGLETON);
             for (final Entry<String, CustomTabConfiguration> entry : tabs) {
@@ -268,7 +285,7 @@ public class CustomTabsFragment extends BaseListFragment implements LoaderCallba
                         && account_ids.length == 0;
                 subItem.setVisible(!shouldDisable);
                 subItem.setEnabled(!shouldDisable);
-                final Drawable icon = res.getDrawable(conf.getDefaultIcon());
+                final Drawable icon = ResourcesCompat.getDrawable(res, conf.getDefaultIcon(), null);
                 subItem.setIcon(icon);
                 subItem.setIntent(intent);
             }

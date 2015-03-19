@@ -256,6 +256,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
                 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
         itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
+        itemDecoration.setDecorationEndOffset(1);
         mRecyclerView.addItemDecoration(itemDecoration);
         getLoaderManager().initLoader(0, null, this);
         setListShown(false);
