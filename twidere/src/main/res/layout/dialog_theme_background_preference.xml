@@ -55,7 +55,7 @@
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_weight="0"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_launcher"
+            android:src="@mipmap/ic_launcher"
             android:visibility="gone"/>
 
     </LinearLayout>

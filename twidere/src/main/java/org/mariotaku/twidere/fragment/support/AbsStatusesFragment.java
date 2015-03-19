@@ -409,9 +409,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     private void updateRefreshProgressOffset() {
         if (mSystemWindowsInsets.top == 0 || mSwipeRefreshLayout == null || isRefreshing()) return;
-        // 40: SwipeRefreshLayout.CIRCLE_DIAMETER
         final float density = getResources().getDisplayMetrics().density;
-        final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - Math.round(40 * density);
+        final int progressCircleDiameter = mSwipeRefreshLayout.getProgressCircleDiameter();
+        final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - progressCircleDiameter;
         // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
         final int swipeDistance = Math.round(64 * density);
         mSwipeRefreshLayout.setProgressViewOffset(true, swipeStart, swipeStart + swipeDistance);

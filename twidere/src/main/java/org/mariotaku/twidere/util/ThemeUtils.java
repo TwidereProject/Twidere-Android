@@ -330,6 +330,7 @@ public class ThemeUtils implements Constants {
             final CompoundButton compoundButton = (CompoundButton) view;
             ViewAccessor.setButtonTintList(compoundButton, tintList);
         }
+        // TODO support TintableBackgroundView
     }
 
 

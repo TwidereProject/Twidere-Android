@@ -2,27 +2,27 @@
 <resources>
 
     <style name="Widget.Twidere.ActionBar.Colored" parent="Widget.Base.Light.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_twidere_solid_color_holo</item>
+        <!--<item name="android:background">@drawable/ab_twidere_solid_color_holo</item>-->
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
     <style name="Widget.Twidere.ActionBar.Colored.Inverse" parent="Widget.Base.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_twidere_solid_color_holo</item>
+        <!--<item name="android:background">@drawable/ab_twidere_solid_color_holo</item>-->
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
     <style name="Widget.Twidere.ActionBar.Dark" parent="Widget.Base.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>
+        <!--<item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>-->
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
     <style name="Widget.Twidere.ActionBar.Light" parent="Widget.Base.Light.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_twidere_solid_light_holo</item>
+        <!--<item name="android:background">@drawable/ab_twidere_solid_light_holo</item>-->
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
     <style name="Widget.Twidere.ActionBar.Light.DarkActionBar" parent="Widget.Base.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>
+        <!--<item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>-->
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 

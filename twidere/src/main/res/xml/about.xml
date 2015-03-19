@@ -123,7 +123,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/sponsored_by">
         <Preference
-            android:icon="@drawable/ic_launcher_hondajojo"
+            android:icon="@mipmap/ic_launcher_hondajojo"
             android:title="@string/kuma_union">
             <intent
                 android:action="android.intent.action.VIEW"
