@@ -25,7 +25,7 @@ public class AccountRefreshSettingsFragment extends BaseAccountPreferenceFragmen
 
 	@Override
 	protected int getPreferencesResource() {
-		return R.xml.settings_account_refresh;
+		return R.xml.preferences_account_refresh;
 	}
 
 	@Override

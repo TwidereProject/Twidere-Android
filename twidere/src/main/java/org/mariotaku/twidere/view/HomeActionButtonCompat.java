@@ -24,7 +24,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -166,6 +165,7 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
             super.onBoundsChange(bounds);
             mBounds.set(bounds);
             updateBitmap();
+            invalidateSelf();
         }
 
         @Override
@@ -180,6 +180,7 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
         public void setColor(int color) {
             mColorPaint.setColor(color);
+            updateBitmap();
             invalidateSelf();
         }
 
@@ -187,9 +188,9 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
             final Rect bounds = mBounds;
             if (bounds.isEmpty()) return;
             mBitmap = Bitmap.createBitmap(bounds.width(), bounds.height(), Config.ARGB_8888);
-            Canvas canvas = new Canvas(mBitmap);
+            final Canvas canvas = new Canvas(mBitmap);
             final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setColor(Color.WHITE);
+            paint.setColor(0xFF000000 | mColorPaint.getColor());
             final float radius = mRadius;
             paint.setShadowLayer(radius, 0, radius * 1.5f / 2, SHADOW_START_COLOR);
             final RectF rect = new RectF(mView.getPaddingLeft(), mView.getPaddingTop(),
@@ -198,7 +199,6 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
             paint.setShadowLayer(0, 0, 0, 0);
             paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
             canvas.drawOval(rect, paint);
-            invalidateSelf();
         }
     }
 

@@ -261,7 +261,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
         @Override
         protected int getPreferenceResource() {
-            return R.xml.settings_cards;
+            return R.xml.preferences_cards;
         }
     }
 
@@ -441,7 +441,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
         @Override
         protected int getPreferenceResource() {
-            return R.xml.settings_theme;
+            return R.xml.preferences_theme;
         }
     }
 

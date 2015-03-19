@@ -20,4 +20,14 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Preference android:layout="@layout/header_usage_statistics"/>
+
+    <org.mariotaku.twidere.preference.ResourceIconPreference
+        android:order="11"
+        android:title="@string/research_ucdavis_earlybird"/>
+
+    <org.mariotaku.twidere.preference.ResourceIconPreference
+        android:order="12"
+        android:title="@string/research_tsinghua_spice"/>
+
 </PreferenceScreen>

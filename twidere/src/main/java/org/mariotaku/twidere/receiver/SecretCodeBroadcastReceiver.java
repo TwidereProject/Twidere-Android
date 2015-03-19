@@ -31,19 +31,19 @@ import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
 
 public class SecretCodeBroadcastReceiver extends BroadcastReceiver implements IntentConstants {
 
-	@Override
-	public void onReceive(final Context context, final Intent intent) {
-		final Intent testIntent = new Intent(context, SettingsActivity.class);
-		final String cls = SettingsDetailsFragment.class.getName();
-		final String title = context.getString(R.string.hidden_settings);
-		final Bundle args = new Bundle();
-		args.putInt(EXTRA_RESID, R.xml.settings_hidden);
-		testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT, cls);
-		testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_ARGUMENTS, args);
-		testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_TITLE, title);
-		testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_SHORT_TITLE, title);
-		testIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(testIntent);
-	}
+    @Override
+    public void onReceive(final Context context, final Intent intent) {
+        final Intent testIntent = new Intent(context, SettingsActivity.class);
+        final String cls = SettingsDetailsFragment.class.getName();
+        final String title = context.getString(R.string.hidden_settings);
+        final Bundle args = new Bundle();
+        args.putInt(EXTRA_RESID, R.xml.preferences_hidden);
+        testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT, cls);
+        testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_ARGUMENTS, args);
+        testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_TITLE, title);
+        testIntent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_SHORT_TITLE, title);
+        testIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(testIntent);
+    }
 
 }

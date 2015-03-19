@@ -40,7 +40,7 @@
         android:title="@string/data_profiling">
         <extra
             android:name="resid"
-            android:value="@xml/settings_usage_statistics"/>
+            android:value="@xml/preferences_usage_statistics"/>
     </Preference>
 
     <org.mariotaku.twidere.preference.SettingsImportExportPreference
