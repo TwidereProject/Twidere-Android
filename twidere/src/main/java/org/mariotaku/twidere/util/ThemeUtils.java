@@ -32,9 +32,9 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableStringBuilder;
@@ -983,13 +983,7 @@ public class ThemeUtils implements Constants {
     private static Drawable applyActionBarDrawable(final Context context, final Drawable d, final boolean applyAlpha) {
         if (d == null) return null;
         d.mutate();
-        if (d instanceof LayerDrawable) {
-            final Drawable colorLayer = ((LayerDrawable) d).findDrawableByLayerId(R.id.color_layer);
-            if (colorLayer != null) {
-                final int color = getUserAccentColor(context);
-                colorLayer.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-            }
-        }
+//        DrawableCompat.setTint(d, getUserAccentColor(context));
         if (applyAlpha) {
             d.setAlpha(getThemeAlpha(context));
         }

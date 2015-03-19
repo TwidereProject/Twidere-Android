@@ -2248,18 +2248,6 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
-    public static int getStatusTypeIconRes(final boolean is_favorite, final boolean has_location,
-                                           final boolean has_media, final boolean is_possibly_sensitive) {
-        if (is_favorite)
-            return R.drawable.ic_indicator_starred;
-        else if (is_possibly_sensitive && has_media)
-            return R.drawable.ic_indicator_reported_media;
-        else if (has_media)
-            return R.drawable.ic_indicator_media;
-        else if (has_location) return R.drawable.ic_indicator_location;
-        return 0;
-    }
-
     public static String getTabDisplayOption(final Context context) {
         if (context == null) return null;
         final String defaultOption = context.getString(R.string.default_tab_display_option);
