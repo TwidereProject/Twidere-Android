@@ -340,7 +340,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mPagesErrorText.setText(getString(R.string.blocked_by_user_summary, displayName));
                     mPagesErrorIcon.setImageResource(R.drawable.ic_info_error_generic);
                     mPagesContent.setVisibility(View.GONE);
-                } else if (!relationship.isSourceFollowingTarget()) {
+                } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
                     mPagesErrorContainer.setVisibility(View.VISIBLE);
                     final String displayName = UserColorNameUtils.getDisplayName(getActivity(), user);
                     mPagesErrorText.setText(getString(R.string.user_protected_summary, displayName));
@@ -682,12 +682,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mProfileImageView.setTransitionDestination(bounds);
                 }
                 super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-            }
-
-            @Override
-            public View onCreateSnapshotView(Context context, Parcelable snapshot) {
-                final View view = super.onCreateSnapshotView(context, snapshot);
-                return view;
             }
 
             @Override

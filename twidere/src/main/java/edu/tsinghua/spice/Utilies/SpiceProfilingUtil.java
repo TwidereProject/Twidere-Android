@@ -6,18 +6,16 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-
-import edu.tsinghua.spice.Task.SpiceAsyUploadTask;
+import java.util.UUID;
 
 /**
  * Created by Denny C. Ng on 2/20/15.
@@ -53,7 +51,7 @@ public class SpiceProfilingUtil {
     }
 
     public static void profile(final Context context, final long account_id, final String text) {
-        profile(context, account_id + "_" + FILE_NAME_PROFILE , text);
+        profile(context, account_id + "_" + FILE_NAME_PROFILE, text);
     }
 
     public static void profile(final Context context, final String name, final String text) {
@@ -61,10 +59,18 @@ public class SpiceProfilingUtil {
         final SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
         if (!prefs.getBoolean(Constants.KEY_SPICE_DATA_PROFILING, false)) return;
-
-        String uuid = "XXX";
-        if (Build.SERIAL.length() > 0)
-            uuid = Build.SERIAL;
+        final String persistedDeviceId = prefs.getString(Constants.KEY_SPICE_DEVICE_ID, null);
+        final String serial = String.valueOf(Build.SERIAL).replaceAll("[^\\w\\d]", "");
+        final String uuid;
+        if (!TextUtils.isEmpty(persistedDeviceId)) {
+            uuid = persistedDeviceId.replaceAll("[^\\w\\d]", "");
+        } else if (!TextUtils.isEmpty(serial)) {
+            uuid = serial;
+            prefs.edit().putString(Constants.KEY_SPICE_DEVICE_ID, serial).apply();
+        } else {
+            uuid = UUID.randomUUID().toString().replaceAll("[^\\w\\d]", "");
+            prefs.edit().putString(Constants.KEY_SPICE_DEVICE_ID, uuid).apply();
+        }
         final String filename = uuid + "_" + name + ".spi";
         new Thread() {
             @Override
@@ -79,7 +85,9 @@ public class SpiceProfilingUtil {
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }
-            };
+            }
+
+            ;
         }.start();
     }
 }

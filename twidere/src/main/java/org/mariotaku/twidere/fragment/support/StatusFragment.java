@@ -525,9 +525,9 @@ public class StatusFragment extends BaseSupportFragment
             if (position == getItemCount() - 1) {
                 return null;
             } else if (position < conversationCount) {
-                return mConversation.get(position);
+                return mConversation != null ? mConversation.get(position) : null;
             } else if (position > conversationCount) {
-                return mReplies.get(position - conversationCount - 1);
+                return mReplies != null ? mReplies.get(position - conversationCount - 1) : null;
             } else {
                 return mStatus;
             }

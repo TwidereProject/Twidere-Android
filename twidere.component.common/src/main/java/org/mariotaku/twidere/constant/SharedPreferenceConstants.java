@@ -224,6 +224,8 @@ public interface SharedPreferenceConstants {
     public static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
     @Preference(type = BOOLEAN, exportable = false)
     public static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
+    @Preference(type = STRING, exportable = false)
+    public static final String KEY_SPICE_DEVICE_ID = "spice_device_id";
     @Preference(type = BOOLEAN, exportable = false)
     public static final String KEY_SHOW_UCD_DATA_PROFILING_REQUEST = "show_ucd_data_profiling_request";
     @Preference(type = BOOLEAN, exportable = false)

@@ -60,17 +60,17 @@
 
             <org.mariotaku.twidere.view.ActionIconView
                 android:layout_width="wrap_content"
+                android:id="@+id/empty_icon"
                 android:layout_height="wrap_content"
-                android:color="?android:textColorSecondary"
-                android:src="@drawable/ic_info_tab"/>
+                android:color="?android:textColorSecondary"/>
 
             <TextView
+                android:id="@+id/empty_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/element_spacing_normal"
                 android:gravity="center"
-                android:text="@string/no_tab"
                 android:textAppearance="?android:textAppearanceMedium"/>
         </LinearLayout>
     </FrameLayout>

@@ -701,12 +701,11 @@
     <string name="round">Round</string>
     <string name="square">Square</string>
     <string name="profile_image_style">Profile image style</string>
-    <string name="default_profile_image_style">round</string>
     <string name="media_preview_style">Media preview style</string>
     <string name="draft_saved">Draft saved</string>
     <string name="open_twitter_links">Open Twitter links</string>
     <string name="N_others_quantity_one">another</string>
-    <string name="N_others_quantity_other"><xliff:g id="retweet_count">%d</xliff:g> others</string>
+    <string name="N_others_quantity_other"><xliff:g id="count">%d</xliff:g> others</string>
     <string name="type_name_to_search">Type name to search</string>
     <string name="no_user_found">No user found</string>
     <string name="members">Members</string>
@@ -733,5 +732,6 @@
     <string name="usage_statistics_header_summary">Twidere took part in some research project, join these projects will make Twidere and some other application better.</string>
     <string name="no_tab">No tab</string>
     <string name="user_protected_summary">You need to send follow request to this protected user to see tweets</string>
+    <string name="no_account">No account</string>
 
 </resources>

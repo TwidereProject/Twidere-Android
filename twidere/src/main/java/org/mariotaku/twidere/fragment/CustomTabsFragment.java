@@ -47,7 +47,9 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
@@ -89,6 +91,8 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     private DragSortListView mListView;
     private View mEmptyView;
     private View mListContainer, mProgressContainer;
+    private TextView mEmptyText;
+    private ImageView mEmptyIcon;
 
     @Override
     public void drop(final int from, final int to) {
@@ -127,6 +131,8 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView);
+        mEmptyText.setText(R.string.no_tab);
+        mEmptyIcon.setImageResource(R.drawable.ic_info_tab);
         getLoaderManager().initLoader(0, null, this);
         setListShown(false);
     }
@@ -156,6 +162,8 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         super.onViewCreated(view, savedInstanceState);
         mListView = (DragSortListView) view.findViewById(android.R.id.list);
         mEmptyView = view.findViewById(android.R.id.empty);
+        mEmptyIcon = (ImageView) view.findViewById(R.id.empty_icon);
+        mEmptyText = (TextView) view.findViewById(R.id.empty_text);
         mListContainer = view.findViewById(R.id.list_container);
         mProgressContainer = view.findViewById(R.id.progress_container);
     }
@@ -209,7 +217,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_custom_tabs, container, false);
+        return inflater.inflate(R.layout.fragment_list_with_empty_view, container, false);
     }
 
     @Override

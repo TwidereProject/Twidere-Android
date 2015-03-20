@@ -637,7 +637,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                         hasName = true;
                     }
                 }
-                if (!hasName) {
+                if (!hasName && mQuery.matches("(?i)[a-z0-9_]{1,20}")) {
                     result.add(screenNamePos, new UserScreenNameItem(mQuery, mAccountId));
                 }
                 usersCursor.close();
