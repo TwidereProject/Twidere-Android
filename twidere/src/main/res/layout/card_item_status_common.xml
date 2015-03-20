@@ -91,8 +91,7 @@
                 android:layout_marginRight="@dimen/element_spacing_small"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:contentDescription="@string/profile_image"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/profile_image_nyan_sakamoto"/>
+                android:scaleType="centerCrop"/>
 
             <org.mariotaku.twidere.view.BoundsImageView
                 android:id="@+id/profile_type"

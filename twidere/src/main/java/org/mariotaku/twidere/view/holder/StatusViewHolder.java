@@ -427,6 +427,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
     public void setupViewOptions() {
         setTextSize(adapter.getTextSize());
+        mediaPreviewContainer.setStyle(adapter.getMediaPreviewStyle());
     }
 
     private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location) {

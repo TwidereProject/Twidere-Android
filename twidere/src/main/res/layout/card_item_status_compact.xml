@@ -77,8 +77,7 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/reply_retweet_status"
             android:contentDescription="@string/profile_image"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/profile_image_nyan_sakamoto"/>
+            android:scaleType="centerCrop"/>
 
         <org.mariotaku.twidere.view.BoundsImageView
             android:id="@+id/profile_type"

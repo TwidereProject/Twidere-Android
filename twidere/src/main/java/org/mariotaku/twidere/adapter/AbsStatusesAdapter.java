@@ -84,37 +84,37 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
-    public ImageLoaderWrapper getImageLoader() {
+    public final ImageLoaderWrapper getImageLoader() {
         return mImageLoader;
     }
 
     @Override
-    public Context getContext() {
+    public final Context getContext() {
         return mContext;
     }
 
     @Override
-    public ImageLoadingHandler getImageLoadingHandler() {
+    public final ImageLoadingHandler getImageLoadingHandler() {
         return mLoadingHandler;
     }
 
     @Override
-    public int getProfileImageStyle() {
+    public final int getProfileImageStyle() {
         return mProfileImageStyle;
     }
 
     @Override
-    public int getMediaPreviewStyle() {
+    public final int getMediaPreviewStyle() {
         return mMediaPreviewStyle;
     }
 
     @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
+    public final AsyncTwitterWrapper getTwitterWrapper() {
         return mTwitterWrapper;
     }
 
     @Override
-    public float getTextSize() {
+    public final float getTextSize() {
         return mTextSize;
     }
 

@@ -54,11 +54,6 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
         return mData.get(position).id;
     }
 
-    @Override
-    public int getMediaPreviewStyle() {
-        return 0;
-    }
-
     public void setData(List<ParcelableStatus> data) {
         mData = data;
         notifyDataSetChanged();
