@@ -24,6 +24,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -96,6 +97,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         screenNameView.setText("@" + TWIDERE_PREVIEW_SCREEN_NAME);
         textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         timeView.setTime(System.currentTimeMillis());
+        mediaPreviewContainer.displayMedia(R.drawable.nyan_stars_background);
     }
 
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
