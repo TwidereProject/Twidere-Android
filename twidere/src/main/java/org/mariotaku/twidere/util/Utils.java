@@ -2969,8 +2969,12 @@ public final class Utils implements Constants, TwitterConstants {
             final Bundle args = new Bundle();
             args.putLong(EXTRA_ACCOUNT_ID, accountId);
             args.putParcelable(EXTRA_CURRENT_MEDIA, current);
-            args.putParcelable(EXTRA_STATUS, status);
-            args.putParcelable(EXTRA_MESSAGE, message);
+            if (status != null) {
+                args.putParcelable(EXTRA_STATUS, status);
+            }
+            if (message != null) {
+                args.putParcelable(EXTRA_MESSAGE, message);
+            }
             args.putParcelableArray(EXTRA_MEDIA, media);
             fragment.setArguments(args);
             fragment.show(fm, "sensitive_content_warning");
@@ -3008,7 +3012,12 @@ public final class Utils implements Constants, TwitterConstants {
         intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
         intent.putExtra(EXTRA_CURRENT_MEDIA, current);
         intent.putExtra(EXTRA_MEDIA, media);
-        intent.putExtra(EXTRA_STATUS, status);
+        if (status != null) {
+            intent.putExtra(EXTRA_STATUS, status);
+        }
+        if (message != null) {
+            intent.putExtra(EXTRA_MESSAGE, message);
+        }
         intent.setClass(context, MediaViewerActivity.class);
         context.startActivity(intent);
     }

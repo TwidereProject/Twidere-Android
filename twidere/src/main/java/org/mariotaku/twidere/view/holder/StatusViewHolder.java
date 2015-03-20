@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
@@ -35,6 +36,7 @@ import java.util.Locale;
 
 import twitter4j.TranslationResult;
 
+import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 /**
@@ -42,7 +44,7 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
  * <p/>
  * Created by mariotaku on 14/11/19.
  */
-public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+public class StatusViewHolder extends RecyclerView.ViewHolder implements Constants, OnClickListener {
 
     private final IStatusesAdapter<?> adapter;
 
@@ -89,12 +91,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements OnClick
     }
 
     public void displaySampleStatus() {
-        nameView.setText("User");
-        screenNameView.setText("@user");
+        profileImageView.setImageResource(R.mipmap.ic_launcher);
+        nameView.setText(TWIDERE_PREVIEW_NAME);
+        screenNameView.setText("@" + TWIDERE_PREVIEW_SCREEN_NAME);
+        textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         timeView.setTime(System.currentTimeMillis());
-        textView.setText(R.string.sample_status_text);
-        mediaPreviewContainer.displayMedia(R.drawable.profile_image_nyan_sakamoto,
-                R.drawable.profile_image_nyan_sakamoto_santa);
     }
 
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
