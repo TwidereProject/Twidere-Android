@@ -136,7 +136,6 @@ import static android.os.Environment.getExternalStorageState;
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.ThemeUtils.getComposeThemeResource;
-import static org.mariotaku.twidere.util.ThemeUtils.getWindowContentOverlayForCompose;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.copyStream;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
@@ -590,7 +589,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         mLocationContainer = findViewById(R.id.location_container);
         mLocationIcon = (ActionIconView) findViewById(R.id.location_icon);
         mLocationText = (TextView) findViewById(R.id.location_text);
-        ViewAccessor.setBackground(findViewById(R.id.compose_content), getWindowContentOverlayForCompose(this));
     }
 
     public void removeAllMedia(final List<ParcelableMediaUpdate> list) {

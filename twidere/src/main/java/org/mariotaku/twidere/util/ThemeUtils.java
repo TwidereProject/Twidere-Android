@@ -399,20 +399,6 @@ public class ThemeUtils implements Constants {
         return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
     }
 
-    public static int getActionBarThemeResource(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarTheme,
-                R.attr.actionBarWidgetTheme, android.R.attr.actionBarTheme,
-                android.R.attr.actionBarWidgetTheme});
-        final int resId;
-        if (a.hasValue(0) || a.hasValue(1)) {
-            resId = a.hasValue(0) ? a.getResourceId(0, 0) : a.getResourceId(1, 0);
-        } else {
-            resId = a.hasValue(2) ? a.getResourceId(2, 0) : a.getResourceId(3, 0);
-        }
-        a.recycle();
-        return resId;
-    }
-
     public static Context getActionBarContext(final Context context) {
         final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarTheme,
                 R.attr.actionBarWidgetTheme, android.R.attr.actionBarTheme,
@@ -460,10 +446,6 @@ public class ThemeUtils implements Constants {
         final Drawable d = a.getDrawable(0);
         a.recycle();
         return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
-    }
-
-    public static int getActionIconColor(final Context context) {
-        return getActionIconColor(getThemeResource(context));
     }
 
     public static int getActionIconColor(final int themeRes) {
@@ -878,11 +860,6 @@ public class ThemeUtils implements Constants {
         return d;
     }
 
-    public static Drawable getWindowContentOverlayForCompose(final Context context) {
-        final int themeRes = getThemeResource(context);
-        return getWindowContentOverlay(new ContextThemeWrapper(context, themeRes));
-    }
-
     public static boolean isDarkTheme(final Context context) {
         return isDarkTheme(getThemeResource(context));
     }
@@ -900,18 +877,6 @@ public class ThemeUtils implements Constants {
                 return true;
         }
         return false;
-    }
-
-    public static boolean isFloatingWindow(final Context context) {
-
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowIsFloating});
-        final boolean b = a.getBoolean(0, false);
-        a.recycle();
-        return b;
-    }
-
-    public static boolean isSolidBackground(final Context context) {
-        return VALUE_THEME_BACKGROUND_SOLID.equals(getThemeBackgroundOption(context));
     }
 
     public static boolean isTransparentBackground(final Context context) {
@@ -968,14 +933,6 @@ public class ThemeUtils implements Constants {
     }
 
 
-    public static boolean shouldApplyColorFilterToActionIcons(final Context context) {
-        return false;
-    }
-
-    public static boolean shouldApplyColorFilterToActionIcons(final int res) {
-        return false;
-    }
-
     private static Drawable applyActionBarDrawable(final Context context, final Drawable d, final boolean applyAlpha) {
         if (d == null) return null;
         d.mutate();
@@ -992,14 +949,6 @@ public class ThemeUtils implements Constants {
         final Class<?> viewCls = Class.forName(className);
         final Constructor<?> constructor = viewCls.getConstructor(Context.class, AttributeSet.class);
         return (View) constructor.newInstance(context, attrs);
-    }
-
-    public static int findAttributeResourceValue(AttributeSet attrs, String name, int defaultValue) {
-        for (int i = 0, j = attrs.getAttributeCount(); i < j; i++) {
-            if (attrs.getAttributeName(i).equals(name))
-                return attrs.getAttributeResourceValue(i, defaultValue);
-        }
-        return defaultValue;
     }
 
     public static int getThemeColor(Context context, int themeResourceId) {
