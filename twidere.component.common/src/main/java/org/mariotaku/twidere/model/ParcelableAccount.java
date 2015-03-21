@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
@@ -144,24 +145,37 @@ public class ParcelableAccount implements Parcelable {
         return list.toArray(new ParcelableAccount[list.size()]);
     }
 
-    public static ParcelableAccount[] getAccounts(final Context context, final long[] accountIds) {
+    @NonNull
+    public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final long[] accountIds) {
         if (context == null) return new ParcelableAccount[0];
         final String where = accountIds != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
                 new RawItemArray(accountIds)).getSQL() : null;
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS_NO_CREDENTIALS, where, null, null);
         if (cur == null) return new ParcelableAccount[0];
+        return getAccounts(cur, new Indices(cur));
+    }
+
+
+    @NonNull
+    public static ParcelableAccount[] getAccounts(@Nullable final Cursor cursor) {
+        if (cursor == null) return new ParcelableAccount[0];
+        return getAccounts(cursor, new Indices(cursor));
+    }
+
+    @NonNull
+    public static ParcelableAccount[] getAccounts(@Nullable final Cursor cursor,@Nullable  final Indices indices) {
+        if (cursor == null || indices == null) return new ParcelableAccount[0];
         try {
-            final Indices idx = new Indices(cur);
-            cur.moveToFirst();
-            final ParcelableAccount[] names = new ParcelableAccount[cur.getCount()];
-            while (!cur.isAfterLast()) {
-                names[cur.getPosition()] = new ParcelableAccount(cur, idx);
-                cur.moveToNext();
+            cursor.moveToFirst();
+            final ParcelableAccount[] names = new ParcelableAccount[cursor.getCount()];
+            while (!cursor.isAfterLast()) {
+                names[cursor.getPosition()] = new ParcelableAccount(cursor, indices);
+                cursor.moveToNext();
             }
             return names;
         } finally {
-            cur.close();
+            cursor.close();
         }
     }
 

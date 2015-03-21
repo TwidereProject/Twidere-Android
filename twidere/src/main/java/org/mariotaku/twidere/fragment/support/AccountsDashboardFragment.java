@@ -19,6 +19,10 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -29,13 +33,18 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.internal.view.SupportMenuInflater;
@@ -52,6 +61,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -78,17 +88,19 @@ import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.menu.SupportAccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccount.Indices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TransitionUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.mariotaku.twidere.util.Utils.openUserFavorites;
@@ -114,6 +126,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private View mAccountSelectorView;
     private RecyclerView mAccountsSelector;
     private ImageView mAccountProfileBannerView;
+    private ImageView mFloatingProfileImageSnapshotView;
     private ShapedImageView mAccountProfileImageView;
     private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
     private ActionMenuView mAccountsToggleMenu;
@@ -122,6 +135,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private Context mThemedContext;
     private ImageLoaderWrapper mImageLoader;
     private SupportAccountActionProvider mAccountActionProvider;
+    private boolean mSwitchAccountAnimationPlaying;
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -180,38 +194,30 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (SupportAccountActionProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
         mAccountActionProvider.setExclusive(false);
-        final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
+        final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(data);
         final Set<Long> activatedIds = new HashSet<>();
-        if (data != null) {
-            data.moveToFirst();
-            final Indices indices = new Indices(data);
-            long defaultId = -1;
-            while (!data.isAfterLast()) {
-                final ParcelableAccount account = new ParcelableAccount(data, indices);
-                accounts.add(account);
-                if (account.is_activated) {
-                    if (defaultId < 0) {
-                        defaultId = account.account_id;
-                    }
-                    activatedIds.add(account.account_id);
+        long defaultId = -1;
+        for (ParcelableAccount account : accounts) {
+            if (account.is_activated) {
+                if (defaultId < 0) {
+                    defaultId = account.account_id;
                 }
-                data.moveToNext();
-            }
-            if (mAccountsAdapter.getSelectedAccountId() <= 0) {
-                mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
+                activatedIds.add(account.account_id);
             }
         }
-        mAccountActionProvider.setAccounts(accounts.toArray(new ParcelableAccount[accounts.size()]));
+        mAccountsAdapter.setAccounts(accounts);
+        if (mAccountsAdapter.getSelectedAccountId() <= 0) {
+            mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
+        }
+        mAccountActionProvider.setAccounts(accounts);
         mAccountActionProvider.setSelectedAccountIds(ArrayUtils.toPrimitive(activatedIds.toArray(new Long[activatedIds.size()])));
 
-        mAccountsAdapter.changeCursor(data);
-        updateAccountOptionsSeparatorLabel();
+        updateAccountOptionsSeparatorLabel(null);
         updateDefaultAccountState();
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mAccountsAdapter.changeCursor(null);
     }
 
     @Override
@@ -345,9 +351,11 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         layoutManager.setStackFromEnd(true);
         mAccountsSelector.setLayoutManager(layoutManager);
         mAccountsSelector.setAdapter(mAccountsAdapter);
+        mAccountsSelector.setItemAnimator(null);
         mAccountProfileContainer = mAccountSelectorView.findViewById(R.id.profile_container);
         mAccountProfileImageView = (ShapedImageView) mAccountSelectorView.findViewById(R.id.profile_image);
         mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.account_profile_banner);
+        mFloatingProfileImageSnapshotView = (ImageView) mAccountSelectorView.findViewById(R.id.floating_profile_image_snapshot);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
         mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
         mAccountsToggleMenu = (ActionMenuView) mAccountSelectorView.findViewById(R.id.toggle_menu);
@@ -412,19 +420,102 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         return mThemedContext = new ContextThemeWrapper(context, themeResource);
     }
 
-    private void onAccountSelected(ParcelableAccount account) {
-        mAccountsAdapter.setSelectedAccountId(account.account_id);
-        updateAccountOptionsSeparatorLabel();
+    private void onAccountSelected(AccountProfileImageViewHolder holder, final ParcelableAccount account) {
+        if (mSwitchAccountAnimationPlaying) return;
+        final ImageView snapshotView = mFloatingProfileImageSnapshotView;
+        final ShapedImageView profileImageView = mAccountProfileImageView;
+        final ShapedImageView clickedImageView = holder.getIconView();
+        final Matrix matrix = new Matrix();
+        final Rect tempRect = new Rect();
+        clickedImageView.getGlobalVisibleRect(tempRect);
+        final RectF sourceBounds = new RectF(tempRect);
+        profileImageView.getGlobalVisibleRect(tempRect);
+        final RectF destBounds = new RectF(tempRect);
+        final float finalScale = destBounds.width() / sourceBounds.width();
+        final Bitmap snapshotBitmap = TransitionUtils.createViewBitmap(clickedImageView, matrix,
+                new RectF(0, 0, sourceBounds.width(), sourceBounds.height()));
+        final ViewGroup.LayoutParams lp = snapshotView.getLayoutParams();
+        lp.width = clickedImageView.getWidth();
+        lp.height = clickedImageView.getHeight();
+        snapshotView.setLayoutParams(lp);
+        // Copied from MaterialNavigationDrawer: https://github.com/madcyph3r/AdvancedMaterialDrawer/
+        AnimatorSet set = new AnimatorSet();
+        snapshotView.setPivotX(0);
+        snapshotView.setPivotY(0);
+        snapshotView.setX(sourceBounds.left);
+        snapshotView.setY(sourceBounds.top);
+        set.play(ObjectAnimator.ofFloat(snapshotView, View.X, sourceBounds.left, destBounds.left))
+                .with(ObjectAnimator.ofFloat(snapshotView, View.Y, sourceBounds.top, destBounds.top))
+                .with(ObjectAnimator.ofFloat(snapshotView, View.SCALE_X, 1, finalScale))
+                .with(ObjectAnimator.ofFloat(snapshotView, View.SCALE_Y, 1, finalScale))
+                .with(ObjectAnimator.ofFloat(profileImageView, View.ALPHA, 1, 0))
+                .with(ObjectAnimator.ofFloat(clickedImageView, View.SCALE_X, 0, 1))
+                .with(ObjectAnimator.ofFloat(clickedImageView, View.SCALE_Y, 0, 1));
+        final long animationTransition = 400;
+        set.setDuration(animationTransition);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new AnimatorListener() {
+
+            private Drawable clickedDrawable;
+            private int[] clickedColors;
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                snapshotView.setVisibility(View.VISIBLE);
+                snapshotView.setImageBitmap(snapshotBitmap);
+                final Drawable profileDrawable = profileImageView.getDrawable();
+                clickedDrawable = clickedImageView.getDrawable();
+                clickedColors = clickedImageView.getBorderColors();
+                final ParcelableAccount oldSelectedAccount = mAccountsAdapter.getSelectedAccount();
+                mImageLoader.displayDashboardProfileImage(clickedImageView,
+                        oldSelectedAccount.profile_image_url, profileDrawable);
+//                mImageLoader.displayDashboardProfileImage(profileImageView,
+//                        account.profile_image_url, clickedDrawable);
+                clickedImageView.setBorderColors(profileImageView.getBorderColors());
+                mSwitchAccountAnimationPlaying = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                finishAnimation();
+            }
+
+            private void finishAnimation() {
+                mAccountsAdapter.setSelectedAccountId(account.account_id);
+                updateAccountOptionsSeparatorLabel(clickedDrawable);
+                snapshotView.setVisibility(View.INVISIBLE);
+                snapshotView.setImageDrawable(null);
+                profileImageView.setImageDrawable(clickedDrawable);
+                profileImageView.setBorderColors(clickedColors);
+                profileImageView.setAlpha(1f);
+                clickedImageView.setScaleX(1);
+                clickedImageView.setScaleY(1);
+                clickedImageView.setAlpha(1f);
+                mSwitchAccountAnimationPlaying = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                finishAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        set.start();
     }
 
-    private void updateAccountOptionsSeparatorLabel() {
+    private void updateAccountOptionsSeparatorLabel(Drawable profileImageSnapshot) {
         final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
         if (account == null) {
             return;
         }
         mAccountProfileNameView.setText(account.name);
         mAccountProfileScreenNameView.setText("@" + account.screen_name);
-        mImageLoader.displayProfileImage(mAccountProfileImageView, account.profile_image_url);
+        mImageLoader.displayDashboardProfileImage(mAccountProfileImageView,
+                account.profile_image_url, profileImageSnapshot);
         mAccountProfileImageView.setBorderColors(account.color);
         final int bannerWidth = mAccountProfileBannerView.getWidth();
         final Resources res = getResources();
@@ -483,9 +574,13 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             icon = (ShapedImageView) itemView.findViewById(android.R.id.icon);
         }
 
+        public ShapedImageView getIconView() {
+            return icon;
+        }
+
         @Override
         public void onClick(View v) {
-            adapter.dispatchItemSelected(getPosition());
+            adapter.dispatchItemSelected(this);
         }
     }
 
@@ -494,62 +589,95 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         private final LayoutInflater mInflater;
         private final ImageLoaderWrapper mImageLoader;
         private final AccountsDashboardFragment mFragment;
-        private Cursor mCursor;
-        private Indices mIndices;
-        private long mSelectedAccountId;
-        private int mSelectedAccountIndex;
+        private ParcelableAccount[] mAccounts;
+        private ParcelableAccount[] mInternalAccounts;
 
         AccountSelectorAdapter(Context context, AccountsDashboardFragment fragment) {
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
             mFragment = fragment;
+            setHasStableIds(true);
         }
 
-        public void changeCursor(Cursor cursor) {
-            mCursor = cursor;
-            if (cursor != null) {
-                mIndices = new Indices(cursor);
+        private static int indexOfAccount(List<ParcelableAccount> accounts, long accountId) {
+            for (int i = 0, j = accounts.size(); i < j; i++) {
+                if (accounts.get(i).account_id == accountId) return i;
             }
-            updateSelectedAccountIndex();
+            return -1;
+        }
+
+        public void setAccounts(ParcelableAccount[] accounts) {
+            mAccounts = accounts;
+            if (accounts != null) {
+                final ParcelableAccount[] previousAccounts = mInternalAccounts;
+                mInternalAccounts = new ParcelableAccount[accounts.length];
+                int tempIdx = 0;
+                final List<ParcelableAccount> tempList = Arrays.asList(accounts);
+                if (previousAccounts != null) {
+                    for (ParcelableAccount previousAccount : previousAccounts) {
+                        final int idx = indexOfAccount(tempList, previousAccount.account_id);
+                        if (idx >= 0) {
+                            mInternalAccounts[tempIdx++] = tempList.remove(idx);
+                        }
+                    }
+                }
+                for (ParcelableAccount account : tempList) {
+                    mInternalAccounts[tempIdx++] = account;
+                }
+            } else {
+                mInternalAccounts = null;
+            }
             notifyDataSetChanged();
         }
 
-        private void updateSelectedAccountIndex() {
-            final Cursor c = mCursor;
-            final Indices i = mIndices;
-            mSelectedAccountIndex = -1;
-            if (c != null && i != null && c.moveToFirst()) {
-                while (!c.isAfterLast()) {
-                    if (c.getLong(mIndices.account_id) == mSelectedAccountId) {
-                        mSelectedAccountIndex = c.getPosition();
-                        break;
-                    }
-                    c.moveToNext();
+
+        public ParcelableAccount getAdapterAccount(int adapterPosition) {
+            if (mInternalAccounts == null || mInternalAccounts.length < 1) {
+                return null;
+            }
+            return mInternalAccounts[adapterPosition + 1];
+        }
+
+        private final LongSparseArray<Long> positionMap = new LongSparseArray<>();
+
+        private void swap(long fromId, long toId) {
+            int fromIdx = -1, toIdx = -1;
+            for (int i = 0, j = mInternalAccounts.length; i < j; i++) {
+                final ParcelableAccount account = mInternalAccounts[i];
+                if (account.account_id == fromId) {
+                    fromIdx = i;
+                }
+                if (account.account_id == toId) {
+                    toIdx = i;
                 }
             }
+            if (fromIdx < 0 || toIdx < 0) return;
+            final ParcelableAccount temp = mInternalAccounts[toIdx];
+            mInternalAccounts[toIdx] = mInternalAccounts[fromIdx];
+            mInternalAccounts[fromIdx] = temp;
+            notifyDataSetChanged();
         }
 
         public ParcelableAccount getSelectedAccount() {
-            final Cursor c = mCursor;
-            final Indices i = mIndices;
-            if (c != null && i != null && c.moveToFirst()) {
-                while (!c.isAfterLast()) {
-                    if (c.getLong(mIndices.account_id) == mSelectedAccountId)
-                        return new ParcelableAccount(c, mIndices);
-                    c.moveToNext();
-                }
+            if (mInternalAccounts == null || mInternalAccounts.length < 0) {
+                return null;
             }
-            return null;
+            return mInternalAccounts[0];
         }
 
         public long getSelectedAccountId() {
-            return mSelectedAccountId;
+            return getSelectedAccount().account_id;
         }
 
         public void setSelectedAccountId(long accountId) {
-            mSelectedAccountId = accountId;
-            updateSelectedAccountIndex();
-            notifyDataSetChanged();
+            final ParcelableAccount selectedAccount = getSelectedAccount();
+            if (selectedAccount == null) return;
+            swap(accountId, selectedAccount.account_id);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return getAdapterAccount(position).account_id;
         }
 
         @Override
@@ -560,31 +688,22 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
         @Override
         public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
-            final Cursor c = mCursor;
-            if (mSelectedAccountIndex != -1 && position >= mSelectedAccountIndex) {
-                c.moveToPosition(position + 1);
-            } else {
-                c.moveToPosition(position);
-            }
-            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
-            mImageLoader.displayProfileImage(holder.icon, c.getString(mIndices.profile_image_url));
-            holder.icon.setBorderColor(c.getInt(mIndices.color));
+//            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
+            final ParcelableAccount account = getAdapterAccount(position);
+            mImageLoader.cancelDisplayTask(holder.icon);
+//            holder.icon.setImageDrawable(null);
+            mImageLoader.displayDashboardProfileImage(holder.icon, account.profile_image_url, null);
+            holder.icon.setBorderColor(account.color);
         }
 
         @Override
         public int getItemCount() {
-            if (mCursor == null) return 0;
-            return Math.max(mCursor.getCount() - 1, 0);
+            if (mInternalAccounts == null || mInternalAccounts.length == 0) return 0;
+            return mInternalAccounts.length - 1;
         }
 
-        private void dispatchItemSelected(int position) {
-            final Cursor c = mCursor;
-            if (mSelectedAccountIndex != -1 && position >= mSelectedAccountIndex) {
-                c.moveToPosition(position + 1);
-            } else {
-                c.moveToPosition(position);
-            }
-            mFragment.onAccountSelected(new ParcelableAccount(c, mIndices));
+        private void dispatchItemSelected(AccountProfileImageViewHolder holder) {
+            mFragment.onAccountSelected(holder, getAdapterAccount(holder.getAdapterPosition()));
         }
     }
 
@@ -643,7 +762,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             text1.setText(option.name);
-            icon.setImageDrawable(icon.getResources().getDrawable(option.icon));
+            icon.setImageDrawable(ResourcesCompat.getDrawable(icon.getResources(), option.icon, null));
             icon.setColorFilter(mActionIconColor, Mode.SRC_ATOP);
             return view;
         }

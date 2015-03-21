@@ -23,7 +23,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:layout_height="160dp"
+    tools:layout_width="280dp">
 
     <ImageView
         android:id="@+id/account_profile_banner"
@@ -33,7 +35,8 @@
         android:layout_alignTop="@id/profile_container"
         android:alpha="0.5"
         android:contentDescription="@string/profile_banner"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        tools:src="@drawable/nyan_stars_background"/>
 
     <FrameLayout
         android:id="@+id/profile_container"
@@ -58,7 +61,7 @@
                 android:layout_marginTop="@dimen/element_spacing_mlarge"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
-                tools:src="@drawable/profile_image_nyan_sakamoto"/>
+                tools:src="@mipmap/ic_launcher"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/other_accounts_list"
@@ -76,7 +79,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_below="@id/profile_image"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -117,6 +121,14 @@
 
             </LinearLayout>
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/floating_profile_image_snapshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            tools:ignore="ContentDescription"/>
     </FrameLayout>
 
 </RelativeLayout>

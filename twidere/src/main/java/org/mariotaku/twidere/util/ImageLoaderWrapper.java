@@ -20,9 +20,11 @@
 package org.mariotaku.twidere.util;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.DisplayImageOptions.Builder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -38,6 +40,7 @@ public class ImageLoaderWrapper implements Constants {
 
     private final ImageLoader mImageLoader;
     private final DisplayImageOptions mProfileImageDisplayOptions;
+    private final DisplayImageOptions mDashboardProfileImageDisplayOptions;
     private final DisplayImageOptions mOvalProfileImageDisplayOptions;
     private final DisplayImageOptions mImageDisplayOptions, mBannerDisplayOptions;
 
@@ -72,11 +75,17 @@ public class ImageLoaderWrapper implements Constants {
         bannerOptsBuilder.cacheOnDisk(true);
         bannerOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
         bannerOptsBuilder.displayer(new FadeInBitmapDisplayer(200, true, true, true));
+        final DisplayImageOptions.Builder dashboardProfileOptsBuilder = new DisplayImageOptions.Builder();
+//        dashboardProfileOptsBuilder.showImageOnLoading(android.R.color.transparent);
+        dashboardProfileOptsBuilder.cacheInMemory(true);
+        dashboardProfileOptsBuilder.cacheOnDisk(true);
+        dashboardProfileOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
 
         mProfileImageDisplayOptions = profileOptsBuilder.build();
         mOvalProfileImageDisplayOptions = ovalProfileOptsBuilder.build();
         mImageDisplayOptions = imageOptsBuilder.build();
         mBannerDisplayOptions = bannerOptsBuilder.build();
+        mDashboardProfileImageDisplayOptions = dashboardProfileOptsBuilder.build();
     }
 
     public void clearFileCache() {
@@ -118,6 +127,18 @@ public class ImageLoaderWrapper implements Constants {
 
     public void displayProfileImage(final ImageView view, final String url) {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions);
+    }
+
+    public void displayDashboardProfileImage(final ImageView view, final String url, Drawable drawableOnLoading) {
+        if (drawableOnLoading != null) {
+            final Builder builder = new Builder();
+            builder.cloneFrom(mDashboardProfileImageDisplayOptions);
+            builder.showImageOnLoading(drawableOnLoading);
+            builder.showImageOnFail(drawableOnLoading);
+            mImageLoader.displayImage(url, view, builder.build());
+            return;
+        }
+        mImageLoader.displayImage(url, view, mDashboardProfileImageDisplayOptions);
     }
 
 

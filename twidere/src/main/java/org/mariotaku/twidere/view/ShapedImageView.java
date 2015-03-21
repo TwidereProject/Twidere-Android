@@ -228,6 +228,10 @@ public class ShapedImageView extends ImageView {
 
     }
 
+    public int[] getBorderColors() {
+        return mBorderColors;
+    }
+
     @ShapeStyle
     public int getStyle() {
         return mStyle;
