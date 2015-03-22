@@ -50,6 +50,7 @@ public class MediaPreviewUtils {
     public static final String GOOGLE_IMAGES_AVAILABLE_SIZES = "((([whs]\\d+|no)\\-?)+)";
 
     private static final String STRING_PATTERN_TWITTER_IMAGES_DOMAIN = "(p|pbs)\\.twimg\\.com";
+    private static final String STRING_PATTERN_TWITTER_TON_DOMAIN = "(ton)\\.twitter\\.com";
     private static final String STRING_PATTERN_SINA_WEIBO_IMAGES_DOMAIN = "[\\w\\d]+\\.sinaimg\\.cn|[\\w\\d]+\\.sina\\.cn";
     private static final String STRING_PATTERN_LOCKERZ_DOMAIN = "lockerz\\.com";
     private static final String STRING_PATTERN_PLIXI_DOMAIN = "plixi\\.com";
@@ -113,28 +114,12 @@ public class MediaPreviewUtils {
             + STRING_PATTERN_GOOGLE_IMAGES_NO_SCHEME;
     private static final String STRING_PATTERN_GOOGLE_PROXY_IMAGES = AVAILABLE_URL_SCHEME_PREFIX
             + STRING_PATTERN_GOOGLE_PROXY_IMAGES_NO_SCHEME;
+    private static final String STRING_PATTERN_TWITTER_DM_IMAGES = AVAILABLE_URL_SCHEME_PREFIX
+            + STRING_PATTERN_TWITTER_IMAGES_NO_SCHEME;
 
-    public static final Pattern PATTERN_ALL_AVAILABLE_IMAGES = Pattern.compile(AVAILABLE_URL_SCHEME_PREFIX + "("
-            + STRING_PATTERN_IMAGES_NO_SCHEME + "|" + STRING_PATTERN_TWITTER_IMAGES_NO_SCHEME + "|"
-            + STRING_PATTERN_INSTAGRAM_NO_SCHEME + "|" + STRING_PATTERN_GOOGLE_IMAGES_NO_SCHEME + "|"
-            + STRING_PATTERN_SINA_WEIBO_IMAGES_NO_SCHEME + "|" + STRING_PATTERN_LOCKERZ_NO_SCHEME + "|"
-            + STRING_PATTERN_PLIXI_NO_SCHEME + "|" + STRING_PATTERN_TWITPIC_NO_SCHEME + "|"
-            + STRING_PATTERN_IMGLY_NO_SCHEME + "|" + STRING_PATTERN_YFROG_NO_SCHEME + "|"
-            + STRING_PATTERN_TWITGOO_NO_SCHEME + "|" + STRING_PATTERN_MOBYPICTURE_NO_SCHEME + "|"
-            + STRING_PATTERN_IMGUR_NO_SCHEME + "|" + STRING_PATTERN_PHOTOZOU_NO_SCHEME + ")", Pattern.CASE_INSENSITIVE);
-
-    public static final Pattern PATTERN_PREVIEW_AVAILABLE_IMAGES_MATCH_ONLY = Pattern.compile(
-            AVAILABLE_URL_SCHEME_PREFIX + "(" + STRING_PATTERN_IMAGES_NO_SCHEME + "|"
-                    + STRING_PATTERN_TWITTER_IMAGES_DOMAIN + "|" + STRING_PATTERN_INSTAGRAM_DOMAIN + "|"
-                    + STRING_PATTERN_GOOGLE_IMAGES_DOMAIN + "|" + STRING_PATTERN_SINA_WEIBO_IMAGES_DOMAIN + "|"
-                    + STRING_PATTERN_LOCKERZ_DOMAIN + "|" + STRING_PATTERN_PLIXI_DOMAIN + "|"
-                    + STRING_PATTERN_TWITPIC_DOMAIN + "|" + STRING_PATTERN_IMGLY_DOMAIN + "|"
-                    + STRING_PATTERN_YFROG_DOMAIN + "|" + STRING_PATTERN_TWITGOO_DOMAIN + "|"
-                    + STRING_PATTERN_MOBYPICTURE_DOMAIN + "|" + STRING_PATTERN_IMGUR_DOMAIN + "|"
-                    + STRING_PATTERN_PHOTOZOU_DOMAIN + ")", Pattern.CASE_INSENSITIVE);
-
-    public static final Pattern PATTERN_IMAGES = Pattern.compile(STRING_PATTERN_IMAGES, Pattern.CASE_INSENSITIVE);
     public static final Pattern PATTERN_TWITTER_IMAGES = Pattern.compile(STRING_PATTERN_TWITTER_IMAGES,
+            Pattern.CASE_INSENSITIVE);
+    public static final Pattern PATTERN_TWITTER_DM_IMAGES = Pattern.compile(STRING_PATTERN_TWITTER_DM_IMAGES,
             Pattern.CASE_INSENSITIVE);
     public static final Pattern PATTERN_SINA_WEIBO_IMAGES = Pattern.compile(STRING_PATTERN_SINA_WEIBO_IMAGES,
             Pattern.CASE_INSENSITIVE);
@@ -179,7 +164,7 @@ public class MediaPreviewUtils {
     private static final Pattern[] SUPPORTED_PATTERNS = {PATTERN_TWITTER_IMAGES, PATTERN_INSTAGRAM,
             PATTERN_GOOGLE_IMAGES, PATTERN_GOOGLE_PROXY_IMAGES, PATTERN_SINA_WEIBO_IMAGES, PATTERN_TWITPIC,
             PATTERN_IMGUR, PATTERN_IMGLY, PATTERN_YFROG, PATTERN_LOCKERZ, PATTERN_PLIXI, PATTERN_TWITGOO,
-            PATTERN_MOBYPICTURE, PATTERN_PHOTOZOU};
+            PATTERN_MOBYPICTURE, PATTERN_PHOTOZOU,PATTERN_TWITTER_DM_IMAGES};
 
     private static final String URL_PHOTOZOU_PHOTO_INFO = "https://api.photozou.jp/rest/photo_info.json";
 

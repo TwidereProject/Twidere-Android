@@ -31,38 +31,42 @@ import org.mariotaku.twidere.fragment.support.PhishingLinkWarningDialogFragment;
 
 public class DirectMessageOnLinkClickHandler extends OnLinkClickHandler {
 
-	private static final String[] SHORT_LINK_SERVICES = new String[] { "bit.ly", "ow.ly", "tinyurl.com", "goo.gl",
-			"k6.kz", "is.gd", "tr.im", "x.co", "weepp.ru" };
+    private static final String[] SHORT_LINK_SERVICES = new String[]{"bit.ly", "ow.ly", "tinyurl.com", "goo.gl",
+            "k6.kz", "is.gd", "tr.im", "x.co", "weepp.ru"};
 
-	public DirectMessageOnLinkClickHandler(final Context context, final MultiSelectManager manager) {
-		super(context, manager);
-	}
+    public DirectMessageOnLinkClickHandler(final Context context, final MultiSelectManager manager) {
+        super(context, manager);
+    }
 
-	@Override
-	protected void openLink(final String link) {
-		if (link == null || context == null || manager.isActive()) return;
-		if (!hasShortenedLinks(link)) {
-			super.openLink(link);
-			return;
-		}
-		final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-		if (context instanceof FragmentActivity && prefs.getBoolean(KEY_PHISHING_LINK_WARNING, true)) {
-			final FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
-			final DialogFragment fragment = new PhishingLinkWarningDialogFragment();
-			final Bundle args = new Bundle();
-			args.putParcelable(EXTRA_URI, Uri.parse(link));
-			fragment.setArguments(args);
-			fragment.show(fm, "phishing_link_warning");
-		} else {
-			super.openLink(link);
-		}
+    protected boolean isPrivateData() {
+        return true;
+    }
 
-	}
+    @Override
+    protected void openLink(final String link) {
+        if (link == null || manager != null && manager.isActive()) return;
+        if (!hasShortenedLinks(link)) {
+            super.openLink(link);
+            return;
+        }
+        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        if (context instanceof FragmentActivity && prefs.getBoolean(KEY_PHISHING_LINK_WARNING, true)) {
+            final FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
+            final DialogFragment fragment = new PhishingLinkWarningDialogFragment();
+            final Bundle args = new Bundle();
+            args.putParcelable(EXTRA_URI, Uri.parse(link));
+            fragment.setArguments(args);
+            fragment.show(fm, "phishing_link_warning");
+        } else {
+            super.openLink(link);
+        }
 
-	private boolean hasShortenedLinks(final String link) {
-		for (final String short_link_service : SHORT_LINK_SERVICES) {
-			if (link.contains(short_link_service)) return true;
-		}
-		return false;
-	}
+    }
+
+    private boolean hasShortenedLinks(final String link) {
+        for (final String short_link_service : SHORT_LINK_SERVICES) {
+            if (link.contains(short_link_service)) return true;
+        }
+        return false;
+    }
 }
