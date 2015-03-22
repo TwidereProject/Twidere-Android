@@ -42,7 +42,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedValues;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
 
@@ -55,7 +55,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
     private final ContentResolver mResolver;
     private final SQLiteDatabase mDatabase;
-    private final ImageLoaderWrapper mProfileImageLoader;
+    private final MediaLoaderWrapper mProfileImageLoader;
     private final SharedPreferences mPreferences, mUserNicknamePreferences;
 
     private final EditText mEditText;

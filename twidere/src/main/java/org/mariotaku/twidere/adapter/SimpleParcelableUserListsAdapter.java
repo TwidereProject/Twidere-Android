@@ -27,7 +27,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
@@ -39,7 +39,7 @@ import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserList> implements IBaseAdapter {
 
     private final Context mContext;
-    private final ImageLoaderWrapper mImageLoader;
+    private final MediaLoaderWrapper mImageLoader;
 
     public SimpleParcelableUserListsAdapter(final Context context) {
         super(context, R.layout.list_item_two_line);

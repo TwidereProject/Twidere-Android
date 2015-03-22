@@ -21,10 +21,9 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -110,7 +109,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
     }
 
     public void displayStatus(@NonNull final Context context,
-                              @NonNull final ImageLoaderWrapper loader,
+                              @NonNull final MediaLoaderWrapper loader,
                               @NonNull final ImageLoadingHandler handler,
                               @NonNull final AsyncTwitterWrapper twitter,
                               final boolean displayMediaPreview, final boolean displayAccountsColor,
@@ -229,7 +228,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
     public void displayStatus(@NonNull Cursor cursor, @NonNull CursorIndices indices,
                               final boolean displayInReplyTo) {
-        final ImageLoaderWrapper loader = adapter.getImageLoader();
+        final MediaLoaderWrapper loader = adapter.getImageLoader();
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
@@ -443,7 +442,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             extraTypeView.setImageResource(R.drawable.ic_action_play_circle);
             extraTypeView.setVisibility(View.VISIBLE);
         } else if (media != null && media.length > 0) {
-            extraTypeView.setImageResource(R.drawable.ic_action_gallery);
+            if (hasVideo(media)) {
+                extraTypeView.setImageResource(R.drawable.ic_action_movie);
+            } else {
+                extraTypeView.setImageResource(R.drawable.ic_action_gallery);
+            }
             extraTypeView.setVisibility(View.VISIBLE);
         } else if (location != null && location.isValid()) {
             extraTypeView.setImageResource(R.drawable.ic_action_location);
@@ -451,6 +454,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         } else {
             extraTypeView.setVisibility(View.GONE);
         }
+    }
+
+    private boolean hasVideo(ParcelableMedia[] media) {
+        for (ParcelableMedia mediaItem : media) {
+            if (mediaItem.type == ParcelableMedia.TYPE_VIDEO) return true;
+        }
+        return false;
     }
 
     public static interface StatusClickListener extends ContentCardClickListener {

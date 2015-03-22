@@ -107,7 +107,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.text.TextAlphaSpan;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -174,7 +174,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
 
-    private ImageLoaderWrapper mProfileImageLoader;
+    private MediaLoaderWrapper mProfileImageLoader;
 
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;

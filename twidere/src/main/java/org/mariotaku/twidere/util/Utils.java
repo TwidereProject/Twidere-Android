@@ -471,7 +471,7 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
-    public static void addToLinearLayout(final LinearLayout container, final ImageLoaderWrapper loader,
+    public static void addToLinearLayout(final LinearLayout container, final MediaLoaderWrapper loader,
                                          final List<ParcelableMedia> mediaList, final long accountId,
                                          final int maxColumnCount, final OnMediaClickListener mediaClickListener) {
         if (container.getOrientation() != LinearLayout.VERTICAL)
@@ -510,7 +510,7 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
-    public static void addToLinearLayout(final LinearLayout container, final ImageLoaderWrapper loader,
+    public static void addToLinearLayout(final LinearLayout container, final MediaLoaderWrapper loader,
                                          final ParcelableMedia[] mediaArray, final long accountId,
                                          final int maxColumnCount, final OnMediaClickListener listener) {
         addToLinearLayout(container, loader, Arrays.asList(mediaArray), accountId, maxColumnCount,

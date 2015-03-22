@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,239 +40,329 @@ import static twitter4j.internal.util.InternalParseUtil.getLong;
  */
 public class MediaEntityJSONImpl implements MediaEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1634113112942821363L;
-	private long id;
-	private int start = -1;
-	private int end = -1;
-	private URL url;
-	private URL mediaURL;
-	private URL mediaURLHttps;
-	private URL expandedURL;
-	private String displayURL;
-	private Map<Integer, MediaEntity.Size> sizes;
-	private String type;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1634113112942821363L;
+    private long id;
+    private int start = -1;
+    private int end = -1;
+    private URL url;
+    private URL mediaURL;
+    private URL mediaURLHttps;
+    private URL expandedURL;
+    private String displayURL;
+    private Map<Integer, MediaEntity.Size> sizes;
+    private Type type;
+    private VideoInfoJSONImpl videoInfo;
 
-	public MediaEntityJSONImpl(final JSONObject json) throws TwitterException {
-		try {
-			final JSONArray indicesArray = json.getJSONArray("indices");
-			start = indicesArray.getInt(0);
-			end = indicesArray.getInt(1);
-			id = getLong("id", json);
+    public VideoInfo getVideoInfo() {
+        return videoInfo;
+    }
 
-			try {
-				url = new URL(json.getString("url"));
-			} catch (final MalformedURLException ignore) {
-			}
+    public MediaEntityJSONImpl(final JSONObject json) throws TwitterException {
+        try {
+            final JSONArray indicesArray = json.getJSONArray("indices");
+            start = indicesArray.getInt(0);
+            end = indicesArray.getInt(1);
+            id = getLong("id", json);
 
-			if (!json.isNull("expanded_url")) {
-				try {
-					expandedURL = new URL(json.getString("expanded_url"));
-				} catch (final MalformedURLException ignore) {
-				}
-			}
-			if (!json.isNull("media_url")) {
-				try {
-					mediaURL = new URL(json.getString("media_url"));
-				} catch (final MalformedURLException ignore) {
-				}
-			}
-			if (!json.isNull("media_url_https")) {
-				try {
-					mediaURLHttps = new URL(json.getString("media_url_https"));
-				} catch (final MalformedURLException ignore) {
-				}
-			}
-			if (!json.isNull("display_url")) {
-				displayURL = json.getString("display_url");
-			}
-			final JSONObject sizes = json.getJSONObject("sizes");
-			this.sizes = new HashMap<Integer, MediaEntity.Size>(4);
-			// thumbworkarounding API side issue
-			addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.LARGE, "large");
-			addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.MEDIUM, "medium");
-			addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.SMALL, "small");
-			addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.THUMB, "thumb");
-			if (!json.isNull("type")) {
-				type = json.getString("type");
-			}
-		} catch (final JSONException jsone) {
-			throw new TwitterException(jsone);
-		}
-	}
+            try {
+                url = new URL(json.getString("url"));
+            } catch (final MalformedURLException ignore) {
+            }
 
-	/* For serialization purposes only. */
-	/* package */MediaEntityJSONImpl() {
+            if (!json.isNull("expanded_url")) {
+                try {
+                    expandedURL = new URL(json.getString("expanded_url"));
+                } catch (final MalformedURLException ignore) {
+                }
+            }
+            if (!json.isNull("media_url")) {
+                try {
+                    mediaURL = new URL(json.getString("media_url"));
+                } catch (final MalformedURLException ignore) {
+                }
+            }
+            if (!json.isNull("media_url_https")) {
+                try {
+                    mediaURLHttps = new URL(json.getString("media_url_https"));
+                } catch (final MalformedURLException ignore) {
+                }
+            }
+            if (!json.isNull("display_url")) {
+                displayURL = json.getString("display_url");
+            }
+            if (!json.isNull("video_info")) {
+                videoInfo = new VideoInfoJSONImpl(json.getJSONObject("video_info"));
+            }
+            final JSONObject sizes = json.getJSONObject("sizes");
+            this.sizes = new HashMap<Integer, MediaEntity.Size>(4);
+            // thumbworkarounding API side issue
+            addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.LARGE, "large");
+            addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.MEDIUM, "medium");
+            addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.SMALL, "small");
+            addMediaEntitySizeIfNotNull(this.sizes, sizes, MediaEntity.Size.THUMB, "thumb");
+            if (!json.isNull("type")) {
+                type = Type.parse(json.getString("type"));
+            }
+        } catch (final JSONException jsone) {
+            throw new TwitterException(jsone);
+        }
+    }
 
-	}
+    /* For serialization purposes only. */
+    /* package */MediaEntityJSONImpl() {
 
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (!(o instanceof MediaEntityJSONImpl)) return false;
+    }
 
-		final MediaEntityJSONImpl that = (MediaEntityJSONImpl) o;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MediaEntityJSONImpl)) return false;
 
-		if (id != that.id) return false;
+        final MediaEntityJSONImpl that = (MediaEntityJSONImpl) o;
 
-		return true;
-	}
+        if (id != that.id) return false;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getDisplayURL() {
-		return displayURL;
-	}
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getEnd() {
-		return end;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDisplayURL() {
+        return displayURL;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public URL getExpandedURL() {
-		return expandedURL;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getEnd() {
+        return end;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public long getId() {
-		return id;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL getExpandedURL() {
+        return expandedURL;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public URL getMediaURL() {
-		return mediaURL;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getId() {
+        return id;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public URL getMediaURLHttps() {
-		return mediaURLHttps;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL getMediaURL() {
+        return mediaURL;
+    }
 
-	@Override
-	public Map<Integer, MediaEntity.Size> getSizes() {
-		return sizes;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL getMediaURLHttps() {
+        return mediaURLHttps;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getStart() {
-		return start;
-	}
+    @Override
+    public Map<Integer, MediaEntity.Size> getSizes() {
+        return sizes;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getType() {
-		return type;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getStart() {
+        return start;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public URL getURL() {
-		return url;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Type getType() {
+        return type;
+    }
 
-	@Override
-	public int hashCode() {
-		return (int) (id ^ id >>> 32);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL getURL() {
+        return url;
+    }
 
-	@Override
-	public String toString() {
-		return "MediaEntityJSONImpl{" + "id=" + id + ", start=" + start + ", end=" + end + ", url=" + url
-				+ ", mediaURL=" + mediaURL + ", mediaURLHttps=" + mediaURLHttps + ", expandedURL=" + expandedURL
-				+ ", displayURL='" + displayURL + '\'' + ", sizes=" + sizes + ", type=" + type + '}';
-	}
+    @Override
+    public int hashCode() {
+        return (int) (id ^ id >>> 32);
+    }
 
-	private void addMediaEntitySizeIfNotNull(final Map<Integer, MediaEntity.Size> sizes, final JSONObject sizes_json,
-			final Integer size, final String key) throws JSONException {
-		final JSONObject size_json = sizes_json.optJSONObject(key);
-		if (size_json != null) {
-			sizes.put(size, new Size(size_json));
-		}
-	}
+    @Override
+    public String toString() {
+        return "MediaEntityJSONImpl{" + "id=" + id + ", start=" + start + ", end=" + end + ", url=" + url
+                + ", mediaURL=" + mediaURL + ", mediaURLHttps=" + mediaURLHttps + ", expandedURL=" + expandedURL
+                + ", displayURL='" + displayURL + '\'' + ", sizes=" + sizes + ", type=" + type + '}';
+    }
 
-	static class Size implements MediaEntity.Size {
+    private void addMediaEntitySizeIfNotNull(final Map<Integer, MediaEntity.Size> sizes, final JSONObject sizes_json,
+                                             final Integer size, final String key) throws JSONException {
+        final JSONObject size_json = sizes_json.optJSONObject(key);
+        if (size_json != null) {
+            sizes.put(size, new Size(size_json));
+        }
+    }
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 5638836742331957957L;
-		int width;
-		int height;
-		int resize;
+    static class Size implements MediaEntity.Size {
 
-		Size(final JSONObject json) throws JSONException {
-			width = json.getInt("w");
-			height = json.getInt("h");
-			resize = "fit".equals(json.getString("resize")) ? MediaEntity.Size.FIT : MediaEntity.Size.CROP;
-		}
+        /**
+         *
+         */
+        private static final long serialVersionUID = 5638836742331957957L;
+        int width;
+        int height;
+        int resize;
 
-		@Override
-		public boolean equals(final Object o) {
-			if (this == o) return true;
-			if (!(o instanceof Size)) return false;
+        Size(final JSONObject json) throws JSONException {
+            width = json.getInt("w");
+            height = json.getInt("h");
+            resize = "fit".equals(json.getString("resize")) ? MediaEntity.Size.FIT : MediaEntity.Size.CROP;
+        }
 
-			final Size size = (Size) o;
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Size)) return false;
 
-			if (height != size.height) return false;
-			if (resize != size.resize) return false;
-			if (width != size.width) return false;
+            final Size size = (Size) o;
 
-			return true;
-		}
+            if (height != size.height) return false;
+            if (resize != size.resize) return false;
+            if (width != size.width) return false;
 
-		@Override
-		public int getHeight() {
-			return height;
-		}
+            return true;
+        }
 
-		@Override
-		public int getResize() {
-			return resize;
-		}
+        @Override
+        public int getHeight() {
+            return height;
+        }
 
-		@Override
-		public int getWidth() {
-			return width;
-		}
+        @Override
+        public int getResize() {
+            return resize;
+        }
 
-		@Override
-		public int hashCode() {
-			int result = width;
-			result = 31 * result + height;
-			result = 31 * result + resize;
-			return result;
-		}
+        @Override
+        public int getWidth() {
+            return width;
+        }
 
-		@Override
-		public String toString() {
-			return "Size{" + "width=" + width + ", height=" + height + ", resize=" + resize + '}';
-		}
-	}
+        @Override
+        public int hashCode() {
+            int result = width;
+            result = 31 * result + height;
+            result = 31 * result + resize;
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Size{" + "width=" + width + ", height=" + height + ", resize=" + resize + '}';
+        }
+    }
+
+    private static class VideoInfoJSONImpl implements VideoInfo {
+
+        private final VariantJSONImpl[] variants;
+        private final long[] aspectRatio;
+        private final long duration;
+
+        VideoInfoJSONImpl(JSONObject json) throws JSONException {
+            variants = VariantJSONImpl.fromJSONArray(json.getJSONArray("variants"));
+            final JSONArray aspectRatioJson = json.getJSONArray("aspect_ratio");
+            aspectRatio = new long[]{aspectRatioJson.getLong(0), aspectRatioJson.getLong(1)};
+            duration = json.getLong("duration_millis");
+        }
+
+        @Override
+        public Variant[] getVariants() {
+            return variants;
+        }
+
+        @Override
+        public long[] getAspectRatio() {
+            return aspectRatio;
+        }
+
+        @Override
+        public String toString() {
+            return "VideoInfoJSONImpl{" +
+                    "variants=" + Arrays.toString(variants) +
+                    ", aspectRatio=" + Arrays.toString(aspectRatio) +
+                    ", duration=" + duration +
+                    '}';
+        }
+
+        @Override
+        public long getDuration() {
+            return duration;
+        }
+
+        private static class VariantJSONImpl implements Variant {
+            private final String contentType;
+            private final String url;
+            private final long bitrate;
+
+            @Override
+            public String toString() {
+                return "VariantJSONImpl{" +
+                        "contentType='" + contentType + '\'' +
+                        ", url='" + url + '\'' +
+                        ", bitrate=" + bitrate +
+                        '}';
+            }
+
+            public VariantJSONImpl(JSONObject json) throws JSONException {
+                contentType = json.getString("content_type");
+                url = json.getString("url");
+                bitrate = json.optLong("bitrate", -1);
+            }
+
+            public static VariantJSONImpl[] fromJSONArray(JSONArray json) throws JSONException {
+                final VariantJSONImpl[] variant = new VariantJSONImpl[json.length()];
+                for (int i = 0, j = variant.length; i < j; i++) {
+                    variant[i] = new VariantJSONImpl(json.getJSONObject(i));
+                }
+                return variant;
+            }
+
+            @Override
+            public String getContentType() {
+                return contentType;
+            }
+
+            @Override
+            public String getUrl() {
+                return url;
+            }
+
+            @Override
+            public long getBitrate() {
+                return bitrate;
+            }
+        }
+    }
 }

@@ -53,7 +53,7 @@ import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -71,7 +71,7 @@ import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class CustomTabEditorActivity extends BaseSupportDialogActivity implements OnClickListener {
 
-    private ImageLoaderWrapper mImageLoader;
+    private MediaLoaderWrapper mImageLoader;
     private SharedPreferences mPreferences;
 
     private AccountsSpinnerAdapter mAccountsAdapter;

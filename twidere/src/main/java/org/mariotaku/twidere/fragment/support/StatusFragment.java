@@ -87,7 +87,7 @@ import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
@@ -453,7 +453,7 @@ public class StatusFragment extends BaseSupportFragment
         private final Context mContext;
         private final StatusFragment mFragment;
         private final LayoutInflater mInflater;
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
         private final ImageLoadingHandler mImageLoadingHandler;
 
         private final boolean mNameFirst, mNicknameOnly;
@@ -506,7 +506,7 @@ public class StatusFragment extends BaseSupportFragment
             return mFragment;
         }
 
-        public ImageLoaderWrapper getImageLoader() {
+        public MediaLoaderWrapper getImageLoader() {
             return mImageLoader;
         }
 
@@ -1110,7 +1110,7 @@ public class StatusFragment extends BaseSupportFragment
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();
             final Resources resources = context.getResources();
-            final ImageLoaderWrapper loader = adapter.getImageLoader();
+            final MediaLoaderWrapper loader = adapter.getImageLoader();
             final boolean nameFirst = adapter.isNameFirst();
             final boolean nicknameOnly = adapter.isNicknameOnly();
 

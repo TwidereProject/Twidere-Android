@@ -28,14 +28,14 @@ import android.widget.ImageView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 
 import java.util.Collection;
 
 public class MediaPreviewAdapter extends ArrayAdapter<String> implements Constants {
 
-	private final ImageLoaderWrapper mImageLoader;
+	private final MediaLoaderWrapper mImageLoader;
 	private final SharedPreferences mPreferences;
 	private final ImageLoadingHandler mImageLoadingHandler;
 

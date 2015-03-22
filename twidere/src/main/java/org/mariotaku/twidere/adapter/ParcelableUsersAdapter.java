@@ -28,7 +28,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserViewListHolder;
@@ -45,7 +45,7 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> implements IBaseCardAdapter {
 
-    private final ImageLoaderWrapper mProfileImageLoader;
+    private final MediaLoaderWrapper mProfileImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final Context mContext;
 

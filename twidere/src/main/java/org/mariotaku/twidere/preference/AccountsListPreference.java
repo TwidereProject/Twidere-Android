@@ -47,7 +47,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
@@ -100,7 +100,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         private final ParcelableAccount mAccount;
         private final SharedPreferences mSwitchPreference;
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
 
         private final String mSwitchKey;
         private final boolean mSwitchDefault;

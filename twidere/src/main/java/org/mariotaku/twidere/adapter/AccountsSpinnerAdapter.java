@@ -29,13 +29,13 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.DirectMessagesConversationFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
 import java.util.Collection;
 
 public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
 
-    private final ImageLoaderWrapper mImageLoader;
+    private final MediaLoaderWrapper mImageLoader;
     private final boolean mDisplayProfileImage;
 
     public AccountsSpinnerAdapter(final Context context) {

@@ -1,7 +1,6 @@
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
-apply plugin: 'aar-link-sources'
 apply from: rootProject.file('global.gradle')
 apply from: rootProject.file('signing.gradle')
 
@@ -63,7 +62,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'com.twitter:twitter-text:1.11.1'
-    aarLinkSources 'com.twitter:twitter-text:1.11.1:sources@jar'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'com.squareup:otto:1.3.6'
@@ -74,16 +72,15 @@ dependencies {
     compile 'com.pnikosis:materialish-progress:1.4'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.2'
-    aarLinkSources 'com.squareup.okhttp:okhttp:2.2.0:sources@jar'
+    compile 'com.github.mariotaku:MessageBubbleView:1.0'
+    compile 'com.github.mariotaku:DragSortListView:0.6.1'
+    compile 'com.github.mariotaku:SlidingMenu:1.3'
     googleCompile 'com.google.android.gms:play-services-maps:7.0.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.10'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
-    compile project(':SlidingMenu')
-    compile project(':DragSortListView')
-    compile project(':MessageBubbleView')
     compile project(':ColorPicker')
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])

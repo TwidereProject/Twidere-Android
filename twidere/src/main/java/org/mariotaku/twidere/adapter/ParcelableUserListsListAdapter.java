@@ -30,7 +30,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -47,7 +47,7 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
         OnClickListener {
 
     private final Context mContext;
-    private final ImageLoaderWrapper mImageLoader;
+    private final MediaLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final Locale mLocale;
 

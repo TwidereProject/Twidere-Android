@@ -34,7 +34,7 @@ import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -46,7 +46,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final ImageLoaderWrapper mImageLoader;
+    private final MediaLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final boolean mNicknameOnly;
     private boolean mLoadMoreIndicatorEnabled;
@@ -98,7 +98,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
 
-    public ImageLoaderWrapper getImageLoader() {
+    public MediaLoaderWrapper getImageLoader() {
         return mImageLoader;
     }
 

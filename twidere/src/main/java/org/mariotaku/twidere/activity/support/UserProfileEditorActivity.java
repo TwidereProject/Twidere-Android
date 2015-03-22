@@ -48,7 +48,7 @@ import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
@@ -79,7 +79,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     private static final int REQUEST_PICK_LINK_COLOR = 3;
     private static final int REQUEST_PICK_BACKGROUND_COLOR = 4;
 
-    private ImageLoaderWrapper mLazyImageLoader;
+    private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private TwidereAsyncTask<Void, Void, ?> mTask;
 

@@ -35,12 +35,12 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.Indices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.view.holder.AccountViewHolder;
 
 public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Constants, IBaseAdapter {
 
-    private final ImageLoaderWrapper mImageLoader;
+    private final MediaLoaderWrapper mImageLoader;
     private final SharedPreferences mPreferences;
 
     private boolean mDisplayProfileImage;
@@ -90,7 +90,7 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
-    public ImageLoaderWrapper getImageLoader() {
+    public MediaLoaderWrapper getImageLoader() {
         return mImageLoader;
     }
 

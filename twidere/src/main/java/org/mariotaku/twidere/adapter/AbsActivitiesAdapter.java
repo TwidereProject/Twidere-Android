@@ -39,7 +39,7 @@ import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -64,7 +64,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final ImageLoaderWrapper mImageLoader;
+    private final MediaLoaderWrapper mImageLoader;
     private final ImageLoadingHandler mLoadingHandler;
     private final AsyncTwitterWrapper mTwitterWrapper;
     private final int mCardBackgroundColor;
@@ -105,7 +105,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     public abstract void setData(Data data);
 
     @Override
-    public ImageLoaderWrapper getImageLoader() {
+    public MediaLoaderWrapper getImageLoader() {
         return mImageLoader;
     }
 

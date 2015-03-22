@@ -34,7 +34,7 @@ import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ColorUtils;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
@@ -73,7 +73,7 @@ public class MessageConversationViewHolder extends ViewHolder {
     public void displayMessage(Cursor cursor, CursorIndices indices) {
         final Context context = adapter.getContext();
         final TwidereLinkify linkify = adapter.getLinkify();
-        final ImageLoaderWrapper loader = adapter.getImageLoader();
+        final MediaLoaderWrapper loader = adapter.getImageLoader();
 
         final long accountId = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.message_timestamp);

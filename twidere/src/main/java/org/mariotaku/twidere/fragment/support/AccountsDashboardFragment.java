@@ -91,7 +91,7 @@ import org.mariotaku.twidere.menu.SupportAccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -133,7 +133,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private View mAccountProfileContainer;
 
     private Context mThemedContext;
-    private ImageLoaderWrapper mImageLoader;
+    private MediaLoaderWrapper mImageLoader;
     private SupportAccountActionProvider mAccountActionProvider;
     private boolean mSwitchAccountAnimationPlaying;
 
@@ -600,7 +600,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private static class AccountSelectorAdapter extends Adapter<AccountProfileImageViewHolder> {
 
         private final LayoutInflater mInflater;
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
         private final AccountsDashboardFragment mFragment;
         private ParcelableAccount[] mAccounts;
         private ParcelableAccount[] mInternalAccounts;

@@ -105,7 +105,7 @@ import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -114,7 +114,6 @@ import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -190,7 +189,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     private ShapedImageView mProfileImageView;
     private BadgeView mCountView;
     private View mAccountSelectorButton;
-    private ImageLoaderWrapper mImageLoader;
+    private MediaLoaderWrapper mImageLoader;
     private View mLocationContainer;
     private ActionIconView mLocationIcon;
     private TextView mLocationText;
@@ -1202,7 +1201,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         public void showAccount(AccountIconsAdapter adapter, ParcelableAccount account, boolean isSelected) {
             itemView.setAlpha(isSelected ? 1 : 0.33f);
-            final ImageLoaderWrapper loader = adapter.getImageLoader();
+            final MediaLoaderWrapper loader = adapter.getImageLoader();
             loader.displayProfileImage(iconView, account.profile_image_url);
             iconView.setBorderColor(account.color);
         }
@@ -1219,7 +1218,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
         private final ComposeActivity mActivity;
         private final LayoutInflater mInflater;
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
         private final LongSparseArray<Boolean> mSelection;
 
         private ParcelableAccount[] mAccounts;
@@ -1231,7 +1230,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             mSelection = new LongSparseArray<>();
         }
 
-        public ImageLoaderWrapper getImageLoader() {
+        public MediaLoaderWrapper getImageLoader() {
             return mImageLoader;
         }
 
@@ -1481,7 +1480,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     private static class MediaPreviewAdapter extends DraggableArrayAdapter<ParcelableMediaUpdate> {
 
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
 
         public MediaPreviewAdapter(final Context context) {
             super(context, R.layout.grid_item_media_editor);

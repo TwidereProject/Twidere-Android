@@ -12,9 +12,7 @@ include ':twidere.component.nyan'
 include ':twidere.extension.streaming'
 include ':twidere.extension.twitlonger'
 include ':twidere.extension.push.xiaomi'
-include ':SlidingMenu', ':DragSortListView', ':MessageBubbleView', ':ColorPicker'
+include ':SlidingMenu', ':ColorPicker'
 
 project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')
-project(':DragSortListView').projectDir = file('libraries/DragSortListView/library')
-project(':MessageBubbleView').projectDir = file('libraries/MessageBubbleView/library')
 project(':ColorPicker').projectDir = file('libraries/ColorPicker/library')

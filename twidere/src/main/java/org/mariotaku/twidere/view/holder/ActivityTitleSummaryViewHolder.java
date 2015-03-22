@@ -37,7 +37,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
@@ -156,7 +156,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
     }
 
     private void displayUserProfileImages(final ParcelableUser[] statuses) {
-        final ImageLoaderWrapper imageLoader = adapter.getImageLoader();
+        final MediaLoaderWrapper imageLoader = adapter.getImageLoader();
         if (statuses == null) {
             for (final ImageView view : profileImageViews) {
                 imageLoader.cancelDisplayTask(view);

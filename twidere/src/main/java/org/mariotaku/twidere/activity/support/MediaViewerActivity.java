@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
@@ -48,16 +49,20 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.loader.support.TileImageLoader;
 import org.mariotaku.twidere.loader.support.TileImageLoader.DownloadListener;
 import org.mariotaku.twidere.loader.support.TileImageLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.ParcelableMedia.VideoInfo.Variant;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.SaveImageTask;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.VideoLoader;
+import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
 import org.mariotaku.twidere.view.TouchImageView;
 import org.mariotaku.twidere.view.TouchImageView.ZoomListener;
 
@@ -178,6 +183,106 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         return getIntent().hasExtra(EXTRA_STATUS);
     }
 
+    public static final class VideoPageFragment extends BaseSupportFragment
+            implements VideoLoadingListener {
+
+        private static final String[] SUPPORTED_VIDEO_TYPES;
+
+        static {
+            SUPPORTED_VIDEO_TYPES = new String[]{"video/mp4"};
+        }
+
+        private WebView mWebView;
+        private VideoLoader mVideoLoader;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_media_page_video, container, false);
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            mVideoLoader = TwidereApplication.getInstance(getActivity()).getVideoLoader();
+            final String url = getBestVideoUrl(getMedia());
+            if (url != null) {
+//                mVideoLoader.loadVideo(url, this);
+                mWebView.loadUrl(url);
+            }
+        }
+
+        private String getBestVideoUrl(ParcelableMedia media) {
+            if (media == null || media.video_info == null) return null;
+            for (Variant variant : media.video_info.variants) {
+                if (ArrayUtils.contains(SUPPORTED_VIDEO_TYPES, variant.content_type)) {
+                    return variant.url;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+            super.onBaseViewCreated(view, savedInstanceState);
+            mWebView = (WebView) view.findViewById(R.id.web_view);
+        }
+
+        @Override
+        public void onVideoLoadingCancelled(String uri, VideoLoadingListener listener) {
+
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            mWebView.onResume();
+        }
+
+        @Override
+        public void onDestroyView() {
+            mWebView.destroy();
+            super.onDestroyView();
+        }
+
+        @Override
+        public void onPause() {
+            mWebView.onPause();
+            super.onPause();
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+//            if (mVideoView != null && mVideoView.isPlaying()) {
+//                mVideoView.pause();
+//            }
+        }
+
+        @Override
+        public void onVideoLoadingComplete(String uri, VideoLoadingListener listener, File file) {
+            mWebView.loadUrl(Uri.fromFile(file).toString());
+        }
+
+        @Override
+        public void onVideoLoadingFailed(String uri, VideoLoadingListener listener, Exception e) {
+        }
+
+        @Override
+        public void onVideoLoadingProgressUpdate(String uri, VideoLoadingListener listener, int current, int total) {
+
+        }
+
+        private ParcelableMedia getMedia() {
+            final Bundle args = getArguments();
+            return args.getParcelable(EXTRA_MEDIA);
+        }
+
+        @Override
+        public void onVideoLoadingStarted(String uri, VideoLoadingListener listener) {
+
+        }
+    }
+
     public static final class ImagePageFragment extends BaseSupportFragment
             implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener, ZoomListener {
 
@@ -205,9 +310,14 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             mProgressBar.setVisibility(View.VISIBLE);
             mProgressBar.setIndeterminate(true);
             invalidateOptionsMenu();
-            final ParcelableMedia media = args.getParcelable(EXTRA_MEDIA);
+            final ParcelableMedia media = getMedia();
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             return new TileImageLoader(getActivity(), this, accountId, Uri.parse(media.media_url));
+        }
+
+        private ParcelableMedia getMedia() {
+            final Bundle args = getArguments();
+            return args.getParcelable(EXTRA_MEDIA);
         }
 
         @Override
@@ -269,7 +379,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_media_page, container, false);
+            return inflater.inflate(R.layout.fragment_media_page_image, container, false);
         }
 
         @Override
@@ -345,11 +455,6 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                 intent.setData(Uri.parse(media.media_url));
             }
             startActivity(intent);
-        }
-
-        private ParcelableMedia getMedia() {
-            final Bundle args = getArguments();
-            return args.getParcelable(EXTRA_MEDIA);
         }
 
         @Override
@@ -464,10 +569,18 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public Fragment getItem(int position) {
+            final ParcelableMedia media = mMedia[position];
             final Bundle args = new Bundle();
             args.putLong(EXTRA_ACCOUNT_ID, mAccountId);
-            args.putParcelable(EXTRA_MEDIA, mMedia[position]);
-            return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
+            args.putParcelable(EXTRA_MEDIA, media);
+            switch (media.type) {
+                case ParcelableMedia.TYPE_VIDEO: {
+                    return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
+                }
+                default: {
+                    return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
+                }
+            }
         }
 
         public void setMedia(long accountId, ParcelableMedia[] media) {

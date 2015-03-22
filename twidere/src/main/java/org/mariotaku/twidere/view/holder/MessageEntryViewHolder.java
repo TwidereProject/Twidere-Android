@@ -32,7 +32,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShortTimeView;
@@ -66,7 +66,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
 
     public void displayMessage(Cursor cursor) {
         final Context context = adapter.getContext();
-        final ImageLoaderWrapper loader = adapter.getImageLoader();
+        final MediaLoaderWrapper loader = adapter.getImageLoader();
 
         final long accountId = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
         final long conversationId = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);

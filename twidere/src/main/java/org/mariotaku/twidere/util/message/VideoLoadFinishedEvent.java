@@ -17,25 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.library'
-apply from: rootProject.file('global.gradle')
+package org.mariotaku.twidere.util.message;
 
-android {
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    compile project(':twidere.component.twitter4j')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+/**
+ * Created by mariotaku on 15/3/23.
+ */
+public class VideoLoadFinishedEvent {
 }

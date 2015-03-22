@@ -70,7 +70,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -99,7 +99,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         LoaderCallbacks<SingleResponse<ParcelableUserList>>, DrawerCallback,
         SystemWindowsInsetsCallback, SupportFragmentCallback {
 
-    private ImageLoaderWrapper mProfileImageLoader;
+    private MediaLoaderWrapper mProfileImageLoader;
     private AsyncTwitterWrapper mTwitterWrapper;
 
     private ImageView mProfileImageView;

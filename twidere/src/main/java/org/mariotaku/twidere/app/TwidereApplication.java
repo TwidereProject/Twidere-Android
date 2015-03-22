@@ -46,12 +46,13 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
@@ -74,7 +75,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         OnSharedPreferenceChangeListener {
 
     private Handler mHandler;
-    private ImageLoaderWrapper mImageLoaderWrapper;
+    private MediaLoaderWrapper mMediaLoaderWrapper;
     private ImageLoader mImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private SharedPreferences mPreferences;
@@ -87,6 +88,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private HostAddressResolver mResolver;
     private SQLiteDatabase mDatabase;
     private Bus mMessageBus;
+    private VideoLoader mVideoLoader;
 
     public AsyncTaskManager getAsyncTaskManager() {
         if (mAsyncTaskManager != null) return mAsyncTaskManager;
@@ -137,9 +139,15 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mImageLoader = loader;
     }
 
-    public ImageLoaderWrapper getImageLoaderWrapper() {
-        if (mImageLoaderWrapper != null) return mImageLoaderWrapper;
-        return mImageLoaderWrapper = new ImageLoaderWrapper(getImageLoader());
+    public VideoLoader getVideoLoader() {
+        if (mVideoLoader != null) return mVideoLoader;
+        final VideoLoader loader = new VideoLoader(this);
+        return mVideoLoader = loader;
+    }
+
+    public MediaLoaderWrapper getImageLoaderWrapper() {
+        if (mMediaLoaderWrapper != null) return mMediaLoaderWrapper;
+        return mMediaLoaderWrapper = new MediaLoaderWrapper(getImageLoader(), getVideoLoader());
     }
 
     public static TwidereApplication getInstance(final Context context) {
@@ -215,8 +223,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onLowMemory() {
-        if (mImageLoaderWrapper != null) {
-            mImageLoaderWrapper.clearMemoryCache();
+        if (mMediaLoaderWrapper != null) {
+            mMediaLoaderWrapper.clearMemoryCache();
         }
         super.onLowMemory();
     }

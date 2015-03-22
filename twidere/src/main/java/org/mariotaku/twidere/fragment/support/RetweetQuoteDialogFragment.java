@@ -35,7 +35,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -83,7 +83,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final Context context = builder.getContext();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final ImageLoaderWrapper loader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        final MediaLoaderWrapper loader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final LayoutInflater inflater = LayoutInflater.from(context);

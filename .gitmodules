@@ -1,12 +1,6 @@
 [submodule "libraries/SlidingMenu"]
 	path = libraries/SlidingMenu
 	url = https://github.com/mariotaku/SlidingMenu-Gradle
-[submodule "libraries/DragSortListView"]
-	path = libraries/DragSortListView
-	url = https://github.com/mariotaku/DragSortListView-Gradle
-[submodule "libraries/MessageBubbleView"]
-	path = libraries/MessageBubbleView
-	url = https://github.com/mariotaku/MessageBubbleView.git
 [submodule "libraries/ColorPicker"]
 	path = libraries/ColorPicker
 	url = https://github.com/uucky/ColorPicker-Android.git

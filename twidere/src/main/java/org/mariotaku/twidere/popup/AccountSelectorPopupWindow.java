@@ -40,7 +40,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.ThemedViewFactory;
 import org.mariotaku.twidere.util.Utils;
@@ -146,7 +146,7 @@ public class AccountSelectorPopupWindow {
 
     private static class AccountsGridAdapter extends ArrayAdapter<ParcelableAccount> {
 
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
 
         public AccountsGridAdapter(Context context) {
             super(context, R.layout.grid_item_selector_account);

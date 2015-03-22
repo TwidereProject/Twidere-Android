@@ -31,7 +31,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.Utils;
@@ -71,7 +71,7 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
         }
         final TwidereApplication application = getApplication();
         final FragmentActivity activity = getActivity();
-        final ImageLoaderWrapper loader = application.getImageLoaderWrapper();
+        final MediaLoaderWrapper loader = application.getImageLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,

@@ -68,7 +68,7 @@ import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener;
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener.DismissCallbacks;
@@ -436,7 +436,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         public void bindView(SuggestionsAdapter adapter, View view, int position) {
             final ParcelableUser user = mUser;
             final Context context = adapter.getContext();
-            final ImageLoaderWrapper loader = adapter.getImageLoader();
+            final MediaLoaderWrapper loader = adapter.getImageLoader();
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
@@ -480,7 +480,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         @Override
         public void bindView(SuggestionsAdapter adapter, View view, int position) {
-            final ImageLoaderWrapper loader = adapter.getImageLoader();
+            final MediaLoaderWrapper loader = adapter.getImageLoader();
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
@@ -496,7 +496,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         private final Context mContext;
         private final LayoutInflater mInflater;
-        private final ImageLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mImageLoader;
         private final boolean mNicknameOnly;
         private List<SuggestionItem> mData;
 
@@ -542,7 +542,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             return view;
         }
 
-        public ImageLoaderWrapper getImageLoader() {
+        public MediaLoaderWrapper getImageLoader() {
             return mImageLoader;
         }
 

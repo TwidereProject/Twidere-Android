@@ -86,7 +86,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameUtils;
@@ -145,7 +145,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     private ParcelableAccount mAccount;
     private ParcelableUser mRecipient;
 
-    private ImageLoaderWrapper mImageLoader;
+    private MediaLoaderWrapper mImageLoader;
     private IColorLabelView mProfileImageContainer;
 
     private LoaderCallbacks<List<ParcelableUser>> mSearchLoadersCallback = new LoaderCallbacks<List<ParcelableUser>>() {

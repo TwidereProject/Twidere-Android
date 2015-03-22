@@ -22,11 +22,11 @@ package org.mariotaku.twidere.adapter.iface;
 import android.widget.ListAdapter;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.ImageLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
 public interface IBaseAdapter extends Constants, ListAdapter {
 
-	public ImageLoaderWrapper getImageLoader();
+	public MediaLoaderWrapper getImageLoader();
 
     public int getLinkHighlightOption();
 
