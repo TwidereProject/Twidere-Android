@@ -27,10 +27,11 @@ import org.mariotaku.twidere.Constants;
 
 public class PositionManager implements Constants {
 
-	private final SharedPreferences mPreferences;
+	private final SharedPreferencesWrapper mPreferences;
 
 	public PositionManager(final Context context) {
-		mPreferences = context.getSharedPreferences(TIMELINE_POSITIONS_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences = SharedPreferencesWrapper.getInstance(context,
+                TIMELINE_POSITIONS_PREFERENCES_NAME, Context.MODE_PRIVATE);
 	}
 
 	public long getPosition(final String key) {

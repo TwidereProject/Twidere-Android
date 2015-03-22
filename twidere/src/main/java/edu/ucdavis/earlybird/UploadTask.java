@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.Settings.Secure;
 
+import org.mariotaku.twidere.util.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,7 +27,7 @@ public class UploadTask extends AsyncTask<Void, Void, Void> {
     private final String device_id;
     private final Context context;
 
-    private final HttpClientWrapper client = new HttpClientWrapper();
+    private final HttpClientWrapper client;
 
     private static final String PROFILE_SERVER_URL = "http://weik.metaisle.com/profiles";
 
@@ -34,6 +36,7 @@ public class UploadTask extends AsyncTask<Void, Void, Void> {
 
     public UploadTask(final Context context) {
         this.context = context;
+        this.client = Utils.getDefaultHttpClient(context);
         device_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
     }
 

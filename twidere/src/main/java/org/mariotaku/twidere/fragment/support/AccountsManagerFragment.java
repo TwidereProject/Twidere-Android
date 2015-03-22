@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -98,9 +97,9 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
                     return;
                 final ContentValues values = new ContentValues();
                 values.put(Accounts.COLOR, data.getIntExtra(EXTRA_COLOR, Color.WHITE));
-                final String where = Accounts.ACCOUNT_ID + " = " + mSelectedAccount.account_id;
+                final Expression where = Expression.equals(Accounts.ACCOUNT_ID, mSelectedAccount.account_id);
                 final ContentResolver cr = getContentResolver();
-                cr.update(Accounts.CONTENT_URI, values, where, null);
+                cr.update(Accounts.CONTENT_URI, values, where.getSQL(), null);
                 return;
             }
         }
@@ -120,12 +119,6 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         mSelectedAccount = mAdapter.getAccount(info.position);
         if (mSelectedAccount == null) return false;
         switch (item.getItemId()) {
-            case MENU_SET_AS_DEFAULT: {
-                final Editor editor = mPreferences.edit();
-                editor.putLong(KEY_DEFAULT_ACCOUNT_ID, mSelectedAccount.account_id);
-                editor.apply();
-                return true;
-            }
             case MENU_SET_COLOR: {
                 final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
                 intent.putExtra(EXTRA_COLOR, mSelectedAccount.color);
@@ -203,8 +196,6 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         menu.setHeaderTitle(account.name);
         final MenuInflater inflater = new MenuInflater(v.getContext());
         inflater.inflate(R.menu.action_manager_account, menu);
-        final boolean isDefault = Utils.getDefaultAccountId(getActivity()) == account.account_id;
-        Utils.setMenuItemAvailability(menu, MENU_SET_AS_DEFAULT, !isDefault);
     }
 
     @Override

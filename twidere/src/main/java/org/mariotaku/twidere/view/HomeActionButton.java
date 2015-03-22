@@ -22,13 +22,16 @@ package org.mariotaku.twidere.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Property;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,13 +42,33 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.accessor.ViewAccessor.OutlineCompat;
 import org.mariotaku.twidere.util.accessor.ViewAccessor.ViewOutlineProviderCompat;
-import org.mariotaku.twidere.view.helper.PressElevateViewHelper;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
+
+import me.uucky.colorpicker.internal.EffectViewHelper;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class HomeActionButton extends FrameLayout implements IHomeActionButton {
 
-    private final PressElevateViewHelper mHelper;
+    private static class PressElevationProperty extends Property<View, Float> {
+        private final float mElevation;
+
+        public PressElevationProperty(float elevation) {
+            super(Float.TYPE, null);
+            mElevation = elevation;
+        }
+
+        @Override
+        public void set(View object, Float value) {
+            ViewCompat.setTranslationZ(object, mElevation * value);
+        }
+
+        @Override
+        public Float get(View object) {
+            return ViewCompat.getTranslationZ(object) / mElevation;
+        }
+    }
+
+    private final EffectViewHelper mHelper;
     private final ImageView mIconView;
     private final ProgressBar mProgressBar;
 
@@ -59,7 +82,9 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
 
     public HomeActionButton(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mHelper = new PressElevateViewHelper(this);
+        final Resources resources = context.getResources();
+        final float elevation = resources.getDisplayMetrics().density * 4;
+        mHelper = new EffectViewHelper(this, new PressElevationProperty(elevation), 200);
         inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions, this);
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
@@ -112,11 +137,8 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
 
     @Override
     public void setPressed(boolean pressed) {
-        final boolean oldState = mHelper.getState();
         super.setPressed(pressed);
-        final boolean state = mHelper.getState();
-        if (oldState == state) return;
-        mHelper.updateButtonState();
+        mHelper.setState(pressed);
     }
 
     private static class HomeActionButtonOutlineProvider extends ViewOutlineProviderCompat {

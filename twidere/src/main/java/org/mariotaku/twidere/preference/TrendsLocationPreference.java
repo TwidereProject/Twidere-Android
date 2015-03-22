@@ -81,7 +81,7 @@ public class TrendsLocationPreference extends Preference implements Constants, O
 		final Location item = mAdapter.getItem(which);
 		if (item != null) {
 			editor.putInt(KEY_LOCAL_TRENDS_WOEID, item.getWoeid());
-			editor.commit();
+			editor.apply();
 		}
 		if (mDialog != null && mDialog.isShowing()) {
 			mDialog.dismiss();

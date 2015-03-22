@@ -733,5 +733,8 @@
     <string name="no_tab">No tab</string>
     <string name="user_protected_summary">You need to send follow request to this protected user to see tweets</string>
     <string name="no_account">No account</string>
+    <string name="permission_description_shorten_status">Application can shorten tweet for Twidere, so it can access your tweet to send.</string>
+    <string name="permission_description_upload_media">Application can upload media for Twidere, so it can access media in your tweet to send.</string>
+    <string name="permission_description_sync_timeline">Application can sync read position for Twidere, so it can access your read position.</string>
 
 </resources>
