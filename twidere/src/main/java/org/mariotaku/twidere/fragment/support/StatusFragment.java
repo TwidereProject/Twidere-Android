@@ -111,7 +111,7 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.tsinghua.spice.Utilies.TypeMapingUtil;
+import edu.tsinghua.spice.Utilies.TypeMappingUtil;
 import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
@@ -312,9 +312,9 @@ public class StatusFragment extends BaseSupportFragment
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media);
         //spice
         SpiceProfilingUtil.log(getActivity(),
-                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
         SpiceProfilingUtil.profile(getActivity(), accountId,
-                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMapingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
         //end
     }
 
@@ -390,22 +390,22 @@ public class StatusFragment extends BaseSupportFragment
                     + "," + status.text_plain.length() + "," + status.timestamp);
         } else {
             for (final ParcelableMedia spiceMedia : status.media) {
-                if (TypeMapingUtil.getMediaType(spiceMedia.type).equals("image")) {
+                if (TypeMappingUtil.getMediaType(spiceMedia.type).equals("image")) {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
                                     + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
                                     + status.timestamp);
                 } else {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMapingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
                 }
             }
         }

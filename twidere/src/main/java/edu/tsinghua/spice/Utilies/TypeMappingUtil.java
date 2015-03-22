@@ -27,13 +27,13 @@ import org.mariotaku.twidere.util.TwidereLinkify;
  */
 
 
-public class TypeMapingUtil {
+public class TypeMappingUtil {
 
-    public static String getLinkType (int type) {
+    public static String getLinkType(int type) {
         String linkType = "";
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION:
-                linkType =  "mention";
+                linkType = "mention";
                 break;
             case TwidereLinkify.LINK_TYPE_CASHTAG:
                 linkType = "cashTag";
@@ -61,11 +61,14 @@ public class TypeMapingUtil {
     }
 
 
-    public static String getMediaType (int type) {
+    public static String getMediaType(int type) {
         String mediaType = "";
         switch (type) {
             case ParcelableMedia.TYPE_IMAGE:
-                mediaType =  "image";
+                mediaType = "image";
+                break;
+            case ParcelableMedia.TYPE_VIDEO:
+                mediaType = "video";
                 break;
             default:
                 mediaType = "unknown";
