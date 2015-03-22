@@ -633,11 +633,9 @@ public class StatusFragment extends BaseSupportFragment
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
             decoration.setDecorationStart(0);
             if (mReplies != null) {
-//                decoration.setDecorationEndOffset(2);
-                decoration.setDecorationEnd(getItemCount() - 2);
+                decoration.setDecorationEndOffset(2);
             } else {
-//                decoration.setDecorationEndOffset(3);
-                decoration.setDecorationEnd(getItemCount() - 3);
+                decoration.setDecorationEndOffset(3);
             }
             mFragment.mRecyclerView.invalidateItemDecorations();
         }

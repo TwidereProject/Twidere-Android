@@ -94,9 +94,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
-            final int childPos = parent.getChildPosition(child);
+            final int childPos = parent.getChildAdapterPosition(child);
             final int start = getDecorationStart(), end = getDecorationEnd(parent);
-            if (start >= 0 && end >= 0 && (childPos < start || childPos > end)) continue;
+            if (start >= 0 && childPos < start || end >= 0 && childPos > end) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int top = child.getBottom() + params.bottomMargin +
@@ -115,9 +115,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
-            final int childPos = parent.getChildPosition(child);
+            final int childPos = parent.getChildAdapterPosition(child);
             final int start = getDecorationStart(), end = getDecorationEnd(parent);
-            if (start >= 0 && end >= 0 && (childPos < start || childPos > end)) continue;
+            if (start >= 0 && childPos < start || end >= 0 && childPos > end) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int left = child.getRight() + params.rightMargin +
@@ -131,9 +131,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-        final int childPos = parent.getChildPosition(view);
+        final int childPos = parent.getChildAdapterPosition(view);
         final int start = getDecorationStart(), end = getDecorationEnd(parent);
-        if (start >= 0 && end >= 0 && childPos < start && childPos > end) {
+        if (start >= 0 && childPos < start || end >= 0 && childPos > end) {
             outRect.setEmpty();
             return;
         }
