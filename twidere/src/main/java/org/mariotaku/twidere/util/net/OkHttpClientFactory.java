@@ -21,9 +21,6 @@ package org.mariotaku.twidere.util.net;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.util.net.OkHttpClientImpl;
-
 import twitter4j.http.HttpClient;
 import twitter4j.http.HttpClientConfiguration;
 import twitter4j.http.HttpClientFactory;

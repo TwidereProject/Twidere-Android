@@ -1748,21 +1748,15 @@ public final class Utils implements Constants, TwitterConstants {
         return context.getResources().getInteger(R.integer.default_text_size);
     }
 
-    public static Twitter getDefaultTwitterInstance(final Context context, final boolean include_entities) {
+    public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
         if (context == null) return null;
-        return getDefaultTwitterInstance(context, include_entities, true, true);
+        return getDefaultTwitterInstance(context, includeEntities, true);
     }
 
     public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
                                                     final boolean includeRetweets) {
         if (context == null) return null;
-        return getDefaultTwitterInstance(context, includeEntities, includeRetweets, !MIUIUtils.isMIUI());
-    }
-
-    public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
-                                                    final boolean includeRetweets, final boolean apacheHttp) {
-        if (context == null) return null;
-        return getTwitterInstance(context, getDefaultAccountId(context), includeEntities, includeRetweets, apacheHttp);
+        return getTwitterInstance(context, getDefaultAccountId(context), includeEntities, includeRetweets);
     }
 
     public static String getErrorMessage(final Context context, final CharSequence message) {
@@ -2510,19 +2504,14 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static Twitter getTwitterInstance(final Context context, final long accountId,
                                              final boolean includeEntities) {
-        return getTwitterInstance(context, accountId, includeEntities, true, !MIUIUtils.isMIUI());
+        return getTwitterInstance(context, accountId, includeEntities, true);
     }
 
-    @Nullable
-    public static Twitter getTwitterInstance(final Context context, final long accountId,
-                                             final boolean includeEntities, final boolean includeRetweets) {
-        return getTwitterInstance(context, accountId, includeEntities, includeRetweets, !MIUIUtils.isMIUI());
-    }
 
     @Nullable
     public static Twitter getTwitterInstance(final Context context, final long accountId,
                                              final boolean includeEntities,
-                                             final boolean includeRetweets, final boolean apacheHttp) {
+                                             final boolean includeRetweets) {
         if (context == null) return null;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -2532,94 +2521,85 @@ public final class Utils implements Constants, TwitterConstants {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
         // Here I use old consumer key/secret because it's default key for older
         // versions
-        final String where = Expression.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
-        final Cursor c = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, where, null, null);
-        if (c == null) return null;
-        try {
-            if (!c.moveToFirst()) return null;
-            final ConfigurationBuilder cb = new ConfigurationBuilder();
-            cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
-            if (apacheHttp) {
-                cb.setHttpClientFactory(new OkHttpClientFactory(context));
-            }
-            cb.setHttpConnectionTimeout(connection_timeout);
-            cb.setGZIPEnabled(enableGzip);
-            cb.setIgnoreSSLError(ignoreSslError);
-            cb.setIncludeCards(true);
-            cb.setCardsPlatform("Android-12");
+        final ParcelableCredentials credentials = ParcelableCredentials.getCredentials(context, accountId);
+        if (credentials == null) return null;
+        final ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
+        cb.setHttpClientFactory(new OkHttpClientFactory(context));
+        cb.setHttpConnectionTimeout(connection_timeout);
+        cb.setGZIPEnabled(enableGzip);
+        cb.setIgnoreSSLError(ignoreSslError);
+        cb.setIncludeCards(true);
+        cb.setCardsPlatform("Android-12");
 //            cb.setModelVersion(7);
-            if (enableProxy) {
-                final String proxy_host = prefs.getString(KEY_PROXY_HOST, null);
-                final int proxy_port = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
-                if (!isEmpty(proxy_host) && proxy_port > 0) {
-                    cb.setHttpProxyHost(proxy_host);
-                    cb.setHttpProxyPort(proxy_port);
-                }
+        if (enableProxy) {
+            final String proxy_host = prefs.getString(KEY_PROXY_HOST, null);
+            final int proxy_port = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
+            if (!isEmpty(proxy_host) && proxy_port > 0) {
+                cb.setHttpProxyHost(proxy_host);
+                cb.setHttpProxyPort(proxy_port);
             }
-            final String prefConsumerKey = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-            final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
-            final String apiUrlFormat = c.getString(c.getColumnIndex(Accounts.API_URL_FORMAT));
-            final String consumerKey = trim(c.getString(c.getColumnIndex(Accounts.CONSUMER_KEY)));
-            final String consumerSecret = trim(c.getString(c.getColumnIndex(Accounts.CONSUMER_SECRET)));
-            final boolean sameOAuthSigningUrl = c.getInt(c.getColumnIndex(Accounts.SAME_OAUTH_SIGNING_URL)) == 1;
-            final boolean noVersionSuffix = c.getInt(c.getColumnIndex(Accounts.NO_VERSION_SUFFIX)) == 1;
-            if (!isEmpty(apiUrlFormat)) {
-                final String versionSuffix = noVersionSuffix ? null : "/1.1/";
-                cb.setRestBaseURL(getApiUrl(apiUrlFormat, "api", versionSuffix));
-                cb.setOAuthBaseURL(getApiUrl(apiUrlFormat, "api", "/oauth/"));
-                cb.setUploadBaseURL(getApiUrl(apiUrlFormat, "upload", versionSuffix));
-                if (!sameOAuthSigningUrl) {
-                    cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
-                    cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
-                    cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
-                }
+        }
+        final String prefConsumerKey = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
+        final String apiUrlFormat = credentials.api_url_format;
+        final String consumerKey = trim(credentials.consumer_key);
+        final String consumerSecret = trim(credentials.consumer_secret);
+        final boolean sameOAuthSigningUrl = credentials.same_oauth_signing_url;
+        final boolean noVersionSuffix = credentials.no_version_suffix;
+        if (!isEmpty(apiUrlFormat)) {
+            final String versionSuffix = noVersionSuffix ? null : "/1.1/";
+            cb.setRestBaseURL(getApiUrl(apiUrlFormat, "api", versionSuffix));
+            cb.setOAuthBaseURL(getApiUrl(apiUrlFormat, "api", "/oauth/"));
+            cb.setUploadBaseURL(getApiUrl(apiUrlFormat, "upload", versionSuffix));
+            if (!sameOAuthSigningUrl) {
+                cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
+                cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
+                cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
             }
-            if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
-                setMockOfficialUserAgent(context, cb);
-            } else {
-                setUserAgent(context, cb);
-            }
+        }
+        if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
+            setMockOfficialUserAgent(context, cb);
+        } else {
+            setUserAgent(context, cb);
+        }
 
-            cb.setIncludeEntitiesEnabled(includeEntities);
-            cb.setIncludeRTsEnabled(includeRetweets);
-            cb.setIncludeReplyCountEnabled(true);
-            cb.setIncludeDescendentReplyCountEnabled(true);
-            switch (c.getInt(c.getColumnIndexOrThrow(Accounts.AUTH_TYPE))) {
-                case Accounts.AUTH_TYPE_OAUTH:
-                case Accounts.AUTH_TYPE_XAUTH: {
-                    if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
-                        cb.setOAuthConsumerKey(consumerKey);
-                        cb.setOAuthConsumerSecret(consumerSecret);
-                    } else if (!isEmpty(prefConsumerKey) && !isEmpty(prefConsumerSecret)) {
-                        cb.setOAuthConsumerKey(prefConsumerKey);
-                        cb.setOAuthConsumerSecret(prefConsumerSecret);
-                    } else {
-                        cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
-                        cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
-                    }
-                    final String token = c.getString(c.getColumnIndexOrThrow(Accounts.OAUTH_TOKEN));
-                    final String tokenSecret = c.getString(c.getColumnIndexOrThrow(Accounts.OAUTH_TOKEN_SECRET));
-                    if (isEmpty(token) || isEmpty(tokenSecret)) return null;
-                    return new TwitterFactory(cb.build()).getInstance(new AccessToken(token, tokenSecret));
+        cb.setIncludeEntitiesEnabled(includeEntities);
+        cb.setIncludeRTsEnabled(includeRetweets);
+        cb.setIncludeReplyCountEnabled(true);
+        cb.setIncludeDescendentReplyCountEnabled(true);
+        switch (credentials.auth_type) {
+            case Accounts.AUTH_TYPE_OAUTH:
+            case Accounts.AUTH_TYPE_XAUTH: {
+                if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
+                    cb.setOAuthConsumerKey(consumerKey);
+                    cb.setOAuthConsumerSecret(consumerSecret);
+                } else if (!isEmpty(prefConsumerKey) && !isEmpty(prefConsumerSecret)) {
+                    cb.setOAuthConsumerKey(prefConsumerKey);
+                    cb.setOAuthConsumerSecret(prefConsumerSecret);
+                } else {
+                    cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
+                    cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
                 }
-                case Accounts.AUTH_TYPE_BASIC: {
-                    final String screenName = c.getString(c.getColumnIndexOrThrow(Accounts.SCREEN_NAME));
-                    final String username = c.getString(c.getColumnIndexOrThrow(Accounts.BASIC_AUTH_USERNAME));
-                    final String loginName = username != null ? username : screenName;
-                    final String password = c.getString(c.getColumnIndexOrThrow(Accounts.BASIC_AUTH_PASSWORD));
-                    if (isEmpty(loginName) || isEmpty(password)) return null;
-                    return new TwitterFactory(cb.build()).getInstance(new BasicAuthorization(loginName, password));
-                }
-                case Accounts.AUTH_TYPE_TWIP_O_MODE: {
-                    return new TwitterFactory(cb.build()).getInstance(new TwipOModeAuthorization());
-                }
-                default: {
-                    return null;
-                }
+                final String token = credentials.oauth_token;
+                final String tokenSecret = credentials.oauth_token_secret;
+                if (isEmpty(token) || isEmpty(tokenSecret)) return null;
+                return new TwitterFactory(cb.build()).getInstance(new AccessToken(token, tokenSecret));
             }
-        } finally {
-            c.close();
+            case Accounts.AUTH_TYPE_BASIC: {
+                final String screenName = credentials.screen_name;
+                final String username = credentials.basic_auth_username;
+                final String loginName = username != null ? username : screenName;
+                final String password = credentials.basic_auth_password;
+                if (isEmpty(loginName) || isEmpty(password)) return null;
+                return new TwitterFactory(cb.build()).getInstance(new BasicAuthorization(loginName, password));
+            }
+            case Accounts.AUTH_TYPE_TWIP_O_MODE: {
+                return new TwitterFactory(cb.build()).getInstance(new TwipOModeAuthorization());
+            }
+            default: {
+                return null;
+            }
         }
     }
 

@@ -419,17 +419,29 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         return mThemedContext = new ContextThemeWrapper(context, themeResource);
     }
 
+    private void getLocationOnScreen(View view, RectF rectF) {
+        final int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        rectF.set(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
+    }
+
     private void onAccountSelected(AccountProfileImageViewHolder holder, final ParcelableAccount account) {
         if (mSwitchAccountAnimationPlaying) return;
         final ImageView snapshotView = mFloatingProfileImageSnapshotView;
         final ShapedImageView profileImageView = mAccountProfileImageView;
         final ShapedImageView clickedImageView = holder.getIconView();
+
+        // Reset snapshot view position
+        snapshotView.setPivotX(0);
+        snapshotView.setPivotY(0);
+        snapshotView.setTranslationX(0);
+        snapshotView.setTranslationY(0);
+
         final Matrix matrix = new Matrix();
-        final Rect tempRect = new Rect();
-        clickedImageView.getGlobalVisibleRect(tempRect);
-        final RectF sourceBounds = new RectF(tempRect);
-        profileImageView.getGlobalVisibleRect(tempRect);
-        final RectF destBounds = new RectF(tempRect);
+        final RectF sourceBounds = new RectF(), destBounds = new RectF(), snapshotBounds = new RectF();
+        getLocationOnScreen(clickedImageView, sourceBounds);
+        getLocationOnScreen(profileImageView, destBounds);
+        getLocationOnScreen(snapshotView, snapshotBounds);
         final float finalScale = destBounds.width() / sourceBounds.width();
         final Bitmap snapshotBitmap = TransitionUtils.createViewBitmap(clickedImageView, matrix,
                 new RectF(0, 0, sourceBounds.width(), sourceBounds.height()));
@@ -439,12 +451,10 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         snapshotView.setLayoutParams(lp);
         // Copied from MaterialNavigationDrawer: https://github.com/madcyph3r/AdvancedMaterialDrawer/
         AnimatorSet set = new AnimatorSet();
-        snapshotView.setPivotX(0);
-        snapshotView.setPivotY(0);
-        snapshotView.setX(sourceBounds.left);
-        snapshotView.setY(sourceBounds.top);
-        set.play(ObjectAnimator.ofFloat(snapshotView, View.X, sourceBounds.left, destBounds.left))
-                .with(ObjectAnimator.ofFloat(snapshotView, View.Y, sourceBounds.top, destBounds.top))
+        set.play(ObjectAnimator.ofFloat(snapshotView, View.TRANSLATION_X,
+                sourceBounds.left - snapshotBounds.left, destBounds.left - snapshotBounds.left))
+                .with(ObjectAnimator.ofFloat(snapshotView, View.TRANSLATION_Y,
+                        sourceBounds.top - snapshotBounds.top, destBounds.top - snapshotBounds.top))
                 .with(ObjectAnimator.ofFloat(snapshotView, View.SCALE_X, 1, finalScale))
                 .with(ObjectAnimator.ofFloat(snapshotView, View.SCALE_Y, 1, finalScale))
                 .with(ObjectAnimator.ofFloat(profileImageView, View.ALPHA, 1, 0))

@@ -150,15 +150,9 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
                 if (record instanceof ARecord) {
                     final InetAddress ipv4Addr = ((ARecord) record).getAddress();
                     resolvedAddresses.add(InetAddress.getByAddress(originalHost, ipv4Addr.getAddress()));
-//                    if (ipv4Addr.isReachable(300)) {
-//                        hostAddr = ipv4Addr.getHostAddress();
-//                    }
                 } else if (record instanceof AAAARecord) {
                     final InetAddress ipv6Addr = ((AAAARecord) record).getAddress();
                     resolvedAddresses.add(InetAddress.getByAddress(originalHost, ipv6Addr.getAddress()));
-//                    if (ipv6Addr.isReachable(300)) {
-//                        hostAddr = ipv6Addr.getHostAddress();
-//                    }
                 }
             }
             if (!resolvedAddresses.isEmpty()) {
@@ -179,7 +173,9 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
         if (Utils.isDebugBuild()) {
             Log.w(RESOLVER_LOGTAG, "Resolve address " + host + " failed, using original host");
         }
-        return InetAddress.getAllByName(host);
+        final InetAddress[] defaultAddresses = InetAddress.getAllByName(host);
+        mHostCache.put(host, defaultAddresses);
+        return defaultAddresses;
     }
 
     private InetAddress[] fromAddressString(String host, String address) throws UnknownHostException {
