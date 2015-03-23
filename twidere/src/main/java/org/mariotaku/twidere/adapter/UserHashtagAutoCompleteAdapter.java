@@ -115,7 +115,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
                 final String profile_image_url_string = cursor.getString(mProfileImageUrlIdx);
                 mProfileImageLoader.displayProfileImage(icon, profile_image_url_string);
             } else {
-                icon.setImageResource(R.drawable.ic_profile_image_default);
+//                icon.setImageResource(R.drawable.ic_profile_image_default);
             }
         } else {
             icon.setImageResource(R.drawable.ic_action_hashtag);

@@ -131,7 +131,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         @Override
         public void onLoadingCancelled(final String imageUri, final View view) {
-            setIcon(R.drawable.ic_profile_image_default);
+//            setIcon(R.drawable.ic_profile_image_default);
         }
 
         @Override
@@ -142,12 +142,12 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         @Override
         public void onLoadingFailed(final String imageUri, final View view, final FailReason failReason) {
-            setIcon(R.drawable.ic_profile_image_default);
+//            setIcon(R.drawable.ic_profile_image_default);
         }
 
         @Override
         public void onLoadingStarted(final String imageUri, final View view) {
-            setIcon(R.drawable.ic_profile_image_default);
+//            setIcon(R.drawable.ic_profile_image_default);
         }
 
         @Override
@@ -160,7 +160,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             super.onAttachedToHierarchy(preferenceManager);
             setTitle(mAccount.name);
             setSummary(String.format("@%s", mAccount.screen_name));
-            setIcon(R.drawable.ic_profile_image_default);
+//            setIcon(R.drawable.ic_profile_image_default);
             mImageLoader.loadProfileImage(mAccount.profile_image_url, this);
         }
 

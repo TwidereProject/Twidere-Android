@@ -52,8 +52,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"
-            tools:src="@drawable/ic_profile_image_default"/>
+            android:contentDescription="@string/profile_image"/>
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_1"
@@ -61,8 +60,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"
-            tools:src="@drawable/ic_profile_image_default"/>
+            android:contentDescription="@string/profile_image"/>
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_2"
@@ -70,8 +68,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"
-            tools:src="@drawable/ic_profile_image_default"/>
+            android:contentDescription="@string/profile_image"/>
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_3"
@@ -79,8 +76,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"
-            tools:src="@drawable/ic_profile_image_default"/>
+            android:contentDescription="@string/profile_image"/>
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_4"
@@ -88,8 +84,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"
-            tools:src="@drawable/ic_profile_image_default"/>
+            android:contentDescription="@string/profile_image"/>
 
         <org.mariotaku.twidere.view.themed.ThemedTextView
             android:id="@+id/activity_profile_image_more_number"

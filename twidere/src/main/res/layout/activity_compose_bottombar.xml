@@ -29,7 +29,7 @@
     android:orientation="horizontal"
     android:showDividers="middle"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    >
 
     <LinearLayout
         android:layout_width="0dp"
@@ -53,8 +53,7 @@
                 android:layout_gravity="center"
                 app:sivBackgroundColor="?android:colorBackground"
                 app:sivBorder="true"
-                app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
-                tools:src="@drawable/ic_profile_image_default"/>
+                app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"/>
 
             <org.mariotaku.twidere.view.BadgeView
                 android:id="@+id/accounts_count"

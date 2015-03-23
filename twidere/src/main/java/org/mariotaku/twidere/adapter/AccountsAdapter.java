@@ -72,7 +72,7 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
             mImageLoader.displayProfileImage(holder.profile_image, cursor.getString(mIndices.profile_image_url));
         } else {
             mImageLoader.cancelDisplayTask(holder.profile_image);
-            holder.profile_image.setImageResource(R.drawable.ic_profile_image_default);
+//            holder.profile_image.setImageResource(R.drawable.ic_profile_image_default);
         }
         final boolean isMultipleChoice = mChoiceMode == ListView.CHOICE_MODE_MULTIPLE
                 || mChoiceMode == ListView.CHOICE_MODE_MULTIPLE_MODAL;

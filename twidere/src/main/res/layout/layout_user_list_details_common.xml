@@ -63,7 +63,6 @@
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/profile_image"
             style="?profileImageStyle"
-            tools:src="@drawable/ic_profile_image_default"
             android:layout_width="@dimen/icon_size_card_details"
             android:layout_height="@dimen/icon_size_card_details"
             android:layout_weight="0"

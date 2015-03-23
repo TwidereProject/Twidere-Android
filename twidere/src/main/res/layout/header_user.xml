@@ -117,8 +117,7 @@
         android:layout_height="@dimen/icon_size_user_profile"
         android:layout_alignBottom="@id/profile_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
-        android:contentDescription="@string/profile_image"
-        android:src="@drawable/ic_profile_image_default"/>
+        android:contentDescription="@string/profile_image"/>
 
     <org.mariotaku.twidere.view.BoundsImageView
         android:id="@+id/profile_type"

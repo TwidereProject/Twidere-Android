@@ -73,8 +73,7 @@
             android:contentDescription="@string/profile_image"
             android:scaleType="centerCrop"
             app:sivBorder="true"
-            app:sivBorderWidth="1dp"
-            tools:src="@drawable/ic_profile_image_default"/>
+            app:sivBorderWidth="1dp"/>
 
         <ImageView
             android:id="@+id/profile_type"

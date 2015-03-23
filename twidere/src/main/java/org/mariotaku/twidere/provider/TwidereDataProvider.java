@@ -1023,8 +1023,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Bitmap profile_image = profile_image_file != null && profile_image_file.isFile() ? BitmapFactory
                 .decodeFile(profile_image_file.getPath()) : null;
         if (profile_image != null) return Bitmap.createScaledBitmap(profile_image, w, h, true);
-        return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.ic_profile_image_default), w, h,
-                true);
+        return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher), w, h, true);
     }
 
     private int getSendersCount(final List<ParcelableDirectMessage> items) {

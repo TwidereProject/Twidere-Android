@@ -95,7 +95,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
                     mImageLoader.displayProfileImage(icon, item.profile_image_url);
                 } else {
                     mImageLoader.cancelDisplayTask(icon);
-                    icon.setImageResource(R.drawable.ic_profile_image_default);
+//                    icon.setImageResource(R.drawable.ic_profile_image_default);
                 }
             }
         } else if (text1 != null) {
