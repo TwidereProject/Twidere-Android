@@ -39,8 +39,8 @@ import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -73,7 +73,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final boolean mCompactCards;
     private final boolean mDisplayMediaPreview;
     private final boolean mNameFirst;
-    private final boolean mNicknameOnly;
     private boolean mLoadMoreIndicatorEnabled;
     private ActivityAdapterListener mActivityAdapterListener;
 
@@ -93,7 +92,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-        mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
     }
 
     public abstract ParcelableActivity getActivity(int position);
@@ -145,10 +143,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     public boolean isNameFirst() {
         return mNameFirst;
-    }
-
-    public boolean isNicknameOnly() {
-        return mNicknameOnly;
     }
 
     @Override
@@ -212,7 +206,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 final StatusViewHolder statusViewHolder = (StatusViewHolder) holder;
                 statusViewHolder.displayStatus(getContext(), getImageLoader(), getImageLoadingHandler(),
                         getTwitterWrapper(), isMediaPreviewDisplayed(), false, false, isNameFirst(),
-                        isNicknameOnly(), getProfileImageStyle(), getMediaPreviewStyle(), status, null, true);
+                        getProfileImageStyle(), getMediaPreviewStyle(), status, null, true);
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {

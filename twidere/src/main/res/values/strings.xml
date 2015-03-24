@@ -354,12 +354,6 @@
     <string name="action_accepting_follow_request">accepting follow request</string>
     <string name="action_denying_follow_request">denying follow request</string>
     <string name="status_is_duplicate">Your tweet is a duplicate.</string>
-    <string name="data_profiling_summary">Twidere took part in a research on predicting user\'s social behavior to pre-caching content started by students in UC Davis.\n\nHere are the data we wanted to collect and why:\nCollected data:\n1. User\'s twitter ID\n2. User\'s home timeline (prediction based on user\'s interest and social interaction)\n3. User\'s click on a tweet (prediction based on user\'s interest and social interaction)\n4. Coarse location (which is good predictor when user will access twitter)\n\nTwidere will upload collected data only when Wifi available and your device connected to charger, so It will not cost you extra bandwidth fee or drain your battery power.</string>
-    <string name="data_profiling">Usage Statistics</string>
-    <string name="enable_data_profiling">Enable Reporting</string>
-    <string name="data_profiling_notification_ticker">Statistics Opted-In</string>
-    <string name="data_profiling_notification_title">Usage Statistics</string>
-    <string name="data_profiling_notification_desc">Enable or Disable Usage Statistics</string>
     <string name="silent_notifications">Silent notifications</string>
     <string name="silent_notifications_summary">Disable ringtone/vibrate for notifications</string>
     <string name="disable_background_service">Disable background service</string>
@@ -736,5 +730,13 @@
     <string name="permission_description_shorten_status">Application can shorten tweet for Twidere, so it can access your tweet to send.</string>
     <string name="permission_description_upload_media">Application can upload media for Twidere, so it can access media in your tweet to send.</string>
     <string name="permission_description_sync_timeline">Application can sync read position for Twidere, so it can access your read position.</string>
+    <string name="title_activity_usage_statistics">UsageStatisticsActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="usage_statistics_notification_summary">Help us improve Twidere!</string>
+    <string name="from_name">From <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="from_name_and_name">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="from_name_and_N_others">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$d</xliff:g> others</string>
 
 </resources>

@@ -29,6 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
@@ -150,10 +151,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mMediaLoaderWrapper = new MediaLoaderWrapper(getImageLoader(), getVideoLoader());
     }
 
-    public static TwidereApplication getInstance(final Context context) {
-        if (context == null) return null;
-        final Context app = context.getApplicationContext();
-        return app instanceof TwidereApplication ? (TwidereApplication) app : null;
+    @NonNull
+    public static TwidereApplication getInstance(@NonNull final Context context) {
+        return (TwidereApplication) context.getApplicationContext();
     }
 
     public Bus getMessageBus() {

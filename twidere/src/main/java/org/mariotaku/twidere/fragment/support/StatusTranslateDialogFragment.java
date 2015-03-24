@@ -41,8 +41,8 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -136,11 +136,10 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-        final boolean nicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
         final boolean displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
 
         mHolder.displayStatus(activity, loader, handler, twitter, displayMediaPreview, true,
-                true, nameFirst, nicknameOnly, profileImageStyle, mediaPreviewStyle, status, null, true);
+                true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, true);
 
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);

@@ -11,7 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
@@ -359,7 +359,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         }
     }
 
-    private static class TabLayoutManager extends LinearLayoutManager {
+    private static class TabLayoutManager extends FixedLinearLayoutManager {
 
         private final TabPagerIndicator mIndicator;
 

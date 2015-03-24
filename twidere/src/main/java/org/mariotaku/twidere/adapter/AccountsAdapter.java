@@ -114,10 +114,6 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         return mDisplayProfileImage;
     }
 
-    @Override
-    public boolean isNicknameOnly() {
-        return false;
-    }
 
     @Override
     public boolean isShowAccountColor() {
@@ -143,11 +139,6 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
 
     @Override
     public void setLinkHighlightOption(String option) {
-
-    }
-
-    @Override
-    public void setNicknameOnly(boolean nicknameOnly) {
 
     }
 

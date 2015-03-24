@@ -29,6 +29,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -51,8 +52,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.BaseSupportListFragment;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.UserColorNameUtils;
-
-import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
 
 public abstract class BaseFiltersFragment extends BaseSupportListFragment implements LoaderManager.LoaderCallbacks<Cursor>,
         MultiChoiceModeListener {
@@ -265,25 +264,23 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
 
             private int mUserIdIdx, mNameIdx, mScreenNameIdx;
 
-            private final boolean mNameFirst, mNicknameOnly;
+            private final boolean mNameFirst;
 
             public FilterUsersListAdapter(final Context context) {
                 super(context, android.R.layout.simple_list_item_activated_1, null, new String[0], new int[0], 0);
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
                 mNameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
-                mNicknameOnly = prefs.getBoolean(KEY_NICKNAME_ONLY, false);
             }
 
             @Override
-            public void bindView(final View view, final Context context, final Cursor cursor) {
+            public void bindView(@NonNull final View view, final Context context, @NonNull final Cursor cursor) {
                 super.bindView(view, context, cursor);
                 final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
                 final long user_id = cursor.getLong(mUserIdIdx);
                 final String name = cursor.getString(mNameIdx);
                 final String screen_name = cursor.getString(mScreenNameIdx);
-                final String display_name = UserColorNameUtils.getDisplayName(context, user_id, name, screen_name, mNameFirst,
-                        mNicknameOnly);
+                final String display_name = UserColorNameUtils.getDisplayName(context, user_id, name, screen_name, mNameFirst);
                 text1.setText(display_name);
             }
 

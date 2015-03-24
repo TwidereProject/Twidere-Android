@@ -70,6 +70,10 @@ public class Expression implements SQLLang {
         return new Expression(String.format(Locale.ROOT, "%s = %d", l, r));
     }
 
+    public static Expression greaterThan(final String l, final long r) {
+        return new Expression(String.format(Locale.ROOT, "%s > %d", l, r));
+    }
+
     public static Expression in(final Column column, final Selectable in) {
         return new Expression(String.format("%s IN(%s)", column.getSQL(), in.getSQL()));
     }

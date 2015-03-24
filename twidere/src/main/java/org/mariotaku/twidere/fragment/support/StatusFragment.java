@@ -44,13 +44,13 @@ import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,9 +87,9 @@ import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -456,7 +456,7 @@ public class StatusFragment extends BaseSupportFragment
         private final MediaLoaderWrapper mImageLoader;
         private final ImageLoadingHandler mImageLoadingHandler;
 
-        private final boolean mNameFirst, mNicknameOnly;
+        private final boolean mNameFirst;
         private final int mCardLayoutResource;
         private final int mTextSize;
         private final int mCardBackgroundColor;
@@ -483,7 +483,6 @@ public class StatusFragment extends BaseSupportFragment
             mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
             mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-            mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
             mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
             mIsCompact = compact;
@@ -655,10 +654,6 @@ public class StatusFragment extends BaseSupportFragment
 
         public boolean isNameFirst() {
             return mNameFirst;
-        }
-
-        public boolean isNicknameOnly() {
-            return mNicknameOnly;
         }
 
         @Override
@@ -1112,11 +1107,10 @@ public class StatusFragment extends BaseSupportFragment
             final Resources resources = context.getResources();
             final MediaLoaderWrapper loader = adapter.getImageLoader();
             final boolean nameFirst = adapter.isNameFirst();
-            final boolean nicknameOnly = adapter.isNicknameOnly();
 
             if (status.retweet_id > 0) {
                 final String retweetedBy = UserColorNameUtils.getDisplayName(context, status.retweeted_by_id,
-                        status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst, nicknameOnly);
+                        status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst);
                 retweetedByView.setText(context.getString(R.string.name_retweeted, retweetedBy));
                 retweetedByContainer.setVisibility(View.VISIBLE);
             } else {
@@ -1124,15 +1118,7 @@ public class StatusFragment extends BaseSupportFragment
                 retweetedByContainer.setVisibility(View.GONE);
             }
 
-            final String nickname = getUserNickname(context, status.user_id, true);
-            if (TextUtils.isEmpty(nickname)) {
-                nameView.setText(status.user_name);
-            } else if (nicknameOnly) {
-                nameView.setText(nickname);
-            } else {
-                nameView.setText(context.getString(R.string.name_with_nickname, status.user_name,
-                        nickname));
-            }
+            nameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
             screenNameView.setText("@" + status.user_screen_name);
 
             textView.setText(Html.fromHtml(status.text_html));
@@ -1240,7 +1226,7 @@ public class StatusFragment extends BaseSupportFragment
     }
 
 
-    private static class StatusListLinearLayoutManager extends LinearLayoutManager {
+    private static class StatusListLinearLayoutManager extends FixedLinearLayoutManager {
 
         private final RecyclerView recyclerView;
 

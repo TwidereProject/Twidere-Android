@@ -47,8 +47,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -136,7 +136,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         @Override
         public void onLoadingComplete(final String imageUri, final View view, final Bitmap loadedImage) {
-            final Bitmap roundedBitmap = Utils.getCircleBitmap(loadedImage);
+            final Bitmap roundedBitmap = BitmapUtils.getCircleBitmap(loadedImage);
             setIcon(new BitmapDrawable(getContext().getResources(), roundedBitmap));
         }
 

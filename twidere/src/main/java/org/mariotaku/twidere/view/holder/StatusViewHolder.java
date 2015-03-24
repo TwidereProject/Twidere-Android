@@ -21,8 +21,8 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
@@ -103,9 +103,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         displayStatus(adapter.getContext(), adapter.getImageLoader(),
                 adapter.getImageLoadingHandler(), adapter.getTwitterWrapper(),
                 adapter.isMediaPreviewEnabled(), adapter.shouldShowAccountsColor(),
-                displayInReplyTo, adapter.isNameFirst(), adapter.isNicknameOnly(),
-                adapter.getProfileImageStyle(), adapter.getMediaPreviewStyle(),
-                status, null, displayInReplyTo);
+                displayInReplyTo, adapter.isNameFirst(), adapter.getProfileImageStyle(),
+                adapter.getMediaPreviewStyle(), status, null, displayInReplyTo);
     }
 
     public void displayStatus(@NonNull final Context context,
@@ -113,7 +112,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
                               @NonNull final ImageLoadingHandler handler,
                               @NonNull final AsyncTwitterWrapper twitter,
                               final boolean displayMediaPreview, final boolean displayAccountsColor,
-                              final boolean displayInReplyTo, boolean nameFirst, boolean nicknameOnly,
+                              final boolean displayInReplyTo, boolean nameFirst,
                               final int profileImageStyle, final int mediaPreviewStyle,
                               @NonNull final ParcelableStatus status,
                               @Nullable final TranslationResult translation, boolean shouldDisplayExtraType) {
@@ -124,14 +123,14 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             replyRetweetView.setVisibility(View.VISIBLE);
             replyRetweetIcon.setVisibility(View.VISIBLE);
             final String retweetedBy = UserColorNameUtils.getDisplayName(context, status.retweeted_by_id,
-                    status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst, nicknameOnly);
+                    status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.name_retweeted, retweetedBy));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_retweet);
         } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0 && displayInReplyTo) {
             replyRetweetView.setVisibility(View.VISIBLE);
             replyRetweetIcon.setVisibility(View.VISIBLE);
             final String inReplyTo = UserColorNameUtils.getDisplayName(context, status.in_reply_to_user_id,
-                    status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst, nicknameOnly);
+                    status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.in_reply_to_name, inReplyTo));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_reply);
         } else {
@@ -232,7 +231,6 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
-        final boolean nicknameOnly = adapter.isNicknameOnly();
 
         final long reply_count = cursor.getLong(indices.reply_count);
         final long retweet_count;
@@ -266,14 +264,14 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
         if (retweet_id > 0) {
             final String retweetedBy = UserColorNameUtils.getDisplayName(context, retweeted_by_id,
-                    retweeted_by_name, retweeted_by_screen_name, nameFirst, nicknameOnly);
+                    retweeted_by_name, retweeted_by_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.name_retweeted, retweetedBy));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_retweet);
             replyRetweetView.setVisibility(View.VISIBLE);
             replyRetweetIcon.setVisibility(View.VISIBLE);
         } else if (in_reply_to_status_id > 0 && in_reply_to_user_id > 0 && displayInReplyTo) {
             final String inReplyTo = UserColorNameUtils.getDisplayName(context, in_reply_to_user_id,
-                    in_reply_to_name, in_reply_to_screen_name, nameFirst, nicknameOnly);
+                    in_reply_to_name, in_reply_to_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.in_reply_to_name, inReplyTo));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_reply);
             replyRetweetView.setVisibility(View.VISIBLE);
@@ -375,7 +373,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
     @Override
     public void onClick(View v) {
         if (statusClickListener == null) return;
-        final int position = getPosition();
+        final int position = getAdapterPosition();
         switch (v.getId()) {
             case R.id.item_content: {
                 statusClickListener.onStatusClick(this, position);

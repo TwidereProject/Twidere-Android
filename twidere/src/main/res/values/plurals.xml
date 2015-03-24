@@ -46,5 +46,9 @@
         <item quantity="one">@string/N_others_quantity_one</item>
         <item quantity="other">@string/N_others_quantity_other</item>
     </plurals>
+    <plurals name="from_name_and_N_others">
+        <item quantity="one">@string/from_name_and_name</item>
+        <item quantity="other">@string/from_name_and_N_others</item>
+    </plurals>
 
 </resources>

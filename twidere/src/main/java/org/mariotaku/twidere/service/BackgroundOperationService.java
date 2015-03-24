@@ -63,6 +63,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ListUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
@@ -403,7 +404,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 o.inJustDecodeBounds = true;
                 BitmapFactory.decodeFile(path, o);
                 final File file = new File(path);
-                Utils.downscaleImageIfNeeded(file, 100);
+                BitmapUtils.downscaleImageIfNeeded(file, 100);
                 final ContentLengthInputStream is = new ContentLengthInputStream(file);
                 is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager, builder, text));
                 final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
@@ -507,7 +508,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     final String path = getImagePathFromUri(this, Uri.parse(media.uri));
                     final File file = path != null ? new File(path) : null;
                     if (!mUseUploader && file != null && file.exists()) {
-                        Utils.downscaleImageIfNeeded(file, 95);
+                        BitmapUtils.downscaleImageIfNeeded(file, 95);
                     }
                 }
             }

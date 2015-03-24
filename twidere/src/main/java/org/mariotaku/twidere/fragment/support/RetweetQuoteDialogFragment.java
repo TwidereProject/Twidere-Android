@@ -35,8 +35,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -92,7 +92,6 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-        final boolean nicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
         final boolean displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         final ParcelableStatus status = getStatus();
 
@@ -103,7 +102,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         builder.setNegativeButton(android.R.string.cancel, null);
 
         holder.displayStatus(context, loader, handler, twitter, displayMediaPreview, true,
-                true, nameFirst, nicknameOnly, profileImageStyle, mediaPreviewStyle, status, null, true);
+                true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, true);
 
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);

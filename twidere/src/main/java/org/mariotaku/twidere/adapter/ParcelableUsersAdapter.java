@@ -104,9 +104,7 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         } else {
             holder.profile_type.setImageDrawable(null);
         }
-        final String nick = getUserNickname(mContext, user.id);
-        holder.name.setText(TextUtils.isEmpty(nick) ? user.name : isNicknameOnly() ? nick : mContext.getString(
-                R.string.name_with_nickname, user.name, nick));
+        holder.name.setText(getUserNickname(mContext, user.id, user.name));
         holder.screen_name.setText("@" + user.screen_name);
         holder.description.setVisibility(TextUtils.isEmpty(user.description_unescaped) ? View.GONE : View.VISIBLE);
         holder.description.setText(user.description_unescaped);

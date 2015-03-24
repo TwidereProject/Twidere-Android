@@ -213,34 +213,29 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
         final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
-        final boolean display_profile_image = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        final boolean nickname_only = mPreferences.getBoolean(KEY_NICKNAME_ONLY, false);
-        final boolean display_name = mPreferences.getBoolean(KEY_NAME_FIRST, true);
+        final boolean displayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        final boolean displayName = mPreferences.getBoolean(KEY_NAME_FIRST, true);
         text1.setVisibility(View.VISIBLE);
         text2.setVisibility(View.VISIBLE);
-        icon.setVisibility(display_profile_image ? View.VISIBLE : View.GONE);
+        icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            final String nick = getUserNickname(this, user.id);
-            text1.setText(TextUtils.isEmpty(nick) ? user.name : nickname_only ? nick : getString(
-                    R.string.name_with_nickname, user.name, nick));
+            text1.setText(getUserNickname(this, user.id,user.name));
             text2.setText("@" + user.screen_name);
-            if (display_profile_image) {
+            if (displayProfileImage) {
                 mImageLoader.displayProfileImage(icon, user.profile_image_url);
             }
         } else if (value instanceof ParcelableUserList) {
             final ParcelableUserList user_list = (ParcelableUserList) value;
             final String created_by;
-            if (display_name) {
+            if (displayName) {
                 created_by = "@" + user_list.user_screen_name;
             } else {
-                final String nick = getUserNickname(this, user_list.user_id);
-                created_by = TextUtils.isEmpty(nick) ? user_list.user_name : nickname_only ? nick : getString(
-                        R.string.name_with_nickname, user_list.user_name, nick);
+                created_by = getUserNickname(this, user_list.user_id,user_list.user_name);
             }
             text1.setText(user_list.name);
             text2.setText(getString(R.string.created_by, created_by));
-            if (display_profile_image) {
+            if (displayProfileImage) {
                 mImageLoader.displayProfileImage(icon, user_list.user_profile_image_url);
             }
         } else if (value instanceof CharSequence) {

@@ -36,8 +36,6 @@ public interface IBaseAdapter extends Constants, ListAdapter {
 
 	public boolean isDisplayProfileImage();
 
-	public boolean isNicknameOnly();
-
 	public boolean isShowAccountColor();
 
 	public void notifyDataSetChanged();
@@ -47,8 +45,6 @@ public interface IBaseAdapter extends Constants, ListAdapter {
 	public void setDisplayProfileImage(boolean display);
 
     public void setLinkHighlightOption(String option);
-
-	public void setNicknameOnly(boolean nicknameOnly);
 
 	public void setShowAccountColor(boolean show);
 

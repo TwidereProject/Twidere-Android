@@ -34,8 +34,8 @@ import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.Utils;
@@ -44,17 +44,42 @@ import org.mariotaku.twidere.view.holder.MessageEntryViewHolder;
 
 public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Constants, IContentCardAdapter, OnClickListener {
 
+    public static final int ITEM_VIEW_TYPE_MESSAGE = 0;
+    public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 1;
+
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final MediaLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
-    private final boolean mNicknameOnly;
-    private boolean mLoadMoreIndicatorEnabled;
     private final int mTextSize;
     private final int mProfileImageStyle;
     private final int mMediaPreviewStyle;
+    private boolean mLoadMoreIndicatorEnabled;
     private Cursor mCursor;
     private MessageEntriesAdapterListener mListener;
+
+    public MessageEntriesAdapter(final Context context) {
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
+        final TwidereApplication app = TwidereApplication.getInstance(context);
+        mMultiSelectManager = app.getMultiSelectManager();
+        mImageLoader = app.getImageLoaderWrapper();
+        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
+                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+        mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+    }
+
+    public DirectMessageEntry getEntry(final int position) {
+        final Cursor c = mCursor;
+        if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
+        return new DirectMessageEntry(c);
+    }
+
+    public MediaLoaderWrapper getImageLoader() {
+        return mImageLoader;
+    }
 
     public Context getContext() {
         return mContext;
@@ -86,20 +111,15 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
     @Override
-    public void setLoadMoreIndicatorEnabled(boolean enabled) {
-        if (mLoadMoreIndicatorEnabled == enabled) return;
-        mLoadMoreIndicatorEnabled = enabled;
-        notifyDataSetChanged();
-    }
-
-    @Override
     public boolean hasLoadMoreIndicator() {
         return mLoadMoreIndicatorEnabled;
     }
 
-
-    public MediaLoaderWrapper getImageLoader() {
-        return mImageLoader;
+    @Override
+    public void setLoadMoreIndicatorEnabled(boolean enabled) {
+        if (mLoadMoreIndicatorEnabled == enabled) return;
+        mLoadMoreIndicatorEnabled = enabled;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -112,25 +132,23 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
 
     }
 
-    public boolean isNicknameOnly() {
-        return mNicknameOnly;
-    }
-
-    public static final int ITEM_VIEW_TYPE_MESSAGE = 0;
-    public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 1;
-
     @Override
-    public int getItemViewType(int position) {
-        if (position == getMessagesCount()) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
-        }
-        return ITEM_VIEW_TYPE_MESSAGE;
-    }
-
-    private int getMessagesCount() {
-        final Cursor c = mCursor;
-        if (c == null || c.isClosed()) return 0;
-        return c.getCount();
+    public void onClick(final View view) {
+//        if (mMultiSelectManager.isActive()) return;
+//        final Object tag = view.getTag();
+//        final int position = tag instanceof Integer ? (Integer) tag : -1;
+//        if (position == -1) return;
+//        switch (view.getId()) {
+//            case R.id.profile_image: {
+//                if (mContext instanceof Activity) {
+//                    final long account_id = getAccountId(position);
+//                    final long user_id = getConversationId(position);
+//                    final String screen_name = getScreenName(position);
+//                    openUserProfile(mContext, account_id, user_id, screen_name, null);
+//                }
+//                break;
+//            }
+//        }
     }
 
     @Override
@@ -161,6 +179,19 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position == getMessagesCount()) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        }
+        return ITEM_VIEW_TYPE_MESSAGE;
+    }
+
+    @Override
+    public final int getItemCount() {
+        return getMessagesCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+    }
+
+    @Override
     public void onItemActionClick(ViewHolder holder, int id, int position) {
 
     }
@@ -180,23 +211,18 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         notifyDataSetChanged();
     }
 
-    @Override
-    public final int getItemCount() {
-        return getMessagesCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+    public void setListener(MessageEntriesAdapterListener listener) {
+        mListener = listener;
     }
 
-    public MessageEntriesAdapter(final Context context) {
-        mContext = context;
-        mInflater = LayoutInflater.from(context);
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        mMultiSelectManager = app.getMultiSelectManager();
-        mImageLoader = app.getImageLoaderWrapper();
-        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
-                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-        mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-        mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mNicknameOnly = preferences.getBoolean(KEY_NICKNAME_ONLY, false);
+    private int getMessagesCount() {
+        final Cursor c = mCursor;
+        if (c == null || c.isClosed()) return 0;
+        return c.getCount();
+    }
+
+    public interface MessageEntriesAdapterListener {
+        public void onEntryClick(int position, DirectMessageEntry entry);
     }
 
     public static class DirectMessageEntry {
@@ -211,39 +237,6 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
             name = cursor.getString(ConversationEntries.IDX_NAME);
         }
 
-    }
-
-    public DirectMessageEntry getEntry(final int position) {
-        final Cursor c = mCursor;
-        if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
-        return new DirectMessageEntry(c);
-    }
-
-    @Override
-    public void onClick(final View view) {
-//        if (mMultiSelectManager.isActive()) return;
-//        final Object tag = view.getTag();
-//        final int position = tag instanceof Integer ? (Integer) tag : -1;
-//        if (position == -1) return;
-//        switch (view.getId()) {
-//            case R.id.profile_image: {
-//                if (mContext instanceof Activity) {
-//                    final long account_id = getAccountId(position);
-//                    final long user_id = getConversationId(position);
-//                    final String screen_name = getScreenName(position);
-//                    openUserProfile(mContext, account_id, user_id, screen_name, null);
-//                }
-//                break;
-//            }
-//        }
-    }
-
-    public void setListener(MessageEntriesAdapterListener listener) {
-        mListener = listener;
-    }
-
-    public interface MessageEntriesAdapterListener {
-        public void onEntryClick(int position, DirectMessageEntry entry);
     }
 
 }

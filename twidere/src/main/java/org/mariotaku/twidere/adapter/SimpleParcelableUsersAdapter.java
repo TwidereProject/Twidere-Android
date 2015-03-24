@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -75,9 +74,7 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
 
         holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, 0,
                 getUserTypeIconRes(user.is_verified, user.is_protected), 0);
-        final String nick = getUserNickname(mContext, user.id);
-        holder.text1.setText(TextUtils.isEmpty(nick) ? user.name : isNicknameOnly() ? nick : mContext.getString(
-                R.string.name_with_nickname, user.name, nick));
+        holder.text1.setText(getUserNickname(mContext, user.id, user.name));
         holder.text2.setText("@" + user.screen_name);
         holder.icon.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
         if (isDisplayProfileImage()) {

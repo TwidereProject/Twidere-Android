@@ -220,16 +220,6 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     public static final String KEY_NAME_FIRST = "name_first";
     public static final String KEY_STOP_AUTO_REFRESH_WHEN_BATTERY_LOW = "stop_auto_refresh_when_battery_low";
-    @Preference(type = BOOLEAN, exportable = false)
-    public static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
-    @Preference(type = BOOLEAN, exportable = false)
-    public static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
-    @Preference(type = STRING, exportable = false)
-    public static final String KEY_SPICE_DEVICE_ID = "spice_device_id";
-    @Preference(type = BOOLEAN, exportable = false)
-    public static final String KEY_SHOW_UCD_DATA_PROFILING_REQUEST = "show_ucd_data_profiling_request";
-    @Preference(type = BOOLEAN, exportable = false)
-    public static final String KEY_SHOW_SPICE_DATA_PROFILING_REQUEST = "show_spice_data_profiling_request";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     public static final String KEY_DISPLAY_SENSITIVE_CONTENTS = "display_sensitive_contents";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
@@ -268,8 +258,6 @@ public interface SharedPreferenceConstants {
     public static final String KEY_FILTERS_IN_HOME_TIMELINE = "filters_in_home_timeline";
     public static final String KEY_FILTERS_IN_MENTIONS_TIMELINE = "filters_in_mentions";
     public static final String KEY_FILTERS_FOR_RTS = "filters_for_rts";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    public static final String KEY_NICKNAME_ONLY = "nickname_only";
     public static final String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     public static final String KEY_CARD_ANIMATION = "card_animation";

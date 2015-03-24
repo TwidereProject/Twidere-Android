@@ -105,6 +105,7 @@ import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -643,7 +644,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         mAccountSelectorButton.setOnClickListener(this);
         mLocationContainer.setOnClickListener(this);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        final LinearLayoutManager linearLayoutManager = new FixedLinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         linearLayoutManager.setStackFromEnd(true);
         mAccountSelector.setLayoutManager(linearLayoutManager);

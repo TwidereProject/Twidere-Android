@@ -91,6 +91,7 @@ import org.mariotaku.twidere.menu.SupportAccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
@@ -347,7 +348,8 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         mAppMenuSectionView = Utils.newSectionView(context, R.string.more);
         mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, listView, false);
         mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.other_accounts_list);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         layoutManager.setStackFromEnd(true);
         mAccountsSelector.setLayoutManager(layoutManager);
         mAccountsSelector.setAdapter(mAccountsAdapter);

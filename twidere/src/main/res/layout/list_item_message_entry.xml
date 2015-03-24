@@ -30,7 +30,6 @@
     android:orientation="horizontal"
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
-    app:backgroundColor="?cardItemBackgroundColor"
     app:ignorePadding="true"
     tools:context=".adapter.DirectMessagesEntryAdapter">
 

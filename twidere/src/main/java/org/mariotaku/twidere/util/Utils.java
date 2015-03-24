@@ -42,15 +42,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -115,7 +109,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.querybuilder.AllColumns;
@@ -212,8 +205,6 @@ import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -546,16 +537,6 @@ public final class Utils implements Constants, TwitterConstants {
         accessibilityManager.sendAccessibilityEvent(event);
     }
 
-    public static Uri appendQueryParameters(final Uri uri, final NameValuePair... params) {
-        final Uri.Builder builder = uri.buildUpon();
-        if (params != null) {
-            for (final NameValuePair param : params) {
-                builder.appendQueryParameter(param.getName(), param.getValue());
-            }
-        }
-        return builder.build();
-    }
-
     public static String buildActivatedStatsWhereClause(final Context context, final String selection) {
         if (context == null) return null;
         final long[] account_ids = getActivatedAccountIds(context);
@@ -728,7 +709,6 @@ public final class Utils implements Constants, TwitterConstants {
         adapter.setDisplayProfileImage(pref.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true));
         adapter.setDisplayNameFirst(pref.getBoolean(KEY_NAME_FIRST, true));
         adapter.setLinkHighlightOption(pref.getString(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HIGHLIGHT_OPTION_NONE));
-        adapter.setNicknameOnly(pref.getBoolean(KEY_NICKNAME_ONLY, false));
         adapter.setTextSize(pref.getInt(KEY_TEXT_SIZE, getDefaultTextSize(context)));
         adapter.notifyDataSetChanged();
     }
@@ -756,27 +736,6 @@ public final class Utils implements Constants, TwitterConstants {
             colors[i] = accounts[i].color;
         }
         return colors;
-    }
-
-    public static Bitmap getCircleBitmap(Bitmap bitmap) {
-        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
-                Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(output);
-
-        final int color = Color.RED;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawOval(rectF, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
     }
 
 
@@ -1135,47 +1094,6 @@ public final class Utils implements Constants, TwitterConstants {
         }
         intent.putExtra(CameraCropActivity.EXTRA_SCALE_UP_IF_NEEDED, scaleUpIfNeeded);
         return intent;
-    }
-
-    public static boolean downscaleImageIfNeeded(final File imageFile, final int quality) {
-        if (imageFile == null || !imageFile.isFile()) return false;
-        final String path = imageFile.getAbsolutePath();
-        final BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, o);
-        // Corrupted image, so return now.
-        if (o.outWidth <= 0 || o.outHeight <= 0) return false;
-        o.inJustDecodeBounds = false;
-        if (o.outWidth > TWITTER_MAX_IMAGE_WIDTH || o.outHeight > TWITTER_MAX_IMAGE_HEIGHT) {
-            // The image dimension is larger than Twitter's limit.
-            o.inSampleSize = calculateInSampleSize(o.outWidth, o.outHeight, TWITTER_MAX_IMAGE_WIDTH,
-                    TWITTER_MAX_IMAGE_HEIGHT);
-            try {
-                final Bitmap b = BitmapDecodeHelper.decode(path, o);
-                final Bitmap.CompressFormat format = getBitmapCompressFormatByMimetype(o.outMimeType,
-                        Bitmap.CompressFormat.PNG);
-                final FileOutputStream fos = new FileOutputStream(imageFile);
-                return b.compress(format, quality, fos);
-            } catch (final OutOfMemoryError e) {
-                return false;
-            } catch (final FileNotFoundException e) {
-                // This shouldn't happen.
-            } catch (final IllegalArgumentException e) {
-                return false;
-            }
-        } else if (imageFile.length() > TWITTER_MAX_IMAGE_SIZE) {
-            // The file size is larger than Twitter's limit.
-            try {
-                final Bitmap b = BitmapDecodeHelper.decode(path, o);
-                final FileOutputStream fos = new FileOutputStream(imageFile);
-                return b.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-            } catch (final OutOfMemoryError e) {
-                return false;
-            } catch (final FileNotFoundException e) {
-                // This shouldn't happen.
-            }
-        }
-        return true;
     }
 
     public static String encodeQueryParams(final String value) throws IOException {
@@ -2213,13 +2131,6 @@ public final class Utils implements Constants, TwitterConstants {
         return 0;
     }
 
-    public static String getSampleDisplayName(final Context context, final boolean name_first,
-                                              final boolean nickname_only) {
-        if (context == null) return null;
-        if (nickname_only) return TWIDERE_PREVIEW_NICKNAME;
-        return context.getString(R.string.name_with_nickname, name_first ? TWIDERE_PREVIEW_NAME : "@"
-                + TWIDERE_PREVIEW_SCREEN_NAME, TWIDERE_PREVIEW_NICKNAME);
-    }
 
     public static String getSenderUserName(final Context context, final ParcelableDirectMessage user) {
         if (context == null || user == null) return null;
@@ -3505,38 +3416,6 @@ public final class Utils implements Constants, TwitterConstants {
     public static String replaceLast(final String text, final String regex, final String replacement) {
         if (text == null || regex == null || replacement == null) return text;
         return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
-    }
-
-    /**
-     * Resizes specific a Bitmap with keeping ratio.
-     */
-    public static Bitmap resizeBitmap(Bitmap orig, final int desireWidth, final int desireHeight) {
-        final int width = orig.getWidth();
-        final int height = orig.getHeight();
-
-        if (0 < width && 0 < height && desireWidth < width || desireHeight < height) {
-            // Calculate scale
-            float scale;
-            if (width < height) {
-                scale = (float) desireHeight / (float) height;
-                if (desireWidth < width * scale) {
-                    scale = (float) desireWidth / (float) width;
-                }
-            } else {
-                scale = (float) desireWidth / (float) width;
-            }
-
-            // Draw resized image
-            final Matrix matrix = new Matrix();
-            matrix.postScale(scale, scale);
-            final Bitmap bitmap = Bitmap.createBitmap(orig, 0, 0, width, height, matrix, true);
-            final Canvas canvas = new Canvas(bitmap);
-            canvas.drawBitmap(bitmap, 0, 0, null);
-
-            orig = bitmap;
-        }
-
-        return orig;
     }
 
     public static void restartActivity(final Activity activity) {

@@ -90,25 +90,25 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
 
         holder.position = position;
 
-        final ParcelableUserList user_list = getItem(position);
-        final String display_name = UserColorNameUtils.getDisplayName(mContext, user_list.user_id, user_list.user_name,
-                user_list.user_screen_name, isDisplayNameFirst(), isNicknameOnly(), false);
+        final ParcelableUserList userList = getItem(position);
+        final String displayName = UserColorNameUtils.getDisplayName(mContext, userList.user_id, userList.user_name,
+                userList.user_screen_name, isDisplayNameFirst(), false);
         holder.setTextSize(getTextSize());
-        holder.name.setText(user_list.name);
-        holder.created_by.setText(mContext.getString(R.string.created_by, display_name));
+        holder.name.setText(userList.name);
+        holder.created_by.setText(mContext.getString(R.string.created_by, displayName));
         if (holder.description != null) {
-            holder.description.setVisibility(TextUtils.isEmpty(user_list.description) ? View.GONE : View.VISIBLE);
-            holder.description.setText(user_list.description);
+            holder.description.setVisibility(TextUtils.isEmpty(userList.description) ? View.GONE : View.VISIBLE);
+            holder.description.setText(userList.description);
         }
         if (holder.members_count != null) {
-            holder.members_count.setText(getLocalizedNumber(mLocale, user_list.members_count));
+            holder.members_count.setText(getLocalizedNumber(mLocale, userList.members_count));
         }
         if (holder.subscribers_count != null) {
-            holder.subscribers_count.setText(getLocalizedNumber(mLocale, user_list.subscribers_count));
+            holder.subscribers_count.setText(getLocalizedNumber(mLocale, userList.subscribers_count));
         }
         holder.profile_image.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
         if (isDisplayProfileImage()) {
-            mImageLoader.displayProfileImage(holder.profile_image, user_list.user_profile_image_url);
+            mImageLoader.displayProfileImage(holder.profile_image, userList.user_profile_image_url);
         } else {
             mImageLoader.cancelDisplayTask(holder.profile_image);
         }

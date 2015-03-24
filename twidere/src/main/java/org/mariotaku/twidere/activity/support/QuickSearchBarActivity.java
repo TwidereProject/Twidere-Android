@@ -441,9 +441,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
-            final String nick = getUserNickname(context, user.id);
-            text1.setText(TextUtils.isEmpty(nick) ? user.name : adapter.isNicknameOnly() ? nick :
-                    context.getString(R.string.name_with_nickname, user.name, nick));
+            text1.setText(getUserNickname(context, user.id, user.name));
             text2.setVisibility(View.VISIBLE);
             text2.setText("@" + user.screen_name);
             icon.clearColorFilter();
@@ -497,15 +495,12 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         private final Context mContext;
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
-        private final boolean mNicknameOnly;
         private List<SuggestionItem> mData;
 
         SuggestionsAdapter(Context context) {
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
-            final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            mNicknameOnly = pref.getBoolean(KEY_NICKNAME_ONLY, false);
         }
 
         public Context getContext() {
@@ -560,10 +555,6 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         @Override
         public int getViewTypeCount() {
             return 4;
-        }
-
-        public boolean isNicknameOnly() {
-            return mNicknameOnly;
         }
 
         public void removeItemAt(int position) {

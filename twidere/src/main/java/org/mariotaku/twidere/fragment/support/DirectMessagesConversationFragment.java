@@ -86,6 +86,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
@@ -237,7 +238,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mTwitterWrapper = getTwitterWrapper();
         mValidator = new TwidereValidator(getActivity());
         mAdapter = new MessageConversationAdapter(getActivity());
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(viewContext);
+        final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(viewContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.setStackFromEnd(true);
         mMessagesListView.setLayoutManager(layoutManager);

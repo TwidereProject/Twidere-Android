@@ -3,16 +3,20 @@ package edu.tsinghua.spice.Task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import edu.tsinghua.spice.Utilies.SpiceHttpUtil;
-import edu.tsinghua.spice.Utilies.SpiceIOUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import twitter4j.http.HttpClientWrapper;
+import twitter4j.http.HttpParameter;
 
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 import static org.mariotaku.twidere.util.Utils.copyStream;
 
 /**
@@ -26,20 +30,19 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
     private static final String LAST_UPLOAD_DATE = "last_upload_time";
     private static final double MILLSECS_HALF_DAY = 1000 * 60 * 60 * 12;
 
-    //private final String device_id;
     private final Context context;
+    private final HttpClientWrapper client;
 
-    private SpiceHttpUtil uploadClient;
+//    private SpiceHttpUtil uploadClient;
 
     public SpiceAsyUploadTask(final Context context) {
         this.context = context;
-        // device_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        this.client = Utils.getDefaultHttpClient(context);
     }
 
 
-    public void uploadMultipart(SpiceHttpUtil client, final File file) {
+    public void uploadMultipart(final File file) {
 
-        String fileName = file.getName();
         final String app_root = file.getParent();
         final File tmp_dir = new File(app_root + "/spice");
         if (!tmp_dir.exists()) {
@@ -53,22 +56,16 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
         file.renameTo(tmp);
 
         try {
-            client.connectForMultipart();
-            client.addFilePart("file", fileName, SpiceIOUtil.readFile(tmp));
-            client.finishMultipart();
-            String serverResponseCode = client.getResponse();
-
-
-            if (serverResponseCode.contains("00")) {
-                SpiceProfilingUtil.log(context, "server has already received file " + tmp.getName());
-                tmp.delete();
-            } else {
-                SpiceProfilingUtil.log(context, "server does not receive file " + tmp.getName());
-                putBackProfile(context, tmp, file);
-            }
-
+            final String url = PROFILE_SERVER_URL;
+            final HttpParameter[] parameters = {new HttpParameter("file", tmp)};
+            client.post(url, url, parameters);
+            SpiceProfilingUtil.log(context, "server has already received file " + tmp.getName());
+            tmp.delete();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (Utils.isDebugBuild()) {
+                Log.w(LOGTAG, e);
+                SpiceProfilingUtil.log(context, "server does not receive file " + tmp.getName());
+            }
             putBackProfile(context, tmp, file);
         }
 
@@ -104,8 +101,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
             }
             final String url = PROFILE_SERVER_URL;
             SpiceProfilingUtil.log(context, url);
-            uploadClient = new SpiceHttpUtil(url);
-            uploadMultipart(uploadClient, file);
+            uploadMultipart(file);
         }
         return false;
     }

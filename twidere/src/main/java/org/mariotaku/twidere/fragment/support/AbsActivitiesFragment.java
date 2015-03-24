@@ -45,6 +45,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -172,7 +173,7 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
         mAdapter = onCreateAdapter(context, compact);
         mAdapter.setLoadMoreIndicatorEnabled(true);
         mAdapter.setListener(this);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         if (compact) {

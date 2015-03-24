@@ -45,7 +45,11 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
 
     public StatusComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mAdapter = new UserHashtagAutoCompleteAdapter(this);
+        if (isInEditMode()) {
+            mAdapter = null;
+        } else {
+            mAdapter = new UserHashtagAutoCompleteAdapter(this);
+        }
         setTokenizer(new ScreenNameTokenizer());
         setMovementMethod(ArrowKeyMovementMethod.getInstance());
         setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES

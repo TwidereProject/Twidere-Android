@@ -24,8 +24,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
@@ -44,6 +44,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedValues;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
@@ -53,14 +54,20 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     private static final String[] FROM = new String[0];
     private static final int[] TO = new int[0];
 
+    @NonNull
     private final ContentResolver mResolver;
+    @NonNull
     private final SQLiteDatabase mDatabase;
+    @NonNull
     private final MediaLoaderWrapper mProfileImageLoader;
-    private final SharedPreferences mPreferences, mUserNicknamePreferences;
+    @NonNull
+    private final SharedPreferencesWrapper mPreferences;
+    @NonNull
+    private final SharedPreferences mUserNicknamePreferences;
 
     private final EditText mEditText;
 
-    private final boolean mDisplayProfileImage, mNicknameOnly;
+    private final boolean mDisplayProfileImage;
 
     private int mProfileImageUrlIdx, mNameIdx, mScreenNameIdx, mUserIdIdx;
     private char mToken = '@';
@@ -72,14 +79,13 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     public UserHashtagAutoCompleteAdapter(final Context context, final EditText view) {
         super(context, R.layout.list_item_two_line_small, null, FROM, TO, 0);
         mEditText = view;
-        mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mUserNicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mResolver = context.getContentResolver();
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mProfileImageLoader = app != null ? app.getImageLoaderWrapper() : null;
-        mDatabase = app != null ? app.getSQLiteDatabase() : null;
-        mDisplayProfileImage = mPreferences != null && mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mNicknameOnly = mPreferences != null && mPreferences.getBoolean(KEY_NICKNAME_ONLY, false);
+        mProfileImageLoader = app.getImageLoaderWrapper();
+        mDatabase = app.getSQLiteDatabase();
+        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
     }
 
     public UserHashtagAutoCompleteAdapter(final EditText view) {
@@ -97,13 +103,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         icon.setImageDrawable(null);
 
         if (mScreenNameIdx != -1 && mNameIdx != -1 && mUserIdIdx != -1) {
-            final String nick = getUserNickname(context, cursor.getLong(mUserIdIdx));
-            final String name = cursor.getString(mNameIdx);
-            if (TextUtils.isEmpty(nick)) {
-                text1.setText(name);
-            } else {
-                text1.setText(mNicknameOnly ? nick : context.getString(R.string.name_with_nickname, name, nick));
-            }
+            text1.setText(getUserNickname(context, cursor.getLong(mUserIdIdx), cursor.getString(mNameIdx)));
             text2.setText("@" + cursor.getString(mScreenNameIdx));
         } else {
             text1.setText("#" + cursor.getString(mNameIdx));
@@ -111,10 +111,11 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         }
         icon.setVisibility(mDisplayProfileImage ? View.VISIBLE : View.GONE);
         if (mProfileImageUrlIdx != -1) {
-            if (mDisplayProfileImage && mProfileImageLoader != null) {
-                final String profile_image_url_string = cursor.getString(mProfileImageUrlIdx);
-                mProfileImageLoader.displayProfileImage(icon, profile_image_url_string);
+            if (mDisplayProfileImage) {
+                final String profileImageUrl = cursor.getString(mProfileImageUrlIdx);
+                mProfileImageLoader.displayProfileImage(icon, profileImageUrl);
             } else {
+                mProfileImageLoader.cancelDisplayTask(icon);
 //                icon.setImageResource(R.drawable.ic_profile_image_default);
             }
         } else {

@@ -72,7 +72,6 @@ import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.DataProfilingSettingsActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
@@ -808,18 +807,19 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     private void showDataProfilingRequest() {
         //spice
-        if (mPreferences.getBoolean(KEY_SHOW_UCD_DATA_PROFILING_REQUEST, true) || mPreferences.getBoolean(KEY_SHOW_SPICE_DATA_PROFILING_REQUEST, true)) {
-            final Intent intent = new Intent(this, DataProfilingSettingsActivity.class);
-            final PendingIntent content_intent = PendingIntent.getActivity(this, 0, intent, 0);
-            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-            builder.setAutoCancel(true);
-            builder.setSmallIcon(R.drawable.ic_stat_info);
-            builder.setTicker(getString(R.string.data_profiling_notification_ticker));
-            builder.setContentTitle(getString(R.string.data_profiling_notification_title));
-            builder.setContentText(getString(R.string.data_profiling_notification_desc));
-            builder.setContentIntent(content_intent);
-            mNotificationManager.notify(NOTIFICATION_ID_DATA_PROFILING, builder.build());
+        if (mPreferences.contains(KEY_UCD_DATA_PROFILING) && mPreferences.contains(KEY_SPICE_DATA_PROFILING)) {
+            return;
         }
+        final Intent intent = new Intent(this, UsageStatisticsActivity.class);
+        final PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setAutoCancel(true);
+        builder.setSmallIcon(R.drawable.ic_stat_info);
+        builder.setTicker(getString(R.string.usage_statistics));
+        builder.setContentTitle(getString(R.string.usage_statistics));
+        builder.setContentText(getString(R.string.usage_statistics_notification_summary));
+        builder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID_DATA_PROFILING, builder.build());
     }
 
     private void triggerActionsClick() {
@@ -944,7 +944,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         protected int[] doInBackground(final Void... params) {
             final int tabCount = mIndicator.getCount();
             final int[] result = new int[tabCount];
-            for (int i = 0, j = tabCount; i < j; i++) {
+            for (int i = 0; i < tabCount; i++) {
                 result[i] = UnreadCountUtils.getUnreadCount(mContext, i);
             }
             return result;

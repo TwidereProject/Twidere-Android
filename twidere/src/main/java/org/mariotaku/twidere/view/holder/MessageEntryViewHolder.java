@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -76,9 +75,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         final String name = cursor.getString(ConversationEntries.IDX_NAME);
         final String screenName = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
 
-        final String nick = getUserNickname(context, conversationId);
-        nameView.setText(TextUtils.isEmpty(nick) ? name : adapter.isNicknameOnly() ? nick : context.getString(
-                R.string.name_with_nickname, name, nick));
+        nameView.setText(getUserNickname(context, conversationId, name));
         screenNameView.setText("@" + screenName);
         textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT)));
         timeView.setTime(timestamp);

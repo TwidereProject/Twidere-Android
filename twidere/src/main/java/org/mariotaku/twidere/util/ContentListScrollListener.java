@@ -35,35 +35,45 @@ public class ContentListScrollListener extends OnScrollListener {
     private int mScrollSum;
     private int mTouchSlop;
 
-    private ContentListAware mContentListAware;
+    private ContentListSupport mContentListSupport;
+    private OnScrollListener mOnScrollListener;
 
-    public ContentListScrollListener(@NonNull ContentListAware contentListAware) {
-        mContentListAware = contentListAware;
+    public ContentListScrollListener(@NonNull ContentListSupport contentListSupport) {
+        mContentListSupport = contentListSupport;
+    }
+
+    public void setOnScrollListener(OnScrollListener listener) {
+        mOnScrollListener = listener;
     }
 
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScrollStateChanged(recyclerView, newState);
+        }
         mScrollState = newState;
     }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScrolled(recyclerView, dx, dy);
+        }
         //Reset mScrollSum when scrolling in reverse direction
         if (dy * mScrollSum < 0) {
             mScrollSum = 0;
         }
         mScrollSum += dy;
         if (Math.abs(mScrollSum) > mTouchSlop) {
-            mContentListAware.setControlVisible(dy < 0);
+            mContentListSupport.setControlVisible(dy < 0);
             mScrollSum = 0;
         }
-        final IContentCardAdapter adapter = mContentListAware.getAdapter();
+        final IContentCardAdapter adapter = mContentListSupport.getAdapter();
         final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (!mContentListAware.isRefreshing() && adapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
+        if (!mContentListSupport.isRefreshing() && adapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
                 && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
-            mContentListAware.onLoadMoreContents();
+            mContentListSupport.onLoadMoreContents();
         }
     }
 
@@ -72,7 +82,7 @@ public class ContentListScrollListener extends OnScrollListener {
         mTouchSlop = touchSlop;
     }
 
-    public static interface ContentListAware {
+    public static interface ContentListSupport {
 
         boolean isRefreshing();
 

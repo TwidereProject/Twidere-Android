@@ -25,7 +25,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
 
-import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -43,22 +42,22 @@ public class UserColorNameUtils implements TwidereConstants {
         throw new AssertionError();
     }
 
-    public static void clearUserColor(final Context context, final long user_id) {
+    public static void clearUserColor(final Context context, final long userId) {
         if (context == null) return;
-        sUserColors.remove(user_id);
+        sUserColors.remove(userId);
         final SharedPreferences prefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(Long.toString(user_id));
+        editor.remove(Long.toString(userId));
         editor.apply();
     }
 
-    public static void clearUserNickname(final Context context, final long user_id) {
+    public static void clearUserNickname(final Context context, final long userId) {
         if (context == null) return;
-        sUserNicknames.remove(user_id);
+        sUserNicknames.remove(userId);
         final SharedPreferences prefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(Long.toString(user_id));
+        editor.remove(Long.toString(userId));
         editor.apply();
     }
 
@@ -80,41 +79,30 @@ public class UserColorNameUtils implements TwidereConstants {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
-        final boolean nicknameOnly = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getBoolean(KEY_NICKNAME_ONLY, false);
-        return getDisplayName(context, userId, name, screenName, nameFirst, nicknameOnly, ignoreCache);
-    }
-
-    public static String getDisplayName(final Context context, final long user_id, final String name,
-                                        final String screen_name, final boolean name_first, final boolean nickname_only) {
-        return getDisplayName(context, user_id, name, screen_name, name_first, nickname_only, false);
+        return getDisplayName(context, userId, name, screenName, nameFirst, ignoreCache);
     }
 
     public static String getDisplayName(final Context context, final ParcelableUser user,
-                                        final boolean nameFirst, final boolean nicknameOnly,
-                                        final boolean ignoreCache) {
-        return getDisplayName(context, user.id, user.name, user.screen_name,
-                nameFirst, nicknameOnly, ignoreCache);
+                                        final boolean nameFirst, final boolean ignoreCache) {
+        return getDisplayName(context, user.id, user.name, user.screen_name, nameFirst, ignoreCache);
     }
 
 
     public static String getDisplayName(final Context context, final ParcelableStatus status,
-                                        final boolean nameFirst, final boolean nicknameOnly,
+                                        final boolean nameFirst,
                                         final boolean ignoreCache) {
         return getDisplayName(context, status.user_id, status.user_name, status.user_screen_name,
-                nameFirst, nicknameOnly, ignoreCache);
+                nameFirst, ignoreCache);
     }
 
     public static String getDisplayName(final Context context, final long userId, final String name,
                                         final String screenName, final boolean nameFirst,
-                                        final boolean nicknameOnly, final boolean ignoreCache) {
+                                        final boolean ignoreCache) {
         if (context == null) return null;
         final String nick = getUserNickname(context, userId, ignoreCache);
-        final boolean nick_available = !isEmpty(nick);
-        if (nicknameOnly && nick_available) return nick;
-        if (!nick_available) return nameFirst && !isEmpty(name) ? name : "@" + screenName;
-        return context.getString(R.string.name_with_nickname, nameFirst && !isEmpty(name) ? name : "@" + screenName,
-                nick);
+        final boolean nickAvailable = !isEmpty(nick);
+        if (nickAvailable) return nick;
+        return nameFirst && !isEmpty(name) ? name : "@" + screenName;
     }
 
     public static int getUserColor(final Context context, final long user_id) {
@@ -145,12 +133,13 @@ public class UserColorNameUtils implements TwidereConstants {
         return nickname;
     }
 
-    public static String getUserNickname(final Context context, final long user_id, final String name) {
-        final String nick = getUserNickname(context, user_id);
-        if (isEmpty(nick)) return name;
-        final boolean nickname_only = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getBoolean(KEY_NICKNAME_ONLY, false);
-        return nickname_only ? nick : context.getString(R.string.name_with_nickname, name, nick);
+    public static String getUserNickname(final Context context, final long userId, final String name) {
+        return getUserNickname(context, userId, name, false);
+    }
+
+    public static String getUserNickname(final Context context, final long userId, final String name, final boolean ignoreCache) {
+        final String nick = getUserNickname(context, userId, ignoreCache);
+        return isEmpty(nick) ? name : nick;
     }
 
     public static void initUserColor(final Context context) {

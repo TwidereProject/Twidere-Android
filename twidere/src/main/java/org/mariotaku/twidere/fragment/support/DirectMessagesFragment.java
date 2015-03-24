@@ -36,6 +36,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -66,7 +67,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentListScrollListener;
-import org.mariotaku.twidere.util.ContentListScrollListener.ContentListAware;
+import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -82,7 +83,7 @@ import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
 public class DirectMessagesFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         RefreshScrollTopInterface, OnRefreshListener, MessageEntriesAdapterListener,
-        ControlBarOffsetListener, ContentListAware {
+        ControlBarOffsetListener, ContentListSupport {
 
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
@@ -240,7 +241,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         mMultiSelectManager = getMultiSelectManager();
         mAdapter = new MessageEntriesAdapter(viewContext);
         mAdapter.setListener(this);
-        mLayoutManager = new LinearLayoutManager(viewContext);
+        mLayoutManager = new FixedLinearLayoutManager(viewContext);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(viewContext));

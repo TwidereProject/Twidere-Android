@@ -37,7 +37,7 @@
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:key="data_profiling_settings"
-        android:title="@string/data_profiling">
+        android:title="@string/usage_statistics">
         <extra
             android:name="resid"
             android:value="@xml/preferences_usage_statistics"/>
