@@ -123,6 +123,7 @@ import static org.mariotaku.twidere.util.Utils.isNotificationsSilent;
 public final class TwidereDataProvider extends ContentProvider implements Constants, OnSharedPreferenceChangeListener,
         LazyLoadCallback {
 
+    public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
     private ContentResolver mContentResolver;
     private SQLiteDatabaseWrapper mDatabaseWrapper;
     private PermissionsManager mPermissionsManager;
@@ -205,6 +206,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             throw new IllegalStateException(e);
         }
     }
+
 
     @Override
     public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
@@ -840,7 +842,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isDirectMessagesNotificationEnabled()) continue;
                     final StringLongPair[] pairs = mReadStateManager.getPositionPairs(DirectMessagesFragment.KEY_READ_POSITION_TAG);
-                    showMessagesNotification(pref, pairs);
+                    showMessagesNotification(pref, pairs, valuesArray);
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES);
                 break;
@@ -1003,8 +1005,16 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
     }
 
-    private void showMessagesNotification(AccountPreferences pref, StringLongPair[] pairs) {
+    private void showMessagesNotification(AccountPreferences pref, StringLongPair[] pairs, ContentValues[] valuesArray) {
         final long accountId = pref.getAccountId();
+        final long prevOldestId = mReadStateManager.getPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountId));
+        long oldestId = -1;
+        for (final ContentValues contentValues : valuesArray) {
+            final long messageId = contentValues.getAsLong(DirectMessages.MESSAGE_ID);
+            oldestId = oldestId < 0 ? messageId : Math.min(oldestId, messageId);
+            if (messageId <= prevOldestId) return;
+        }
+        mReadStateManager.setPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountId), oldestId, false);
         final Context context = getContext();
         final Resources resources = context.getResources();
         final NotificationManager nm = getNotificationManager();
@@ -1025,8 +1035,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
         }
         orExpressions.add(Expression.notIn(new Column(DirectMessages.SENDER_ID), new RawItemArray(senderIds.toArray())));
-        final Expression selection = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
-                Expression.or(orExpressions.toArray(new Expression[orExpressions.size()])));
+        final Expression selection = Expression.and(
+                Expression.equals(DirectMessages.ACCOUNT_ID, accountId),
+                Expression.greaterThan(DirectMessages.MESSAGE_ID, prevOldestId),
+                Expression.or(orExpressions.toArray(new Expression[orExpressions.size()]))
+        );
         final String filteredSelection = selection.getSQL();
         final String[] userProjection = {DirectMessages.SENDER_ID, DirectMessages.SENDER_NAME,
                 DirectMessages.SENDER_SCREEN_NAME};

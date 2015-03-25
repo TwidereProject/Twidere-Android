@@ -198,6 +198,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         mHandler = new Handler();
         mMessageBus = new Bus();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        if (!mPreferences.contains(KEY_USAGE_STATISTICS)) {
+            final boolean prevUsageEnabled = mPreferences.getBoolean("ucd_data_profiling", false)
+                    || mPreferences.getBoolean("spice_data_profiling", false);
+            mPreferences.edit().putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled).apply();
+        }
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         initializeAsyncTask();
         initAccountColor(this);
