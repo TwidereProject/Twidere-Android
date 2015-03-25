@@ -188,6 +188,11 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.MESSAGE_TIMESTAMP, message.getCreatedAt().getTime());
         values.put(DirectMessages.SENDER_ID, sender.getId());
         values.put(DirectMessages.RECIPIENT_ID, recipient.getId());
+        if (isOutgoing) {
+            values.put(DirectMessages.CONVERSATION_ID, recipient.getId());
+        } else {
+            values.put(DirectMessages.CONVERSATION_ID, sender.getId());
+        }
         final String text_html = TwitterContentUtils.formatDirectMessageText(message);
         values.put(DirectMessages.TEXT_HTML, text_html);
         values.put(DirectMessages.TEXT_PLAIN, message.getText());

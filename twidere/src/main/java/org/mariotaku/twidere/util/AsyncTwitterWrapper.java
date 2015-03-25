@@ -1788,6 +1788,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                             truncated));
                     storeMessages(accountId, messages, isOutgoing(), true);
                 } catch (final TwitterException e) {
+                    if (Utils.isDebugBuild()) {
+                        Log.w(LOGTAG, e);
+                    }
                     result.add(new MessageListResponse(accountId, e));
                 }
                 idx++;

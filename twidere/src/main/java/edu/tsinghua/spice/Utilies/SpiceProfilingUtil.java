@@ -58,18 +58,18 @@ public class SpiceProfilingUtil {
         if (context == null) return;
         final SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        if (!prefs.getBoolean(Constants.KEY_SPICE_DATA_PROFILING, false)) return;
-        final String persistedDeviceId = prefs.getString(Constants.KEY_SPICE_DEVICE_ID, null);
+        if (!prefs.getBoolean(Constants.KEY_USAGE_STATISTICS, false)) return;
+        final String persistedDeviceId = prefs.getString(Constants.KEY_DEVICE_SERIAL, null);
         final String serial = String.valueOf(Build.SERIAL).replaceAll("[^\\w\\d]", "");
         final String uuid;
         if (!TextUtils.isEmpty(persistedDeviceId)) {
             uuid = persistedDeviceId.replaceAll("[^\\w\\d]", "");
         } else if (!TextUtils.isEmpty(serial)) {
             uuid = serial;
-            prefs.edit().putString(Constants.KEY_SPICE_DEVICE_ID, serial).apply();
+            prefs.edit().putString(Constants.KEY_DEVICE_SERIAL, serial).apply();
         } else {
             uuid = UUID.randomUUID().toString().replaceAll("[^\\w\\d]", "");
-            prefs.edit().putString(Constants.KEY_SPICE_DEVICE_ID, uuid).apply();
+            prefs.edit().putString(Constants.KEY_DEVICE_SERIAL, uuid).apply();
         }
         final String filename = uuid + "_" + name + ".spi";
         new Thread() {

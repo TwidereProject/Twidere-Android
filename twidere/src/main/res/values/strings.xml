@@ -738,5 +738,6 @@
     <string name="from_name">From <xliff:g id="name">%1$s</xliff:g></string>
     <string name="from_name_and_name">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$s</xliff:g></string>
     <string name="from_name_and_N_others">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$d</xliff:g> others</string>
+    <string name="projects_we_participant">Projects we participant</string>
 
 </resources>

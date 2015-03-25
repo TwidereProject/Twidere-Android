@@ -41,7 +41,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
-import org.mariotaku.twidere.util.PositionManager;
+import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -72,7 +72,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private Rect mSystemWindowsInsets = new Rect();
     private int mControlBarOffsetPixels;
     private PopupMenu mPopupMenu;
-    private PositionManager mPositionManager;
+    private ReadStateManager mReadStateManager;
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
@@ -157,7 +157,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPositionManager = new PositionManager(getActivity());
+        mReadStateManager = new ReadStateManager(getActivity());
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();
@@ -426,7 +426,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         if (position == RecyclerView.NO_POSITION) return;
         final ParcelableStatus status = mAdapter.getStatus(position);
         if (status == null) return;
-        mPositionManager.setPosition(readPositionTag, status.id);
+        mReadStateManager.setPosition(readPositionTag, status.id);
     }
 
     private void setListShown(boolean shown) {

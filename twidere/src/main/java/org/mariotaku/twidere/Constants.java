@@ -33,7 +33,7 @@ import static org.mariotaku.twidere.annotation.Preference.Type.STRING;
 public interface Constants extends TwidereConstants {
 
     String DATABASES_NAME = "twidere.sqlite";
-    int DATABASES_VERSION = 87;
+    int DATABASES_VERSION = 88;
 
     int MENU_GROUP_STATUS_EXTENSION = 10;
     int MENU_GROUP_COMPOSE_EXTENSION = 11;
@@ -185,9 +185,7 @@ public interface Constants extends TwidereConstants {
 
     // SharedPreferences constants
     @Preference(type = BOOLEAN, exportable = false)
-    String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
-    @Preference(type = BOOLEAN, exportable = false)
-    String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
+    String KEY_USAGE_STATISTICS = "usage_statistics";
     @Preference(type = STRING, exportable = false)
-    String KEY_SPICE_DEVICE_ID = "spice_device_id";
+    String KEY_DEVICE_SERIAL = "device_serial";
 }

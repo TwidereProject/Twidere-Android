@@ -43,7 +43,9 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     @Override
     public boolean isGapItem(int position) {
         final Cursor c = mCursor;
-        return c != null && c.moveToPosition(position) && c.getInt(mIndices.is_gap) == 1;
+        if (c == null || !c.moveToPosition(position) || position == getStatusesCount() - 1)
+            return false;
+        return c.getInt(mIndices.is_gap) == 1;
     }
 
 
@@ -51,7 +53,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     public long getItemId(int position) {
         if (position == getStatusesCount()) return Long.MAX_VALUE;
         final Cursor c = mCursor;
-        if (c != null && !c.isClosed() && c.moveToPosition(position)) {
+        if (c != null && c.moveToPosition(position)) {
             return c.getLong(mIndices._id);
         }
         return RecyclerView.NO_ID;
@@ -67,7 +69,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     public ParcelableStatus getStatus(int position) {
         if (hasLoadMoreIndicator() && position == getStatusesCount() - 1) return null;
         final Cursor c = mCursor;
-        if (c != null && !c.isClosed() && c.moveToPosition(position)) {
+        if (c != null && c.moveToPosition(position)) {
             return new ParcelableStatus(c, mIndices);
         }
         return null;
@@ -83,7 +85,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
     public long getStatusId(int position) {
         if (position == getStatusesCount()) return -1;
         final Cursor c = mCursor;
-        if (c != null && !c.isClosed() && c.moveToPosition(position)) {
+        if (c != null && c.moveToPosition(position)) {
             return c.getLong(mIndices.status_id);
         }
         return -1;

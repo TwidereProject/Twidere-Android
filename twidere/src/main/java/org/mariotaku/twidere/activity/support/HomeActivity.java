@@ -807,7 +807,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     private void showDataProfilingRequest() {
         //spice
-        if (mPreferences.contains(KEY_UCD_DATA_PROFILING) && mPreferences.contains(KEY_SPICE_DATA_PROFILING)) {
+        if (mPreferences.contains(KEY_USAGE_STATISTICS)) {
             return;
         }
         final Intent intent = new Intent(this, UsageStatisticsActivity.class);
@@ -859,7 +859,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
                 title = R.string.compose;
             }
         }
-        final boolean hasActivatedTask = hasActivatedTask();
         if (mActionsButton instanceof IHomeActionButton) {
             final IHomeActionButton hab = (IHomeActionButton) mActionsButton;
             hab.setIcon(icon);

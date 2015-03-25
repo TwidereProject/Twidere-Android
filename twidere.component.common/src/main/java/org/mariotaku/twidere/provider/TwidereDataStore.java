@@ -321,6 +321,7 @@ public interface TwidereDataStore {
         public static final String MESSAGE_TIMESTAMP = "message_timestamp";
         public static final String SENDER_ID = "sender_id";
         public static final String RECIPIENT_ID = "recipient_id";
+        public static final String CONVERSATION_ID = "conversation_id";
 
         public static final String IS_OUTGOING = "is_outgoing";
 
@@ -337,12 +338,12 @@ public interface TwidereDataStore {
         public static final String MEDIA_LIST = "media_list";
 
         public static final String[] COLUMNS = new String[]{_ID, ACCOUNT_ID, MESSAGE_ID, MESSAGE_TIMESTAMP,
-                SENDER_ID, RECIPIENT_ID, IS_OUTGOING, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, SENDER_NAME,
-                RECIPIENT_NAME, SENDER_SCREEN_NAME, RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
+                SENDER_ID, RECIPIENT_ID, CONVERSATION_ID, IS_OUTGOING, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED,
+                SENDER_NAME, RECIPIENT_NAME, SENDER_SCREEN_NAME, RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
                 RECIPIENT_PROFILE_IMAGE_URL, MEDIA_LIST};
-        public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_INT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+        public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT,
+                TYPE_INT, TYPE_INT, TYPE_INT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
         public static final String DEFAULT_SORT_ORDER = MESSAGE_ID + " DESC";
 

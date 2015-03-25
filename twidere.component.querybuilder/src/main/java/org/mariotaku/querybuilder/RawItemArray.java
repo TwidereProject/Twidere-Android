@@ -12,7 +12,7 @@ public class RawItemArray implements Selectable {
         this.array = converted;
     }
 
-    public RawItemArray(final String[] array) {
+    public RawItemArray(final Object[] array) {
         this.array = array;
     }
 

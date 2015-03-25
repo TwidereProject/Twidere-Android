@@ -20,12 +20,14 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -35,12 +37,14 @@ import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -84,11 +88,12 @@ import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
-import android.support.v7.widget.FixedLinearLayoutManager;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -97,6 +102,7 @@ import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -116,6 +122,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     private AsyncTwitterWrapper mTwitterWrapper;
     private SharedPreferences mPreferences;
     private SharedPreferences mMessageDrafts;
+    private ReadStateManager mReadStateManager;
 
     private RecyclerView mMessagesListView;
     private ListView mUsersSearchList;
@@ -193,11 +200,19 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        final BaseActionBarActivity activity = (BaseActionBarActivity) getActivity();
+        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mImageLoader = TwidereApplication.getInstance(activity).getImageLoaderWrapper();
+        mReadStateManager = new ReadStateManager(activity);
+        mTwitterWrapper = getTwitterWrapper();
+        mValidator = new TwidereValidator(activity);
+
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context viewContext = view.getContext();
         setHasOptionsMenu(true);
-        final BaseActionBarActivity activity = (BaseActionBarActivity) getActivity();
         final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) throw new NullPointerException();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
@@ -232,12 +247,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
             }
         });
         mQueryButton.setOnClickListener(this);
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mImageLoader = TwidereApplication.getInstance(getActivity()).getImageLoaderWrapper();
-        mTwitterWrapper = getTwitterWrapper();
-        mValidator = new TwidereValidator(getActivity());
-        mAdapter = new MessageConversationAdapter(getActivity());
+        mAdapter = new MessageConversationAdapter(activity);
         final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(viewContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.setStackFromEnd(true);
@@ -304,6 +314,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
 
         mUsersSearchList.setVisibility(View.GONE);
         mUsersSearchProgress.setVisibility(View.GONE);
+
     }
 
     private String getDraftsTextKey(long accountId, long userId) {
@@ -628,6 +639,13 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
             mLoaderInitialized = true;
             lm.initLoader(0, args, this);
         }
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+        new SetReadStateTask(getActivity(), account, recipient).execute();
         updateActionBar();
         updateProfileImage();
     }
@@ -763,6 +781,43 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
                 return cachedList;
             }
             return super.loadInBackground();
+        }
+    }
+
+    private static class SetReadStateTask extends AsyncTask<Void, Void, Cursor> {
+        private final Context mContext;
+        private final ReadStateManager mReadStateManager;
+        private final ParcelableAccount mAccount;
+        private final ParcelableUser mRecipient;
+
+        public SetReadStateTask(Context context, ParcelableAccount account, ParcelableUser recipient) {
+            mContext = context;
+            mReadStateManager = new ReadStateManager(context);
+            mAccount = account;
+            mRecipient = recipient;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor.moveToFirst()) {
+                final int messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID);
+                final String key = mAccount.account_id + "-" + mRecipient.id;
+                mReadStateManager.setPosition(DirectMessagesFragment.KEY_READ_POSITION_TAG, key, cursor.getLong(messageIdIdx), false);
+            }
+            Log.d(LOGTAG, Arrays.toString(mReadStateManager.getPositionPairs(DirectMessagesFragment.KEY_READ_POSITION_TAG)));
+            cursor.close();
+        }
+
+        @Override
+        protected Cursor doInBackground(Void... params) {
+            final ContentResolver resolver = mContext.getContentResolver();
+            final String[] projection = {ConversationEntries.MESSAGE_ID};
+            final String selection = Expression.and(
+                    Expression.equals(ConversationEntries.ACCOUNT_ID, mAccount.account_id),
+                    Expression.equals(ConversationEntries.CONVERSATION_ID, mRecipient.id)
+            ).getSQL();
+            final String orderBy = new OrderBy(ConversationEntries.MESSAGE_ID, false).getSQL();
+            return resolver.query(ConversationEntries.CONTENT_URI, projection, selection, null, orderBy);
         }
     }
 }

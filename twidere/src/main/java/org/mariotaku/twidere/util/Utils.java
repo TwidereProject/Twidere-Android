@@ -3736,7 +3736,7 @@ public final class Utils implements Constants, TwitterConstants {
         final Intent profilingServiceIntent = new Intent(context, UCDService.class);
         //spice
         final Intent spiceProfilingServiceIntent = new Intent(context, SpiceService.class);
-        if (prefs.getBoolean(KEY_UCD_DATA_PROFILING, false) || prefs.getBoolean(KEY_SPICE_DATA_PROFILING, false)) {
+        if (prefs.getBoolean(KEY_USAGE_STATISTICS, false)) {
             context.startService(profilingServiceIntent);
             //spice
             context.startService(spiceProfilingServiceIntent);

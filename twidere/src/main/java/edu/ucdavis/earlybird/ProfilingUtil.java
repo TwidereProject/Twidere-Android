@@ -49,7 +49,7 @@ public class ProfilingUtil {
 		if (context == null) return;
 		final SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME,
 				Context.MODE_PRIVATE);
-		if (!prefs.getBoolean(Constants.KEY_UCD_DATA_PROFILING, false)) return;
+		if (!prefs.getBoolean(Constants.KEY_USAGE_STATISTICS, false)) return;
 		final String filename = name + ".csv";
 		new Thread() {
 			@Override

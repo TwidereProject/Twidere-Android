@@ -23,15 +23,18 @@
     <Preference android:layout="@layout/header_usage_statistics"/>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
-        android:key="ucd_data_profiling"
         android:order="11"
-        android:title="@string/research_ucdavis_earlybird"/>
-
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
-        android:key="spice_data_profiling"
-        android:order="12"
-        android:title="@string/research_tsinghua_spice"/>
+        android:title="@string/usage_statistics"
+        android:key="usage_statistics"/>
+    <PreferenceCategory
+        android:title="@string/projects_we_participant"
+        android:order="12">
+        <Preference
+            android:title="@string/research_ucdavis_earlybird"/>
+
+        <Preference
+            android:title="@string/research_tsinghua_spice"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

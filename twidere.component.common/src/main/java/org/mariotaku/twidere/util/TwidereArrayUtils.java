@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -119,21 +120,17 @@ public final class TwidereArrayUtils {
         return min;
     }
 
+    @NonNull
     public static long[] parseLongArray(final String string, final char token) {
-        if (string == null) return new long[0];
-        final String[] items_string_array = string.split(String.valueOf(token));
-        final ArrayList<Long> items_list = new ArrayList<Long>();
-        for (final String id_string : items_string_array) {
+        if (TextUtils.isEmpty(string)) return new long[0];
+        final String[] itemsStringArray = string.split(String.valueOf(token));
+        final long[] array = new long[itemsStringArray.length];
+        for (int i = 0, j = itemsStringArray.length; i < j; i++) {
             try {
-                items_list.add(Long.parseLong(id_string));
+                array[i] = Long.parseLong(itemsStringArray[i]);
             } catch (final NumberFormatException e) {
-                // Ignore.
+                return new long[0];
             }
-        }
-        final int list_size = items_list.size();
-        final long[] array = new long[list_size];
-        for (int i = 0; i < list_size; i++) {
-            array[i] = items_list.get(i);
         }
         return array;
     }
