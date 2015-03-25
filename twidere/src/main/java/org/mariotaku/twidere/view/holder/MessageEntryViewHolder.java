@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,7 +64,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         itemView.setOnClickListener(this);
     }
 
-    public void displayMessage(Cursor cursor) {
+    public void displayMessage(Cursor cursor, boolean isUnread) {
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getImageLoader();
 
@@ -79,7 +80,14 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         screenNameView.setText("@" + screenName);
         textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT)));
         timeView.setTime(timestamp);
-        setIsOutgoing(isOutgoing);
+        if (isOutgoing) {
+            timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_indicator_sent, 0);
+        } else {
+            timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+        nameView.setTypeface(null, isUnread ? Typeface.BOLD : Typeface.NORMAL);
+        screenNameView.setTypeface(null, isUnread ? Typeface.BOLD : Typeface.NORMAL);
+        textView.setTypeface(null, isUnread ? Typeface.BOLD : Typeface.NORMAL);
         if (account_color_enabled) {
             content.drawEnd(Utils.getAccountColor(context, accountId));
         }
@@ -112,15 +120,11 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         }
     }
 
-    public void setIsOutgoing(final boolean is_outgoing) {
-        timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, is_outgoing ? R.drawable.ic_indicator_sent : 0, 0);
-    }
-
     public void setTextSize(final float textSize) {
         nameView.setTextSize(textSize * 1.1f);
         screenNameView.setTextSize(textSize);
         textView.setTextSize(textSize);
-        timeView.setTextSize(textSize);
+        timeView.setTextSize(textSize * 0.85f);
     }
 
     public void setUserColor(final int color) {

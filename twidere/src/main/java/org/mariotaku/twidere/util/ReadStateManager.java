@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -72,6 +73,14 @@ public class ReadStateManager implements Constants {
             if (entry.startsWith(prefix)) return StringLongPair.valueOf(entry).getValue();
         }
         return -1;
+    }
+
+    public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+        mPreferences.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+        mPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     public boolean setPosition(final String key, final String keyId, final long position, boolean acceptOlder) {
@@ -132,6 +141,10 @@ public class ReadStateManager implements Constants {
         editor.putLong(key, id);
         editor.apply();
         return true;
+    }
+
+    public interface OnReadStateChangeListener {
+        void onReadStateChanged();
     }
 
 }
