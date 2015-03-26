@@ -56,7 +56,6 @@
     <string name="unfavorite">Unfavorite</string>
     <string name="reply">Reply</string>
     <string name="share">Share</string>
-    <string name="share_via_twidere">Share via Twidere</string>
     <string name="view_image">Image</string>
     <string name="view_map">Map</string>
     <string name="view_status">View tweet</string>
@@ -100,8 +99,8 @@
     <string name="users_favorited_this">Users favorited this</string>
     <string name="reply_to">Reply to <xliff:g id="user_name">%s</xliff:g></string>
     <string name="quote_user">Quote <xliff:g id="user_name">%s</xliff:g></string>
-    <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, via <xliff:g id="source">%2$s</xliff:g></string>
-    <string name="source">via <xliff:g id="source">%s</xliff:g></string>
+    <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+    <string name="source"><xliff:g id="source">%s</xliff:g></string>
     <string name="filters">Filters</string>
     <string name="users">Users</string>
     <string name="user">User</string>

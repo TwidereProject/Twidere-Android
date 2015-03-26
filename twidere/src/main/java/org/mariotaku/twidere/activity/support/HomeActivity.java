@@ -59,6 +59,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.Toast;
@@ -233,6 +234,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             if (offset <= 0) return;
             animator = ObjectAnimator.ofFloat(this, ControlBarOffsetProperty.SINGLETON, offset, 0);
         }
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.addListener(this);
         animator.setDuration(DURATION);
         animator.start();
