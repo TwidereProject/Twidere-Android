@@ -28,7 +28,7 @@
         android:title="@string/usage_statistics"
         android:key="usage_statistics"/>
     <PreferenceCategory
-        android:title="@string/projects_we_participant"
+        android:title="@string/projects_we_took_part"
         android:order="12">
         <Preference
             android:title="@string/research_ucdavis_earlybird"/>

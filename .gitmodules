@@ -1,6 +1,3 @@
-[submodule "libraries/SlidingMenu"]
-	path = libraries/SlidingMenu
-	url = https://github.com/mariotaku/SlidingMenu-Gradle
 [submodule "libraries/ColorPicker"]
 	path = libraries/ColorPicker
 	url = https://github.com/uucky/ColorPicker-Android.git

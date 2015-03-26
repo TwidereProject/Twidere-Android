@@ -12,7 +12,6 @@ include ':twidere.component.nyan'
 include ':twidere.extension.streaming'
 include ':twidere.extension.twitlonger'
 include ':twidere.extension.push.xiaomi'
-include ':SlidingMenu', ':ColorPicker'
+include ':ColorPicker'
 
-project(':SlidingMenu').projectDir = file('libraries/SlidingMenu/library')
 project(':ColorPicker').projectDir = file('libraries/ColorPicker/library')

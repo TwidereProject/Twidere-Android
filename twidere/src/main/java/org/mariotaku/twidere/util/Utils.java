@@ -3731,7 +3731,7 @@ public final class Utils implements Constants, TwitterConstants {
         showWarnMessage(context, context.getText(resId), long_message);
     }
 
-    public static void startProfilingServiceIfNeeded(final Context context) {
+    public static void startUsageStatisticsServiceIfNeeded(final Context context) {
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final Intent profilingServiceIntent = new Intent(context, UCDService.class);
         //spice

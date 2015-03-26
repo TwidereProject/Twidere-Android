@@ -3,11 +3,14 @@ package org.mariotaku.twidere.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.util.Log;
+
+import org.mariotaku.twidere.Constants;
 
 import java.util.Map;
 import java.util.Set;
 
-public class SharedPreferencesWrapper {
+public class SharedPreferencesWrapper implements Constants {
 
 	private final SharedPreferences mPreferences;
 	private final Class<?> mKeysClass;
@@ -33,6 +36,7 @@ public class SharedPreferencesWrapper {
 		try {
 			return mPreferences.getBoolean(key, defValue);
 		} catch (final ClassCastException e) {
+            if (Utils.isDebugBuild()) Log.w(LOGTAG, e);
 			mPreferences.edit().remove(key).apply();
 			return defValue;
 		}
@@ -42,6 +46,7 @@ public class SharedPreferencesWrapper {
 		try {
 			return mPreferences.getFloat(key, defValue);
 		} catch (final ClassCastException e) {
+            if (Utils.isDebugBuild()) Log.w(LOGTAG, e);
 			mPreferences.edit().remove(key).apply();
 			return defValue;
 		}
@@ -51,6 +56,7 @@ public class SharedPreferencesWrapper {
 		try {
 			return mPreferences.getInt(key, defValue);
 		} catch (final ClassCastException e) {
+            if (Utils.isDebugBuild()) Log.w(LOGTAG, e);
 			mPreferences.edit().remove(key).apply();
 			return defValue;
 		}
@@ -60,6 +66,7 @@ public class SharedPreferencesWrapper {
 		try {
 			return mPreferences.getLong(key, defValue);
 		} catch (final ClassCastException e) {
+            if (Utils.isDebugBuild()) Log.w(LOGTAG, e);
 			mPreferences.edit().remove(key).apply();
 			return defValue;
 		}
@@ -73,6 +80,7 @@ public class SharedPreferencesWrapper {
 		try {
 			return mPreferences.getString(key, defValue);
 		} catch (final ClassCastException e) {
+            if (Utils.isDebugBuild()) Log.w(LOGTAG, e);
 			mPreferences.edit().remove(key).apply();
 			return defValue;
 		}
@@ -82,7 +90,8 @@ public class SharedPreferencesWrapper {
 		try {
 			return mPreferences.getStringSet(key, defValue);
 		} catch (final ClassCastException e) {
-			mPreferences.edit().remove(key).apply();
+            if (Utils.isDebugBuild()) Log.w(LOGTAG, e);
+            mPreferences.edit().remove(key).apply();
 			return defValue;
 		}
 	}

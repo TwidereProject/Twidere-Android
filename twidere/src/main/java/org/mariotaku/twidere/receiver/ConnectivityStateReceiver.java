@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.receiver;
 
-import static org.mariotaku.twidere.util.Utils.startProfilingServiceIfNeeded;
+import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
 import android.content.BroadcastReceiver;
@@ -44,7 +44,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
 			Log.d(RECEIVER_LOGTAG, String.format("Received Broadcast %s", intent));
 		}
 		if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
-		startProfilingServiceIfNeeded(context);
+		startUsageStatisticsServiceIfNeeded(context);
 		startRefreshServiceIfNeeded(context);
         //spice
         SpiceProfilingUtil.profile(context,SpiceProfilingUtil.FILE_NAME_ONWIFI, NetworkStateUtil.getConnectedType(context));

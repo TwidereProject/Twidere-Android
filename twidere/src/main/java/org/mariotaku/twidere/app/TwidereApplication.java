@@ -23,6 +23,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -69,12 +71,14 @@ import static org.mariotaku.twidere.util.UserColorNameUtils.initUserColor;
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
-import static org.mariotaku.twidere.util.Utils.startProfilingServiceIfNeeded;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
+import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 
+    public static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
+    public static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
     private Handler mHandler;
     private MediaLoaderWrapper mMediaLoaderWrapper;
     private ImageLoader mImageLoader;
@@ -194,15 +198,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         }
         setTheme(ThemeUtils.getThemeResource(this));
         super.onCreate();
-//        TwidereOkHttpPlatform.applyHack(this);
         mHandler = new Handler();
         mMessageBus = new Bus();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        if (!mPreferences.contains(KEY_USAGE_STATISTICS)) {
-            final boolean prevUsageEnabled = mPreferences.getBoolean("ucd_data_profiling", false)
-                    || mPreferences.getBoolean("spice_data_profiling", false);
-            mPreferences.edit().putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled).apply();
-        }
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         initializeAsyncTask();
         initAccountColor(this);
@@ -222,8 +220,27 @@ public class TwidereApplication extends MultiDexApplication implements Constants
                     PackageManager.DONT_KILL_APP);
         }
 
-        startProfilingServiceIfNeeded(this);
+
+        migrateUsageStatisticsPreferences();
+
+        startUsageStatisticsServiceIfNeeded(this);
         startRefreshServiceIfNeeded(this);
+    }
+
+    private void migrateUsageStatisticsPreferences() {
+        final boolean hasUsageStatistics = mPreferences.contains(KEY_USAGE_STATISTICS);
+        final boolean hasUCDDataProfiling = mPreferences.contains(KEY_UCD_DATA_PROFILING);
+        final boolean hasSpiceDataProfiling = mPreferences.contains(KEY_SPICE_DATA_PROFILING);
+        Log.d(LOGTAG, String.format("usage: %b, ucd: %b, spice: %b", hasUsageStatistics, hasUCDDataProfiling, hasSpiceDataProfiling));
+        if (!hasUsageStatistics && (hasUCDDataProfiling || hasSpiceDataProfiling)) {
+            final boolean prevUsageEnabled = mPreferences.getBoolean(KEY_UCD_DATA_PROFILING, false)
+                    || mPreferences.getBoolean(KEY_SPICE_DATA_PROFILING, false);
+            final Editor editor = mPreferences.edit();
+            editor.putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled);
+            editor.remove(KEY_UCD_DATA_PROFILING);
+            editor.remove(KEY_SPICE_DATA_PROFILING);
+            editor.apply();
+        }
     }
 
     @Override
@@ -244,10 +261,10 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             reloadConnectivitySettings();
         } else if (KEY_USAGE_STATISTICS.equals(key)) {
             stopService(new Intent(this, UCDService.class));
-            startProfilingServiceIfNeeded(this);
+            startUsageStatisticsServiceIfNeeded(this);
             //spice
             stopService(new Intent(this, SpiceService.class));
-            startProfilingServiceIfNeeded(this);
+            startUsageStatisticsServiceIfNeeded(this);
             //end
         } else if (KEY_CONSUMER_KEY.equals(key) || KEY_CONSUMER_SECRET.equals(key) || KEY_API_URL_FORMAT.equals(key)
                 || KEY_AUTH_TYPE.equals(key) || KEY_SAME_OAUTH_SIGNING_URL.equals(key)) {
