@@ -32,7 +32,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -229,10 +228,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private void migrateUsageStatisticsPreferences() {
         final boolean hasUsageStatistics = mPreferences.contains(KEY_USAGE_STATISTICS);
-        final boolean hasUCDDataProfiling = mPreferences.contains(KEY_UCD_DATA_PROFILING);
-        final boolean hasSpiceDataProfiling = mPreferences.contains(KEY_SPICE_DATA_PROFILING);
-        Log.d(LOGTAG, String.format("usage: %b, ucd: %b, spice: %b", hasUsageStatistics, hasUCDDataProfiling, hasSpiceDataProfiling));
-        if (!hasUsageStatistics && (hasUCDDataProfiling || hasSpiceDataProfiling)) {
+        if (hasUsageStatistics) return;
+        if (mPreferences.contains(KEY_UCD_DATA_PROFILING) || mPreferences.contains(KEY_SPICE_DATA_PROFILING)) {
             final boolean prevUsageEnabled = mPreferences.getBoolean(KEY_UCD_DATA_PROFILING, false)
                     || mPreferences.getBoolean(KEY_SPICE_DATA_PROFILING, false);
             final Editor editor = mPreferences.edit();
