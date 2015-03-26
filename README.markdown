@@ -10,7 +10,7 @@ Twidere is a powerful twitter client for Android 4.0+, which gives you a full Ma
 
 ## Features ##
 
-* Pure & Clean Material design works for both Lollipop and Lollipop devices
+* Pure & Clean Material design works for both Lollipop and pre-Lollipop devices
 * Dark/Light theme, with theme color support
 * Media preview
 * Built in image viewer (with animated gif support) and map viewer
