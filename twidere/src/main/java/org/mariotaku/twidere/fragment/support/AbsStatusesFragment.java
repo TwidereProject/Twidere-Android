@@ -120,9 +120,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
 
-    public boolean isRefreshing() {
-        return mSwipeRefreshLayout.isRefreshing();
-    }
+    public abstract boolean isRefreshing();
 
     public AbsStatusesAdapter<Data> getAdapter() {
         return mAdapter;
@@ -157,7 +155,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mReadStateManager = new ReadStateManager(getActivity());
+        mReadStateManager = getReadStateManager();
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();

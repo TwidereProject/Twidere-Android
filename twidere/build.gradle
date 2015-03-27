@@ -36,7 +36,7 @@ android {
     }
     buildTypes {
         debug {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm")
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
         }
     }

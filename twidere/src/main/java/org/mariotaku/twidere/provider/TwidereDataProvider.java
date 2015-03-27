@@ -326,7 +326,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         updatePreferences();
         mPermissionsManager = new PermissionsManager(context);
-        mReadStateManager = new ReadStateManager(context);
+        mReadStateManager = app.getReadStateManager();
         mImagePreloader = new ImagePreloader(context, app.getImageLoader());
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_HOME_ACTIVITY_ONSTART);

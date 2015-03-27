@@ -305,19 +305,11 @@ public class BackgroundOperationService extends IntentService implements Constan
             final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
             final long draftId = ParseUtils.parseLong(draftUri.getLastPathSegment(), -1);
             mTwitter.addSendingDraftId(draftId);
-
-            try {
-                Thread.sleep(15000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
             boolean failed = false;
             Exception exception = null;
             final Expression where = Expression.equals(Drafts._ID, draftId);
             final List<Long> failedAccountIds = ListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
-
-
 
             for (final SingleResponse<ParcelableStatus> response : result) {
 
@@ -334,7 +326,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                                 + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id);
                         SpiceProfilingUtil.profile(this.getBaseContext(), response.getData().account_id, response.getData().id + ",Tweet," + response.getData().account_id + ","
                                 + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id);
-                    }   else
+                    } else
                         for (final ParcelableMedia spiceMedia : response.getData().media) {
                             SpiceProfilingUtil.log(this.getBaseContext(), response.getData().id + ",Media," + response.getData().account_id + ","
                                     + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
@@ -395,6 +387,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                                                                       final long accountId, final long recipientId,
                                                                       final String text, final String imageUri) {
         final Twitter twitter = getTwitterInstance(this, accountId, true, true);
+        if (twitter == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
             if (imageUri != null) {
@@ -418,8 +411,6 @@ public class BackgroundOperationService extends IntentService implements Constan
                         true);
             }
             Utils.setLastSeen(this, recipientId, System.currentTimeMillis());
-
-
 
 
             return SingleResponse.getInstance(directMessage);

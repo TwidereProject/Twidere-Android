@@ -54,6 +54,7 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
+import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -105,9 +106,8 @@ import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import android.support.v7.widget.FixedLinearLayoutManager;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MathUtils;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -1127,11 +1127,14 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         final int tweetLength = mValidator.getTweetLength(text), maxLength = mValidator.getMaxTweetLength();
         if (!mStatusShortenerUsed && tweetLength > maxLength) {
             mEditText.setError(getString(R.string.error_message_status_too_long));
-            final int text_length = mEditText.length();
-            mEditText.setSelection(text_length - (tweetLength - maxLength), text_length);
+            final int textLength = mEditText.length();
+            mEditText.setSelection(textLength - (tweetLength - maxLength), textLength);
             return;
         } else if (!hasMedia && (isEmpty(text) || noReplyContent(text))) {
             mEditText.setError(getString(R.string.error_message_no_content));
+            return;
+        } else if (mAccountsAdapter.isSelectionEmpty()) {
+            mEditText.setError(getString(R.string.no_account_selected));
             return;
         }
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
@@ -1263,6 +1266,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             final ParcelableAccount[] result = new ParcelableAccount[selectedCount];
             System.arraycopy(temp, 0, result, 0, result.length);
             return result;
+        }
+
+        public boolean isSelectionEmpty() {
+            return getSelectedAccountIds().length == 0;
         }
 
         public void setSelectedAccountIds(long... accountIds) {

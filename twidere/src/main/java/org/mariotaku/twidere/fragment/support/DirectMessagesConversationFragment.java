@@ -205,7 +205,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mImageLoader = TwidereApplication.getInstance(activity).getImageLoaderWrapper();
-        mReadStateManager = new ReadStateManager(activity);
+        mReadStateManager = getReadStateManager();
         mTwitterWrapper = getTwitterWrapper();
         mValidator = new TwidereValidator(activity);
 
@@ -792,7 +792,7 @@ public class DirectMessagesConversationFragment extends BaseSupportFragment impl
 
         public SetReadStateTask(Context context, ParcelableAccount account, ParcelableUser recipient) {
             mContext = context;
-            mReadStateManager = new ReadStateManager(context);
+            mReadStateManager = TwidereApplication.getInstance(context).getReadStateManager();
             mAccount = account;
             mRecipient = recipient;
         }

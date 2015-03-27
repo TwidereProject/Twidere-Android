@@ -120,6 +120,7 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
             client.setProxy(new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(conf.getHttpProxyHost(),
                     conf.getHttpProxyPort())));
         }
+//        client.setHostnameVerifier(new HostResolvedHostnameVerifier());
         Internal.instance.setNetwork(client, new Network() {
             @Override
             public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {

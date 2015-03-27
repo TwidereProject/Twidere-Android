@@ -294,7 +294,7 @@ public class MediaEntityJSONImpl implements MediaEntity {
             variants = VariantJSONImpl.fromJSONArray(json.getJSONArray("variants"));
             final JSONArray aspectRatioJson = json.getJSONArray("aspect_ratio");
             aspectRatio = new long[]{aspectRatioJson.getLong(0), aspectRatioJson.getLong(1)};
-            duration = json.getLong("duration_millis");
+            duration = json.optLong("duration_millis", -1);
         }
 
         @Override

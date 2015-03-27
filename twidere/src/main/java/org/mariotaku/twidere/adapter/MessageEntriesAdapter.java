@@ -79,7 +79,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mReadStateManager = new ReadStateManager(context);
+        mReadStateManager = app.getReadStateManager();
         mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
 
             @Override

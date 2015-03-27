@@ -38,6 +38,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.ReadStateManager;
 
 public class BaseSupportFragment extends Fragment implements IBaseFragment, Constants {
 
@@ -82,6 +83,10 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
 
     public AsyncTwitterWrapper getTwitterWrapper() {
         return getApplication() != null ? getApplication().getTwitterWrapper() : null;
+    }
+
+    public ReadStateManager getReadStateManager() {
+        return getApplication() != null ? getApplication().getReadStateManager() : null;
     }
 
     public void invalidateOptionsMenu() {

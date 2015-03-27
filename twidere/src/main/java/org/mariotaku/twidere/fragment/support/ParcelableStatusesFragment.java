@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -145,6 +146,12 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     protected long getAccountId() {
         final Bundle args = getArguments();
         return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        final LoaderManager lm = getLoaderManager();
+        return lm.hasRunningLoaders();
     }
 
     protected String[] getSavedStatusesFileArgs() {

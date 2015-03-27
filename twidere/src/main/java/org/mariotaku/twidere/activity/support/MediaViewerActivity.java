@@ -41,6 +41,7 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
@@ -206,8 +207,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             mVideoLoader = TwidereApplication.getInstance(getActivity()).getVideoLoader();
             final String url = getBestVideoUrl(getMedia());
             if (url != null) {
-//                mVideoLoader.loadVideo(url, this);
-                mWebView.loadUrl(url);
+                mVideoLoader.loadVideo(url, this);
             }
         }
 
@@ -260,7 +260,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public void onVideoLoadingComplete(String uri, VideoLoadingListener listener, File file) {
-            mWebView.loadUrl(Uri.fromFile(file).toString());
+            Toast.makeText(getActivity(), String.format("%s length: %d", file, file.length()), Toast.LENGTH_SHORT).show();
         }
 
         @Override
