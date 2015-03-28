@@ -1013,15 +1013,19 @@ public class StatusFragment extends BaseSupportFragment
                         twitter.destroyFavoriteAsync(status.account_id, status.id);
                         //spice
                         SpiceProfilingUtil.profile(adapter.getContext(),
-                                status.account_id, status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
-                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Unfavor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                                status.account_id, status.id + ",Unfavor,"
+                                        + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
+                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Unfavor,"
+                                + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
                         //end
                     } else {
                         twitter.createFavoriteAsync(status.account_id, status.id);
                         //spice
                         SpiceProfilingUtil.profile(adapter.getContext(),
-                                status.account_id, status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
-                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Favor," + status.account_id + "," + status.user_id + "," + status.timestamp);
+                                status.account_id, status.id + ",Favor,"
+                                        + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
+                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Favor,"
+                                + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
                         //end
                     }
                     break;
