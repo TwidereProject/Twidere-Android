@@ -105,7 +105,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     @Override
     public boolean canDismiss(int position) {
-        return position < getHistorySize(mSearchQuery.getText());
+        return mUsersSearchAdapter.canDismiss(position);
     }
 
     @Override
@@ -285,41 +285,9 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     }
 
-    static class HeaderItem implements SuggestionItem {
-
-        static final int ITEM_VIEW_TYPE = 1;
-
-        @Override
-        public void bindView(SuggestionsAdapter adapter, View view, int position) {
-
-        }
-
-        @Override
-        public int getItemViewType() {
-            return ITEM_VIEW_TYPE;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return false;
-        }
-
-        @Override
-        public void onItemClick(QuickSearchBarActivity activity, int position) {
-
-        }
-
-        @Override
-        public int getItemLayoutResource() {
-            return 0;
-        }
-
-
-    }
-
     static class SearchHistoryItem extends BaseClickableItem {
 
-        static final int ITEM_VIEW_TYPE = 1;
+        static final int ITEM_VIEW_TYPE = 0;
         private final long mCursorId;
         private final String mQuery;
 
@@ -369,7 +337,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     static class SavedSearchItem extends BaseClickableItem {
 
-        static final int ITEM_VIEW_TYPE = 2;
+        static final int ITEM_VIEW_TYPE = 1;
         private final String mQuery;
 
         public SavedSearchItem(String query) {
@@ -405,7 +373,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     static class UserSuggestionItem extends BaseClickableItem {
 
-        static final int ITEM_VIEW_TYPE = 3;
+        static final int ITEM_VIEW_TYPE = 2;
         private final ParcelableUser mUser;
 
         public UserSuggestionItem(Cursor c, CachedIndices i, long accountId) {
@@ -501,6 +469,10 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        }
+
+        public boolean canDismiss(int position) {
+            return getItemViewType(position) == SearchHistoryItem.ITEM_VIEW_TYPE;
         }
 
         public Context getContext() {

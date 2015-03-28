@@ -38,6 +38,7 @@ public class StringUtils {
 
     public static boolean startsWithIgnoreCase(@NonNull String string, @NonNull String prefix,
                                                int start) {
+        if (prefix.length() > string.length()) return false;
         return regionMatchesIgnoreCase(string, start, prefix, 0, prefix.length());
     }
 }
