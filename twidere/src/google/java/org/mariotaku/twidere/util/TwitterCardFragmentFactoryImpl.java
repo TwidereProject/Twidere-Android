@@ -19,18 +19,9 @@
 
 package org.mariotaku.twidere.util;
 
-import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
-import com.google.android.youtube.player.YouTubePlayer.Provider;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableValueItem;
 
 /**
  * Created by mariotaku on 15/1/1.

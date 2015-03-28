@@ -98,6 +98,7 @@ import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.HotKeyHandler;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UnreadCountUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -119,7 +120,6 @@ import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
-import static org.mariotaku.twidere.util.CustomTabUtils.getAddedTabPosition;
 import static org.mariotaku.twidere.util.Utils.cleanDatabasesByItemLimit;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
@@ -343,7 +343,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONCREATE));
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         mTabDisplayOption = getTabDisplayOptionInt(this);
-        final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
 
         mColorStatusFrameLayout.setOnFitSystemWindowsListener(this);
         ThemeUtils.applyBackground(mTabIndicator);
@@ -361,7 +360,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
         mEmptyTabHint.setOnClickListener(this);
-        setTabPosition(initialTabPosition);
+
         setupSlidingMenu();
         setupBars();
         showDataProfilingRequest();
@@ -380,6 +379,9 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
         mPagerPosition = Float.NaN;
         setupHomeTabs();
+
+        final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
+        setTabPosition(initialTabPosition);
     }
 
     @Override
@@ -607,9 +609,9 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     @Override
     protected void onNewIntent(final Intent intent) {
-        final int tab_position = handleIntent(intent, false);
-        if (tab_position >= 0) {
-            mViewPager.setCurrentItem(MathUtils.clamp(tab_position, mPagerAdapter.getCount(), 0));
+        final int tabPosition = handleIntent(intent, false);
+        if (tabPosition >= 0) {
+            mViewPager.setCurrentItem(MathUtils.clamp(tabPosition, mPagerAdapter.getCount(), 0));
         }
     }
 
@@ -683,8 +685,21 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             mTwitterWrapper.refreshAll();
         }
 
-        final int tab = intent.getIntExtra(EXTRA_INITIAL_TAB, -1);
-        final int initialTab = tab != -1 ? tab : getAddedTabPosition(this, intent.getStringExtra(EXTRA_TAB_TYPE));
+        final Uri uri = intent.getData();
+        final String tabType = uri != null ? Utils.matchTabType(uri) : null;
+        int initialTab = -1, initalTabFallback;
+        if (tabType != null) {
+            final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID));
+            for (int i = mPagerAdapter.getCount() - 1; i > -1; i--) {
+                final SupportTabSpec tab = mPagerAdapter.getTab(i);
+                if (tabType.equals(tab.type)) {
+                    initialTab = i;
+                    if (hasAccountId(tab.args, accountId)) {
+                        break;
+                    }
+                }
+            }
+        }
         if (initialTab != -1 && mViewPager != null) {
             // clearNotification(initial_tab);
         }
@@ -694,6 +709,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             startActivity(extraIntent);
         }
         return initialTab;
+    }
+
+    private boolean hasAccountId(Bundle args, long accountId) {
+        if (args == null) return false;
+        if (args.containsKey(EXTRA_ACCOUNT_ID)) {
+            return args.getLong(EXTRA_ACCOUNT_ID) == accountId;
+        } else if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
+            return ArrayUtils.contains(args.getLongArray(EXTRA_ACCOUNT_IDS), accountId);
+        }
+        return false;
     }
 
     private boolean hasActivatedTask() {
@@ -720,10 +745,10 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     private void setTabPosition(final int initial_tab) {
-        final boolean remember_position = mPreferences.getBoolean(KEY_REMEMBER_POSITION, true);
+        final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, true);
         if (initial_tab >= 0) {
             mViewPager.setCurrentItem(MathUtils.clamp(initial_tab, mPagerAdapter.getCount(), 0));
-        } else if (remember_position) {
+        } else if (rememberPosition) {
             final int position = mPreferences.getInt(KEY_SAVED_TAB_POSITION, 0);
             mViewPager.setCurrentItem(MathUtils.clamp(position, mPagerAdapter.getCount(), 0));
         }

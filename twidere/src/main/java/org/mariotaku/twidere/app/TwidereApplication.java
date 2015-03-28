@@ -42,18 +42,20 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.otto.Bus;
 
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
@@ -74,6 +76,7 @@ import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
+@ReportsCrashes(formKey = "", mode = ReportingInteractionMode.SILENT)
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 
@@ -199,10 +202,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onCreate() {
+        BugReporter.init(this);
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();
         }
-        setTheme(ThemeUtils.getThemeResource(this));
+//        setTheme(ThemeUtils.getThemeResource(this));
         super.onCreate();
         mHandler = new Handler();
         mMessageBus = new Bus();
@@ -226,9 +230,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
                     PackageManager.DONT_KILL_APP);
         }
 
-
         migrateUsageStatisticsPreferences();
-
         startUsageStatisticsServiceIfNeeded(this);
         startRefreshServiceIfNeeded(this);
     }

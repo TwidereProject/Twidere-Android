@@ -270,6 +270,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static final Pattern PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)");
     private static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final UriMatcher LINK_HANDLER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final UriMatcher HOME_TABS_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH,
@@ -379,6 +380,9 @@ public final class Utils implements Constants, TwitterConstants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_SEARCH, null, LINK_ID_SEARCH);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_MUTES_USERS, null, LINK_ID_MUTES_USERS);
 
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_HOME, null, CustomTabUtils.TAB_CODE_HOME_TIMELINE);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_MENTIONS, null, CustomTabUtils.TAB_CODE_MENTIONS_TIMELINE);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, CustomTabUtils.TAB_CODE_DIRECT_MESSAGES);
     }
 
     private static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
@@ -2827,6 +2831,31 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int matchLinkId(final Uri uri) {
         return LINK_HANDLER_URI_MATCHER.match(uri);
+    }
+
+
+    public static int matchTabCode(final Uri uri) {
+        return HOME_TABS_URI_MATCHER.match(uri);
+    }
+
+
+    public static String matchTabType(final Uri uri) {
+        return getTabType(matchTabCode(uri));
+    }
+
+    public static String getTabType(final int code) {
+        switch (code) {
+            case TAB_CODE_HOME_TIMELINE: {
+                return TAB_TYPE_HOME_TIMELINE;
+            }
+            case TAB_CODE_MENTIONS_TIMELINE: {
+                return TAB_TYPE_MENTIONS_TIMELINE;
+            }
+            case TAB_CODE_DIRECT_MESSAGES: {
+                return TAB_TYPE_DIRECT_MESSAGES;
+            }
+        }
+        return null;
     }
 
     public static void openMessageConversation(final FragmentActivity activity, final long accountId,
