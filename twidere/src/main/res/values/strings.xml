@@ -735,5 +735,6 @@
     <string name="from_name_and_N_others">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$d</xliff:g> others</string>
     <string name="projects_we_took_part">Projects we took part</string>
     <string name="activated_accounts">Activated accounts</string>
+    <string name="search">Search</string>
 
 </resources>

@@ -7,7 +7,8 @@
         android:key="cat_theme_preview"
         android:order="11"
         android:title="@string/preview">
-        <org.mariotaku.twidere.preference.ThemePreviewPreference android:key="theme_preview"/>
+        <org.mariotaku.twidere.preference.ThemePreviewPreference
+            android:key="theme_preview"/>
     </PreferenceCategory>
 
     <org.mariotaku.twidere.preference.SummaryListPreference

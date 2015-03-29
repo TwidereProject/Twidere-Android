@@ -807,7 +807,7 @@ public class ThemeUtils implements Constants {
         if (context == null) return Color.TRANSPARENT;
         final Resources res = getResources(context);
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        final int def = res.getColor(R.color.material_light_blue);
+        final int def = res.getColor(R.color.branding_color);
         return pref.getInt(KEY_THEME_COLOR, def);
     }
 

@@ -178,7 +178,7 @@
         </activity>
         <activity
             android:name=".activity.support.QuickSearchBarActivity"
-            android:label="@android:string/search_go"
+            android:label="@string/search"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Blank.Dialog"
             android:windowSoftInputMode="adjustResize">
