@@ -25,6 +25,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -46,7 +47,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
@@ -90,7 +91,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     @Override
     protected void onAttachedToHierarchy(final PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
-        new LoadAccountsTask(this).executeTask();
+        AsyncTaskUtils.executeTask(new LoadAccountsTask(this));
     }
 
     protected abstract void setupPreference(AccountItemPreference preference, ParcelableAccount account);
@@ -213,7 +214,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         }
     }
 
-    private static class LoadAccountsTask extends TwidereAsyncTask<Void, Void, List<ParcelableAccount>> {
+    private static class LoadAccountsTask extends AsyncTask<Void, Void, List<ParcelableAccount>> {
 
         private final AccountsListPreference mPreference;
 

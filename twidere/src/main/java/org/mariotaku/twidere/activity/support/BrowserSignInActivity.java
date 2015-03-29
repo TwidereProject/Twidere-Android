@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
@@ -41,13 +42,13 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
+import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -121,10 +122,10 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
     }
 
     private void getRequestToken() {
-        if (mRequestToken != null || mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING)
+        if (mRequestToken != null || mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING)
             return;
         mTask = new GetRequestTokenTask(this);
-        mTask.executeTask();
+        AsyncTaskUtils.executeTask(mTask);
     }
 
     private void loadUrl(final String url) {
@@ -207,7 +208,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
 
     }
 
-    static class GetRequestTokenTask extends TwidereAsyncTask<Void, Void, RequestToken> {
+    static class GetRequestTokenTask extends AsyncTask<Void, Void, RequestToken> {
 
         private final String mConsumerKey, mConsumerSecret;
         private final TwidereApplication mApplication;

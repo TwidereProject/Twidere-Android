@@ -22,8 +22,8 @@ package org.mariotaku.twidere.adapter.iface;
 import android.content.Context;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 /**

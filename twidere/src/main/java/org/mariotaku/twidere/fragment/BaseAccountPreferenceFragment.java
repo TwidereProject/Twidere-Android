@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.fragment;
 
-import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

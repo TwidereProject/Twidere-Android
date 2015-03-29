@@ -19,18 +19,13 @@
 
 package org.mariotaku.twidere.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.Window;
 import android.widget.FrameLayout;
 
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 
 public class ExtendedFrameLayout extends FrameLayout implements IExtendedView {

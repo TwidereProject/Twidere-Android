@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.loader.support;
 
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
-
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
@@ -28,6 +26,8 @@ import twitter4j.ResponseList;
 import twitter4j.SavedSearch;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+
+import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 
 public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearch>> {
 

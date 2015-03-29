@@ -19,13 +19,6 @@
 
 package org.mariotaku.twidere.util.imageloader;
 
-import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
-import static org.mariotaku.twidere.util.Utils.getImageLoaderHttpClient;
-import static org.mariotaku.twidere.util.Utils.getNormalTwitterProfileImage;
-import static org.mariotaku.twidere.util.Utils.getRedirectedHttpResponse;
-import static org.mariotaku.twidere.util.Utils.getTwitterAuthorization;
-import static org.mariotaku.twidere.util.Utils.getTwitterProfileImageOfSize;
-
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -41,14 +34,21 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.Utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+
 import twitter4j.TwitterException;
 import twitter4j.auth.Authorization;
 import twitter4j.http.HttpClientWrapper;
 import twitter4j.http.HttpResponse;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
+import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
+import static org.mariotaku.twidere.util.Utils.getImageLoaderHttpClient;
+import static org.mariotaku.twidere.util.Utils.getNormalTwitterProfileImage;
+import static org.mariotaku.twidere.util.Utils.getRedirectedHttpResponse;
+import static org.mariotaku.twidere.util.Utils.getTwitterAuthorization;
+import static org.mariotaku.twidere.util.Utils.getTwitterProfileImageOfSize;
 
 public class TwidereImageDownloader extends BaseImageDownloader implements Constants {
 

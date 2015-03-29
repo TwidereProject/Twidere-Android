@@ -19,11 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.createFilteredUser;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getDisplayName;
-import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
-import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -50,6 +45,10 @@ import org.mariotaku.twidere.util.UserColorNameUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.mariotaku.twidere.util.ContentValuesCreator.createFilteredUser;
+import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
+import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
 public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment implements OnMultiChoiceClickListener,
 		OnClickListener {

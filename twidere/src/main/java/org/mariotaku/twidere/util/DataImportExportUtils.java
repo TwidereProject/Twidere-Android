@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import static org.mariotaku.twidere.annotation.Preference.Type.INVALID;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -44,6 +42,8 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import static org.mariotaku.twidere.annotation.Preference.Type.INVALID;
 
 public class DataImportExportUtils implements Constants {
 

@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -57,7 +58,7 @@ import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.preference.WizardPageHeaderPreference;
 import org.mariotaku.twidere.preference.WizardPageNavPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -87,15 +88,15 @@ public class SettingsWizardActivity extends Activity implements Constants {
     private AbsInitialSettingsTask mTask;
 
     public void applyInitialSettings() {
-        if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING) return;
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
         mTask = new InitialSettingsTask(this);
-        mTask.executeTask();
+        AsyncTaskUtils.executeTask(mTask);
     }
 
     public void applyInitialTabSettings() {
-        if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING) return;
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
         mTask = new InitialTabSettingsTask(this);
-        mTask.executeTask();
+        AsyncTaskUtils.executeTask(mTask);
     }
 
     public void exitWizard() {
@@ -503,7 +504,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
         }
     }
 
-    static abstract class AbsInitialSettingsTask extends TwidereAsyncTask<Void, Void, Boolean> {
+    static abstract class AbsInitialSettingsTask extends AsyncTask<Void, Void, Boolean> {
 
         private static final String FRAGMENT_TAG = "initial_settings_dialog";
 

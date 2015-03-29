@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import static org.mariotaku.twidere.util.ServiceUtils.bindToService;
-
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
@@ -33,6 +31,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.IStatusShortener;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
+
+import static org.mariotaku.twidere.util.ServiceUtils.bindToService;
 
 public final class StatusShortenerInterface implements Constants, IStatusShortener {
 

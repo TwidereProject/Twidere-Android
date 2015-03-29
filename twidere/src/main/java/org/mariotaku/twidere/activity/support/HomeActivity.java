@@ -37,6 +37,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -90,7 +91,7 @@ import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
@@ -592,9 +593,9 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     public void updateUnreadCount() {
         if (mTabIndicator == null || mUpdateUnreadCountTask != null
-                && mUpdateUnreadCountTask.getStatus() == TwidereAsyncTask.Status.RUNNING) return;
+                && mUpdateUnreadCountTask.getStatus() == AsyncTask.Status.RUNNING) return;
         mUpdateUnreadCountTask = new UpdateUnreadCountTask(mTabIndicator);
-        mUpdateUnreadCountTask.executeTask();
+        AsyncTaskUtils.executeTask(mUpdateUnreadCountTask);
         mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
     }
 
@@ -959,7 +960,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     }
 
-    private static class UpdateUnreadCountTask extends TwidereAsyncTask<Void, Void, int[]> {
+    private static class UpdateUnreadCountTask extends AsyncTask<Void, Void, int[]> {
         private final Context mContext;
         private final TabPagerIndicator mIndicator;
 

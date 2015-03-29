@@ -24,9 +24,9 @@ import android.content.SharedPreferences;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
-import twitter4j.CursorSupport;
-
 import java.util.List;
+
+import twitter4j.CursorSupport;
 
 public abstract class BaseCursorSupportUsersLoader extends Twitter4JUsersLoader {
 

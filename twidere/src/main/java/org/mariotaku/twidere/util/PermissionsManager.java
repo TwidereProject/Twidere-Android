@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import static android.text.TextUtils.isEmpty;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -32,6 +30,8 @@ import org.mariotaku.twidere.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.text.TextUtils.isEmpty;
 
 public class PermissionsManager implements Constants {
 

@@ -398,6 +398,7 @@ public final class Utils implements Constants, TwitterConstants {
         HOME_TABS_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, CustomTabUtils.TAB_CODE_DIRECT_MESSAGES);
     }
 
+
     private static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
     private static LongSparseArray<String> sAccountScreenNames = new LongSparseArray<>();
     private static LongSparseArray<String> sAccountNames = new LongSparseArray<>();

@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +27,8 @@ import android.os.Bundle;
 
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserFollowersLoader;
+
+import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
 
 public class UserFollowersFragment extends CursorSupportUsersListFragment {
 

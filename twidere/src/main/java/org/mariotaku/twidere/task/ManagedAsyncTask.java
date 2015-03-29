@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.task;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.squareup.otto.Bus;
 
@@ -28,7 +29,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
-public abstract class ManagedAsyncTask<Params, Progress, Result> extends TwidereAsyncTask<Params, Progress, Result> implements
+public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> implements
         Constants {
 
     private final AsyncTaskManager manager;
@@ -40,7 +41,6 @@ public abstract class ManagedAsyncTask<Params, Progress, Result> extends Twidere
     }
 
     public ManagedAsyncTask(final Context context, final AsyncTaskManager manager, final String tag) {
-        super(manager.getHandler());
         this.manager = manager;
         this.context = context;
         this.tag = tag;

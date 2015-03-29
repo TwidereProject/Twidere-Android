@@ -17,19 +17,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j.api;
+package org.mariotaku.twidere.util;
 
-import java.io.File;
-import java.io.InputStream;
+import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
-import twitter4j.MediaUploadResponse;
-import twitter4j.TwitterException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-public interface MediaResources {
+/**
+ * Created by mariotaku on 15/3/30.
+ */
+public class AsyncTaskUtils {
 
-    public MediaUploadResponse uploadMedia(File file) throws TwitterException;
+    public static final Executor DEFAULT_EXECUTOR = Executors.newFixedThreadPool(2);
 
-    public MediaUploadResponse uploadMedia(String fileName, InputStream fileBody, String fileType)
-            throws TwitterException;
+    @SafeVarargs
+    public static <T extends AsyncTask<Parameter, ?, ?>, Parameter> T executeTask(T task, Parameter... params) {
+        task.executeOnExecutor(DEFAULT_EXECUTOR, params);
+        return task;
+    }
 
+    public static boolean isTaskRunning(@Nullable AsyncTask task) {
+        return task != null && task.getStatus() == AsyncTask.Status.RUNNING;
+    }
 }

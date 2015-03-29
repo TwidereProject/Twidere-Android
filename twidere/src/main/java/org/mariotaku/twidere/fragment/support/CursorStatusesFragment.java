@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.Loader;
@@ -38,7 +39,7 @@ import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
 import org.mariotaku.twidere.loader.support.ExtendedCursorLoader;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
@@ -172,7 +173,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     public void onLoadMoreContents() {
-        new TwidereAsyncTask<Void, Void, long[][]>() {
+        AsyncTaskUtils.executeTask(new AsyncTask<Void, Void, long[][]>() {
 
             @Override
             protected long[][] doInBackground(final Void... params) {
@@ -187,12 +188,12 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
                 getStatuses(result[0], result[1], result[2]);
             }
 
-        }.executeTask();
+        });
     }
 
     @Override
     public boolean triggerRefresh() {
-        new TwidereAsyncTask<Void, Void, long[][]>() {
+        AsyncTaskUtils.executeTask(new AsyncTask<Void, Void, long[][]>() {
 
             @Override
             protected long[][] doInBackground(final Void... params) {
@@ -207,7 +208,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
                 getStatuses(result[0], result[1], result[2]);
             }
 
-        }.executeTask();
+        });
         return true;
     }
 

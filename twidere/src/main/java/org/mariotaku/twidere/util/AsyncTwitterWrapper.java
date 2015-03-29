@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
@@ -62,7 +63,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
@@ -173,12 +173,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public void clearNotificationAsync(final int notificationId, final long notificationAccount) {
         final ClearNotificationTask task = new ClearNotificationTask(notificationId, notificationAccount);
-        task.executeTask();
+        AsyncTaskUtils.executeTask(task);
     }
 
     public void clearUnreadCountAsync(final int position) {
         final ClearUnreadCountTask task = new ClearUnreadCountTask(position);
-        task.executeTask();
+        AsyncTaskUtils.executeTask(task);
     }
 
     public int createBlockAsync(final long accountId, final long user_id) {
@@ -346,7 +346,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         for (final ManagedAsyncTask<?, ?, ?> task : mAsyncTaskManager.getTaskSpecList()) {
             if (task instanceof CreateFriendshipTask) {
                 final CreateFriendshipTask createFriendshipTask = (CreateFriendshipTask) task;
-                if (createFriendshipTask.getStatus() == TwidereAsyncTask.Status.RUNNING
+                if (createFriendshipTask.getStatus() == AsyncTask.Status.RUNNING
                         && createFriendshipTask.getAccountId() == accountId
                         && createFriendshipTask.getUserId() == userId)
                     return true;
@@ -367,7 +367,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         for (final ManagedAsyncTask<?, ?, ?> task : mAsyncTaskManager.getTaskSpecList()) {
             if (task instanceof DestroyFriendshipTask) {
                 final DestroyFriendshipTask destroyFriendshipTask = (DestroyFriendshipTask) task;
-                if (destroyFriendshipTask.getStatus() == TwidereAsyncTask.Status.RUNNING
+                if (destroyFriendshipTask.getStatus() == AsyncTask.Status.RUNNING
                         && destroyFriendshipTask.getAccountId() == accountId
                         && destroyFriendshipTask.getUserId() == userId)
                     return true;
@@ -435,7 +435,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public void removeUnreadCountsAsync(final int position, final LongSparseArray<Set<Long>> counts) {
         final RemoveUnreadCountsTask task = new RemoveUnreadCountsTask(position, counts);
-        task.executeTask();
+        AsyncTaskUtils.executeTask(task);
     }
 
     public int reportMultiSpam(final long accountId, final long[] user_ids) {
@@ -784,7 +784,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    final class ClearNotificationTask extends TwidereAsyncTask<Void, Void, Integer> {
+    final class ClearNotificationTask extends AsyncTask<Void, Void, Integer> {
         private final int notificationType;
         private final long accountId;
 
@@ -800,7 +800,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    final class ClearUnreadCountTask extends TwidereAsyncTask<Void, Void, Integer> {
+    final class ClearUnreadCountTask extends AsyncTask<Void, Void, Integer> {
         private final int position;
 
         ClearUnreadCountTask(final int position) {
@@ -2166,7 +2166,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    final class RemoveUnreadCountsTask extends TwidereAsyncTask<Void, Void, Integer> {
+    final class RemoveUnreadCountsTask extends AsyncTask<Void, Void, Integer> {
         private final int position;
         private final LongSparseArray<Set<Long>> counts;
 

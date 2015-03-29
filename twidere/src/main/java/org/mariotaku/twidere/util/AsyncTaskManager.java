@@ -19,10 +19,10 @@
 
 package org.mariotaku.twidere.util;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 
 import org.mariotaku.twidere.task.ManagedAsyncTask;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -84,7 +84,7 @@ public final class AsyncTaskManager {
     public final <T> boolean execute(final int hashCode, final T... params) {
         final ManagedAsyncTask<T, ?, ?> task = (ManagedAsyncTask<T, ?, ?>) findTask(hashCode);
         if (task != null) {
-            task.executeTask(params);
+            task.executeOnExecutor(mExecutor, params);
             return true;
         }
         return false;
@@ -108,7 +108,7 @@ public final class AsyncTaskManager {
     public boolean hasRunningTasksForTag(final String tag) {
         if (tag == null) return false;
         for (final ManagedAsyncTask<?, ?, ?> task : getTaskSpecList()) {
-            if (task.getStatus() == ManagedAsyncTask.Status.RUNNING && tag.equals(task.getTag()))
+            if (task.getStatus() == AsyncTask.Status.RUNNING && tag.equals(task.getTag()))
                 return true;
         }
         return false;
@@ -116,7 +116,7 @@ public final class AsyncTaskManager {
 
     public boolean isExecuting(final int hashCode) {
         final ManagedAsyncTask<?, ?, ?> task = findTask(hashCode);
-        if (task != null && task.getStatus() == TwidereAsyncTask.Status.RUNNING) return true;
+        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) return true;
         return false;
     }
 

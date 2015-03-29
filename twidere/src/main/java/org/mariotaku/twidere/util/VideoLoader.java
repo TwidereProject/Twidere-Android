@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;

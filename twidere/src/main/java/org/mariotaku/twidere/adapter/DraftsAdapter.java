@@ -32,9 +32,9 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.DraftViewHolder;
 

@@ -23,13 +23,13 @@ import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
+import java.util.List;
+
 import twitter4j.CursorPaging;
 import twitter4j.PageableResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
-
-import java.util.List;
 
 public class UserFollowersLoader extends CursorSupportUsersLoader {
 

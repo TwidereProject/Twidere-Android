@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.model;
 
+import android.app.Fragment;
+import android.os.Bundle;
+
 import static org.mariotaku.twidere.util.CompareUtils.bundleEquals;
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.CompareUtils.objectEquals;
-
-import android.app.Fragment;
-import android.os.Bundle;
 
 public class TabSpec {
 

@@ -23,12 +23,12 @@ import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUserList;
 
+import java.util.List;
+
 import twitter4j.PageableResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UserList;
-
-import java.util.List;
 
 public class UserListMembershipsLoader extends BaseUserListsLoader {
 

@@ -1,7 +1,5 @@
 package org.mariotaku.twidere.activity.support;
 
-import static android.os.Environment.getExternalStorageState;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -34,6 +32,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import static android.os.Environment.getExternalStorageState;
 
 public class ImagePickerActivity extends ThemedActionBarActivity {
 

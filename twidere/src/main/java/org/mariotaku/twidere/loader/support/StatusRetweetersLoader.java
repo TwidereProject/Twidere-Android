@@ -23,12 +23,12 @@ import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
+import java.util.List;
+
 import twitter4j.CursorPaging;
 import twitter4j.IDs;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-
-import java.util.List;
 
 public class StatusRetweetersLoader extends IDsUsersLoader {
 

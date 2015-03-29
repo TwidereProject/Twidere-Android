@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.preference;
 
-import static org.mariotaku.twidere.util.Utils.getDefaultTwitterInstance;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -40,14 +38,16 @@ import android.widget.TextView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
+import java.text.Collator;
+import java.util.Comparator;
+import java.util.List;
+
 import twitter4j.Location;
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import java.text.Collator;
-import java.util.Comparator;
-import java.util.List;
+import static org.mariotaku.twidere.util.Utils.getDefaultTwitterInstance;
 
 public class TrendsLocationPreference extends Preference implements Constants, OnClickListener {
 

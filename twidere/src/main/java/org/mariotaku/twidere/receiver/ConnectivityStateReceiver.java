@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.receiver;
 
-import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
-import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +30,9 @@ import org.mariotaku.twidere.util.Utils;
 
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+
+import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
+import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
 

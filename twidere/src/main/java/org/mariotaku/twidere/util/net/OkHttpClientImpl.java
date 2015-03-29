@@ -141,6 +141,7 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
             return RequestBody.create(APPLICATION_FORM_URLENCODED, HttpParameter.encodeParameters(params));
         }
         final MultipartBuilder builder = new MultipartBuilder();
+        builder.type(MultipartBuilder.FORM);
         for (final HttpParameter param : params) {
             if (param.isFile()) {
                 RequestBody requestBody;

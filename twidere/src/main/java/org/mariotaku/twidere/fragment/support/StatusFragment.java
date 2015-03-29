@@ -31,6 +31,7 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -76,9 +77,8 @@ import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
-import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
@@ -369,11 +369,11 @@ public class StatusFragment extends BaseSupportFragment
     }
 
     private void loadConversation(ParcelableStatus status) {
-        if (mLoadConversationTask != null && mLoadConversationTask.getStatus() == Status.RUNNING) {
+        if (AsyncTaskUtils.isTaskRunning(mLoadConversationTask)) {
             mLoadConversationTask.cancel(true);
         }
         mLoadConversationTask = new LoadConversationTask(this);
-        mLoadConversationTask.executeTask(status);
+        AsyncTaskUtils.executeTask(mLoadConversationTask, status);
     }
 
     private void loadReplies(ParcelableStatus status) {
@@ -860,7 +860,7 @@ public class StatusFragment extends BaseSupportFragment
 
     }
 
-    static class LoadConversationTask extends TwidereAsyncTask<ParcelableStatus, ParcelableStatus,
+    static class LoadConversationTask extends AsyncTask<ParcelableStatus, ParcelableStatus,
             ListResponse<ParcelableStatus>> {
 
         final Context context;

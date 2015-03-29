@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
-import static org.mariotaku.twidere.util.UserColorNameUtils.setUserNickname;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -36,6 +33,9 @@ import android.widget.FrameLayout;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+
+import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.setUserNickname;
 
 public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
 

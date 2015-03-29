@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.fragment;
 
-import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountScreenName;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,6 +36,9 @@ import org.mariotaku.twidere.util.ParseUtils;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+
+import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountScreenName;
 
 public class PayPalDonateFragment extends BaseFragment implements OnClickListener, TextWatcher {
 

@@ -30,7 +30,6 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.imageloader.AccountExtra;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
 

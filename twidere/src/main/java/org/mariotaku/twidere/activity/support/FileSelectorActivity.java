@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import static android.os.Environment.getExternalStorageDirectory;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +28,8 @@ import org.mariotaku.twidere.fragment.support.FileSelectorDialogFragment;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.io.File;
+
+import static android.os.Environment.getExternalStorageDirectory;
 
 public class FileSelectorActivity extends BaseSupportDialogActivity implements FileSelectorDialogFragment.Callback {
 

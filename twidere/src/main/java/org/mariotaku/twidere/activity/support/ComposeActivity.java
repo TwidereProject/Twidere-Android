@@ -41,6 +41,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -103,7 +104,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MathUtils;
@@ -169,7 +170,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     private SharedPreferencesWrapper mPreferences;
     private ParcelableLocation mRecentLocation;
     private ContentResolver mResolver;
-    private TwidereAsyncTask<Void, Void, ?> mTask;
+    private AsyncTask<Void, Void, ?> mTask;
     private GridView mMediaPreviewGrid;
     private ActionMenuView mMenuBar;
     private EditText mEditText;
@@ -293,7 +294,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
                 break;
             }
             case MENU_DELETE: {
-                new DeleteImageTask(this).executeTask();
+                AsyncTaskUtils.executeTask(new DeleteImageTask(this));
                 break;
             }
             case MENU_TOGGLE_SENSITIVE: {
@@ -386,8 +387,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO: {
                 if (resultCode == Activity.RESULT_OK) {
-                    mTask = new AddMediaTask(this, mTempPhotoUri, createTempImageUri(), ParcelableMedia.TYPE_IMAGE,
-                            true).executeTask();
+                    mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, mTempPhotoUri,
+                            createTempImageUri(), ParcelableMedia.TYPE_IMAGE, true));
                     mTempPhotoUri = null;
                 }
                 break;
@@ -395,16 +396,16 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             case REQUEST_PICK_IMAGE: {
                 if (resultCode == Activity.RESULT_OK) {
                     final Uri src = intent.getData();
-                    mTask = new AddMediaTask(this, src, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false)
-                            .executeTask();
+                    mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, src,
+                            createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false));
                 }
                 break;
             }
             case REQUEST_OPEN_DOCUMENT: {
                 if (resultCode == Activity.RESULT_OK) {
                     final Uri src = intent.getData();
-                    mTask = new AddMediaTask(this, src, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false)
-                            .executeTask();
+                    mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, src,
+                            createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false));
                 }
                 break;
             }
@@ -442,7 +443,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     @Override
     public void onBackPressed() {
-        if (mTask != null && mTask.getStatus() == TwidereAsyncTask.Status.RUNNING) return;
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final boolean textChanged = text != null && !text.isEmpty() && !text.equals(mOriginalText);
         final boolean isEditingDraft = INTENT_ACTION_EDIT_DRAFT.equals(getIntent().getAction());
@@ -451,7 +452,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            mTask = new DiscardTweetTask(this).executeTask();
+            mTask = AsyncTaskUtils.executeTask(new DiscardTweetTask(this));
         }
     }
 
@@ -849,14 +850,14 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         final Uri extraStream = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         //TODO handle share_screenshot extra (Bitmap)
         if (extraStream != null) {
-            new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false).executeTask();
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false));
         } else if (data != null) {
-            new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false).executeTask();
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false));
         } else if (intent.hasExtra(EXTRA_SHARE_SCREENSHOT) && Utils.useShareScreenshot()) {
             final Bitmap bitmap = intent.getParcelableExtra(EXTRA_SHARE_SCREENSHOT);
             if (bitmap != null) {
                 try {
-                    new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.TYPE_IMAGE).executeTask();
+                    AsyncTaskUtils.executeTask(new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.TYPE_IMAGE));
                 } catch (IOException e) {
                     // ignore
                     bitmap.recycle();
@@ -1347,7 +1348,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     }
 
-    private static class AddMediaTask extends TwidereAsyncTask<Void, Void, Boolean> {
+    private static class AddMediaTask extends AsyncTask<Void, Void, Boolean> {
 
         private final ComposeActivity activity;
         private final int media_type;
@@ -1405,7 +1406,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         }
     }
 
-    private static class DeleteImageTask extends TwidereAsyncTask<Void, Void, Boolean> {
+    private static class DeleteImageTask extends AsyncTask<Void, Void, Boolean> {
 
         final ComposeActivity mActivity;
         private final ParcelableMediaUpdate[] mMedia;
@@ -1451,7 +1452,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         }
     }
 
-    private static class DiscardTweetTask extends TwidereAsyncTask<Void, Void, Void> {
+    private static class DiscardTweetTask extends AsyncTask<Void, Void, Void> {
 
         final ComposeActivity mActivity;
 

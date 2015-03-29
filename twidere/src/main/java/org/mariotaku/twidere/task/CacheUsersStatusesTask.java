@@ -22,26 +22,23 @@ package org.mariotaku.twidere.task;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.twitter.Extractor;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.TwitterWrapper.TwitterListResponse;
-import org.mariotaku.twidere.util.Utils;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import twitter4j.Relationship;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.User;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
@@ -49,11 +46,12 @@ import static org.mariotaku.twidere.util.ContentValuesCreator.createStatus;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
-public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> implements Constants {
+public class CacheUsersStatusesTask extends AsyncTask<Void, Void, Void> implements Constants {
 
     private final TwitterListResponse<twitter4j.Status>[] responses;
     private final Context context;
 
+    @SafeVarargs
     public CacheUsersStatusesTask(final Context context, final TwitterListResponse<twitter4j.Status>... responses) {
         this.context = context;
         this.responses = responses;
@@ -117,6 +115,7 @@ public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> i
         return null;
     }
 
+    @SafeVarargs
     public static Runnable getRunnable(final Context context,
                                        final TwitterListResponse<twitter4j.Status>... all_statuses) {
         return new ExecuteCacheUserStatusesTaskRunnable(context, all_statuses);
@@ -126,6 +125,7 @@ public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> i
         final Context context;
         final TwitterListResponse<twitter4j.Status>[] all_statuses;
 
+        @SafeVarargs
         ExecuteCacheUserStatusesTaskRunnable(final Context context,
                                              final TwitterListResponse<twitter4j.Status>... all_statuses) {
             this.context = context;
@@ -134,7 +134,7 @@ public class CacheUsersStatusesTask extends TwidereAsyncTask<Void, Void, Void> i
 
         @Override
         public void run() {
-            new CacheUsersStatusesTask(context, all_statuses).executeTask();
+            AsyncTaskUtils.executeTask(new CacheUsersStatusesTask(context, all_statuses));
         }
     }
 }

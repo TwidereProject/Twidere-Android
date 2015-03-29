@@ -27,8 +27,8 @@ import android.net.Uri;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableLocation;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 public class TwidereCommands {
 

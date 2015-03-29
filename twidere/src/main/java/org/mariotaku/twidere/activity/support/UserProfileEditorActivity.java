@@ -22,6 +22,7 @@ package org.mariotaku.twidere.activity.support;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -43,9 +44,8 @@ import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.task.TwidereAsyncTask;
-import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.util.AsyncTaskManager;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -81,7 +81,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
 
     private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
-    private TwidereAsyncTask<Void, Void, ?> mTask;
+    private AsyncTask<Void, Void, ?> mTask;
 
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
@@ -190,7 +190,8 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     @Override
     public void onClick(final View view) {
         final ParcelableUser user = mUser;
-        if (user == null || (mTask != null && mTask.getStatus() == Status.RUNNING)) return;
+        if (user == null || (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING))
+            return;
         switch (view.getId()) {
             case R.id.profile_image: {
                 break;
@@ -221,7 +222,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
             }
             case R.id.profile_banner_remove: {
                 mTask = new RemoveProfileBannerTaskInternal(user.account_id);
-                mTask.executeTask();
+                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case R.id.actionbar_cancel: {
@@ -237,7 +238,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
                 final int backgroundColor = mBackgroundColor.getColor();
                 mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
                         description, linkColor, backgroundColor);
-                mTask.executeTask();
+                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case R.id.set_link_color: {
@@ -314,13 +315,13 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         if (resultCode == RESULT_CANCELED) return;
         switch (requestCode) {
             case REQUEST_UPLOAD_PROFILE_BANNER_IMAGE: {
-                if (mTask == null || mTask.getStatus() != Status.PENDING) return;
-                mTask.executeTask();
+                if (mTask == null || mTask.getStatus() != AsyncTask.Status.PENDING) return;
+                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
-                if (mTask == null || mTask.getStatus() != Status.PENDING) return;
-                mTask.executeTask();
+                if (mTask == null || mTask.getStatus() != AsyncTask.Status.PENDING) return;
+                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case REQUEST_PICK_LINK_COLOR: {
@@ -420,7 +421,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         mDoneButton.setEnabled(isProfileChanged());
     }
 
-    static class UpdateProfileTaskInternal extends TwidereAsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
+    static class UpdateProfileTaskInternal extends AsyncTask<Void, Void, SingleResponse<ParcelableUser>> {
 
         private static final String DIALOG_FRAGMENT_TAG = "updating_user_profile";
         private final UserProfileEditorActivity mActivity;
@@ -510,7 +511,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
 
     }
 
-    class RemoveProfileBannerTaskInternal extends TwidereAsyncTask<Void, Void, SingleResponse<Boolean>> {
+    class RemoveProfileBannerTaskInternal extends AsyncTask<Void, Void, SingleResponse<Boolean>> {
 
         private final long account_id;
 

@@ -19,18 +19,18 @@
 
 package org.mariotaku.twidere.loader.support;
 
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
-
 import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUser;
+
+import java.util.Collections;
+import java.util.List;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-import java.util.Collections;
-import java.util.List;
+import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 
 public abstract class Twitter4JUsersLoader extends ParcelableUsersLoader {
 

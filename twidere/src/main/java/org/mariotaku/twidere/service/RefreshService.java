@@ -19,17 +19,6 @@
 
 package org.mariotaku.twidere.service;
 
-import static org.mariotaku.twidere.util.ParseUtils.parseInt;
-import static org.mariotaku.twidere.util.Utils.getAccountIds;
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
-import static org.mariotaku.twidere.util.Utils.getNewestMessageIdsFromDatabase;
-import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
-import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
-import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
-import static org.mariotaku.twidere.util.Utils.isDebugBuild;
-import static org.mariotaku.twidere.util.Utils.isNetworkAvailable;
-import static org.mariotaku.twidere.util.Utils.shouldStopAutoRefreshOnBatteryLow;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -50,6 +39,17 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 
 import java.util.Arrays;
+
+import static org.mariotaku.twidere.util.ParseUtils.parseInt;
+import static org.mariotaku.twidere.util.Utils.getAccountIds;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
+import static org.mariotaku.twidere.util.Utils.getNewestMessageIdsFromDatabase;
+import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
+import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
+import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
+import static org.mariotaku.twidere.util.Utils.isDebugBuild;
+import static org.mariotaku.twidere.util.Utils.isNetworkAvailable;
+import static org.mariotaku.twidere.util.Utils.shouldStopAutoRefreshOnBatteryLow;
 
 public class RefreshService extends Service implements Constants {
 

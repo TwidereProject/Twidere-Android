@@ -368,7 +368,12 @@ public class BackgroundOperationService extends IntentService implements Constan
             }
             mTwitter.removeSendingDraftId(draftId);
             if (mPreferences.getBoolean(KEY_REFRESH_AFTER_TWEET, false)) {
-                mTwitter.refreshAll();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTwitter.refreshAll();
+                    }
+                });
             }
         }
         stopForeground(false);
@@ -401,6 +406,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 final ContentLengthInputStream is = new ContentLengthInputStream(file);
                 is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager, builder, text));
                 final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
+//                final MediaUploadResponse uploadResp = twitter.uploadMediaBase64(is);
                 directMessage = new ParcelableDirectMessage(twitter.sendDirectMessage(recipientId, text,
                         uploadResp.getId()), accountId, true);
                 if (!file.delete()) {
