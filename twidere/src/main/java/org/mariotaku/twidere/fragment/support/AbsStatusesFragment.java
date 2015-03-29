@@ -459,13 +459,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         Utils.openMedia(getActivity(), status, media);
         //spice
         SpiceProfilingUtil.log(getActivity(),
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + ","
-                        + status.text_plain.length() + "," + media.media_url + ","
-                        + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + mAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + ","
-                        + status.text_plain.length() + "," + media.media_url + ","
-                        + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + mAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         //end
     }
 

@@ -250,6 +250,14 @@ public class StatusFragment extends BaseSupportFragment
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
         if (status == null) return;
         Utils.openMedia(getActivity(), status, media);
+        SpiceProfilingUtil.log(getActivity(),
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
+        SpiceProfilingUtil.profile(getActivity(), status.account_id,
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
     }
 
     @Override
@@ -307,13 +315,13 @@ public class StatusFragment extends BaseSupportFragment
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media);
         //spice
         SpiceProfilingUtil.log(getActivity(),
-                status.id + ",Clicked," + accountId + "," + status.user_id + ","
-                        + status.text_plain.length() + "," + media.media_url + ","
-                        + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
-        SpiceProfilingUtil.profile(getActivity(), accountId,
-                status.id + ",Clicked," + accountId + "," + status.user_id + ","
-                        + status.text_plain.length() + "," + media.media_url + ","
-                        + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
+        SpiceProfilingUtil.profile(getActivity(), status.account_id,
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         //end
     }
 
