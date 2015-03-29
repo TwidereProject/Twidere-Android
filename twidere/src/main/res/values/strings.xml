@@ -729,10 +729,6 @@
     <string name="permission_description_shorten_status">Application can shorten tweet for Twidere, so it can access your tweet to send.</string>
     <string name="permission_description_upload_media">Application can upload media for Twidere, so it can access media in your tweet to send.</string>
     <string name="permission_description_sync_timeline">Application can sync read position for Twidere, so it can access your read position.</string>
-    <string name="title_activity_usage_statistics">UsageStatisticsActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="usage_statistics_notification_summary">Help us improve Twidere!</string>
     <string name="from_name">From <xliff:g id="name">%1$s</xliff:g></string>
     <string name="from_name_and_name">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$s</xliff:g></string>

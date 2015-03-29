@@ -24,14 +24,8 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.text.TextUtils;
 import android.util.JsonReader;
+import android.util.JsonWriter;
 import android.util.Log;
-
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Request.Builder;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.acra.ACRA;
 import org.acra.ErrorReporter;
@@ -39,13 +33,15 @@ import org.acra.ReportField;
 import org.acra.collector.CrashReportData;
 import org.acra.sender.ReportSender;
 import org.acra.sender.ReportSenderException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Scanner;
@@ -63,7 +59,7 @@ public class BugReporter implements Constants {
 
     public static class GitHubIssueReportSender implements ReportSender {
 
-        private static final String AUTH_TOKEN = "208aacee0f51338a85ba5e9e3da54859981456ca";
+        private static final String AUTH_TOKEN = "be96f826b8d1947e3a988cace182b57bf8b2cd00";
         private static final String USER_REPO = "mariotaku-bugreport/Twidere-Android.bugreport.test";
 
         @Override
@@ -83,23 +79,19 @@ public class BugReporter implements Constants {
             titleBuilder.append(checksum);
             titleBuilder.append(" ");
             titleBuilder.append(titleContent);
-            final JSONObject json = new JSONObject();
-            try {
-                json.put("title", titleBuilder.toString());
-                json.put("body", bodyBuilder.toString());
-            } catch (JSONException e) {
-                throw new ReportSenderException("Error processing report json", e);
-            }
-            final OkHttpClient client = new OkHttpClient();
-            final Request.Builder searchIssueBuilder = new Request.Builder();
             final String query = String.format(Locale.ROOT, "%s repo:%s", checksum, USER_REPO);
             final Uri.Builder searchIssueUrlBuilder = Uri.parse("https://api.github.com/search/issues").buildUpon();
             searchIssueUrlBuilder.appendQueryParameter("q", query);
-            searchIssueBuilder.url(searchIssueUrlBuilder.build().toString());
-            authorizeRequest(searchIssueBuilder);
+            HttpURLConnection searchIssueConnection = null;
+            int searchIssueConnectionStatus = -1;
             try {
-                final Response response = client.newCall(searchIssueBuilder.build()).execute();
-                final JsonReader jsonReader = new JsonReader(response.body().charStream());
+                searchIssueConnection = (HttpURLConnection) new URL(searchIssueUrlBuilder.build().toString()).openConnection();
+                searchIssueConnection.setRequestMethod("GET");
+                authorizeRequest(searchIssueConnection);
+                searchIssueConnection.setDoInput(true);
+                searchIssueConnectionStatus = searchIssueConnection.getResponseCode();
+                final InputStreamReader reader = new InputStreamReader(searchIssueConnection.getInputStream());
+                final JsonReader jsonReader = new JsonReader(reader);
                 boolean isDuplicate = false;
                 jsonReader.beginObject();
                 while (jsonReader.hasNext()) {
@@ -115,18 +107,34 @@ public class BugReporter implements Constants {
                     return;
                 }
             } catch (IOException e) {
-                final String msg = "Network error when searching issues";
+                final String msg = "Network error when searching issues, code " + searchIssueConnectionStatus;
                 Log.w(LOGTAG, msg, e);
                 throw new ReportSenderException(msg, e);
+            } finally {
+                if (searchIssueConnection != null) {
+                    searchIssueConnection.disconnect();
+                }
             }
-            final RequestBody issueBody = RequestBody.create(MediaType.parse("application/json"), json.toString());
-            final Request.Builder createIssueBuilder = new Request.Builder();
-            createIssueBuilder.url(String.format(Locale.ROOT, "https://api.github.com/repos/%s/issues", USER_REPO));
-            createIssueBuilder.post(issueBody);
-            authorizeRequest(createIssueBuilder);
+
+            createIssue(bodyBuilder.toString(), titleBuilder.toString());
+        }
+
+        private void createIssue(String body, String title) throws ReportSenderException {
+            HttpURLConnection createIssueConnection;
             try {
-                final Response response = client.newCall(createIssueBuilder.build()).execute();
-                final String location = response.header("Location");
+                createIssueConnection = (HttpURLConnection) new URL(String.format(Locale.ROOT, "https://api.github.com/repos/%s/issues", USER_REPO)).openConnection();
+                createIssueConnection.setRequestMethod("POST");
+                authorizeRequest(createIssueConnection);
+                createIssueConnection.setRequestProperty("Content-Type", "application/json");
+                createIssueConnection.setDoOutput(true);
+                final JsonWriter writer = new JsonWriter(new OutputStreamWriter(createIssueConnection.getOutputStream()));
+                writer.beginObject();
+                writer.name("title").value(title);
+                writer.name("body").value(body);
+                writer.endObject();
+                writer.flush();
+                createIssueConnection.connect();
+                final String location = createIssueConnection.getHeaderField("Location");
                 if (!TextUtils.isEmpty(location)) {
                     Log.d(LOGTAG, "Issue created at " + location);
                 }
@@ -166,10 +174,10 @@ public class BugReporter implements Constants {
             bodyBuilder.append("\n````");
         }
 
-        private void authorizeRequest(Builder builder) {
-            builder.header("Authorization", "token " + AUTH_TOKEN);
-            builder.header("Accept", "application/vnd.github.v3+json");
-            builder.header("User-Agent", "Twidere (" + BuildConfig.VERSION_NAME + ")");
+        private void authorizeRequest(HttpURLConnection builder) {
+            builder.setRequestProperty("Authorization", String.format(Locale.ROOT, "token %s", AUTH_TOKEN));
+            builder.setRequestProperty("Accept", "application/vnd.github.v3+json");
+            builder.setRequestProperty("User-Agent", "Twidere (" + BuildConfig.VERSION_NAME + ")");
         }
     }
 }

@@ -35,11 +35,16 @@ Twidere is a powerful twitter client for Android 4.0+, which gives you a full Ma
 
 ## Credits ##
 
+### Material re-design ###
+
+* [@Uucky_Lee](https://twitter.com/Uucky_Lee)
+
 ### Icon designers ###
 
-* [@lordfriend](https://twitter.com/#!/lordfriend)
-* [@ilovinheart](https://twitter.com/#!/ilovinheart) (0.0.7 version)
-* [@Rieya](https://twitter.com/#!/Rieya) (0.0.6 version)
+* [@Linkzero](https://twitter.com/Linkzero)
+* [@lordfriend](https://twitter.com//lordfriend)
+* [@ilovinheart](https://twitter.com/ilovinheart) (0.0.7 version)
+* [@Rieya](https://twitter.com/Rieya) (0.0.6 version)
 
 Thanks to their excellent design!
 
@@ -91,7 +96,7 @@ Bitcoin: 1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW
 
 [@TwidereProject/donators](https://twitter.com/TwidereProject/lists/donators), if you haven't find your name, please contact @TwidereProject :)
 
-Buy me a bread or anything you want :)
+Buy me a ~~bread~~ [game](http://steamcommunity.com/id/mariotaku/wishlist) or anything you want :)
 
 ---
 

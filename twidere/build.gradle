@@ -44,6 +44,11 @@ android {
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
         }
     }
+    sourceSets {
+        main {
+            res.srcDirs = [project.file("src/$name/res"), project.file("src/$name/res-localized")]
+        }
+    }
 }
 
 repositories {

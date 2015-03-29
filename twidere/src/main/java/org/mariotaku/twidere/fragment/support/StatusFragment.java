@@ -391,7 +391,7 @@ public class StatusFragment extends BaseSupportFragment
                     + "," + status.text_plain.length() + "," + status.timestamp);
         } else {
             for (final ParcelableMedia spiceMedia : status.media) {
-                if (TypeMappingUtil.getMediaType(spiceMedia.type).equals("image")) {
+                if (spiceMedia.type == ParcelableMedia.TYPE_IMAGE) {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
