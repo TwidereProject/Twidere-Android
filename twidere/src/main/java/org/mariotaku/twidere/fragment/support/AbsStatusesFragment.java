@@ -15,10 +15,12 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -73,6 +75,15 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private int mControlBarOffsetPixels;
     private PopupMenu mPopupMenu;
     private ReadStateManager mReadStateManager;
+    private ParcelableStatus mSelectedStatus;
+    private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            final ParcelableStatus status = mSelectedStatus;
+            if (status == null) return false;
+            return Utils.handleMenuItemClick(getActivity(), getFragmentManager(), getTwitterWrapper(), status, item);
+        }
+    };
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
@@ -372,10 +383,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         }
         final PopupMenu popupMenu = new PopupMenu(mAdapter.getContext(), menuView,
                 Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
+        popupMenu.setOnMenuItemClickListener(mOnStatusMenuItemClickListener);
         popupMenu.inflate(R.menu.action_status);
-        setMenuForStatus(mAdapter.getContext(), popupMenu.getMenu(), mAdapter.getStatus(position));
+        final ParcelableStatus status = mAdapter.getStatus(position);
+        setMenuForStatus(mAdapter.getContext(), popupMenu.getMenu(), status);
         popupMenu.show();
         mPopupMenu = popupMenu;
+        mSelectedStatus = status;
     }
 
     @Override

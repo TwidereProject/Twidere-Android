@@ -133,7 +133,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
         mContentObserver = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
-//                reloadStatuses();
+                reloadStatuses();
             }
         };
         cr.registerContentObserver(Accounts.CONTENT_URI, true, mContentObserver);

@@ -124,6 +124,8 @@
         style="@style/Widget.ProfileType"
         android:layout_width="@dimen/icon_size_profile_type_user_profile"
         android:layout_height="@dimen/icon_size_profile_type_user_profile"
+        android:layout_marginRight="@dimen/element_spacing_minus_msmall"
+        android:layout_marginBottom="@dimen/element_spacing_minus_msmall"
         android:layout_alignBottom="@id/profile_image"
         android:layout_alignRight="@id/profile_image"
         android:scaleType="fitCenter"/>

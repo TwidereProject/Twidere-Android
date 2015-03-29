@@ -27,6 +27,7 @@
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/activities_drawer"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:gravity="bottom"
         app:umanoDragView="@+id/activities_header_title"

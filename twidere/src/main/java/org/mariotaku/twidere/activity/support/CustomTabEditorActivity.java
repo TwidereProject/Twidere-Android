@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -292,16 +293,17 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         }
         if (!isEditMode()) {
             mTabConfiguration = conf;
-            final boolean has_secondary_field = conf.getSecondaryFieldType() != CustomTabConfiguration.FIELD_TYPE_NONE;
-            final boolean account_id_none = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
-            mAccountContainer.setVisibility(account_id_none ? View.GONE : View.VISIBLE);
-            mSecondaryFieldContainer.setVisibility(has_secondary_field ? View.VISIBLE : View.GONE);
+            final boolean hasSecondaryField = conf.getSecondaryFieldType() != CustomTabConfiguration.FIELD_TYPE_NONE;
+            final boolean accountIdNone = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
+            mAccountContainer.setVisibility(accountIdNone ? View.GONE : View.VISIBLE);
+            mSecondaryFieldContainer.setVisibility(hasSecondaryField ? View.VISIBLE : View.GONE);
             final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
             if (!accountIdRequired) {
                 mAccountsAdapter.add(ParcelableAccount.dummyInstance());
             }
             final boolean officialKeyOnly = intent.getBooleanExtra(EXTRA_OFFICIAL_KEY_ONLY, false);
             mAccountsAdapter.addAll(ParcelableAccount.getAccountsList(this, false, officialKeyOnly));
+            mAccountsAdapter.setDummyItemText(R.string.activated_accounts);
             switch (conf.getSecondaryFieldType()) {
                 case CustomTabConfiguration.FIELD_TYPE_USER: {
                     mSecondaryFieldLabel.setText(R.string.user);
@@ -425,6 +427,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
             }
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Bundle args = getArguments();

@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +27,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
@@ -52,7 +50,6 @@ import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,9 +61,7 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
-import org.apache.http.protocol.HTTP;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -85,7 +80,6 @@ import org.mariotaku.twidere.task.TwidereAsyncTask;
 import org.mariotaku.twidere.task.TwidereAsyncTask.Status;
 import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -104,8 +98,6 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -116,7 +108,6 @@ import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
-import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.UserColorNameUtils.setUserColor;
@@ -312,9 +303,13 @@ public class StatusFragment extends BaseSupportFragment
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media);
         //spice
         SpiceProfilingUtil.log(getActivity(),
-                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + accountId + "," + status.user_id + ","
+                        + status.text_plain.length() + "," + media.media_url + ","
+                        + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
         SpiceProfilingUtil.profile(getActivity(), accountId,
-                status.id + ",Clicked," + accountId + "," + status.user_id + "," + status.text_plain.length() + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
+                status.id + ",Clicked," + accountId + "," + status.user_id + ","
+                        + status.text_plain.length() + "," + media.media_url + ","
+                        + TypeMappingUtil.getMediaType(media.type) + "," + status.timestamp);
         //end
     }
 
@@ -384,28 +379,38 @@ public class StatusFragment extends BaseSupportFragment
         //spice
         if (status.media == null) {
             SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                    status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                    status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count
+                            + "," + status.retweet_count + "," + status.favorite_count
                             + "," + status.text_plain.length() + "," + status.timestamp);
-            SpiceProfilingUtil.log(getActivity(), status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+            SpiceProfilingUtil.log(getActivity(), status.id + ",Words," + status.account_id + "," + status.user_id
+                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                     + "," + status.text_plain.length() + "," + status.timestamp);
         } else {
             for (final ParcelableMedia spiceMedia : status.media) {
                 if (TypeMappingUtil.getMediaType(spiceMedia.type).equals("image")) {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                            status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
-                                    + status.timestamp);
+                            status.id + ",PreviewM," + status.account_id + "," + status.user_id
+                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
+                                    + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height
+                                    + "," + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
-                            status.id + ",PreviewM," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height + ","
-                                    + status.timestamp);
+                            status.id + ",PreviewM," + status.account_id + "," + status.user_id
+                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
+                                    + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height
+                                    + "," + status.timestamp);
                 } else {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                            status.id + ",PreviewO," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
+                            status.id + ",PreviewO," + status.account_id + "," + status.user_id
+                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
+                                    + "," + spiceMedia.media_url + "," + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
-                            status.id + ",PreviewO," + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.media_url + "," + status.timestamp);
+                            status.id + ",PreviewO," + status.account_id + "," + status.user_id
+                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
+                                    + "," + spiceMedia.media_url + "," + status.timestamp);
                 }
             }
         }
@@ -492,6 +497,15 @@ public class StatusFragment extends BaseSupportFragment
             } else {
                 mCardLayoutResource = R.layout.card_item_status;
             }
+        }
+
+        public void addConversation(ParcelableStatus status, int position) {
+            if (mConversation == null) {
+                mConversation = new ArrayList<>();
+            }
+            mConversation.add(position, status);
+            notifyDataSetChanged();
+            updateItemDecoration();
         }
 
         public int findPositionById(long itemId) {
@@ -870,9 +884,15 @@ public class StatusFragment extends BaseSupportFragment
 
         @Override
         protected void onProgressUpdate(ParcelableStatus... values) {
-            super.onProgressUpdate(values);
+            for (ParcelableStatus status : values) {
+//                fragment.addConversation(status, 0);
+            }
         }
 
+    }
+
+    private void addConversation(ParcelableStatus status, int position) {
+        mStatusAdapter.addConversation(status, position);
     }
 
     private static class SpaceViewHolder extends ViewHolder {
@@ -981,127 +1001,8 @@ public class StatusFragment extends BaseSupportFragment
             if (status == null || fragment == null) return false;
             final AsyncTwitterWrapper twitter = fragment.getTwitterWrapper();
             final FragmentActivity activity = fragment.getActivity();
-            switch (item.getItemId()) {
-                case MENU_COPY: {
-                    if (ClipboardUtils.setText(activity, status.text_plain)) {
-                        showOkMessage(activity, R.string.text_copied, false);
-                    }
-                    break;
-                }
-                case MENU_RETWEET: {
-                    if (isMyRetweet(status)) {
-                        twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
-                    } else {
-                        twitter.retweetStatusAsync(status.account_id, status.id);
-                    }
-                    break;
-                }
-                case MENU_QUOTE: {
-                    final Intent intent = new Intent(INTENT_ACTION_QUOTE);
-                    intent.putExtra(EXTRA_STATUS, status);
-                    fragment.startActivity(intent);
-                    break;
-                }
-                case MENU_REPLY: {
-                    final Intent intent = new Intent(INTENT_ACTION_REPLY);
-                    intent.putExtra(EXTRA_STATUS, status);
-                    fragment.startActivity(intent);
-                    break;
-                }
-                case MENU_FAVORITE: {
-                    if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(status.account_id, status.id);
-                        //spice
-                        SpiceProfilingUtil.profile(adapter.getContext(),
-                                status.account_id, status.id + ",Unfavor,"
-                                        + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Unfavor,"
-                                + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                        //end
-                    } else {
-                        twitter.createFavoriteAsync(status.account_id, status.id);
-                        //spice
-                        SpiceProfilingUtil.profile(adapter.getContext(),
-                                status.account_id, status.id + ",Favor,"
-                                        + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                        SpiceProfilingUtil.log(adapter.getContext(), status.id + ",Favor,"
-                                + status.account_id + "," + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                        //end
-                    }
-                    break;
-                }
-                case MENU_DELETE: {
-                    DestroyStatusDialogFragment.show(fragment.getFragmentManager(), status);
-                    break;
-                }
-                case MENU_ADD_TO_FILTER: {
-                    AddStatusFilterDialogFragment.show(fragment.getFragmentManager(), status);
-                    break;
-                }
-                case MENU_SET_COLOR: {
-                    final Intent intent = new Intent(activity, ColorPickerDialogActivity.class);
-                    final int color = getUserColor(activity, status.user_id, true);
-                    if (color != 0) {
-                        intent.putExtra(EXTRA_COLOR, color);
-                    }
-                    intent.putExtra(EXTRA_CLEAR_BUTTON, color != 0);
-                    intent.putExtra(EXTRA_ALPHA_SLIDER, false);
-                    fragment.startActivityForResult(intent, REQUEST_SET_COLOR);
-                    break;
-                }
-                case MENU_CLEAR_NICKNAME: {
-                    clearUserNickname(activity, status.user_id);
-                    adapter.notifyDataSetChanged();
-                    break;
-                }
-                case MENU_SET_NICKNAME: {
-                    final String nick = getUserNickname(activity, status.user_id, true);
-                    SetUserNicknameDialogFragment.show(fragment.getFragmentManager(), status.user_id, nick);
-                    break;
-                }
-                case MENU_TRANSLATE: {
-                    final ParcelableCredentials account
-                            = ParcelableAccount.getCredentials(activity, status.account_id);
-                    if (Utils.isOfficialCredentials(activity, account)) {
-                        StatusTranslateDialogFragment.show(fragment.getFragmentManager(), status);
-                    } else {
-                        final Resources resources = fragment.getResources();
-                        final Locale locale = resources.getConfiguration().locale;
-                        try {
-                            final String template = "http://translate.google.com/#%s|%s|%s";
-                            final String sourceLang = "auto";
-                            final String targetLang = URLEncoder.encode(locale.getLanguage(), HTTP.UTF_8);
-                            final String text = URLEncoder.encode(status.text_unescaped, HTTP.UTF_8);
-                            final Uri uri = Uri.parse(String.format(Locale.ROOT, template, sourceLang, targetLang, text));
-                            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                            fragment.startActivity(intent);
-                        } catch (UnsupportedEncodingException ignore) {
-
-                        }
-                    }
-                    break;
-                }
-                case MENU_OPEN_WITH_ACCOUNT: {
-                    final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
-                    intent.setClass(activity, AccountSelectorActivity.class);
-                    intent.putExtra(EXTRA_SINGLE_SELECTION, true);
-                    fragment.startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
-                    break;
-                }
-                default: {
-                    if (item.getIntent() != null) {
-                        try {
-                            fragment.startActivity(item.getIntent());
-                        } catch (final ActivityNotFoundException e) {
-                            Log.w(LOGTAG, e);
-                            return false;
-                        }
-                    }
-                    break;
-                }
-            }
-            return true;
+            final FragmentManager fm = fragment.getFragmentManager();
+            return Utils.handleMenuItemClick(activity, fm, twitter, status, item);
         }
 
         public void showStatus(ParcelableStatus status) {

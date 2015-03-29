@@ -41,11 +41,9 @@
             android:summary="@string/pay_via_paypal_summary"
             android:title="@string/pay_via_paypal">
         </Preference>
-        <Preference android:title="@string/donate_via_alipay">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://me.alipay.com/mariotaku"/>
-        </Preference>
+        <Preference
+            android:title="@string/donate_via_alipay"
+            android:summary="mariotaku.lee@gmail.com"/>
         <Preference
             android:summary="@string/contributors_list_summary"
             android:title="@string/donators">

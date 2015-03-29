@@ -37,6 +37,8 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
 
     private final MediaLoaderWrapper mImageLoader;
     private final boolean mDisplayProfileImage;
+    private final Context mContext;
+    private String mDummyItemText;
 
     public AccountsSpinnerAdapter(final Context context) {
         this(context, R.layout.list_item_user);
@@ -44,6 +46,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
 
     public AccountsSpinnerAdapter(final Context context, int itemViewResource) {
         super(context, itemViewResource);
+        mContext = context;
         mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
         mDisplayProfileImage = context.getSharedPreferences(DirectMessagesConversationFragment.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE).getBoolean(DirectMessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);
@@ -99,8 +102,18 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
                 }
             }
         } else if (text1 != null) {
-            text1.setText(R.string.none);
+            text1.setText(mDummyItemText);
         }
+    }
+
+
+    public void setDummyItemText(int textRes) {
+        setDummyItemText(mContext.getString(textRes));
+    }
+
+    public void setDummyItemText(String text) {
+        mDummyItemText = text;
+        notifyDataSetChanged();
     }
 
 }

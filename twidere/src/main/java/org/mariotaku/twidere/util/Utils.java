@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -109,6 +110,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.querybuilder.AllColumns;
@@ -127,21 +129,27 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CameraCropActivity;
+import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
+import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
+import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
+import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesConversationFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
 import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.support.SavedSearchesListFragment;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
 import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragment;
+import org.mariotaku.twidere.fragment.support.SetUserNicknameDialogFragment;
 import org.mariotaku.twidere.fragment.support.StatusFavoritersListFragment;
 import org.mariotaku.twidere.fragment.support.StatusFragment;
 import org.mariotaku.twidere.fragment.support.StatusRepliesListFragment;
 import org.mariotaku.twidere.fragment.support.StatusRetweetersListFragment;
+import org.mariotaku.twidere.fragment.support.StatusTranslateDialogFragment;
 import org.mariotaku.twidere.fragment.support.StatusesListFragment;
 import org.mariotaku.twidere.fragment.support.UserBlocksListFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
@@ -208,6 +216,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
@@ -229,6 +238,7 @@ import java.util.zip.CRC32;
 import javax.net.ssl.SSLException;
 
 import edu.tsinghua.spice.SpiceService;
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.DirectMessage;
 import twitter4j.RateLimitStatus;
@@ -259,6 +269,9 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_UR
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 import static org.mariotaku.twidere.util.TwidereLinkify.TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES;
+import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 @SuppressWarnings("unused")
 public final class Utils implements Constants, TwitterConstants {
@@ -3872,6 +3885,136 @@ public final class Utils implements Constants, TwitterConstants {
         if (pm == null || info == null || info.metaData == null || key == null || !info.metaData.containsKey(key))
             return null;
         return pm.getDrawable(info.packageName, info.metaData.getInt(key), info.applicationInfo);
+    }
+
+    public static boolean handleMenuItemClick(FragmentActivity activity, FragmentManager fm, AsyncTwitterWrapper twitter, ParcelableStatus status, MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_COPY: {
+                if (ClipboardUtils.setText(activity, status.text_plain)) {
+                    showOkMessage(activity, R.string.text_copied, false);
+                }
+                break;
+            }
+            case MENU_RETWEET: {
+                if (isMyRetweet(status)) {
+                    twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
+                } else {
+                    twitter.retweetStatusAsync(status.account_id, status.id);
+                }
+                break;
+            }
+            case MENU_QUOTE: {
+                final Intent intent = new Intent(INTENT_ACTION_QUOTE);
+                intent.putExtra(EXTRA_STATUS, status);
+                activity.startActivity(intent);
+                break;
+            }
+            case MENU_REPLY: {
+                final Intent intent = new Intent(INTENT_ACTION_REPLY);
+                intent.putExtra(EXTRA_STATUS, status);
+                activity.startActivity(intent);
+                break;
+            }
+            case MENU_FAVORITE: {
+                if (status.is_favorite) {
+                    twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    //spice
+                    SpiceProfilingUtil.profile(activity,
+                            status.account_id, status.id + ",Unfavor," + status.account_id
+                                    + "," + status.user_id + "," + status.reply_count
+                                    + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + status.timestamp);
+                    SpiceProfilingUtil.log(activity, status.id + ",Unfavor," + status.account_id
+                            + "," + status.user_id + "," + status.reply_count
+                            + "," + status.retweet_count + "," + status.favorite_count
+                            + "," + status.timestamp);
+                    //end
+                } else {
+                    twitter.createFavoriteAsync(status.account_id, status.id);
+                    //spice
+                    SpiceProfilingUtil.profile(activity,
+                            status.account_id, status.id + ",Favor,"
+                                    + status.account_id + "," + status.user_id + "," + status.reply_count
+                                    + "," + status.retweet_count + "," + status.favorite_count
+                                    + "," + status.timestamp);
+                    SpiceProfilingUtil.log(activity, status.id + ",Favor,"
+                            + status.account_id + "," + status.user_id + "," + status.reply_count
+                            + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
+                    //end
+                }
+                break;
+            }
+            case MENU_DELETE: {
+                DestroyStatusDialogFragment.show(fm, status);
+                break;
+            }
+            case MENU_ADD_TO_FILTER: {
+                AddStatusFilterDialogFragment.show(fm, status);
+                break;
+            }
+            case MENU_SET_COLOR: {
+                final Intent intent = new Intent(activity, ColorPickerDialogActivity.class);
+                final int color = getUserColor(activity, status.user_id, true);
+                if (color != 0) {
+                    intent.putExtra(EXTRA_COLOR, color);
+                }
+                intent.putExtra(EXTRA_CLEAR_BUTTON, color != 0);
+                intent.putExtra(EXTRA_ALPHA_SLIDER, false);
+                activity.startActivityForResult(intent, REQUEST_SET_COLOR);
+                break;
+            }
+            case MENU_CLEAR_NICKNAME: {
+                clearUserNickname(activity, status.user_id);
+                break;
+            }
+            case MENU_SET_NICKNAME: {
+                final String nick = getUserNickname(activity, status.user_id, true);
+                SetUserNicknameDialogFragment.show(fm, status.user_id, nick);
+                break;
+            }
+            case MENU_TRANSLATE: {
+                final ParcelableCredentials account
+                        = ParcelableAccount.getCredentials(activity, status.account_id);
+                if (isOfficialCredentials(activity, account)) {
+                    StatusTranslateDialogFragment.show(fm, status);
+                } else {
+                    final Resources resources = activity.getResources();
+                    final Locale locale = resources.getConfiguration().locale;
+                    try {
+                        final String template = "http://translate.google.com/#%s|%s|%s";
+                        final String sourceLang = "auto";
+                        final String targetLang = URLEncoder.encode(locale.getLanguage(), HTTP.UTF_8);
+                        final String text = URLEncoder.encode(status.text_unescaped, HTTP.UTF_8);
+                        final Uri uri = Uri.parse(String.format(Locale.ROOT, template, sourceLang, targetLang, text));
+                        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        activity.startActivity(intent);
+                    } catch (UnsupportedEncodingException ignore) {
+
+                    }
+                }
+                break;
+            }
+            case MENU_OPEN_WITH_ACCOUNT: {
+                final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
+                intent.setClass(activity, AccountSelectorActivity.class);
+                intent.putExtra(EXTRA_SINGLE_SELECTION, true);
+                activity.startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
+                break;
+            }
+            default: {
+                if (item.getIntent() != null) {
+                    try {
+                        activity.startActivity(item.getIntent());
+                    } catch (final ActivityNotFoundException e) {
+                        Log.w(LOGTAG, e);
+                        return false;
+                    }
+                }
+                break;
+            }
+        }
+        return true;
     }
 
     private static boolean isErrorCodeMessageSupported(final TwitterException te) {

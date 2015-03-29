@@ -84,7 +84,7 @@
 
     <dimen name="icon_size_profile_type">16dp</dimen>
     <dimen name="icon_size_profile_type_detail">22dp</dimen>
-    <dimen name="icon_size_profile_type_user_profile">28dp</dimen>
+    <dimen name="icon_size_profile_type_user_profile">26dp</dimen>
     <dimen name="icon_size_activity_type">16dp</dimen>
 
     <!-- Elevation values -->
