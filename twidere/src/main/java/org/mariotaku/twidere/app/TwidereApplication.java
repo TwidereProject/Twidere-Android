@@ -42,15 +42,12 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.otto.Bus;
 
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -76,7 +73,6 @@ import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
-@ReportsCrashes(formKey = "", mode = ReportingInteractionMode.SILENT)
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 
@@ -202,11 +198,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onCreate() {
-        BugReporter.init(this);
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();
         }
-//        setTheme(ThemeUtils.getThemeResource(this));
         super.onCreate();
         mHandler = new Handler();
         mMessageBus = new Bus();
@@ -221,8 +215,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         final ComponentName main2 = new ComponentName(this, MainHondaJOJOActivity.class);
         final boolean mainDisabled = pm.getComponentEnabledSetting(main) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
         final boolean main2Disabled = pm.getComponentEnabledSetting(main2) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-        final boolean no_entry = mainDisabled && main2Disabled;
-        if (no_entry) {
+        final boolean noEntry = mainDisabled && main2Disabled;
+        if (noEntry) {
             pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         } else if (!mainDisabled) {
