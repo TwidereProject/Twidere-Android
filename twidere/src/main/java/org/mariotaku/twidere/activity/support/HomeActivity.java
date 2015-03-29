@@ -416,8 +416,10 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         // UCD
         ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStart");
         // spice
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Launch" + "," + Build.MODEL);
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Launch" + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Launch" + "," + Build.MODEL
+                + "," + "mediaPreview=" + mPreferences.getBoolean(KEY_MEDIA_PREVIEW, false));
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Launch"
+                + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
         //end
         updateUnreadCount();
     }
