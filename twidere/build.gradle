@@ -10,7 +10,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 99
+        versionCode 100
         versionName "0.3.0"
         multiDexEnabled true
     }
@@ -37,6 +37,10 @@ android {
     buildTypes {
         debug {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+            versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
+        }
+        release {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
         }
     }
