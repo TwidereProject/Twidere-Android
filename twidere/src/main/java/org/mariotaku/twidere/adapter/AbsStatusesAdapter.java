@@ -16,6 +16,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.UserFragment;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
@@ -245,6 +246,14 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
+
+    @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onMediaClick(holder, media, position);
+        }
+    }
+
     public void setListener(StatusAdapterListener listener) {
         mStatusAdapterListener = listener;
     }
@@ -266,6 +275,8 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
 
     public static interface StatusAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
+
+        void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position);
 
         void onStatusActionClick(StatusViewHolder holder, int id, int position);
 

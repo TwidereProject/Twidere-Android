@@ -37,6 +37,7 @@ import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
@@ -254,6 +255,13 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
             mActivityAdapterListener.onGapClick((GapViewHolder) holder, position);
         }
     }
+
+
+    @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+
+    }
+
 
     @Override
     public void onItemActionClick(ViewHolder holder, int id, int position) {

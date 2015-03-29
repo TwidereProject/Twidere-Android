@@ -2885,16 +2885,12 @@ public final class Utils implements Constants, TwitterConstants {
         activity.startActivity(intent);
     }
 
-    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
-                                 final ParcelableDirectMessage message, final ParcelableMedia current,
-                                 final ParcelableMedia[] media) {
-        openMedia(context, accountId, isPossiblySensitive, null, message, current, media);
+    public static void openMedia(final Context context, final ParcelableDirectMessage message, final ParcelableMedia current) {
+        openMedia(context, message.account_id, false, null, message, current, message.media);
     }
 
-    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
-                                 final ParcelableStatus status, final ParcelableMedia current,
-                                 final ParcelableMedia[] media) {
-        openMedia(context, accountId, isPossiblySensitive, status, null, current, media);
+    public static void openMedia(final Context context, final ParcelableStatus status, final ParcelableMedia current) {
+        openMedia(context, status.account_id, status.is_possibly_sensitive, status, null, current, status.media);
     }
 
     public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,

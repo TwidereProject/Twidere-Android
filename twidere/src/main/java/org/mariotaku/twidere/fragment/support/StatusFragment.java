@@ -108,18 +108,15 @@ import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.UserColorNameUtils.setUserColor;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 import static org.mariotaku.twidere.util.Utils.formatToLongTimeString;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
-import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
-import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 /**
  * Created by mariotaku on 14/12/5.
@@ -246,6 +243,13 @@ public class StatusFragment extends BaseSupportFragment
     @Override
     public void onGapClick(GapViewHolder holder, int position) {
 
+    }
+
+    @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        final ParcelableStatus status = mStatusAdapter.getStatus(position);
+        if (status == null) return;
+        Utils.openMedia(getActivity(), status, media);
     }
 
     @Override
@@ -576,6 +580,13 @@ public class StatusFragment extends BaseSupportFragment
         public final void onStatusClick(StatusViewHolder holder, int position) {
             if (mStatusAdapterListener != null) {
                 mStatusAdapterListener.onStatusClick(holder, position);
+            }
+        }
+
+        @Override
+        public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+            if (mStatusAdapterListener != null) {
+                mStatusAdapterListener.onMediaClick(holder, media, position);
             }
         }
 

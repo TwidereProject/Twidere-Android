@@ -33,8 +33,8 @@ import android.widget.TextView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 
 /**
@@ -113,6 +113,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             if (i < k) {
                 final ParcelableMedia media = mediaArray[i];
                 loader.displayPreviewImage(imageView, media.page_url, loadingHandler);
+                child.setTag(media);
                 child.setVisibility(VISIBLE);
                 if (i == j - 1) {
                     final TextView moreIndicator = (TextView) child.findViewById(R.id.more_media);

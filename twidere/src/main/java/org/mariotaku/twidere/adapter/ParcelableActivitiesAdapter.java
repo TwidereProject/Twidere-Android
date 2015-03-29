@@ -24,7 +24,9 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import java.util.List;
 

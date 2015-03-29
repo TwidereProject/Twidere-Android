@@ -38,6 +38,7 @@ import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
@@ -444,6 +445,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private void setListShown(boolean shown) {
         mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
         mSwipeRefreshLayout.setVisibility(shown ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        final ParcelableStatus status = mAdapter.getStatus(position);
+        if (status == null) return;
+        Utils.openMedia(getActivity(), status, media);
     }
 
     private void updateRefreshProgressOffset() {

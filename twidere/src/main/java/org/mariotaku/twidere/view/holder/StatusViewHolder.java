@@ -27,6 +27,7 @@ import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShortTimeView;
@@ -44,7 +45,8 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
  * <p/>
  * Created by mariotaku on 14/11/19.
  */
-public class StatusViewHolder extends RecyclerView.ViewHolder implements Constants, OnClickListener {
+public class StatusViewHolder extends RecyclerView.ViewHolder implements Constants, OnClickListener,
+        OnMediaClickListener {
 
     private final IStatusesAdapter<?> adapter;
 
@@ -172,7 +174,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             } else {
                 mediaPreviewContainer.setVisibility(View.GONE);
             }
-            mediaPreviewContainer.displayMedia(media, loader, status.account_id, null, handler);
+            mediaPreviewContainer.displayMedia(media, loader, status.account_id, this, handler);
         } else {
             mediaPreviewContainer.setVisibility(View.GONE);
         }
@@ -312,7 +314,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreviewContainer.setStyle(adapter.getMediaPreviewStyle());
             mediaPreviewContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
-            mediaPreviewContainer.displayMedia(media, loader, account_id, null,
+            mediaPreviewContainer.displayMedia(media, loader, account_id, this,
                     adapter.getImageLoadingHandler());
         } else {
             mediaPreviewContainer.setVisibility(View.GONE);
@@ -396,6 +398,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         }
     }
 
+    @Override
+    public void onMediaClick(View view, ParcelableMedia media, long accountId) {
+        if (statusClickListener == null) return;
+        final int position = getAdapterPosition();
+        statusClickListener.onMediaClick(this, media, position);
+    }
+
     public void setOnClickListeners() {
         setStatusClickListener(adapter);
     }
@@ -407,7 +416,6 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
         itemView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
-        mediaPreviewContainer.setOnClickListener(this);
         replyCountView.setOnClickListener(this);
         retweetCountView.setOnClickListener(this);
         favoriteCountView.setOnClickListener(this);
@@ -464,6 +472,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
     public static interface StatusClickListener extends ContentCardClickListener {
 
         void onStatusClick(StatusViewHolder holder, int position);
+
+        void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position);
 
         void onUserProfileClick(StatusViewHolder holder, int position);
     }
