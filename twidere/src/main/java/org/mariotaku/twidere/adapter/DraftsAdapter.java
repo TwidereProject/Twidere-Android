@@ -54,7 +54,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
 
     public DraftsAdapter(final Context context) {
         super(context, R.layout.list_item_draft, null, new String[0], new int[0], 0);
-        mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
         mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);

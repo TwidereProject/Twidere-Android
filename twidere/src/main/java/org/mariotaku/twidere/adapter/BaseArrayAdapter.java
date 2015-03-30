@@ -53,7 +53,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
         super(context, layoutRes, collection);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, app.getMultiSelectManager()));
-        mImageLoader = app.getImageLoaderWrapper();
+        mImageLoader = app.getMediaLoaderWrapper();
         mNicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mColorPrefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mNicknamePrefs.registerOnSharedPreferenceChangeListener(this);

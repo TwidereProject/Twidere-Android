@@ -19,6 +19,7 @@
   -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -27,11 +28,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <ProgressBar
+    <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/progress"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        app:matProg_barColor="@color/branding_color"/>
 
 
 </FrameLayout>

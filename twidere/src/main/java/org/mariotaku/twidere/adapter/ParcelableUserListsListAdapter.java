@@ -60,7 +60,7 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
         mContext = context;
         mLocale = context.getResources().getConfiguration().locale;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mImageLoader = app.getImageLoaderWrapper();
+        mImageLoader = app.getMediaLoaderWrapper();
         mMultiSelectManager = app.getMultiSelectManager();
         configBaseCardAdapter(context, this);
     }

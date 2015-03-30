@@ -44,7 +44,7 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
         super(context, R.layout.list_item_two_line);
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mImageLoader = app.getImageLoaderWrapper();
+        mImageLoader = app.getMediaLoaderWrapper();
         configBaseAdapter(context, this);
     }
 

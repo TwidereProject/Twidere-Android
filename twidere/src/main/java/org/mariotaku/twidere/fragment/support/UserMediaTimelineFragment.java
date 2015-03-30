@@ -167,7 +167,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
 
         MediaTimelineAdapter(Context context) {
             mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
             mLoadingHandler = new ImageLoadingHandler(R.id.media_image_progress);
         }
 

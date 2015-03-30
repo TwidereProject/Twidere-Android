@@ -19,11 +19,13 @@
 
 package org.mariotaku.twidere.util.net;
 
+import android.content.Context;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
 public final class HostResolvedHostnameVerifier implements HostnameVerifier {
-    public HostResolvedHostnameVerifier(boolean ignoreSSLError) {
+    public HostResolvedHostnameVerifier(Context context, boolean ignoreSSLError) {
 
     }
 

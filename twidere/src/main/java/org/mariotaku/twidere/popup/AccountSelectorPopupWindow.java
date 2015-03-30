@@ -150,7 +150,7 @@ public class AccountSelectorPopupWindow {
 
         public AccountsGridAdapter(Context context) {
             super(context, R.layout.grid_item_selector_account);
-            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
         }
 
         @Override

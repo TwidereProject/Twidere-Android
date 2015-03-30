@@ -21,22 +21,31 @@ package org.mariotaku.twidere.util.net;
 
 import android.content.Context;
 
-import twitter4j.http.HttpClient;
-import twitter4j.http.HttpClientConfiguration;
-import twitter4j.http.HttpClientFactory;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
- * Created by mariotaku on 15/1/22.
+ * Created by mariotaku on 15/3/31.
  */
-public class OkHttpClientFactory implements HttpClientFactory {
-    private final Context context;
+public class TwidereTrustManager implements X509TrustManager {
+    public TwidereTrustManager(Context context) {
 
-    public OkHttpClientFactory(Context context) {
-        this.context = context;
     }
 
     @Override
-    public HttpClient getInstance(HttpClientConfiguration conf) {
-        return new OkHttpClientImpl(context, conf);
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
     }
 }

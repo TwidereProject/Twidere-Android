@@ -73,7 +73,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null));
         mMultiSelectManager = app.getMultiSelectManager();
-        mImageLoader = app.getImageLoaderWrapper();
+        mImageLoader = app.getMediaLoaderWrapper();
         mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
         mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context);

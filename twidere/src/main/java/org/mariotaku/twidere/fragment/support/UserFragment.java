@@ -653,7 +653,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             userId = args.getLong(EXTRA_USER_ID, -1);
             screenName = args.getString(EXTRA_SCREEN_NAME);
         }
-        mProfileImageLoader = getApplication().getImageLoaderWrapper();
+        mProfileImageLoader = getApplication().getMediaLoaderWrapper();
         final FragmentActivity activity = getActivity();
 
         Utils.setNdefPushMessageCallback(activity, new CreateNdefMessageCallback() {

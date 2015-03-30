@@ -321,7 +321,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         }
 
         mTwitterWrapper = getApplication().getTwitterWrapper();
-        mProfileImageLoader = getApplication().getImageLoaderWrapper();
+        mProfileImageLoader = getApplication().getMediaLoaderWrapper();
         mProfileImageView.setOnClickListener(this);
         mUserListDetails.setOnClickListener(this);
         mRetryButton.setOnClickListener(this);

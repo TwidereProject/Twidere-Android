@@ -83,7 +83,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final Context context = builder.getContext();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final MediaLoaderWrapper loader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        final MediaLoaderWrapper loader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final LayoutInflater inflater = LayoutInflater.from(context);

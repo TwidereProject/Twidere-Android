@@ -128,7 +128,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         if (status == null || translated == null) return;
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = getApplication();
-        final MediaLoaderWrapper loader = application.getImageLoaderWrapper();
+        final MediaLoaderWrapper loader = application.getMediaLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,

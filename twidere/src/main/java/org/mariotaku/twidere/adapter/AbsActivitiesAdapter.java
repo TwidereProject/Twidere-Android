@@ -83,7 +83,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
         mInflater = LayoutInflater.from(context);
-        mImageLoader = app.getImageLoaderWrapper();
+        mImageLoader = app.getMediaLoaderWrapper();
         mLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
         mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,

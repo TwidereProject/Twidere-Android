@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util.net;
 
+import android.content.Context;
 import android.net.SSLCertificateSocketFactory;
 import android.net.Uri;
 
@@ -51,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
 import javax.net.SocketFactory;
+import javax.net.ssl.TrustManager;
 
 import okio.BufferedSink;
 import twitter4j.TwitterException;
@@ -69,11 +71,13 @@ import twitter4j.http.RequestMethod;
 public class OkHttpClientImpl implements HttpClient, TwidereConstants {
 
     public static final MediaType APPLICATION_FORM_URLENCODED = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8");
+    private final Context context;
     private final HttpClientConfiguration conf;
     private final OkHttpClient client;
     private final HostAddressResolver resolver;
 
-    public OkHttpClientImpl(HttpClientConfiguration conf) {
+    public OkHttpClientImpl(Context context, HttpClientConfiguration conf) {
+        this.context = context;
         this.conf = conf;
         this.resolver = conf.getHostAddressResolverFactory().getInstance(conf);
         this.client = createHttpClient(conf);
@@ -109,11 +113,15 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
     private OkHttpClient createHttpClient(HttpClientConfiguration conf) {
         final OkHttpClient client = new OkHttpClient();
         final boolean ignoreSSLError = conf.isSSLErrorIgnored();
+        final SSLCertificateSocketFactory sslSocketFactory;
         if (ignoreSSLError) {
-            client.setSslSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
+            sslSocketFactory = (SSLCertificateSocketFactory) SSLCertificateSocketFactory.getInsecure(0, null);
         } else {
-            client.setSslSocketFactory(SSLCertificateSocketFactory.getDefault(0, null));
+            sslSocketFactory = (SSLCertificateSocketFactory) SSLCertificateSocketFactory.getDefault(0, null);
         }
+//        sslSocketFactory.setTrustManagers(new TrustManager[]{new TwidereTrustManager(context)});
+//        client.setHostnameVerifier(new HostResolvedHostnameVerifier(context, ignoreSSLError));
+        client.setSslSocketFactory(sslSocketFactory);
         client.setSocketFactory(SocketFactory.getDefault());
         client.setConnectTimeout(conf.getHttpConnectionTimeout(), TimeUnit.MILLISECONDS);
 
@@ -121,7 +129,6 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
             client.setProxy(new Proxy(Type.HTTP, InetSocketAddress.createUnresolved(conf.getHttpProxyHost(),
                     conf.getHttpProxyPort())));
         }
-//        client.setHostnameVerifier(new HostResolvedHostnameVerifier());
         Internal.instance.setNetwork(client, new Network() {
             @Override
             public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {

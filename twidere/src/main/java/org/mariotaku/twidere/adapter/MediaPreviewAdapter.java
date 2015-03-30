@@ -43,7 +43,7 @@ public class MediaPreviewAdapter extends ArrayAdapter<String> implements Constan
 
 	public MediaPreviewAdapter(final Context context) {
 		super(context, R.layout.gallery_item_image_preview);
-		mImageLoader = ((TwidereApplication) context.getApplicationContext()).getImageLoaderWrapper();
+		mImageLoader = ((TwidereApplication) context.getApplicationContext()).getMediaLoaderWrapper();
 		mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 		mImageLoadingHandler = new ImageLoadingHandler();
 	}

@@ -72,7 +72,7 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
         }
         final TwidereApplication application = getApplication();
         final FragmentActivity activity = getActivity();
-        final MediaLoaderWrapper loader = application.getImageLoaderWrapper();
+        final MediaLoaderWrapper loader = application.getMediaLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,

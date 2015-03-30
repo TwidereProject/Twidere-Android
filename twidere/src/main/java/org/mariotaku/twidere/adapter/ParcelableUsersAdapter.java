@@ -60,7 +60,7 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         mContext = context;
         mLocale = context.getResources().getConfiguration().locale;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mProfileImageLoader = app.getImageLoaderWrapper();
+        mProfileImageLoader = app.getMediaLoaderWrapper();
         mMultiSelectManager = app.getMultiSelectManager();
         configBaseCardAdapter(context, this);
     }

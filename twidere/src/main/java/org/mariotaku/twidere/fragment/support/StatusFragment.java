@@ -498,7 +498,7 @@ public class StatusFragment extends BaseSupportFragment
             mFragment = fragment;
             mContext = context;
             mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
             mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
             mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);

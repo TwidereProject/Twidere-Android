@@ -337,7 +337,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();
-        mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+        mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
         final LayoutInflater inflater = LayoutInflater.from(context);
         final ListView listView = getListView();
         mAdapter = new MergeAdapter();
@@ -607,7 +607,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
         AccountSelectorAdapter(Context context, AccountsDashboardFragment fragment) {
             mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getImageLoaderWrapper();
+            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
             mFragment = fragment;
             setHasStableIds(true);
         }

@@ -251,6 +251,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
         mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        mProgressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mSystemWindowsInsets.set(insets);
         updateRefreshProgressOffset();
     }

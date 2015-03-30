@@ -77,8 +77,9 @@ import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeed
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 
-    public static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
-    public static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
+    private static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
+    private static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
+
     private Handler mHandler;
     private MediaLoaderWrapper mMediaLoaderWrapper;
     private ImageLoader mImageLoader;
@@ -156,7 +157,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mVideoLoader = loader;
     }
 
-    public MediaLoaderWrapper getImageLoaderWrapper() {
+    public MediaLoaderWrapper getMediaLoaderWrapper() {
         if (mMediaLoaderWrapper != null) return mMediaLoaderWrapper;
         return mMediaLoaderWrapper = new MediaLoaderWrapper(getImageLoader(), getVideoLoader());
     }
@@ -283,6 +284,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public void reloadConnectivitySettings() {
         if (mImageDownloader != null) {
             mImageDownloader.reloadConnectivitySettings();
+        }
+        if (mFullImageDownloader != null) {
+            mFullImageDownloader.reloadConnectivitySettings();
         }
     }
 

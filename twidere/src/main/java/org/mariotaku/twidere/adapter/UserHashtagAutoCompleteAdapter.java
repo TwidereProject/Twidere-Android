@@ -83,7 +83,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         mUserNicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mResolver = context.getContentResolver();
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mProfileImageLoader = app.getImageLoaderWrapper();
+        mProfileImageLoader = app.getMediaLoaderWrapper();
         mDatabase = app.getSQLiteDatabase();
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
     }

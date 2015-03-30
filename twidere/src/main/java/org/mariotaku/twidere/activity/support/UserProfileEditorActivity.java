@@ -130,7 +130,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
             return;
         }
         mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
-        mLazyImageLoader = TwidereApplication.getInstance(this).getImageLoaderWrapper();
+        mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
         mAccountId = accountId;
 
 

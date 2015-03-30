@@ -40,11 +40,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -287,16 +287,16 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener, ZoomListener {
 
         private TouchImageView mImageView;
-        private ProgressBar mProgressBar;
+        private ProgressWheel mProgressBar;
         private boolean mLoaderInitialized;
-        private long mContentLength;
+        private float mContentLength;
         private SaveImageTask mSaveImageTask;
 
         @Override
         public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
             mImageView = (TouchImageView) view.findViewById(R.id.image_view);
-            mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
+            mProgressBar = (ProgressWheel) view.findViewById(R.id.progress);
         }
 
         @Override
@@ -308,7 +308,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public Loader<Result> onCreateLoader(final int id, final Bundle args) {
             mProgressBar.setVisibility(View.VISIBLE);
-            mProgressBar.setIndeterminate(true);
+            mProgressBar.spin();
             invalidateOptionsMenu();
             final ParcelableMedia media = getMedia();
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
@@ -491,18 +491,18 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onDownloadStart(final long total) {
             mContentLength = total;
-            mProgressBar.setIndeterminate(total <= 0);
-            mProgressBar.setMax(total > 0 ? (int) (total / 1024) : 0);
+            mProgressBar.spin();
         }
 
         @Override
         public void onProgressUpdate(final long downloaded) {
-            if (mContentLength == 0) {
-                mProgressBar.setIndeterminate(true);
+            if (mContentLength <= 0) {
+                if (!mProgressBar.isSpinning()) {
+                    mProgressBar.spin();
+                }
                 return;
             }
-            mProgressBar.setIndeterminate(false);
-            mProgressBar.setProgress((int) (downloaded / 1024));
+            mProgressBar.setProgress(downloaded / mContentLength);
         }
 
         @Override
