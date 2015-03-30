@@ -74,6 +74,7 @@ import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -944,7 +945,7 @@ public class StatusFragment extends BaseSupportFragment
         private final View mediaPreviewLoad;
         private final LinearLayout mediaPreviewGrid;
 
-        private final View locationContainer;
+        private final TextView locationView;
         private final TwitterCardContainer twitterCard;
 
         public DetailStatusViewHolder(StatusAdapter adapter, View itemView) {
@@ -969,7 +970,7 @@ public class StatusFragment extends BaseSupportFragment
             mediaPreviewContainer = itemView.findViewById(R.id.media_preview);
             mediaPreviewLoad = itemView.findViewById(R.id.media_preview_load);
             mediaPreviewGrid = (LinearLayout) itemView.findViewById(R.id.media_preview_grid);
-            locationContainer = itemView.findViewById(R.id.location_container);
+            locationView = (TextView) itemView.findViewById(R.id.location_view);
             profileContainer = itemView.findViewById(R.id.profile_container);
             twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
 
@@ -1008,6 +1009,13 @@ public class StatusFragment extends BaseSupportFragment
                         Utils.openUserProfile(adapter.getContext(), status.account_id, status.user_id,
                                 status.user_screen_name, null);
                     }
+                    break;
+                }
+                case R.id.location_view: {
+                    final ParcelableStatus status = adapter.getStatus(getAdapterPosition());
+                    final ParcelableLocation location = status.location;
+                    if (!ParcelableLocation.isValidLocation(location)) return;
+                    Utils.openMap(adapter.getContext(), location.latitude, location.longitude);
                     break;
                 }
             }
@@ -1069,6 +1077,7 @@ public class StatusFragment extends BaseSupportFragment
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
+            locationView.setVisibility(ParcelableLocation.isValidLocation(status.location) ? View.VISIBLE : View.GONE);
 
             retweetsContainer.setVisibility(!status.user_is_protected ? View.VISIBLE : View.GONE);
             repliesContainer.setVisibility(status.reply_count < 0 ? View.GONE : View.VISIBLE);
@@ -1138,11 +1147,13 @@ public class StatusFragment extends BaseSupportFragment
             profileContainer.setOnClickListener(this);
             retweetsContainer.setOnClickListener(this);
             retweetedByContainer.setOnClickListener(this);
+            locationView.setOnClickListener(this);
 
             final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);
             textView.setTextSize(defaultTextSize * 1.25f);
             screenNameView.setTextSize(defaultTextSize * 0.85f);
+            locationView.setTextSize(defaultTextSize * 0.85f);
             timeSourceView.setTextSize(defaultTextSize * 0.85f);
         }
 

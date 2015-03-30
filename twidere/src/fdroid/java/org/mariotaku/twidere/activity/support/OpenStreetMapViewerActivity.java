@@ -110,6 +110,7 @@ public class OpenStreetMapViewerActivity extends BaseActionBarActivity implement
         setContentView(R.layout.activity_osm_viewer);
         mMapView.setMultiTouchControls(true);
         mMapView.setBuiltInZoomControls(true);
+        mMapView.setTilesScaledToDpi(true);
         final List<Overlay> overlays = mMapView.getOverlays();
         final GeoPoint gp = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
         final Drawable d = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_map_marker, null);

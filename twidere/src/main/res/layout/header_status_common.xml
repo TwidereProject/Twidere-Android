@@ -181,47 +181,21 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-    <RelativeLayout
-        android:id="@+id/location_container"
+
+    <org.mariotaku.twidere.view.themed.ThemedTextView
+        android:id="@+id/location_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <org.mariotaku.twidere.view.MapImageView
-            android:id="@+id/map_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_map"
-            android:contentDescription="@string/location"
-            android:duplicateParentState="true"
-            android:foreground="?android:selectableItemBackground"
-            android:scaleType="centerCrop"/>
-
-        <View
-            android:id="@+id/location_background_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/location_view"
-            android:layout_alignParentBottom="true"
-            android:layout_alignTop="@+id/location_view"
-            android:alpha="0.5"
-            android:background="?cardItemBackgroundColor"/>
-
-        <org.mariotaku.twidere.view.themed.ThemedTextView
-            android:id="@+id/location_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="?android:selectableItemBackground"
-            android:drawableLeft="@drawable/ic_indicator_location"
-            android:drawablePadding="4dp"
-            android:duplicateParentState="true"
-            android:gravity="center_vertical"
-            android:padding="@dimen/element_spacing_normal"
-            android:singleLine="true"
-            android:text="@string/view_map"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-    </RelativeLayout>
+        android:layout_alignParentBottom="true"
+        android:background="?android:selectableItemBackground"
+        android:drawableLeft="@drawable/ic_indicator_location"
+        android:drawablePadding="4dp"
+        android:gravity="center_vertical"
+        android:padding="@dimen/element_spacing_normal"
+        android:singleLine="true"
+        android:text="@string/view_map"
+        android:textColor="?android:textColorSecondary"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
