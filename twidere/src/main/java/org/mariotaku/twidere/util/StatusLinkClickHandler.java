@@ -39,7 +39,7 @@ public class StatusLinkClickHandler extends OnLinkClickHandler {
     }
 
     private ParcelableMedia findByLink(ParcelableMedia[] media, String link) {
-        if (link == null) return null;
+        if (link == null || media == null) return null;
         for (ParcelableMedia mediaItem : media) {
             if (link.equals(mediaItem.media_url) || link.equals(mediaItem.page_url))
                 return mediaItem;

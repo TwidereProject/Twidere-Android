@@ -41,16 +41,6 @@
         <item>@string/profile_images</item>
         <item>@string/preview_images</item>
     </string-array>
-    <string-array name="entries_compose_quit_action">
-        <item>@string/ask</item>
-        <item>@string/save</item>
-        <item>@string/discard</item>
-    </string-array>
-    <string-array name="values_compose_quit_action">
-        <item>ask</item>
-        <item>save</item>
-        <item>discard</item>
-    </string-array>
     <string-array name="entries_theme">
         <item>@string/theme_light</item>
         <item>@string/theme_dark</item>
@@ -68,13 +58,6 @@
         <item>@string/theme_background_default</item>
         <item>@string/theme_background_solid</item>
         <item>@string/theme_background_transparent</item>
-    </string-array>
-    <string-array name="dependency_values_actionbar_theme">
-        <item>twidere</item>
-        <item>light</item>
-    </string-array>
-    <string-array name="dependency_values_theme_background_alpha">
-        <item>transparent</item>
     </string-array>
     <string-array name="dependency_values_true">
         <item>true</item>
@@ -147,6 +130,4 @@
         <item>@string/square</item>
     </string-array>
 
-    <string name="crop">Crop</string>
-    <string name="scale">Scale</string>
 </resources>

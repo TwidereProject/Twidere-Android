@@ -736,5 +736,7 @@
     <string name="projects_we_took_part">Projects we took part</string>
     <string name="activated_accounts">Activated accounts</string>
     <string name="search">Search</string>
+    <string name="crop">Crop</string>
+    <string name="scale">Scale</string>
 
 </resources>

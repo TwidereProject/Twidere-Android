@@ -20,8 +20,7 @@
         android:key="twitter_link_handler"
         android:title="@string/open_twitter_links"/>
 
-    <org.mariotaku.twidere.preference.ComponentStatePreference
-        android:name="org.mariotaku.twidere.activity.AssistLauncherActivity"
+    <org.mariotaku.twidere.preference.ComposeNowPreference
         android:key="compose_now"
         android:summary="@string/compose_now_summary"
         android:title="@string/compose_now"/>

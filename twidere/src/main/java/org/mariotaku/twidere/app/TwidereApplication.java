@@ -43,6 +43,7 @@ import com.nostra13.universalimageloader.utils.L;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
@@ -221,6 +222,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
                     PackageManager.DONT_KILL_APP);
         } else if (!mainDisabled) {
             pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
+        if (!Utils.isComposeNowSupported()) {
+            final ComponentName assist = new ComponentName(this, AssistLauncherActivity.class);
+            pm.setComponentEnabledSetting(assist, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
         }
 

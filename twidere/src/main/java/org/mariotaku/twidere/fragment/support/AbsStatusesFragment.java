@@ -272,21 +272,26 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     public final void onLoadFinished(Loader<Data> loader, Data data) {
         setRefreshing(false);
         final SharedPreferences preferences = getSharedPreferences();
+        final boolean rememberPosition = preferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = preferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
         final long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
+        final String tag = getCurrentReadPositionTag();
         if (readFromBottom) {
             lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
         } else {
             lastVisiblePos = mLayoutManager.findFirstVisibleItemPosition();
         }
         if (lastVisiblePos != -1) {
-            lastReadId = mAdapter.getItemId(lastVisiblePos);
+            lastReadId = mAdapter.getStatusId(lastVisiblePos);
             if (readFromBottom) {
                 lastVisibleTop = mLayoutManager.getChildAt(mLayoutManager.getChildCount() - 1).getTop();
             } else {
                 lastVisibleTop = mLayoutManager.getChildAt(0).getTop();
             }
+        } else if (rememberPosition && tag != null) {
+            lastReadId = mReadStateManager.getPosition(tag);
+            lastVisibleTop = 0;
         } else {
             lastReadId = -1;
             lastVisibleTop = 0;
@@ -295,14 +300,14 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             mAdapter.setLoadMoreIndicatorEnabled(hasMoreData(data));
             int pos = -1;
-            for (int i = 0; i < mAdapter.getItemCount(); i++) {
-                if (lastReadId == mAdapter.getItemId(i)) {
+            for (int i = 0, j = mAdapter.getItemCount(); i < j; i++) {
+                if (lastReadId != -1 && lastReadId == mAdapter.getStatusId(i)) {
                     pos = i;
                     break;
                 }
             }
             if (pos != -1 && mAdapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
-                mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - mLayoutManager.getPaddingTop());
+                mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
             }
         }
         if (loader instanceof IExtendedLoader) {
@@ -445,6 +450,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         final ParcelableStatus status = mAdapter.getStatus(position);
         if (status == null) return;
         mReadStateManager.setPosition(readPositionTag, status.id);
+        mReadStateManager.setPosition(getCurrentReadPositionTag(), status.id, true);
+    }
+
+    private String getCurrentReadPositionTag() {
+        final String tag = getReadPositionTag();
+        if (tag == null) return null;
+        return tag + "_current";
     }
 
     private void setListShown(boolean shown) {

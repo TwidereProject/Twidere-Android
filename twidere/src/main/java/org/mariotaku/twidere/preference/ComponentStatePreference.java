@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.preference.CheckBoxPreference;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 public class ComponentStatePreference extends CheckBoxPreference {
@@ -23,12 +25,8 @@ public class ComponentStatePreference extends CheckBoxPreference {
 
     public ComponentStatePreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.name});
-        final String name = a.getString(0);
-        a.recycle();
-        if (name == null) throw new NullPointerException();
         mPackageManager = context.getPackageManager();
-        mComponentName = new ComponentName(context.getPackageName(), name);
+        mComponentName = getComponentName(context, attrs);
         setDefaultValue(isComponentEnabled());
     }
 
@@ -37,11 +35,6 @@ public class ComponentStatePreference extends CheckBoxPreference {
         final boolean disableDependentsState = getDisableDependentsState();
         final boolean value = isComponentEnabled();
         return disableDependentsState ? value : !value;
-    }
-
-    @Override
-    protected boolean getPersistedBoolean(final boolean defaultReturnValue) {
-        return isComponentEnabled();
     }
 
     @Override
@@ -54,6 +47,35 @@ public class ComponentStatePreference extends CheckBoxPreference {
         setChecked(getPersistedBoolean(true));
     }
 
+    protected ComponentName getComponentName(Context context, AttributeSet attrs) {
+        final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.name});
+        final String name = a.getString(0);
+        a.recycle();
+        if (name == null) throw new NullPointerException();
+        return new ComponentName(context.getPackageName(), name);
+    }
+
+    protected boolean isComponentAvailable() {
+        return true;
+    }
+
+    @Override
+    protected boolean shouldPersist() {
+        return true;
+    }
+
+    @Override
+    protected void notifyHierarchyChanged() {
+        super.notifyHierarchyChanged();
+        updateEnableState();
+    }
+
+    @Override
+    protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
+        super.onAttachedToHierarchy(preferenceManager);
+        updateEnableState();
+    }
+
     @Override
     protected boolean persistBoolean(final boolean value) {
         final int newState = value ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
@@ -63,8 +85,8 @@ public class ComponentStatePreference extends CheckBoxPreference {
     }
 
     @Override
-    protected boolean shouldPersist() {
-        return true;
+    protected boolean getPersistedBoolean(final boolean defaultReturnValue) {
+        return isComponentEnabled();
     }
 
     @SuppressLint("InlinedApi")
@@ -78,6 +100,10 @@ public class ComponentStatePreference extends CheckBoxPreference {
             // Seems this will thrown on older devices
             return false;
         }
+    }
+
+    private void updateEnableState() {
+        setEnabled(isComponentAvailable());
     }
 
 }

@@ -91,6 +91,8 @@ import android.transition.TransitionInflater;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -1486,6 +1488,11 @@ public final class Utils implements Constants, TwitterConstants {
         }
         cur.close();
         return ids;
+    }
+
+    public static boolean isComposeNowSupported() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return false;
+        return !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME);
     }
 
     public static boolean isOfficialCredentials(final Context context, final ParcelableCredentials account) {
