@@ -142,6 +142,10 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         mIndicatorAdapter.setIconColor(color);
     }
 
+    public void setLabelColor(int color) {
+        mIndicatorAdapter.setLabelColor(color);
+    }
+
     public void setStripColor(int color) {
         mIndicatorAdapter.setStripColor(color);
     }
@@ -339,6 +343,10 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             }
         }
 
+        public void setLabelColor(int color) {
+            labelView.setTextColor(color);
+        }
+
         public void setPadding(int horizontalPadding, int verticalPadding) {
             itemView.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
         }
@@ -393,7 +401,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         private LayoutInflater mInflater;
 
         private TabProvider mTabProvider;
-        private int mStripColor, mIconColor;
+        private int mStripColor, mIconColor, mLabelColor;
         private boolean mDisplayBadge;
 
         public TabPagerIndicatorAdapter(TabPagerIndicator indicator) {
@@ -426,6 +434,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             holder.setStripHeight(mIndicator.getStripHeight());
             holder.setStripColor(mStripColor);
             holder.setIconColor(mIconColor);
+            holder.setLabelColor(mLabelColor);
             holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge);
             holder.setDisplayOption(mIndicator.isIconDisplayed(), mIndicator.isLabelDisplayed());
         }
@@ -448,6 +457,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         public void setIconColor(int color) {
             mIconColor = color;
+            notifyDataSetChanged();
+        }
+
+        public void setLabelColor(int color) {
+            mLabelColor = color;
             notifyDataSetChanged();
         }
 
