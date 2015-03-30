@@ -330,6 +330,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     }
 
     public void setRefreshing(boolean refreshing) {
+        if (refreshing == mSwipeRefreshLayout.isRefreshing()) return;
         mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 

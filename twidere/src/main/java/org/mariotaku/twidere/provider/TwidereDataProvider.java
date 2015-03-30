@@ -821,7 +821,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         getAccountIds(getContext()));
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isHomeTimelineNotificationEnabled()) continue;
-                    showTimelineNotification(pref, mReadStateManager.getPosition(HomeTimelineFragment.KEY_READ_POSITION_TAG));
+                    showTimelineNotification(pref, getPositionTag(HomeTimelineFragment.KEY_READ_POSITION_TAG,
+                            pref.getAccountId()));
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE);
                 break;
@@ -831,7 +832,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         getAccountIds(getContext()));
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isMentionsNotificationEnabled()) continue;
-                    showMentionsNotification(pref, mReadStateManager.getPosition(MentionsTimelineFragment.KEY_READ_POSITION_TAG));
+                    showMentionsNotification(pref, getPositionTag(MentionsTimelineFragment.KEY_READ_POSITION_TAG,
+                            pref.getAccountId()));
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_MENTIONS_TIMELINE);
                 break;
@@ -851,6 +853,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
         }
+    }
+
+    private long getPositionTag(String tag, long accountId) {
+        final long position = mReadStateManager.getPosition(Utils.getReadPositionTagWithAccounts(tag,
+                accountId));
+        if (position != -1) return position;
+        return mReadStateManager.getPosition(tag);
     }
 
     private void showTimelineNotification(AccountPreferences pref, long position) {

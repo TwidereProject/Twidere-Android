@@ -27,7 +27,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 13
-        versionName "1.10 (0.3.0-dev)"
+        versionName "1.11 (0.3.0-dev)"
     }
     buildTypes {
         release {
@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile project(':twidere.library.extension')
     compile project(':twidere.component.twitter4j.streaming')
     compile fileTree(dir: 'libs', include: ['*.jar'])

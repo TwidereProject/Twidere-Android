@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import org.mariotaku.twidere.Twidere;
 import org.mariotaku.twidere.TwidereSharedPreferences;
+import org.mariotaku.twidere.extension.streaming.util.OkHttpClientFactory;
 import org.mariotaku.twidere.extension.streaming.util.TwidereHostAddressResolverFactory;
 import org.mariotaku.twidere.extension.streaming.util.Utils;
 import org.mariotaku.twidere.library.twitter4j.streaming.BuildConfig;
@@ -51,8 +52,8 @@ import static android.text.TextUtils.isEmpty;
 
 public class StreamingService extends Service implements Constants, PrivateConstants {
 
-    private static final int NOTIFITION_SERVICE_STARTED = 1;
-    private static final int NOTIFITION_REQUEST_PERMISSION = 2;
+    private static final int NOTIFICATION_SERVICE_STARTED = 1;
+    private static final int NOTIFICATION_REQUEST_PERMISSION = 2;
 
     private final List<WeakReference<TwitterStream>> mTwitterInstances = new ArrayList<>();
     private ContentResolver mResolver;
@@ -116,7 +117,7 @@ public class StreamingService extends Service implements Constants, PrivateConst
             new Thread(new ShutdownStreamTwitterRunnable(twitter)).start();
         }
         mTwitterInstances.clear();
-        mNotificationManager.cancel(NOTIFITION_SERVICE_STARTED);
+        mNotificationManager.cancel(NOTIFICATION_SERVICE_STARTED);
     }
 
     @SuppressWarnings("deprecation")
@@ -142,9 +143,9 @@ public class StreamingService extends Service implements Constants, PrivateConst
                 notification.icon = R.drawable.ic_stat_twidere;
                 notification.tickerText = getString(R.string.streaming_service_running);
                 notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
-                mNotificationManager.notify(NOTIFITION_SERVICE_STARTED, notification);
+                mNotificationManager.notify(NOTIFICATION_SERVICE_STARTED, notification);
             } else {
-                mNotificationManager.cancel(NOTIFITION_SERVICE_STARTED);
+                mNotificationManager.cancel(NOTIFICATION_SERVICE_STARTED);
             }
         } else {
             final Intent intent = new Intent(this, SettingsActivity.class);
@@ -157,7 +158,7 @@ public class StreamingService extends Service implements Constants, PrivateConst
             notification.icon = R.drawable.ic_stat_login;
             notification.tickerText = getString(R.string.request_permission);
             notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
-            mNotificationManager.notify(NOTIFITION_REQUEST_PERMISSION, notification);
+            mNotificationManager.notify(NOTIFICATION_REQUEST_PERMISSION, notification);
         }
     }
 
@@ -176,6 +177,8 @@ public class StreamingService extends Service implements Constants, PrivateConst
             final long account_id = account.account_id;
             mAccountIds[i] = account_id;
             final StreamConfigurationBuilder cb = new StreamConfigurationBuilder();
+            cb.setHttpClientFactory(new OkHttpClientFactory(this));
+            cb.setHostAddressResolverFactory(new TwidereHostAddressResolverFactory(this));
             cb.setGZIPEnabled(prefs.getBoolean(KEY_GZIP_COMPRESSING, true));
             cb.setIncludeEntitiesEnabled(true);
             if (prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false)) {

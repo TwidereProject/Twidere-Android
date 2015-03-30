@@ -20,6 +20,7 @@
 package twitter4j.conf;
 
 import twitter4j.http.HostAddressResolverFactory;
+import twitter4j.http.HttpClientFactory;
 
 /**
  * A builder that can be used to construct a twitter4j configuration with
@@ -31,7 +32,7 @@ import twitter4j.http.HostAddressResolverFactory;
  * @author John Sirois - john.sirois at gmail.com
  */
 @SuppressWarnings("unused")
-public final class StreamConfigurationBuilder {
+public final class StreamConfigurationBuilder  {
 
     private StreamConfigurationBase configuration = new StreamConfigurationBase();
 
@@ -91,6 +92,10 @@ public final class StreamConfigurationBuilder {
         checkNotBuilt();
         configuration.setHostAddressResolverFactory(factory);
         return this;
+    }
+
+    public void setHttpClientFactory(HttpClientFactory factory) {
+        configuration.setHttpClientFactory(factory);
     }
 
     public StreamConfigurationBuilder setHttpConnectionTimeout(final int httpConnectionTimeout) {

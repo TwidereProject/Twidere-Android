@@ -1084,6 +1084,26 @@ public final class Utils implements Constants, TwitterConstants {
         return intent;
     }
 
+
+    public static String getReadPositionTagWithAccounts(String tag, Bundle args) {
+        final long[] accountIds;
+        if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
+            accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
+        } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
+            accountIds = new long[]{args.getLong(EXTRA_ACCOUNT_ID, -1)};
+        } else {
+            accountIds = null;
+        }
+        return getReadPositionTagWithAccounts(tag, accountIds);
+    }
+
+    public static String getReadPositionTagWithAccounts(String tag, long... accountIds) {
+        if (accountIds == null || accountIds.length == 0) return tag;
+        final long[] accountIdsClone = accountIds.clone();
+        Arrays.sort(accountIdsClone);
+        return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
+    }
+
     public static String getStatusShareText(final Context context, final ParcelableStatus status) {
         final Uri link = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
         return context.getString(R.string.status_share_text_format_with_link,

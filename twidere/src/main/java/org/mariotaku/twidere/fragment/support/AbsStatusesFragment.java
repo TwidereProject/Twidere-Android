@@ -148,7 +148,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     public void setRefreshing(boolean refreshing) {
         if (refreshing == mSwipeRefreshLayout.isRefreshing()) return;
-        if (!refreshing) updateRefreshProgressOffset();
+//        if (!refreshing) updateRefreshProgressOffset();
         mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
@@ -454,9 +454,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     private String getCurrentReadPositionTag() {
-        final String tag = getReadPositionTag();
+        final String tag = getReadPositionTagWithAccounts();
         if (tag == null) return null;
         return tag + "_current";
+    }
+
+    private String getReadPositionTagWithAccounts() {
+        return Utils.getReadPositionTagWithAccounts(getReadPositionTag(), getAccountIds());
     }
 
     private void setListShown(boolean shown) {

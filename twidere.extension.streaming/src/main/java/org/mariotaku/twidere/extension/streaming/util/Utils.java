@@ -7,10 +7,22 @@ import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.TwidereSharedPreferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import static android.text.TextUtils.isEmpty;
 
 public class Utils implements TwidereConstants {
 
+
+    public static void closeSilently(Closeable closeable) {
+        if (closeable == null) return;
+        try {
+            closeable.close();
+        } catch (IOException ignore) {
+
+        }
+    }
 
     public static long[] getActivatedAccountIds(final Context context) {
         long[] accounts = new long[0];

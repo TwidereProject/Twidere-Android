@@ -63,6 +63,11 @@ public class ReadStateManager implements Constants {
         return pairs;
     }
 
+
+    public long getPosition(final String key, final long keyId) {
+        return getPosition(key, String.valueOf(keyId));
+    }
+
     public long getPosition(final String key, final String keyId) {
         if (TextUtils.isEmpty(key)) return -1;
         final Set<String> set = mPreferences.getStringSet(key, null);
@@ -80,6 +85,11 @@ public class ReadStateManager implements Constants {
 
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
         mPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+
+    public boolean setPosition(final String key, final long keyId, final long position, boolean acceptOlder) {
+        return setPosition(key, String.valueOf(keyId), position, acceptOlder);
     }
 
     public boolean setPosition(final String key, final String keyId, final long position, boolean acceptOlder) {
