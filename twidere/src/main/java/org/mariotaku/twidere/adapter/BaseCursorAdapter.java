@@ -88,7 +88,7 @@ public class BaseCursorAdapter extends SimpleCursorAdapter implements IBaseAdapt
     }
 
     @Override
-    public final boolean isDisplayProfileImage() {
+    public final boolean isProfileImageDisplayed() {
         return mDisplayProfileImage;
     }
 

@@ -32,31 +32,20 @@
     app:ignorePadding="true"
     tools:context=".adapter.DraftsAdapter">
 
-    <org.mariotaku.twidere.view.ImagePreviewContainer
-        android:id="@+id/image_preview_container"
+
+    <org.mariotaku.twidere.view.CardMediaContainer
+        android:id="@+id/media_preview_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profile_container"
+        android:layout_below="@id/profile_container"
+        android:layout_marginTop="@dimen/element_spacing_normal"
+        android:horizontalSpacing="@dimen/element_spacing_xsmall"
+        android:verticalSpacing="@dimen/element_spacing_xsmall">
 
-        <org.mariotaku.twidere.view.HighlightImageView
-            android:id="@+id/image_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+        <include layout="@layout/layout_card_media_preview"/>
 
-        <ProgressBar
-            android:id="@+id/media_preview_progress"
-            style="?android:progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.2dp"
-            android:layout_gravity="bottom"
-            android:background="#40808080"/>
-    </org.mariotaku.twidere.view.ImagePreviewContainer>
+    </org.mariotaku.twidere.view.CardMediaContainer>
 
     <org.mariotaku.twidere.view.themed.ThemedTextView
         android:id="@+id/text"

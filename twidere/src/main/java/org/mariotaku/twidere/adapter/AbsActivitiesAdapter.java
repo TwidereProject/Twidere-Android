@@ -74,6 +74,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final boolean mCompactCards;
     private final boolean mDisplayMediaPreview;
     private final boolean mNameFirst;
+    private final boolean mDisplayProfileImage;
     private boolean mLoadMoreIndicatorEnabled;
     private ActivityAdapterListener mActivityAdapterListener;
 
@@ -91,6 +92,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
     }
@@ -206,7 +208,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 }
                 final StatusViewHolder statusViewHolder = (StatusViewHolder) holder;
                 statusViewHolder.displayStatus(getContext(), getImageLoader(), getImageLoadingHandler(),
-                        getTwitterWrapper(), isMediaPreviewDisplayed(), false, false, isNameFirst(),
+                        getTwitterWrapper(), isProfileImageEnabled(), isMediaPreviewEnabled(), false, false, isNameFirst(),
                         getProfileImageStyle(), getMediaPreviewStyle(), status, null, true);
                 break;
             }
@@ -321,14 +323,17 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     protected abstract int getActivityAction(int position);
 
-    private boolean isMediaPreviewDisplayed() {
+    private boolean isMediaPreviewEnabled() {
         return mDisplayMediaPreview;
     }
 
+    @Override
+    public boolean isProfileImageEnabled() {
+        return mDisplayProfileImage;
+    }
 
     public static interface ActivityAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
-
     }
 
     private static class StubViewHolder extends ViewHolder {

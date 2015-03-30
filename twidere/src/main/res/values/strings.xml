@@ -738,5 +738,8 @@
     <string name="search">Search</string>
     <string name="crop">Crop</string>
     <string name="scale">Scale</string>
+    <string name="user_type_verified">Verified</string>
+    <string name="user_type_protected">Protected</string>
+
 
 </resources>

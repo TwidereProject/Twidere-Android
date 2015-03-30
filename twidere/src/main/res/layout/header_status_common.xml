@@ -83,7 +83,8 @@
             android:layout_marginBottom="@dimen/element_spacing_minus_small"
             android:layout_alignBottom="@id/profile_image"
             android:layout_alignRight="@id/profile_image"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

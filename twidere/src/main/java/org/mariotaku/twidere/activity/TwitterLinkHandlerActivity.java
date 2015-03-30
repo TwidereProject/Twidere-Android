@@ -229,6 +229,12 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                 builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, pathSegments.get(1));
                 return new Intent(Intent.ACTION_VIEW, builder.build());
             }
+            default: {
+                final String fragment = uri.getFragment();
+                if (fragment != null && fragment.startsWith("#!")) {
+
+                }
+            }
         }
         return null;
     }

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util.net;
 import android.net.SSLCertificateSocketFactory;
 import android.net.Uri;
 
+import com.nostra13.universalimageloader.utils.IoUtils;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
@@ -33,10 +34,9 @@ import com.squareup.okhttp.internal.Internal;
 import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.util.Utils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -52,6 +52,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.net.SocketFactory;
 
+import okio.BufferedSink;
 import twitter4j.TwitterException;
 import twitter4j.auth.Authorization;
 import twitter4j.http.HostAddressResolver;
@@ -146,10 +147,7 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
             if (param.isFile()) {
                 RequestBody requestBody;
                 if (param.hasFileBody()) {
-                    final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    Utils.copyStream(param.getFileBody(), os);
-                    requestBody = RequestBody.create(MediaType.parse(param.getContentType()), os.toByteArray());
-                    os.close();
+                    requestBody = new StreamRequestBody(MediaType.parse(param.getContentType()), param.getFileBody(), true);
                 } else {
                     requestBody = RequestBody.create(MediaType.parse(param.getContentType()), param.getFile());
                 }
@@ -159,6 +157,36 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
             }
         }
         return builder.build();
+    }
+
+    static class StreamRequestBody extends RequestBody {
+
+        private final MediaType contentType;
+        private final InputStream stream;
+        private final boolean closeAfterWrite;
+
+        StreamRequestBody(MediaType contentType, InputStream stream, boolean closeAfterWrite) {
+            this.contentType = contentType;
+            this.stream = stream;
+            this.closeAfterWrite = closeAfterWrite;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return contentType;
+        }
+
+        @Override
+        public void writeTo(BufferedSink sink) throws IOException {
+            int len;
+            byte[] buf = new byte[8192];
+            while ((len = stream.read(buf)) != -1) {
+                sink.write(buf, 0, len);
+            }
+            if (closeAfterWrite) {
+                IoUtils.closeSilently(stream);
+            }
+        }
     }
 
     private void setupRequestBuilder(Builder builder, HttpRequest req) throws IOException {

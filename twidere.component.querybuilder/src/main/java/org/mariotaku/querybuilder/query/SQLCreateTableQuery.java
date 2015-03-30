@@ -1,5 +1,6 @@
 package org.mariotaku.querybuilder.query;
 
+import org.mariotaku.querybuilder.Constraint;
 import org.mariotaku.querybuilder.NewColumn;
 import org.mariotaku.querybuilder.SQLQuery;
 import org.mariotaku.querybuilder.Utils;
@@ -11,6 +12,7 @@ public class SQLCreateTableQuery implements SQLQuery {
     private String table;
     private NewColumn[] newColumns;
     private SQLSelectQuery selectStmt;
+    private Constraint[] constraints;
 
     SQLCreateTableQuery() {
     }
@@ -28,11 +30,20 @@ public class SQLCreateTableQuery implements SQLQuery {
         if (createIfNotExists) {
             sb.append("IF NOT EXISTS ");
         }
-        sb.append(String.format("%s ", table));
+        sb.append(table);
+        sb.append(' ');
         if (newColumns != null && newColumns.length > 0) {
-            sb.append(String.format("(%s)", Utils.toString(newColumns, ',', true)));
+            sb.append('(');
+            sb.append(Utils.toString(newColumns, ',', true));
+            if (constraints != null) {
+                sb.append(' ');
+                sb.append(Utils.toString(constraints, ',', true));
+                sb.append(' ');
+            }
+            sb.append(')');
         } else {
-            sb.append(String.format("AS %s", selectStmt.getSQL()));
+            sb.append("AS ");
+            sb.append(selectStmt.getSQL());
         }
         return sb.toString();
     }
@@ -86,6 +97,12 @@ public class SQLCreateTableQuery implements SQLQuery {
             return this;
         }
 
+        public Builder constraint(final Constraint... constraints) {
+            checkNotBuilt();
+            query.setConstraints(constraints);
+            return this;
+        }
+
         public Builder createTable(final boolean temporary, final boolean createIfNotExists, final String table) {
             checkNotBuilt();
             query.setTemporary(temporary);
@@ -106,6 +123,10 @@ public class SQLCreateTableQuery implements SQLQuery {
             if (buildCalled) throw new IllegalStateException();
         }
 
+    }
+
+    private void setConstraints(Constraint[] constraints) {
+        this.constraints = constraints;
     }
 
 }

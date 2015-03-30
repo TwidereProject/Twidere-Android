@@ -811,13 +811,6 @@ public class ThemeUtils implements Constants {
         return pref.getInt(KEY_THEME_COLOR, def);
     }
 
-    public static int getUserAccentColor(final Context context, int themeRes) {
-        if (context == null) return Color.TRANSPARENT;
-        final int defThemeColor = getThemeColor(context, themeRes);
-        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        return pref.getInt(KEY_THEME_COLOR, defThemeColor);
-    }
-
     public static Typeface getUserTypeface(final Context context, final Typeface defTypeface) {
         if (context == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
             return Typeface.DEFAULT;

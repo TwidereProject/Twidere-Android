@@ -49,6 +49,7 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final boolean mCompactCards;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
+    private final boolean mDisplayProfileImage;
     private boolean mLoadMoreIndicatorEnabled;
     private StatusAdapterListener mStatusAdapterListener;
     private boolean mShowInReplyTo;
@@ -69,6 +70,7 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
+        mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         setShowInReplyTo(true);
     }
@@ -123,8 +125,20 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
+    public void setLoadMoreIndicatorEnabled(boolean enabled) {
+        if (mLoadMoreIndicatorEnabled == enabled) return;
+        mLoadMoreIndicatorEnabled = enabled;
+        notifyDataSetChanged();
+    }
+
+    @Override
     public boolean isMediaPreviewEnabled() {
         return mDisplayMediaPreview;
+    }
+
+    @Override
+    public boolean isProfileImageEnabled() {
+        return mDisplayProfileImage;
     }
 
     @Override
@@ -224,6 +238,21 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
+    public final void onStatusClick(StatusViewHolder holder, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusClick(holder, position);
+        }
+    }
+
+
+    @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onMediaClick(holder, media, position);
+        }
+    }
+
+    @Override
     public void onUserProfileClick(StatusViewHolder holder, int position) {
         final Context context = getContext();
         final ParcelableStatus status = getStatus(position);
@@ -239,30 +268,8 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
-    @Override
-    public final void onStatusClick(StatusViewHolder holder, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onStatusClick(holder, position);
-        }
-    }
-
-
-    @Override
-    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onMediaClick(holder, media, position);
-        }
-    }
-
     public void setListener(StatusAdapterListener listener) {
         mStatusAdapterListener = listener;
-    }
-
-    @Override
-    public void setLoadMoreIndicatorEnabled(boolean enabled) {
-        if (mLoadMoreIndicatorEnabled == enabled) return;
-        mLoadMoreIndicatorEnabled = enabled;
-        notifyDataSetChanged();
     }
 
     public void setShowAccountsColor(boolean showAccountsColor) {

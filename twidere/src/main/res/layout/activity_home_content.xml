@@ -27,6 +27,8 @@
 
     <org.mariotaku.twidere.view.ExtendedViewPager
         android:id="@+id/main_pager"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -59,7 +61,7 @@
         <View
             android:id="@+id/actionbar_overlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"/>
 
     </LinearLayout>

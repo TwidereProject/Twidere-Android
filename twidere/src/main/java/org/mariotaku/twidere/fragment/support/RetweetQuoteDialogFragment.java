@@ -92,6 +92,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
+        final boolean displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         final boolean displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         final ParcelableStatus status = getStatus();
 
@@ -101,8 +102,8 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         builder.setNeutralButton(R.string.quote, this);
         builder.setNegativeButton(android.R.string.cancel, null);
 
-        holder.displayStatus(context, loader, handler, twitter, displayMediaPreview, true,
-                true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, true);
+        holder.displayStatus(context, loader, handler, twitter, displayProfileImage, displayMediaPreview,
+                true, true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, true);
 
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);

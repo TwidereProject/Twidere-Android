@@ -76,8 +76,8 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
                 getUserTypeIconRes(user.is_verified, user.is_protected), 0);
         holder.text1.setText(getUserNickname(mContext, user.id, user.name));
         holder.text2.setText("@" + user.screen_name);
-        holder.icon.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
-        if (isDisplayProfileImage()) {
+        holder.icon.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);
+        if (isProfileImageDisplayed()) {
             mImageLoader.displayProfileImage(holder.icon, user.profile_image_url);
         } else {
             mImageLoader.cancelDisplayTask(holder.icon);

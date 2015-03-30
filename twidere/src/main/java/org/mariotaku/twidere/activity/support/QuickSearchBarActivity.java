@@ -148,7 +148,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     @Override
     public int getThemeColor() {
-        return ThemeUtils.getUserAccentColor(this, getThemeResourceId());
+        return ThemeUtils.getUserAccentColor(this);
     }
 
     @Override

@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
@@ -75,20 +76,21 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
-                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
         final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
         final boolean displayExtraType = args.getBoolean(EXTRA_SHOW_EXTRA_TYPE, true);
+        final boolean displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE);
         final boolean displayMediaPreview;
         if (args.containsKey(EXTRA_SHOW_MEDIA_PREVIEW)) {
             displayMediaPreview = args.getBoolean(EXTRA_SHOW_MEDIA_PREVIEW);
         } else {
             displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         }
-        mHolder.displayStatus(activity, loader, handler, twitter, displayMediaPreview, true,
-                true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, displayExtraType);
+        mHolder.displayStatus(activity, loader, handler, twitter, displayProfileImage, displayMediaPreview,
+                true, true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, displayExtraType);
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
     }

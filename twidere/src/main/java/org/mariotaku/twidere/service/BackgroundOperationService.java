@@ -39,6 +39,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.mariotaku.querybuilder.Expression;
@@ -520,6 +521,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     final BitmapFactory.Options o = new BitmapFactory.Options();
                     o.inJustDecodeBounds = true;
                     final long[] mediaIds = new long[statusUpdate.media.length];
+                    ContentLengthInputStream is = null;
                     try {
                         for (int i = 0, j = mediaIds.length; i < j; i++) {
                             final ParcelableMediaUpdate media = statusUpdate.media[i];
@@ -527,7 +529,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                             if (path == null) throw new FileNotFoundException();
                             BitmapFactory.decodeFile(path, o);
                             final File file = new File(path);
-                            final ContentLengthInputStream is = new ContentLengthInputStream(file);
+                            is = new ContentLengthInputStream(file);
                             is.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
                                     statusUpdate));
                             final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is,
@@ -540,6 +542,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                         final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
                         results.add(response);
                         continue;
+                    } finally {
+                        IoUtils.closeSilently(is);
                     }
                     status.mediaIds(mediaIds);
                 }

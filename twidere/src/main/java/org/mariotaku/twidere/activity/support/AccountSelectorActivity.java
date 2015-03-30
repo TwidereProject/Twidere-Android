@@ -152,8 +152,8 @@ public class AccountSelectorActivity extends BaseSupportDialogActivity implement
     @Override
     protected void onResume() {
         super.onResume();
-        final boolean display_profile_image = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mAdapter.setDisplayProfileImage(display_profile_image);
+        final boolean displayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mAdapter.setDisplayProfileImage(displayProfileImage);
     }
 
     @Override

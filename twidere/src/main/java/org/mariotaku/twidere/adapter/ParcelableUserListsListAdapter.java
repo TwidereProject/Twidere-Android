@@ -106,8 +106,8 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
         if (holder.subscribers_count != null) {
             holder.subscribers_count.setText(getLocalizedNumber(mLocale, userList.subscribers_count));
         }
-        holder.profile_image.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
-        if (isDisplayProfileImage()) {
+        holder.profile_image.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);
+        if (isProfileImageDisplayed()) {
             mImageLoader.displayProfileImage(holder.profile_image, userList.user_profile_image_url);
         } else {
             mImageLoader.cancelDisplayTask(holder.profile_image);

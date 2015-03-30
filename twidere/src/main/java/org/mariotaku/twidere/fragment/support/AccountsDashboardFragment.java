@@ -389,7 +389,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return LayoutInflater.from(getThemedContext()).inflate(R.layout.fragment_accounts_drawer, container, false);
+        return LayoutInflater.from(getThemedContext()).inflate(R.layout.fragment_accounts_dashboard, container, false);
     }
 
     @Override

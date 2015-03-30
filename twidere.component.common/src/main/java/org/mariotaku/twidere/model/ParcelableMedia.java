@@ -107,6 +107,21 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
         video_info = VideoInfo.fromMediaEntityInfo(entity.getVideoInfo());
     }
 
+    public ParcelableMedia(ParcelableMediaUpdate update) {
+        media_url = update.uri;
+        page_url = update.uri;
+        type = update.type;
+    }
+
+    public static ParcelableMedia[] fromMediaUpdates(ParcelableMediaUpdate[] mediaUpdates) {
+        final ParcelableMedia[] media = new ParcelableMedia[mediaUpdates.length];
+        for (int i = 0, j = mediaUpdates.length; i < j; i++) {
+            final ParcelableMediaUpdate mediaUpdate = mediaUpdates[i];
+            media[i] = new ParcelableMedia(mediaUpdate);
+        }
+        return media;
+    }
+
     private static int getTypeInt(Type type) {
         switch (type) {
             case PHOTO:

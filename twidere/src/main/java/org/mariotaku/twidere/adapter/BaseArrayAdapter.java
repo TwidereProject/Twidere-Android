@@ -85,7 +85,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
     }
 
     @Override
-    public final boolean isDisplayProfileImage() {
+    public final boolean isProfileImageDisplayed() {
         return mDisplayProfileImage;
     }
 

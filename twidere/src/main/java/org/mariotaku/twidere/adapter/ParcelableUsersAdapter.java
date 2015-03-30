@@ -115,8 +115,8 @@ public class ParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> imp
         holder.statuses_count.setText(getLocalizedNumber(mLocale, user.statuses_count));
         holder.followers_count.setText(getLocalizedNumber(mLocale, user.followers_count));
         holder.friends_count.setText(getLocalizedNumber(mLocale, user.friends_count));
-        holder.profile_image.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
-        if (isDisplayProfileImage()) {
+        holder.profile_image.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);
+        if (isProfileImageDisplayed()) {
             mProfileImageLoader.displayProfileImage(holder.profile_image, user.profile_image_url);
         }
         return view;

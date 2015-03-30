@@ -63,8 +63,10 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
@@ -2079,12 +2081,10 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static int getMediaPreviewStyle(String style) {
-        if (VALUE_MEDIA_PREVIEW_STYLE_CROP.equalsIgnoreCase(style)) {
-            return VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP;
-        } else if (VALUE_MEDIA_PREVIEW_STYLE_SCALE.equalsIgnoreCase(style)) {
+        if (VALUE_MEDIA_PREVIEW_STYLE_SCALE.equalsIgnoreCase(style)) {
             return VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE;
         }
-        return VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE;
+        return VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP;
     }
 
     public static Proxy getProxy(final Context context) {
@@ -2579,10 +2579,19 @@ public final class Utils implements Constants, TwitterConstants {
         return UserColorNameUtils.getDisplayName(context, user.getId(), user.getName(), user.getScreenName());
     }
 
+    @DrawableRes
     public static int getUserTypeIconRes(final boolean isVerified, final boolean isProtected) {
         if (isVerified)
             return R.drawable.ic_user_type_verified;
         else if (isProtected) return R.drawable.ic_user_type_protected;
+        return 0;
+    }
+
+    @StringRes
+    public static int getUserTypeDescriptionRes(final boolean isVerified, final boolean isProtected) {
+        if (isVerified)
+            return R.string.user_type_verified;
+        else if (isProtected) return R.string.user_type_protected;
         return 0;
     }
 

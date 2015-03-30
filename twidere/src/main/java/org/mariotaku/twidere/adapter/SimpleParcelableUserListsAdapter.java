@@ -77,8 +77,8 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
                 user_list.user_screen_name, isDisplayNameFirst(), false);
         holder.text1.setText(user_list.name);
         holder.text2.setText(mContext.getString(R.string.created_by, display_name));
-        holder.icon.setVisibility(isDisplayProfileImage() ? View.VISIBLE : View.GONE);
-        if (isDisplayProfileImage()) {
+        holder.icon.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);
+        if (isProfileImageDisplayed()) {
             mImageLoader.displayProfileImage(holder.icon, user_list.user_profile_image_url);
         } else {
             mImageLoader.cancelDisplayTask(holder.icon);

@@ -26,6 +26,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.nostra13.universalimageloader.utils.IoUtils;
+
 import org.mariotaku.twidere.TwidereConstants;
 
 import java.io.File;
@@ -63,11 +65,12 @@ public class BitmapUtils {
             // The image dimension is larger than Twitter's limit.
             o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight, TwidereConstants.TWITTER_MAX_IMAGE_WIDTH,
                     TwidereConstants.TWITTER_MAX_IMAGE_HEIGHT);
+            FileOutputStream fos = null;
             try {
                 final Bitmap b = BitmapDecodeHelper.decode(path, o);
                 final Bitmap.CompressFormat format = Utils.getBitmapCompressFormatByMimetype(o.outMimeType,
                         Bitmap.CompressFormat.PNG);
-                final FileOutputStream fos = new FileOutputStream(imageFile);
+                fos = new FileOutputStream(imageFile);
                 return b.compress(format, quality, fos);
             } catch (final OutOfMemoryError e) {
                 return false;
@@ -75,17 +78,22 @@ public class BitmapUtils {
                 // This shouldn't happen.
             } catch (final IllegalArgumentException e) {
                 return false;
+            } finally {
+                IoUtils.closeSilently(fos);
             }
         } else if (imageFile.length() > TwidereConstants.TWITTER_MAX_IMAGE_SIZE) {
             // The file size is larger than Twitter's limit.
+            FileOutputStream fos = null;
             try {
                 final Bitmap b = BitmapDecodeHelper.decode(path, o);
-                final FileOutputStream fos = new FileOutputStream(imageFile);
+                fos = new FileOutputStream(imageFile);
                 return b.compress(Bitmap.CompressFormat.JPEG, 80, fos);
             } catch (final OutOfMemoryError e) {
                 return false;
             } catch (final FileNotFoundException e) {
                 // This shouldn't happen.
+            } finally {
+                IoUtils.closeSilently(fos);
             }
         }
         return true;

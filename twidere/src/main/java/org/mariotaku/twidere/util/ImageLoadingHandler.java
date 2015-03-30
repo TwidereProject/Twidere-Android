@@ -36,84 +36,87 @@ import java.util.Map;
 
 public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingProgressListener {
 
-	private final Map<View, String> mLoadingUris = new HashMap<>();
-	private final int[] mProgressBarIds;
+    private final Map<View, String> mLoadingUris = new HashMap<>();
+    private final int[] mProgressBarIds;
 
-	public ImageLoadingHandler() {
-		this(R.id.media_preview_progress);
-	}
+    public ImageLoadingHandler() {
+        this(R.id.media_preview_progress);
+    }
 
-	public ImageLoadingHandler(final int... progressBarIds) {
-		mProgressBarIds = progressBarIds;
-	}
+    public ImageLoadingHandler(final int... progressBarIds) {
+        mProgressBarIds = progressBarIds;
+    }
 
-	public String getLoadingUri(final View view) {
-		return mLoadingUris.get(view);
-	}
+    public String getLoadingUri(final View view) {
+        return mLoadingUris.get(view);
+    }
 
-	@Override
-	public void onLoadingCancelled(final String imageUri, final View view) {
-		if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
-		mLoadingUris.remove(view);
-		final ProgressBar progress = findProgressBar(view.getParent());
-		if (progress != null) {
-			progress.setVisibility(View.GONE);
-		}
-	}
-
-	@Override
-	public void onLoadingComplete(final String imageUri, final View view, final Bitmap bitmap) {
-		if (view == null) return;
-		mLoadingUris.remove(view);
-		final ProgressBar progress = findProgressBar(view.getParent());
-		if (progress != null) {
-			progress.setVisibility(View.GONE);
-		}
-	}
-
-	@Override
-	public void onLoadingFailed(final String imageUri, final View view, final FailReason reason) {
-		if (view == null) return;
-		if (view instanceof ImageView) {
-			((ImageView) view).setImageDrawable(null);
-			view.setBackgroundResource(R.drawable.image_preview_refresh);
-		}
-		mLoadingUris.remove(view);
+    @Override
+    public void onLoadingCancelled(final String imageUri, final View view) {
+        if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
+        mLoadingUris.remove(view);
         final ProgressBar progress = findProgressBar(view.getParent());
         if (progress != null) {
             progress.setVisibility(View.GONE);
         }
-	}
+    }
 
-	@Override
-	public void onLoadingStarted(final String imageUri, final View view) {
-		if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
-		mLoadingUris.put(view, imageUri);
-		final ProgressBar progress = findProgressBar(view.getParent());
-		if (progress != null) {
-			progress.setVisibility(View.VISIBLE);
-			progress.setIndeterminate(true);
-			progress.setMax(100);
-		}
-	}
+    @Override
+    public void onLoadingComplete(final String imageUri, final View view, final Bitmap bitmap) {
+        if (view == null) return;
+        mLoadingUris.remove(view);
+        final ProgressBar progress = findProgressBar(view.getParent());
+        if (progress != null) {
+            progress.setVisibility(View.GONE);
+        }
+    }
 
-	@Override
-	public void onProgressUpdate(final String imageUri, final View view, final int current, final int total) {
-		if (total == 0 || view == null) return;
-		final ProgressBar progress = findProgressBar(view.getParent());
-		if (progress != null) {
-			progress.setIndeterminate(false);
-			progress.setProgress(100 * current / total);
-		}
-	}
+    @Override
+    public void onLoadingFailed(final String imageUri, final View view, final FailReason reason) {
+        if (view == null) return;
+        if (view instanceof ImageView) {
+            ((ImageView) view).setImageDrawable(null);
+            view.setBackgroundResource(R.drawable.image_preview_refresh);
+        }
+        mLoadingUris.remove(view);
+        final ProgressBar progress = findProgressBar(view.getParent());
+        if (progress != null) {
+            progress.setVisibility(View.GONE);
+        }
+    }
 
-	private ProgressBar findProgressBar(final ViewParent viewParent) {
-		if (mProgressBarIds == null || !(viewParent instanceof View)) return null;
-		final View parent = (View) viewParent;
-		for (final int id : mProgressBarIds) {
-			final View progress = parent.findViewById(id);
-			if (progress instanceof ProgressBar) return (ProgressBar) progress;
-		}
-		return null;
-	}
+    @Override
+    public void onLoadingStarted(final String imageUri, final View view) {
+        if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
+        if (view instanceof ImageView) {
+            view.setBackgroundResource(0);
+        }
+        mLoadingUris.put(view, imageUri);
+        final ProgressBar progress = findProgressBar(view.getParent());
+        if (progress != null) {
+            progress.setVisibility(View.VISIBLE);
+            progress.setIndeterminate(true);
+            progress.setMax(100);
+        }
+    }
+
+    @Override
+    public void onProgressUpdate(final String imageUri, final View view, final int current, final int total) {
+        if (total == 0 || view == null) return;
+        final ProgressBar progress = findProgressBar(view.getParent());
+        if (progress != null) {
+            progress.setIndeterminate(false);
+            progress.setProgress(100 * current / total);
+        }
+    }
+
+    private ProgressBar findProgressBar(final ViewParent viewParent) {
+        if (mProgressBarIds == null || !(viewParent instanceof View)) return null;
+        final View parent = (View) viewParent;
+        for (final int id : mProgressBarIds) {
+            final View progress = parent.findViewById(id);
+            if (progress instanceof ProgressBar) return (ProgressBar) progress;
+        }
+        return null;
+    }
 }
