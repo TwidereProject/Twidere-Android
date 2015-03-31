@@ -83,7 +83,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         public boolean onMenuItemClick(MenuItem item) {
             final ParcelableStatus status = mSelectedStatus;
             if (status == null) return false;
-            return Utils.handleMenuItemClick(getActivity(), getFragmentManager(), getTwitterWrapper(), status, item);
+            return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
+                    getFragmentManager(), getTwitterWrapper(), status, item);
         }
     };
 
