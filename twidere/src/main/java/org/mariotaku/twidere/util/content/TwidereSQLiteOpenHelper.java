@@ -27,12 +27,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 
 import org.mariotaku.querybuilder.Columns;
+import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.NewColumn;
+import org.mariotaku.querybuilder.SQLQuery;
 import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.query.SQLCreateIndexQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTableQuery;
-import org.mariotaku.querybuilder.query.SQLCreateViewQuery;
+import org.mariotaku.querybuilder.query.SQLCreateTriggerQuery.Event;
+import org.mariotaku.querybuilder.query.SQLCreateTriggerQuery.Type;
+import org.mariotaku.querybuilder.query.SQLDeleteQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
@@ -91,7 +96,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true));
 
         createViews(db);
-
+        createTriggers(db);
         createIndices(db);
 
         db.setTransactionSuccessful();
@@ -107,8 +112,26 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     }
 
     private void createViews(SQLiteDatabase db) {
-        db.execSQL(createDirectMessagesView().getSQL());
-        db.execSQL(createDirectMessageConversationEntriesView().getSQL());
+        db.execSQL(SQLQueryBuilder.createView(true, DirectMessages.TABLE_NAME)
+                .as(DirectMessagesQueryBuilder.build()).buildSQL());
+        db.execSQL(SQLQueryBuilder.createView(true, DirectMessages.ConversationEntries.TABLE_NAME)
+                .as(ConversationsEntryQueryBuilder.build()).buildSQL());
+    }
+
+    private void createTriggers(SQLiteDatabase db) {
+        db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_statuses", Statuses.TABLE_NAME).getSQL());
+        db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_mentions", Mentions.TABLE_NAME).getSQL());
+    }
+
+    private SQLQuery createDeleteDuplicateStatusTrigger(String triggerName, String tableName) {
+        final Table table = new Table(tableName);
+        final SQLDeleteQuery deleteOld = SQLQueryBuilder.deleteFrom(table).where(Expression.and(
+                Expression.equals(new Column(Statuses.ACCOUNT_ID), new Column(Table.NEW, Statuses.ACCOUNT_ID)),
+                Expression.equals(new Column(Statuses.STATUS_ID), new Column(Table.NEW, Statuses.STATUS_ID))
+        )).build();
+        return SQLQueryBuilder.createTrigger(false, true, triggerName)
+                .type(Type.BEFORE).event(Event.INSERT).on(table).forEachRow(true)
+                .actions(deleteOld).build();
     }
 
 
@@ -132,19 +155,6 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
             values.put(Accounts.CONSUMER_SECRET, trim(pref_consumer_secret));
             db.update(Accounts.TABLE_NAME, values, null, null);
         }
-    }
-
-    private SQLCreateViewQuery createDirectMessageConversationEntriesView() {
-        final SQLCreateViewQuery.Builder qb = SQLQueryBuilder.createView(true,
-                DirectMessages.ConversationEntries.TABLE_NAME);
-        qb.as(ConversationsEntryQueryBuilder.build());
-        return qb.build();
-    }
-
-    private SQLCreateViewQuery createDirectMessagesView() {
-        final SQLCreateViewQuery.Builder qb = SQLQueryBuilder.createView(true, DirectMessages.TABLE_NAME);
-        qb.as(DirectMessagesQueryBuilder.build());
-        return qb.build();
     }
 
     private void handleVersionChange(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
@@ -188,6 +198,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         safeUpgrade(db, SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true, null);
         db.beginTransaction();
         createViews(db);
+        createTriggers(db);
         createIndices(db);
         db.setTransactionSuccessful();
         db.endTransaction();

@@ -26,8 +26,8 @@ android {
         applicationId "org.mariotaku.twidere.extension.streaming"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 13
-        versionName "1.11 (0.3.0-dev)"
+        versionCode 14
+        versionName "1.12 (0.3.0-dev)"
     }
     buildTypes {
         release {

@@ -10,7 +10,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 101
+        versionCode 102
         versionName "0.3.0"
         multiDexEnabled true
     }
@@ -89,6 +89,7 @@ dependencies {
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.12'
+    debugCompile 'im.dino:dbinspector:3.1.0@aar'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
     compile fileTree(dir: 'libs/main', include: ['*.jar'])

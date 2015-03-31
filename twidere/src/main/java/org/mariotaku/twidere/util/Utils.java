@@ -2195,11 +2195,11 @@ public final class Utils implements Constants, TwitterConstants {
         return share_format.replace(FORMAT_PATTERN_TITLE, title).replace(FORMAT_PATTERN_TEXT, text != null ? text : "");
     }
 
-    public static int getStatusCountInDatabase(final Context context, final Uri uri, final long account_id) {
+    public static int getStatusCountInDatabase(final Context context, final Uri uri, final long accountId) {
         if (context == null) return -1;
         final ContentResolver resolver = context.getContentResolver();
-        final String where = Statuses.ACCOUNT_ID + " = " + account_id;
-        final String[] projection = new String[]{SQLFunctions.COUNT(Statuses.STATUS_ID)};
+        final String where = Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL();
+        final String[] projection = new String[]{SQLFunctions.COUNT()};
         final Cursor cur = ContentResolverUtils.query(resolver, uri, projection, where, null, null);
         if (cur == null) return -1;
         try {

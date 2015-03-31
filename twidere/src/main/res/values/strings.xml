@@ -529,10 +529,6 @@
     <string name="report_user">Report <xliff:g id="name">%s</xliff:g></string>
     <string name="report_user_confirm_message">Report <xliff:g id="name">%s</xliff:g> for spam? You\'ll also block this user.</string>
     <string name="twidere_test">Twidere test</string>
-    <string name="donate_via_paypal">Donate via PayPal</string>
-    <string name="pay_via_paypal">Pay via PayPal directly</string>
-    <string name="pay_via_paypal_summary">When you see &quot;This recipient is not eligible to receive funds&quot;</string>
-    <string name="donate_via_alipay">Donate via Alipay</string>
     <string name="staggered_home_timeline">Staggered Home Timeline</string>
     <string name="unread_count">Unread count</string>
     <string name="developed_by">Developed by</string>
@@ -740,6 +736,7 @@
     <string name="scale">Scale</string>
     <string name="user_type_verified">Verified</string>
     <string name="user_type_protected">Protected</string>
+    <string name="donate_summary">See project page</string>
 
 
 </resources>

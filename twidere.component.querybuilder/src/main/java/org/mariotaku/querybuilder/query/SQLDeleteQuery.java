@@ -2,19 +2,20 @@ package org.mariotaku.querybuilder.query;
 
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.SQLQuery;
+import org.mariotaku.querybuilder.Table;
 
 public class SQLDeleteQuery implements SQLQuery {
 
-    private String table;
+    private Table table;
     private Expression where;
 
     @Override
     public String getSQL() {
-        if (where != null) return String.format("DELETE FROM %s", table);
-        return String.format("DELETE FROM %S WHERE %s", table, where.getSQL());
+        if (where == null) return String.format("DELETE FROM %s", table.getSQL());
+        return String.format("DELETE FROM %S WHERE %s", table.getSQL(), where.getSQL());
     }
 
-    void setFrom(final String table) {
+    void setFrom(final Table table) {
         this.table = table;
     }
 
@@ -37,7 +38,7 @@ public class SQLDeleteQuery implements SQLQuery {
             return build().getSQL();
         }
 
-        public Builder from(final String table) {
+        public Builder from(final Table table) {
             checkNotBuilt();
             query.setFrom(table);
             return this;

@@ -32,6 +32,7 @@ import org.mariotaku.querybuilder.query.SQLCreateIndexQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTableQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTriggerQuery;
 import org.mariotaku.querybuilder.query.SQLCreateViewQuery;
+import org.mariotaku.querybuilder.query.SQLDeleteQuery;
 import org.mariotaku.querybuilder.query.SQLDropTableQuery;
 import org.mariotaku.querybuilder.query.SQLDropTriggerQuery;
 import org.mariotaku.querybuilder.query.SQLDropViewQuery;
@@ -82,6 +83,10 @@ public class SQLQueryBuilder {
 
     public static SQLCreateViewQuery.Builder createView(final String name) {
         return createView(false, false, name);
+    }
+
+    public static SQLDeleteQuery.Builder deleteFrom(Table table) {
+        return new SQLDeleteQuery.Builder().from(table);
     }
 
     public static SQLDropTableQuery dropTable(final boolean dropIfExists, final String table) {
