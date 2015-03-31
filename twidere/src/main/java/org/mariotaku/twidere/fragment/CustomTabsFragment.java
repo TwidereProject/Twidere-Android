@@ -82,7 +82,7 @@ import static org.mariotaku.twidere.util.CustomTabUtils.isTabTypeValid;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 
 public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<Cursor>,
-        MultiChoiceModeListener, DropListener, OnItemClickListener {
+        MultiChoiceModeListener, OnItemClickListener {
 
     private ContentResolver mResolver;
 
@@ -94,14 +94,6 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     private TextView mEmptyText;
     private ImageView mEmptyIcon;
 
-    @Override
-    public void drop(final int from, final int to) {
-        mAdapter.drop(from, to);
-        if (mListView.getChoiceMode() != AbsListView.CHOICE_MODE_NONE) {
-            mListView.moveCheckState(from, to);
-        }
-        saveTabPositions();
-    }
 
     @Override
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
@@ -127,10 +119,19 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         mAdapter = new CustomTabsAdapter(context);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(this);
-        mListView.setDropListener(this);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView);
+        mListView.setDropListener(new DropListener() {
+            @Override
+            public void drop(final int from, final int to) {
+                mAdapter.drop(from, to);
+                if (mListView.getChoiceMode() != AbsListView.CHOICE_MODE_NONE) {
+                    mListView.moveCheckState(from, to);
+                }
+                saveTabPositions();
+            }
+        });
         mEmptyText.setText(R.string.no_tab);
         mEmptyIcon.setImageResource(R.drawable.ic_info_tab);
         getLoaderManager().initLoader(0, null, this);
@@ -316,7 +317,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
                 final long id = c.getLong(idIdx);
                 final ContentValues values = new ContentValues();
                 values.put(Tabs.POSITION, i);
-                final String where = Tabs._ID + " = " + id;
+                final String where = Expression.equals(Tabs._ID, id).getSQL();
                 mResolver.update(Tabs.CONTENT_URI, values, where, null);
             }
         }

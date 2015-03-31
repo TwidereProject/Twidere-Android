@@ -56,6 +56,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -376,7 +377,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                         drawableRes = R.drawable.ic_follow_none;
                     }
                 }
-                final Drawable icon = getResources().getDrawable(drawableRes);
+                final Drawable icon = ResourcesCompat.getDrawable(getResources(), drawableRes, null);
                 final int iconSize = Math.round(mFollowButton.getTextSize() * 1.4f);
                 icon.setBounds(0, 0, iconSize, iconSize);
                 icon.setColorFilter(mFollowButton.getCurrentTextColor(), Mode.SRC_ATOP);
@@ -1241,7 +1242,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ActionBar actionBar = linkHandler.getSupportActionBar();
         if (actionBar == null) return;
         final int themeResId = linkHandler.getCurrentThemeResourceId();
-        final Drawable shadow = activity.getResources().getDrawable(R.drawable.shadow_user_banner_action_bar);
+        final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
         final Drawable background = ThemeUtils.getActionBarBackground(activity, themeResId);
         mActionBarBackground = new ActionBarDrawable(getResources(), shadow, background, ThemeUtils.isDarkTheme(themeResId));
         mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
