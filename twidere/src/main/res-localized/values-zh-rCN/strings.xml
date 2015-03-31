@@ -356,8 +356,6 @@
   <string name="disable_background_service">禁用后台服务</string>
   <string name="disable_background_service_summary">别傻了，Twidere在关闭自动刷新和数据统计之后是没有后台服务的。</string>
   <string name="text_copied">文本已复制到剪贴板</string>
-  <string name="amount_usd">总额（美元）</string>
-  <string name="donate">捐助</string>
   <string name="hashtag">话题标签</string>
   <string name="links">链接</string>
   <string name="edit_profile">编辑个人资料</string>
@@ -527,15 +525,10 @@
   <string name="report_user">报告<xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">报告<xliff:g id="name">%s</xliff:g>发送垃圾信息吗？你将同时阻止这个用户。</string>
   <string name="twidere_test">Twidere 测试</string>
-  <string name="donate_via_paypal">通过PayPal捐助</string>
-  <string name="pay_via_paypal">直接通过PayPal付款</string>
-  <string name="pay_via_paypal_summary">当你看到“This recipient is not eligible to receive funds”时可使用这个方式</string>
-  <string name="donate_via_alipay">通过支付宝捐助</string>
   <string name="staggered_home_timeline">主页信息流</string>
   <string name="unread_count">未读条目</string>
   <string name="developed_by">开发者</string>
   <string name="project_account">项目帐号</string>
-  <string name="donators">捐助者</string>
   <string name="translators">翻译者</string>
   <string name="translate">翻译</string>
   <string name="sponsored_by">赞助</string>
@@ -731,4 +724,9 @@
   <string name="from_name_and_N_others">来自<xliff:g id="name">%1$s</xliff:g>和其他<xliff:g id="name">%2$d</xliff:g>人</string>
   <string name="projects_we_took_part">我们参与的项目</string>
   <string name="activated_accounts">已启用的帐号</string>
+  <string name="search">搜索</string>
+  <string name="crop">裁剪</string>
+  <string name="scale">缩放</string>
+  <string name="user_type_verified">验证用户</string>
+  <string name="user_type_protected">受保护用户</string>
 </resources>

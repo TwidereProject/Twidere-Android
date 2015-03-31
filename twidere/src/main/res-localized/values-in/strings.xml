@@ -11,6 +11,7 @@
   <string name="remove_location">Hapus lokasi</string>
   <string name="remove_image">Hapus gambar</string>
   <string name="remove_photo">Hapus gambar</string>
+  <string name="status_hint">Apa yang terjadi ?</string>
   <string name="sign_up">Daftar</string>
   <string name="sign_in">Masuk</string>
   <string name="rest_base_url">Pusat REST URL</string>
@@ -98,6 +99,8 @@
   <string name="users_favorited_this">Disukai para pengguna</string>
   <string name="reply_to">Balasan untuk <xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">Mengutip <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Saring</string>
   <string name="users">Pengguna</string>
   <string name="user">Pengguna</string>
@@ -280,6 +283,7 @@
   <string name="activities_about_me">Kegiatan tentang saya</string>
   <string name="activities_by_friends">Aktivitas oleh teman-teman</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> Tweet anda difavoritkan.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> mengikuti Anda.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> me-retweet tweet anda.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> menambahkan Anda ke dalam daftar.</string>
@@ -343,8 +347,6 @@
   <string name="disable_background_service">Matikan layanan background</string>
   <string name="disable_background_service_summary">Twidere tak memiliki layanan latar belakang jika anda mematikan pembaruan otomatis (auto refresh) dan pemrofilan data (data profiling), jangan bercanda!</string>
   <string name="text_copied">Teks telah dikopi ke clipboard.</string>
-  <string name="amount_usd">Jumlah (Dollar AS)</string>
-  <string name="donate">Donasi</string>
   <string name="hashtag">tanda pagar</string>
   <string name="links">Tautan</string>
   <string name="edit_profile">Edit profil</string>
@@ -513,15 +515,10 @@
   <string name="report_user">Laporkan <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Laporkan <xliff:g id="name">%s</xliff:g> karena spam? Kamu juga bisa blokir pengguna ini.</string>
   <string name="twidere_test">Uji Twidere</string>
-  <string name="donate_via_paypal">Donasi via PayPal</string>
-  <string name="pay_via_paypal">Bayar langsung lewat Paypal</string>
-  <string name="pay_via_paypal_summary">Bila Anda melihat \"Penerima ini tidak memenuhi syarat untuk menerima dana\"</string>
-  <string name="donate_via_alipay">Donasi via Alipay</string>
   <string name="staggered_home_timeline">Staggered Home Timeline</string>
   <string name="unread_count">Belum terbaca</string>
   <string name="developed_by">Dikelola oleh</string>
   <string name="project_account">Akun proyek</string>
-  <string name="donators">Donatur</string>
   <string name="translators">Penerjemah</string>
   <string name="translate">Terjemahkan</string>
   <string name="sponsored_by">Di sponsori oleh</string>
@@ -664,4 +661,35 @@
   <string name="photo">Foto</string>
   <string name="gallery">Galeri</string>
   <string name="remove">Hapus</string>
+  <string name="load_media">Masukan Media</string>
+  <string name="profile_text_color">Warna Teks</string>
+  <string name="profile_background_color">Warna latar belakang</string>
+  <string name="profile_link_color_main_color">Warna link (warna utama)</string>
+  <string name="retweet_quote_confirm_title">Retweet ke follower anda?</string>
+  <string name="font">Huruf</string>
+  <string name="size">Ukuran</string>
+  <string name="just_now">Baru saja</string>
+  <string name="requested">Diminta</string>
+  <string name="round">Lingkaran</string>
+  <string name="square">Kotak</string>
+  <string name="profile_image_style">Tampilan gaya profil</string>
+  <string name="media_preview_style">Tampilan media pratinjau</string>
+  <string name="draft_saved">Draft tersimpan</string>
+  <string name="open_twitter_links">Buka Link Twitter</string>
+  <string name="N_others_quantity_one">Lainnya</string>
+  <string name="type_name_to_search">Ketik nama untuk mencari</string>
+  <string name="no_user_found">Tidak menemukan pengguna</string>
+  <string name="members">Anggota</string>
+  <string name="subscribers">Langganan</string>
+  <string name="read_from_bottom">Baca dari bawah</string>
+  <string name="register">Registrasi</string>
+  <string name="follows">Ikuti</string>
+  <string name="belongs_to">Milik</string>
+  <string name="blocked_by_user_summary">Anda telah diblokir oleh <xliff:g id="name">%s</xliff:g></string>
+  <string name="select_accounts">Pilih akun</string>
+  <string name="media_preview">Pratinjau media</string>
+  <string name="edit_tabs">Edit tab</string>
+  <string name="no_location">Tidak ada lokasi</string>
+  <string name="getting_location">Mendapatkan lokasi</string>
+  <string name="save_to_gallery">Simpan ke galeri</string>
 </resources>

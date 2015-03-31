@@ -23,6 +23,7 @@
 
     <application>
         <activity
+            tools:replace="android:label"
             android:name="im.dino.dbinspector.activities.DbInspectorActivity"
             android:label="Database Inspector">
             <intent-filter tools:node="removeAll">

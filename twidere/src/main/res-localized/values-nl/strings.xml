@@ -327,8 +327,6 @@
   <string name="disable_background_service">Schakel achtergrond service uit</string>
   <string name="disable_background_service_summary">Twidere heeft geen service op de achtergrond als je de automatisch vernieuwen en data profilering uitschakelt, doe niet zo gek!</string>
   <string name="text_copied">Tekst gekopieerd naar plakbord.</string>
-  <string name="amount_usd">Bedrag (USD)</string>
-  <string name="donate">Doneer</string>
   <string name="hashtag">Hashtag</string>
   <string name="links">Links</string>
   <string name="edit_profile">Profiel bewerken</string>
@@ -495,15 +493,10 @@
   <string name="report_user">Rapporteer <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Rapporteer <xliff:g id="name">%s</xliff:g> voor spam? Je zult deze gebruiker ook blokkeren.</string>
   <string name="twidere_test">Twidere test</string>
-  <string name="donate_via_paypal">Doneren via PayPal</string>
-  <string name="pay_via_paypal">Betaal via PayPal direct</string>
-  <string name="pay_via_paypal_summary">Als je ziet \"Deze ontvanger is niet in aanmerking om geld te ontvangen\"</string>
-  <string name="donate_via_alipay">Doneer via Alipay</string>
   <string name="staggered_home_timeline">Gespreide Thuis Tijdlijn</string>
   <string name="unread_count">Aantal ongelezen</string>
   <string name="developed_by">Ontworpen door</string>
   <string name="project_account">Project account</string>
-  <string name="donators">Donateurs</string>
   <string name="translators">Vertalers</string>
   <string name="translate">Vertalen</string>
   <string name="sponsored_by">Gesponsord door</string>

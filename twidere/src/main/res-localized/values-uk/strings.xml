@@ -317,8 +317,6 @@
   <string name="disable_background_service">Вимкнути фоновий режим</string>
   <string name="disable_background_service_summary">Twidere не має фонової служби, якщо ви відключили автоматичне оновлення і профілювання даних, не говоріть дурниць!</string>
   <string name="text_copied">Текст скопійовано до буферу обміну.</string>
-  <string name="amount_usd">Кількість (долари США)</string>
-  <string name="donate">Пожертвувати</string>
   <string name="hashtag">Хештеґ</string>
   <string name="links">Посилання</string>
   <string name="edit_profile">Редагувати профіль</string>
@@ -480,15 +478,10 @@
   <string name="report_user">Повідомити про <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Повідомити про <xliff:g id="name">%s</xliff:g> як про спамера? Ви також заблокуєте цього користувача.</string>
   <string name="twidere_test">Тест Twidere</string>
-  <string name="donate_via_paypal">Пожертва через PayPal</string>
-  <string name="pay_via_paypal">Пряма оплата через PayPal</string>
-  <string name="pay_via_paypal_summary">Коли ви бачите \"Цей одержувач не має права на отримання коштів\"</string>
-  <string name="donate_via_alipay">Пожертва через Alipay</string>
   <string name="staggered_home_timeline">Домашня часова стрічка</string>
   <string name="unread_count">Число непрочитаних</string>
   <string name="developed_by">Розроблено</string>
   <string name="project_account">Профіль проекту</string>
-  <string name="donators">Спонсори</string>
   <string name="translators">Перекладачі</string>
   <string name="translate">Перекласти</string>
   <string name="sponsored_by">Спонсоровано</string>

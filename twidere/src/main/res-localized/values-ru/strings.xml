@@ -356,8 +356,6 @@
   <string name="disable_background_service">Выключить фоновый режим</string>
   <string name="disable_background_service_summary">Twidere не использует фоновый сервис при отключенном автообновлении.</string>
   <string name="text_copied">Текст скопирован в буфер обмена.</string>
-  <string name="amount_usd">Количество(USD)</string>
-  <string name="donate">Пожертвования</string>
   <string name="hashtag">Хэштег</string>
   <string name="links">Ссылки</string>
   <string name="edit_profile">Редактировать профиль</string>
@@ -528,15 +526,10 @@
   <string name="report_user">Пожаловаться на <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Пожаловаться на <xliff:g id="name">%s</xliff:g> за спам? Вы также заблокируете этого пользователя.</string>
   <string name="twidere_test">Тест Twidere</string>
-  <string name="donate_via_paypal">Пожертвовать через PayPal</string>
-  <string name="pay_via_paypal">Пожертвовать через PayPal напрямую</string>
-  <string name="pay_via_paypal_summary">Когда вы видите \"Этот получатель не имеет права на получение денежных средств\"</string>
-  <string name="donate_via_alipay">Пожертвовать через Alipay</string>
   <string name="staggered_home_timeline">Перемешать ленту</string>
   <string name="unread_count">Счётчик непрочитанного</string>
   <string name="developed_by">Разработано</string>
   <string name="project_account">Аккаунт проекта</string>
-  <string name="donators">Пожертвовавшие</string>
   <string name="translators">Переводчики</string>
   <string name="translate">Перевести</string>
   <string name="sponsored_by">Спонсор</string>

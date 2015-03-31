@@ -343,8 +343,6 @@
   <string name="disable_background_service">Ota taustapalvelu pois käytöstä</string>
   <string name="disable_background_service_summary">Twiderella ei ole taustapalvelua, jos otat automaatisen päivityksen ja tilastoinnin pois päältä, senkin hupsu!</string>
   <string name="text_copied">Leikepöydälle kopioitu teksti.</string>
-  <string name="amount_usd">Määrä (USD)</string>
-  <string name="donate">Lahjoita</string>
   <string name="hashtag">Hashtag</string>
   <string name="links">Linkit</string>
   <string name="edit_profile">Muokkaa profiilia</string>
@@ -513,15 +511,10 @@
   <string name="report_user">Ilmianna <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Ilmiannetaanko käyttäjä <xliff:g id="name">%s</xliff:g> roskapostittamisesta? Tulet myös estämään tämän käyttäjän.</string>
   <string name="twidere_test">Twideren testi</string>
-  <string name="donate_via_paypal">Lahjoita PayPalilla</string>
-  <string name="pay_via_paypal">Maksa suoraan PayPalilla</string>
-  <string name="pay_via_paypal_summary">Valitse, jos näet viestin: \"This recipient is not eligible to receive funds\"</string>
-  <string name="donate_via_alipay">Lahjoita Alipaylla</string>
   <string name="staggered_home_timeline">Ryhmitelty aikajana</string>
   <string name="unread_count">Lukemattomat</string>
   <string name="developed_by">Kehittäjä</string>
   <string name="project_account">Projektin tili</string>
-  <string name="donators">Lahjoittajat</string>
   <string name="translators">Kääntäjät</string>
   <string name="translate">Käännä</string>
   <string name="sponsored_by">Sponsoroijat</string>

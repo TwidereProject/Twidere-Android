@@ -356,8 +356,6 @@
   <string name="disable_background_service">Désactiver le service en arrière-plan</string>
   <string name="disable_background_service_summary">Si vous désactivez l\'actualisation automatique et le profilage des données, Twidere n\'aura pas de service de synchronisation en fond, ne soyez pas stupide !</string>
   <string name="text_copied">Le texte est copié dans le presse-papiers.</string>
-  <string name="amount_usd">Montant (USD)</string>
-  <string name="donate">Donner</string>
   <string name="hashtag">Hashtag</string>
   <string name="links">Liens</string>
   <string name="edit_profile">Modifier le profil</string>
@@ -527,15 +525,10 @@
   <string name="report_user">Signaler <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Signaler <xliff:g id="name">%s</xliff:g>comme spam ? Vous bloquerez aussi cet utilisateur.</string>
   <string name="twidere_test">Test de Twidere</string>
-  <string name="donate_via_paypal">Faire un don via PayPal</string>
-  <string name="pay_via_paypal">Payer avec PayPal</string>
-  <string name="pay_via_paypal_summary">Quand vous voyez « Ce destinataire n\'a pas le droit recevoir des fonds »</string>
-  <string name="donate_via_alipay">Faire un don via Alipay</string>
   <string name="staggered_home_timeline">Fil d\'actualité décalé</string>
   <string name="unread_count">Messages non-lus</string>
   <string name="developed_by">Développé par</string>
   <string name="project_account">Compte du projet</string>
-  <string name="donators">Donateurs</string>
   <string name="translators">Traducteurs</string>
   <string name="translate">Traduire</string>
   <string name="sponsored_by">Sponsorisé par</string>

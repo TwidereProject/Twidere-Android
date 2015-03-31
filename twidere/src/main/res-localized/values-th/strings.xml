@@ -304,8 +304,6 @@
   <string name="silent_notifications_summary">ปิดเสียงเตือนและการสั่นสำหรับการแจ้งเตือน</string>
   <string name="disable_background_service">ปิดการทำงานเซอร์วิสที่ทำงานอยู่เบื้องหลัง</string>
   <string name="text_copied">ข้อความถูกคัดลอกไปยังคลิปบอร์ดแล้ว</string>
-  <string name="amount_usd">จำนวน (ดอลลาร์สหรัฐ)</string>
-  <string name="donate">บริจาค</string>
   <string name="edit_profile">แก้ไขข้อมูลส่วนตัว</string>
   <string name="display_sensitive_contents">แสดงเนื้อหาที่อ่อนไหว</string>
   <string name="mark_as_sensitive">ระบุเป็นเนื้อหาที่อ่อนไหว</string>

@@ -343,8 +343,6 @@
   <string name="disable_background_service">백그라운드 서비스 사용 안함</string>
   <string name="disable_background_service_summary">자동 갱신과 익명 데이터 전송을 사용하지 않으면 Twidere는 백그라운드 서비스를 수행하지 않습니다. 주의하세요!</string>
   <string name="text_copied">클립보드로 복사되었습니다.</string>
-  <string name="amount_usd">가격 (미국 달러)</string>
-  <string name="donate">기부</string>
   <string name="hashtag">해시태그</string>
   <string name="links">링크</string>
   <string name="edit_profile">프로필 수정</string>
@@ -513,15 +511,10 @@
   <string name="report_user"><xliff:g id="name">%s</xliff:g>님을 스팸 신고하기</string>
   <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g>님을 스팸 신고하겠습니까? 이 사용자를 차단하게 됩니다.</string>
   <string name="twidere_test">Twidere 테스트</string>
-  <string name="donate_via_paypal">페이팔로 후원하기</string>
-  <string name="pay_via_paypal">페이팔로 직접 지불</string>
-  <string name="pay_via_paypal_summary">\"This recipient is not eligible to receive funds\"라고 표시되면 이쪽으로 기부하여 주십시오.</string>
-  <string name="donate_via_alipay">Alplay로 기부</string>
   <string name="staggered_home_timeline">2열 홈 타임라인</string>
   <string name="unread_count">읽지 않은 개수</string>
   <string name="developed_by">개발자</string>
   <string name="project_account">프로젝트 계정</string>
-  <string name="donators">기부자</string>
   <string name="translators">번역자</string>
   <string name="translate">번역하기</string>
   <string name="sponsored_by">후원자</string>

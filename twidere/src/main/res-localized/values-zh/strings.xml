@@ -358,8 +358,6 @@
   <string name="disable_background_service">禁用背景服務</string>
   <string name="disable_background_service_summary">別傻了，Twidere 在關閉自動更新和數據統計之後是沒有背景服務的。</string>
   <string name="text_copied">文字已複製到剪貼本</string>
-  <string name="amount_usd">總額（美元）</string>
-  <string name="donate">捐助</string>
   <string name="hashtag">話題標籤</string>
   <string name="links">連結</string>
   <string name="edit_profile">編輯個人資料</string>
@@ -529,15 +527,10 @@
   <string name="report_user">報告<xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">你確定報告<xliff:g id="name">%s</xliff:g>發送垃圾信息嗎？</string>
   <string name="twidere_test">Twidere 測試</string>
-  <string name="donate_via_paypal">通過PayPal捐助</string>
-  <string name="pay_via_paypal">直接通過PayPal付款</string>
-  <string name="pay_via_paypal_summary">當你看到“This recipient is not eligible to receive funds”時可使用這個方式</string>
-  <string name="donate_via_alipay">通過支付寶捐助</string>
   <string name="staggered_home_timeline">主頁信息流</string>
   <string name="unread_count">未讀條目</string>
   <string name="developed_by">開發者</string>
   <string name="project_account">項目帳號</string>
-  <string name="donators">捐助者</string>
   <string name="translators">翻譯者</string>
   <string name="translate">翻譯</string>
   <string name="sponsored_by">贊助</string>

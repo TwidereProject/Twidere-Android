@@ -344,8 +344,6 @@
   <string name="disable_background_service">Desactivar el servei en segon pla</string>
   <string name="disable_background_service_summary">El Twidere no opera en segon pla si desactives l‘actualització automàtica i la recollida de dades, no siguis babau!</string>
   <string name="text_copied">S\'ha copiat text al porta-retalls.</string>
-  <string name="amount_usd">Quantitat (USD)</string>
-  <string name="donate">Donacions</string>
   <string name="hashtag">Etiqueta</string>
   <string name="links">Enllaços</string>
   <string name="edit_profile">Edita el perfil</string>
@@ -515,15 +513,10 @@
   <string name="report_user">Informa d\'abús l\'usuari <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Voleu reportar l\'usuari <xliff:g id="name">%s</xliff:g> per abús? Automàticament, també el bloquejareu.</string>
   <string name="twidere_test">Prova Twidere </string>
-  <string name="donate_via_paypal">Fes una donació mitjançant PayPal</string>
-  <string name="pay_via_paypal">Fes una donació mitjançant PayPal directament</string>
-  <string name="pay_via_paypal_summary">Si veieu «El destinatari no pot rebre transferències»</string>
-  <string name="donate_via_alipay">Fes una donació mitjançant Alipay</string>
   <string name="staggered_home_timeline">Cronologia d\'inici esglaonada</string>
   <string name="unread_count">Recompte de piulades sense llegir</string>
   <string name="developed_by">Desenvolupat per</string>
   <string name="project_account">Compte del projecte</string>
-  <string name="donators">Donants</string>
   <string name="translators">Traductors</string>
   <string name="translate">Ajudeu a traduir el Twidere</string>
   <string name="sponsored_by">Patrocinat per</string>

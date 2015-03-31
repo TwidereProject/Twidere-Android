@@ -323,8 +323,6 @@
   <string name="silent_notifications_summary">تعطيل الصوت/الاهتزاز للإخطارات</string>
   <string name="disable_background_service">تعطيل الخدمات الخلفية</string>
   <string name="text_copied">تم نسخ النص إلى الحافظة.</string>
-  <string name="amount_usd">المبلغ (USD)</string>
-  <string name="donate">تبرع</string>
   <string name="hashtag">وسم</string>
   <string name="links">روابط</string>
   <string name="edit_profile">تعديل الملف الشخصي</string>
@@ -464,14 +462,9 @@
   <string name="destroy_status_confirm_message">هل تريد حذف هذه التغريدة؟</string>
   <string name="report_user">تقرير <xliff:g id="name">%s</xliff:g></string>
   <string name="twidere_test">تجريب تويدر</string>
-  <string name="donate_via_paypal">التبرع عبر PayPal</string>
-  <string name="pay_via_paypal">الدفع عن طريق PayPal مباشرة</string>
-  <string name="pay_via_paypal_summary">عندما ترى \"هذا المستلم ليس مؤهلا لتلقي الأموال\"</string>
-  <string name="donate_via_alipay">التبرع عبر Alipay</string>
   <string name="unread_count">عدد غير المقروء</string>
   <string name="developed_by">من تطوير</string>
   <string name="project_account">حساب المشروع</string>
-  <string name="donators">المتبرعون</string>
   <string name="translators">المطرجمون</string>
   <string name="translate">طَرجٍم</string>
   <string name="sponsored_by">مدعوم من طرف</string>

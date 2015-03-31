@@ -297,8 +297,6 @@
   <string name="action_accepting_follow_request">követési kérés elfogadása</string>
   <string name="action_denying_follow_request">követési kérés visszautasítása</string>
   <string name="text_copied">Szöveg kimásolva a vágólapra.</string>
-  <string name="amount_usd">Egyenleg (USD)</string>
-  <string name="donate">Adományoz</string>
   <string name="links">Linkek</string>
   <string name="edit_profile">Profil szerkesztése</string>
   <string name="display_sensitive_contents">Érzékeny információk megjelenítése</string>

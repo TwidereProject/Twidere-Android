@@ -355,8 +355,6 @@
   <string name="disable_background_service">Deaktivere Hintergrunddienst</string>
   <string name="disable_background_service_summary">Der Hintergrund-Dienst wird nicht mehr funktionieren, wenn du Auto-Refresh und Datenprofile deaktivierst. Denk\' nach!</string>
   <string name="text_copied">Text wurde in die Zwischenablage kopiert.</string>
-  <string name="amount_usd">Betrag (USD)</string>
-  <string name="donate">Spende</string>
   <string name="hashtag">Hashtag</string>
   <string name="links">Links</string>
   <string name="edit_profile">Profil bearbeiten</string>
@@ -526,15 +524,10 @@
   <string name="report_user"><xliff:g id="name">%s</xliff:g> melden</string>
   <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g> als Spam melden? Dieser Benutzer wird gleichzeitig geblockt.</string>
   <string name="twidere_test">Twidere test</string>
-  <string name="donate_via_paypal">Mit PayPal spenden</string>
-  <string name="pay_via_paypal">Mit PayPal direkt bezahlen</string>
-  <string name="pay_via_paypal_summary">Falls du \"This recipient is not eligible to receive funds\" angezeigt bekommst</string>
-  <string name="donate_via_alipay">Mit Alipay spenden</string>
   <string name="staggered_home_timeline">Gestaffelte Timeline</string>
   <string name="unread_count">Anzahl ungelesene</string>
   <string name="developed_by">Entwickelt von</string>
   <string name="project_account">Twitter-Account von Twidere</string>
-  <string name="donators">Spender</string>
   <string name="translators">Übersetzer</string>
   <string name="translate">Übersetzen</string>
   <string name="sponsored_by">Gesponsort von</string>

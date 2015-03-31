@@ -329,8 +329,6 @@
   <string name="disable_background_service">バックグラウンドサービスを無効にする</string>
   <string name="disable_background_service_summary">Twidereは自動更新と匿名データ送信を無効にすれば裏で動きません!</string>
   <string name="text_copied">テキストがクリップボードにコピーされました。</string>
-  <string name="amount_usd">金額(米ドル）</string>
-  <string name="donate">寄付</string>
   <string name="hashtag">ハッシュタグ</string>
   <string name="links">リンク</string>
   <string name="edit_profile">プロフィール編集</string>
@@ -497,15 +495,10 @@
   <string name="report_user"><xliff:g id="name">%s</xliff:g>をスパム報告する</string>
   <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g>をスパム報告しますか? 同時にブロックもします。</string>
   <string name="twidere_test">Twidereテスト</string>
-  <string name="donate_via_paypal">PayPalで寄付</string>
-  <string name="pay_via_paypal">PayPalで支払う</string>
-  <string name="pay_via_paypal_summary">\"This recipient is not eligible to receive funds\"と出た場合こちらから寄付してください。</string>
-  <string name="donate_via_alipay">Alipayで寄付</string>
   <string name="staggered_home_timeline">二列ホームTL</string>
   <string name="unread_count">未読数の表示</string>
   <string name="developed_by">開発者</string>
   <string name="project_account">プロジェクトアカウント</string>
-  <string name="donators">寄付したユーザー</string>
   <string name="translators">翻訳者</string>
   <string name="translate">翻訳する</string>
   <string name="sponsored_by">スポンサー</string>

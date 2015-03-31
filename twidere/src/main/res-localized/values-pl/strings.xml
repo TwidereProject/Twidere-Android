@@ -342,8 +342,6 @@
   <string name="disable_background_service">Wyłącz pracę w tle</string>
   <string name="disable_background_service_summary">Jeśli automatyczne odświeżanie strumienia jest wyłączone, żadne usługi Twidere nie działają w tle.</string>
   <string name="text_copied">Tekst skopiowany do schowka.</string>
-  <string name="amount_usd">Wartość (USD)</string>
-  <string name="donate">Zrób darowiznę</string>
   <string name="hashtag">Hashtag</string>
   <string name="links">Odnośniki</string>
   <string name="edit_profile">Edytuj profil</string>
@@ -513,13 +511,9 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="report_user">Zgłoś <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Zgłoś <xliff:g id="name">%s</xliff:g> za spam? Użytkownik zostanie także zablokowany.</string>
   <string name="twidere_test">Test Twidere</string>
-  <string name="donate_via_paypal">Przekaż darowiznę przez PayPal</string>
-  <string name="pay_via_paypal">Zapłać bezpośrednio przez PayPal</string>
-  <string name="donate_via_alipay">Przekaż darowiznę przez Alipay</string>
   <string name="unread_count">Licznik nieprzeczytanych</string>
   <string name="developed_by">Rozwijana przez</string>
   <string name="project_account">Konto projektu</string>
-  <string name="donators">Donatorzy</string>
   <string name="translators">Tłumacze</string>
   <string name="translate">Przetłumacz</string>
   <string name="sponsored_by">Sponsorowana przez</string>

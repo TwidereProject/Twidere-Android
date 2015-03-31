@@ -343,8 +343,6 @@
   <string name="disable_background_service">Disabilita servizio in backround</string>
   <string name="disable_background_service_summary">Twidere non ha servizi in background, non si aggiornerà quindi se disabili l\'auto-refresh e la raccolta dati, non essere sciocco!</string>
   <string name="text_copied">Testo copiato negli appunti.</string>
-  <string name="amount_usd">Ammontare (USD)</string>
-  <string name="donate">Donazioni</string>
   <string name="hashtag">Hashtag</string>
   <string name="links">Collegamenti</string>
   <string name="edit_profile">Modifica profilo</string>
@@ -513,15 +511,10 @@
   <string name="report_user">Segnala <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Segnalare <xliff:g id="name">%s</xliff:g> per spam? Bloccherai questo utente.</string>
   <string name="twidere_test">Twidere test</string>
-  <string name="donate_via_paypal">Donazione via PayPal</string>
-  <string name="pay_via_paypal">Paga direttamente con PayPal</string>
-  <string name="pay_via_paypal_summary">Quando vedi \"Questo destinatario non può ricevere fondi\"</string>
-  <string name="donate_via_alipay">Dona via Alipay</string>
   <string name="staggered_home_timeline">Home Timeline sfalsata</string>
   <string name="unread_count">Conteggio elementi non letti</string>
   <string name="developed_by">Sviluppato da</string>
   <string name="project_account">Project account</string>
-  <string name="donators">Donatori</string>
   <string name="translators">Traduttori</string>
   <string name="translate">Traduce</string>
   <string name="sponsored_by">Sponsorizzato da</string>
