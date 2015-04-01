@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_size_normal"
             android:textColor="?android:textColorSecondary"
+            android:outlineProvider="background"
             app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
             app:tabExpandEnabled="true"
             app:tabHorizontalPadding="@dimen/element_spacing_large"

@@ -30,17 +30,22 @@ import android.os.Build;
  */
 public class ActionBarColorDrawable extends ColorDrawable {
 
-    public ActionBarColorDrawable() {
+    private final boolean outlineEnabled;
+
+    public ActionBarColorDrawable(boolean outlineEnabled) {
         super();
+        this.outlineEnabled = outlineEnabled;
     }
 
-    public ActionBarColorDrawable(int color) {
+    public ActionBarColorDrawable(int color, boolean outlineEnabled) {
         super(color);
+        this.outlineEnabled = outlineEnabled;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void getOutline(Outline outline) {
+        if (!outlineEnabled) return;
         final Rect bounds = getBounds();
         // Very very dirty hack to make outline shadow in action bar not visible beneath status bar
         outline.setRect(bounds.left - bounds.width() / 2, -bounds.height(),

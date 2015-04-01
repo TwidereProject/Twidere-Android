@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.ObjectAnimator;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -48,7 +45,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Property;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -60,7 +56,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.Toast;
@@ -76,7 +71,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
@@ -131,8 +125,7 @@ import static org.mariotaku.twidere.util.Utils.openSearch;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class HomeActivity extends BaseActionBarActivity implements OnClickListener, OnPageChangeListener,
-        SupportFragmentCallback, OnOpenedListener, OnClosedListener,
-        OnLongClickListener, AnimatorListener {
+        SupportFragmentCallback, OnOpenedListener, OnClosedListener, OnLongClickListener {
 
     private final Handler mHandler = new Handler();
 
@@ -169,7 +162,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     private int mTabDisplayOption;
     private float mPagerPosition;
     private Toolbar mActionBar;
-    private int mControlAnimationDirection;
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -181,24 +173,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         return mCurrentVisibleFragment;
     }
 
-    @Override
-    public void onAnimationStart(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        mControlAnimationDirection = 0;
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-        mControlAnimationDirection = 0;
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-
-    }
 
     @Override
     public void onDetachFragment(final Fragment fragment) {
@@ -221,25 +195,11 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
                 && ((RefreshScrollTopInterface) f).triggerRefresh();
     }
 
-    private static final long DURATION = 200l;
+    private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
 
     @Override
     public void setControlBarVisibleAnimate(boolean visible) {
-        if (mControlAnimationDirection != 0) return;
-        final ObjectAnimator animator;
-        final float offset = getControlBarOffset();
-        if (visible) {
-            if (offset >= 1) return;
-            animator = ObjectAnimator.ofFloat(this, ControlBarOffsetProperty.SINGLETON, offset, 1);
-        } else {
-            if (offset <= 0) return;
-            animator = ObjectAnimator.ofFloat(this, ControlBarOffsetProperty.SINGLETON, offset, 0);
-        }
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addListener(this);
-        animator.setDuration(DURATION);
-        animator.start();
-        mControlAnimationDirection = visible ? 1 : -1;
+        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
     }
 
     @Override
@@ -992,21 +952,4 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     }
 
-    private static class ControlBarOffsetProperty extends Property<IControlBarActivity, Float> {
-        public static final ControlBarOffsetProperty SINGLETON = new ControlBarOffsetProperty();
-
-        @Override
-        public void set(IControlBarActivity object, Float value) {
-            object.setControlBarOffset(value);
-        }
-
-        public ControlBarOffsetProperty() {
-            super(Float.TYPE, null);
-        }
-
-        @Override
-        public Float get(IControlBarActivity object) {
-            return object.getControlBarOffset();
-        }
-    }
 }

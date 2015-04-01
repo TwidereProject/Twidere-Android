@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -44,7 +43,6 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -56,13 +54,33 @@ import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
 
 public class LinkHandlerActivity extends BaseActionBarActivity implements OnClickListener,
-        OnLongClickListener, SystemWindowsInsetsCallback, IControlBarActivity {
+        OnLongClickListener, SystemWindowsInsetsCallback, IControlBarActivity, SupportFragmentCallback {
+
+    private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
 
     private MultiSelectEventHandler mMultiSelectHandler;
-
     private TintedStatusFrameLayout mMainContent;
-
     private boolean mFinishOnly;
+
+    @Override
+    public Fragment getCurrentVisibleFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.main_content);
+    }
+
+    @Override
+    public void onDetachFragment(Fragment fragment) {
+
+    }
+
+    @Override
+    public void onSetUserVisibleHint(Fragment fragment, boolean isVisibleToUser) {
+
+    }
+
+    @Override
+    public boolean triggerRefresh(int position) {
+        return false;
+    }
 
     @Override
     public void onClick(final View v) {
@@ -110,7 +128,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
 
     @Override
     protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
-        final Fragment fragment = getSupportFragmentManager().findFragmentById(android.R.id.content);
+        final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof IBasePullToRefreshFragment)
             return (IBasePullToRefreshFragment) fragment;
         else if (fragment instanceof SupportFragmentCallback) {
@@ -129,7 +147,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
         final Uri data = intent.getData();
         final int linkId = matchLinkId(data);
         requestWindowFeatures(getWindow(), linkId, data);
-        setUiOptions(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -211,9 +228,14 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
             case LINK_ID_USER: {
                 break;
             }
+            case LINK_ID_SEARCH: {
+                ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
+                        getCurrentThemeColor(), false);
+                break;
+            }
             default: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
-                        getCurrentThemeColor());
+                        getCurrentThemeColor(), true);
                 break;
             }
         }
@@ -250,16 +272,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
                     ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null,
                             getCurrentThemeColor()));
                 }
-                break;
-            }
-        }
-    }
-
-    private void setUiOptions(final Window window, int linkId, final Uri uri) {
-        if (!FlymeUtils.hasSmartBar()) return;
-        switch (linkId) {
-            case LINK_ID_USER: {
-                window.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
                 break;
             }
         }
@@ -381,13 +393,24 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
     }
 
     @Override
-    public void setControlBarOffset(float offset) {
+    public void setControlBarVisibleAnimate(boolean visible) {
+        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
+    }
 
+
+    @Override
+    public void setControlBarOffset(float offset) {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) return;
+        actionBar.setHideOffset(Math.round((1 - offset) * getControlBarHeight()));
+        notifyControlBarOffsetChanged();
     }
 
     @Override
     public float getControlBarOffset() {
-        return 0;
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) return 0;
+        return 1f - actionBar.getHideOffset() / (float) getControlBarHeight();
     }
 
     @Override

@@ -733,6 +733,7 @@
     <string name="scale">Scale</string>
     <string name="user_type_verified">Verified</string>
     <string name="user_type_protected">Protected</string>
+    <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
 
 
 </resources>

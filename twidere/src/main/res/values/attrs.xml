@@ -19,6 +19,7 @@
     <declare-styleable name="TabPagerIndicator">
         <attr name="tabStripColor" format="color"/>
         <attr name="tabIconColor" format="color"/>
+        <attr name="tabLabelColor" format="color"/>
         <attr name="tabHorizontalPadding" format="dimension"/>
         <attr name="tabVerticalPadding" format="dimension"/>
         <attr name="tabDividerVerticalPadding" format="dimension"/>

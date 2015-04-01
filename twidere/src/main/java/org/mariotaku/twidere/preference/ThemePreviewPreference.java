@@ -111,7 +111,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
 
         ViewAccessor.setBackground(windowBackgroundView, ThemeUtils.getWindowBackground(context));
 //        ViewAccessor.setBackground(windowContentOverlayView, ThemeUtils.getWindowContentOverlay(context));
-        ViewAccessor.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes, accentColor));
+        ViewAccessor.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes, accentColor, true));
         ViewAccessor.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
         cardView.setCardBackgroundColor(cardBackgroundColor);
 

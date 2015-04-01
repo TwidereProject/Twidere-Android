@@ -3,9 +3,14 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@id/compose"
+        android:icon="@drawable/ic_action_status_compose"
+        app:showAsAction="always"
+        android:title="@string/compose"/>
+    <item
         android:id="@id/save"
         android:icon="@drawable/ic_action_save"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/save"/>
 
 </menu>

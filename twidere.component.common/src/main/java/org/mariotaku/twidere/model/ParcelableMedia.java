@@ -113,7 +113,9 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
         type = update.type;
     }
 
-    public static ParcelableMedia[] fromMediaUpdates(ParcelableMediaUpdate[] mediaUpdates) {
+    @Nullable
+    public static ParcelableMedia[] fromMediaUpdates(@Nullable final ParcelableMediaUpdate[] mediaUpdates) {
+        if (mediaUpdates == null) return null;
         final ParcelableMedia[] media = new ParcelableMedia[mediaUpdates.length];
         for (int i = 0, j = mediaUpdates.length; i < j; i++) {
             final ParcelableMediaUpdate mediaUpdate = mediaUpdates[i];

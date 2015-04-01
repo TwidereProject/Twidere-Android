@@ -1380,7 +1380,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public ActionBarDrawable(Resources resources, Drawable shadow, Drawable background,
                                  boolean colorLineOnly) {
             super(new Drawable[]{shadow, background, new LineBackgroundDrawable(resources, 2.0f),
-                    new ActionBarColorDrawable()});
+                    new ActionBarColorDrawable(true)});
             mShadowDrawable = getDrawable(0);
             mBackgroundDrawable = getDrawable(1);
             mLineDrawable = (LineBackgroundDrawable) getDrawable(2);

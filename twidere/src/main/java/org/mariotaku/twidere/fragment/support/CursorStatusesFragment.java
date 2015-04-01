@@ -43,10 +43,10 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.util.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
-import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
 import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
@@ -85,15 +85,16 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     protected Object createMessageBusCallback() {
-        return new ParcelableStatusesBusCallback();
+        return new CursorStatusesBusCallback();
     }
 
 
-    protected class ParcelableStatusesBusCallback {
+    protected class CursorStatusesBusCallback {
 
         @Subscribe
-        public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-            updateRefreshState();
+        public void notifyGetStatusesTaskChanged(GetStatusesTaskEvent event) {
+            if (!event.uri.equals(getContentUri())) return;
+            setRefreshing(event.running);
         }
 
         @Subscribe
@@ -138,6 +139,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
             }
         };
         cr.registerContentObserver(Accounts.CONTENT_URI, true, mContentObserver);
+        updateRefreshState();
     }
 
     protected void reloadStatuses() {

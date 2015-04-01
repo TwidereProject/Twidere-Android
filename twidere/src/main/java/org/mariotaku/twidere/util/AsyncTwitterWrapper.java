@@ -70,6 +70,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
+import org.mariotaku.twidere.util.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
@@ -2101,7 +2102,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         }
 
+        @NonNull
         protected abstract Uri getDatabaseUri();
+
+        @Override
+        protected void onPostExecute(List<StatusListResponse> statusListResponses) {
+            super.onPostExecute(statusListResponses);
+            final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+            bus.post(new GetStatusesTaskEvent(getDatabaseUri(), false));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+            bus.post(new GetStatusesTaskEvent(getDatabaseUri(), true));
+        }
 
         @Override
         protected List<StatusListResponse> doInBackground(final Void... params) {
