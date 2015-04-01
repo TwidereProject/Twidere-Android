@@ -168,6 +168,7 @@ public interface IntentConstants {
     public static final String EXTRA_ICON = "icon";
     public static final String EXTRA_ID = "id";
     public static final String EXTRA_RESID = "resid";
+    public static final String EXTRA_SETTINGS_INTENT_ACTION = "settings_intent_action";
     public static final String EXTRA_IMAGE_URI = "image_uri";
     public static final String EXTRA_ATTACHED_IMAGE_TYPE = "attached_image_type";
     public static final String EXTRA_ACTIVATED_ONLY = "activated_only";

@@ -595,18 +595,10 @@
 
         <service
             android:name=".service.RefreshService"
-            android:label="@string/label_refresh_service"
-            android:settingsActivity=".activity.SettingsActivity"/>
+            android:label="@string/label_refresh_service"/>
         <service
             android:name=".service.BackgroundOperationService"
             android:label="@string/label_background_operation_service"/>
-        <service
-            android:name="edu.ucdavis.earlybird.UCDService"
-            android:settingsActivity=".activity.support.UsageStatisticsActivity"/>
-        <!-- SPICE -->
-        <service
-            android:name="edu.tsinghua.spice.SpiceService"
-            android:settingsActivity=".activity.support.UsageStatisticsActivity"/>
         <service
             android:name=".service.DashClockHomeUnreadCountService"
             android:icon="@drawable/ic_extension_twidere"
@@ -722,6 +714,11 @@
                     android:scheme="android_secret_code"/>
             </intent-filter>
         </receiver>
+
+        <!-- Begin third Party components -->
+
+        <service
+            android:name="edu.ucdavis.earlybird.UCDService"/>
         <receiver
             android:name="edu.ucdavis.earlybird.UploadReceiver"
             android:exported="false">
@@ -732,7 +729,10 @@
                 <action android:name="edu.ucdavis.earlybird.UPLOAD_PROFILE"/>
             </intent-filter>
         </receiver>
+
         <!-- SPICE -->
+        <service
+            android:name="edu.tsinghua.spice.SpiceService"/>
         <receiver
             android:name="edu.tsinghua.spice.SpiceUploadReceiver"
             android:exported="false">
@@ -743,6 +743,8 @@
                 <action android:name="edu.tsinghua.spice.UPLOAD_PROFILE"/>
             </intent-filter>
         </receiver>
+
+        <!-- Begin third Party components -->
 
     </application>
 

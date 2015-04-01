@@ -20,6 +20,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -39,13 +40,14 @@
             android:id="@+id/view_pager_tabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_size_normal"
-            android:textColor="?android:textColorSecondary"
             android:outlineProvider="background"
+            android:textColor="?android:textColorSecondary"
             app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
             app:tabExpandEnabled="true"
             app:tabHorizontalPadding="@dimen/element_spacing_large"
             app:tabIconColor="?android:colorForeground"
-            app:tabShowDivider="true"/>
+            app:tabShowDivider="true"
+            tools:ignore="UnusedAttribute"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
@@ -59,8 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="@dimen/element_spacing_large"
         android:orientation="vertical"
+        android:padding="@dimen/element_spacing_large"
         android:visibility="gone">
 
         <org.mariotaku.twidere.view.ActionIconView

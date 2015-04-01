@@ -43,6 +43,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.fragment.support.SearchFragment;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -394,6 +395,8 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
 
     @Override
     public void setControlBarVisibleAnimate(boolean visible) {
+        // Currently only search page needs this pattern, so we only enable this feature for it.
+        if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
         mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
     }
 

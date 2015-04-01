@@ -57,16 +57,18 @@ public class SettingsDetailsFragment extends BasePreferenceFragment {
             addPreferencesFromResource(resId);
         }
         final Context context = preferenceScreen.getContext();
-        final Intent hiddenEntryIntent = new Intent(INTENT_ACTION_HIDDEN_SETTINGS_ENTRY);
-        final PackageManager pm = context.getPackageManager();
-        for (ResolveInfo info : pm.queryIntentActivities(hiddenEntryIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
-            final Preference preference = new Preference(context);
-            final Intent intent = new Intent(INTENT_ACTION_HIDDEN_SETTINGS_ENTRY);
-            intent.setPackage(info.resolvePackageName);
-            intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-            preference.setIntent(intent);
-            preference.setTitle(info.loadLabel(pm));
-            preferenceScreen.addPreference(preference);
+        if (args.containsKey(EXTRA_SETTINGS_INTENT_ACTION)) {
+            final Intent hiddenEntryIntent = new Intent(args.getString(EXTRA_SETTINGS_INTENT_ACTION));
+            final PackageManager pm = context.getPackageManager();
+            for (ResolveInfo info : pm.queryIntentActivities(hiddenEntryIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
+                final Preference preference = new Preference(context);
+                final Intent intent = new Intent(hiddenEntryIntent);
+                intent.setPackage(info.resolvePackageName);
+                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+                preference.setIntent(intent);
+                preference.setTitle(info.loadLabel(pm));
+                preferenceScreen.addPreference(preference);
+            }
         }
     }
 

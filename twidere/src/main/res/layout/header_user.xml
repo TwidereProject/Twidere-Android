@@ -22,6 +22,7 @@
     android:id="@+id/header_user_profile"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -30,13 +31,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <View
+        android:id="@+id/profile_name_background"
+        android:layout_width="match_parent"
+        android:layout_alignTop="@+id/profile_name_container"
+        android:layout_alignBottom="@+id/profile_name_container"
+        android:layout_height="wrap_content"/>
+
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profile_name_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_banner_space"
         android:layout_toRightOf="@id/profile_image"
-        android:background="?android:selectableItemBackground"
         android:orientation="vertical"
         android:paddingBottom="@dimen/element_spacing_xsmall"
         android:paddingLeft="@dimen/element_spacing_small"
@@ -85,7 +92,8 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="?android:textColorPrimary"/>
+                android:textColor="?android:textColorPrimary"
+                tools:text="Name"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/screen_name"
@@ -93,7 +101,8 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"/>
+                android:textColor="?android:textColorPrimary"
+                tools:text="\@screenname"/>
         </LinearLayout>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
@@ -101,21 +110,21 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_spacing_xsmall"
-        android:layout_above="@id/profile_name_container"
+        android:layout_above="@+id/profile_name_container"
         android:background="@drawable/shadow_top"/>
 
     <FrameLayout
         android:id="@+id/profile_details_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_name_container"/>
+        android:layout_below="@+id/profile_name_container"/>
 
     <org.mariotaku.twidere.view.ShapedImageView
         android:id="@+id/profile_image"
         style="?profileImageStyleLarge"
         android:layout_width="@dimen/icon_size_user_profile"
         android:layout_height="@dimen/icon_size_user_profile"
-        android:layout_alignBottom="@id/profile_name_container"
+        android:layout_alignBottom="@+id/profile_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"/>
 
@@ -124,11 +133,12 @@
         style="@style/Widget.ProfileType"
         android:layout_width="@dimen/icon_size_profile_type_user_profile"
         android:layout_height="@dimen/icon_size_profile_type_user_profile"
-        android:layout_marginRight="@dimen/element_spacing_minus_msmall"
-        android:layout_marginBottom="@dimen/element_spacing_minus_msmall"
         android:layout_alignBottom="@id/profile_image"
         android:layout_alignRight="@id/profile_image"
-        android:scaleType="fitCenter"/>
+        android:layout_marginBottom="@dimen/element_spacing_minus_msmall"
+        android:layout_marginRight="@dimen/element_spacing_minus_msmall"
+        android:scaleType="fitCenter"
+        tools:visibility="gone"/>
 
     <org.mariotaku.twidere.view.AssetFontTextView
         android:id="@+id/uucky_footer"
@@ -145,6 +155,5 @@
         android:typeface="serif"
         android:visibility="gone"
         app:fontPath="fonts/LibreBaskerville-Italic.ttf"/>
-
 
 </RelativeLayout>

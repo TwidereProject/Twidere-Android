@@ -33,25 +33,25 @@ import static org.mariotaku.twidere.util.Utils.isRTL;
 
 public interface IColorLabelView {
 
-    public static final float LABEL_WIDTH = 3.5f;
+    float LABEL_WIDTH = 3.5f;
 
-    public void drawBackground(final int color);
+    void drawBackground(final int color);
 
-    public void drawBottom(final int... colors);
+    void drawBottom(final int... colors);
 
-    public void drawEnd(final int... colors);
+    void drawEnd(final int... colors);
 
-    public void drawLabel(final int[] start, final int[] end, int[] top, int[] bottom, final int background);
+    void drawLabel(final int[] start, final int[] end, int[] top, int[] bottom, final int background);
 
-    public void drawStart(final int... colors);
+    void drawStart(final int... colors);
 
-    public void drawTop(final int... colors);
+    void drawTop(final int... colors);
 
-    public boolean isPaddingsIgnored();
+    boolean isPaddingsIgnored();
 
-    public void setIgnorePaddings(final boolean ignorePaddings);
+    void setIgnorePaddings(final boolean ignorePaddings);
 
-    public void setVisibility(int visibility);
+    void setVisibility(int visibility);
 
     public static final class Helper {
 

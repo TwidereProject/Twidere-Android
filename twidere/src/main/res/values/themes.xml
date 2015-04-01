@@ -372,6 +372,7 @@
     <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Settings.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:windowBackground">@color/background_color_window_settings_wizard</item>
         <item name="android:colorActivatedHighlight">@color/branding_color</item>
     </style>
 

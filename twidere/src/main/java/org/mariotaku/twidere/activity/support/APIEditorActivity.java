@@ -19,11 +19,7 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,9 +35,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 import twitter4j.TwitterConstants;
 
@@ -49,7 +44,7 @@ import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.trim;
 
 public class APIEditorActivity extends BaseSupportDialogActivity implements TwitterConstants, OnCheckedChangeListener,
-        OnClickListener {
+        OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private EditText mEditAPIUrlFormat;
     private CheckBox mEditSameOAuthSigningUrl, mEditNoVersionSuffix;
@@ -58,6 +53,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
     private RadioButton mButtonOAuth, mButtonxAuth, mButtonBasic, mButtonTwipOMode;
     private Button mSaveButton;
     private View mAPIFormatHelpButton;
+    private boolean mEditNoVersionSuffixChanged;
 
     @Override
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
@@ -66,6 +62,14 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         mEditSameOAuthSigningUrl.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         mEditConsumerKey.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         mEditConsumerSecret.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
+        if (!mEditNoVersionSuffixChanged) {
+            mEditNoVersionSuffix.setChecked(authType == Accounts.AUTH_TYPE_TWIP_O_MODE);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        mEditNoVersionSuffixChanged = true;
     }
 
     @Override
@@ -73,12 +77,6 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         switch (v.getId()) {
             case R.id.save: {
                 if (checkUrlErrors()) return;
-                final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
-                final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
-                if (authType == Accounts.AUTH_TYPE_TWIP_O_MODE && !apiUrlFormat.endsWith("/1.1/")) {
-                    new TWIPNoticeDialogFragment().show(getFragmentManager(), "twip_o_mode_bug_notice");
-                    return;
-                }
                 saveAndFinish();
                 break;
             }
@@ -179,6 +177,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         }
 
         mEditAuthType.setOnCheckedChangeListener(this);
+        mEditNoVersionSuffix.setOnCheckedChangeListener(this);
         mSaveButton.setOnClickListener(this);
         mAPIFormatHelpButton.setOnClickListener(this);
 
@@ -217,34 +216,5 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
                 return Accounts.AUTH_TYPE_OAUTH;
             }
         }
-    }
-
-    public static class TWIPNoticeDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE: {
-                    final Activity a = getActivity();
-                    if (a instanceof APIEditorActivity) {
-                        ((APIEditorActivity) a).saveAndFinish();
-                    }
-                    break;
-                }
-            }
-
-        }
-
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            builder.setTitle(android.R.string.dialog_alert_title);
-            builder.setMessage(R.string.twip_api_version_notice_message);
-            builder.setPositiveButton(R.string.save, this);
-            builder.setNegativeButton(android.R.string.cancel, this);
-            return builder.create();
-        }
-
     }
 }
