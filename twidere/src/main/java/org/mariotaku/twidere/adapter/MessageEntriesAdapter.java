@@ -63,7 +63,8 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     private final int mMediaPreviewStyle;
     private final ReadStateManager mReadStateManager;
     private final OnSharedPreferenceChangeListener mReadStateChangeListener;
-    private boolean mLoadMoreIndicatorEnabled;
+    private boolean mLoadMoreSupported;
+    private boolean mLoadMoreIndicatorVisible;
     private Cursor mCursor;
     private MessageEntriesAdapterListener mListener;
     private StringLongPair[] mPositionPairs;
@@ -133,10 +134,6 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         return mTextSize;
     }
 
-    @Override
-    public boolean hasLoadMoreIndicator() {
-        return mLoadMoreIndicatorEnabled;
-    }
 
     @Override
     public void onReadStateChanged() {
@@ -144,11 +141,31 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
     @Override
-    public void setLoadMoreIndicatorEnabled(boolean enabled) {
-        if (mLoadMoreIndicatorEnabled == enabled) return;
-        mLoadMoreIndicatorEnabled = enabled;
+    public boolean isLoadMoreIndicatorVisible() {
+        return mLoadMoreIndicatorVisible;
+    }
+
+    @Override
+    public boolean isLoadMoreSupported() {
+        return mLoadMoreSupported;
+    }
+
+    @Override
+    public void setLoadMoreSupported(boolean supported) {
+        mLoadMoreSupported = supported;
+        if (!supported) {
+            mLoadMoreIndicatorVisible = false;
+        }
         notifyDataSetChanged();
     }
+
+    @Override
+    public void setLoadMoreIndicatorVisible(boolean enabled) {
+        if (mLoadMoreIndicatorVisible == enabled) return;
+        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public boolean isGapItem(int position) {
@@ -228,7 +245,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
 
     @Override
     public final int getItemCount() {
-        return getMessagesCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+        return getMessagesCount() + (mLoadMoreIndicatorVisible ? 1 : 0);
     }
 
     @Override

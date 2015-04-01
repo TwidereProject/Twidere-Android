@@ -86,7 +86,7 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (isRefreshing()) return;
-            if (mAdapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
+            if (mAdapter.isLoadMoreIndicatorVisible() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
                     && layoutManager.findLastVisibleItemPosition() == mAdapter.getItemCount() - 1) {
                 onLoadMoreStatuses();
             }
@@ -171,7 +171,7 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
         mAdapter = onCreateAdapter(context, compact);
-        mAdapter.setLoadMoreIndicatorEnabled(true);
+        mAdapter.setLoadMoreIndicatorVisible(true);
         mAdapter.setListener(this);
         final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

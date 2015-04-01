@@ -75,7 +75,8 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final boolean mDisplayMediaPreview;
     private final boolean mNameFirst;
     private final boolean mDisplayProfileImage;
-    private boolean mLoadMoreIndicatorEnabled;
+    private boolean mLoadMoreSupported;
+    private boolean mLoadMoreIndicatorVisible;
     private ActivityAdapterListener mActivityAdapterListener;
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
@@ -138,10 +139,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     @Override
     public float getTextSize() {
         return mTextSize;
-    }
-
-    public boolean hasLoadMoreIndicator() {
-        return mLoadMoreIndicatorEnabled;
     }
 
     public boolean isNameFirst() {
@@ -248,7 +245,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     }
 
     public final int getItemCount() {
-        return getActivityCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+        return getActivityCount() + (mLoadMoreIndicatorVisible ? 1 : 0);
     }
 
     @Override
@@ -313,11 +310,32 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mActivityAdapterListener = listener;
     }
 
-    public void setLoadMoreIndicatorEnabled(boolean enabled) {
-        if (mLoadMoreIndicatorEnabled == enabled) return;
-        mLoadMoreIndicatorEnabled = enabled;
+    @Override
+    public boolean isLoadMoreIndicatorVisible() {
+        return mLoadMoreIndicatorVisible;
+    }
+
+    @Override
+    public boolean isLoadMoreSupported() {
+        return mLoadMoreSupported;
+    }
+
+    @Override
+    public void setLoadMoreSupported(boolean supported) {
+        mLoadMoreSupported = supported;
+        if (!supported) {
+            mLoadMoreIndicatorVisible = false;
+        }
         notifyDataSetChanged();
     }
+
+    @Override
+    public void setLoadMoreIndicatorVisible(boolean enabled) {
+        if (mLoadMoreIndicatorVisible == enabled) return;
+        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
+        notifyDataSetChanged();
+    }
+
 
     protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
 

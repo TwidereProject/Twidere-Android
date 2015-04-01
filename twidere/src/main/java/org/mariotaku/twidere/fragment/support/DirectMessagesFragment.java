@@ -64,6 +64,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -73,6 +74,7 @@ import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
+import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import java.util.Collections;
@@ -152,13 +154,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         super.onDetach();
     }
 
-
-    @Subscribe
-    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-        updateRefreshState();
-    }
-
-
     @Override
     public void onEntryClick(int position, DirectMessageEntry entry) {
         Utils.openMessageConversation(getActivity(), entry.account_id, entry.conversation_id);
@@ -219,7 +214,9 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         if (getActivity() == null) return;
         mFirstVisibleItem = -1;
         mAdapter.setCursor(cursor);
-        mAdapter.setLoadMoreIndicatorEnabled(cursor != null && cursor.getCount() > 0);
+        mAdapter.setLoadMoreIndicatorVisible(false);
+        mAdapter.setLoadMoreSupported(cursor != null && cursor.getCount() > 0);
+        mSwipeRefreshLayout.setEnabled(true);
 //        mAdapter.setShowAccountColor(getActivatedAccountIds(getActivity()).length > 1);
         setListShown(true);
     }
@@ -274,8 +271,18 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.register(this);
         mAdapter.updateReadState();
+        updateRefreshState();
     }
 
+
+    @Subscribe
+    public void onGetMessagesTaskChanged(GetMessagesTaskEvent event) {
+        if (event.uri.equals(Inbox.CONTENT_URI) && !event.running) {
+            setRefreshing(false);
+            mAdapter.setLoadMoreIndicatorVisible(false);
+            mSwipeRefreshLayout.setEnabled(true);
+        }
+    }
 
     @Override
     public void onStop() {
@@ -330,12 +337,13 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     }
 
     public void setRefreshing(boolean refreshing) {
-        if (refreshing == mSwipeRefreshLayout.isRefreshing()) return;
-        mSwipeRefreshLayout.setRefreshing(refreshing);
+        if (mAdapter == null || refreshing == mSwipeRefreshLayout.isRefreshing()) return;
+        mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
     }
 
     public boolean isRefreshing() {
-        return mSwipeRefreshLayout.isRefreshing();
+        if (mSwipeRefreshLayout == null || mAdapter == null) return false;
+        return mSwipeRefreshLayout.isRefreshing() || mAdapter.isLoadMoreIndicatorVisible();
     }
 
     private void addReadPosition(final int firstVisibleItem) {
@@ -359,6 +367,8 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     //
     private void loadMoreMessages() {
         if (isRefreshing()) return;
+        mAdapter.setLoadMoreIndicatorVisible(true);
+        mSwipeRefreshLayout.setEnabled(false);
         AsyncTaskUtils.executeTask(new AsyncTask<Void, Void, long[][]>() {
 
             @Override

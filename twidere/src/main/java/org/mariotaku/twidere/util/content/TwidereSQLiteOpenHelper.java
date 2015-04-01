@@ -119,8 +119,14 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     }
 
     private void createTriggers(SQLiteDatabase db) {
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_statuses").getSQL());
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_mentions").getSQL());
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_received_messages").getSQL());
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_sent_messages").getSQL());
         db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_statuses", Statuses.TABLE_NAME).getSQL());
         db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_mentions", Mentions.TABLE_NAME).getSQL());
+        db.execSQL(createDeleteDuplicateMessageTrigger("delete_old_received_messages", DirectMessages.Inbox.TABLE_NAME).getSQL());
+        db.execSQL(createDeleteDuplicateMessageTrigger("delete_old_sent_messages", DirectMessages.Outbox.TABLE_NAME).getSQL());
     }
 
     private SQLQuery createDeleteDuplicateStatusTrigger(String triggerName, String tableName) {
@@ -128,6 +134,18 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         final SQLDeleteQuery deleteOld = SQLQueryBuilder.deleteFrom(table).where(Expression.and(
                 Expression.equals(new Column(Statuses.ACCOUNT_ID), new Column(Table.NEW, Statuses.ACCOUNT_ID)),
                 Expression.equals(new Column(Statuses.STATUS_ID), new Column(Table.NEW, Statuses.STATUS_ID))
+        )).build();
+        return SQLQueryBuilder.createTrigger(false, true, triggerName)
+                .type(Type.BEFORE).event(Event.INSERT).on(table).forEachRow(true)
+                .actions(deleteOld).build();
+    }
+
+
+    private SQLQuery createDeleteDuplicateMessageTrigger(String triggerName, String tableName) {
+        final Table table = new Table(tableName);
+        final SQLDeleteQuery deleteOld = SQLQueryBuilder.deleteFrom(table).where(Expression.and(
+                Expression.equals(new Column(DirectMessages.ACCOUNT_ID), new Column(Table.NEW, DirectMessages.ACCOUNT_ID)),
+                Expression.equals(new Column(DirectMessages.MESSAGE_ID), new Column(Table.NEW, DirectMessages.MESSAGE_ID))
         )).build();
         return SQLQueryBuilder.createTrigger(false, true, triggerName)
                 .type(Type.BEFORE).event(Event.INSERT).on(table).forEachRow(true)

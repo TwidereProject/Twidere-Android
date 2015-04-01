@@ -54,7 +54,8 @@ public class ContentListScrollListener extends OnScrollListener {
         }
         final IContentCardAdapter adapter = mContentListSupport.getAdapter();
         final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (!mContentListSupport.isRefreshing() && adapter.hasLoadMoreIndicator() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
+        if (!mContentListSupport.isRefreshing() && adapter.isLoadMoreSupported()
+                && !adapter.isLoadMoreIndicatorVisible() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
                 && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
             mContentListSupport.onLoadMoreContents();
         }

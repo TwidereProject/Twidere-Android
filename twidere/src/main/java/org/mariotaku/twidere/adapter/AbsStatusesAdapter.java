@@ -33,10 +33,10 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
  */
 public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implements Constants,
         IStatusesAdapter<D> {
-
     public static final int ITEM_VIEW_TYPE_STATUS = 0;
     public static final int ITEM_VIEW_TYPE_GAP = 1;
     public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
+
 
     private final Context mContext;
     private final LayoutInflater mInflater;
@@ -46,11 +46,15 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final int mCardBackgroundColor;
     private final int mTextSize;
     private final int mProfileImageStyle, mMediaPreviewStyle;
+
     private final boolean mCompactCards;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
     private final boolean mDisplayProfileImage;
-    private boolean mLoadMoreIndicatorEnabled;
+
+    private boolean mLoadMoreSupported;
+    private boolean mLoadMoreIndicatorVisible;
+
     private StatusAdapterListener mStatusAdapterListener;
     private boolean mShowInReplyTo;
     private boolean mShowAccountsColor;
@@ -120,14 +124,28 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
-    public boolean hasLoadMoreIndicator() {
-        return mLoadMoreIndicatorEnabled;
+    public boolean isLoadMoreIndicatorVisible() {
+        return mLoadMoreIndicatorVisible;
     }
 
     @Override
-    public void setLoadMoreIndicatorEnabled(boolean enabled) {
-        if (mLoadMoreIndicatorEnabled == enabled) return;
-        mLoadMoreIndicatorEnabled = enabled;
+    public boolean isLoadMoreSupported() {
+        return mLoadMoreSupported;
+    }
+
+    @Override
+    public void setLoadMoreSupported(boolean supported) {
+        mLoadMoreSupported = supported;
+        if (!supported) {
+            mLoadMoreIndicatorVisible = false;
+        }
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void setLoadMoreIndicatorVisible(boolean enabled) {
+        if (mLoadMoreIndicatorVisible == enabled) return;
+        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
         notifyDataSetChanged();
     }
 
@@ -137,13 +155,43 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
+    public boolean isNameFirst() {
+        return mNameFirst;
+    }
+
+    @Override
     public boolean isProfileImageEnabled() {
         return mDisplayProfileImage;
     }
 
     @Override
-    public boolean isNameFirst() {
-        return mNameFirst;
+    public final void onStatusClick(StatusViewHolder holder, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onStatusClick(holder, position);
+        }
+    }
+
+    @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        if (mStatusAdapterListener != null) {
+            mStatusAdapterListener.onMediaClick(holder, media, position);
+        }
+    }
+
+    @Override
+    public void onUserProfileClick(StatusViewHolder holder, int position) {
+        final Context context = getContext();
+        final ParcelableStatus status = getStatus(position);
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        if (context instanceof FragmentActivity) {
+            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
+                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
+        } else {
+            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
+        }
     }
 
     public boolean isShowInReplyTo() {
@@ -213,7 +261,7 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
 
     @Override
     public final int getItemCount() {
-        return getStatusesCount() + (mLoadMoreIndicatorEnabled ? 1 : 0);
+        return getStatusesCount() + (mLoadMoreIndicatorVisible ? 1 : 0);
     }
 
     @Override
@@ -234,37 +282,6 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
         if (mStatusAdapterListener != null) {
             mStatusAdapterListener.onStatusMenuClick((StatusViewHolder) holder, menuView, position);
-        }
-    }
-
-    @Override
-    public final void onStatusClick(StatusViewHolder holder, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onStatusClick(holder, position);
-        }
-    }
-
-
-    @Override
-    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
-        if (mStatusAdapterListener != null) {
-            mStatusAdapterListener.onMediaClick(holder, media, position);
-        }
-    }
-
-    @Override
-    public void onUserProfileClick(StatusViewHolder holder, int position) {
-        final Context context = getContext();
-        final ParcelableStatus status = getStatus(position);
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        if (context instanceof FragmentActivity) {
-            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-        } else {
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
         }
     }
 

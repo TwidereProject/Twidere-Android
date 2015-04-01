@@ -150,7 +150,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     public void setRefreshing(boolean refreshing) {
         if (refreshing == mSwipeRefreshLayout.isRefreshing()) return;
 //        if (!refreshing) updateRefreshProgressOffset();
-        mSwipeRefreshLayout.setRefreshing(refreshing);
+        mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
     }
 
     @Override
@@ -207,6 +207,16 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
         setListShown(false);
+    }
+
+    @Override
+    public void onLoadMoreContents() {
+        setLoadMoreIndicatorVisible(true);
+        setRefreshEnabled(false);
+    }
+
+    public void setLoadMoreIndicatorVisible(boolean visible) {
+        mAdapter.setLoadMoreIndicatorVisible(visible);
     }
 
     @Override
@@ -272,7 +282,6 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public final void onLoadFinished(Loader<Data> loader, Data data) {
-        setRefreshing(false);
         final SharedPreferences preferences = getSharedPreferences();
         final boolean rememberPosition = preferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = preferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
@@ -300,7 +309,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         }
         mAdapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            mAdapter.setLoadMoreIndicatorEnabled(hasMoreData(data));
+            mAdapter.setLoadMoreSupported(hasMoreData(data));
             int pos = -1;
             for (int i = 0, j = mAdapter.getItemCount(); i < j; i++) {
                 if (lastReadId != -1 && lastReadId == mAdapter.getStatusId(i)) {
@@ -316,6 +325,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             ((IExtendedLoader) loader).setFromUser(false);
         }
         setListShown(true);
+        onLoadingFinished();
+    }
+
+    protected abstract void onLoadingFinished();
+
+    public void setRefreshEnabled(boolean enabled) {
+        mSwipeRefreshLayout.setEnabled(enabled);
     }
 
     @Override

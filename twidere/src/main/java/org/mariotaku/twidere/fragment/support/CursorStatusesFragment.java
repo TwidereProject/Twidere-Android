@@ -59,6 +59,11 @@ import static org.mariotaku.twidere.util.Utils.shouldEnableFiltersForRTs;
  */
 public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor> {
 
+    @Override
+    protected void onLoadingFinished() {
+
+    }
+
     private ContentObserver mContentObserver;
 
     public abstract Uri getContentUri();
@@ -95,6 +100,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
         public void notifyGetStatusesTaskChanged(GetStatusesTaskEvent event) {
             if (!event.uri.equals(getContentUri())) return;
             setRefreshing(event.running);
+            if (!event.running) {
+                setLoadMoreIndicatorVisible(false);
+                setRefreshEnabled(true);
+            }
         }
 
         @Subscribe
@@ -175,6 +184,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     public void onLoadMoreContents() {
+        super.onLoadMoreContents();
         AsyncTaskUtils.executeTask(new AsyncTask<Void, Void, long[][]>() {
 
             @Override

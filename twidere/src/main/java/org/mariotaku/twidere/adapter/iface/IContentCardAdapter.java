@@ -47,7 +47,11 @@ public interface IContentCardAdapter extends IGapSupportedAdapter, ContentCardCl
 
     float getTextSize();
 
-    boolean hasLoadMoreIndicator();
+    boolean isLoadMoreIndicatorVisible();
 
-    void setLoadMoreIndicatorEnabled(boolean enabled);
+    boolean isLoadMoreSupported();
+
+    void setLoadMoreSupported(boolean supported);
+
+    void setLoadMoreIndicatorVisible(boolean enabled);
 }

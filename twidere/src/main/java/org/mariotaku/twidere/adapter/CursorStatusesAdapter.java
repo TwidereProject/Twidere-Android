@@ -67,7 +67,7 @@ public class CursorStatusesAdapter extends AbsStatusesAdapter<Cursor> {
 
     @Override
     public ParcelableStatus getStatus(int position) {
-        if (hasLoadMoreIndicator() && position == getStatusesCount() - 1) return null;
+        if (isLoadMoreIndicatorVisible() && position == getStatusesCount() - 1) return null;
         final Cursor c = mCursor;
         if (c != null && c.moveToPosition(position)) {
             return new ParcelableStatus(c, mIndices);
