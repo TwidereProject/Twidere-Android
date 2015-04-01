@@ -4,6 +4,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OnConflict;
 import org.mariotaku.querybuilder.SQLQuery;
 import org.mariotaku.querybuilder.SetValue;
+import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Utils;
 
 import java.util.Locale;
@@ -11,7 +12,7 @@ import java.util.Locale;
 public class SQLUpdateQuery implements SQLQuery {
 
     private OnConflict onConflict;
-    private String table;
+    private Table table;
     private SetValue[] values;
     private Expression where;
 
@@ -27,7 +28,7 @@ public class SQLUpdateQuery implements SQLQuery {
         if (onConflict != null) {
             sb.append(String.format(Locale.ROOT, "OR %s ", onConflict.getAction()));
         }
-        sb.append(String.format(Locale.ROOT, "%s ", table));
+        sb.append(String.format(Locale.ROOT, "%s ", table.getSQL()));
         sb.append(String.format(Locale.ROOT, "SET %s ", Utils.toString(values, ',', false)));
         if (where != null) {
             sb.append(String.format(Locale.ROOT, "WHERE %s ", where.getSQL()));
@@ -47,7 +48,7 @@ public class SQLUpdateQuery implements SQLQuery {
         this.onConflict = onConflict;
     }
 
-    void setTable(final String table) {
+    void setTable(final Table table) {
         this.table = table;
     }
 
@@ -80,14 +81,14 @@ public class SQLUpdateQuery implements SQLQuery {
             return this;
         }
 
-        public Builder update(final OnConflict onConflict, final String table) {
+        public Builder update(final OnConflict onConflict, final Table table) {
             checkNotBuilt();
             query.setOnConflict(onConflict);
             query.setTable(table);
             return this;
         }
 
-        public Builder update(final String table) {
+        public Builder update(final Table table) {
             return update(null, table);
         }
 

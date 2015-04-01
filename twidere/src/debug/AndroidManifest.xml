@@ -23,9 +23,10 @@
 
     <application>
         <activity
-            tools:replace="android:label"
             android:name="im.dino.dbinspector.activities.DbInspectorActivity"
-            android:label="Database Inspector">
+            android:exported="false"
+            android:label="Database Inspector"
+            tools:replace="android:label">
             <intent-filter tools:node="removeAll">
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

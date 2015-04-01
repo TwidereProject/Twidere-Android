@@ -64,6 +64,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -1788,7 +1789,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final List<DirectMessage> messages = new ArrayList<>();
                     final boolean truncated = truncateMessages(getDirectMessages(twitter, paging), messages,
                             since_id);
-                    result.add(new MessageListResponse(accountId, max_id, since_id, load_item_limit, messages,
+                    result.add(new MessageListResponse(accountId, max_id, since_id, messages,
                             truncated));
                     storeMessages(accountId, messages, isOutgoing(), true);
                 } catch (final TwitterException e) {
@@ -1809,11 +1810,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (messages == null) return true;
             final Uri uri = getDatabaseUri();
             final ContentValues[] valuesArray = new ContentValues[messages.size()];
-            final long[] messageIds = new long[messages.size()];
 
             for (int i = 0, j = messages.size(); i < j; i++) {
                 final DirectMessage message = messages.get(i);
-                messageIds[i] = message.getId();
                 valuesArray[i] = createDirectMessage(message, accountId, isOutgoing);
             }
 
@@ -2037,7 +2036,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    abstract class GetStatusesTask extends ManagedAsyncTask<Void, Void, List<StatusListResponse>> {
+    abstract class GetStatusesTask extends ManagedAsyncTask<Void, TwitterListResponse<twitter4j.Status>, List<StatusListResponse>> {
 
         private final long[] mAccountIds, mMaxIds, mSinceIds;
 
@@ -2055,10 +2054,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             return mMaxIds != null && mMaxIds.length == mAccountIds.length;
         }
 
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-//            new CacheUsersStatusesTask(mContext, responses.toArray(array)).executeTask();
+        protected final void onProgressUpdate(TwitterListResponse<twitter4j.Status>... values) {
+            AsyncTaskUtils.executeTask(new CacheUsersStatusesTask(mContext), values);
         }
 
         private void storeStatus(long accountId, List<twitter4j.Status> statuses, long maxId, boolean truncated, boolean notify) {
@@ -2159,6 +2158,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final List<twitter4j.Status> statuses = new ArrayList<>();
                     final boolean truncated = truncateStatuses(getStatuses(twitter, paging), statuses, sinceId);
                     storeStatus(accountId, statuses, maxId, truncated, true);
+                    publishProgress(new StatusListResponse(accountId, statuses));
                 } catch (final TwitterException e) {
                     Log.w(LOGTAG, e);
                     result.add(new StatusListResponse(accountId, e));

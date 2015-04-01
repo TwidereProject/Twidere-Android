@@ -8,9 +8,9 @@ import java.util.Locale;
 public class SetValue implements SQLLang {
 
     private final Columns.Column column;
-    private final Expression expression;
+    private final SQLLang expression;
 
-    public SetValue(Columns.Column column, Expression expression) {
+    public SetValue(Columns.Column column, SQLLang expression) {
         this.column = column;
         this.expression = expression;
     }

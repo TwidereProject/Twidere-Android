@@ -201,6 +201,10 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         return getArguments().getString(EXTRA_QUERY);
     }
 
+    public long getAccountId() {
+        return getArguments().getLong(EXTRA_ACCOUNT_ID);
+    }
+
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
@@ -223,9 +227,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 final Bundle args = getArguments();
                 if (twitter != null && args != null) {
-                    final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-                    final String query = args.getString(EXTRA_QUERY);
-                    twitter.createSavedSearchAsync(accountId, query);
+                    twitter.createSavedSearchAsync(getAccountId(), getQuery());
                 }
                 return true;
             }
@@ -233,6 +235,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
                 final Intent intent = new Intent(getActivity(), ComposeActivity.class);
                 intent.setAction(INTENT_ACTION_COMPOSE);
                 intent.putExtra(Intent.EXTRA_TEXT, String.format("#%s ", getQuery()));
+                intent.putExtra(EXTRA_ACCOUNT_ID, getAccountId());
                 startActivity(intent);
                 break;
             }

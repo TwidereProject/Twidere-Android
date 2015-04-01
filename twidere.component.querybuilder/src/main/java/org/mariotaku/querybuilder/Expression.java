@@ -129,6 +129,12 @@ public class Expression implements SQLLang {
     }
 
 
+
+    public static Expression like(final Column column, final SQLLang expression) {
+        return new Expression(String.format(Locale.ROOT, "%s LIKE %s", column.getSQL(), expression.getSQL()));
+    }
+
+
     public static Expression likeRaw(final Column column, final String pattern) {
         return new Expression(String.format(Locale.ROOT, "%s LIKE %s", column.getSQL(), pattern));
     }

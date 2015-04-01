@@ -174,7 +174,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                                 values.getAsLong(CachedUsers.USER_ID));
                         mDatabaseWrapper.update(table, values, where.getSQL(), null);
                         newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
-                                values, SQLiteDatabase.CONFLICT_IGNORE);
+                                values, SQLiteDatabase.CONFLICT_REPLACE);
                     }
                 } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
                     for (final ContentValues values : valuesArray) {

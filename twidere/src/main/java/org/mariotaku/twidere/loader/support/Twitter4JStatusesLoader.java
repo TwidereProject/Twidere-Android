@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -30,8 +29,6 @@ import android.util.Log;
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.task.CacheUsersStatusesTask;
-import org.mariotaku.twidere.util.TwitterWrapper.StatusListResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +52,6 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
     private final long mAccountId;
     private final long mMaxId, mSinceId;
     private final SQLiteDatabase mDatabase;
-    private final Handler mHandler;
     private final Object[] mSavedStatusesFileArgs;
     private Comparator<ParcelableStatus> mComparator;
 
@@ -68,7 +64,6 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
         mMaxId = maxId;
         mSinceId = sinceId;
         mDatabase = TwidereApplication.getInstance(context).getSQLiteDatabase();
-        mHandler = new Handler();
         mSavedStatusesFileArgs = savedStatusesArgs;
     }
 
@@ -117,7 +112,6 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
         }
         final long minStatusId = statuses.isEmpty() ? -1 : Collections.min(statuses).getId();
         final boolean insertGap = minStatusId > 0 && statuses.size() > 1 && !data.isEmpty() && !truncated;
-        mHandler.post(CacheUsersStatusesTask.getRunnable(context, new StatusListResponse(mAccountId, statuses)));
         for (final Status status : statuses) {
             final long id = status.getId();
             final boolean deleted = deleteStatus(data, id);
@@ -142,6 +136,7 @@ public abstract class Twitter4JStatusesLoader extends ParcelableStatusesLoader {
     public final void setComparator(Comparator<ParcelableStatus> comparator) {
         mComparator = comparator;
     }
+
 
     @NonNull
     protected abstract List<Status> getStatuses(@NonNull Twitter twitter, Paging paging) throws TwitterException;

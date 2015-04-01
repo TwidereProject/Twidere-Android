@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff.Mode;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -118,8 +119,10 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
                 mProfileImageLoader.cancelDisplayTask(icon);
 //                icon.setImageResource(R.drawable.ic_profile_image_default);
             }
+            icon.clearColorFilter();
         } else {
             icon.setImageResource(R.drawable.ic_action_hashtag);
+            icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
         }
         super.bindView(view, context, cursor);
     }

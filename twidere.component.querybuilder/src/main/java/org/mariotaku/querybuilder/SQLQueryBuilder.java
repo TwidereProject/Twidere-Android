@@ -38,6 +38,7 @@ import org.mariotaku.querybuilder.query.SQLDropTriggerQuery;
 import org.mariotaku.querybuilder.query.SQLDropViewQuery;
 import org.mariotaku.querybuilder.query.SQLInsertQuery;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.querybuilder.query.SQLUpdateQuery;
 
 public class SQLQueryBuilder {
 
@@ -103,6 +104,10 @@ public class SQLQueryBuilder {
 
     public static SQLInsertQuery.Builder insertInto(final OnConflict onConflict, final String table) {
         return new SQLInsertQuery.Builder().insertInto(onConflict, table);
+    }
+
+    public static SQLUpdateQuery.Builder update(final OnConflict onConflict, final Table table) {
+        return new SQLUpdateQuery.Builder().update(onConflict, table);
     }
 
     public static SQLInsertQuery.Builder insertInto(final String table) {

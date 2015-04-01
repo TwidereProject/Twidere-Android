@@ -30,8 +30,10 @@ import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.NewColumn;
+import org.mariotaku.querybuilder.OnConflict;
 import org.mariotaku.querybuilder.SQLQuery;
 import org.mariotaku.querybuilder.SQLQueryBuilder;
+import org.mariotaku.querybuilder.SetValue;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.query.SQLCreateIndexQuery;
 import org.mariotaku.querybuilder.query.SQLCreateTableQuery;
@@ -121,12 +123,44 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     private void createTriggers(SQLiteDatabase db) {
         db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_statuses").getSQL());
         db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_mentions").getSQL());
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_cached_statuses").getSQL());
         db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_received_messages").getSQL());
         db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_sent_messages").getSQL());
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "on_user_cache_update_trigger").getSQL());
+        db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_cached_hashtags").getSQL());
         db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_statuses", Statuses.TABLE_NAME).getSQL());
         db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_mentions", Mentions.TABLE_NAME).getSQL());
+        db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_cached_statuses", CachedStatuses.TABLE_NAME).getSQL());
         db.execSQL(createDeleteDuplicateMessageTrigger("delete_old_received_messages", DirectMessages.Inbox.TABLE_NAME).getSQL());
         db.execSQL(createDeleteDuplicateMessageTrigger("delete_old_sent_messages", DirectMessages.Outbox.TABLE_NAME).getSQL());
+
+        // Update user info in filtered users
+        final Table cachedUsersTable = new Table(CachedUsers.TABLE_NAME);
+        final Table filteredUsersTable = new Table(Filters.Users.TABLE_NAME);
+        db.execSQL(SQLQueryBuilder.createTrigger(false, true, "on_user_cache_update_trigger")
+                .type(Type.BEFORE)
+                .event(Event.INSERT)
+                .on(cachedUsersTable)
+                .forEachRow(true)
+                .actions(SQLQueryBuilder.update(OnConflict.REPLACE, filteredUsersTable)
+                        .set(new SetValue(new Column(Filters.Users.NAME), new Column(Table.NEW, CachedUsers.NAME)),
+                                new SetValue(new Column(Filters.Users.SCREEN_NAME), new Column(Table.NEW, CachedUsers.SCREEN_NAME)))
+                        .where(Expression.equals(new Column(Filters.Users.USER_ID), new Column(Table.NEW, CachedUsers.USER_ID)))
+                        .build())
+                .buildSQL());
+
+        // Delete duplicated hashtags ignoring case
+        final Table cachedHashtagsTable = new Table(CachedHashtags.TABLE_NAME);
+        db.execSQL(SQLQueryBuilder.createTrigger(false, true, "delete_old_cached_hashtags")
+                .type(Type.BEFORE)
+                .event(Event.INSERT)
+                .on(cachedHashtagsTable)
+                .forEachRow(true)
+                .actions(SQLQueryBuilder.deleteFrom(cachedHashtagsTable)
+                        .where(Expression.like(new Column(CachedHashtags.NAME), new Column(Table.NEW, CachedHashtags.NAME)))
+                        .build())
+                .buildSQL());
+
     }
 
     private SQLQuery createDeleteDuplicateStatusTrigger(String triggerName, String tableName) {

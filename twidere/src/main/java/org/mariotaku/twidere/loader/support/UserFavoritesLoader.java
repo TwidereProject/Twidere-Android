@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 
@@ -46,8 +47,9 @@ public class UserFavoritesLoader extends Twitter4JStatusesLoader {
         mUserScreenName = screen_name;
     }
 
+    @NonNull
     @Override
-    public ResponseList<Status> getStatuses(final Twitter twitter, final Paging paging) throws TwitterException {
+    public ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         if (twitter == null) return null;
         if (mUserId != -1)
             return twitter.getFavorites(mUserId, paging);

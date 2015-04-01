@@ -228,22 +228,22 @@ public class TwitterWrapper implements Constants {
 
         public final boolean truncated;
 
-        public MessageListResponse(final long account_id, final Exception exception) {
-            this(account_id, -1, -1, null, false, exception);
+        public MessageListResponse(final long accountId, final Exception exception) {
+            this(accountId, -1, -1, null, false, exception);
         }
 
-        public MessageListResponse(final long account_id, final List<DirectMessage> list) {
-            this(account_id, -1, -1, list, false, null);
+        public MessageListResponse(final long accountId, final List<DirectMessage> list) {
+            this(accountId, -1, -1, list, false, null);
         }
 
-        public MessageListResponse(final long account_id, final long max_id, final long since_id,
-                                   final int load_item_limit, final List<DirectMessage> list, final boolean truncated) {
-            this(account_id, max_id, since_id, list, truncated, null);
+        public MessageListResponse(final long accountId, final long maxId, final long sinceId,
+                                   final List<DirectMessage> list, final boolean truncated) {
+            this(accountId, maxId, sinceId, list, truncated, null);
         }
 
-        MessageListResponse(final long account_id, final long max_id, final long since_id,
+        MessageListResponse(final long accountId, final long maxId, final long sinceId,
                             final List<DirectMessage> list, final boolean truncated, final Exception exception) {
-            super(account_id, max_id, since_id, list, exception);
+            super(accountId, maxId, sinceId, list, exception);
             this.truncated = truncated;
         }
 
@@ -253,22 +253,22 @@ public class TwitterWrapper implements Constants {
 
         public final boolean truncated;
 
-        public StatusListResponse(final long account_id, final Exception exception) {
-            this(account_id, -1, -1, null, false, exception);
+        public StatusListResponse(final long accountId, final Exception exception) {
+            this(accountId, -1, -1, null, false, exception);
         }
 
-        public StatusListResponse(final long account_id, final List<Status> list) {
-            this(account_id, -1, -1, list, false, null);
+        public StatusListResponse(final long accountId, final List<Status> list) {
+            this(accountId, -1, -1, list, false, null);
         }
 
-        public StatusListResponse(final long account_id, final long max_id, final long since_id,
-                                  final int load_item_limit, final List<Status> list, final boolean truncated) {
-            this(account_id, max_id, since_id, list, truncated, null);
+        public StatusListResponse(final long accountId, final long maxId, final long sinceId,
+                                  final List<Status> list, final boolean truncated) {
+            this(accountId, maxId, sinceId, list, truncated, null);
         }
 
-        StatusListResponse(final long account_id, final long max_id, final long since_id, final List<Status> list,
+        StatusListResponse(final long accountId, final long maxId, final long sinceId, final List<Status> list,
                            final boolean truncated, final Exception exception) {
-            super(account_id, max_id, since_id, list, exception);
+            super(accountId, maxId, sinceId, list, exception);
             this.truncated = truncated;
         }
 
@@ -276,22 +276,22 @@ public class TwitterWrapper implements Constants {
 
     public static class TwitterListResponse<Data> extends ListResponse<Data> {
 
-        public final long account_id, max_id, since_id;
+        public final long accountId, maxId, sinceId;
 
-        public TwitterListResponse(final long account_id, final Exception exception) {
-            this(account_id, -1, -1, null, exception);
+        public TwitterListResponse(final long accountId, final Exception exception) {
+            this(accountId, -1, -1, null, exception);
         }
 
-        public TwitterListResponse(final long account_id, final long max_id, final long since_id, final List<Data> list) {
-            this(account_id, max_id, since_id, list, null);
+        public TwitterListResponse(final long accountId, final long maxId, final long sinceId, final List<Data> list) {
+            this(accountId, maxId, sinceId, list, null);
         }
 
-        TwitterListResponse(final long account_id, final long max_id, final long since_id, final List<Data> list,
+        TwitterListResponse(final long accountId, final long maxId, final long sinceId, final List<Data> list,
                             final Exception exception) {
             super(list, exception);
-            this.account_id = account_id;
-            this.max_id = max_id;
-            this.since_id = since_id;
+            this.accountId = accountId;
+            this.maxId = maxId;
+            this.sinceId = sinceId;
         }
 
     }
