@@ -30,11 +30,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/element_spacing_xsmall"
-            android:layout_alignBottom="@+id/view_pager_tabs"
-            android:background="?android:dividerVertical"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/view_pager_tabs"/>
 
         <org.mariotaku.twidere.view.TabPagerIndicator
             android:id="@+id/view_pager_tabs"
@@ -49,13 +49,8 @@
             app:tabShowDivider="true"
             tools:ignore="UnusedAttribute"/>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/view_pager_tabs"/>
-
         <View
+            android:id="@+id/pager_window_overlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/view_pager"

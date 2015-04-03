@@ -61,7 +61,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -133,7 +132,6 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
@@ -1376,18 +1374,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         updateTitleColor();
     }
 
-    private void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
+    private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
-        final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.decor_content_parent);
-        if (!(view instanceof ActionBarOverlayLayout)) return;
-        try {
-            final Field field = ActionBarOverlayLayout.class.getDeclaredField("mWindowContentOverlay");
-            field.setAccessible(true);
-            final Drawable drawable = (Drawable) field.get(view);
-            if (drawable == null) return;
-            drawable.setAlpha(Math.round(alpha * 255));
-        } catch (Exception ignore) {
-        }
+        final Drawable drawable = ThemeUtils.getCompatToolbarOverlay(activity);
+        if (drawable == null) return;
+        drawable.setAlpha(Math.round(alpha * 255));
     }
 
     private void updateTitleColor() {

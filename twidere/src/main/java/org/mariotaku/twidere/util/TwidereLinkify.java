@@ -129,7 +129,9 @@ public final class TwidereLinkify implements Constants {
             addLinks(string, account_id, type, sensitive, listener, highlightOption);
         }
         view.setText(string);
-        addLinkMovementMethod(view);
+        if (mAddMovementMethod) {
+            addLinkMovementMethod(view);
+        }
     }
 
     public final void applyUserProfileLink(final TextView view, final long accountId, final long userId,
@@ -152,7 +154,9 @@ public final class TwidereLinkify implements Constants {
             applyLink(screenName, 0, string.length(), string, accountId, LINK_TYPE_MENTION, false, listener);
         }
         view.setText(string);
-        addLinkMovementMethod(view);
+        if (mAddMovementMethod) {
+            addLinkMovementMethod(view);
+        }
     }
 
     public void setHighlightOption(final int style) {

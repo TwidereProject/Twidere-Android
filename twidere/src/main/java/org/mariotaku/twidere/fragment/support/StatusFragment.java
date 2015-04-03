@@ -31,6 +31,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -1207,50 +1208,52 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             timeSourceView.setTextSize(defaultTextSize * 0.85f);
 
             textView.setMovementMethod(StatusContentMovementMethod.getInstance());
-            textView.setCustomSelectionActionModeCallback(new Callback() {
-                @Override
-                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    final FragmentActivity activity = fragment.getActivity();
-                    if (activity instanceof IThemedActivity) {
-                        final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-                        final int accentColor = ((IThemedActivity) activity).getCurrentThemeColor();
-                        ThemeUtils.applySupportActionModeBackground(mode, fragment.getActivity(), themeRes, accentColor, true);
-                    }
-                    mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
-                    return true;
-                }
-
-                @Override
-                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
-                    final SpannableString string = SpannableString.valueOf(textView.getText());
-                    final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
-                    final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
-                    Utils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
-                    return true;
-                }
-
-                @Override
-                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    switch (item.getItemId()) {
-                        case android.R.id.copyUrl: {
-                            final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
-                            final SpannableString string = SpannableString.valueOf(textView.getText());
-                            final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
-                            if (spans.length != 1) return true;
-                            ClipboardUtils.setText(activity, spans[0].getURL());
-                            mode.finish();
-                            return true;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                textView.setCustomSelectionActionModeCallback(new Callback() {
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        final FragmentActivity activity = fragment.getActivity();
+                        if (activity instanceof IThemedActivity) {
+                            final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
+                            final int accentColor = ((IThemedActivity) activity).getCurrentThemeColor();
+                            ThemeUtils.applySupportActionModeBackground(mode, fragment.getActivity(), themeRes, accentColor, true);
                         }
+                        mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
+                        return true;
                     }
-                    return false;
-                }
 
-                @Override
-                public void onDestroyActionMode(ActionMode mode) {
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
+                        final SpannableString string = SpannableString.valueOf(textView.getText());
+                        final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
+                        final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
+                        Utils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
+                        return true;
+                    }
 
-                }
-            });
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        switch (item.getItemId()) {
+                            case android.R.id.copyUrl: {
+                                final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
+                                final SpannableString string = SpannableString.valueOf(textView.getText());
+                                final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
+                                if (spans.length != 1) return true;
+                                ClipboardUtils.setText(activity, spans[0].getURL());
+                                mode.finish();
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+
+                    }
+                });
+            }
         }
 
 

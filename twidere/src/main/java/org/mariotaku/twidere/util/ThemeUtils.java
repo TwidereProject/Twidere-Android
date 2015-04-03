@@ -41,6 +41,7 @@ import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
 import android.support.v7.internal.view.SupportActionModeWrapper;
 import android.support.v7.internal.view.SupportActionModeWrapperTrojan;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
+import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -162,6 +163,19 @@ public class ThemeUtils implements Constants {
         }
     }
 
+    public static Drawable getCompatToolbarOverlay(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return null;
+        final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.decor_content_parent);
+        if (!(view instanceof ActionBarOverlayLayout)) return null;
+        try {
+            final Field field = ActionBarOverlayLayout.class.getDeclaredField("mWindowContentOverlay");
+            field.setAccessible(true);
+            return (Drawable) field.get(view);
+        } catch (Exception ignore) {
+        }
+        return null;
+    }
+
     public static void initPagerIndicatorAsActionBarTab(FragmentActivity activity, TabPagerIndicator indicator) {
         final float supportActionBarElevation = getSupportActionBarElevation(activity);
         ViewCompat.setElevation(indicator, supportActionBarElevation);
@@ -200,6 +214,18 @@ public class ThemeUtils implements Constants {
             final MenuItem menuItem = itemView.getItemData();
             if (menuItem.hasSubMenu()) continue;
             itemView.setOnLongClickListener(listener);
+        }
+    }
+
+    public static void setCompatToolbarOverlay(Activity activity, Drawable background) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
+        final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.decor_content_parent);
+        if (!(view instanceof ActionBarOverlayLayout)) return;
+        try {
+            final Field field = ActionBarOverlayLayout.class.getDeclaredField("mWindowContentOverlay");
+            field.setAccessible(true);
+            field.set(view, background);
+        } catch (Exception ignore) {
         }
     }
 
