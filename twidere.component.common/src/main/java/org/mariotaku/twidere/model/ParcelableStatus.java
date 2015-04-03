@@ -603,8 +603,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             is_following = cursor.getColumnIndex(Statuses.IS_FOLLOWING);
             media = cursor.getColumnIndex(Statuses.MEDIA_LIST);
             mentions = cursor.getColumnIndex(Statuses.MENTIONS_LIST);
+            card = cursor.getColumnIndex(Statuses.CARD);
             card_name = cursor.getColumnIndex(Statuses.CARD_NAME);
-            card = cursor.getColumnIndex(Statuses.MENTIONS_LIST);
             place_full_name = cursor.getColumnIndex(Statuses.PLACE_FULL_NAME);
         }
 
