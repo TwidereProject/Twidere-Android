@@ -49,6 +49,7 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -780,7 +781,7 @@ public class StatusFragment extends BaseSupportFragment
                 case VIEW_TYPE_DETAIL_STATUS: {
                     final ParcelableStatus status = getStatus(position);
                     final DetailStatusViewHolder detailHolder = (DetailStatusViewHolder) holder;
-                    detailHolder.showStatus(status);
+                    detailHolder.displayStatus(status);
                     break;
                 }
                 case VIEW_TYPE_LIST_STATUS: {
@@ -1059,7 +1060,7 @@ public class StatusFragment extends BaseSupportFragment
             return Utils.handleMenuItemClick(activity, fragment, fm, twitter, status, item);
         }
 
-        public void showStatus(ParcelableStatus status) {
+        public void displayStatus(ParcelableStatus status) {
             if (status == null) return;
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();
@@ -1104,7 +1105,18 @@ public class StatusFragment extends BaseSupportFragment
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
-            locationView.setVisibility(ParcelableLocation.isValidLocation(status.location) ? View.VISIBLE : View.GONE);
+            if (!TextUtils.isEmpty(status.place_full_name)) {
+                locationView.setVisibility(View.VISIBLE);
+                locationView.setText(status.place_full_name);
+                locationView.setClickable(ParcelableLocation.isValidLocation(status.location));
+            } else if (ParcelableLocation.isValidLocation(status.location)) {
+                locationView.setVisibility(View.VISIBLE);
+                locationView.setText(R.string.view_map);
+                locationView.setClickable(true);
+            } else {
+                locationView.setVisibility(View.GONE);
+                locationView.setText(null);
+            }
 
             retweetsContainer.setVisibility(!status.user_is_protected ? View.VISIBLE : View.GONE);
             repliesContainer.setVisibility(status.reply_count < 0 ? View.GONE : View.VISIBLE);

@@ -230,7 +230,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             favoriteCountView.setText(null);
         }
         if (shouldDisplayExtraType) {
-            displayExtraTypeIcon(status.card_name, status.media, status.location);
+            displayExtraTypeIcon(status.card_name, status.media, status.location, status.place_full_name);
         } else {
             extraTypeView.setVisibility(View.GONE);
         }
@@ -267,6 +267,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         final String in_reply_to_name = cursor.getString(indices.in_reply_to_user_name);
         final String in_reply_to_screen_name = cursor.getString(indices.in_reply_to_user_screen_name);
         final String card_name = cursor.getString(indices.card_name);
+        final String place_full_name = cursor.getString(indices.place_full_name);
 
         final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(
                 cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
@@ -374,7 +375,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         } else {
             favoriteCountView.setText(null);
         }
-        displayExtraTypeIcon(card_name, media, location);
+        displayExtraTypeIcon(card_name, media, location, place_full_name);
     }
 
     public CardView getCardView() {
@@ -454,7 +455,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         mediaPreviewContainer.setStyle(adapter.getMediaPreviewStyle());
     }
 
-    private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location) {
+    private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName) {
         if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
             extraTypeView.setImageResource(R.drawable.ic_action_music);
             extraTypeView.setVisibility(View.VISIBLE);

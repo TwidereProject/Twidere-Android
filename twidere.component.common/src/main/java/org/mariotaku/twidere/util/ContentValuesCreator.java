@@ -50,6 +50,7 @@ import java.util.List;
 
 import twitter4j.DirectMessage;
 import twitter4j.GeoLocation;
+import twitter4j.Place;
 import twitter4j.Relationship;
 import twitter4j.SavedSearch;
 import twitter4j.Status;
@@ -356,6 +357,10 @@ public final class ContentValuesCreator implements TwidereConstants {
         final GeoLocation location = status.getGeoLocation();
         if (location != null) {
             values.put(Statuses.LOCATION, location.getLatitude() + "," + location.getLongitude());
+        }
+        final Place place = status.getPlace();
+        if (place != null) {
+            values.put(Statuses.PLACE_FULL_NAME, place.getFullName());
         }
         values.put(Statuses.IS_RETWEET, isRetweet);
         values.put(Statuses.IS_FAVORITE, status.isFavorited());

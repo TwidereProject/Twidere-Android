@@ -63,6 +63,7 @@ import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
@@ -93,6 +94,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     private View mListContainer, mProgressContainer;
     private TextView mEmptyText;
     private ImageView mEmptyIcon;
+    private SharedPreferencesWrapper mPreferences;
 
 
     @Override
@@ -111,6 +113,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mPreferences = SharedPreferencesWrapper.getInstance(getActivity(), SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         setHasOptionsMenu(true);
         mResolver = getContentResolver();
         final View view = getView();
@@ -266,7 +269,8 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     public void onPrepareOptionsMenu(final Menu menu) {
         final Resources res = getResources();
         final boolean hasOfficialKeyAccounts = Utils.hasAccountSignedWithOfficialKeys(getActivity());
-        final long[] account_ids = getAccountIds(getActivity());
+        final boolean forcePrivateAPI = mPreferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
+        final long[] accountIds = getAccountIds(getActivity());
         final MenuItem itemAdd = menu.findItem(R.id.add_submenu);
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             final SubMenu subMenu = itemAdd.getSubMenu();
@@ -289,9 +293,10 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
                 intent.putExtra(EXTRA_OFFICIAL_KEY_ONLY, isOfficiakKeyAccountRequired);
 
                 final MenuItem subItem = subMenu.add(conf.getDefaultTitle());
-                final boolean shouldDisable = conf.isSingleTab() && isTabAdded(getActivity(), type)
-                        || isOfficiakKeyAccountRequired && !hasOfficialKeyAccounts || accountIdRequired
-                        && account_ids.length == 0;
+                final boolean disabledByNoAccount = accountIdRequired && accountIds.length == 0;
+                final boolean disabledByNoOfficialKey = !forcePrivateAPI && isOfficiakKeyAccountRequired && !hasOfficialKeyAccounts;
+                final boolean disabledByDuplicateTab = conf.isSingleTab() && isTabAdded(getActivity(), type);
+                final boolean shouldDisable = disabledByDuplicateTab || disabledByNoOfficialKey || disabledByNoAccount;
                 subItem.setVisible(!shouldDisable);
                 subItem.setEnabled(!shouldDisable);
                 final Drawable icon = ResourcesCompat.getDrawable(res, conf.getDefaultIcon(), null);

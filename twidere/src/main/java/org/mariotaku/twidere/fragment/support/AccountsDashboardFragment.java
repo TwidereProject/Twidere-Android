@@ -95,6 +95,7 @@ import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
+import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -209,11 +210,23 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         }
         mAccountsAdapter.setAccounts(accounts);
         mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
+        mAccountOptionsAdapter.setSelectedAccount(mAccountsAdapter.getSelectedAccount());
         mAccountActionProvider.setAccounts(accounts);
         mAccountActionProvider.setSelectedAccountIds(ArrayUtils.toPrimitive(activatedIds.toArray(new Long[activatedIds.size()])));
 
+        initAccountActionsAdapter(accounts);
         updateAccountOptionsSeparatorLabel(null);
         updateDefaultAccountState();
+    }
+
+    void initAccountActionsAdapter(ParcelableAccount[] accounts) {
+        mAccountOptionsAdapter.clear();
+        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
+        if (accounts.length > 1) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
+        }
+        mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
+        mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));
     }
 
     @Override
@@ -496,6 +509,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
                 editor.putLong(KEY_DEFAULT_ACCOUNT_ID, account.account_id);
                 editor.apply();
                 mAccountsAdapter.setSelectedAccountId(account.account_id);
+                mAccountOptionsAdapter.setSelectedAccount(account);
                 updateAccountOptionsSeparatorLabel(clickedDrawable);
                 snapshotView.setVisibility(View.INVISIBLE);
                 snapshotView.setImageDrawable(null);
@@ -547,21 +561,27 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     private static final class AccountOptionsAdapter extends OptionItemsAdapter {
 
-        private static final ArrayList<OptionItem> sOptions = new ArrayList<>();
-
-        static {
-            sOptions.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
-            sOptions.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
-            sOptions.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
-            sOptions.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));
-        }
+        private ParcelableAccount mSelectedAccount;
 
         public AccountOptionsAdapter(final Context context) {
             super(context);
-            clear();
-            addAll(sOptions);
         }
 
+        public void setSelectedAccount(ParcelableAccount account) {
+            mSelectedAccount = account;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        protected String getTitle(int position, OptionItem option) {
+            final ParcelableAccount account = mSelectedAccount;
+            if (account != null && option.id == MENU_COMPOSE) {
+                final Context context = getContext();
+                return context.getString(R.string.tweet_with_name,
+                        UserColorNameUtils.getDisplayName(context, -1, account.name, account.screen_name));
+            }
+            return super.getTitle(position, option);
+        }
     }
 
     private static final class AppMenuAdapter extends OptionItemsAdapter {
@@ -774,10 +794,14 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final OptionItem option = getItem(position);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
-            text1.setText(option.name);
+            text1.setText(getTitle(position, option));
             icon.setImageDrawable(ResourcesCompat.getDrawable(icon.getResources(), option.icon, null));
             icon.setColorFilter(mActionIconColor, Mode.SRC_ATOP);
             return view;
+        }
+
+        protected String getTitle(int position, OptionItem option) {
+            return getContext().getString(option.name);
         }
 
     }

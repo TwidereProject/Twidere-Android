@@ -736,6 +736,8 @@ public interface TwidereDataStore {
 
         public static final String LOCATION = "location";
 
+        public static final String PLACE_FULL_NAME = "place_full_name";
+
         /**
          * User's ID of the status.<br>
          * Type: INTEGER (long)
@@ -799,14 +801,15 @@ public interface TwidereDataStore {
                 DESCENDENT_REPLY_COUNT, RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID,
                 RETWEETED_BY_USER_NAME, RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE,
                 MY_RETWEET_ID, IS_RETWEET, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
-                IS_POSSIBLY_SENSITIVE, MEDIA_LIST, MENTIONS_LIST, CARD_NAME, CARD};
+                IS_POSSIBLY_SENSITIVE, MEDIA_LIST, MENTIONS_LIST, CARD_NAME, CARD, PLACE_FULL_NAME};
 
         public static final String[] TYPES = new String[]{TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_TEXT};
 
     }
 

@@ -3571,7 +3571,9 @@ public final class Utils implements Constants, TwitterConstants {
         final MenuItem translate = menu.findItem(MENU_TRANSLATE);
         if (translate != null) {
             final boolean isOfficialKey = isOfficialCredentials(context, account);
-            setMenuItemAvailability(menu, MENU_TRANSLATE, isOfficialKey);
+            final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            final boolean forcePrivateApis = prefs.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
+            setMenuItemAvailability(menu, MENU_TRANSLATE, forcePrivateApis || isOfficialKey);
         }
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION);
         addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION, INTENT_ACTION_EXTENSION_OPEN_STATUS,

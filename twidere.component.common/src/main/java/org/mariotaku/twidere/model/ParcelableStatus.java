@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.json.JSONException;
@@ -48,6 +49,7 @@ import twitter4j.CardEntity.BooleanValue;
 import twitter4j.CardEntity.ImageValue;
 import twitter4j.CardEntity.StringValue;
 import twitter4j.CardEntity.UserValue;
+import twitter4j.Place;
 import twitter4j.Status;
 import twitter4j.User;
 
@@ -110,6 +112,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
 
     public final ParcelableLocation location;
 
+    public final String place_full_name;
+
     public final ParcelableUserMention[] mentions;
 
     public final ParcelableMedia[] media;
@@ -154,6 +158,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = ContentValuesUtils.getAsBoolean(values, Statuses.IS_FOLLOWING, false);
         mentions = SimpleValueSerializer.fromSerializedString(values.getAsString(Statuses.MENTIONS_LIST), ParcelableUserMention.SIMPLE_CREATOR);
         card = ParcelableCardEntity.fromJSONString(values.getAsString(Statuses.CARD));
+        place_full_name = values.getAsString(Statuses.PLACE_FULL_NAME);
         card_name = card != null ? card.name : null;
     }
 
@@ -198,6 +203,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = idx.is_following != -1 && c.getInt(idx.is_following) == 1;
         mentions = idx.mentions != -1 ? ParcelableUserMention.fromJSONString(c.getString(idx.mentions)) : null;
         card = idx.card != -1 ? ParcelableCardEntity.fromJSONString(c.getString(idx.card)) : null;
+        place_full_name = idx.place_full_name != -1 ? c.getString(idx.place_full_name) : null;
         card_name = card != null ? card.name : null;
     }
 
@@ -239,6 +245,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = in.readBoolean("is_following");
         mentions = in.readParcelableArray("mentions", ParcelableUserMention.JSON_CREATOR);
         card = in.readParcelable("card", ParcelableCardEntity.JSON_CREATOR);
+        place_full_name = in.readString("place_full_name");
         card_name = card != null ? card.name : null;
     }
 
@@ -280,6 +287,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         in_reply_to_name = in.readString();
         mentions = in.createTypedArray(ParcelableUserMention.CREATOR);
         card = in.readParcelable(ParcelableCardEntity.class.getClassLoader());
+        place_full_name = in.readString();
         card_name = card != null ? card.name : null;
     }
 
@@ -322,6 +330,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         in_reply_to_name = orig.in_reply_to_name;
         mentions = orig.mentions;
         card = orig.card;
+        place_full_name = orig.place_full_name;
         card_name = card != null ? card.name : null;
     }
 
@@ -405,14 +414,21 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         in_reply_to_status_id = status.getInReplyToStatusId();
         in_reply_to_user_id = status.getInReplyToUserId();
         source = status.getSource();
-        location = new ParcelableLocation(status.getGeoLocation());
+        location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
         is_favorite = status.isFavorited();
         text_unescaped = HtmlEscapeHelper.toPlainText(text_html);
         my_retweet_id = retweeted_by_id == account_id ? id : status.getCurrentUserRetweet();
         is_possibly_sensitive = status.isPossiblySensitive();
         mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
         card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
+        place_full_name = getPlaceFullName(status.getPlace());
         card_name = card != null ? card.name : null;
+    }
+
+    @Nullable
+    private static String getPlaceFullName(@Nullable Place place) {
+        if (place == null) return null;
+        return place.getFullName();
     }
 
     @Override
@@ -485,6 +501,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeBoolean("is_following", user_is_following);
         out.writeParcelableArray("mentions", mentions);
         out.writeParcelable("card", card);
+        out.writeString("place_full_name", place_full_name);
     }
 
     private static long getTime(final Date date) {
@@ -500,7 +517,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 retweeted_by_user_screen_name, retweeted_by_user_profile_image, retweet_id, retweet_timestamp,
                 retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
                 descendent_reply_count, is_possibly_sensitive, is_following, media, mentions,
-                card_name, card;
+                card_name, card, place_full_name;
 
         @Override
         public String toString() {
@@ -544,6 +561,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                     ", mentions=" + mentions +
                     ", card_name=" + card_name +
                     ", card=" + card +
+                    ", place_full_name=" + place_full_name +
                     '}';
         }
 
@@ -587,6 +605,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             mentions = cursor.getColumnIndex(Statuses.MENTIONS_LIST);
             card_name = cursor.getColumnIndex(Statuses.CARD_NAME);
             card = cursor.getColumnIndex(Statuses.MENTIONS_LIST);
+            place_full_name = cursor.getColumnIndex(Statuses.PLACE_FULL_NAME);
         }
 
     }
@@ -630,6 +649,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeString(in_reply_to_name);
         out.writeTypedArray(mentions, flags);
         out.writeParcelable(card, flags);
+        out.writeString(place_full_name);
     }
 
     public static final class ParcelableCardEntity implements TwidereParcelable {
