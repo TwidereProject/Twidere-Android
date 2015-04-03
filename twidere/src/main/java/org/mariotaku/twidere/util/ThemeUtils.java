@@ -422,14 +422,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    @Deprecated
-    public static Drawable getActionBarBackground(final Context context, final boolean applyAlpha) {
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
-                android.R.attr.actionBarStyle, 0);
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
-        return applyActionBarDrawable(context, d, applyAlpha);
-    }
 
     public static Drawable getActionBarBackground(final Context context, final int themeRes) {
         final TypedArray a1 = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
@@ -494,14 +486,6 @@ public class ThemeUtils implements Constants {
         return new ContextThemeWrapper(context, resId);
     }
 
-    @Deprecated
-    public static Drawable getActionBarSplitBackground(final Context context, final boolean applyAlpha) {
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.backgroundSplit},
-                android.R.attr.actionBarStyle, 0);
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
-        return applyActionBarDrawable(context, d, applyAlpha);
-    }
 
     public static Drawable getActionBarSplitBackground(final Context context, final int themeRes) {
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.backgroundSplit},
