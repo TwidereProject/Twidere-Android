@@ -139,8 +139,8 @@ abstract class TwitterBaseImpl implements OAuthSupport, HttpResponseListener, Tw
      * token.
      *
      * @throws twitter4j.TwitterException When Twitter service or network is unavailable,
-     *                          when the user has not authorized, or when the client
-     *                          application is not permitted to use xAuth
+     *                                    when the user has not authorized, or when the client
+     *                                    application is not permitted to use xAuth
      * @see <a href="https://dev.twitter.com/docs/oauth/xauth">xAuth | Twitter
      * Developers</a>
      */
@@ -386,9 +386,9 @@ abstract class TwitterBaseImpl implements OAuthSupport, HttpResponseListener, Tw
      *
      * @param image image to be uploaded
      * @throws twitter4j.TwitterException when the specified file is not found
-     *                          (FileNotFoundException will be nested) , or when the
-     *                          specified file object is not representing a file(IOException
-     *                          will be nested).
+     *                                    (FileNotFoundException will be nested) , or when the
+     *                                    specified file object is not representing a file(IOException
+     *                                    will be nested).
      */
     protected void checkFileValidity(final File image) throws TwitterException {
         if (!image.exists()) // noinspection ThrowableInstanceNeverThrown
@@ -419,13 +419,13 @@ abstract class TwitterBaseImpl implements OAuthSupport, HttpResponseListener, Tw
         return user;
     }
 
-    protected HttpResponse get(final String url, final String sign_url, final HttpParameter... parameters)
+    protected HttpResponse get(final String url, final String signUrl, final HttpParameter... parameters)
             throws TwitterException {
         // intercept HTTP call for monitoring purposes
         HttpResponse response = null;
         final long start = System.currentTimeMillis();
         try {
-            response = http.get(url, sign_url, parameters, auth);
+            response = http.get(url, signUrl, parameters, auth);
         } finally {
             final long elapsedTime = System.currentTimeMillis() - start;
             TwitterAPIMonitor.getInstance().methodCalled(url, elapsedTime, isOk(response));

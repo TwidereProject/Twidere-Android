@@ -193,7 +193,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public Place createPlace(final String name, final String containedWithin, final String token,
                              final GeoLocation location, final String streetAddress) throws TwitterException {
         ensureAuthorizationEnabled();
-        final List<HttpParameter> params = new ArrayList<HttpParameter>(6);
+        final List<HttpParameter> params = new ArrayList<>(6);
         addParameterToList(params, "name", name);
         addParameterToList(params, "contained_within", containedWithin);
         addParameterToList(params, "token", token);
@@ -215,7 +215,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public UserList createUserList(final String listName, final boolean isPublicList, final String description)
             throws TwitterException {
         ensureAuthorizationEnabled();
-        final List<HttpParameter> params = new ArrayList<HttpParameter>();
+        final List<HttpParameter> params = new ArrayList<>();
         addParameterToList(params, "name", listName);
         addParameterToList(params, "mode", isPublicList ? "public" : "private");
         addParameterToList(params, "description", description);
@@ -929,7 +929,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     @Override
     public SimilarPlaces getSimilarPlaces(final GeoLocation location, final String name, final String containedWithin,
                                           final String streetAddress) throws TwitterException {
-        final List<HttpParameter> params = new ArrayList<HttpParameter>(3);
+        final List<HttpParameter> params = new ArrayList<>(3);
         params.add(new HttpParameter("lat", location.getLatitude()));
         params.add(new HttpParameter("long", location.getLongitude()));
         params.add(new HttpParameter("name", name));
@@ -1398,11 +1398,13 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         ensureAuthorizationEnabled();
         final String url = conf.getRestBaseURL() + ENDPOINT_CONVERSATION_SHOW;
         final String sign_url = conf.getSigningRestBaseURL() + ENDPOINT_CONVERSATION_SHOW;
-        final List<HttpParameter> paramsList = new ArrayList<HttpParameter>();
+        final List<HttpParameter> paramsList = new ArrayList<>();
         paramsList.add(INCLUDE_ENTITIES);
         paramsList.add(INCLUDE_REPLY_COUNT);
         paramsList.add(INCLUDE_DESCENDENT_REPLY_COUNT);
         paramsList.add(INCLUDE_MY_RETWEET);
+        paramsList.add(INCLUDE_CARDS);
+        paramsList.add(CARDS_PLATFORM);
         paramsList.add(new HttpParameter("id", statusId));
         if (paging != null) {
             paramsList.addAll(paging.asPostParameterList());
@@ -1428,16 +1430,17 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     @Override
     public Relationship showFriendship(final String sourceScreenName, final String targetScreenName)
             throws TwitterException {
-        return factory.createRelationship(get(conf.getRestBaseURL() + ENDPOINT_FRIENDSHIPS_SHOW,
-                conf.getSigningRestBaseURL() + ENDPOINT_FRIENDSHIPS_SHOW,
-                getParameterArray("source_screen_name", sourceScreenName, "target_screen_name", targetScreenName)));
+        final String url = conf.getRestBaseURL() + ENDPOINT_FRIENDSHIPS_SHOW;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_FRIENDSHIPS_SHOW;
+        return factory.createRelationship(get(url, signUrl, getParameterArray("source_screen_name", sourceScreenName, "target_screen_name", targetScreenName)));
     }
 
     @Override
     public SavedSearch showSavedSearch(final int id) throws TwitterException {
         ensureAuthorizationEnabled();
-        return factory.createSavedSearch(get(conf.getRestBaseURL() + "saved_searches/show/" + id + ".json",
-                conf.getSigningRestBaseURL() + "saved_searches/show/" + id + ".json"));
+        final String url = conf.getRestBaseURL() + "saved_searches/show/" + id + ".json";
+        final String signUrl = conf.getSigningRestBaseURL() + "saved_searches/show/" + id + ".json";
+        return factory.createSavedSearch(get(url, signUrl));
     }
 
     @Override
@@ -1446,7 +1449,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_STATUSES_SHOW;
         final HttpParameter paramStatus = new HttpParameter("id", statusId);
         return factory.createStatus(get(url, signUrl, paramStatus, INCLUDE_ENTITIES,
-                INCLUDE_MY_RETWEET, INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT));
+                INCLUDE_MY_RETWEET, INCLUDE_REPLY_COUNT, INCLUDE_DESCENDENT_REPLY_COUNT, INCLUDE_CARDS,
+                CARDS_PLATFORM));
     }
 
     @Override
@@ -1460,26 +1464,30 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
 
     @Override
     public User showUser(final long userId) throws TwitterException {
-        return factory.createUser(get(conf.getRestBaseURL() + ENDPOINT_USERS_SHOW, conf.getSigningRestBaseURL()
-                + ENDPOINT_USERS_SHOW, new HttpParameter("user_id", userId), INCLUDE_ENTITIES));
+        final String url = conf.getRestBaseURL() + ENDPOINT_USERS_SHOW;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_USERS_SHOW;
+        return factory.createUser(get(url, signUrl, new HttpParameter("user_id", userId), INCLUDE_ENTITIES));
     }
 
     @Override
     public User showUser(final String screenName) throws TwitterException {
-        return factory.createUser(get(conf.getRestBaseURL() + ENDPOINT_USERS_SHOW, conf.getSigningRestBaseURL()
-                + ENDPOINT_USERS_SHOW, new HttpParameter("screen_name", screenName), INCLUDE_ENTITIES));
+        final String url = conf.getRestBaseURL() + ENDPOINT_USERS_SHOW;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_USERS_SHOW;
+        return factory.createUser(get(url, signUrl, new HttpParameter("screen_name", screenName), INCLUDE_ENTITIES));
     }
 
     @Override
     public UserList showUserList(final long listId) throws TwitterException {
-        return factory.createAUserList(get(conf.getRestBaseURL() + ENDPOINT_LISTS_SHOW, conf.getSigningRestBaseURL()
-                + ENDPOINT_LISTS_SHOW, new HttpParameter("list_id", listId)));
+        final String url = conf.getRestBaseURL() + ENDPOINT_LISTS_SHOW;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_LISTS_SHOW;
+        return factory.createAUserList(get(url, signUrl, new HttpParameter("list_id", listId)));
     }
 
     @Override
     public UserList showUserList(final String slug, final long ownerId) throws TwitterException {
-        return factory.createAUserList(get(conf.getRestBaseURL() + ENDPOINT_LISTS_SHOW, conf.getSigningRestBaseURL()
-                + ENDPOINT_LISTS_SHOW, new HttpParameter("slug", slug), new HttpParameter("owner_id", ownerId)));
+        final String url = conf.getRestBaseURL() + ENDPOINT_LISTS_SHOW;
+        final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_LISTS_SHOW;
+        return factory.createAUserList(get(url, signUrl, new HttpParameter("slug", slug), new HttpParameter("owner_id", ownerId)));
     }
 
     @Override
@@ -1545,7 +1553,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public User updateProfile(final String name, final String url, final String location, final String description)
             throws TwitterException {
         ensureAuthorizationEnabled();
-        final ArrayList<HttpParameter> params = new ArrayList<HttpParameter>();
+        final ArrayList<HttpParameter> params = new ArrayList<>();
         addParameterToList(params, "name", name);
         addParameterToList(params, "url", url);
         addParameterToList(params, "location", location);
@@ -1586,7 +1594,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
                                          final int offsetTop) throws TwitterException {
         ensureAuthorizationEnabled();
         checkFileValidity(banner);
-        final List<HttpParameter> params = new ArrayList<HttpParameter>(5);
+        final List<HttpParameter> params = new ArrayList<>(5);
         addParameterToList(params, "width", width);
         addParameterToList(params, "height", height);
         addParameterToList(params, "offset_left", offsetLeft);
@@ -1608,7 +1616,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public void updateProfileBannerImage(final InputStream banner, final int width, final int height,
                                          final int offsetLeft, final int offsetTop) throws TwitterException {
         ensureAuthorizationEnabled();
-        final List<HttpParameter> params = new ArrayList<HttpParameter>(5);
+        final List<HttpParameter> params = new ArrayList<>(5);
         addParameterToList(params, "width", width);
         addParameterToList(params, "height", height);
         addParameterToList(params, "offset_left", offsetLeft);
@@ -1623,7 +1631,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
                                     final String profileLinkColor, final String profileSidebarFillColor, final String profileSidebarBorderColor)
             throws TwitterException {
         ensureAuthorizationEnabled();
-        final List<HttpParameter> params = new ArrayList<HttpParameter>(6);
+        final List<HttpParameter> params = new ArrayList<>(6);
         addParameterToList(params, "profile_background_color", profileBackgroundColor);
         addParameterToList(params, "profile_text_color", profileTextColor);
         addParameterToList(params, "profile_link_color", profileLinkColor);
@@ -1671,7 +1679,7 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
     public UserList updateUserList(final long listId, final String newListName, final boolean isPublicList,
                                    final String newDescription) throws TwitterException {
         ensureAuthorizationEnabled();
-        final List<HttpParameter> httpParams = new ArrayList<HttpParameter>();
+        final List<HttpParameter> httpParams = new ArrayList<>();
         httpParams.add(new HttpParameter("list_id", listId));
         if (newListName != null) {
             httpParams.add(new HttpParameter("name", newListName));
