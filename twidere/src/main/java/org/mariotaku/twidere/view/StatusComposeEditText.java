@@ -64,7 +64,7 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (!isInEditMode() && mAdapter == null || mAdapter.isCursorClosed()) {
+        if (!isInEditMode() && (mAdapter == null || mAdapter.isCursorClosed())) {
             mAdapter = new UserHashtagAutoCompleteAdapter(this);
         }
         setAdapter(mAdapter);
