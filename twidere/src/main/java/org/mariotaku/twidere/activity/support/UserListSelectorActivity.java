@@ -166,7 +166,9 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
                 getUserLists(mScreenName);
             }
         }
-        mEditScreenName.setAdapter(new UserHashtagAutoCompleteAdapter(this));
+        final UserHashtagAutoCompleteAdapter adapter = new UserHashtagAutoCompleteAdapter(this);
+        adapter.setAccountId(getAccountId());
+        mEditScreenName.setAdapter(adapter);
         mEditScreenName.setText(mScreenName);
         mUserListsListView.setAdapter(mUserListsAdapter = new SimpleParcelableUserListsAdapter(this));
         mUsersListView.setAdapter(mUsersAdapter = new SimpleParcelableUsersAdapter(this));

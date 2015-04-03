@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff.Mode;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -72,6 +73,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
     private int mProfileImageUrlIdx, mNameIdx, mScreenNameIdx, mUserIdIdx;
     private char mToken = '@';
+    private long mAccountId;
 
     public UserHashtagAutoCompleteAdapter(final Context context) {
         this(context, null);
@@ -172,16 +174,26 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
                 selection = null;
                 selectionArgs = null;
             }
-            final OrderBy orderBy = new OrderBy(CachedUsers.SCREEN_NAME, CachedUsers.NAME);
-            return mResolver.query(CachedUsers.CONTENT_URI, CachedUsers.BASIC_COLUMNS,
-                    selection != null ? selection.getSQL() : null, selectionArgs, orderBy.getSQL());
+            final OrderBy orderBy = new OrderBy(new String[]{CachedUsers.LAST_SEEN, "score", CachedUsers.SCREEN_NAME,
+                    CachedUsers.NAME}, new boolean[]{false, false, true, true});
+            final Cursor cursor = mResolver.query(Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId)),
+                    CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null, selectionArgs, orderBy.getSQL());
+            if (Utils.isDebugBuild() && cursor == null) throw new NullPointerException();
+            return cursor;
         } else {
             final String selection = constraintEscaped != null ? CachedHashtags.NAME + " LIKE ?||'%' ESCAPE '^'"
                     : null;
             final String[] selectionArgs = constraintEscaped != null ? new String[]{constraintEscaped} : null;
-            return mDatabase.query(true, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, selection, selectionArgs,
+            final Cursor cursor = mDatabase.query(true, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, selection, selectionArgs,
                     null, null, CachedHashtags.NAME, null);
+            if (Utils.isDebugBuild() && cursor == null) throw new NullPointerException();
+            return cursor;
         }
+    }
+
+
+    public void setAccountId(long accountId) {
+        mAccountId = accountId;
     }
 
     @Override

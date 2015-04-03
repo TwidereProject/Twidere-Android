@@ -1,34 +1,33 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ * Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util;
+package android.support.v7.internal.view;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.support.v7.view.ActionMode;
 
-public final class ClipboardUtils {
+/**
+ * Created by mariotaku on 15/4/4.
+ */
+public class SupportActionModeWrapperTrojan {
 
-    public static boolean setText(final Context context, final CharSequence text) {
-        if (context == null) return false;
-        final ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboardManager.setPrimaryClip(ClipData.newPlainText(text, text));
-        return true;
+    public static ActionMode getWrappedObject(SupportActionModeWrapper wrapper) {
+        return wrapper.mWrappedObject;
     }
+
 }

@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -37,62 +38,65 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 public class AddUserListMemberDialogFragment extends BaseSupportDialogFragment implements
-		DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener {
 
-	public static final String FRAGMENT_TAG = "add_user_list_member";
-	private AutoCompleteTextView mEditText;
-	private UserHashtagAutoCompleteAdapter mUserAutoCompleteAdapter;
+    public static final String FRAGMENT_TAG = "add_user_list_member";
+    private AutoCompleteTextView mEditText;
+    private UserHashtagAutoCompleteAdapter mUserAutoCompleteAdapter;
 
-	@Override
-	public void onClick(final DialogInterface dialog, final int which) {
-		final Bundle args = getArguments();
-		if (args == null || !args.containsKey(EXTRA_ACCOUNT_ID) || !args.containsKey(EXTRA_LIST_ID)) return;
-		switch (which) {
-			case DialogInterface.BUTTON_POSITIVE: {
-				final String mText = ParseUtils.parseString(mEditText.getText());
-				final AsyncTwitterWrapper twitter = getTwitterWrapper();
-				if (mText == null || mText.length() <= 0 || twitter == null) return;
-				// twitter.addUserListMembersAsync(args.getLong(EXTRA_ACCOUNT_ID),
-				// args.getInt(EXTRA_LIST_ID), mText);
-				break;
-			}
-		}
-	}
+    @Override
+    public void onClick(final DialogInterface dialog, final int which) {
+        final Bundle args = getArguments();
+        if (args == null || !args.containsKey(EXTRA_ACCOUNT_ID) || !args.containsKey(EXTRA_LIST_ID) || !args.containsKey(EXTRA_USERS))
+            return;
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE: {
+                final String mText = ParseUtils.parseString(mEditText.getText());
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (mText == null || mText.length() <= 0 || twitter == null) return;
+                twitter.addUserListMembersAsync(args.getLong(EXTRA_ACCOUNT_ID), args.getLong(EXTRA_LIST_ID));
+                break;
+            }
+        }
+    }
 
-	@Override
-	public Dialog onCreateDialog(final Bundle savedInstanceState) {
-		final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-		final View view = LayoutInflater.from(wrapped).inflate(R.layout.auto_complete_textview, null);
-		builder.setView(view);
-		mEditText = (AutoCompleteTextView) view.findViewById(R.id.edit_text);
-		if (savedInstanceState != null) {
-			mEditText.setText(savedInstanceState.getCharSequence(EXTRA_TEXT));
-		}
-		mUserAutoCompleteAdapter = new UserHashtagAutoCompleteAdapter(wrapped);
-		mEditText.setAdapter(mUserAutoCompleteAdapter);
-		mEditText.setThreshold(1);
-		mEditText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
-		builder.setTitle(R.string.screen_name);
-		builder.setPositiveButton(android.R.string.ok, this);
-		builder.setNegativeButton(android.R.string.cancel, this);
-		return builder.create();
-	}
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        final View view = LayoutInflater.from(wrapped).inflate(R.layout.auto_complete_textview, null);
+        builder.setView(view);
+        mEditText = (AutoCompleteTextView) view.findViewById(R.id.edit_text);
+        if (savedInstanceState != null) {
+            mEditText.setText(savedInstanceState.getCharSequence(EXTRA_TEXT));
+        }
+        mUserAutoCompleteAdapter = new UserHashtagAutoCompleteAdapter(wrapped);
+        final Bundle args = getArguments();
+        mUserAutoCompleteAdapter.setAccountId(args.getLong(EXTRA_ACCOUNT_ID));
+        mEditText.setAdapter(mUserAutoCompleteAdapter);
+        mEditText.setThreshold(1);
+        mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        builder.setTitle(R.string.screen_name);
+        builder.setPositiveButton(android.R.string.ok, this);
+        builder.setNegativeButton(android.R.string.cancel, this);
+        return builder.create();
+    }
 
-	@Override
-	public void onSaveInstanceState(final Bundle outState) {
-		outState.putCharSequence(EXTRA_TEXT, mEditText.getText());
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        outState.putCharSequence(EXTRA_TEXT, mEditText.getText());
+        super.onSaveInstanceState(outState);
+    }
 
-	public static AddUserListMemberDialogFragment show(final FragmentManager fm, final long accountId, final long listId) {
-		final Bundle args = new Bundle();
-		args.putLong(EXTRA_ACCOUNT_ID, accountId);
-		args.putLong(EXTRA_LIST_ID, listId);
-		final AddUserListMemberDialogFragment f = new AddUserListMemberDialogFragment();
-		f.setArguments(args);
-		f.show(fm, FRAGMENT_TAG);
-		return f;
-	}
+    public static AddUserListMemberDialogFragment show(final FragmentManager fm, final long accountId, final long listId) {
+        final Bundle args = new Bundle();
+        args.putLong(EXTRA_ACCOUNT_ID, accountId);
+        args.putLong(EXTRA_LIST_ID, listId);
+        final AddUserListMemberDialogFragment f = new AddUserListMemberDialogFragment();
+        f.setArguments(args);
+        f.show(fm, FRAGMENT_TAG);
+        return f;
+    }
 
 }

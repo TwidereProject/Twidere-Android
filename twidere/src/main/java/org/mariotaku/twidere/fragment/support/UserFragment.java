@@ -738,7 +738,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         getUserInfo(accountId, userId, screenName, false);
 
-        final float actionBarElevation = ThemeUtils.getActionBarElevation(activity);
+        final float actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity);
         ViewCompat.setElevation(mPagerIndicator, actionBarElevation);
 
         setupBaseActionBar();

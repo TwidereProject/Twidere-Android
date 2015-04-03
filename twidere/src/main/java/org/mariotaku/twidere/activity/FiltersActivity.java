@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -65,6 +66,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 
@@ -250,7 +252,8 @@ public class FiltersActivity extends BaseActionBarActivity implements TabListene
         @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
+            final FragmentActivity activity = getActivity();
+            final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
             buildDialog(builder);
             final View view = LayoutInflater.from(wrapped).inflate(R.layout.auto_complete_textview, null);
@@ -260,9 +263,11 @@ public class FiltersActivity extends BaseActionBarActivity implements TabListene
             final int auto_complete_type = args != null ? args.getInt(EXTRA_AUTO_COMPLETE_TYPE, 0) : 0;
             if (auto_complete_type != 0) {
                 if (auto_complete_type == AUTO_COMPLETE_TYPE_SOURCES) {
-                    mUserAutoCompleteAdapter = new SourceAutoCompleteAdapter(getActivity());
+                    mUserAutoCompleteAdapter = new SourceAutoCompleteAdapter(activity);
                 } else {
-                    mUserAutoCompleteAdapter = new UserHashtagAutoCompleteAdapter(getActivity());
+                    final UserHashtagAutoCompleteAdapter adapter = new UserHashtagAutoCompleteAdapter(activity);
+                    adapter.setAccountId(Utils.getDefaultAccountId(activity));
+                    mUserAutoCompleteAdapter = adapter;
                 }
                 mEditText.setAdapter(mUserAutoCompleteAdapter);
                 mEditText.setThreshold(1);

@@ -142,7 +142,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
 import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
-import org.mariotaku.twidere.fragment.support.DirectMessagesConversationFragment;
+import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
 import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.support.SavedSearchesListFragment;
@@ -884,7 +884,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_DIRECT_MESSAGES_CONVERSATION: {
-                fragment = new DirectMessagesConversationFragment();
+                fragment = new MessagesConversationFragment();
                 final String paramRecipientId = uri.getQueryParameter(QUERY_PARAM_RECIPIENT_ID);
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final long conversationId = ParseUtils.parseLong(paramRecipientId);

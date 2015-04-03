@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -224,6 +225,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
         }
     }
 
+    @SuppressLint("AppCompatMethod")
     private void setActionBarBackground(ActionBar actionBar, int linkId, Uri data) {
         switch (linkId) {
             case LINK_ID_USER: {
@@ -233,10 +235,14 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
             case LINK_ID_USER_LISTS: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
                         getCurrentThemeColor(), false);
+                ThemeUtils.applyActionBarBackground(getActionBar(), this, getCurrentThemeResourceId(),
+                        getCurrentThemeColor(), true);
                 break;
             }
             default: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
+                        getCurrentThemeColor(), true);
+                ThemeUtils.applyActionBarBackground(getActionBar(), this, getCurrentThemeResourceId(),
                         getCurrentThemeColor(), true);
                 break;
             }

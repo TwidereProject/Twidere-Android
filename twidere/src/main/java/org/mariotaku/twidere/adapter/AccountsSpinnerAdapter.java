@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.support.DirectMessagesConversationFragment;
+import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
@@ -48,8 +48,8 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
         super(context, itemViewResource);
         mContext = context;
         mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
-        mDisplayProfileImage = context.getSharedPreferences(DirectMessagesConversationFragment.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE).getBoolean(DirectMessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);
+        mDisplayProfileImage = context.getSharedPreferences(MessagesConversationFragment.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE).getBoolean(MessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);
     }
 
     public AccountsSpinnerAdapter(final Context context, final Collection<ParcelableAccount> accounts) {

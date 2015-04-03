@@ -34,6 +34,7 @@ import org.mariotaku.twidere.view.themed.ThemedMultiAutoCompleteTextView;
 public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView implements IThemedView {
 
     private UserHashtagAutoCompleteAdapter mAdapter;
+    private long mAccountId;
 
     public StatusComposeEditText(final Context context) {
         this(context, null);
@@ -64,10 +65,11 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (!isInEditMode() && (mAdapter == null || mAdapter.isCursorClosed())) {
+        if (!isInEditMode() && mAdapter == null) {
             mAdapter = new UserHashtagAutoCompleteAdapter(this);
         }
         setAdapter(mAdapter);
+        updateAccountId();
     }
 
     @Override
@@ -77,7 +79,16 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
             mAdapter.closeCursor();
             mAdapter = null;
         }
-//        setAdapter(null);
+    }
+
+    public void setAccountId(long accountId) {
+        mAccountId = accountId;
+        updateAccountId();
+    }
+
+    private void updateAccountId() {
+        if (mAdapter == null) return;
+        mAdapter.setAccountId(mAccountId);
     }
 
     @Override

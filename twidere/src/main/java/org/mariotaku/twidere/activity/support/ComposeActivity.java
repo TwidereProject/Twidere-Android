@@ -78,7 +78,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -119,6 +118,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.ShapedImageView;
+import org.mariotaku.twidere.view.StatusComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 
 import java.io.File;
@@ -173,7 +173,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     private AsyncTask<Void, Void, ?> mTask;
     private GridView mMediaPreviewGrid;
     private ActionMenuView mMenuBar;
-    private EditText mEditText;
+    private StatusComposeEditText mEditText;
     private View mSendView;
     private StatusTextCountView mSendTextCountView;
     private RecyclerView mAccountSelector;
@@ -577,7 +577,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mEditText = (EditText) findViewById(R.id.edit_text);
+        mEditText = (StatusComposeEditText) findViewById(R.id.edit_text);
         mMediaPreviewGrid = (GridView) findViewById(R.id.media_thumbnail_preview);
         mMenuBar = (ActionMenuView) findViewById(R.id.menu_bar);
         mSendView = findViewById(R.id.send);
@@ -1316,7 +1316,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     }
 
     private void notifyAccountSelectionChanged() {
-        setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
+        final ParcelableAccount[] accounts = mAccountsAdapter.getSelectedAccounts();
+        setSelectedAccounts(accounts);
+        mEditText.setAccountId(accounts.length > 0 ? accounts[0].account_id : Utils.getDefaultAccountId(this));
 //        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
     }
 

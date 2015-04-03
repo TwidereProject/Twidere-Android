@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -33,10 +33,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.internal.app.WindowDecorActionBar;
+import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
+import android.support.v7.internal.view.SupportActionModeWrapper;
+import android.support.v7.internal.view.SupportActionModeWrapperTrojan;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableStringBuilder;
@@ -44,6 +47,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.ActionMode;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -67,6 +71,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.iface.IThemedView;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class ThemeUtils implements Constants {
@@ -124,6 +129,35 @@ public class ThemeUtils implements Constants {
             mutated.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
             view.invalidate();
         } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void applySupportActionModeBackground(ActionMode mode, FragmentActivity activity,
+                                                        int themeRes, int accentColor, boolean outlineEnabled) {
+        // Very dirty implementation
+        if (!(mode instanceof SupportActionModeWrapper) || !(activity instanceof IThemedActivity))
+            return;
+        final android.support.v7.view.ActionMode modeCompat =
+                SupportActionModeWrapperTrojan.getWrappedObject((SupportActionModeWrapper) mode);
+        if (!(modeCompat instanceof ActionModeImpl)) return;
+        try {
+            WindowDecorActionBar actionBar = null;
+            final Field[] fields = ActionModeImpl.class.getDeclaredFields();
+            for (Field field : fields) {
+                if (WindowDecorActionBar.class.isAssignableFrom(field.getType())) {
+                    field.setAccessible(true);
+                    actionBar = (WindowDecorActionBar) field.get(modeCompat);
+                    break;
+                }
+            }
+            if (actionBar == null) return;
+            final Field contextViewField = WindowDecorActionBar.class.getDeclaredField("mContextView");
+            contextViewField.setAccessible(true);
+            final View view = (View) contextViewField.get(actionBar);
+            if (view == null) return;
+            ViewAccessor.setBackground(view, getActionBarBackground(activity, themeRes, accentColor, outlineEnabled));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -376,9 +410,11 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    @TargetApi(VERSION_CODES.LOLLIPOP)
     public static float getActionBarElevation(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.elevation}, android.R.attr.actionBarStyle, 0);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return 0;
+        @SuppressLint("InlinedApi")
+        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.elevation},
+                android.R.attr.actionBarStyle, 0);
         try {
             return a.getDimension(0, 0);
         } finally {

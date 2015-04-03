@@ -44,18 +44,18 @@ public class TwidereQueryBuilder {
 
     public static final class CachedUsersQueryBuilder {
 
-        public static SQLSelectQuery buildWithRelationship(final String[] projection,
-                                                           final String selection,
-                                                           final String sortOrder,
-                                                           final long accountId) {
-            return buildWithRelationship(Utils.getColumnsFromProjection(projection), selection,
+        public static SQLSelectQuery withRelationship(final String[] projection,
+                                                      final String selection,
+                                                      final String sortOrder,
+                                                      final long accountId) {
+            return withRelationship(Utils.getColumnsFromProjection(projection), selection,
                     sortOrder, accountId);
         }
 
-        public static SQLSelectQuery buildWithRelationship(final Selectable select,
-                                                           final String selection,
-                                                           final String sortOrder,
-                                                           final long accountId) {
+        public static SQLSelectQuery withRelationship(final Selectable select,
+                                                      final String selection,
+                                                      final String sortOrder,
+                                                      final long accountId) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             qb.select(select).from(new Tables(CachedUsers.TABLE_NAME));
             final Column relationshipsUserId = new Column(new Table(CachedRelationships.TABLE_NAME),
@@ -78,10 +78,10 @@ public class TwidereQueryBuilder {
             return qb.build();
         }
 
-        public static SQLSelectQuery buildWithScore(final String[] projection,
-                                                    final String selection,
-                                                    final String sortOrder,
-                                                    final long accountId) {
+        public static SQLSelectQuery withScore(final String[] projection,
+                                               final String selection,
+                                               final String sortOrder,
+                                               final long accountId) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             final Selectable select = Utils.getColumnsFromProjection(projection);
             final Column[] columns = new Column[CachedUsers.COLUMNS.length + 1];
@@ -99,7 +99,7 @@ public class TwidereQueryBuilder {
                             CachedRelationships.MUTING));
             columns[columns.length - 1] = new Column(expr, "score");
             qb.select(select);
-            qb.from(buildWithRelationship(new Columns(columns), null, null, accountId));
+            qb.from(withRelationship(new Columns(columns), null, null, accountId));
             if (selection != null) {
                 qb.where(new Expression(selection));
             }

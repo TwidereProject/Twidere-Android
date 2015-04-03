@@ -458,7 +458,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
                 case VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP: {
                     final long accountId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
-                    final SQLSelectQuery query = CachedUsersQueryBuilder.buildWithRelationship(projection,
+                    final SQLSelectQuery query = CachedUsersQueryBuilder.withRelationship(projection,
                             selection, sortOrder, accountId);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
@@ -466,7 +466,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
                 case VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE: {
                     final long accountId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
-                    final SQLSelectQuery query = CachedUsersQueryBuilder.buildWithScore(projection,
+                    final SQLSelectQuery query = CachedUsersQueryBuilder.withScore(projection,
                             selection, sortOrder, accountId);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
