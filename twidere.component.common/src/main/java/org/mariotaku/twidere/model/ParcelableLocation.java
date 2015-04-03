@@ -75,7 +75,7 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
 
     public ParcelableLocation(@NonNull final JSONParcel in) {
         latitude = in.readDouble("latitude", Double.NaN);
-        longitude = in.readDouble("longutude", Double.NaN);
+        longitude = in.readDouble("longitude", Double.NaN);
     }
 
     public ParcelableLocation(@Nullable final Location location) {
