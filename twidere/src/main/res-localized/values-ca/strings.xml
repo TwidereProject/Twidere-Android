@@ -573,7 +573,6 @@
   <string name="tab_display_option_label">Nom</string>
   <string name="tab_display_option_icon_and_label">Icona i etiqueta</string>
   <string name="highlight_and_underline">Destacat i subratllat</string>
-  <string name="twip_api_version_notice_message">TWIP no pot manegar correctament URLs Rest Base que no acabin en \"/1.1/\".\n\n Potser necessiteu afegir \"/1.1/\" al final de la URL Rest Base per evitar problemes quan pengeu una imatge.</string>
   <string name="back">Torna</string>
   <string name="theme_font_family">Família tipogràfica del tema</string>
   <string name="translation_destination">Destí de la traducció</string>

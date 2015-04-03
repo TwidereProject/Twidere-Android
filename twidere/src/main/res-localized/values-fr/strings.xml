@@ -587,7 +587,6 @@
   <string name="tab_display_option_label">Label</string>
   <string name="tab_display_option_icon_and_label">Icône et étiquette</string>
   <string name="highlight_and_underline">Mettre en évidence et souligner</string>
-  <string name="twip_api_version_notice_message">TWIP ne gère pas les URL REST qui ne terminant pas par \"/1.1/\".\n\n Vous devriez ajouter \"/1.1/\" à la fin de l\'URL REST pour éviter des problèmes liés à l\'envoi d\'images.</string>
   <string name="back">Retour</string>
   <string name="theme_font_family">Famille de polices du thème</string>
   <string name="translation_destination">Langue de traduction</string>
@@ -716,4 +715,12 @@
   <string name="usage_statistics_header_summary">Twidere prend part à quelques projets de recherche, rejoindre ces projets vont rendre Twidere et d\'autres applications encore meilleures.</string>
   <string name="no_tab">Aucun onglet</string>
   <string name="user_protected_summary">Vous devez envoyer une demande de suivi pour voir les tweets de cet utilisateur</string>
+  <string name="no_account">Pas de compte</string>
+  <string name="usage_statistics_notification_summary">Aidez-nous à améliorer Twidere!</string>
+  <string name="activated_accounts">Comptes activés</string>
+  <string name="search">Rechercher</string>
+  <string name="crop">Rogner</string>
+  <string name="scale">Mise à l\'echelle</string>
+  <string name="user_type_verified">Vérifié</string>
+  <string name="user_type_protected">Protégé</string>
 </resources>

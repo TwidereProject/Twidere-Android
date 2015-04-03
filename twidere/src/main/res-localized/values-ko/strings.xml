@@ -571,7 +571,6 @@
   <string name="tab_display_option_label">라벨</string>
   <string name="tab_display_option_icon_and_label">아이콘과 라벨</string>
   <string name="highlight_and_underline">강조색과 밑줄</string>
-  <string name="twip_api_version_notice_message">TWIP는 \"/1.1/\"로 끝나지 않는 REST 기반 URL을 완전하게 다룰 수 없습니다.\n\n이미지 업로드 문제를 해결하기 위해서는 \"/1.1/\"을 REST 기반 URL 마지막에 추가하여 주십시오.</string>
   <string name="back">돌아가기</string>
   <string name="theme_font_family">폰트 테마</string>
   <string name="translation_destination">번역 대상</string>

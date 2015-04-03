@@ -85,6 +85,11 @@
   <string name="look_and_feel">テーマ</string>
   <string name="display_profile_image">プロフィール画像を表示</string>
   <string name="image_load_summary">無効にするとリストのスクロール速度が速くなり、データ通信量を抑えられます。</string>
+  <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> さんと他のユーザーがリツイート</string>
+  <string name="N_retweeted_quantity_one"><xliff:g id="retweet_count">%d</xliff:g> 回のリツイート</string>
+  <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>によってリツイートされました</string>
+  <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> さんと <xliff:g id="retweet_count">%2$d</xliff:g>人によってリツイートしました</string>
+  <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> 人によってリツイートされました</string>
   <string name="users_retweeted_this">リツイートしたユーザーを表示</string>
   <string name="users_favorited_this">お気に入りに登録したユーザーを表示</string>
   <string name="reply_to"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
@@ -113,6 +118,7 @@
   <string name="quote">引用</string>
   <string name="add_rule">ルールを追加</string>
   <string name="text_size">フォントサイズ</string>
+  <string name="text_size_summary">ツイートのテキストサイズ</string>
   <string name="cannot_get_location">位置情報が取得できません。</string>
   <string name="drafts">下書き</string>
   <string name="description">自己紹介</string>
@@ -144,6 +150,7 @@
   <string name="save_as">名前を付けて保存</string>
   <string name="please_wait">しばらくお待ちください…</string>
   <string name="file_saved_to"><xliff:g id="filename">%s</xliff:g> にファイルが保存されました。</string>
+  <string name="saved_to_gallery">ギャラリーに保存</string>
   <string name="proxy">プロキシ</string>
   <string name="http_proxy">HTTP プロキシ</string>
   <string name="http_proxy_summary">ネットワークリクエストにHTTP プロキシを使用します。</string>
@@ -179,6 +186,7 @@
   <string name="list_members">リスト内アカウント</string>
   <string name="list_subscribers">リスト保存ユーザー数</string>
   <string name="type_to_compose">メッセージを入力</string>
+  <string name="lists">リスト</string>
   <string name="users_lists">保存したリスト</string>
   <string name="lists_following_user">追加されたリスト</string>
   <string name="item_3_minutes">3分</string>
@@ -370,6 +378,7 @@
   <string name="quote_protected_status_notice">非公開ツイートを引用するのはおすすめできません。</string>
   <string name="edit_draft">下書きを編集</string>
   <string name="profile_image">プロフィール画像</string>
+  <string name="your_profile_image">あなたのプロフィール画像</string>
   <string name="mention_user"><xliff:g id="user">%s</xliff:g>宛にツイート</string>
   <string name="theme_color">テーマ色</string>
   <string name="wrong_url_format">不正なURL形式です。</string>
@@ -555,7 +564,6 @@
   <string name="tab_display_option_label">ラベル</string>
   <string name="tab_display_option_icon_and_label">アイコンとラベル</string>
   <string name="highlight_and_underline">ハイライトと下線</string>
-  <string name="twip_api_version_notice_message">TWIPは\"/1.1/\"で終わっていないRest Base URLを正しく扱えません。\n\n 画像のアップロードの問題を解決するためには\"/1.1/\"をRest Base URLの最後に追記してください。</string>
   <string name="back">戻る</string>
   <string name="theme_font_family">使用するフォント</string>
   <string name="translation_destination">翻訳先の言語</string>
@@ -627,4 +635,25 @@
   <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんをミュートしますか? フォローしたままにしますが、このユーザーのツイートを表示しないようにします。</string>
   <string name="remove_from_filter">フィルタから削除</string>
   <string name="sort_timeline_by_id">IDでタイムラインを並び替え</string>
+  <string name="profile">プロフィール</string>
+  <string name="state_blocking">ブロックしています</string>
+  <string name="load_more">さらに読み込む</string>
+  <string name="photo">写真</string>
+  <string name="gallery">ギャラリー</string>
+  <string name="remove">削除</string>
+  <string name="profile_text_color">テキストの色</string>
+  <string name="profile_background_color">背景色</string>
+  <string name="retweet_quote_confirm_title">フォロワーにリツイートしますか？</string>
+  <string name="font">フォント</string>
+  <string name="size">サイズ</string>
+  <string name="just_now">たった今</string>
+  <string name="no_user_found">ユーザーが見つかりません。</string>
+  <string name="media_preview">メディアのプレビュー</string>
+  <string name="edit_tabs">タブの編集</string>
+  <string name="getting_location">位置を取得しています。</string>
+  <string name="import_export_settings">設定の保存/読み込み</string>
+  <string name="no_tab">タブがありません</string>
+  <string name="user_protected_summary">このツイートは非公開です。見るためにはフォローリクエストを送信し、承認される必要があります</string>
+  <string name="activated_accounts">アクティブアカウント</string>
+  <string name="search">検索</string>
 </resources>

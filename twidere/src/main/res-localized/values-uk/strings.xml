@@ -536,7 +536,6 @@
   <string name="tab_display_option_label">Мітка</string>
   <string name="tab_display_option_icon_and_label">Піктограма і мітка</string>
   <string name="highlight_and_underline">Виділення і підкреслення</string>
-  <string name="twip_api_version_notice_message">TWIP не може впоратися з Rest Base URL, яке не закінчується вірно на \"/1.1/\".\n\n Може вам потрібно додати \"/1.1/\" у кінці Rest Base URL для уникнення проблем при завантаженні зображення.</string>
   <string name="back">Назад</string>
   <string name="theme_font_family">Сім\'я шрифтів теми</string>
   <string name="translation_destination">Призначення перекладу</string>

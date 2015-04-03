@@ -11,6 +11,7 @@
   <string name="remove_location">Eliminar ubicación</string>
   <string name="remove_image">Quitar imagen</string>
   <string name="remove_photo">Eliminar foto</string>
+  <string name="status_hint">Que paso?</string>
   <string name="sign_up">Únete</string>
   <string name="sign_in">Inicia sesión</string>
   <string name="rest_base_url">REST Base URL</string>
@@ -98,6 +99,8 @@
   <string name="users_favorited_this">Favoritos de los usuarios</string>
   <string name="reply_to">Respuesta a <xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">Cita <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Filtros</string>
   <string name="users">Usuarios</string>
   <string name="user">Usuario</string>
@@ -280,14 +283,26 @@
   <string name="activities_about_me">Actividades sobre mí</string>
   <string name="activities_by_friends">Actividades de amigos</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> marcó tu tweet como favorito.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> marcaron como favorito tu tweet.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> marcó como favorito tu retweet.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> marcaron como favorito tu retweet.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> te está siguiendo.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te están siguiendo.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> te retwitteó.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han retweedteado.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> han retweedteado tu retweet.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han retweedteado.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="usuario">%s</xliff:g> te añadió a una lista.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> te agregaron a la lista  "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han agregado a sus listas.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> marcó como favorito el tweet de <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> marcó como favorito <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> ahora sigue a <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> está siguiendo <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> ha retuiteado el tuit de <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> añadio a <xliff:g id="target">%2$s</xliff:g> a una lista.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> ha creado la lista <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> creó la lista <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">Tweet no enviado.</string>
   <string name="status_not_updated_summary">Tweet no enviado y guardado en borradores.</string>
   <string name="incoming_friendships">Solicitudes de seguimiento pendientes</string>
@@ -487,6 +502,7 @@
   <string name="wizard_page_tabs_unchanged_message">Puedes añadir pestañas en \"Configuración\">\"Pestañas\"</string>
   <string name="wizard_page_cards_text">Configura artículos de la tarjeta.</string>
   <string name="wizard_page_hints_text">Aquí algunos consejos útiles.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere participa de un proyecto de investigación que necesita algunos datos de uso.</string>
   <string name="wizard_page_finished_title">Finalizado</string>
   <string name="wizard_page_finished_text">Ahora Twidere está preparado para usarse.</string>
   <string name="invalid_tab">Pestaña inválida</string>
@@ -554,6 +570,8 @@
   <string name="N_new_mentions_quantity_other"><xliff:g id="items">%d</xliff:g> nuevas menciones</string>
   <string name="N_new_messages_quantity_one"><xliff:g id="items">%d</xliff:g> nueva conversación</string>
   <string name="N_new_messages_quantity_other"><xliff:g id="items">%d</xliff:g> nuevas conversaciones</string>
+  <string name="status_share_subject_format_with_time">Tweet de<xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), a las <xliff:g id="time">%3$s</xliff:g></string>
+  <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">Tasa límite</string>
   <string name="wizard_hint_rate_limit">Si encuentra problemas de tasa límite por favor no me culpe, es la política de Twitter.</string>
   <string name="preparing_database">Preparando base de datos</string>
@@ -571,7 +589,6 @@
   <string name="tab_display_option_label">Etiqueta</string>
   <string name="tab_display_option_icon_and_label">Icono y etiqueta</string>
   <string name="highlight_and_underline">Resaltar y subrayar</string>
-  <string name="twip_api_version_notice_message">TWIP no puede manejar correctamente \"REST Base URL\" que no terminen en \"/1.1/\" correctly.\n\n Necesita agregar  \"/1.1/\" al final de la dirección para evitar este error al subir una imagen.</string>
   <string name="back">Volver</string>
   <string name="theme_font_family">Familia tipográfica del tema</string>
   <string name="translation_destination">Destino de la traducción</string>
@@ -657,4 +674,62 @@
   <string name="photo">Foto</string>
   <string name="gallery">Galería</string>
   <string name="remove">Eliminar</string>
+  <string name="load_media">Cargar multimedia</string>
+  <string name="profile_text_color">Color del texto</string>
+  <string name="profile_background_color">Color del fondo</string>
+  <string name="profile_link_color_main_color">Color enlaces (color primario)</string>
+  <string name="retweet_quote_confirm_title">¿Retweet a tus seguidores?</string>
+  <string name="font">Fuente</string>
+  <string name="size">Tamaño</string>
+  <string name="just_now">Justo ahora</string>
+  <string name="requested">Solicitado</string>
+  <string name="round">Redonda</string>
+  <string name="square">Cuadrada</string>
+  <string name="profile_image_style">Estilo imagen perfil</string>
+  <string name="media_preview_style">Estilo de la previsualización multimedia</string>
+  <string name="draft_saved">Borrador guardado</string>
+  <string name="open_twitter_links">Abrir los enlaces de Twitter</string>
+  <string name="N_others_quantity_one">otro</string>
+  <string name="N_others_quantity_other"><xliff:g id="count">%d</xliff:g> otros</string>
+  <string name="type_name_to_search">Escribe nombre a buscar</string>
+  <string name="no_user_found">Ningún usuario encontrado</string>
+  <string name="members">Miembros</string>
+  <string name="subscribers">Suscriptor</string>
+  <string name="read_from_bottom">Leer desde el final</string>
+  <string name="register">Registrar</string>
+  <string name="follows">Sigue</string>
+  <string name="belongs_to">Pertenece a</string>
+  <string name="blocked_by_user_summary">Fuiste bloqueado por <xliff:g id="name">%s</xliff:g></string>
+  <string name="select_accounts">Seleccione la cuenta</string>
+  <string name="media_preview">Previsualización multimedia</string>
+  <string name="edit_tabs">Editar pestañas</string>
+  <string name="no_location">Sin localización</string>
+  <string name="getting_location">Buscando localización</string>
+  <string name="save_to_gallery">Guardar en la galería</string>
+  <string name="usage_statistics">Estadísticas de uso</string>
+  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
+  <string name="research_tsinghua_spice">Tsinghua Spice</string>
+  <string name="unknown_location">Localización desconocida</string>
+  <string name="ellipsis">&#8230;</string>
+  <string name="designed_by">Diseñado por</string>
+  <string name="designer_name">Uucky Lee</string>
+  <string name="import_export_settings">Importar/Exportar ajustes</string>
+  <string name="usage_statistics_header_summary">Twidere forma parte de un proyecto de investigación, unirse a estos proyectos hará de Twidere, y otras, una aplicación mejor.</string>
+  <string name="no_tab">Sin pestañas</string>
+  <string name="user_protected_summary">Necesitas mandar una petición de seguimiento a este usuario protegido para ver sus tweets</string>
+  <string name="no_account">Sin cuenta</string>
+  <string name="permission_description_shorten_status">La aplicación puede ordenar tweets para Twidere, así puede acceder a tu tweet para enviarlo.</string>
+  <string name="permission_description_upload_media">La aplicación puede subir el contenido para Twidere, así puede acceder a tu contenido para enviarlo.</string>
+  <string name="permission_description_sync_timeline">La aplicación puede sincronizar la posición para Twidere, así puede acceder a tu posición de lectura.</string>
+  <string name="usage_statistics_notification_summary">¡Ayúdanos a mejorar Twidere!</string>
+  <string name="from_name">De <xliff:g id="name">%1$s</xliff:g></string>
+  <string name="from_name_and_name">De <xliff:g id="name">%1$s</xliff:g> y <xliff:g id="name">%2$s</xliff:g></string>
+  <string name="from_name_and_N_others">De <xliff:g id="name">%1$s</xliff:g> y <xliff:g id="name">%2$d</xliff:g> otros</string>
+  <string name="projects_we_took_part">Proyectos en los que participamos</string>
+  <string name="activated_accounts">Cuentas activadas</string>
+  <string name="search">Búsqueda</string>
+  <string name="crop">Recortar</string>
+  <string name="scale">Escalar</string>
+  <string name="user_type_verified">Verificado</string>
+  <string name="user_type_protected">Protegido</string>
 </resources>

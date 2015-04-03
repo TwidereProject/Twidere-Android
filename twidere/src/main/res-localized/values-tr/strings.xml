@@ -88,10 +88,19 @@
   <string name="image_load_summary">Bunu pasif yapmak listenin kaydırılma hızını artırır ve kullanılan veri miktarını azaltır.</string>
   <string name="in_reply_to_name"><xliff:g id="user_name">%s</xliff:g> adlı kişiye cevap ver</string>
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> bunu retweet etti</string>
+  <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> ve birbaşkası daha retweet etti</string>
+  <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>
+  <string name="N_retweeted_quantity_one"><xliff:g id="retweet_count">%d</xliff:g> kere retweet edildi</string>
+  <string name="N_retweeted_quantity_other"><xliff:g id="retweet_count">%d</xliff:g> kere retweet edildi</string>
+  <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> bunu retweet etti</string>
+  <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>
+  <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> kullanıcı bunu retweet etti</string>
   <string name="users_retweeted_this">Kullanıcılar bunu retweetledi</string>
   <string name="users_favorited_this">Kullanıcılar bunu beğendi</string>
   <string name="reply_to"><xliff:g id="user_name">%s</xliff:g> adlı kişiye cevap ver</string>
   <string name="quote_user">Alıntı yap <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, <xliff:g id="source">%2$s</xliff:g> kullanılarak</string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Filtreler</string>
   <string name="users">Kullanıcılar</string>
   <string name="user">Kullanıcı</string>
@@ -113,9 +122,11 @@
   <string name="load_item_limit">Yeni nesne yükleme limiti</string>
   <string name="load_item_limit_summary">Bir defada yüklenecek en çok nesne sayısını belirler.</string>
   <string name="load_more_automatically">Daha fazla içeriği otomatik olarak yükle</string>
+  <string name="load_more_automatically_summary">Daha fazla içeriği (fotoğraf, harita, tweet gibi) otomatik olarak yükle</string>
   <string name="quote">Alıntı yap</string>
   <string name="add_rule">Kural ekle</string>
   <string name="text_size">Yazı Boyutu</string>
+  <string name="text_size_summary">Tweeti harf sayısı.</string>
   <string name="cannot_get_location">Konumunuz alınamıyor.</string>
   <string name="drafts">Taslaklar</string>
   <string name="description">Açıklama</string>
@@ -160,6 +171,7 @@
   <string name="twitter_muted_users">Tweetleri gösterilmeyen kullanıcılar</string>
   <string name="message_user_muted">Bu kullanıcı filtre listesine eklendi. Bu kullanıcıdan gelen tweetleri zaman akışınızda/bahsedenler listenizde görmeyeceksiniz.</string>
   <string name="message_users_muted">Kullanıcılar filtre listesine eklendi. Bu kullanıcılardan gelen tweetleri zaman akışınızda/bahsedenler listenizde görmeyeceksiniz.</string>
+  <string name="message_user_unmuted">Bu kullanıcı filtreden çıkarılmış.</string>
   <string name="inbox">Gelen kutusu</string>
   <string name="load_images">Resimleri yükle</string>
   <string name="other_settings">Diğer ayarlar</string>
@@ -204,6 +216,7 @@
   <string name="accounts">Hesaplar</string>
   <string name="account">Hesap</string>
   <string name="mention_this_user">Bu kullanıcıdan bahset</string>
+  <string name="mention_user_name"><xliff:g id="name">%1$s</xliff:g> \'e söyle</string>
   <string name="signing_in_please_wait">Giriş yapılıyor, lütfen bekleyin veya çıkmak için GERİ butonuna basın.</string>
   <string name="connectivity">Bağlanabilirlik</string>
   <string name="add_member">Üye ekle</string>
@@ -269,14 +282,26 @@
   <string name="activities_about_me">Etkileşimler</string>
   <string name="activities_by_friends">Arkadaşların hareketleri</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> senin tweetini kendi favorilerine ekledi.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha tweetinizi favorilerine ekledi.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> tweetinizi favorilerine ekledi.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha tweetinizi favorilerine ekledi.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> seni takip ediyor.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha sizi takip ediyor.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> senin tweetini retweet etti.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha tweetinizi favorilerine ekledi.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> tweetini retweet etti.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha tweetinizi favorilerine ekledi.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> seni listesine ekledi.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> seni "<xliff:g id="list">%2$s</xliff:g>\" listesine ekledi.</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="other">%2$s</xliff:g> kişi seni listelerine ekledi.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> <xliff:g id="target">%2$s</xliff:g>\'ın tweet\'ini favoriledi.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="other">%3$s</xliff:g> kişi <xliff:g id="target">%2$s</xliff:g>\'in tweetini favorilerine ekledi.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> şunu takip ediyor <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="other">%3$s</xliff:g> kişi <xliff:g id="target">%2$s</xliff:g> takip ediyor.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> şu kullanıcının <xliff:g id="target">%2$s</xliff:g> tweet\'ını  retweet\'ladı.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> şu kişiyi <xliff:g id="target">%2$s</xliff:g> listeye ekledi.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> şu listeyi <xliff:g id="target">%2$s</xliff:g> oluşturdu.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="other">%1$s</xliff:g> kişi <xliff:g id="target">%2$s</xliff:g> listesini oluşturdu.</string>
   <string name="status_not_updated">Tweet gönderilmedi.</string>
   <string name="status_not_updated_summary">Tweet gönderilmedi, ve taslaklara kaydedildi.</string>
   <string name="incoming_friendships">Beklemedeki takip istekleri</string>

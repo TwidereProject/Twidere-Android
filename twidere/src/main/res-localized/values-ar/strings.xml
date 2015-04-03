@@ -17,6 +17,7 @@
   <string name="oauth_base_url">عنوان OAuth</string>
   <string name="signing_oauth_base_url">توقيع رابط قاعدة الـOAuth</string>
   <string name="signing_rest_base_url">توقيع رابط قاعدة الـREST</string>
+  <string name="same_oauth_signing_url">إستخدم نفس الرابط لتسجيل الدخول</string>
   <string name="auth_type">نوع Auth</string>
   <string name="oauth">OAuth</string>
   <string name="xauth">xAuth</string>
@@ -83,6 +84,9 @@
   <string name="look_and_feel">طريقة العرض</string>
   <string name="display_profile_image">عرض صورة الملف الشخضي</string>
   <string name="image_load_summary">تعطيل هذا سوف يزيد من سرعة التنقل ويقلص استخدام البيانات.</string>
+  <string name="in_reply_to_name">رداً على <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="name_retweeted">أعاد تغريد <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="name_and_another_retweeted">و أخر قام بإعادة تغريدة <xliff:g id="user_name">%1$s</xliff:g></string>
   <string name="retweeted_by_name">أعادها <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">أعادها <xliff:g id="user_name">%1$s</xliff:g> و<xliff:g id="retweet_count">%2$d</xliff:g> آخرون</string>
   <string name="users_retweeted_this">المستخدمين الذين قاموا بإعادة التغريد</string>

@@ -575,7 +575,6 @@
   <string name="tab_display_option_label">Tanda</string>
   <string name="tab_display_option_icon_and_label">Gambar dan tanda</string>
   <string name="highlight_and_underline">Sorot dan garis bawah</string>
-  <string name="twip_api_version_notice_message">TWIP tidak bisa menangani Rest Base URL yang tidak diakhiri dengan \"/ 1,1 /\" dengan benar. \n\n Anda mungkin perlu menambahkan \"/ 1,1 /\" pada akhir Rest Base URL untuk menghindari masalah ketika meng-upload gambar.</string>
   <string name="back">Kembali</string>
   <string name="theme_font_family">Tema font keluarga</string>
   <string name="translation_destination">Tujuan penerjemahan</string>

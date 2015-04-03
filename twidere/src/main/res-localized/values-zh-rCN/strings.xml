@@ -99,6 +99,8 @@
   <string name="users_favorited_this">收藏这条推文的用户</string>
   <string name="reply_to">回复<xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">引用<xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">过滤</string>
   <string name="users">用户</string>
   <string name="user">用户</string>
@@ -587,7 +589,6 @@
   <string name="tab_display_option_label">标签</string>
   <string name="tab_display_option_icon_and_label">图标和标签</string>
   <string name="highlight_and_underline">高亮和下划线</string>
-  <string name="twip_api_version_notice_message">TWIP无法正确处理没有以\"/1.1/\"结尾的Rest Base URL。\n\n你可能需要在Rest Base URL的结尾加上\"/1.1/\"以避免上传图片时发生问题。</string>
   <string name="back">返回</string>
   <string name="theme_font_family">主题字体族</string>
   <string name="translation_destination">翻译结果语言</string>
@@ -706,6 +707,8 @@
   <string name="getting_location">获取位置</string>
   <string name="save_to_gallery">保存到相册</string>
   <string name="usage_statistics">使用信息统计</string>
+  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
+  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">未知位置</string>
   <string name="ellipsis">&#8230;</string>
   <string name="designed_by">设计</string>
@@ -729,4 +732,5 @@
   <string name="scale">缩放</string>
   <string name="user_type_verified">验证用户</string>
   <string name="user_type_protected">受保护用户</string>
+  <string name="tweet_hashtag">发推 #<xliff:g id="text">%1$s</xliff:g></string>
 </resources>

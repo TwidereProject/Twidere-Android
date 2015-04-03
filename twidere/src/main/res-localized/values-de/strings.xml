@@ -584,7 +584,6 @@
   <string name="tab_display_option_label">Beschriftung</string>
   <string name="tab_display_option_icon_and_label">Symbol und Beschriftung</string>
   <string name="highlight_and_underline">Hervorheben und unterstreichen</string>
-  <string name="twip_api_version_notice_message">TWIP kann keinen REST-Basis-URL bearbeiten, die nicht mit \"/1.1/\" endet.\n\nSie müssen evtl. \"/1.1/\" an den REST-Basis-URL anhängen, um Probleme beim Hochladen von Bildern zu vermeiden.</string>
   <string name="back">Zurück</string>
   <string name="theme_font_family">Theme-Schriftart</string>
   <string name="translation_destination">Zielsprache</string>

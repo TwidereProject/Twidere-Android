@@ -552,7 +552,6 @@
   <string name="tab_display_option_label">Label</string>
   <string name="tab_display_option_icon_and_label">Icoon en label</string>
   <string name="highlight_and_underline">Benadrukken en onderstrepen</string>
-  <string name="twip_api_version_notice_message">TWIP kan REST basisurls die niet eindigen op \"/1.1/\" niet correct behandelen.\n\nHet kan dat je \"/1.1/\" moet toevoegen aan het einde van de REST basisurl om problemen bij het uploaden van afbeeldingen te vermijden.</string>
   <string name="back">Terug</string>
   <string name="theme_font_family">Lettertypefamilie thema</string>
   <string name="translation_destination">Doeltaal vertaling</string>
