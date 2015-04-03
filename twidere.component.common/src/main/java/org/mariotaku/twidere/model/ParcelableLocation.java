@@ -99,8 +99,8 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
             latitude = Double.NaN;
             longitude = Double.NaN;
         } else {
-            latitude = ParseUtils.parseDouble(longlat[0]);
-            longitude = ParseUtils.parseDouble(longlat[1]);
+            latitude = ParseUtils.parseDouble(longlat[0], Double.NaN);
+            longitude = ParseUtils.parseDouble(longlat[1], Double.NaN);
         }
     }
 
@@ -197,6 +197,10 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
 
     public static String toString(final ParcelableLocation location) {
         if (!isValidLocation(location)) return null;
-        return location.latitude + "," + location.longitude;
+        return toString(location.latitude, location.longitude);
+    }
+
+    public static String toString(double latitude, double longitude) {
+        return latitude + "," + longitude;
     }
 }

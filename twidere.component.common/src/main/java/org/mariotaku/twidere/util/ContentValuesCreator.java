@@ -356,7 +356,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.IS_POSSIBLY_SENSITIVE, status.isPossiblySensitive());
         final GeoLocation location = status.getGeoLocation();
         if (location != null) {
-            values.put(Statuses.LOCATION, location.getLatitude() + "," + location.getLongitude());
+            values.put(Statuses.LOCATION, ParcelableLocation.toString(location.getLatitude(), location.getLongitude()));
         }
         final Place place = status.getPlace();
         if (place != null) {
