@@ -34,8 +34,7 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="?android:colorActivatedHighlight"
-        android:textSize="@dimen/text_size_wizard_title"
-        android:textStyle="italic"/>
+        android:textSize="@dimen/text_size_wizard_title"/>
 
     <TextView
         android:id="@android:id/summary"

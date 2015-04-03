@@ -85,7 +85,11 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
         final Resources resources = context.getResources();
         final float elevation = resources.getDisplayMetrics().density * 4;
         mHelper = new EffectViewHelper(this, new PressElevationProperty(elevation), 200);
-        inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions, this);
+        if (isInEditMode()) {
+            inflate(context, R.layout.action_item_home_actions, this);
+        } else {
+            inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions, this);
+        }
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
         ViewAccessor.setOutlineProvider(this, new HomeActionButtonOutlineProvider());

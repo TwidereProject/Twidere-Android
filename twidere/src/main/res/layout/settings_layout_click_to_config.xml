@@ -31,6 +31,6 @@
         android:layout_gravity="center"
         android:text="@string/click_item_to_config"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold|italic"/>
+        android:textStyle="bold"/>
 
 </FrameLayout>

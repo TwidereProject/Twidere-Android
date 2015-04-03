@@ -85,9 +85,9 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         } else {
             timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
-        nameView.setTypeface(null, isUnread ? Typeface.BOLD : Typeface.NORMAL);
-        screenNameView.setTypeface(null, isUnread ? Typeface.BOLD : Typeface.NORMAL);
-        textView.setTypeface(null, isUnread ? Typeface.BOLD : Typeface.NORMAL);
+        nameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
+        screenNameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
+        textView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         if (account_color_enabled) {
             content.drawEnd(Utils.getAccountColor(context, accountId));
         }

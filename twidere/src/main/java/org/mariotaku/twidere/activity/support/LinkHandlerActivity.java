@@ -229,7 +229,8 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
             case LINK_ID_USER: {
                 break;
             }
-            case LINK_ID_SEARCH: {
+            case LINK_ID_SEARCH:
+            case LINK_ID_USER_LISTS: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
                         getCurrentThemeColor(), false);
                 break;

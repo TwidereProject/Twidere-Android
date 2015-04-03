@@ -120,7 +120,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     @Override
     public void onPageSelected(int position) {
-        mIndicatorAdapter.notifyDataSetChanged();
+        notifyDataSetChanged();
         if (mPageChangeListener == null) return;
         smoothScrollToPosition(position);
         mPageChangeListener.onPageSelected(position);
@@ -395,6 +395,12 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         }
     }
 
+    public void updateAppearance() {
+        final int positionStart = mLayoutManager.findFirstVisibleItemPosition();
+        final int itemCount = mLayoutManager.findLastVisibleItemPosition() - positionStart;
+        mIndicatorAdapter.notifyItemRangeChanged(positionStart, itemCount);
+    }
+
     private static class TabPagerIndicatorAdapter extends Adapter<TabItemHolder> {
 
         private final TabPagerIndicator mIndicator;
@@ -424,7 +430,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         public TabItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (mIndicator == null) throw new IllegalStateException("item context not set");
             final View view = mInflater.inflate(R.layout.layout_tab_item, parent, false);
-            return new TabItemHolder(mIndicator, view);
+            final TabItemHolder holder = new TabItemHolder(mIndicator, view);
+            holder.setStripHeight(mIndicator.getStripHeight());
+            holder.setPadding(mIndicator.getTabHorizontalPadding(), mIndicator.getTabVerticalPadding());
+            holder.setDisplayOption(mIndicator.isIconDisplayed(), mIndicator.isLabelDisplayed());
+            return holder;
         }
 
         @Override
@@ -432,13 +442,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
             final Drawable icon = mTabProvider.getPageIcon(position);
             final CharSequence title = mTabProvider.getPageTitle(position);
             holder.setTabData(icon, title, mIndicator.getCurrentItem() == position);
-            holder.setPadding(mIndicator.getTabHorizontalPadding(), mIndicator.getTabVerticalPadding());
-            holder.setStripHeight(mIndicator.getStripHeight());
+            holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge);
+
             holder.setStripColor(mStripColor);
             holder.setIconColor(mIconColor);
             holder.setLabelColor(mLabelColor);
-            holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge);
-            holder.setDisplayOption(mIndicator.isIconDisplayed(), mIndicator.isLabelDisplayed());
         }
 
         @Override
@@ -449,17 +457,17 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         public void setBadge(int position, int count) {
             mUnreadCounts.put(position, count);
-            notifyDataSetChanged();
+            notifyItemChanged(position);
         }
 
         public void setDisplayBadge(boolean display) {
             mDisplayBadge = display;
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
         }
 
         public void setIconColor(int color) {
             mIconColor = color;
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
         }
 
         public void setLabelColor(int color) {
@@ -469,12 +477,12 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         public void setStripColor(int color) {
             mStripColor = color;
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
         }
 
         public void setTabProvider(TabProvider tabProvider) {
             mTabProvider = tabProvider;
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
         }
     }
 }

@@ -34,6 +34,7 @@ import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
 public class UserListsFragment extends BaseSupportFragment implements RefreshScrollTopInterface,
@@ -66,9 +67,7 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         mViewPager.setOffscreenPageLimit(2);
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
-        if (activity instanceof IThemedActivity) {
-            mPagerIndicator.setStripColor(((IThemedActivity) activity).getCurrentThemeColor());
-        }
+        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator);
     }
 
 

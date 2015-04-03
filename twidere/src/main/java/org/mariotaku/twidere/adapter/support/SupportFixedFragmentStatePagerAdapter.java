@@ -36,7 +36,7 @@ public abstract class SupportFixedFragmentStatePagerAdapter extends FragmentStat
 	public Object instantiateItem(final ViewGroup container, final int position) {
 		final Fragment f = (Fragment) super.instantiateItem(container, position);
 		final Bundle savedFragmentState = f != null ? FragmentTrojan.getSavedFragmentState(f) : null;
-		if (savedFragmentState != null && f != null) {
+		if (savedFragmentState != null) {
 			savedFragmentState.setClassLoader(f.getClass().getClassLoader());
 		}
 		return f;

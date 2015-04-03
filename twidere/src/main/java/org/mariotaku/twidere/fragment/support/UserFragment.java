@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.animation.ArgbEvaluator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -60,7 +61,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.CardView;
+import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -132,6 +133,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
@@ -195,7 +197,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
-    private CardView mCardView;
     private View mUuckyFooter;
     private View mProfileBannerContainer;
     private Button mFollowButton;
@@ -216,6 +217,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private int mBannerWidth;
     private ActionBarDrawable mActionBarBackground;
     private Fragment mCurrentVisibleFragment;
+    private int mCardBackgroundColor;
 
 
     @Subscribe
@@ -529,7 +531,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public boolean shouldLayoutHeaderBottom() {
         final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
-        final CardView card = mCardView;
+        final View card = mProfileDetailsContainer;
         if (drawer == null || card == null) return false;
         return card.getTop() + drawer.getHeaderTop() - drawer.getPaddingTop() <= 0;
     }
@@ -628,13 +630,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_user, container, false);
-        final ViewGroup profileDetailsContainer = (ViewGroup) view.findViewById(R.id.profile_details_container);
-        final boolean isCompact = Utils.isCompactCards(getActivity());
-        if (isCompact) {
-            inflater.inflate(R.layout.layout_user_details_compact, profileDetailsContainer);
-        } else {
-            inflater.inflate(R.layout.layout_user_details, profileDetailsContainer);
-        }
+//        final ViewGroup profileDetailsContainer = (ViewGroup) view.findViewById(R.id.profile_details_container);
+//        final boolean isCompact = Utils.isCompactCards(getActivity());
+//        if (isCompact) {
+//            inflater.inflate(R.layout.layout_user_details_compact, profileDetailsContainer);
+//        } else {
+//            inflater.inflate(R.layout.layout_user_details, profileDetailsContainer);
+//        }
         return view;
     }
 
@@ -642,12 +644,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final FragmentActivity activity = getActivity();
         setHasOptionsMenu(true);
         getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
         getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
         mLocale = getResources().getConfiguration().locale;
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity);
+        mProfileImageLoader = getApplication().getMediaLoaderWrapper();
         final Bundle args = getArguments();
         long accountId = -1, userId = -1;
         String screenName = null;
@@ -658,8 +663,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             userId = args.getLong(EXTRA_USER_ID, -1);
             screenName = args.getString(EXTRA_SCREEN_NAME);
         }
-        mProfileImageLoader = getApplication().getMediaLoaderWrapper();
-        final FragmentActivity activity = getActivity();
 
         Utils.setNdefPushMessageCallback(activity, new CreateNdefMessageCallback() {
 
@@ -707,7 +710,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         ViewCompat.setTransitionName(mProfileImageView, TRANSITION_NAME_PROFILE_IMAGE);
         ViewCompat.setTransitionName(mProfileTypeView, TRANSITION_NAME_PROFILE_TYPE);
-        ViewCompat.setTransitionName(mCardView, TRANSITION_NAME_CARD);
+//        ViewCompat.setTransitionName(mCardView, TRANSITION_NAME_CARD);
 
         mHeaderDrawerLayout.setDrawerCallback(this);
 
@@ -729,7 +732,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerSpace.setOnTouchListener(this);
 
 
-        mCardView.setCardBackgroundColor(ThemeUtils.getCardBackgroundColor(activity));
+        mProfileNameBackground.setBackgroundColor(mCardBackgroundColor);
+        mProfileDetailsContainer.setBackgroundColor(mCardBackgroundColor);
+        mUuckyFooter.setBackgroundColor(mCardBackgroundColor);
 
         getUserInfo(accountId, userId, screenName, false);
 
@@ -1129,7 +1134,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mErrorMessageView = (TextView) headerView.findViewById(R.id.error_message);
         mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
         mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
-        mCardView = (CardView) headerView.findViewById(R.id.card);
+//        mCardView = (CardView) headerView.findViewById(R.id.card);
         mNameView = (TextView) headerView.findViewById(R.id.name);
         mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);
@@ -1272,14 +1277,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mURLView.setLinkTextColor(color);
         if (activity instanceof IThemedActivity) {
             final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-            if (ThemeUtils.isDarkTheme(themeRes)) {
-                ViewAccessor.setBackground(mPagerIndicator, ThemeUtils.getActionBarBackground(activity, themeRes));
-                mPagerIndicator.setStripColor(color);
-            } else {
-                mPagerIndicator.setBackgroundColor(color);
-            }
+            ViewAccessor.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity, themeRes, color, true));
         } else {
             mPagerIndicator.setBackgroundColor(color);
+        }
+
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        if (drawer != null) {
+            final int offset = drawer.getPaddingTop() - drawer.getHeaderTop();
+            updateScrollOffset(offset);
         }
     }
 
@@ -1309,6 +1315,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return getActivity() instanceof LinkHandlerActivity;
     }
 
+    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
+
     private void updateScrollOffset(int offset) {
         final View space = mProfileBannerSpace;
         final ProfileBannerImageView profileBannerView = mProfileBannerView;
@@ -1323,24 +1331,63 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mTintedStatusContent.setFactor(factor);
 
             final float profileContentHeight = mProfileNameContainer.getHeight() + mProfileDetailsContainer.getHeight();
-            final float outlineAlphaFactor;
+            final float tabOutlineAlphaFactor;
             if ((offset - spaceHeight) > 0) {
-                outlineAlphaFactor = 1f - MathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0, 1);
+                tabOutlineAlphaFactor = 1f - MathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0, 1);
             } else {
-                outlineAlphaFactor = 1f;
+                tabOutlineAlphaFactor = 1f;
             }
-            mActionBarBackground.setOutlineAlphaFactor(outlineAlphaFactor);
-            final Drawable drawable = mPagerIndicator.getBackground();
-            if (drawable != null) {
-                drawable.setAlpha(Math.round(255 * (1 - outlineAlphaFactor)));
+            mActionBarBackground.setOutlineAlphaFactor(tabOutlineAlphaFactor);
+
+            final FragmentActivity activity = getActivity();
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);
             }
+
             final int color = mActionBarBackground.getColor();
-            final int contrastColor = ColorUtils.getContrastYIQ(color, 192);
-            mPagerIndicator.setIconColor(contrastColor);
-            mPagerIndicator.setLabelColor(contrastColor);
-            mPagerIndicator.setStripColor(contrastColor);
+
+            if (activity instanceof IThemedActivity) {
+                final Drawable drawable = mPagerIndicator.getBackground();
+                final int stackedTabColor;
+                if (ThemeUtils.isDarkTheme(((IThemedActivity) activity).getCurrentThemeResourceId())) {
+                    stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
+                    final int contrastColor = ColorUtils.getContrastYIQ(stackedTabColor, 192);
+                    mPagerIndicator.setIconColor(contrastColor);
+                    mPagerIndicator.setLabelColor(contrastColor);
+                    mPagerIndicator.setStripColor(color);
+                } else if (drawable instanceof ColorDrawable) {
+                    stackedTabColor = color;
+                    final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
+                    ((ColorDrawable) drawable).setColor(tabColor);
+                    final int contrastColor = ColorUtils.getContrastYIQ(tabColor, 192);
+                    mPagerIndicator.setIconColor(contrastColor);
+                    mPagerIndicator.setLabelColor(contrastColor);
+                    mPagerIndicator.setStripColor(contrastColor);
+                }
+            } else {
+                final int contrastColor = ColorUtils.getContrastYIQ(color, 192);
+                mPagerIndicator.setIconColor(contrastColor);
+                mPagerIndicator.setLabelColor(contrastColor);
+                mPagerIndicator.setStripColor(contrastColor);
+            }
+            mPagerIndicator.updateAppearance();
         }
         updateTitleColor();
+    }
+
+    private void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
+        final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.decor_content_parent);
+        if (!(view instanceof ActionBarOverlayLayout)) return;
+        try {
+            final Field field = ActionBarOverlayLayout.class.getDeclaredField("mWindowContentOverlay");
+            field.setAccessible(true);
+            final Drawable drawable = (Drawable) field.get(view);
+            if (drawable == null) return;
+            drawable.setAlpha(Math.round(alpha * 255));
+        } catch (Exception ignore) {
+        }
     }
 
     private void updateTitleColor() {
@@ -1408,7 +1455,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         private final Drawable mShadowDrawable;
         private final Drawable mBackgroundDrawable;
-        //        private final LineBackgroundDrawable mLineDrawable;
         private final ColorDrawable mColorDrawable;
         private final boolean mColorLineOnly;
 
@@ -1422,7 +1468,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             super(new Drawable[]{shadow, background, new ActionBarColorDrawable(true)});
             mShadowDrawable = getDrawable(0);
             mBackgroundDrawable = getDrawable(1);
-//            mLineDrawable = (LineBackgroundDrawable) getDrawable(2);
             mColorDrawable = (ColorDrawable) getDrawable(2);
             mColorLineOnly = colorLineOnly;
             setAlpha(0xFF);
@@ -1479,7 +1524,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public void setColor(int color) {
             mColor = color;
             mColorDrawable.setColor(color);
-//            mLineDrawable.setColor(color);
             setFactor(mFactor);
         }
 
@@ -1491,7 +1535,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final boolean showLine = mColorLineOnly && hasColor;
             final boolean showColor = !mColorLineOnly && hasColor;
             mBackgroundDrawable.setAlpha(showBackground ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
-//            mLineDrawable.setAlpha(showLine ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
             mColorDrawable.setAlpha(showColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
         }
 

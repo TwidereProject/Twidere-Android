@@ -35,6 +35,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableStringBuilder;
@@ -61,6 +63,7 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.iface.IThemedView;
 
 import java.lang.reflect.Constructor;
@@ -79,25 +82,12 @@ public class ThemeUtils implements Constants {
         throw new AssertionError();
     }
 
-    @Deprecated
-    public static void applyActionBarBackground(final ActionBar actionBar, final Context context) {
-        applyActionBarBackground(actionBar, context, true);
-    }
-
-    @Deprecated
-    public static void applyActionBarBackground(final ActionBar actionBar, final Context context,
-                                                final boolean applyAlpha) {
-        if (actionBar == null || context == null) return;
-        actionBar.setBackgroundDrawable(getActionBarBackground(context, applyAlpha));
-        actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, applyAlpha));
-        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, applyAlpha));
-    }
 
     public static void applyActionBarBackground(final ActionBar actionBar, final Context context, final int themeRes) {
         if (actionBar == null || context == null) return;
         actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes));
         actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
-        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes));
+//        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes));
     }
 
 
@@ -106,7 +96,7 @@ public class ThemeUtils implements Constants {
         if (actionBar == null || context == null) return;
         actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, outlineEnabled));
         actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
-        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes));
+        actionBar.setStackedBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, outlineEnabled));
     }
 
 
@@ -115,7 +105,7 @@ public class ThemeUtils implements Constants {
         if (actionBar == null || context == null) return;
         actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, outlineEnabled));
         actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
-        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes));
+        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes, accentColor, outlineEnabled));
     }
 
 
@@ -136,6 +126,27 @@ public class ThemeUtils implements Constants {
         } catch (final Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void initPagerIndicatorAsActionBarTab(FragmentActivity activity, TabPagerIndicator indicator) {
+        final float supportActionBarElevation = getSupportActionBarElevation(activity);
+        ViewCompat.setElevation(indicator, supportActionBarElevation);
+        if (!(activity instanceof IThemedActivity)) return;
+        final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
+        final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
+        final int contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
+        ViewAccessor.setBackground(indicator, getActionBarStackedBackground(activity, themeRes, themeColor, true));
+        if (isDarkTheme(themeRes)) {
+            final int foregroundColor = getThemeForegroundColor(activity);
+            indicator.setIconColor(foregroundColor);
+            indicator.setLabelColor(foregroundColor);
+            indicator.setStripColor(themeColor);
+        } else {
+            indicator.setIconColor(contrastColor);
+            indicator.setLabelColor(contrastColor);
+            indicator.setStripColor(contrastColor);
+        }
+        indicator.updateAppearance();
     }
 
     public static void resetCheatSheet(ActionMenuView menuView) {
@@ -406,16 +417,29 @@ public class ThemeUtils implements Constants {
         return null;
     }
 
+    @NonNull
     public static Drawable getActionBarBackground(final Context context, final int themeRes,
                                                   final int accentColor, boolean outlineEnabled) {
-        if (!isDarkTheme(themeRes)) {
-            final ColorDrawable d = new ActionBarColorDrawable(accentColor, outlineEnabled);
-            return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
+        final int actionBarColor;
+        if (isDarkTheme(themeRes)) {
+            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
+        } else {
+            actionBarColor = accentColor;
         }
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
-                android.R.attr.actionBarStyle, themeRes);
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
+        final ColorDrawable d = new ActionBarColorDrawable(actionBarColor, outlineEnabled);
+        return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
+    }
+
+    @NonNull
+    public static Drawable getActionBarStackedBackground(final Context context, final int themeRes,
+                                                         final int accentColor, boolean outlineEnabled) {
+        final int actionBarColor;
+        if (isDarkTheme(themeRes)) {
+            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
+        } else {
+            actionBarColor = accentColor;
+        }
+        final ColorDrawable d = new ActionBarColorDrawable(actionBarColor, outlineEnabled);
         return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
     }
 
@@ -445,23 +469,6 @@ public class ThemeUtils implements Constants {
 
     public static Drawable getActionBarSplitBackground(final Context context, final int themeRes) {
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.backgroundSplit},
-                android.R.attr.actionBarStyle, themeRes);
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
-        return applyActionBarDrawable(context, d, isTransparentBackground(themeRes));
-    }
-
-    @Deprecated
-    public static Drawable getActionBarStackedBackground(final Context context, final boolean applyAlpha) {
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.backgroundStacked},
-                android.R.attr.actionBarStyle, 0);
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
-        return applyActionBarDrawable(context, d, applyAlpha);
-    }
-
-    public static Drawable getActionBarStackedBackground(final Context context, final int themeRes) {
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.backgroundStacked},
                 android.R.attr.actionBarStyle, themeRes);
         final Drawable d = a.getDrawable(0);
         a.recycle();

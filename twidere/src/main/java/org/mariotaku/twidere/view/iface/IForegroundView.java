@@ -85,7 +85,7 @@ public interface IForegroundView {
                 setForeground(d);
             }
 
-            mForegroundInPadding = true;
+//            mForegroundInPadding = true;
 
             a.recycle();
         }

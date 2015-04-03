@@ -34,6 +34,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="?android:colorActivatedHighlight"
         android:textSize="@dimen/text_size_wizard_nav_item"
-        android:textStyle="bold|italic"/>
+        android:textStyle="bold"/>
 
 </FrameLayout>

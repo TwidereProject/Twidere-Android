@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -42,7 +41,6 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
@@ -52,7 +50,6 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
@@ -166,18 +163,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
         mPagerIndicator.setOnPageChangeListener(this);
-        if (activity instanceof IThemedActivity) {
-            final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
-            final int contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
-            mPagerIndicator.setBackgroundColor(themeColor);
-            mPagerIndicator.setIconColor(contrastColor);
-            mPagerIndicator.setLabelColor(contrastColor);
-            mPagerIndicator.setStripColor(contrastColor);
-        } else {
-            mPagerIndicator.setBackgroundColor(ThemeUtils.getThemeColor(activity));
-        }
-        final float supportActionBarElevation = ThemeUtils.getSupportActionBarElevation(activity);
-        ViewCompat.setElevation(mPagerIndicator, supportActionBarElevation);
+        ThemeUtils.initPagerIndicatorAsActionBarTab(activity,mPagerIndicator);
         if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
             final String query = args.getString(EXTRA_QUERY);
             final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),

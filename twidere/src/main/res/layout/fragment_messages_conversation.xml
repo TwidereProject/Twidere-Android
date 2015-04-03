@@ -74,24 +74,30 @@
             android:paddingRight="@dimen/element_spacing_normal"
             android:scrollbarStyle="outsideInset"/>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/users_search_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal">
 
-            <LinearLayout
+            <org.mariotaku.twidere.view.ActionIconView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:color="?android:textColorSecondary"
+                android:src="@drawable/ic_info_search"/>
 
-                <TextView
-                    android:id="@+id/users_search_empty_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </FrameLayout>
+            <TextView
+                android:id="@+id/users_search_empty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"/>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/users_search_progress"
