@@ -3012,7 +3012,7 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static void openMap(final Context context, final double latitude, final double longitude) {
-        if (context == null || !new ParcelableLocation(latitude, longitude).isValid()) return;
+        if (context == null || !ParcelableLocation.isValidLocation(latitude, longitude)) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_MAP);

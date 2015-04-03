@@ -153,7 +153,11 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
     }
 
     public boolean isValid() {
-        return Double.isNaN(latitude) && Double.isNaN(longitude);
+        return isValidLocation(latitude, longitude);
+    }
+
+    public static boolean isValidLocation(double latitude, double longitude) {
+        return !Double.isNaN(latitude) && !Double.isNaN(longitude);
     }
 
     public GeoLocation toGeoLocation() {

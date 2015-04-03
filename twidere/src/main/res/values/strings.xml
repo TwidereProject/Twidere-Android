@@ -733,7 +733,9 @@
     <string name="user_type_verified">Verified</string>
     <string name="user_type_protected">Protected</string>
     <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
-    <string name="tweet_with_name">Tweet with<xliff:g id="text">%1$s</xliff:g></string>
+
+    <!-- 'Tweet' here is a verb -->
+    <string name="tweet_from_name">Tweet from <xliff:g id="text">%1$s</xliff:g></string>
 
 
 </resources>

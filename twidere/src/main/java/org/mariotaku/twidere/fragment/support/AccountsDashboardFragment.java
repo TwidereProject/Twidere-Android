@@ -577,7 +577,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final ParcelableAccount account = mSelectedAccount;
             if (account != null && option.id == MENU_COMPOSE) {
                 final Context context = getContext();
-                return context.getString(R.string.tweet_with_name,
+                return context.getString(R.string.tweet_from_name,
                         UserColorNameUtils.getDisplayName(context, -1, account.name, account.screen_name));
             }
             return super.getTitle(position, option);
