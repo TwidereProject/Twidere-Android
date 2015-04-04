@@ -22,10 +22,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/usage_statistics">
 
-    <org.mariotaku.twidere.preference.ResourceIconPreference
+    <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:order="11"
         android:title="@string/research_ucdavis_earlybird"/>
-    <org.mariotaku.twidere.preference.ResourceIconPreference
+    <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:order="12"
         android:title="@string/research_tsinghua_spice"/>
 

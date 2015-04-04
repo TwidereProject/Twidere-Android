@@ -57,7 +57,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.internal.widget.TintButton;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -194,7 +193,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private TabPagerIndicator mPagerIndicator;
     private View mUuckyFooter;
     private View mProfileBannerContainer;
-    private TintButton mFollowButton;
+    private Button mFollowButton;
     private ProgressBar mFollowProgress;
     private View mPagesContent, mPagesErrorContainer;
     private ImageView mPagesErrorIcon;
@@ -1145,7 +1144,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
-        mFollowButton = (TintButton) headerView.findViewById(R.id.follow);
+        mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
         mPagesContent = view.findViewById(R.id.pages_content);
