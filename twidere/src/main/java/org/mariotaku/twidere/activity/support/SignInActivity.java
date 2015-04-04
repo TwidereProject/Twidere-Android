@@ -32,10 +32,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -503,10 +505,20 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
         setSignInButton();
     }
 
+    private final Handler mHandler = new Handler();
+
     void onSignInStart() {
-        if (isFinishing()) return;
-        final SupportProgressDialogFragment fragment = SupportProgressDialogFragment.show(this, FRAGMENT_TAG_SIGN_IN_PROGRESS);
-        fragment.setCancelable(false);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing()) return;
+                final FragmentManager fm = getSupportFragmentManager();
+                final FragmentTransaction ft = fm.beginTransaction();
+                final SupportProgressDialogFragment fragment = new SupportProgressDialogFragment();
+                fragment.setCancelable(false);
+                fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS);
+            }
+        });
     }
 
     public static abstract class AbstractSignInTask extends AsyncTask<Void, Void, SignInResponse> {

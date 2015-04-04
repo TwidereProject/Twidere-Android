@@ -22,13 +22,15 @@ package org.mariotaku.twidere.fragment.support;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.R;
 
 public class SupportProgressDialogFragment extends BaseSupportDialogFragment {
 
-	@Override
+	@NonNull
+    @Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		final ProgressDialog dialog = new ProgressDialog(getActivity());
 		dialog.setMessage(getString(R.string.please_wait));

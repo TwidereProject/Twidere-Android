@@ -16,7 +16,7 @@
         android:order="22"
         android:title="@string/name_first"/>
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="display_profile_image"
         android:order="23"
         android:title="@string/profile_image"/>
