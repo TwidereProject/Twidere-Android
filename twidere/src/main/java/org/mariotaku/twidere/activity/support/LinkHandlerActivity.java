@@ -255,16 +255,20 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
             case LINK_ID_USER: {
                 mMainContent.setShadowColor(0xA0000000);
                 mMainContent.setDrawShadow(false);
-                mMainContent.setDrawColor(!ThemeUtils.isDarkTheme(getCurrentThemeResourceId()));
+                mMainContent.setDrawColor(true);
                 break;
             }
             default: {
                 mMainContent.setDrawShadow(false);
-                mMainContent.setDrawColor(!ThemeUtils.isDarkTheme(getCurrentThemeResourceId()));
+                mMainContent.setDrawColor(true);
                 mMainContent.setFactor(1);
                 final int color = getCurrentThemeColor();
                 final int alpha = getCurrentThemeBackgroundAlpha();
-                mMainContent.setColor(color, alpha);
+                if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
+                    mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark), alpha);
+                } else {
+                    mMainContent.setColor(color, alpha);
+                }
                 break;
             }
         }

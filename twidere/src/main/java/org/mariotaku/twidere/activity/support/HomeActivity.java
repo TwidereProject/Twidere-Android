@@ -31,7 +31,6 @@ import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -724,9 +723,21 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
-        if (ThemeUtils.isColoredActionBar(themeResId)) {
+        ViewAccessor.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor, true));
+        if (ThemeUtils.isDarkTheme(themeResId)) {
+            final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
+            final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());
+            homeActionButton.setButtonColor(backgroundColor);
+            homeActionButton.setIconColor(foregroundColor, Mode.SRC_ATOP);
+            mTabIndicator.setStripColor(themeColor);
+            mTabIndicator.setIconColor(foregroundColor);
+            mTabIndicator.setLabelColor(foregroundColor);
+            mColorStatusFrameLayout.setDrawColor(true);
+            mColorStatusFrameLayout.setDrawShadow(false);
+            mColorStatusFrameLayout.setColor(getResources().getColor(R.color.background_color_action_bar_dark), actionBarAlpha);
+            mColorStatusFrameLayout.setFactor(1);
+        } else {
             final int contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
-            ViewAccessor.setBackground(mActionBar, new ColorDrawable(themeColor));
             homeActionButton.setButtonColor(themeColor);
             homeActionButton.setIconColor(contrastColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(contrastColor);
@@ -737,17 +748,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             mColorStatusFrameLayout.setDrawShadow(false);
             mColorStatusFrameLayout.setColor(themeColor, actionBarAlpha);
             mColorStatusFrameLayout.setFactor(1);
-        } else {
-            final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
-            final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());
-            ViewAccessor.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId));
-            homeActionButton.setButtonColor(backgroundColor);
-            homeActionButton.setIconColor(foregroundColor, Mode.SRC_ATOP);
-            mTabIndicator.setStripColor(themeColor);
-            mTabIndicator.setIconColor(foregroundColor);
-            mTabIndicator.setLabelColor(foregroundColor);
-            mColorStatusFrameLayout.setDrawColor(false);
-            mColorStatusFrameLayout.setDrawShadow(false);
         }
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);

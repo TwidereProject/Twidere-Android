@@ -30,12 +30,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Outline;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -61,6 +57,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.internal.widget.TintButton;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -197,7 +194,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private TabPagerIndicator mPagerIndicator;
     private View mUuckyFooter;
     private View mProfileBannerContainer;
-    private Button mFollowButton;
+    private TintButton mFollowButton;
     private ProgressBar mFollowProgress;
     private View mPagesContent, mPagesErrorContainer;
     private ImageView mPagesErrorIcon;
@@ -389,13 +386,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
 
                 final ContentResolver resolver = getContentResolver();
-                final String where = Expression.equals(CachedUsers.USER_ID, user.id).getSQL();
                 final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
                 resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
-                // I bet you don't want to see blocked user in your auto
-                // complete list.
-                if (!data.getData().isSourceBlockingTarget()) {
-                }
                 mFollowButton.setVisibility(View.VISIBLE);
             } else {
                 mFollowButton.setText(null);
@@ -1132,7 +1124,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mErrorMessageView = (TextView) headerView.findViewById(R.id.error_message);
         mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
         mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
-//        mCardView = (CardView) headerView.findViewById(R.id.card);
         mNameView = (TextView) headerView.findViewById(R.id.name);
         mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);
@@ -1154,7 +1145,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
-        mFollowButton = (Button) headerView.findViewById(R.id.follow);
+        mFollowButton = (TintButton) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
         mPagesContent = view.findViewById(R.id.pages_content);
@@ -1183,11 +1174,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void setListShown(boolean shown) {
         final TintedStatusFrameLayout tintedStatus = mTintedStatusContent;
         if (tintedStatus == null) return;
-        final FragmentActivity activity = getActivity();
-        final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
-        final boolean drawColor = !ThemeUtils.isDarkTheme(linkHandler.getCurrentThemeResourceId());
         tintedStatus.setDrawShadow(shown);
-        tintedStatus.setDrawColor(drawColor);
     }
 
     private void getFriendship() {
@@ -1253,10 +1240,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
         final ActionBar actionBar = linkHandler.getSupportActionBar();
         if (actionBar == null) return;
-        final int themeResId = linkHandler.getCurrentThemeResourceId();
         final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
-        final Drawable background = ThemeUtils.getActionBarBackground(activity, themeResId);
-        mActionBarBackground = new ActionBarDrawable(getResources(), shadow, background, ThemeUtils.isDarkTheme(themeResId));
+        mActionBarBackground = new ActionBarDrawable(getResources(), shadow);
         mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
         mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
         actionBar.setBackgroundDrawable(mActionBarBackground);
@@ -1266,19 +1251,22 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
-        mActionBarBackground.setColor(color);
         final FragmentActivity activity = getActivity();
-        mTintedStatusContent.setColor(color, ThemeUtils.getThemeAlpha(activity));
+        final IThemedActivity themed = (IThemedActivity) activity;
+        final int themeRes = themed.getCurrentThemeResourceId();
+        if (ThemeUtils.isDarkTheme(themeRes)) {
+            final int actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
+            mTintedStatusContent.setColor(actionBarColor, themed.getCurrentThemeBackgroundAlpha());
+            mActionBarBackground.setColor(actionBarColor);
+        } else {
+            mTintedStatusContent.setColor(color, themed.getCurrentThemeBackgroundAlpha());
+            mActionBarBackground.setColor(color);
+        }
         mDescriptionView.setLinkTextColor(color);
         mProfileBannerView.setBackgroundColor(color);
         mLocationView.setLinkTextColor(color);
         mURLView.setLinkTextColor(color);
-        if (activity instanceof IThemedActivity) {
-            final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-            ViewAccessor.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity, themeRes, color, true));
-        } else {
-            mPagerIndicator.setBackgroundColor(color);
-        }
+        ViewAccessor.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity, themeRes, color, true));
 
         final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
         if (drawer != null) {
@@ -1445,22 +1433,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private static class ActionBarDrawable extends LayerDrawable {
 
         private final Drawable mShadowDrawable;
-        private final Drawable mBackgroundDrawable;
         private final ColorDrawable mColorDrawable;
-        private final boolean mColorLineOnly;
 
         private float mFactor;
         private int mColor;
         private int mAlpha;
         private float mOutlineAlphaFactor;
 
-        public ActionBarDrawable(Resources resources, Drawable shadow, Drawable background,
-                                 boolean colorLineOnly) {
-            super(new Drawable[]{shadow, background, new ActionBarColorDrawable(true)});
+        public ActionBarDrawable(Resources resources, Drawable shadow) {
+            super(new Drawable[]{shadow, new ActionBarColorDrawable(true)});
             mShadowDrawable = getDrawable(0);
-            mBackgroundDrawable = getDrawable(1);
-            mColorDrawable = (ColorDrawable) getDrawable(2);
-            mColorLineOnly = colorLineOnly;
+            mColorDrawable = (ColorDrawable) getDrawable(1);
             setAlpha(0xFF);
             setOutlineAlphaFactor(1);
         }
@@ -1472,12 +1455,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void getOutline(Outline outline) {
-            final boolean showColor = !mColorLineOnly && mColor != 0;
-            if (showColor) {
-                mColorDrawable.getOutline(outline);
-            } else {
-                mBackgroundDrawable.getOutline(outline);
-            }
+            mColorDrawable.getOutline(outline);
             outline.setAlpha(mFactor * mOutlineAlphaFactor * 0.99f);
         }
 
@@ -1494,22 +1472,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         @Override
         public int getIntrinsicWidth() {
-            final boolean showColor = !mColorLineOnly && mColor != 0;
-            if (showColor) {
-                return mColorDrawable.getIntrinsicWidth();
-            } else {
-                return mBackgroundDrawable.getIntrinsicWidth();
-            }
+            return mColorDrawable.getIntrinsicWidth();
         }
 
         @Override
         public int getIntrinsicHeight() {
-            final boolean showColor = !mColorLineOnly && mColor != 0;
-            if (showColor) {
-                return mColorDrawable.getIntrinsicHeight();
-            } else {
-                return mBackgroundDrawable.getIntrinsicHeight();
-            }
+            return mColorDrawable.getIntrinsicHeight();
         }
 
         public void setColor(int color) {
@@ -1522,81 +1490,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFactor = f;
             mShadowDrawable.setAlpha(Math.round(mAlpha * MathUtils.clamp(1 - f, 0, 1)));
             final boolean hasColor = mColor != 0;
-            final boolean showBackground = mColorLineOnly || !hasColor;
-            final boolean showLine = mColorLineOnly && hasColor;
-            final boolean showColor = !mColorLineOnly && hasColor;
-            mBackgroundDrawable.setAlpha(showBackground ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
-            mColorDrawable.setAlpha(showColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
+            mColorDrawable.setAlpha(hasColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
         }
 
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        private static class LineBackgroundDrawable extends Drawable {
-
-            private final Rect mBounds;
-            private final Paint mPaint;
-            private final float mLineSize;
-
-            private int mAlpha;
-            private int mColor;
-
-            LineBackgroundDrawable(Resources resources, float lineSizeDp) {
-                mBounds = new Rect();
-                mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                mLineSize = resources.getDisplayMetrics().density * lineSizeDp;
-                setColor(Color.TRANSPARENT);
-            }
-
-            @Override
-            public void draw(Canvas canvas) {
-                canvas.drawRect(mBounds.left, mBounds.bottom - mLineSize, mBounds.right,
-                        mBounds.bottom, mPaint);
-            }
-
-            public int getColor() {
-                return mColor;
-            }
-
-            public void setColor(int color) {
-                mColor = color;
-                updatePaint();
-            }
-
-            @Override
-            protected void onBoundsChange(Rect bounds) {
-                super.onBoundsChange(bounds);
-                mBounds.set(bounds);
-            }
-
-            private void updatePaint() {
-                mPaint.setColor(mColor);
-                mPaint.setAlpha(Color.alpha(mColor) * mAlpha / 0xFF);
-                invalidateSelf();
-            }
-
-
-            @Override
-            public int getAlpha() {
-                return mAlpha;
-            }
-
-
-            @Override
-            public void setAlpha(int alpha) {
-                mAlpha = alpha;
-                updatePaint();
-            }
-
-            @Override
-            public void setColorFilter(ColorFilter cf) {
-
-            }
-
-            @Override
-            public int getOpacity() {
-                return PixelFormat.TRANSLUCENT;
-            }
-
-        }
     }
 
 

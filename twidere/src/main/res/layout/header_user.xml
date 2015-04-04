@@ -59,7 +59,7 @@
             android:layout_centerInParent="true"
             android:minWidth="48dp">
 
-            <Button
+            <android.support.v7.internal.widget.TintButton
                 android:id="@+id/follow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

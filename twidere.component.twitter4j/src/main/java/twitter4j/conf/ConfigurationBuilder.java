@@ -253,6 +253,13 @@ public final class ConfigurationBuilder {
         return this;
     }
 
+
+    public ConfigurationBuilder setOAuthAuthorizationURL(final String oAuthAuthorizationURL) {
+        checkNotBuilt();
+        configuration.setOAuthAuthorizationURL(oAuthAuthorizationURL);
+        return this;
+    }
+
     public ConfigurationBuilder setOAuthConsumerKey(final String oAuthConsumerKey) {
         checkNotBuilt();
         configuration.setOAuthConsumerKey(oAuthConsumerKey);

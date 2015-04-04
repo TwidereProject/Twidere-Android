@@ -115,9 +115,12 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     private void updateTabOffset() {
         final int controlBarHeight = getControlBarHeight();
         final int translationY = controlBarHeight - mControlBarOffsetPixels;
-        final View view = getActivity().getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-        if (view != null && controlBarHeight != 0) {
-            view.setAlpha(translationY / (float) controlBarHeight);
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof LinkHandlerActivity) {
+            final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
+            if (view != null && controlBarHeight != 0) {
+                view.setAlpha(translationY / (float) controlBarHeight);
+            }
         }
         mPagerIndicator.setTranslationY(translationY);
         mPagerWindowOverlay.setTranslationY(translationY);

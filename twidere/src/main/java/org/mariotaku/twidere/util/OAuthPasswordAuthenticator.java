@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.text.TextUtils;
 import android.util.Xml;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -29,18 +30,27 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
+import twitter4j.http.HeaderMap;
 import twitter4j.http.HttpClientWrapper;
 import twitter4j.http.HttpParameter;
+import twitter4j.http.HttpResponse;
 
 import static android.text.TextUtils.isEmpty;
 
 public class OAuthPasswordAuthenticator implements Constants {
+
+    private static final String INPUT_AUTHENTICITY_TOKEN = "authenticity_token";
+    private static final String INPUT_REDIRECT_AFTER_LOGIN = "redirect_after_login";
 
     private final Twitter twitter;
     private final HttpClientWrapper client;
@@ -62,18 +72,27 @@ public class OAuthPasswordAuthenticator implements Constants {
         try {
             final String oauthToken = requestToken.getToken();
             final String authorizationUrl = requestToken.getAuthorizationURL();
-            final String authenticityToken = readAuthenticityTokenFromHtml(client.get(authorizationUrl,
-                    authorizationUrl, null, null).asReader());
-            if (authenticityToken == null) throw new AuthenticityTokenException();
+            final HashMap<String, String> inputMap = new HashMap<>();
+            final HttpResponse authorizePage = client.get(authorizationUrl, authorizationUrl, null, null);
+            final List<String> cookieHeaders = authorizePage.getResponseHeaders("Set-Cookie");
+            readInputFromHtml(authorizePage.asReader(),
+                    inputMap, INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
             final Configuration conf = twitter.getConfiguration();
-            final HttpParameter[] params = new HttpParameter[4];
-            params[0] = new HttpParameter("authenticity_token", authenticityToken);
-            params[1] = new HttpParameter("oauth_token", oauthToken);
-            params[2] = new HttpParameter("session[username_or_email]", username);
-            params[3] = new HttpParameter("session[password]", password);
+            final List<HttpParameter> params = new ArrayList<>();
+            params.add(new HttpParameter("oauth_token", oauthToken));
+            params.add(new HttpParameter(INPUT_AUTHENTICITY_TOKEN, inputMap.get(INPUT_AUTHENTICITY_TOKEN)));
+            if (inputMap.containsKey(INPUT_REDIRECT_AFTER_LOGIN)) {
+                params.add(new HttpParameter(INPUT_REDIRECT_AFTER_LOGIN, inputMap.get(INPUT_REDIRECT_AFTER_LOGIN)));
+            }
+            params.add(new HttpParameter("session[username_or_email]", username));
+            params.add(new HttpParameter("session[password]", password));
+            final HeaderMap requestHeaders = new HeaderMap();
+            requestHeaders.addHeader("Origin", "https://twitter.com");
+            requestHeaders.addHeader("Referer", "https://twitter.com/oauth/authorize?oauth_token=" + requestToken.getToken());
+            requestHeaders.put("Cookie", cookieHeaders);
             final String oAuthAuthorizationUrl = conf.getOAuthAuthorizationURL();
             final String oauthPin = readOAuthPINFromHtml(client.post(oAuthAuthorizationUrl, oAuthAuthorizationUrl,
-                    params).asReader());
+                    params.toArray(new HttpParameter[params.size()]), requestHeaders).asReader());
             if (isEmpty(oauthPin)) throw new WrongUserPassException();
             return twitter.getOAuthAccessToken(requestToken, oauthPin);
         } catch (final IOException | TwitterException | NullPointerException | XmlPullParserException e) {
@@ -81,7 +100,7 @@ public class OAuthPasswordAuthenticator implements Constants {
         }
     }
 
-    public static String readAuthenticityTokenFromHtml(final Reader in) throws IOException, XmlPullParserException {
+    public static void readInputFromHtml(final Reader in, Map<String, String> map, String... desiredNames) throws IOException, XmlPullParserException {
         final XmlPullParserFactory f = XmlPullParserFactory.newInstance();
         final XmlPullParser parser = f.newPullParser();
         parser.setFeature(Xml.FEATURE_RELAXED, true);
@@ -90,12 +109,14 @@ public class OAuthPasswordAuthenticator implements Constants {
             final String tag = parser.getName();
             switch (parser.getEventType()) {
                 case XmlPullParser.START_TAG: {
-                    if ("input".equals(tag) && "authenticity_token".equals(parser.getAttributeValue(null, "name")))
-                        return parser.getAttributeValue(null, "value");
+                    final String name = parser.getAttributeValue(null, "name");
+                    if ("input".equalsIgnoreCase(tag) && ArrayUtils.contains(desiredNames, name)) {
+                        map.put(name, parser.getAttributeValue(null, "value"));
+                    }
+                    break;
                 }
             }
         }
-        return null;
     }
 
     public static String readOAuthPINFromHtml(final Reader in) throws XmlPullParserException, IOException {

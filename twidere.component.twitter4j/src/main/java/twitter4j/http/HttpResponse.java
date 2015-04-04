@@ -206,6 +206,8 @@ public abstract class HttpResponse {
 
 	public abstract String getResponseHeader(String name);
 
+	public abstract List<String> getResponseHeaders(String name);
+
 	public abstract Map<String, List<String>> getResponseHeaderFields();
 
 	public int getStatusCode() {

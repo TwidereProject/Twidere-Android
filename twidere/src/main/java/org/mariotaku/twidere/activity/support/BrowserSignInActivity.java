@@ -34,6 +34,8 @@ import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -168,6 +170,11 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
         public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             mActivity.setLoadProgressShown(true);
+        }
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+            super.onLoadResource(view, url);
         }
 
         @Override

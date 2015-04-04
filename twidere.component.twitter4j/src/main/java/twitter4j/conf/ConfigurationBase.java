@@ -18,12 +18,11 @@ package twitter4j.conf;
 
 import java.io.ObjectStreamException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import twitter4j.TwitterConstants;
 import twitter4j.Version;
+import twitter4j.http.HeaderMap;
 import twitter4j.http.HostAddressResolverFactory;
 import twitter4j.http.HttpClientFactory;
 
@@ -98,7 +97,7 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     private HostAddressResolverFactory hostAddressResolverFactory;
 
     // method for HttpRequestFactoryConfiguration
-    Map<String, String> requestHeaders;
+    HeaderMap requestHeaders;
 
     private static final List<ConfigurationBase> instances = new ArrayList<ConfigurationBase>();
     private boolean includeCards;
@@ -394,7 +393,7 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     }
 
     @Override
-    public Map<String, String> getRequestHeaders() {
+    public HeaderMap getRequestHeaders() {
         return requestHeaders;
     }
 
@@ -714,6 +713,10 @@ class ConfigurationBase implements TwitterConstants, Configuration {
         oAuthAccessTokenSecret = accessTokenSecret;
     }
 
+    public void setOAuthAuthorizationURL(String oAuthAuthorizationURL) {
+//        this.oAuthAuthorizationURL = oAuthAuthorizationURL;
+    }
+
     protected final void setOAuthBaseURL(String oAuthBaseURL) {
         if (isNullOrEmpty(oAuthBaseURL)) {
             oAuthBaseURL = DEFAULT_OAUTH_BASE_URL;
@@ -869,23 +872,23 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     }
 
     final void initRequestHeaders() {
-        requestHeaders = new HashMap<String, String>();
+        requestHeaders = new HeaderMap();
         if (includeTwitterClientHeader) {
-            requestHeaders.put("X-Twitter-Client-Version", getClientVersion());
-            requestHeaders.put("X-Twitter-Client-URL", getClientURL());
-            requestHeaders.put("X-Twitter-Client", getClientName());
+            requestHeaders.addHeader("X-Twitter-Client-Version", getClientVersion());
+            requestHeaders.addHeader("X-Twitter-Client-URL", getClientURL());
+            requestHeaders.addHeader("X-Twitter-Client", getClientName());
         }
 
-        requestHeaders.put("User-Agent", getHttpUserAgent());
+        requestHeaders.addHeader("User-Agent", getHttpUserAgent());
         if (gzipEnabled) {
-            requestHeaders.put("Accept-Encoding", "gzip");
+            requestHeaders.addHeader("Accept-Encoding", "gzip");
         }
         // I found this may cause "Socket is closed" error in Android, so I
         // changed it to "keep-alive".
         if (!isNullOrEmpty(httpProxyHost) && httpProxyPort > 0) {
-            requestHeaders.put("Connection", "keep-alive");
+            requestHeaders.addHeader("Connection", "keep-alive");
         } else {
-            requestHeaders.put("Connection", "close");
+            requestHeaders.addHeader("Connection", "close");
         }
     }
 

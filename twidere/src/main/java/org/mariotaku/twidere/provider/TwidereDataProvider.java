@@ -50,6 +50,7 @@ import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
+import android.support.v4.util.LongSparseArray;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -83,6 +84,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
+import org.mariotaku.twidere.receiver.NotificationReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImagePreloader;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
@@ -873,7 +875,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String filteredSelection = Utils.buildStatusFilterWhereClause(Statuses.TABLE_NAME,
                 selection, true).getSQL();
         final String[] userProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
-        final String[] statusProjection = new String[0];
+        final String[] statusProjection = {Statuses.STATUS_ID};
         final Cursor statusCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
                 filteredSelection, null, null, null, Statuses.SORT_ORDER_TIMESTAMP_DESC);
         final Cursor userCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, userProjection,
@@ -882,9 +884,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final int usersCount = userCursor.getCount();
             final int statusesCount = statusCursor.getCount();
             if (statusesCount == 0 || usersCount == 0) return;
-            final int idxUserName = userCursor.getColumnIndex(Statuses.USER_NAME),
+            final int idxStatusId = statusCursor.getColumnIndex(Statuses.STATUS_ID),
+                    idxUserName = userCursor.getColumnIndex(Statuses.USER_NAME),
                     idxUserScreenName = userCursor.getColumnIndex(Statuses.USER_NAME),
                     idxUserId = userCursor.getColumnIndex(Statuses.USER_NAME);
+            final long statusId = statusCursor.moveToFirst() ? statusCursor.getLong(idxStatusId) : -1;
             final String notificationTitle = resources.getQuantityString(R.plurals.N_new_statuses,
                     statusesCount, statusesCount);
             final String notificationContent;
@@ -906,15 +910,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 notificationContent = resources.getString(R.string.from_name_and_N_others, othersName, usersCount - 1);
             }
 
-            // Setup on click intent
-            final Intent homeIntent = new Intent(context, HomeActivity.class);
-            final Uri.Builder homeLinkBuilder = new Uri.Builder();
-            homeLinkBuilder.scheme(SCHEME_TWIDERE);
-            homeLinkBuilder.authority(AUTHORITY_HOME);
-            homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-            homeIntent.setData(homeLinkBuilder.build());
-            final PendingIntent clickIntent = PendingIntent.getActivity(context, 0, homeIntent, 0);
-
             // Setup notification
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
@@ -923,7 +918,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentTitle(notificationTitle);
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-            builder.setContentIntent(clickIntent);
+            builder.setContentIntent(getContentIntent(context, AUTHORITY_HOME, accountId));
+            builder.setDeleteIntent(getDeleteIntent(context, AUTHORITY_HOME, accountId, statusId));
             builder.setNumber(statusesCount);
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
@@ -951,7 +947,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String filteredSelection = Utils.buildStatusFilterWhereClause(Mentions.TABLE_NAME,
                 selection, true).getSQL();
         final String[] userProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
-        final String[] statusProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME,
+        final String[] statusProjection = {Statuses.STATUS_ID, Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME,
                 Statuses.TEXT_UNESCAPED, Statuses.STATUS_TIMESTAMP};
         final Cursor statusCursor = mDatabaseWrapper.query(Mentions.TABLE_NAME, statusProjection,
                 filteredSelection, null, null, null, Statuses.SORT_ORDER_TIMESTAMP_DESC);
@@ -964,6 +960,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final String accountName = Utils.getAccountName(context, accountId);
             final String accountScreenName = Utils.getAccountScreenName(context, accountId);
             final int idxStatusText = statusCursor.getColumnIndex(Statuses.TEXT_UNESCAPED),
+                    idxStatusId = statusCursor.getColumnIndex(Statuses.STATUS_ID),
                     idxStatusTimestamp = statusCursor.getColumnIndex(Statuses.STATUS_TIMESTAMP),
                     idxStatusUserName = statusCursor.getColumnIndex(Statuses.USER_NAME),
                     idxStatusUserScreenName = statusCursor.getColumnIndex(Statuses.USER_SCREEN_NAME),
@@ -985,11 +982,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
 
             // Add rich notification and get latest tweet timestamp
-            long when = -1;
+            long when = -1, statusId = -1;
             final InboxStyle style = new InboxStyle();
             for (int i = 0, j = Math.min(statusesCount, 5); statusCursor.moveToPosition(i) && i < j; i++) {
-                if (when < 0) {
+                if (when == -1) {
                     when = statusCursor.getLong(idxStatusTimestamp);
+                }
+                if (statusId == -1) {
+                    statusId = statusCursor.getLong(idxStatusId);
                 }
                 final SpannableStringBuilder sb = new SpannableStringBuilder();
                 sb.append(UserColorNameUtils.getUserNickname(context, statusCursor.getLong(idxUserId),
@@ -1005,15 +1005,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 style.setSummaryText("@" + accountScreenName);
             }
 
-            // Setup on click intent
-            final Intent homeIntent = new Intent(context, HomeActivity.class);
-            final Uri.Builder homeLinkBuilder = new Uri.Builder();
-            homeLinkBuilder.scheme(SCHEME_TWIDERE);
-            homeLinkBuilder.authority(AUTHORITY_MENTIONS);
-            homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-            homeIntent.setData(homeLinkBuilder.build());
-            final PendingIntent clickIntent = PendingIntent.getActivity(context, 0, homeIntent, 0);
-
             // Setup notification
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
@@ -1022,7 +1013,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentTitle(notificationTitle);
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-            builder.setContentIntent(clickIntent);
+            builder.setContentIntent(getContentIntent(context, AUTHORITY_MENTIONS, accountId));
+            builder.setDeleteIntent(getDeleteIntent(context, AUTHORITY_MENTIONS, accountId, statusId));
             builder.setNumber(statusesCount);
             builder.setWhen(when);
             builder.setStyle(style);
@@ -1034,6 +1026,43 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             statusCursor.close();
             userCursor.close();
         }
+    }
+
+    private PendingIntent getContentIntent(Context context, String type, long accountId) {
+        // Setup click intent
+        final Intent homeIntent = new Intent(context, HomeActivity.class);
+        final Uri.Builder homeLinkBuilder = new Uri.Builder();
+        homeLinkBuilder.scheme(SCHEME_TWIDERE);
+        homeLinkBuilder.authority(type);
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        homeIntent.setData(homeLinkBuilder.build());
+        return PendingIntent.getActivity(context, 0, homeIntent, 0);
+    }
+
+    private static PendingIntent getDeleteIntent(Context context, String type, long accountId, long position) {
+        // Setup delete intent
+        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
+        final Uri.Builder recvLinkBuilder = new Uri.Builder();
+        recvLinkBuilder.scheme(SCHEME_TWIDERE);
+        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        recvLinkBuilder.appendPath(type);
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
+        recvIntent.setData(recvLinkBuilder.build());
+        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
+    }
+
+    private static PendingIntent getDeleteIntent(Context context, String type, long accountId, StringLongPair[] positions) {
+        // Setup delete intent
+        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
+        final Uri.Builder recvLinkBuilder = new Uri.Builder();
+        recvLinkBuilder.scheme(SCHEME_TWIDERE);
+        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        recvLinkBuilder.appendPath(type);
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));
+        recvIntent.setData(recvLinkBuilder.build());
+        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
     }
 
     private void setNotificationPreferences(NotificationCompat.Builder builder, AccountPreferences pref, int defaultFlags) {
@@ -1089,8 +1118,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String filteredSelection = selection.getSQL();
         final String[] userProjection = {DirectMessages.SENDER_ID, DirectMessages.SENDER_NAME,
                 DirectMessages.SENDER_SCREEN_NAME};
-        final String[] messageProjection = {DirectMessages.SENDER_ID, DirectMessages.SENDER_NAME,
-                DirectMessages.SENDER_SCREEN_NAME, DirectMessages.TEXT_UNESCAPED,
+        final String[] messageProjection = {DirectMessages.MESSAGE_ID, DirectMessages.SENDER_ID,
+                DirectMessages.SENDER_NAME, DirectMessages.SENDER_SCREEN_NAME, DirectMessages.TEXT_UNESCAPED,
                 DirectMessages.MESSAGE_TIMESTAMP};
         final Cursor messageCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME, messageProjection,
                 filteredSelection, null, null, null, DirectMessages.DEFAULT_SORT_ORDER);
@@ -1104,6 +1133,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final String accountScreenName = Utils.getAccountScreenName(context, accountId);
             final int idxMessageText = messageCursor.getColumnIndex(DirectMessages.TEXT_UNESCAPED),
                     idxMessageTimestamp = messageCursor.getColumnIndex(DirectMessages.MESSAGE_TIMESTAMP),
+                    idxMessageId = messageCursor.getColumnIndex(DirectMessages.MESSAGE_ID),
+                    idxMessageUserId = messageCursor.getColumnIndex(DirectMessages.SENDER_ID),
                     idxMessageUserName = messageCursor.getColumnIndex(DirectMessages.SENDER_NAME),
                     idxMessageUserScreenName = messageCursor.getColumnIndex(DirectMessages.SENDER_SCREEN_NAME),
                     idxUserName = userCursor.getColumnIndex(DirectMessages.SENDER_NAME),
@@ -1128,35 +1159,36 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         displayName, usersCount - 1, messagesCount);
             }
 
+            final LongSparseArray<Long> idsMap = new LongSparseArray<>();
             // Add rich notification and get latest tweet timestamp
             long when = -1;
             final InboxStyle style = new InboxStyle();
-            for (int i = 0, j = Math.min(messagesCount, 5); messageCursor.moveToPosition(i) && i < j; i++) {
+            for (int i = 0; messageCursor.moveToPosition(i) && i < messagesCount; i++) {
                 if (when < 0) {
                     when = messageCursor.getLong(idxMessageTimestamp);
                 }
-                final SpannableStringBuilder sb = new SpannableStringBuilder();
-                sb.append(UserColorNameUtils.getUserNickname(context, messageCursor.getLong(idxUserId),
-                        mNameFirst ? messageCursor.getString(idxMessageUserName) : messageCursor.getString(idxMessageUserScreenName)));
-                sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                sb.append(' ');
-                sb.append(messageCursor.getString(idxMessageText));
-                style.addLine(sb);
+                if (i < 5) {
+                    final SpannableStringBuilder sb = new SpannableStringBuilder();
+                    sb.append(UserColorNameUtils.getUserNickname(context, messageCursor.getLong(idxUserId),
+                            mNameFirst ? messageCursor.getString(idxMessageUserName) : messageCursor.getString(idxMessageUserScreenName)));
+                    sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    sb.append(' ');
+                    sb.append(messageCursor.getString(idxMessageText));
+                    style.addLine(sb);
+                }
+                final long userId = messageCursor.getLong(idxMessageUserId);
+                final long messageId = messageCursor.getLong(idxMessageId);
+                idsMap.put(userId, Math.max(idsMap.get(userId, -1L), messageId));
             }
             if (mNameFirst) {
                 style.setSummaryText(accountName);
             } else {
                 style.setSummaryText("@" + accountScreenName);
             }
-
-            // Setup on click intent
-            final Intent homeIntent = new Intent(context, HomeActivity.class);
-            final Uri.Builder homeLinkBuilder = new Uri.Builder();
-            homeLinkBuilder.scheme(SCHEME_TWIDERE);
-            homeLinkBuilder.authority(AUTHORITY_DIRECT_MESSAGES);
-            homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-            homeIntent.setData(homeLinkBuilder.build());
-            final PendingIntent clickIntent = PendingIntent.getActivity(context, 0, homeIntent, 0);
+            final StringLongPair[] positions = new StringLongPair[idsMap.size()];
+            for (int i = 0, j = idsMap.size(); i < j; i++) {
+                positions[i] = new StringLongPair(String.valueOf(idsMap.keyAt(i)), idsMap.valueAt(i));
+            }
 
             // Setup notification
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
@@ -1166,7 +1198,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentTitle(notificationTitle);
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-            builder.setContentIntent(clickIntent);
+            builder.setContentIntent(getContentIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId));
+            builder.setContentIntent(getDeleteIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId, positions));
             builder.setNumber(messagesCount);
             builder.setWhen(when);
             builder.setStyle(style);

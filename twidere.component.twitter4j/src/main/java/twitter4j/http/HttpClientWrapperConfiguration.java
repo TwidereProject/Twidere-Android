@@ -16,11 +16,12 @@
 
 package twitter4j.http;
 
+import java.util.List;
 import java.util.Map;
 
 public interface HttpClientWrapperConfiguration extends HttpClientConfiguration {
 	/**
 	 * @return request headers
 	 */
-	Map<String, String> getRequestHeaders();
+	HeaderMap getRequestHeaders();
 }

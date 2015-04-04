@@ -99,6 +99,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final String AUTHORITY_STATUS_REPLIES = "status_replies";
     public static final String AUTHORITY_RETWEETS_OF_ME = "retweets_of_me";
     public static final String AUTHORITY_MUTES_USERS = "mutes_users";
+    public static final String AUTHORITY_NOTIFICATIONS = "notifications";
 
     public static final String QUERY_PARAM_ACCOUNT_ID = "account_id";
     public static final String QUERY_PARAM_ACCOUNT_IDS = "account_ids";
@@ -120,6 +121,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final String QUERY_PARAM_FINISH_ONLY = "finish_only";
     public static final String QUERY_PARAM_NEW_ITEMS_COUNT = "new_items_count";
     public static final String QUERY_PARAM_RECIPIENT_ID = "recipient_id";
+    public static final String QUERY_PARAM_READ_POSITION = "param_read_position";
+    public static final String QUERY_PARAM_READ_POSITIONS = "param_read_positions";
 
     public static final String DEFAULT_PROTOCOL = PROTOCOL_HTTPS;
 

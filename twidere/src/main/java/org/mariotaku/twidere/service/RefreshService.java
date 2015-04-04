@@ -53,265 +53,257 @@ import static org.mariotaku.twidere.util.Utils.shouldStopAutoRefreshOnBatteryLow
 
 public class RefreshService extends Service implements Constants {
 
-	private SharedPreferencesWrapper mPreferences;
+    private SharedPreferencesWrapper mPreferences;
 
-	private AlarmManager mAlarmManager;
-	private AsyncTwitterWrapper mTwitterWrapper;
-	private PendingIntent mPendingRefreshHomeTimelineIntent, mPendingRefreshMentionsIntent,
-			mPendingRefreshDirectMessagesIntent, mPendingRefreshTrendsIntent;
+    private AlarmManager mAlarmManager;
+    private AsyncTwitterWrapper mTwitterWrapper;
+    private PendingIntent mPendingRefreshHomeTimelineIntent, mPendingRefreshMentionsIntent,
+            mPendingRefreshDirectMessagesIntent, mPendingRefreshTrendsIntent;
 
-	private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
 
-		@Override
-		public void onReceive(final Context context, final Intent intent) {
-			final String action = intent.getAction();
-			if (isDebugBuild()) {
-				Log.d(LOGTAG, String.format("Refresh service received action %s", action));
-			}
-			if (BROADCAST_NOTIFICATION_DELETED.equals(action)) {
-				final int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1);
-				final long accountId = intent.getLongExtra(EXTRA_NOTIFICATION_ACCOUNT, -1);
-				clearNotification(notificationId, accountId);
-			} else if (BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING.equals(action)) {
-				rescheduleHomeTimelineRefreshing();
-			} else if (BROADCAST_RESCHEDULE_MENTIONS_REFRESHING.equals(action)) {
-				rescheduleMentionsRefreshing();
-			} else if (BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING.equals(action)) {
-				rescheduleDirectMessagesRefreshing();
-			} else if (BROADCAST_RESCHEDULE_TRENDS_REFRESHING.equals(action)) {
-				rescheduleTrendsRefreshing();
-			} else if (isAutoRefreshAllowed()) {
-				final long[] accountIds = getAccountIds(context);
-				final AccountPreferences[] accountPrefs = AccountPreferences.getAccountPreferences(context, accountIds);
-				if (BROADCAST_REFRESH_HOME_TIMELINE.equals(action)) {
-					final long[] refreshIds = getRefreshableIds(accountPrefs, new HomeRefreshableFilter());
-					final long[] sinceIds = getNewestStatusIdsFromDatabase(context, Statuses.CONTENT_URI, refreshIds);
-					if (isDebugBuild()) {
-						Log.d(LOGTAG, String.format("Auto refreshing home for %s", Arrays.toString(refreshIds)));
-					}
-					if (!isHomeTimelineRefreshing()) {
-						getHomeTimeline(refreshIds, null, sinceIds);
-					}
-				} else if (BROADCAST_REFRESH_MENTIONS.equals(action)) {
-					final long[] refreshIds = getRefreshableIds(accountPrefs, new MentionsRefreshableFilter());
-					final long[] sinceIds = getNewestStatusIdsFromDatabase(context, Mentions.CONTENT_URI, refreshIds);
-					if (isDebugBuild()) {
-						Log.d(LOGTAG, String.format("Auto refreshing mentions for %s", Arrays.toString(refreshIds)));
-					}
-					if (!isMentionsRefreshing()) {
-						getMentions(refreshIds, null, sinceIds);
-					}
-				} else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
-					final long[] refreshIds = getRefreshableIds(accountPrefs, new MessagesRefreshableFilter());
-					final long[] sinceIds = getNewestMessageIdsFromDatabase(context, DirectMessages.Inbox.CONTENT_URI,
-							refreshIds);
-					if (isDebugBuild()) {
-						Log.d(LOGTAG, String.format("Auto refreshing messages for %s", Arrays.toString(refreshIds)));
-					}
-					if (!isReceivedDirectMessagesRefreshing()) {
-						getReceivedDirectMessages(refreshIds, null, sinceIds);
-					}
-				} else if (BROADCAST_REFRESH_TRENDS.equals(action)) {
-					final long[] refreshIds = getRefreshableIds(accountPrefs, new TrendsRefreshableFilter());
-					if (isDebugBuild()) {
-						Log.d(LOGTAG, String.format("Auto refreshing trends for %s", Arrays.toString(refreshIds)));
-					}
-					if (!isLocalTrendsRefreshing()) {
-						getLocalTrends(refreshIds);
-					}
-				}
-			}
-		}
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            final String action = intent.getAction();
+            if (isDebugBuild()) {
+                Log.d(LOGTAG, String.format("Refresh service received action %s", action));
+            }
+            if (BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING.equals(action)) {
+                rescheduleHomeTimelineRefreshing();
+            } else if (BROADCAST_RESCHEDULE_MENTIONS_REFRESHING.equals(action)) {
+                rescheduleMentionsRefreshing();
+            } else if (BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING.equals(action)) {
+                rescheduleDirectMessagesRefreshing();
+            } else if (BROADCAST_RESCHEDULE_TRENDS_REFRESHING.equals(action)) {
+                rescheduleTrendsRefreshing();
+            } else if (isAutoRefreshAllowed()) {
+                final long[] accountIds = getAccountIds(context);
+                final AccountPreferences[] accountPrefs = AccountPreferences.getAccountPreferences(context, accountIds);
+                if (BROADCAST_REFRESH_HOME_TIMELINE.equals(action)) {
+                    final long[] refreshIds = getRefreshableIds(accountPrefs, new HomeRefreshableFilter());
+                    final long[] sinceIds = getNewestStatusIdsFromDatabase(context, Statuses.CONTENT_URI, refreshIds);
+                    if (isDebugBuild()) {
+                        Log.d(LOGTAG, String.format("Auto refreshing home for %s", Arrays.toString(refreshIds)));
+                    }
+                    if (!isHomeTimelineRefreshing()) {
+                        getHomeTimeline(refreshIds, null, sinceIds);
+                    }
+                } else if (BROADCAST_REFRESH_MENTIONS.equals(action)) {
+                    final long[] refreshIds = getRefreshableIds(accountPrefs, new MentionsRefreshableFilter());
+                    final long[] sinceIds = getNewestStatusIdsFromDatabase(context, Mentions.CONTENT_URI, refreshIds);
+                    if (isDebugBuild()) {
+                        Log.d(LOGTAG, String.format("Auto refreshing mentions for %s", Arrays.toString(refreshIds)));
+                    }
+                    if (!isMentionsRefreshing()) {
+                        getMentions(refreshIds, null, sinceIds);
+                    }
+                } else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
+                    final long[] refreshIds = getRefreshableIds(accountPrefs, new MessagesRefreshableFilter());
+                    final long[] sinceIds = getNewestMessageIdsFromDatabase(context, DirectMessages.Inbox.CONTENT_URI,
+                            refreshIds);
+                    if (isDebugBuild()) {
+                        Log.d(LOGTAG, String.format("Auto refreshing messages for %s", Arrays.toString(refreshIds)));
+                    }
+                    if (!isReceivedDirectMessagesRefreshing()) {
+                        getReceivedDirectMessages(refreshIds, null, sinceIds);
+                    }
+                } else if (BROADCAST_REFRESH_TRENDS.equals(action)) {
+                    final long[] refreshIds = getRefreshableIds(accountPrefs, new TrendsRefreshableFilter());
+                    if (isDebugBuild()) {
+                        Log.d(LOGTAG, String.format("Auto refreshing trends for %s", Arrays.toString(refreshIds)));
+                    }
+                    if (!isLocalTrendsRefreshing()) {
+                        getLocalTrends(refreshIds);
+                    }
+                }
+            }
+        }
 
-	};
+    };
 
-	@Override
-	public IBinder onBind(final Intent intent) {
-		return null;
-	}
+    @Override
+    public IBinder onBind(final Intent intent) {
+        return null;
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		final TwidereApplication app = TwidereApplication.getInstance(this);
-		mTwitterWrapper = app.getTwitterWrapper();
-		mPreferences = SharedPreferencesWrapper.getInstance(app, SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-		mPendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, new Intent(
-				BROADCAST_REFRESH_HOME_TIMELINE), 0);
-		mPendingRefreshMentionsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_MENTIONS), 0);
-		mPendingRefreshDirectMessagesIntent = PendingIntent.getBroadcast(this, 0, new Intent(
-				BROADCAST_REFRESH_DIRECT_MESSAGES), 0);
-		mPendingRefreshTrendsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_TRENDS), 0);
-		final IntentFilter filter = new IntentFilter(BROADCAST_NOTIFICATION_DELETED);
-		filter.addAction(BROADCAST_REFRESH_HOME_TIMELINE);
-		filter.addAction(BROADCAST_REFRESH_MENTIONS);
-		filter.addAction(BROADCAST_REFRESH_DIRECT_MESSAGES);
-		filter.addAction(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING);
-		filter.addAction(BROADCAST_RESCHEDULE_MENTIONS_REFRESHING);
-		filter.addAction(BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING);
-		registerReceiver(mStateReceiver, filter);
-		startAutoRefresh();
-	}
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        final TwidereApplication app = TwidereApplication.getInstance(this);
+        mTwitterWrapper = app.getTwitterWrapper();
+        mPreferences = SharedPreferencesWrapper.getInstance(app, SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        mPendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+                BROADCAST_REFRESH_HOME_TIMELINE), 0);
+        mPendingRefreshMentionsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_MENTIONS), 0);
+        mPendingRefreshDirectMessagesIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+                BROADCAST_REFRESH_DIRECT_MESSAGES), 0);
+        mPendingRefreshTrendsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_TRENDS), 0);
+        final IntentFilter filter = new IntentFilter(BROADCAST_NOTIFICATION_DELETED);
+        filter.addAction(BROADCAST_REFRESH_HOME_TIMELINE);
+        filter.addAction(BROADCAST_REFRESH_MENTIONS);
+        filter.addAction(BROADCAST_REFRESH_DIRECT_MESSAGES);
+        filter.addAction(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING);
+        filter.addAction(BROADCAST_RESCHEDULE_MENTIONS_REFRESHING);
+        filter.addAction(BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING);
+        registerReceiver(mStateReceiver, filter);
+        startAutoRefresh();
+    }
 
-	@Override
-	public void onDestroy() {
-		unregisterReceiver(mStateReceiver);
-		if (hasAutoRefreshAccounts(this)) {
-			// Auto refresh enabled, so I will try to start service after it was
-			// stopped.
-			startService(new Intent(this, getClass()));
-		}
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(mStateReceiver);
+        if (hasAutoRefreshAccounts(this)) {
+            // Auto refresh enabled, so I will try to start service after it was
+            // stopped.
+            startService(new Intent(this, getClass()));
+        }
+        super.onDestroy();
+    }
 
-	protected boolean isAutoRefreshAllowed() {
-		return isNetworkAvailable(this) && (isBatteryOkay(this) || !shouldStopAutoRefreshOnBatteryLow(this));
-	}
+    protected boolean isAutoRefreshAllowed() {
+        return isNetworkAvailable(this) && (isBatteryOkay(this) || !shouldStopAutoRefreshOnBatteryLow(this));
+    }
 
-	private void clearNotification(final int notificationId, final long notificationAccount) {
-		mTwitterWrapper.clearNotificationAsync(notificationId, notificationAccount);
-	}
+    private int getHomeTimeline(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+        return mTwitterWrapper.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
+    }
 
-	private int getHomeTimeline(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-		return mTwitterWrapper.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
-	}
+    private int getLocalTrends(final long[] accountIds) {
+        final long account_id = getDefaultAccountId(this);
+        final int woeid = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
+        return mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
+    }
 
-	private int getLocalTrends(final long[] accountIds) {
-		final long account_id = getDefaultAccountId(this);
-		final int woeid = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
-		return mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
-	}
+    private int getMentions(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+        return mTwitterWrapper.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
+    }
 
-	private int getMentions(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-		return mTwitterWrapper.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
-	}
+    private int getReceivedDirectMessages(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+        return mTwitterWrapper.getReceivedDirectMessagesAsync(accountIds, maxIds, sinceIds);
+    }
 
-	private int getReceivedDirectMessages(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-		return mTwitterWrapper.getReceivedDirectMessagesAsync(accountIds, maxIds, sinceIds);
-	}
+    private long[] getRefreshableIds(final AccountPreferences[] prefs, final RefreshableAccountFilter filter) {
+        if (prefs == null) return null;
+        final long[] temp = new long[prefs.length];
+        int i = 0;
+        for (final AccountPreferences pref : prefs) {
+            if (pref.isAutoRefreshEnabled() && filter.isRefreshable(pref)) {
+                temp[i++] = pref.getAccountId();
+            }
+        }
+        final long[] result = new long[i];
+        System.arraycopy(temp, 0, result, 0, i);
+        return result;
+    }
 
-	private long[] getRefreshableIds(final AccountPreferences[] prefs, final RefreshableAccountFilter filter) {
-		if (prefs == null) return null;
-		final long[] temp = new long[prefs.length];
-		int i = 0;
-		for (final AccountPreferences pref : prefs) {
-			if (pref.isAutoRefreshEnabled() && filter.isRefreshable(pref)) {
-				temp[i++] = pref.getAccountId();
-			}
-		}
-		final long[] result = new long[i];
-		System.arraycopy(temp, 0, result, 0, i);
-		return result;
-	}
+    private long getRefreshInterval() {
+        if (mPreferences == null) return 0;
+        final int prefValue = parseInt(mPreferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL));
+        return Math.max(prefValue, 3) * 60 * 1000;
+    }
 
-	private long getRefreshInterval() {
-		if (mPreferences == null) return 0;
-		final int prefValue = parseInt(mPreferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL));
-		return Math.max(prefValue, 3) * 60 * 1000;
-	}
+    private boolean isHomeTimelineRefreshing() {
+        return mTwitterWrapper.isHomeTimelineRefreshing();
+    }
 
-	private boolean isHomeTimelineRefreshing() {
-		return mTwitterWrapper.isHomeTimelineRefreshing();
-	}
+    private boolean isLocalTrendsRefreshing() {
+        return mTwitterWrapper.isLocalTrendsRefreshing();
+    }
 
-	private boolean isLocalTrendsRefreshing() {
-		return mTwitterWrapper.isLocalTrendsRefreshing();
-	}
+    private boolean isMentionsRefreshing() {
+        return mTwitterWrapper.isMentionsTimelineRefreshing();
+    }
 
-	private boolean isMentionsRefreshing() {
-		return mTwitterWrapper.isMentionsTimelineRefreshing();
-	}
+    private boolean isReceivedDirectMessagesRefreshing() {
+        return mTwitterWrapper.isReceivedDirectMessagesRefreshing();
+    }
 
-	private boolean isReceivedDirectMessagesRefreshing() {
-		return mTwitterWrapper.isReceivedDirectMessagesRefreshing();
-	}
+    private void rescheduleDirectMessagesRefreshing() {
+        mAlarmManager.cancel(mPendingRefreshDirectMessagesIntent);
+        final long refreshInterval = getRefreshInterval();
+        if (refreshInterval > 0) {
+            mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
+                    refreshInterval, mPendingRefreshDirectMessagesIntent);
+        }
+    }
 
-	private void rescheduleDirectMessagesRefreshing() {
-		mAlarmManager.cancel(mPendingRefreshDirectMessagesIntent);
-		final long refreshInterval = getRefreshInterval();
-		if (refreshInterval > 0) {
-			mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-					refreshInterval, mPendingRefreshDirectMessagesIntent);
-		}
-	}
+    private void rescheduleHomeTimelineRefreshing() {
+        mAlarmManager.cancel(mPendingRefreshHomeTimelineIntent);
+        final long refreshInterval = getRefreshInterval();
+        if (refreshInterval > 0) {
+            mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
+                    refreshInterval, mPendingRefreshHomeTimelineIntent);
+        }
+    }
 
-	private void rescheduleHomeTimelineRefreshing() {
-		mAlarmManager.cancel(mPendingRefreshHomeTimelineIntent);
-		final long refreshInterval = getRefreshInterval();
-		if (refreshInterval > 0) {
-			mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-					refreshInterval, mPendingRefreshHomeTimelineIntent);
-		}
-	}
+    private void rescheduleMentionsRefreshing() {
+        mAlarmManager.cancel(mPendingRefreshMentionsIntent);
+        final long refreshInterval = getRefreshInterval();
+        if (refreshInterval > 0) {
+            mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
+                    refreshInterval, mPendingRefreshMentionsIntent);
+        }
+    }
 
-	private void rescheduleMentionsRefreshing() {
-		mAlarmManager.cancel(mPendingRefreshMentionsIntent);
-		final long refreshInterval = getRefreshInterval();
-		if (refreshInterval > 0) {
-			mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-					refreshInterval, mPendingRefreshMentionsIntent);
-		}
-	}
+    private void rescheduleTrendsRefreshing() {
+        mAlarmManager.cancel(mPendingRefreshTrendsIntent);
+        final long refreshInterval = getRefreshInterval();
+        if (refreshInterval > 0) {
+            mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
+                    refreshInterval, mPendingRefreshTrendsIntent);
+        }
+    }
 
-	private void rescheduleTrendsRefreshing() {
-		mAlarmManager.cancel(mPendingRefreshTrendsIntent);
-		final long refreshInterval = getRefreshInterval();
-		if (refreshInterval > 0) {
-			mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-					refreshInterval, mPendingRefreshTrendsIntent);
-		}
-	}
+    private boolean startAutoRefresh() {
+        stopAutoRefresh();
+        final long refreshInterval = getRefreshInterval();
+        if (refreshInterval <= 0) return false;
+        rescheduleHomeTimelineRefreshing();
+        rescheduleMentionsRefreshing();
+        rescheduleDirectMessagesRefreshing();
+        rescheduleTrendsRefreshing();
+        return true;
+    }
 
-	private boolean startAutoRefresh() {
-		stopAutoRefresh();
-		final long refreshInterval = getRefreshInterval();
-		if (refreshInterval <= 0) return false;
-		rescheduleHomeTimelineRefreshing();
-		rescheduleMentionsRefreshing();
-		rescheduleDirectMessagesRefreshing();
-		rescheduleTrendsRefreshing();
-		return true;
-	}
+    private void stopAutoRefresh() {
+        mAlarmManager.cancel(mPendingRefreshHomeTimelineIntent);
+        mAlarmManager.cancel(mPendingRefreshMentionsIntent);
+        mAlarmManager.cancel(mPendingRefreshDirectMessagesIntent);
+        mAlarmManager.cancel(mPendingRefreshTrendsIntent);
+    }
 
-	private void stopAutoRefresh() {
-		mAlarmManager.cancel(mPendingRefreshHomeTimelineIntent);
-		mAlarmManager.cancel(mPendingRefreshMentionsIntent);
-		mAlarmManager.cancel(mPendingRefreshDirectMessagesIntent);
-		mAlarmManager.cancel(mPendingRefreshTrendsIntent);
-	}
+    private static class HomeRefreshableFilter implements RefreshableAccountFilter {
+        @Override
+        public boolean isRefreshable(final AccountPreferences pref) {
+            return pref.isAutoRefreshHomeTimelineEnabled();
+        }
+    }
 
-	private static class HomeRefreshableFilter implements RefreshableAccountFilter {
-		@Override
-		public boolean isRefreshable(final AccountPreferences pref) {
-			return pref.isAutoRefreshHomeTimelineEnabled();
-		}
-	}
+    private static class MentionsRefreshableFilter implements RefreshableAccountFilter {
 
-	private static class MentionsRefreshableFilter implements RefreshableAccountFilter {
+        @Override
+        public boolean isRefreshable(final AccountPreferences pref) {
+            return pref.isAutoRefreshMentionsEnabled();
+        }
 
-		@Override
-		public boolean isRefreshable(final AccountPreferences pref) {
-			return pref.isAutoRefreshMentionsEnabled();
-		}
+    }
 
-	}
+    private static class MessagesRefreshableFilter implements RefreshableAccountFilter {
+        @Override
+        public boolean isRefreshable(final AccountPreferences pref) {
+            return pref.isAutoRefreshDirectMessagesEnabled();
+        }
+    }
 
-	private static class MessagesRefreshableFilter implements RefreshableAccountFilter {
-		@Override
-		public boolean isRefreshable(final AccountPreferences pref) {
-			return pref.isAutoRefreshDirectMessagesEnabled();
-		}
-	}
+    private static interface RefreshableAccountFilter {
+        boolean isRefreshable(AccountPreferences pref);
+    }
 
-	private static interface RefreshableAccountFilter {
-		boolean isRefreshable(AccountPreferences pref);
-	}
-
-	private static class TrendsRefreshableFilter implements RefreshableAccountFilter {
-		@Override
-		public boolean isRefreshable(final AccountPreferences pref) {
-			return pref.isAutoRefreshTrendsEnabled();
-		}
-	}
+    private static class TrendsRefreshableFilter implements RefreshableAccountFilter {
+        @Override
+        public boolean isRefreshable(final AccountPreferences pref) {
+            return pref.isAutoRefreshTrendsEnabled();
+        }
+    }
 }

@@ -81,8 +81,11 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
     @Override
     public HttpResponse request(HttpRequest req) throws TwitterException {
         final Builder builder = new Builder();
-        for (Entry<String, String> headerEntry : req.getRequestHeaders().entrySet()) {
-            builder.header(headerEntry.getKey(), headerEntry.getValue());
+        for (Entry<String, List<String>> headerEntry : req.getRequestHeaders().entrySet()) {
+            final String name = headerEntry.getKey();
+            for (String value : headerEntry.getValue()) {
+                builder.addHeader(name, value);
+            }
         }
         final Authorization authorization = req.getAuthorization();
         if (authorization != null) {
@@ -257,6 +260,11 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
         @Override
         public String getResponseHeader(String name) {
             return response.header(name);
+        }
+
+        @Override
+        public List<String> getResponseHeaders(String name) {
+            return response.headers(name);
         }
 
         @Override

@@ -83,6 +83,10 @@ public class ReadStateManager implements Constants {
         mPreferences.registerOnSharedPreferenceChangeListener(listener);
     }
 
+    public boolean setPosition(String key, String keyId, long position) {
+        return setPosition(key, keyId, position, false);
+    }
+
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
         mPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }

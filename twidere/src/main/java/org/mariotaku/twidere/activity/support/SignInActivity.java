@@ -38,6 +38,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -95,6 +96,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
     private static final String EXTRA_API_LAST_CHANGE = "api_last_change";
     public static final String FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress";
+    private static final String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
 
     private String mAPIUrlFormat;
     private int mAuthType;
@@ -367,16 +369,17 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
         } else {
             Utils.setUserAgent(this, cb);
         }
-        if (!isEmpty(mAPIUrlFormat)) {
-            final String versionSuffix = mNoVersionSuffix ? null : "/1.1/";
-            cb.setRestBaseURL(Utils.getApiUrl(mAPIUrlFormat, "api", versionSuffix));
-            cb.setOAuthBaseURL(Utils.getApiUrl(mAPIUrlFormat, "api", "/oauth/"));
-            cb.setUploadBaseURL(Utils.getApiUrl(mAPIUrlFormat, "upload", versionSuffix));
-            if (!mSameOAuthSigningUrl) {
-                cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
-                cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
-                cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
-            }
+        final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
+        final String versionSuffix = mNoVersionSuffix ? null : "/1.1/";
+        cb.setRestBaseURL(Utils.getApiUrl(apiUrlFormat, "api", versionSuffix));
+        cb.setOAuthBaseURL(Utils.getApiUrl(apiUrlFormat, "api", "/oauth/"));
+        cb.setUploadBaseURL(Utils.getApiUrl(apiUrlFormat, "upload", versionSuffix));
+        cb.setOAuthAuthorizationURL(Utils.getApiUrl(apiUrlFormat, null, "/oauth/authorize"));
+        cb.setHttpUserAgent(Utils.generateBrowserUserAgent());
+        if (!mSameOAuthSigningUrl) {
+            cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
+            cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
+            cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
         }
         if (isEmpty(mConsumerKey) || isEmpty(mConsumerSecret)) {
             cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY_3);
@@ -501,6 +504,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
     }
 
     void onSignInStart() {
+        if (isFinishing()) return;
         final SupportProgressDialogFragment fragment = SupportProgressDialogFragment.show(this, FRAGMENT_TAG_SIGN_IN_PROGRESS);
         fragment.setCancelable(false);
     }

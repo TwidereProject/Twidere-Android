@@ -83,6 +83,11 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         public boolean onMenuItemClick(MenuItem item) {
             final ParcelableStatus status = mSelectedStatus;
             if (status == null) return false;
+            if (item.getItemId() == MENU_SHARE) {
+                final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_status)));
+                return true;
+            }
             return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
                     getFragmentManager(), getTwitterWrapper(), status, item);
         }
@@ -461,7 +466,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     protected abstract AbsStatusesAdapter<Data> onCreateAdapter(Context context, boolean compact);
 
     protected void saveReadPosition() {
-        final String readPositionTag = getReadPositionTag();
+        final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
         final int position = mLayoutManager.findFirstVisibleItemPosition();
         if (position == RecyclerView.NO_POSITION) return;
