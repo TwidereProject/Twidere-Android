@@ -54,13 +54,11 @@ public class MediaTimelineLoader extends Twitter4JStatusesLoader {
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
         if (mUserId != -1)
             return twitter.getMediaTimeline(mUserId, paging);
         else if (mUserScreenName != null)
             return twitter.getMediaTimeline(mUserScreenName, paging);
-        else
-            return null;
+        throw new TwitterException("Wrong user");
     }
 
     @Override

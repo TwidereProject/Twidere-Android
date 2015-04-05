@@ -144,7 +144,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         return new MediaTimelineLoader(context, accountId, userId, screenName, sinceId, maxId, null,
-                null, tabPosition, false);
+                null, tabPosition, true);
     }
 
     @Override
