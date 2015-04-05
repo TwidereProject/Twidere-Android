@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -425,6 +426,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
 
         private static final String DIALOG_FRAGMENT_TAG = "updating_user_profile";
         private final UserProfileEditorActivity mActivity;
+        private final Handler mHandler;
         private final long mAccountId;
         private final ParcelableUser mOriginal;
         private final String mName;
@@ -440,6 +442,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
                                          final String description, final int linkColor,
                                          final int backgroundColor) {
             mActivity = activity;
+            mHandler = new Handler(activity.getMainLooper());
             mAccountId = accountId;
             mOriginal = original;
             mName = name;
@@ -504,8 +507,13 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
 
         @Override
         protected void onPreExecute() {
-            final DialogFragment df = SupportProgressDialogFragment.show(mActivity, DIALOG_FRAGMENT_TAG);
-            df.setCancelable(false);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    final DialogFragment df = SupportProgressDialogFragment.show(mActivity, DIALOG_FRAGMENT_TAG);
+                    df.setCancelable(false);
+                }
+            });
             super.onPreExecute();
         }
 

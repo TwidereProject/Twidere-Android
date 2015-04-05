@@ -1,6 +1,9 @@
 package org.mariotaku.twidere.adapter;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
@@ -21,22 +24,32 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
+import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
+import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
+
+import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import edu.tsinghua.spice.Utilies.TypeMappingUtil;
+import edu.ucdavis.earlybird.ProfilingUtil;
 
 /**
  * Created by mariotaku on 14/11/19.
  */
 public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implements Constants,
-        IStatusesAdapter<D> {
+        IStatusesAdapter<D>, OnLinkClickListener {
     public static final int ITEM_VIEW_TYPE_STATUS = 0;
     public static final int ITEM_VIEW_TYPE_GAP = 1;
     public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
-
 
     private final Context mContext;
     private final LayoutInflater mInflater;
@@ -45,12 +58,18 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     private final AsyncTwitterWrapper mTwitterWrapper;
     private final int mCardBackgroundColor;
     private final int mTextSize;
-    private final int mProfileImageStyle, mMediaPreviewStyle;
+    @ShapeStyle
+    private final int mProfileImageStyle;
+    @PreviewStyle
+    private final int mMediaPreviewStyle;
+    @HighlightStyle
+    private final int mLinkHighlightingStyle;
 
     private final boolean mCompactCards;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
     private final boolean mDisplayProfileImage;
+    private final TwidereLinkify mLinkify;
 
     private boolean mLoadMoreSupported;
     private boolean mLoadMoreIndicatorVisible;
@@ -73,9 +92,12 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
         mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
         mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+        mLinkify = new TwidereLinkify(new InternalOnLinkClickListener(this));
+        mLinkify.setHighlightOption(mLinkHighlightingStyle);
         setShowInReplyTo(true);
     }
 
@@ -150,8 +172,18 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
     }
 
     @Override
+    public TwidereLinkify getTwidereLinkify() {
+        return mLinkify;
+    }
+
+    @Override
     public boolean isMediaPreviewEnabled() {
         return mDisplayMediaPreview;
+    }
+
+    @Override
+    public int getLinkHighlightingStyle() {
+        return mLinkHighlightingStyle;
     }
 
     @Override
@@ -285,6 +317,23 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         }
     }
 
+    @Override
+    public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
+        final Context context = getContext();
+        // UCD
+        ProfilingUtil.profile(context, accountId, "Click, " + link + ", " + type);
+        //spice
+        SpiceProfilingUtil.profile(context, accountId, accountId + ",Visit," + link + "," + TypeMappingUtil.getLinkType(type));
+        //end
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            context.startActivity(intent);
+        } catch (final ActivityNotFoundException e) {
+            // TODO
+        }
+    }
+
     public void setListener(StatusAdapterListener listener) {
         mStatusAdapterListener = listener;
     }
@@ -309,4 +358,21 @@ public abstract class AbsStatusesAdapter<D> extends Adapter<ViewHolder> implemen
         void onStatusMenuClick(StatusViewHolder holder, View menuView, int position);
     }
 
+    private static class InternalOnLinkClickListener<D> extends OnLinkClickHandler {
+
+        private final AbsStatusesAdapter<D> adapter;
+
+        public InternalOnLinkClickListener(AbsStatusesAdapter<D> adapter) {
+            super(adapter.getContext(), null);
+            this.adapter = adapter;
+        }
+
+        @Override
+        protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
+            final ParcelableStatus status = adapter.getStatus((int) extraId);
+            final ParcelableMedia current = StatusLinkClickHandler.findByLink(status.media, link);
+            Utils.openMedia(context, status, current);
+        }
+
+    }
 }

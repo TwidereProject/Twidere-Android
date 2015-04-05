@@ -28,10 +28,9 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.Collection;
-
-import static org.mariotaku.twidere.util.Utils.getLinkHighlightOptionInt;
 
 public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter, OnSharedPreferenceChangeListener {
 
@@ -114,7 +113,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
 
     @Override
     public final void setLinkHighlightOption(final String option) {
-        final int optionInt = getLinkHighlightOptionInt(option);
+        final int optionInt = Utils.getLinkHighlightingStyleInt(option);
         mLinkify.setHighlightOption(optionInt);
         if (optionInt == mLinkHighlightOption) return;
         mLinkHighlightOption = optionInt;

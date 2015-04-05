@@ -32,9 +32,9 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
-
-import static org.mariotaku.twidere.util.Utils.getLinkHighlightOptionInt;
+import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
 public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
 
@@ -43,6 +43,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
     private final TwidereLinkify mLinkify;
     private StatusViewHolder mHolder;
     private boolean mCompactModeChanged;
+    private DummyStatusHolderAdapter mAdapter;
 
     public CardPreviewPreference(final Context context) {
         this(context, null);
@@ -58,6 +59,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         mLinkify = new TwidereLinkify(null);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
+        mAdapter = new DummyStatusHolderAdapter(context);
     }
 
     @Override
@@ -80,8 +82,8 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         if (mPreferences == null) return;
         mCompactModeChanged = false;
         final Context context = getContext();
-        final int highlightOption = getLinkHighlightOptionInt(context);
-        mHolder = new StatusViewHolder(view);
+        final int highlightOption = Utils.getLinkHighlightingStyle(context);
+        mHolder = new StatusViewHolder(mAdapter, view);
         mHolder.displaySampleStatus();
         mLinkify.setHighlightOption(highlightOption);
         super.onBindView(view);

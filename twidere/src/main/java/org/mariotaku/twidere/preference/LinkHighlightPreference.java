@@ -59,7 +59,7 @@ public class LinkHighlightPreference extends AutoInvalidateListPreference implem
 		super.onBindView(view);
 		final TextView summary = (TextView) view.findViewById(android.R.id.summary);
 		summary.setVisibility(View.VISIBLE);
-		summary.setText(getStyledEntry(Utils.getLinkHighlightOptionInt(getValue()), getEntry()));
+		summary.setText(getStyledEntry(Utils.getLinkHighlightingStyleInt(getValue()), getEntry()));
 	}
 
 	private static CharSequence getStyledEntry(final int option, final CharSequence entry) {

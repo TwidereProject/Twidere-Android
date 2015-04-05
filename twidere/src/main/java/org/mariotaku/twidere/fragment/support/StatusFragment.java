@@ -101,6 +101,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -348,7 +349,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         popupMenu.show();
         mPopupMenu = popupMenu;
         mSelectedStatus = status;
-    }    @Override
+    }
+
+    @Override
     public Loader<SingleResponse<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
         final Bundle fragmentArgs = getArguments();
         final long accountId = fragmentArgs.getLong(EXTRA_ACCOUNT_ID, -1);
@@ -383,7 +386,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     private ParcelableStatus getStatus() {
         return mStatusAdapter.getStatus();
-    }    @Override
+    }
+
+    @Override
     public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
                                final SingleResponse<ParcelableStatus> data) {
         if (data.hasData()) {
@@ -580,7 +585,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final StatusLinkClickHandler linkClickHandler = new StatusLinkClickHandler(context, null);
             linkClickHandler.setStatus(status);
             final TwidereLinkify linkify = new TwidereLinkify(linkClickHandler, VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH, false);
-            linkify.applyAllLinks(textView, status.account_id, status.is_possibly_sensitive);
+            linkify.applyAllLinks(textView, status.account_id, getAdapterPosition(), status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 
             final String timeString = formatToLongTimeString(context, status.timestamp);
@@ -851,12 +856,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public SpaceViewHolder(View itemView) {
             super(itemView);
         }
-    }    @Override
+    }
+
+    @Override
     public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
 
     }
 
-    private static class StatusAdapter extends Adapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
+    private static class StatusAdapter extends Adapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>>, OnLinkClickListener {
 
         private static final int VIEW_TYPE_DETAIL_STATUS = 0;
         private static final int VIEW_TYPE_LIST_STATUS = 1;
@@ -869,6 +876,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
         private final ImageLoadingHandler mImageLoadingHandler;
+        private final TwidereLinkify mLinkify;
 
         private final boolean mNameFirst;
         private final int mCardLayoutResource;
@@ -876,6 +884,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final int mCardBackgroundColor;
         private final boolean mIsCompact;
         private final int mProfileImageStyle;
+        private final int mMediaPreviewStyle;
         private final boolean mDisplayMediaPreview;
         private final boolean mDisplayProfileImage;
 
@@ -903,6 +912,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
             mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+            mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
             mIsCompact = compact;
             mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
             mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
@@ -911,6 +921,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             } else {
                 mCardLayoutResource = R.layout.card_item_status;
             }
+            mLinkify = new TwidereLinkify(this);
         }
 
         public void addConversation(ParcelableStatus status, int position) {
@@ -953,7 +964,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public int getMediaPreviewStyle() {
-            return 0;
+            return mMediaPreviewStyle;
         }
 
         @Override
@@ -973,6 +984,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public boolean isLoadMoreSupported() {
             return mLoadMoreSupported;
+        }
+
+        @Override
+        public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
+
         }
 
         @Override
@@ -1017,8 +1033,18 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
+        public TwidereLinkify getTwidereLinkify() {
+            return mLinkify;
+        }
+
+        @Override
         public boolean isMediaPreviewEnabled() {
             return mDisplayMediaPreview;
+        }
+
+        @Override
+        public int getLinkHighlightingStyle() {
+            return 0;
         }
 
         public boolean isNameFirst() {
@@ -1320,12 +1346,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
     }
-
-
-
-
-
-
 
 
 }

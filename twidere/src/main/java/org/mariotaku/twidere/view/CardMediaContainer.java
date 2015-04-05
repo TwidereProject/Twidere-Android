@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -36,6 +37,9 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by mariotaku on 14/12/17.
@@ -285,6 +289,12 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             if (mListener == null) return;
             mListener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId);
         }
+
+    }
+
+    @IntDef({VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE, VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP})
+    @Retention(RetentionPolicy.SOURCE)
+    public static @interface PreviewStyle {
 
     }
 }

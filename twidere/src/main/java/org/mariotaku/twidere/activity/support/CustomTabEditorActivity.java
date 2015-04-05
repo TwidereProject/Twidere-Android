@@ -221,7 +221,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            text1.setText(getUserNickname(this, user.id,user.name));
+            text1.setText(getUserNickname(this, user.id, user.name));
             text2.setText("@" + user.screen_name);
             if (displayProfileImage) {
                 mImageLoader.displayProfileImage(icon, user.profile_image_url);
@@ -232,7 +232,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
             if (displayName) {
                 created_by = "@" + user_list.user_screen_name;
             } else {
-                created_by = getUserNickname(this, user_list.user_id,user_list.user_name);
+                created_by = getUserNickname(this, user_list.user_id, user_list.user_name);
             }
             text1.setText(user_list.name);
             text2.setText(getString(R.string.created_by, created_by));
@@ -302,7 +302,8 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                 mAccountsAdapter.add(ParcelableAccount.dummyInstance());
             }
             final boolean officialKeyOnly = intent.getBooleanExtra(EXTRA_OFFICIAL_KEY_ONLY, false);
-            mAccountsAdapter.addAll(ParcelableAccount.getAccountsList(this, false, officialKeyOnly));
+            final boolean forcePrivateAPIs = intent.getBooleanExtra(KEY_FORCE_USING_PRIVATE_APIS, false);
+            mAccountsAdapter.addAll(ParcelableAccount.getAccountsList(this, false, !forcePrivateAPIs && officialKeyOnly));
             mAccountsAdapter.setDummyItemText(R.string.activated_accounts);
             switch (conf.getSecondaryFieldType()) {
                 case CustomTabConfiguration.FIELD_TYPE_USER: {

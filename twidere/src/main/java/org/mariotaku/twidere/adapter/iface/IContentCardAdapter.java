@@ -24,6 +24,7 @@ import android.content.Context;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 /**
@@ -41,6 +42,7 @@ public interface IContentCardAdapter extends IGapSupportedAdapter, ContentCardCl
     @ShapeStyle
     int getProfileImageStyle();
 
+    @PreviewStyle
     int getMediaPreviewStyle();
 
     AsyncTwitterWrapper getTwitterWrapper();

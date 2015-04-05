@@ -35,14 +35,15 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
 /**
  * Created by mariotaku on 15/3/17.
  */
 public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
 
+    private DummyStatusHolderAdapter mAdapter;
     private StatusViewHolder mHolder;
     private View mStatusContainer;
 
@@ -59,7 +60,6 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mStatusContainer = view.findViewById(R.id.status_container);
-        mHolder = new StatusViewHolder(view);
     }
 
     @Override
@@ -70,27 +70,22 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
             dismiss();
             return;
         }
-        final TwidereApplication application = getApplication();
+        final View view = getView();
+        if (view == null) throw new AssertionError();
         final FragmentActivity activity = getActivity();
+        mAdapter = new DummyStatusHolderAdapter(activity);
+        mHolder = new StatusViewHolder(mAdapter, getView());
+        final TwidereApplication application = getApplication();
         final MediaLoaderWrapper loader = application.getMediaLoaderWrapper();
         final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
-        final int profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-        final int mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-        final boolean displayExtraType = args.getBoolean(EXTRA_SHOW_EXTRA_TYPE, true);
-        final boolean displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE);
-        final boolean displayMediaPreview;
         if (args.containsKey(EXTRA_SHOW_MEDIA_PREVIEW)) {
-            displayMediaPreview = args.getBoolean(EXTRA_SHOW_MEDIA_PREVIEW);
-        } else {
-            displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+            mAdapter.setMediaPreviewEnabled(args.getBoolean(EXTRA_SHOW_MEDIA_PREVIEW));
         }
-        mHolder.displayStatus(activity, loader, handler, twitter, displayProfileImage, displayMediaPreview,
-                true, true, nameFirst, profileImageStyle, mediaPreviewStyle, status, null, displayExtraType);
+        mHolder.displayStatus(status, null, false, true);
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
     }

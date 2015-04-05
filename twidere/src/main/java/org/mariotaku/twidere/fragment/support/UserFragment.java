@@ -1052,7 +1052,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final long account_id, final int type,
+    public void onLinkClick(final String link, final String orig, final long accountId, long extraId, final int type,
                             final boolean sensitive, int start, int end) {
         final ParcelableUser user = getUser();
         if (user == null) return;
@@ -1085,7 +1085,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                openStatus(getActivity(), account_id, parseLong(link));
+                openStatus(getActivity(), accountId, parseLong(link));
                 break;
             }
         }
@@ -1278,8 +1278,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final Context context = getActivity();
         final Bundle args = getArguments(), tabArgs = new Bundle();
         final long accountId;
-        if (args.containsKey(EXTRA_USER)) {
-            final ParcelableUser user = args.getParcelable(EXTRA_USER);
+        final ParcelableUser user = args.getParcelable(EXTRA_USER);
+        if (user != null) {
             tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId = user.account_id);
             tabArgs.putLong(EXTRA_USER_ID, user.id);
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);

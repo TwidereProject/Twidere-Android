@@ -32,6 +32,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -295,11 +296,13 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
         private final FragmentActivity mActivity;
         private final long[] mIds;
         private final NotificationManager mNotificationManager;
+        private Handler mHandler;
 
         private DeleteDraftsTask(final FragmentActivity activity, final long[] ids) {
             mActivity = activity;
             mNotificationManager = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
             mIds = ids;
+            mHandler = new Handler(activity.getMainLooper());
         }
 
         @Override
@@ -345,9 +348,14 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            final SupportProgressDialogFragment f = SupportProgressDialogFragment.show(mActivity,
-                    FRAGMENT_TAG_DELETING_DRAFTS);
-            f.setCancelable(false);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    final SupportProgressDialogFragment f = SupportProgressDialogFragment.show(mActivity,
+                            FRAGMENT_TAG_DELETING_DRAFTS);
+                    f.setCancelable(false);
+                }
+            });
         }
     }
 }

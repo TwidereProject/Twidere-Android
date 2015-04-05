@@ -52,29 +52,29 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final long account_id, final int type,
+    public void onLinkClick(final String link, final String orig, final long accountId, long extraId, final int type,
                             final boolean sensitive, int start, int end) {
         if (manager != null && manager.isActive()) return;
         if (!isPrivateData()) {
             // UCD
-            ProfilingUtil.profile(context, account_id, "Click, " + link + ", " + type);
+            ProfilingUtil.profile(context, accountId, "Click, " + link + ", " + type);
             //spice
-            SpiceProfilingUtil.profile(context, account_id, account_id + ",Visit," + link + "," + TypeMappingUtil.getLinkType(type));
+            SpiceProfilingUtil.profile(context, accountId, accountId + ",Visit," + link + "," + TypeMappingUtil.getLinkType(type));
             //end
         }
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                openUserProfile(context, account_id, -1, link, null);
+                openUserProfile(context, accountId, -1, link, null);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
-                openTweetSearch(context, account_id, "#" + link);
+                openTweetSearch(context, accountId, "#" + link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LINK: {
                 if (MediaPreviewUtils.isLinkSupported(link)) {
-                    openMedia(account_id, sensitive, link, start, end);
+                    openMedia(accountId, extraId, sensitive, link, start, end);
                 } else {
                     openLink(link);
                 }
@@ -85,19 +85,19 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 if (mentionList.length != 2) {
                     break;
                 }
-                openUserListDetails(context, account_id, -1, -1, mentionList[0], mentionList[1]);
+                openUserListDetails(context, accountId, -1, -1, mentionList[0], mentionList[1]);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_CASHTAG: {
-                openTweetSearch(context, account_id, link);
+                openTweetSearch(context, accountId, link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                openUserProfile(context, account_id, ParseUtils.parseLong(link), null, null);
+                openUserProfile(context, accountId, ParseUtils.parseLong(link), null, null);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                openStatus(context, account_id, ParseUtils.parseLong(link));
+                openStatus(context, accountId, ParseUtils.parseLong(link));
                 break;
             }
         }
@@ -107,9 +107,9 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         return false;
     }
 
-    protected void openMedia(long account_id, boolean sensitive, String link, int start, int end) {
+    protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
         final ParcelableMedia[] media = {ParcelableMedia.newImage(link, link)};
-        Utils.openMedia(context, account_id, sensitive, null, media);
+        Utils.openMedia(context, accountId, sensitive, null, media);
     }
 
     protected void openLink(final String link) {

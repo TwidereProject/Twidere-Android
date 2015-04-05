@@ -208,10 +208,12 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
+import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
+import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
@@ -1887,17 +1889,19 @@ public final class Utils implements Constants, TwitterConstants {
         return sb;
     }
 
-    public static String getLinkHighlightOption(final Context context) {
+    public static String getLinkHighlightingStyleName(final Context context) {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         return prefs.getString(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HIGHLIGHT_OPTION_NONE);
     }
 
-    public static int getLinkHighlightOptionInt(final Context context) {
-        return getLinkHighlightOptionInt(getLinkHighlightOption(context));
+    @HighlightStyle
+    public static int getLinkHighlightingStyle(final Context context) {
+        return getLinkHighlightingStyleInt(getLinkHighlightingStyleName(context));
     }
 
-    public static int getLinkHighlightOptionInt(final String option) {
+    @HighlightStyle
+    public static int getLinkHighlightingStyleInt(final String option) {
         if (VALUE_LINK_HIGHLIGHT_OPTION_BOTH.equals(option))
             return VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH;
         else if (VALUE_LINK_HIGHLIGHT_OPTION_HIGHLIGHT.equals(option))
@@ -2100,6 +2104,7 @@ public final class Utils implements Constants, TwitterConstants {
         return ShapedImageView.SHAPE_CIRCLE;
     }
 
+    @PreviewStyle
     public static int getMediaPreviewStyle(String style) {
         if (VALUE_MEDIA_PREVIEW_STYLE_SCALE.equalsIgnoreCase(style)) {
             return VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE;

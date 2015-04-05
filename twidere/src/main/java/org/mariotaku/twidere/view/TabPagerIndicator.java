@@ -324,7 +324,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         @Override
         public boolean onLongClick(View v) {
-            return indicator.dispatchTabLongClick(getAdapterPosition());
+            final int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return false;
+            return indicator.dispatchTabLongClick(position);
         }
 
         public void setBadge(int count, boolean display) {

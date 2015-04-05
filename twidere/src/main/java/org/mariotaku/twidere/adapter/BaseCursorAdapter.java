@@ -30,8 +30,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
-
-import static org.mariotaku.twidere.util.Utils.getLinkHighlightOptionInt;
+import org.mariotaku.twidere.util.Utils;
 
 public class BaseCursorAdapter extends SimpleCursorAdapter implements IBaseAdapter, OnSharedPreferenceChangeListener {
 
@@ -118,7 +117,7 @@ public class BaseCursorAdapter extends SimpleCursorAdapter implements IBaseAdapt
 
     @Override
     public final void setLinkHighlightOption(final String option) {
-        final int option_int = getLinkHighlightOptionInt(option);
+        final int option_int = Utils.getLinkHighlightingStyleInt(option);
         if (option_int == mLinkHighlightOption) return;
         mLinkHighlightOption = option_int;
         mLinkify.setHighlightOption(option_int);
