@@ -32,8 +32,6 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
  */
 public class MentionsTimelineFragment extends CursorStatusesFragment {
 
-    public static final String KEY_READ_POSITION_TAG = "mentions_timeline";
-
     @Override
     public Uri getContentUri() {
         return Mentions.CONTENT_URI;
@@ -79,7 +77,7 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
 
     @Override
     protected String getReadPositionTag() {
-        return KEY_READ_POSITION_TAG;
+        return TAB_TYPE_MENTIONS_TIMELINE;
     }
 
 }

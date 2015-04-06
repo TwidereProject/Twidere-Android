@@ -225,7 +225,7 @@ public class FiltersActivity extends BaseActionBarActivity implements TabListene
     private void addTab(final Class<? extends Fragment> cls, final int name, final int position) {
         if (mActionBar == null || mAdapter == null) return;
         mActionBar.addTab(mActionBar.newTab().setText(name).setTabListener(this));
-        mAdapter.addTab(cls, null, getString(name), null, position);
+        mAdapter.addTab(cls, null, getString(name), null, position, null);
     }
 
     public static final class AddItemFragment extends BaseSupportDialogFragment implements OnClickListener {

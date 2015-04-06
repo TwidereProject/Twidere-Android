@@ -195,7 +195,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             textView.setText(status.text_unescaped);
         } else {
             textView.setText(Html.fromHtml(status.text_html));
-            linkify.applyAllLinks(textView, status.account_id, getAdapterPosition(), status.is_possibly_sensitive);
+            linkify.applyAllLinks(textView, status.account_id, getLayoutPosition(),
+                    status.is_possibly_sensitive, linkHighlightingStyle);
         }
 
         if (status.reply_count > 0) {
@@ -346,8 +347,9 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             textView.setText(cursor.getString(indices.text_unescaped));
         } else {
             textView.setText(Html.fromHtml(cursor.getString(indices.text_html)));
-            linkify.applyAllLinks(textView, account_id, getAdapterPosition(),
-                    cursor.getShort(indices.is_possibly_sensitive) == 1);
+            linkify.applyAllLinks(textView, account_id, getLayoutPosition(),
+                    cursor.getShort(indices.is_possibly_sensitive) == 1,
+                    adapter.getLinkHighlightingStyle());
         }
 
         if (reply_count > 0) {

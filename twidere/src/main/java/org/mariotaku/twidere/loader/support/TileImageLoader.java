@@ -95,8 +95,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
                 if (ImageValidator.isValid(cachedValidity)) {
                     // The file is corrupted, so we remove it from
                     // cache.
-                    return decodeBitmapOnly(cacheFile,
-                            ImageValidator.isValidForRegionDecoder(cachedValidity));
+                    return decodeBitmapOnly(cacheFile, ImageValidator.isValidForRegionDecoder(cachedValidity));
                 }
                 final InputStream is = mDownloader.getStream(url, new AccountExtra(mAccountId));
                 if (is == null) return Result.nullInstance();

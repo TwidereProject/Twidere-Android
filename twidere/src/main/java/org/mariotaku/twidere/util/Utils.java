@@ -1088,6 +1088,11 @@ public final class Utils implements Constants, TwitterConstants {
 
 
     public static String getReadPositionTagWithAccounts(String tag, Bundle args) {
+        final long[] accountIds = getAccountIds(args);
+        return getReadPositionTagWithAccounts(tag, accountIds);
+    }
+
+    public static long[] getAccountIds(Bundle args) {
         final long[] accountIds;
         if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
             accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
@@ -1096,11 +1101,23 @@ public final class Utils implements Constants, TwitterConstants {
         } else {
             accountIds = null;
         }
-        return getReadPositionTagWithAccounts(tag, accountIds);
+        return accountIds;
     }
 
     public static String getReadPositionTagWithAccounts(String tag, long... accountIds) {
-        if (accountIds == null || accountIds.length == 0) return tag;
+        if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0))
+            return tag;
+        final long[] accountIdsClone = accountIds.clone();
+        Arrays.sort(accountIdsClone);
+        return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
+    }
+
+    public static String getReadPositionTagWithAccounts(Context context, boolean activatedIfMissing, String tag, long... accountIds) {
+        if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {
+            final long[] activatedIds = getActivatedAccountIds(context);
+            Arrays.sort(activatedIds);
+            return tag + "_" + TwidereArrayUtils.toString(activatedIds, '_', false);
+        }
         final long[] accountIdsClone = accountIds.clone();
         Arrays.sort(accountIdsClone);
         return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
@@ -1493,6 +1510,34 @@ public final class Utils implements Constants, TwitterConstants {
         } finally {
             cur.close();
         }
+    }
+
+    public static int getStatusesCount(final Context context, final Uri uri, final long sinceId, final long... accountIds) {
+        if (context == null) return 0;
+        final ContentResolver resolver = context.getContentResolver();
+        final RawItemArray idsIn;
+        if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {
+            idsIn = new RawItemArray(getActivatedAccountIds(context));
+        } else {
+            idsIn = new RawItemArray(accountIds);
+        }
+        final Expression selection = Expression.and(
+                Expression.in(new Column(Statuses.ACCOUNT_ID), idsIn),
+                Expression.greaterThan(Statuses.STATUS_ID, sinceId),
+                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context))
+        );
+        final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{SQLFunctions.COUNT()},
+                selection.getSQL(),
+                null, null);
+        if (cur == null) return 0;
+        try {
+            if (cur.moveToFirst()) {
+                return cur.getInt(0);
+            }
+        } finally {
+            cur.close();
+        }
+        return 0;
     }
 
     public static long[] getAllStatusesIds(final Context context, final Uri uri) {

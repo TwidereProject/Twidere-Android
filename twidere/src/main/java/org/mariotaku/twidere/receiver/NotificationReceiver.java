@@ -23,13 +23,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
-import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
-import org.mariotaku.twidere.fragment.support.MentionsTimelineFragment;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -68,16 +66,16 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
         }
     }
 
-    private String getPositionTag(String type) {
+    private static String getPositionTag(@NonNull String type) {
         switch (type) {
             case AUTHORITY_HOME: {
-                return HomeTimelineFragment.KEY_READ_POSITION_TAG;
+                return TAB_TYPE_HOME_TIMELINE;
             }
             case AUTHORITY_MENTIONS: {
-                return MentionsTimelineFragment.KEY_READ_POSITION_TAG;
+                return TAB_TYPE_MENTIONS_TIMELINE;
             }
             case AUTHORITY_DIRECT_MESSAGES: {
-                return DirectMessagesFragment.KEY_READ_POSITION_TAG;
+                return TAB_TYPE_DIRECT_MESSAGES;
             }
         }
         return null;

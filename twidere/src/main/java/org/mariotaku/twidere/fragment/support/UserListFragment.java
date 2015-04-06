@@ -571,9 +571,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             tabArgs.putLong(EXTRA_LIST_ID, args.getLong(EXTRA_LIST_ID, -1));
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
         }
-        mPagerAdapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0);
-        mPagerAdapter.addTab(UserListMembersFragment.class, tabArgs, getString(R.string.members), null, 1);
-        mPagerAdapter.addTab(UserListSubscribersFragment.class, tabArgs, getString(R.string.subscribers), null, 2);
+        mPagerAdapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0, null);
+        mPagerAdapter.addTab(UserListMembersFragment.class, tabArgs, getString(R.string.members), null, 1, null);
+        mPagerAdapter.addTab(UserListSubscribersFragment.class, tabArgs, getString(R.string.subscribers), null, 2, null);
         mPagerIndicator.notifyDataSetChanged();
     }
 

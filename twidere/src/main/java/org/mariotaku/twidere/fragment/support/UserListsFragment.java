@@ -61,8 +61,8 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         final Bundle args = getArguments();
         final FragmentActivity activity = getActivity();
         mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
-        mAdapter.addTab(UserListsListFragment.class, args, getString(R.string.follows), null, 0);
-        mAdapter.addTab(UserListMembershipsListFragment.class, args, getString(R.string.belongs_to), 0, 1);
+        mAdapter.addTab(UserListsListFragment.class, args, getString(R.string.follows), null, 0, null);
+        mAdapter.addTab(UserListMembershipsListFragment.class, args, getString(R.string.belongs_to), 0, 1, null);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
         mPagerIndicator.setViewPager(mViewPager);

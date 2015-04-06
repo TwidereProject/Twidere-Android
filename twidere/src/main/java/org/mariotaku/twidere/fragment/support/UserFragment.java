@@ -1289,11 +1289,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
         }
-        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), R.drawable.ic_action_quote, 0);
+        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), R.drawable.ic_action_quote, 0, null);
         if (Utils.isOfficialKeyAccount(context, accountId)) {
-            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, 1);
+            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, 1, null);
         }
-        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), R.drawable.ic_action_star, 2);
+        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), R.drawable.ic_action_star, 2, null);
     }
 
     private boolean shouldUseNativeMenu() {

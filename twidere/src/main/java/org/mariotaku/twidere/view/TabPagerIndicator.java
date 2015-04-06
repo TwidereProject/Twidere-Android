@@ -99,6 +99,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         return mIndicatorAdapter.getItemContext();
     }
 
+    public void getTabSpecs() {
+    }
+
     public void setItemContext(Context context) {
         mIndicatorAdapter.setItemContext(context);
     }
@@ -134,6 +137,10 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
     public void setBadge(int position, int count) {
         mIndicatorAdapter.setBadge(position, count);
+    }
+
+    public void clearBadge() {
+        mIndicatorAdapter.clearBadge();
     }
 
     public void setDisplayBadge(boolean display) {
@@ -460,6 +467,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         public void setBadge(int position, int count) {
             mUnreadCounts.put(position, count);
             notifyItemChanged(position);
+        }
+
+        public void clearBadge() {
+            mUnreadCounts.clear();
+            notifyDataSetChanged();
         }
 
         public void setDisplayBadge(boolean display) {

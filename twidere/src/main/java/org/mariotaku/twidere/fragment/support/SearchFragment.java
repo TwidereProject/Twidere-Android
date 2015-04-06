@@ -166,9 +166,8 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         final Bundle args = getArguments();
         final FragmentActivity activity = getActivity();
         mAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
-        mAdapter.addTab(StatusesSearchFragment.class, args, getString(R.string.statuses),
-                R.drawable.ic_action_twitter, 0);
-        mAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1);
+        mAdapter.addTab(StatusesSearchFragment.class, args, getString(R.string.statuses), R.drawable.ic_action_twitter, 0, null);
+        mAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1, null);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
         mPagerIndicator.setViewPager(mViewPager);

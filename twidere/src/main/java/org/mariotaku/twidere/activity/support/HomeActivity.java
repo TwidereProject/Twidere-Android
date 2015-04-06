@@ -26,6 +26,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
@@ -84,6 +85,8 @@ import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
@@ -93,8 +96,8 @@ import org.mariotaku.twidere.util.HotKeyHandler;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UnreadCountUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
@@ -108,6 +111,12 @@ import org.mariotaku.twidere.view.RightDrawerFrameLayout;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
@@ -141,6 +150,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     private MultiSelectEventHandler mMultiSelectHandler;
     private HotKeyHandler mHotKeyHandler;
+    private ReadStateManager mReadStateManager;
 
     private SupportTabsAdapter mPagerAdapter;
 
@@ -161,6 +171,13 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     private int mTabDisplayOption;
     private float mPagerPosition;
     private Toolbar mActionBar;
+
+    private OnSharedPreferenceChangeListener mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            updateUnreadCount();
+        }
+    };
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -279,6 +296,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTwitterWrapper = getTwitterWrapper();
+        mReadStateManager = TwidereApplication.getInstance(this).getReadStateManager();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mHotKeyHandler = new HotKeyHandler(this);
@@ -381,12 +399,14 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Launch"
                 + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
         //end
+        mReadStateManager.registerOnSharedPreferenceChangeListener(mReadStateChangeListener);
         updateUnreadCount();
     }
 
     @Override
     protected void onStop() {
         mMultiSelectHandler.dispatchOnStop();
+        mReadStateManager.unregisterOnSharedPreferenceChangeListener(mReadStateChangeListener);
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
         bus.unregister(this);
         final ContentResolver resolver = getContentResolver();
@@ -553,7 +573,8 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     public void updateUnreadCount() {
         if (mTabIndicator == null || mUpdateUnreadCountTask != null
                 && mUpdateUnreadCountTask.getStatus() == AsyncTask.Status.RUNNING) return;
-        mUpdateUnreadCountTask = new UpdateUnreadCountTask(mTabIndicator);
+        mUpdateUnreadCountTask = new UpdateUnreadCountTask(this, mReadStateManager, mTabIndicator,
+                mPagerAdapter.getTabs());
         AsyncTaskUtils.executeTask(mUpdateUnreadCountTask);
         mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
     }
@@ -922,31 +943,52 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     }
 
-    private static class UpdateUnreadCountTask extends AsyncTask<Void, Void, int[]> {
+    private static class UpdateUnreadCountTask extends AsyncTask<Void, Void, Map<SupportTabSpec, Integer>> {
         private final Context mContext;
+        private final ReadStateManager mReadStateManager;
         private final TabPagerIndicator mIndicator;
+        private final List<SupportTabSpec> mTabs;
 
-        UpdateUnreadCountTask(final TabPagerIndicator indicator) {
+        UpdateUnreadCountTask(final Context context, final ReadStateManager manager, final TabPagerIndicator indicator, final List<SupportTabSpec> tabs) {
+            mContext = context;
+            mReadStateManager = manager;
             mIndicator = indicator;
-            mContext = indicator.getContext();
+            mTabs = Collections.unmodifiableList(tabs);
         }
 
         @Override
-        protected int[] doInBackground(final Void... params) {
-            final int tabCount = mIndicator.getCount();
-            final int[] result = new int[tabCount];
-            for (int i = 0; i < tabCount; i++) {
-                result[i] = UnreadCountUtils.getUnreadCount(mContext, i);
+        protected Map<SupportTabSpec, Integer> doInBackground(final Void... params) {
+            final Map<SupportTabSpec, Integer> result = new HashMap<>();
+            for (SupportTabSpec spec : mTabs) {
+                switch (spec.type) {
+                    case TAB_TYPE_HOME_TIMELINE: {
+                        final long[] accountIds = Utils.getAccountIds(spec.args);
+                        final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext, true, spec.tag, accountIds);
+                        final long position = mReadStateManager.getPosition(tagWithAccounts);
+                        result.put(spec, Utils.getStatusesCount(mContext, Statuses.CONTENT_URI, position, accountIds));
+                        break;
+                    }
+                    case TAB_TYPE_MENTIONS_TIMELINE: {
+                        final long[] accountIds = Utils.getAccountIds(spec.args);
+                        final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext, true, spec.tag, accountIds);
+                        final long position = mReadStateManager.getPosition(tagWithAccounts);
+                        result.put(spec, Utils.getStatusesCount(mContext, Mentions.CONTENT_URI, position, accountIds));
+                        break;
+                    }
+                    case TAB_TYPE_DIRECT_MESSAGES: {
+                        break;
+                    }
+                }
             }
             return result;
         }
 
         @Override
-        protected void onPostExecute(final int[] result) {
-            final int tabCount = mIndicator.getCount();
-            if (result == null || result.length != tabCount) return;
-            for (int i = 0; i < tabCount; i++) {
-                mIndicator.setBadge(i, result[i]);
+        protected void onPostExecute(final Map<SupportTabSpec, Integer> result) {
+            mIndicator.clearBadge();
+            for (Entry<SupportTabSpec, Integer> entry : result.entrySet()) {
+                final SupportTabSpec key = entry.getKey();
+                mIndicator.setBadge(key.position, entry.getValue());
             }
         }
 

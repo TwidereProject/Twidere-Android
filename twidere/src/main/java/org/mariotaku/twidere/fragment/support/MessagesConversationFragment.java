@@ -804,9 +804,9 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             if (cursor.moveToFirst()) {
                 final int messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID);
                 final String key = mAccount.account_id + "-" + mRecipient.id;
-                mReadStateManager.setPosition(DirectMessagesFragment.KEY_READ_POSITION_TAG, key, cursor.getLong(messageIdIdx), false);
+                mReadStateManager.setPosition(TAB_TYPE_DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false);
             }
-            Log.d(LOGTAG, Arrays.toString(mReadStateManager.getPositionPairs(DirectMessagesFragment.KEY_READ_POSITION_TAG)));
+            Log.d(LOGTAG, Arrays.toString(mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES)));
             cursor.close();
         }
 

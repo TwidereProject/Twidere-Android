@@ -45,14 +45,17 @@
 
     <permission
         android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"
+        android:label="@string/permission_label_shorten_status"
         android:description="@string/permission_description_shorten_status"
         android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
     <permission
         android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"
+        android:label="@string/permission_label_upload_media"
         android:description="@string/permission_description_upload_media"
         android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
     <permission
         android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"
+        android:label="@string/permission_label_sync_timeline"
         android:description="@string/permission_description_sync_timeline"
         android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
 

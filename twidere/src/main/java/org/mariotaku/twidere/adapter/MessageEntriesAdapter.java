@@ -91,7 +91,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
     public void updateReadState() {
-        mPositionPairs = mReadStateManager.getPositionPairs(DirectMessagesFragment.KEY_READ_POSITION_TAG);
+        mPositionPairs = mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES);
         notifyDataSetChanged();
     }
 

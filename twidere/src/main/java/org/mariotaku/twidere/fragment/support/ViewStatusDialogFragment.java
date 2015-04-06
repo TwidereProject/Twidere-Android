@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -28,13 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
@@ -53,7 +46,10 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
+        if (getShowsDialog()) {
+            return inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
+        }
+        return inflater.inflate(R.layout.card_item_status_common, parent, false);
     }
 
     @Override
@@ -75,12 +71,6 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
         final FragmentActivity activity = getActivity();
         mAdapter = new DummyStatusHolderAdapter(activity);
         mHolder = new StatusViewHolder(mAdapter, getView());
-        final TwidereApplication application = getApplication();
-        final MediaLoaderWrapper loader = application.getMediaLoaderWrapper();
-        final ImageLoadingHandler handler = new ImageLoadingHandler(R.id.media_preview_progress);
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
-                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
         if (args.containsKey(EXTRA_SHOW_MEDIA_PREVIEW)) {
             mAdapter.setMediaPreviewEnabled(args.getBoolean(EXTRA_SHOW_MEDIA_PREVIEW));

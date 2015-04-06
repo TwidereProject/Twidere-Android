@@ -88,8 +88,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         RefreshScrollTopInterface, OnRefreshListener, MessageEntriesAdapterListener,
         ControlBarOffsetListener, ContentListSupport {
 
-    public static final String KEY_READ_POSITION_TAG = "direct_messages";
-
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
     private final LongSparseArray<Set<Long>> mUnreadCountsToRemove = new LongSparseArray<>();
