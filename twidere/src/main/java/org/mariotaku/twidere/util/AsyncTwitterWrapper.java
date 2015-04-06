@@ -896,6 +896,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 return SingleResponse.getInstance(new ParcelableStatus(status, account_id, false));
             } catch (final TwitterException e) {
+                Log.w(LOGTAG, e);
                 return SingleResponse.getInstance(e);
             }
         }
@@ -1821,7 +1822,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 //                    Expression.in(new Column(DirectMessages.MESSAGE_ID), new RawItemArray(messageIds)));
 //            final Uri deleteUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_NOTIFY, false);
 //            mResolver.delete(deleteUri, deleteWhere.getSQL(), null);
-
 
 
             // Insert previously fetched items.

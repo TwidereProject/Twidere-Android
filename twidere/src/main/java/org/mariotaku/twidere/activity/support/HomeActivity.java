@@ -670,7 +670,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
         final Uri uri = intent.getData();
         final String tabType = uri != null ? Utils.matchTabType(uri) : null;
-        int initialTab = -1, initalTabFallback;
+        int initialTab = -1;
         if (tabType != null) {
             final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID));
             for (int i = mPagerAdapter.getCount() - 1; i > -1; i--) {

@@ -98,9 +98,10 @@ public class OkHttpClientImpl implements HttpClient, TwidereConstants {
                 builder.header("Authorization", authHeader);
             }
         }
+        Response response = null;
         try {
             setupRequestBuilder(builder, req);
-            final Response response = client.newCall(builder.build()).execute();
+             response = client.newCall(builder.build()).execute();
             return new OkHttpResponse(conf, null, response);
         } catch (IOException e) {
             throw new TwitterException(e);
