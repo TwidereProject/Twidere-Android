@@ -526,9 +526,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
             final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                     SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            loader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
+            final TwidereApplication app = TwidereApplication.getInstance(context);
+            loader = app.getMediaLoaderWrapper();
             handler = new ImageLoadingHandler(R.id.media_preview_progress);
-            twitter = getTwitterWrapper();
+            twitter = app.getTwitterWrapper();
             linkify = new TwidereLinkify(null);
 
             profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
