@@ -17,7 +17,6 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
@@ -39,12 +38,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
-import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
-import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.sprylab.android.widget.TextureVideoView;
 
@@ -66,15 +62,9 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
-import org.mariotaku.twidere.view.TouchImageView;
-import org.mariotaku.twidere.view.TouchImageView.ZoomListener;
 
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 
-import pl.droidsonroids.gif.GifDrawable;
 
 public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants, OnPageChangeListener {
 
@@ -284,9 +274,9 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     }
 
     public static final class ImagePageFragment extends BaseSupportFragment
-            implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener, ZoomListener {
+            implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener {
 
-        private TouchImageView mImageView;
+        private SubsamplingScaleImageView mImageView;
         private ProgressWheel mProgressBar;
         private boolean mLoaderInitialized;
         private float mContentLength;
@@ -295,7 +285,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
-            mImageView = (TouchImageView) view.findViewById(R.id.image_view);
+            mImageView = (SubsamplingScaleImageView) view.findViewById(R.id.image_view);
             mProgressBar = (ProgressWheel) view.findViewById(R.id.progress);
         }
 
@@ -326,40 +316,24 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                 mImageView.setVisibility(View.VISIBLE);
                 mImageView.setTag(data.file);
                 if (data.useDecoder) {
-                    TileBitmapDrawable.attachTileBitmapDrawable(mImageView, data.file.getAbsolutePath(),
-                            null, new OnInitializeListener() {
-                                @Override
-                                public void onStartInitialization() {
-
-                                }
-
-                                @Override
-                                public void onEndInitialization() {
-                                    mImageView.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            updateScaleLimit();
-                                        }
-                                    });
-                                }
-                            });
+                    mImageView.setImage(ImageSource.uri(Uri.fromFile(data.file)));
                 } else if ("image/gif".equals(data.options.outMimeType)) {
-                    try {
-                        final FileDescriptor fd = new RandomAccessFile(data.file, "r").getFD();
-                        mImageView.setImageDrawable(new GifDrawable(fd));
-                    } catch (IOException e) {
-                        mImageView.setImageDrawable(null);
-                        mImageView.setTag(null);
-                        mImageView.setVisibility(View.GONE);
-                        Utils.showErrorMessage(getActivity(), null, e, true);
-                    }
+//                    try {
+//                        final FileDescriptor fd = new RandomAccessFile(data.file, "r").getFD();
+//                        mImageView.setImageDrawable(new GifDrawable(fd));
+//                    } catch (IOException e) {
+//                        mImageView.setImage(null);
+//                        mImageView.setTag(null);
+//                        mImageView.setVisibility(View.GONE);
+//                        Utils.showErrorMessage(getActivity(), null, e, true);
+//                    }
                     updateScaleLimit();
                 } else {
-                    mImageView.setImageBitmap(data.bitmap);
+                    mImageView.setImage(ImageSource.bitmap(data.bitmap));
                     updateScaleLimit();
                 }
             } else {
-                mImageView.setImageDrawable(null);
+                mImageView.setImage(null);
                 mImageView.setTag(null);
                 mImageView.setVisibility(View.GONE);
                 Utils.showErrorMessage(getActivity(), null, data.exception, true);
@@ -371,10 +345,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public void onLoaderReset(final Loader<TileImageLoader.Result> loader) {
-            final Drawable drawable = mImageView.getDrawable();
-            if (drawable instanceof GifDrawable) {
-                ((GifDrawable) drawable).recycle();
-            }
+//            final Drawable drawable = mImageView.getDrawable();
+//            if (drawable instanceof GifDrawable) {
+//                ((GifDrawable) drawable).recycle();
+//            }
         }
 
         @Override
@@ -462,7 +436,6 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             super.onActivityCreated(savedInstanceState);
             setHasOptionsMenu(true);
             mImageView.setOnClickListener(this);
-            mImageView.setZoomListener(this);
             loadImage();
         }
 
@@ -510,13 +483,11 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         }
 
-        @Override
         public void onZoomOut() {
             final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
             activity.setBarVisibility(true);
         }
 
-        @Override
         public void onZoomIn() {
             final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
             activity.setBarVisibility(false);
@@ -533,16 +504,16 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
 
         private void updateScaleLimit() {
-            final int viewWidth = mImageView.getWidth(), viewHeight = mImageView.getHeight();
-            final Drawable drawable = mImageView.getDrawable();
-            if (drawable == null || viewWidth <= 0 || viewHeight <= 0) return;
-            final int drawableWidth = drawable.getIntrinsicWidth();
-            final int drawableHeight = drawable.getIntrinsicHeight();
-            if (drawableWidth <= 0 || drawableHeight <= 0) return;
-            final float widthRatio = viewWidth / (float) drawableWidth;
-            final float heightRatio = viewHeight / (float) drawableHeight;
-            mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
-            mImageView.resetScale();
+//            final int viewWidth = mImageView.getWidth(), viewHeight = mImageView.getHeight();
+//            final Drawable drawable = mImageView.getDrawable();
+//            if (drawable == null || viewWidth <= 0 || viewHeight <= 0) return;
+//            final int drawableWidth = drawable.getIntrinsicWidth();
+//            final int drawableHeight = drawable.getIntrinsicHeight();
+//            if (drawableWidth <= 0 || drawableHeight <= 0) return;
+//            final float widthRatio = viewWidth / (float) drawableWidth;
+//            final float heightRatio = viewHeight / (float) drawableHeight;
+//            mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
+//            mImageView.resetScale();
         }
     }
 

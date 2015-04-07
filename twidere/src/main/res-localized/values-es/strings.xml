@@ -273,8 +273,8 @@
   <string name="view">Vista</string>
   <string name="custom_host_mapping">Asignación de host personalizado</string>
   <string name="custom_host_mapping_summary">Funciona como \"/etc/hosts\", pero no requiere permisos adicionales.</string>
-  <string name="host">Host</string>
-  <string name="address">Dirección (puede ser otra dirección de host)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Dirección (puede ser otra dirección de host)</string>
   <string name="add_host_mapping">Añadir asignación de host</string>
   <string name="tcp_dns_query">Consulta DNS usando TCP</string>
   <string name="tcp_dns_query_summary">Utilizar el protocolo TCP para las peticiones DNS, puede evitar envenenamiento de caché DNS.</string>

@@ -269,8 +269,8 @@
   <string name="view">Wyświetl</string>
   <string name="custom_host_mapping">Ustawianie mapowania hosta</string>
   <string name="custom_host_mapping_summary">Mapowanie hostów, nie wymaga żadnych dodatkowych uprawnień.</string>
-  <string name="host">Host</string>
-  <string name="address">Adres (może być inny adres hosta)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Adres (może być inny adres hosta)</string>
   <string name="add_host_mapping">Dodaj mapowanie hosta</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Używa protokołu TCP do zapytań DNS, może pozwolić uniknąć zatrucia DNS.</string>

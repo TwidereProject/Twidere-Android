@@ -271,8 +271,8 @@
   <string name="view">Ansicht</string>
   <string name="custom_host_mapping">Individuelles Host-Mapping</string>
   <string name="custom_host_mapping_summary">Host-Mapping wie /ect/hosts, ohne zusätzlich erforderliche Rechte.</string>
-  <string name="host">Host</string>
-  <string name="address">Adresse(Kann auch eine andere Host-Adresse sein)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Adresse(Kann auch eine andere Host-Adresse sein)</string>
   <string name="add_host_mapping">Füge host mapping hinzu</string>
   <string name="tcp_dns_query">TCP DNS-Abfrage</string>
   <string name="tcp_dns_query_summary">Benutze TCP für DNS Anfragen, um DNS Cache Poisoning zu vermeiden.</string>

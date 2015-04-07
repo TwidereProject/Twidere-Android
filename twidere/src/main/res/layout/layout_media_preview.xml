@@ -19,16 +19,23 @@
   -->
 
 <FrameLayout
-    android:id="@+id/media_preview"
+    android:id="@+id/media_preview_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/media_preview_grid"
+    <org.mariotaku.twidere.view.CardMediaContainer
+        android:id="@+id/media_preview"
         android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:layout_marginTop="@dimen/element_spacing_normal"
+        android:horizontalSpacing="@dimen/element_spacing_xsmall"
+        android:verticalSpacing="@dimen/element_spacing_xsmall">
+
+        <include layout="@layout/layout_card_media_preview"/>
+
+    </org.mariotaku.twidere.view.CardMediaContainer>
 
     <LinearLayout
         android:id="@+id/media_preview_load"

@@ -95,7 +95,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -106,8 +105,6 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -233,8 +230,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -484,52 +481,6 @@ public final class Utils implements Constants, TwitterConstants {
             }
 
         }
-    }
-
-    public static void addToLinearLayout(final LinearLayout container, final MediaLoaderWrapper loader,
-                                         final List<ParcelableMedia> mediaList, final long accountId,
-                                         final int maxColumnCount, final OnMediaClickListener mediaClickListener) {
-        if (container.getOrientation() != LinearLayout.VERTICAL)
-            throw new IllegalArgumentException();
-        final Context context = container.getContext();
-        final ImageLoadingHandler loadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
-        final LayoutInflater inflater = LayoutInflater.from(context);
-        final ListIterator<ParcelableMedia> iterator = mediaList.listIterator();
-        final int imageCount = mediaList.size();
-        final double imageCountSqrt = Math.sqrt(imageCount);
-        final int bestColumnCount = imageCountSqrt % 1 == 0 ? (int) imageCountSqrt : maxColumnCount;
-        final int firstColumn = imageCount % bestColumnCount, fullRowCount = imageCount / bestColumnCount;
-        final int rowCount = fullRowCount + (firstColumn > 0 ? 1 : 0);
-        final View.OnClickListener clickListener = new ImageGridClickListener(mediaClickListener, accountId);
-        container.setMotionEventSplittingEnabled(false);
-        for (int currentRow = 0; currentRow < rowCount; currentRow++) {
-            final LinearLayout rowContainer = new LinearLayout(context);
-            rowContainer.setOrientation(LinearLayout.HORIZONTAL);
-            rowContainer.setMotionEventSplittingEnabled(false);
-            container.addView(rowContainer, LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            final int columnCount = currentRow == 0 && firstColumn > 0 ? firstColumn : bestColumnCount;
-            for (int currentColumn = 0; currentColumn < columnCount; currentColumn++) {
-                final ParcelableMedia media = iterator.next();
-                final View item = inflater.inflate(R.layout.grid_item_media_preview, rowContainer, false);
-                item.setTag(media);
-                if (mediaClickListener != null) {
-                    item.setOnClickListener(clickListener);
-                }
-                final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) item.getLayoutParams();
-                lp.weight = 1.0f;
-                rowContainer.addView(item, lp);
-                final ImageView imageView = (ImageView) item.findViewById(R.id.media_preview_item);
-                loader.displayPreviewImage(imageView, media.page_url, loadingHandler);
-            }
-        }
-    }
-
-    public static void addToLinearLayout(final LinearLayout container, final MediaLoaderWrapper loader,
-                                         final ParcelableMedia[] mediaArray, final long accountId,
-                                         final int maxColumnCount, final OnMediaClickListener listener) {
-        addToLinearLayout(container, loader, Arrays.asList(mediaArray), accountId, maxColumnCount,
-                listener);
     }
 
     public static void announceForAccessibilityCompat(final Context context, final View view, final CharSequence text,
@@ -2194,13 +2145,15 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static HttpResponse getRedirectedHttpResponse(final HttpClientWrapper client, final String url,
-                                                         final String signUrl, final Authorization auth) throws TwitterException {
+                                                         final String signUrl, final Authorization auth,
+                                                         final HashMap<String, List<String>> additionalHeaders)
+            throws TwitterException {
         if (url == null) return null;
         final ArrayList<String> urls = new ArrayList<>();
         urls.add(url);
         HttpResponse resp;
         try {
-            resp = client.get(url, signUrl, auth);
+            resp = client.get(url, signUrl, auth, additionalHeaders);
         } catch (final TwitterException te) {
             if (isRedirected(te.getStatusCode())) {
                 resp = te.getHttpResponse();
@@ -2213,7 +2166,7 @@ public final class Utils implements Constants, TwitterConstants {
             if (urls.contains(request_url)) throw new TwitterException("Too many redirects");
             urls.add(request_url);
             try {
-                resp = client.get(request_url, request_url);
+                resp = client.get(request_url, request_url, additionalHeaders);
             } catch (final TwitterException te) {
                 if (isRedirected(te.getStatusCode())) {
                     resp = te.getHttpResponse();

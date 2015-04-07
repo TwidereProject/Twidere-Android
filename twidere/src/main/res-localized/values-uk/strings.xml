@@ -244,8 +244,8 @@
   <string name="view">Вигляд</string>
   <string name="custom_host_mapping">Перенаправлення вузлів</string>
   <string name="custom_host_mapping_summary">Перенаправлення вузлів, як за допомогою /etc/hosts, але не потребує додаткових дозволів.</string>
-  <string name="host">Хост</string>
-  <string name="address">Адреса (може бути інша адреса)</string>
+  <string name="host_mapping_host">Хост</string>
+  <string name="host_mapping_address">Адреса (може бути інша адреса)</string>
   <string name="add_host_mapping">Додати перенаправлення вузлів</string>
   <string name="tcp_dns_query">TCP DNS запит</string>
   <string name="tcp_dns_query_summary">Використовувати протокол TCP для DNS-запитів, це допоможе уникнути DNS Cache Poisoning.</string>

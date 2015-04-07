@@ -271,8 +271,8 @@
   <string name="view">Voir</string>
   <string name="custom_host_mapping">Mappage d\'hôte personnalisée</string>
   <string name="custom_host_mapping_summary">Mappage d\'hôte comme /etc/hosts, mais n\'exige pas de permissions supplémentaires.</string>
-  <string name="host">Hôte</string>
-  <string name="address">Adresse (peut-être une autre adresse hôte)</string>
+  <string name="host_mapping_host">Hôte</string>
+  <string name="host_mapping_address">Adresse (peut-être une autre adresse hôte)</string>
   <string name="add_host_mapping">Ajouter un hôte personnalisé</string>
   <string name="tcp_dns_query">Requête DNS TCP</string>
   <string name="tcp_dns_query_summary">Utiliser le protocole TCP pour faire des requêtes DNS, cela peut éviter un empoisonnement du cache DNS.</string>

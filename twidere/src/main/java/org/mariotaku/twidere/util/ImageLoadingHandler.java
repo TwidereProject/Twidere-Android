@@ -20,7 +20,10 @@
 package org.mariotaku.twidere.util;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -30,6 +33,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.view.ForegroundImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +60,9 @@ public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingPr
     public void onLoadingCancelled(final String imageUri, final View view) {
         if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
         mLoadingUris.remove(view);
+        if (view instanceof ForegroundImageView) {
+            ((ForegroundImageView) view).setForeground(null);
+        }
         final ProgressBar progress = findProgressBar(view.getParent());
         if (progress != null) {
             progress.setVisibility(View.GONE);
@@ -65,18 +73,38 @@ public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingPr
     public void onLoadingComplete(final String imageUri, final View view, final Bitmap bitmap) {
         if (view == null) return;
         mLoadingUris.remove(view);
-        final ProgressBar progress = findProgressBar(view.getParent());
+        final ViewGroup parent = (ViewGroup) view.getParent();
+        if (view instanceof ForegroundImageView) {
+            final Drawable foreground;
+            if (isVideoItem(parent)) {
+                foreground = ResourcesCompat.getDrawable(view.getResources(), R.drawable.ic_card_media_play, null);
+            } else {
+                foreground = null;
+            }
+            ((ForegroundImageView) view).setForeground(foreground);
+        }
+        final ProgressBar progress = findProgressBar(parent);
         if (progress != null) {
             progress.setVisibility(View.GONE);
         }
     }
 
+    private static boolean isVideoItem(ViewGroup parent) {
+        final Object tag = parent.getTag();
+        if (tag instanceof ParcelableMedia) {
+            return ((ParcelableMedia) tag).type == ParcelableMedia.TYPE_VIDEO;
+        }
+        return false;
+    }
+
     @Override
     public void onLoadingFailed(final String imageUri, final View view, final FailReason reason) {
         if (view == null) return;
-        if (view instanceof ImageView) {
+        if (view instanceof ForegroundImageView) {
             ((ImageView) view).setImageDrawable(null);
-            view.setBackgroundResource(R.drawable.image_preview_refresh);
+            final Drawable foreground = ResourcesCompat.getDrawable(view.getResources(),
+                    R.drawable.image_preview_refresh, null);
+            ((ForegroundImageView) view).setForeground(foreground);
         }
         mLoadingUris.remove(view);
         final ProgressBar progress = findProgressBar(view.getParent());
@@ -88,8 +116,8 @@ public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingPr
     @Override
     public void onLoadingStarted(final String imageUri, final View view) {
         if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
-        if (view instanceof ImageView) {
-            view.setBackgroundResource(0);
+        if (view instanceof ForegroundImageView) {
+            ((ForegroundImageView) view).setForeground(null);
         }
         mLoadingUris.put(view, imageUri);
         final ProgressBar progress = findProgressBar(view.getParent());

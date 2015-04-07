@@ -271,8 +271,8 @@
   <string name="view">Вид</string>
   <string name="custom_host_mapping">Перенаправление узлов</string>
   <string name="custom_host_mapping_summary">Перенаправление узлов, как с помощью /etc/hosts, но не требующее дополнительных разрешений.</string>
-  <string name="host">Хост</string>
-  <string name="address">Адрес (Может быть указан другой адрес)</string>
+  <string name="host_mapping_host">Хост</string>
+  <string name="host_mapping_address">Адрес (Может быть указан другой адрес)</string>
   <string name="add_host_mapping">Добавить перенаправление узлов</string>
   <string name="tcp_dns_query">TCP DNS-запрос</string>
   <string name="tcp_dns_query_summary">Использовать протокол TCP для запросов DNS в целях предотвращения DNS Cache Poisoning.</string>

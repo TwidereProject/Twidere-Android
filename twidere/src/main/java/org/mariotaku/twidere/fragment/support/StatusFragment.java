@@ -68,7 +68,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -106,6 +105,7 @@ import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
+import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwitterCardContainer;
@@ -525,7 +525,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final View retweetedByContainer;
         private final View mediaPreviewContainer;
         private final View mediaPreviewLoad;
-        private final LinearLayout mediaPreviewGrid;
+        private final CardMediaContainer mediaPreview;
 
         private final TextView locationView;
         private final TwitterCardContainer twitterCard;
@@ -549,9 +549,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             repliesCountView = (TextView) itemView.findViewById(R.id.replies_count);
             retweetsCountView = (TextView) itemView.findViewById(R.id.retweets_count);
             favoritesCountView = (TextView) itemView.findViewById(R.id.favorites_count);
-            mediaPreviewContainer = itemView.findViewById(R.id.media_preview);
+            mediaPreviewContainer = itemView.findViewById(R.id.media_preview_container);
             mediaPreviewLoad = itemView.findViewById(R.id.media_preview_load);
-            mediaPreviewGrid = (LinearLayout) itemView.findViewById(R.id.media_preview_grid);
+            mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
             locationView = (TextView) itemView.findViewById(R.id.location_view);
             profileContainer = itemView.findViewById(R.id.profile_container);
             twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
@@ -640,16 +640,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             } else if (adapter.isDetailMediaExpanded()) {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.GONE);
-                mediaPreviewGrid.setVisibility(View.VISIBLE);
-                mediaPreviewGrid.removeAllViews();
-                final int maxColumns = resources.getInteger(R.integer.grid_column_image_preview);
-                Utils.addToLinearLayout(mediaPreviewGrid, loader, status.media, status.account_id,
-                        maxColumns, adapter.getFragment());
+                mediaPreview.setVisibility(View.VISIBLE);
+                mediaPreview.displayMedia(status.media, loader, status.account_id,
+                        adapter.getFragment(), adapter.getImageLoadingHandler());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.VISIBLE);
-                mediaPreviewGrid.setVisibility(View.GONE);
-                mediaPreviewGrid.removeAllViews();
+                mediaPreview.setVisibility(View.GONE);
             }
 
             if (TwitterCardUtils.isCardSupported(status.card)) {

@@ -256,8 +256,8 @@
   <string name="view">Ver</string>
   <string name="custom_host_mapping">Mapeamento de hosts personalizado</string>
   <string name="custom_host_mapping_summary">Mapear hosts tais como /etc/hosts, mas não requer outras permissões adicionais.</string>
-  <string name="host">Host</string>
-  <string name="address">Endereço (pode ser outro endereço de host)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Endereço (pode ser outro endereço de host)</string>
   <string name="add_host_mapping">Adicionar mapeamento de hosts</string>
   <string name="tcp_dns_query">Consultar TCP DNS</string>
   <string name="tcp_dns_query_summary">Usar protocolo de TCP para solicitar DNS, isso pode evitar interrupções na Cache DNS.</string>

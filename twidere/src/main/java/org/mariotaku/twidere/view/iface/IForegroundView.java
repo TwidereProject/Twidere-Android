@@ -96,32 +96,35 @@ public interface IForegroundView {
         }
 
         public void dispatchOnDraw(final Canvas canvas) {
-            if (mForeground != null) {
-                final Drawable foreground = mForeground;
+            draw(canvas);
+        }
 
-                if (mForegroundBoundsChanged) {
-                    mForegroundBoundsChanged = false;
-                    final Rect selfBounds = mSelfBounds;
-                    final Rect overlayBounds = mOverlayBounds;
+        public void draw(Canvas canvas) {
+            final Drawable foreground = mForeground;
+            if (foreground == null) return;
 
-                    final int w = mView.getRight() - mView.getLeft();
-                    final int h = mView.getBottom() - mView.getTop();
+            if (mForegroundBoundsChanged) {
+                mForegroundBoundsChanged = false;
+                final Rect selfBounds = mSelfBounds;
+                final Rect overlayBounds = mOverlayBounds;
 
-                    if (mForegroundInPadding) {
-                        selfBounds.set(0, 0, w, h);
-                    } else {
-                        selfBounds.set(mView.getPaddingLeft(), mView.getPaddingTop(), w - mView.getPaddingRight(), h
-                                - mView.getPaddingBottom());
-                    }
+                final int w = mView.getRight() - mView.getLeft();
+                final int h = mView.getBottom() - mView.getTop();
 
-                    final int layoutDirection = ViewCompat.getLayoutDirection(mView);
-                    GravityCompat.apply(mForegroundGravity, foreground.getIntrinsicWidth(),
-                            foreground.getIntrinsicHeight(), selfBounds, overlayBounds, layoutDirection);
-                    foreground.setBounds(overlayBounds);
+                if (mForegroundInPadding) {
+                    selfBounds.set(0, 0, w, h);
+                } else {
+                    selfBounds.set(mView.getPaddingLeft(), mView.getPaddingTop(), w - mView.getPaddingRight(), h
+                            - mView.getPaddingBottom());
                 }
 
-                foreground.draw(canvas);
+                final int layoutDirection = ViewCompat.getLayoutDirection(mView);
+                GravityCompat.apply(mForegroundGravity, foreground.getIntrinsicWidth(),
+                        foreground.getIntrinsicHeight(), selfBounds, overlayBounds, layoutDirection);
+                foreground.setBounds(overlayBounds);
             }
+
+            foreground.draw(canvas);
         }
 
         public void dispatchOnLayout(final boolean changed, final int left, final int top, final int right,
@@ -131,35 +134,6 @@ public interface IForegroundView {
 
         public void dispatchOnSizeChanged(final int w, final int h, final int oldw, final int oldh) {
             mForegroundBoundsChanged = true;
-        }
-
-        public void draw(final Canvas canvas) {
-            if (mForeground != null) {
-                final Drawable foreground = mForeground;
-
-                if (mForegroundBoundsChanged) {
-                    mForegroundBoundsChanged = false;
-                    final Rect selfBounds = mSelfBounds;
-                    final Rect overlayBounds = mOverlayBounds;
-
-                    final int w = mView.getRight() - mView.getLeft();
-                    final int h = mView.getBottom() - mView.getTop();
-
-                    if (mForegroundInPadding) {
-                        selfBounds.set(0, 0, w, h);
-                    } else {
-                        selfBounds.set(mView.getPaddingLeft(), mView.getPaddingTop(), w - mView.getPaddingRight(), h
-                                - mView.getPaddingBottom());
-                    }
-
-                    final int layoutDirection = ViewCompat.getLayoutDirection(mView);
-                    GravityCompat.apply(mForegroundGravity, foreground.getIntrinsicWidth(),
-                            foreground.getIntrinsicHeight(), selfBounds, overlayBounds, layoutDirection);
-                    foreground.setBounds(overlayBounds);
-                }
-
-                foreground.draw(canvas);
-            }
         }
 
         public void drawableStateChanged() {

@@ -73,7 +73,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             final String oauthToken = requestToken.getToken();
             final String authorizationUrl = requestToken.getAuthorizationURL();
             final HashMap<String, String> inputMap = new HashMap<>();
-            final HttpResponse authorizePage = client.get(authorizationUrl, authorizationUrl, null, null);
+            final HttpResponse authorizePage = client.get(authorizationUrl, authorizationUrl, null, null, null);
             final List<String> cookieHeaders = authorizePage.getResponseHeaders("Set-Cookie");
             readInputFromHtml(authorizePage.asReader(),
                     inputMap, INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);

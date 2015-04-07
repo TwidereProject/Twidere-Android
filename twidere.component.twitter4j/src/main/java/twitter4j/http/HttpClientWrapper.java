@@ -95,7 +95,7 @@ public final class HttpClientWrapper {
     }
 
     public HttpResponse get(final String url, final String signUrl) throws TwitterException {
-        return get(url, signUrl, null, null);
+        return get(url, signUrl, null, null, null);
     }
 
     public HttpResponse get(final String url, final String signUrl, final Authorization authorization)
@@ -105,12 +105,37 @@ public final class HttpClientWrapper {
 
     public HttpResponse get(final String url, final String signUrl, final HttpParameter[] parameters)
             throws TwitterException {
-        return get(url, signUrl, parameters, null);
+        return get(url, signUrl, parameters, null, null);
     }
 
     public HttpResponse get(final String url, final String signUrl, final HttpParameter[] parameters,
                             final Authorization authorization) throws TwitterException {
-        return request(new HttpRequest(GET, url, signUrl, parameters, authorization, requestHeaders));
+        return get(url, signUrl, parameters, authorization, null);
+    }
+
+    public HttpResponse get(final String url, final String signUrl, final HttpParameter[] parameters,
+                            final Map<String, List<String>> requestHeaders) throws TwitterException {
+        return get(url, signUrl, parameters, null, requestHeaders);
+    }
+
+    public HttpResponse get(final String url, final String signUrl, final Map<String, List<String>> requestHeaders)
+            throws TwitterException {
+        return get(url, signUrl, null, null, requestHeaders);
+    }
+
+    public HttpResponse get(final String url, final String signUrl, final Authorization authorization,
+                            final Map<String, List<String>> requestHeaders) throws TwitterException {
+        return get(url, signUrl, null, authorization, requestHeaders);
+    }
+
+    public HttpResponse get(final String url, final String signUrl, final HttpParameter[] parameters,
+                            final Authorization authorization, final Map<String, List<String>> requestHeaders)
+            throws TwitterException {
+        final Map<String, List<String>> headers = new HashMap<>(this.requestHeaders);
+        if (requestHeaders != null) {
+            headers.putAll(requestHeaders);
+        }
+        return request(new HttpRequest(GET, url, signUrl, parameters, authorization, headers));
     }
 
     @Override

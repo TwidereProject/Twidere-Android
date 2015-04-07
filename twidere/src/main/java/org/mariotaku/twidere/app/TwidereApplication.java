@@ -114,7 +114,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     public ImageDownloader getFullImageDownloader() {
         if (mFullImageDownloader != null) return mFullImageDownloader;
-        return mFullImageDownloader = new TwidereImageDownloader(this, true);
+        return mFullImageDownloader = new TwidereImageDownloader(this, true, true);
     }
 
     public Handler getHandler() {
@@ -133,7 +133,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     public ImageDownloader getImageDownloader() {
         if (mImageDownloader != null) return mImageDownloader;
-        return mImageDownloader = new TwidereImageDownloader(this, false);
+        return mImageDownloader = new TwidereImageDownloader(this, false, true);
     }
 
     public ImageLoader getImageLoader() {
@@ -274,7 +274,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             startUsageStatisticsServiceIfNeeded(this);
             //end
         } else if (KEY_CONSUMER_KEY.equals(key) || KEY_CONSUMER_SECRET.equals(key) || KEY_API_URL_FORMAT.equals(key)
-                || KEY_AUTH_TYPE.equals(key) || KEY_SAME_OAUTH_SIGNING_URL.equals(key)) {
+                || KEY_AUTH_TYPE.equals(key) || KEY_SAME_OAUTH_SIGNING_URL.equals(key) || KEY_THUMBOR_ENABLED.equals(key)
+                || KEY_THUMBOR_ADDRESS.equals(key) || KEY_THUMBOR_SECURITY_KEY.equals(key)) {
             final SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(KEY_API_LAST_CHANGE, System.currentTimeMillis());
             editor.apply();

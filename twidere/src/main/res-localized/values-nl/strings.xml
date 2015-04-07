@@ -254,8 +254,8 @@
   <string name="view">Bekijk</string>
   <string name="custom_host_mapping">Aangepaste host toewijzingen</string>
   <string name="custom_host_mapping_summary">Host toewijzingen zoals /etc/hosts, maar heeft geen aanvullende rechten nodig.</string>
-  <string name="host">Host</string>
-  <string name="address">Adres (Kan een ander host adres zijn)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Adres (Kan een ander host adres zijn)</string>
   <string name="add_host_mapping">Voeg host toewijzing toe</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Gebruik TCP Protocol om DNS aanvragen te doen. Dit kan DNS Cache Poisoning vermijden.</string>

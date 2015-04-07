@@ -270,8 +270,8 @@
   <string name="view">보기</string>
   <string name="custom_host_mapping">커스텀 호스트 매핑</string>
   <string name="custom_host_mapping_summary">/etc/hosts 에 지정하는 것처럼 호스트를 매핑합니다. 다른 권한은 전혀 필요 없습니다.</string>
-  <string name="host">호스트</string>
-  <string name="address">주소 (대체 호스트 주소가 될 수 있음)</string>
+  <string name="host_mapping_host">호스트</string>
+  <string name="host_mapping_address">주소 (대체 호스트 주소가 될 수 있음)</string>
   <string name="add_host_mapping">호스트 매핑 추가</string>
   <string name="tcp_dns_query">TCP DNS 쿼리</string>
   <string name="tcp_dns_query_summary">TCP 프로토콜로 DNS 요청을 통신하고 DNS 캐시의 오염을 막습니다.</string>

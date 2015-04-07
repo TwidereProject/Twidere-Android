@@ -273,8 +273,8 @@
   <string name="view">檢視</string>
   <string name="custom_host_mapping">自訂主機對應</string>
   <string name="custom_host_mapping_summary">如同/etc/hosts的主機對應，但不需要任何額外的權限</string>
-  <string name="host">主機名</string>
-  <string name="address">地址（可以是另一個主機名）</string>
+  <string name="host_mapping_host">主機名</string>
+  <string name="host_mapping_address">地址（可以是另一個主機名）</string>
   <string name="add_host_mapping">新增主機名對應</string>
   <string name="tcp_dns_query">TCP DNS 查詢方式</string>
   <string name="tcp_dns_query_summary">使用 TCP 協議進行 DNS 查詢，這可以避免 DNS 快取污染</string>

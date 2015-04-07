@@ -23,20 +23,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
+    android:divider="?android:dividerHorizontal"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:showDividers="middle">
 
     <Switch
         android:id="@android:id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
-    <View
-        android:layout_width="1dp"
-        android:layout_height="@dimen/element_size_normal"
-        android:layout_marginLeft="@dimen/element_spacing_small"
-        android:layout_marginRight="@dimen/element_spacing_small"
-        android:background="?android:dividerHorizontal"/>
 
     <org.mariotaku.twidere.view.ActionIconButton
         android:id="@+id/settings"

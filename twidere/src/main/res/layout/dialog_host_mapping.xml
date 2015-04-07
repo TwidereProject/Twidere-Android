@@ -35,7 +35,7 @@
         android:id="@+id/host"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/host"
+        android:hint="@string/host_mapping_host"
         android:inputType="text|textUri"
         android:singleLine="true"/>
 
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="@string/address"
+        android:hint="@string/host_mapping_address"
         android:inputType="text|textUri"
         android:singleLine="true"/>
 

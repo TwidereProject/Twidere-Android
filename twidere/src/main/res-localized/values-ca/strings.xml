@@ -271,8 +271,8 @@
   <string name="view">Mostra</string>
   <string name="custom_host_mapping">Associacions de servidors personalitzades</string>
   <string name="custom_host_mapping_summary">Associa servidors com el fitxer /etc/hosts sense requerir permisos addicionals.</string>
-  <string name="host">Servidor</string>
-  <string name="address">Adreça (pot ser una altra adreça de servidor)</string>
+  <string name="host_mapping_host">Servidor</string>
+  <string name="host_mapping_address">Adreça (pot ser una altra adreça de servidor)</string>
   <string name="add_host_mapping">Afegeix una associació de servidor</string>
   <string name="tcp_dns_query">Petició DNS per TCP</string>
   <string name="tcp_dns_query_summary">Utilitza el protocol TCP per fer peticions DNS per evitar l\'«Enverinament de la Memòria Cau de DNS».</string>

@@ -273,8 +273,8 @@
   <string name="view">查看</string>
   <string name="custom_host_mapping">自定义主机映射</string>
   <string name="custom_host_mapping_summary">如同/etc/hosts的主机映射，但不需要任何额外的权限</string>
-  <string name="host">主机名</string>
-  <string name="address">地址（可以是另一个主机名）</string>
+  <string name="host_mapping_host">主机名</string>
+  <string name="host_mapping_address">地址（可以是另一个主机名）</string>
   <string name="add_host_mapping">添加主机名映射</string>
   <string name="tcp_dns_query">TCP DNS查询方式</string>
   <string name="tcp_dns_query_summary">使用TCP协议进行DNS查询，这可以避免DNS缓存投毒</string>

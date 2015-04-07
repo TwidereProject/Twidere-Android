@@ -25,22 +25,18 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class MediaViewPager extends ViewPager {
-	
-	
-	public MediaViewPager(Context context) {
-		this(context, null);
-	}
 
-	public MediaViewPager(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
-	
-	@Override
-	protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
-		if (v instanceof TouchImageView) {
-			return v.canScrollHorizontally(dx);
-		} else {
-			return super.canScroll(v, checkV, dx, x, y);
-		}
-	}
+
+    public MediaViewPager(Context context) {
+        this(context, null);
+    }
+
+    public MediaViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    @Override
+    protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
+        return super.canScroll(v, checkV, dx, x, y);
+    }
 }

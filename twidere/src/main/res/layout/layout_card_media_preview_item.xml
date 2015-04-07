@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/media"
-        android:foreground="@drawable/ic_action_play_circle"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"/>
 

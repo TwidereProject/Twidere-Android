@@ -2,7 +2,6 @@ package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.PorterDuff.Mode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
@@ -35,6 +34,7 @@ import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
+import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
@@ -62,12 +62,16 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
     private final ImageView profileTypeView;
     private final ImageView extraTypeView;
     private final TextView textView;
+    private final TextView quoteTextView;
     private final TextView nameView, screenNameView;
+    private final TextView quotedNameView, quotedScreenNameView;
     private final TextView replyRetweetView;
     private final ShortTimeView timeView;
-    private final CardMediaContainer mediaPreviewContainer;
+    private final CardMediaContainer mediaPreview;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
+    private final View quotedNameContainer;
     private final IColorLabelView itemContent;
+    private final ForegroundColorView quoteIndicator;
 
     private StatusClickListener statusClickListener;
 
@@ -79,13 +83,19 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
         extraTypeView = (ImageView) itemView.findViewById(R.id.extra_type);
         textView = (TextView) itemView.findViewById(R.id.text);
+        quoteTextView = (TextView) itemView.findViewById(R.id.quote_text);
         nameView = (TextView) itemView.findViewById(R.id.name);
         screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
+        quotedNameView = (TextView) itemView.findViewById(R.id.quoted_name);
+        quotedScreenNameView = (TextView) itemView.findViewById(R.id.quoted_screen_name);
         replyRetweetIcon = (ImageView) itemView.findViewById(R.id.reply_retweet_icon);
         replyRetweetView = (TextView) itemView.findViewById(R.id.reply_retweet_status);
         timeView = (ShortTimeView) itemView.findViewById(R.id.time);
 
-        mediaPreviewContainer = (CardMediaContainer) itemView.findViewById(R.id.media_preview_container);
+        mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
+        quotedNameContainer = itemView.findViewById(R.id.quoted_name_container);
+
+        quoteIndicator = (ForegroundColorView) itemView.findViewById(R.id.quote_indicator);
 
         replyCountView = (TextView) itemView.findViewById(R.id.reply_count);
         retweetCountView = (TextView) itemView.findViewById(R.id.retweet_count);
@@ -100,7 +110,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         screenNameView.setText("@" + TWIDERE_PREVIEW_SCREEN_NAME);
         textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         timeView.setTime(System.currentTimeMillis());
-        mediaPreviewContainer.displayMedia(R.drawable.nyan_stars_background);
+        mediaPreview.displayMedia(R.drawable.nyan_stars_background);
     }
 
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
@@ -109,41 +119,34 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
     public void displayStatus(@NonNull final ParcelableStatus status, @Nullable final TranslationResult translation,
                               final boolean displayInReplyTo, final boolean shouldDisplayExtraType) {
-        final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getImageLoader();
-        final ImageLoadingHandler handler = adapter.getImageLoadingHandler();
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final TwidereLinkify linkify = adapter.getTwidereLinkify();
-        final boolean displayProfileImage = adapter.isProfileImageEnabled();
-        final boolean displayMediaPreview = adapter.isMediaPreviewEnabled();
-        final boolean displayAccountsColor = adapter.shouldShowAccountsColor();
+        final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
-        final int profileImageStyle = adapter.getProfileImageStyle();
-        final int mediaPreviewStyle = adapter.getMediaPreviewStyle();
-        final int linkHighlightingStyle = adapter.getLinkHighlightingStyle();
-        final ParcelableMedia[] media = status.media;
 
-        replyRetweetIcon.setColorFilter(replyRetweetView.getCurrentTextColor(), Mode.SRC_ATOP);
+        final long reply_count = status.reply_count;
+        final long retweet_count;
+        final long favorite_count;
+
         if (status.retweet_id > 0) {
-            replyRetweetView.setVisibility(View.VISIBLE);
-            replyRetweetIcon.setVisibility(View.VISIBLE);
             final String retweetedBy = UserColorNameUtils.getDisplayName(context, status.retweeted_by_id,
                     status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.name_retweeted, retweetedBy));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_retweet);
-        } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0 && displayInReplyTo) {
             replyRetweetView.setVisibility(View.VISIBLE);
             replyRetweetIcon.setVisibility(View.VISIBLE);
+        } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0 && displayInReplyTo) {
             final String inReplyTo = UserColorNameUtils.getDisplayName(context, status.in_reply_to_user_id,
                     status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.in_reply_to_name, inReplyTo));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_reply);
+            replyRetweetView.setVisibility(View.VISIBLE);
+            replyRetweetIcon.setVisibility(View.VISIBLE);
         } else {
             replyRetweetView.setVisibility(View.GONE);
             replyRetweetIcon.setVisibility(View.GONE);
-            replyRetweetView.setText(null);
         }
-
 
         final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
         if (typeIconRes != 0) {
@@ -154,64 +157,102 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             profileTypeView.setVisibility(View.GONE);
         }
 
-        nameView.setText(status.user_name);
-        screenNameView.setText("@" + status.user_screen_name);
-        timeView.setTime(status.timestamp);
+        if (status.is_quote) {
+            quotedNameView.setText(status.user_name);
+            quotedScreenNameView.setText("@" + status.user_screen_name);
+            timeView.setTime(status.quote_timestamp);
+            nameView.setText(status.quoted_by_user_name);
+            screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
-        final int userColor = UserColorNameUtils.getUserColor(context, status.user_id);
-        itemContent.drawStart(userColor);
+            if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+                quoteTextView.setText(status.quote_text_unescaped);
+            } else {
+                quoteTextView.setText(Html.fromHtml(status.quote_text_html));
+                linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
+                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
+                quoteTextView.setMovementMethod(null);
+            }
 
-        if (displayAccountsColor) {
+            quotedNameContainer.setVisibility(View.VISIBLE);
+            quoteTextView.setVisibility(View.VISIBLE);
+            quoteIndicator.setVisibility(View.VISIBLE);
+
+            quoteIndicator.setColor(UserColorNameUtils.getUserColor(context, status.user_id));
+
+            if (adapter.isProfileImageEnabled()) {
+                profileTypeView.setVisibility(View.VISIBLE);
+                profileImageView.setVisibility(View.VISIBLE);
+                loader.displayProfileImage(profileImageView, status.quoted_by_user_profile_image);
+            } else {
+                profileTypeView.setVisibility(View.GONE);
+                profileImageView.setVisibility(View.GONE);
+                loader.cancelDisplayTask(profileImageView);
+            }
+
+            final int userColor = UserColorNameUtils.getUserColor(context, status.quoted_by_user_id);
+            itemContent.drawStart(userColor);
+        } else {
+            nameView.setText(status.user_name);
+            screenNameView.setText("@" + status.user_screen_name);
+            timeView.setTime(status.timestamp);
+
+            quotedNameContainer.setVisibility(View.GONE);
+            quoteTextView.setVisibility(View.GONE);
+            quoteIndicator.setVisibility(View.GONE);
+
+            if (adapter.isProfileImageEnabled()) {
+                final String user_profile_image_url = status.user_profile_image_url;
+                profileTypeView.setVisibility(View.VISIBLE);
+                profileImageView.setVisibility(View.VISIBLE);
+                loader.displayProfileImage(profileImageView, user_profile_image_url);
+            } else {
+                profileTypeView.setVisibility(View.GONE);
+                profileImageView.setVisibility(View.GONE);
+                loader.cancelDisplayTask(profileImageView);
+            }
+            final int userColor = UserColorNameUtils.getUserColor(context, status.user_id);
+            itemContent.drawStart(userColor);
+        }
+
+
+        if (adapter.shouldShowAccountsColor()) {
             itemContent.drawEnd(Utils.getAccountColor(context, status.account_id));
         } else {
             itemContent.drawEnd();
         }
-        profileImageView.setStyle(profileImageStyle);
 
-        if (displayProfileImage) {
-            profileTypeView.setVisibility(View.VISIBLE);
-            profileImageView.setVisibility(View.VISIBLE);
-            loader.displayProfileImage(profileImageView, status.user_profile_image_url);
-        } else {
-            profileTypeView.setVisibility(View.GONE);
-            profileImageView.setVisibility(View.GONE);
-            loader.cancelDisplayTask(profileImageView);
-        }
 
-        if (displayMediaPreview) {
-            mediaPreviewContainer.setStyle(mediaPreviewStyle);
-            if (media != null && media.length > 0) {
-                mediaPreviewContainer.setVisibility(View.VISIBLE);
-            } else {
-                mediaPreviewContainer.setVisibility(View.GONE);
-            }
-            mediaPreviewContainer.displayMedia(media, loader, status.account_id, this, handler);
+        if (adapter.isMediaPreviewEnabled()) {
+            mediaPreview.setStyle(adapter.getMediaPreviewStyle());
+            mediaPreview.setVisibility(status.media != null && status.media.length > 0 ? View.VISIBLE : View.GONE);
+            mediaPreview.displayMedia(status.media, loader, status.account_id, this,
+                    adapter.getImageLoadingHandler());
         } else {
-            mediaPreviewContainer.setVisibility(View.GONE);
+            mediaPreview.setVisibility(View.GONE);
         }
-        if (translation != null) {
-            textView.setText(translation.getText());
-        } else if (linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+        if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(status.text_unescaped);
         } else {
             textView.setText(Html.fromHtml(status.text_html));
             linkify.applyAllLinks(textView, status.account_id, getLayoutPosition(),
-                    status.is_possibly_sensitive, linkHighlightingStyle);
+                    status.is_possibly_sensitive,
+                    adapter.getLinkHighlightingStyle());
+            textView.setMovementMethod(null);
         }
 
-        if (status.reply_count > 0) {
-            replyCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), status.reply_count));
+        if (reply_count > 0) {
+            replyCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), reply_count));
         } else {
             replyCountView.setText(null);
         }
 
-        final long retweet_count;
         if (twitter.isDestroyingStatus(status.account_id, status.my_retweet_id)) {
             retweetCountView.setActivated(false);
-            retweet_count = Math.max(0, status.favorite_count - 1);
+            retweet_count = Math.max(0, status.retweet_count - 1);
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_id, status.id);
-            retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status));
+            retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status.account_id,
+                    status.retweeted_by_id, status.my_retweet_id));
             retweet_count = status.retweet_count + (creatingRetweet ? 1 : 0);
         }
         if (retweet_count > 0) {
@@ -219,9 +260,6 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         } else {
             retweetCountView.setText(null);
         }
-        retweetCountView.setEnabled(!status.user_is_protected);
-
-        final long favorite_count;
         if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
             favoriteCountView.setActivated(false);
             favorite_count = Math.max(0, status.favorite_count - 1);
@@ -255,7 +293,6 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         final long favorite_count;
 
         final long account_id = cursor.getLong(indices.account_id);
-        final long timestamp = cursor.getLong(indices.status_timestamp);
         final long user_id = cursor.getLong(indices.user_id);
         final long status_id = cursor.getLong(indices.status_id);
         final long retweet_id = cursor.getLong(indices.retweet_id);
@@ -264,15 +301,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         final long in_reply_to_status_id = cursor.getLong(indices.in_reply_to_status_id);
         final long in_reply_to_user_id = cursor.getLong(indices.in_reply_to_user_id);
 
-        final boolean user_is_protected = cursor.getInt(indices.is_protected) == 1;
-
         final String user_name = cursor.getString(indices.user_name);
         final String user_screen_name = cursor.getString(indices.user_screen_name);
-        final String user_profile_image_url = cursor.getString(indices.user_profile_image_url);
-        final String retweeted_by_name = cursor.getString(indices.retweeted_by_user_name);
-        final String retweeted_by_screen_name = cursor.getString(indices.retweeted_by_user_screen_name);
-        final String in_reply_to_name = cursor.getString(indices.in_reply_to_user_name);
-        final String in_reply_to_screen_name = cursor.getString(indices.in_reply_to_user_screen_name);
         final String card_name = cursor.getString(indices.card_name);
         final String place_full_name = cursor.getString(indices.place_full_name);
 
@@ -282,6 +312,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
                 cursor.getString(indices.location));
 
         if (retweet_id > 0) {
+            final String retweeted_by_name = cursor.getString(indices.retweeted_by_user_name);
+            final String retweeted_by_screen_name = cursor.getString(indices.retweeted_by_user_screen_name);
             final String retweetedBy = UserColorNameUtils.getDisplayName(context, retweeted_by_id,
                     retweeted_by_name, retweeted_by_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.name_retweeted, retweetedBy));
@@ -289,6 +321,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             replyRetweetView.setVisibility(View.VISIBLE);
             replyRetweetIcon.setVisibility(View.VISIBLE);
         } else if (in_reply_to_status_id > 0 && in_reply_to_user_id > 0 && displayInReplyTo) {
+            final String in_reply_to_name = cursor.getString(indices.in_reply_to_user_name);
+            final String in_reply_to_screen_name = cursor.getString(indices.in_reply_to_user_screen_name);
             final String inReplyTo = UserColorNameUtils.getDisplayName(context, in_reply_to_user_id,
                     in_reply_to_name, in_reply_to_screen_name, nameFirst);
             replyRetweetView.setText(context.getString(R.string.in_reply_to_name, inReplyTo));
@@ -300,8 +334,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             replyRetweetIcon.setVisibility(View.GONE);
         }
 
-        final int typeIconRes = getUserTypeIconRes(cursor.getInt(indices.is_verified) == 1,
-                user_is_protected);
+        final int typeIconRes = getUserTypeIconRes(cursor.getShort(indices.is_verified) == 1,
+                cursor.getShort(indices.is_protected) == 1);
         if (typeIconRes != 0) {
             profileTypeView.setImageResource(typeIconRes);
             profileTypeView.setVisibility(View.VISIBLE);
@@ -310,12 +344,64 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             profileTypeView.setVisibility(View.GONE);
         }
 
-        nameView.setText(user_name);
-        screenNameView.setText("@" + user_screen_name);
-        timeView.setTime(timestamp);
+        if (cursor.getShort(indices.is_quote) == 1) {
+            quotedNameView.setText(user_name);
+            quotedScreenNameView.setText("@" + user_screen_name);
+            timeView.setTime(cursor.getLong(indices.quote_timestamp));
+            nameView.setText(cursor.getString(indices.quoted_by_user_name));
+            screenNameView.setText("@" + cursor.getString(indices.quoted_by_user_screen_name));
 
-        final int userColor = UserColorNameUtils.getUserColor(context, user_id);
-        itemContent.drawStart(userColor);
+            if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+                quoteTextView.setText(cursor.getString(indices.quote_text_unescaped));
+            } else {
+                quoteTextView.setText(Html.fromHtml(cursor.getString(indices.quote_text_html)));
+                linkify.applyAllLinks(quoteTextView, account_id, getLayoutPosition(),
+                        cursor.getShort(indices.is_possibly_sensitive) == 1,
+                        adapter.getLinkHighlightingStyle());
+                quoteTextView.setMovementMethod(null);
+            }
+
+            quotedNameContainer.setVisibility(View.VISIBLE);
+            quoteTextView.setVisibility(View.VISIBLE);
+            quoteIndicator.setVisibility(View.VISIBLE);
+
+            quoteIndicator.setColor(UserColorNameUtils.getUserColor(context, user_id));
+
+            if (adapter.isProfileImageEnabled()) {
+                profileTypeView.setVisibility(View.VISIBLE);
+                profileImageView.setVisibility(View.VISIBLE);
+                loader.displayProfileImage(profileImageView, cursor.getString(indices.quoted_by_user_profile_image));
+            } else {
+                profileTypeView.setVisibility(View.GONE);
+                profileImageView.setVisibility(View.GONE);
+                loader.cancelDisplayTask(profileImageView);
+            }
+
+            final int userColor = UserColorNameUtils.getUserColor(context, cursor.getLong(indices.quoted_by_user_id));
+            itemContent.drawStart(userColor);
+        } else {
+            nameView.setText(user_name);
+            screenNameView.setText("@" + user_screen_name);
+            timeView.setTime(cursor.getLong(indices.status_timestamp));
+
+            quotedNameContainer.setVisibility(View.GONE);
+            quoteTextView.setVisibility(View.GONE);
+            quoteIndicator.setVisibility(View.GONE);
+
+            if (adapter.isProfileImageEnabled()) {
+                final String user_profile_image_url = cursor.getString(indices.user_profile_image_url);
+                profileTypeView.setVisibility(View.VISIBLE);
+                profileImageView.setVisibility(View.VISIBLE);
+                loader.displayProfileImage(profileImageView, user_profile_image_url);
+            } else {
+                profileTypeView.setVisibility(View.GONE);
+                profileImageView.setVisibility(View.GONE);
+                loader.cancelDisplayTask(profileImageView);
+            }
+            final int userColor = UserColorNameUtils.getUserColor(context, user_id);
+            itemContent.drawStart(userColor);
+        }
+
 
         if (adapter.shouldShowAccountsColor()) {
             itemContent.drawEnd(Utils.getAccountColor(context, account_id));
@@ -323,25 +409,14 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             itemContent.drawEnd();
         }
 
-        profileImageView.setStyle(adapter.getProfileImageStyle());
-
-        if (adapter.isProfileImageEnabled()) {
-            profileTypeView.setVisibility(View.VISIBLE);
-            profileImageView.setVisibility(View.VISIBLE);
-            loader.displayProfileImage(profileImageView, user_profile_image_url);
-        } else {
-            profileTypeView.setVisibility(View.GONE);
-            profileImageView.setVisibility(View.GONE);
-            loader.cancelDisplayTask(profileImageView);
-        }
 
         if (adapter.isMediaPreviewEnabled()) {
-            mediaPreviewContainer.setStyle(adapter.getMediaPreviewStyle());
-            mediaPreviewContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
-            mediaPreviewContainer.displayMedia(media, loader, account_id, this,
+            mediaPreview.setStyle(adapter.getMediaPreviewStyle());
+            mediaPreview.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
+            mediaPreview.displayMedia(media, loader, account_id, this,
                     adapter.getImageLoadingHandler());
         } else {
-            mediaPreviewContainer.setVisibility(View.GONE);
+            mediaPreview.setVisibility(View.GONE);
         }
         if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(cursor.getString(indices.text_unescaped));
@@ -350,6 +425,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             linkify.applyAllLinks(textView, account_id, getLayoutPosition(),
                     cursor.getShort(indices.is_possibly_sensitive) == 1,
                     adapter.getLinkHighlightingStyle());
+            textView.setMovementMethod(null);
         }
 
         if (reply_count > 0) {
@@ -372,15 +448,12 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         } else {
             retweetCountView.setText(null);
         }
-        retweetCountView.setEnabled(!user_is_protected);
-
-        favoriteCountView.setActivated(cursor.getInt(indices.is_favorite) == 1);
         if (twitter.isDestroyingFavorite(account_id, status_id)) {
             favoriteCountView.setActivated(false);
             favorite_count = Math.max(0, cursor.getLong(indices.favorite_count) - 1);
         } else {
             final boolean creatingFavorite = twitter.isCreatingFavorite(account_id, status_id);
-            favoriteCountView.setActivated(creatingFavorite || cursor.getInt(indices.is_favorite) == 1);
+            favoriteCountView.setActivated(creatingFavorite || cursor.getShort(indices.is_favorite) == 1);
             favorite_count = cursor.getLong(indices.favorite_count) + (creatingFavorite ? 1 : 0);
         }
         if (favorite_count > 0) {
@@ -454,8 +527,11 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
     public void setTextSize(final float textSize) {
         nameView.setTextSize(textSize);
+        quotedNameView.setTextSize(textSize);
         textView.setTextSize(textSize);
+        quoteTextView.setTextSize(textSize);
         screenNameView.setTextSize(textSize * 0.85f);
+        quotedScreenNameView.setTextSize(textSize * 0.85f);
         timeView.setTextSize(textSize * 0.85f);
         replyRetweetView.setTextSize(textSize * 0.75f);
         replyCountView.setTextSize(textSize);
@@ -465,7 +541,8 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
     public void setupViewOptions() {
         setTextSize(adapter.getTextSize());
-        mediaPreviewContainer.setStyle(adapter.getMediaPreviewStyle());
+        mediaPreview.setStyle(adapter.getMediaPreviewStyle());
+        profileImageView.setStyle(adapter.getProfileImageStyle());
     }
 
     private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName) {

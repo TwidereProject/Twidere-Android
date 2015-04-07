@@ -273,8 +273,8 @@
     <string name="view">View</string>
     <string name="custom_host_mapping">Custom host mapping</string>
     <string name="custom_host_mapping_summary">Host mapping like /etc/hosts, but does not require any additional permissions.</string>
-    <string name="host">Host</string>
-    <string name="address">Address (Can be another host address)</string>
+    <string name="host_mapping_host">Host</string>
+    <string name="host_mapping_address">Address (Can be another host address)</string>
     <string name="add_host_mapping">Add host mapping</string>
     <string name="tcp_dns_query">TCP DNS Query</string>
     <string name="tcp_dns_query_summary">Use TCP Protocol to make DNS requests, which can avoid DNS Cache Poisoning.</string>
@@ -739,6 +739,9 @@
     <string name="permission_label_shorten_status">Shorten tweet</string>
     <string name="permission_label_upload_media">Upload media</string>
     <string name="permission_label_sync_timeline">Sync timeline</string>
+    <string name="thumbor_integration">Thumbor integration</string>
+    <string name="server_address">Server address</string>
+    <string name="security_key">Security key</string>
 
 
 </resources>

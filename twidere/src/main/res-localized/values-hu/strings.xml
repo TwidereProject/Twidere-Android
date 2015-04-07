@@ -243,8 +243,8 @@
   <string name="view">Nézet</string>
   <string name="custom_host_mapping">Egyedi host hozzárendelés</string>
   <string name="custom_host_mapping_summary">Host hozzárendelés, mint a /etc/hosts, de nem kell hozzá plusz jog.</string>
-  <string name="host">Host</string>
-  <string name="address">Cím (Lehet egy másik host címe)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Cím (Lehet egy másik host címe)</string>
   <string name="add_host_mapping">Host hozzárendelés hozzáadása</string>
   <string name="tcp_dns_query">TCP DNS lekérdezés</string>
   <string name="tcp_dns_query_summary">DNS lekérdezések TCP protokoll felett, ezzel elkerülhető a DNS gyorsítótár mérgezés.</string>

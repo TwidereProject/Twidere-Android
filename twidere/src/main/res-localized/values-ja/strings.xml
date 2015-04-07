@@ -264,8 +264,8 @@
   <string name="view">表示</string>
   <string name="custom_host_mapping">ホストマッピングの設定</string>
   <string name="custom_host_mapping_summary">rootedでなくても/etc/hostsのようにホストマッピングができます。</string>
-  <string name="host">ホスト</string>
-  <string name="address">アドレス (他のホストアドレスも可)</string>
+  <string name="host_mapping_host">ホスト</string>
+  <string name="host_mapping_address">アドレス (他のホストアドレスも可)</string>
   <string name="add_host_mapping">ホストマッピングを追加</string>
   <string name="tcp_dns_query">TCP DNS クエリー</string>
   <string name="tcp_dns_query_summary">TCP プロトコルでDNS リクエストを通信し、DNSキャッシュ汚染を回避できます。</string>

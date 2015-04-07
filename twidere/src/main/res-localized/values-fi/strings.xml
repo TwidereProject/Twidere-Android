@@ -270,8 +270,8 @@
   <string name="view">Näytä</string>
   <string name="custom_host_mapping">Mukautettu Host Mapping -määrittely</string>
   <string name="custom_host_mapping_summary">Verkkonimet määritellään kuten /etc/hosts -tiedostossa, mutta ylimääräisiä oikeuksia ei tarvita.</string>
-  <string name="host">Host</string>
-  <string name="address">Osoite (voi olla toinen host-osoite)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Osoite (voi olla toinen host-osoite)</string>
   <string name="add_host_mapping">Lisää host mapping</string>
   <string name="tcp_dns_query">TCP DNS -kysely</string>
   <string name="tcp_dns_query_summary">Käytä TCP-yhteyskäytäntöä DNS-pyyntöihin, jotta vältyttäisiin DNS Cache Poisoning -verkkohuijauksilta.</string>

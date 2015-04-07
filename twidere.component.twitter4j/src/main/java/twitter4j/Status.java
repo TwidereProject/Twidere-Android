@@ -114,6 +114,8 @@ public interface Status extends Comparable<Status>, TwitterResponse, ExtendedEnt
      */
     Status getRetweetedStatus();
 
+    Status getQuotedStatus();
+
     /**
      * returns the source of the tweet
      *
@@ -150,6 +152,8 @@ public interface Status extends Comparable<Status>, TwitterResponse, ExtendedEnt
      * @since Twitter4J 2.0.10
      */
     boolean isRetweet();
+
+    boolean isQuote();
 
     /**
      * Returns true if the authenticating user has retweeted this tweet, or

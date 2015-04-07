@@ -35,8 +35,8 @@
   <string name="show_absolute_time">Tunjukkan masa mutlak</string>
   <string name="show_absolute_time_summary">Tunjukkan masa mutlak di tweet</string>
   <string name="user_mentions">Sebutan pengguna</string>
-  <string name="host">Hos</string>
-  <string name="address">Alamat (Boleh jadi sebagai alamat host yang lain)</string>
+  <string name="host_mapping_host">Hos</string>
+  <string name="host_mapping_address">Alamat (Boleh jadi sebagai alamat host yang lain)</string>
   <string name="add_host_mapping">Tambah pemetaan hos</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="dns_server_summary">Tetapkan pelayan DNS untuk permintaan API.</string>

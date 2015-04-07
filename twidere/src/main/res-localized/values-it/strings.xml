@@ -273,8 +273,8 @@
   <string name="view">Visualizza</string>
   <string name="custom_host_mapping">Mappatura host personalizzata</string>
   <string name="custom_host_mapping_summary">Mappa gli host come in /etc/hosts, ma non richiede permessi aggiuntivi.</string>
-  <string name="host">Host</string>
-  <string name="address">Indirizzo (può essere un altro indirizzo host)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Indirizzo (può essere un altro indirizzo host)</string>
   <string name="add_host_mapping">Aggiungi mappatura host</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Usa il protocollo TCP per effettuare le richieste DNS, utile per evitare il DNS Cache Poisoning.</string>

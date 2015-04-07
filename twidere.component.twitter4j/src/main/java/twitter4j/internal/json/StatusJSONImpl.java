@@ -92,6 +92,7 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
     private long[] contributorsIDs;
 
     private Status retweetedStatus;
+    private Status quotedStatus;
     private UserMentionEntity[] userMentionEntities;
     private URLEntity[] urlEntities;
     private HashtagEntity[] hashtagEntities;
@@ -252,6 +253,11 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
         return retweetedStatus;
     }
 
+    @Override
+    public Status getQuotedStatus() {
+        return quotedStatus;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -316,6 +322,11 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
     @Override
     public boolean isRetweet() {
         return retweetedStatus != null;
+    }
+
+    @Override
+    public boolean isQuote() {
+        return quotedStatus != null;
     }
 
     /**
@@ -395,6 +406,16 @@ final class StatusJSONImpl extends TwitterResponseImpl implements Status {
                 logger.warn("failed to parse retweeted_status:" + json);
             }
         }
+
+        if (!json.isNull("quoted_status")) {
+            try {
+                quotedStatus = new StatusJSONImpl(json.getJSONObject("quoted_status"));
+            } catch (final JSONException ignore) {
+                ignore.printStackTrace();
+                logger.warn("failed to parse retweeted_status:" + json);
+            }
+        }
+
         if (!json.isNull("contributors")) {
             try {
                 final JSONArray contributorsArray = json.getJSONArray("contributors");

@@ -273,8 +273,8 @@
   <string name="view">Lihat</string>
   <string name="custom_host_mapping">Kustom host mapping</string>
   <string name="custom_host_mapping_summary">Host pemetaan sperti /etc/hosts, tanpa butuh permisi tambahan.</string>
-  <string name="host">Host</string>
-  <string name="address">Alamat (dapat berupa alamat host lain)</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Alamat (dapat berupa alamat host lain)</string>
   <string name="add_host_mapping">Tambah pemetaan host</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Gunakan protokol TCP untuk permintaan DNS dan menghindari DNS Cache Posioning.</string>

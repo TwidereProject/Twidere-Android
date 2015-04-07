@@ -244,8 +244,8 @@
   <string name="view">เปิดดู</string>
   <string name="custom_host_mapping">กำหนดที่อยู่ host เอง</string>
   <string name="custom_host_mapping_summary">กำหนดที่อยู่ host เอง (เหมือนในไฟล์ /etc/hosts) ซึ่งการกระทำนี้ไม่ต้องการสิทธิ์ใดๆ เพิ่มเติม</string>
-  <string name="host">โฮสต์</string>
-  <string name="address">ที่อยู่ (สามารถใช้ที่อยู่โฮสต์อื่นได้)</string>
+  <string name="host_mapping_host">โฮสต์</string>
+  <string name="host_mapping_address">ที่อยู่ (สามารถใช้ที่อยู่โฮสต์อื่นได้)</string>
   <string name="add_host_mapping">เพิ่มการกำหนดโฮสต์</string>
   <string name="tcp_dns_query">การสืบค้น DNS ทาง TCP</string>
   <string name="tcp_dns_query_summary">ใช้โปรโตคอล TCP เพื่อร้องขอ DNS ซึ่งสามารถหลบเลี่ยงการโจมตีแบบ DNS Cache Poisoning ได้</string>

@@ -182,7 +182,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-
     <org.mariotaku.twidere.view.themed.ThemedTextView
         android:id="@+id/location_view"
         android:layout_width="match_parent"

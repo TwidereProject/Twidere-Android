@@ -263,8 +263,8 @@
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> العناصر المحددة</string>
   <string name="view">عرض</string>
   <string name="custom_host_mapping">تعيين المضيف مخصص</string>
-  <string name="host">المضيف</string>
-  <string name="address">العنوان (يمكن أن يكون عنوان مضيف آخر)</string>
+  <string name="host_mapping_host">المضيف</string>
+  <string name="host_mapping_address">العنوان (يمكن أن يكون عنوان مضيف آخر)</string>
   <string name="dns_server">خادم DNS</string>
   <string name="activities_about_me">الاحداث المتعلقة بي</string>
   <string name="activities_by_friends">أنشطة الأصدقاء</string>

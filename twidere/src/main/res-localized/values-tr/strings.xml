@@ -273,8 +273,8 @@
   <string name="view">Görüntüle</string>
   <string name="custom_host_mapping">Özel sunucu haritalama</string>
   <string name="custom_host_mapping_summary">/etc/hosts şeklinde sunucu haritalama, ancak ekstra izin gerektirmez.</string>
-  <string name="host">Sunucu</string>
-  <string name="address">Adres (başka bir sunucu adresi olabilir)</string>
+  <string name="host_mapping_host">Sunucu</string>
+  <string name="host_mapping_address">Adres (başka bir sunucu adresi olabilir)</string>
   <string name="add_host_mapping">Sunucu haritalama ekle</string>
   <string name="tcp_dns_query">TCP DNS sorgualama</string>
   <string name="dns_server">DNS Sunucusu</string>
