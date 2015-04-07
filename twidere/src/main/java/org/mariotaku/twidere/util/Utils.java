@@ -4266,25 +4266,28 @@ public final class Utils implements Constants, TwitterConstants {
     /**
      * Send Notifications to Pebble smartwatches
      *
+     * @param context Context
      * @param message String
      */
     public static void sendPebbleNotification(final Context context, final String message) {
+        if (context == null || TextUtils.isEmpty(message)) return;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)
-                && message != null && !message.isEmpty()) {
 
-            final Intent intent = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+        if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)) {
 
-            final HashMap<String, String> data = new HashMap<String, String>();
+            final String app_name = context.getString(R.string.app_name);
 
-            data.put("title", "Twittnuker");
+            final HashMap<String, String> data = new HashMap<>();
+            data.put("title", app_name);
             data.put("body", message);
 
             final JSONObject jsonData = new JSONObject(data);
+
             final String notificationData = new JSONArray().put(jsonData).toString();
 
+            final Intent intent = new Intent(INTENT_ACTION_PEBBLE_NOTIFICATION);
             intent.putExtra("messageType", "PEBBLE_ALERT");
-            intent.putExtra("sender", "Twittnuker");
+            intent.putExtra("sender", app_name);
             intent.putExtra("notificationData", notificationData);
 
             context.getApplicationContext().sendBroadcast(intent);

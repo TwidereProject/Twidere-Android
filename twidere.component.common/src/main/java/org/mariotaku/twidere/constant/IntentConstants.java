@@ -73,6 +73,8 @@ public interface IntentConstants {
     public static final String INTENT_ACTION_DISCARD_DRAFT = INTENT_PACKAGE_PREFIX + "DISCARD_DRAFT";
     public static final String INTENT_ACTION_PICK_ACTIVITY = "org.mariotaku.twidere.PICK_ACTIVITY";
 
+    public static final String INTENT_ACTION_PEBBLE_NOTIFICATION = "com.getpebble.action.SEND_NOTIFICATION";
+
     public static final String BROADCAST_NOTIFICATION_DELETED = INTENT_PACKAGE_PREFIX + "NOTIFICATION_DELETED";
     public static final String BROADCAST_USER_LIST_DETAILS_UPDATED = INTENT_PACKAGE_PREFIX
             + "USER_LIST_DETAILS_UPDATED";
