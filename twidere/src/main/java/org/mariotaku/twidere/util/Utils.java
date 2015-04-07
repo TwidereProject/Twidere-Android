@@ -115,7 +115,9 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.querybuilder.AllColumns;
 import org.mariotaku.querybuilder.Columns;
@@ -233,6 +235,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -4258,5 +4261,33 @@ public final class Utils implements Constants, TwitterConstants {
             mListener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId);
         }
 
+    }
+
+    /**
+     * Send Notifications to Pebble smartwatches
+     *
+     * @param message String
+     */
+    public static void sendPebbleNotification(final Context context, final String message) {
+        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)
+                && message != null && !message.isEmpty()) {
+
+            final Intent intent = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+
+            final HashMap<String, String> data = new HashMap<String, String>();
+
+            data.put("title", "Twittnuker");
+            data.put("body", message);
+
+            final JSONObject jsonData = new JSONObject(data);
+            final String notificationData = new JSONArray().put(jsonData).toString();
+
+            intent.putExtra("messageType", "PEBBLE_ALERT");
+            intent.putExtra("sender", "Twittnuker");
+            intent.putExtra("notificationData", notificationData);
+
+            context.getApplicationContext().sendBroadcast(intent);
+        }
     }
 }

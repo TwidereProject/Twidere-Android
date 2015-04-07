@@ -707,4 +707,5 @@
   <string name="usage_statistics_header_summary">Twidere hat an einem Forschungsprojekt teilgenommen, an diesem Projekt mitzumachen wird Twidere und andere Anwendungen verbessern.</string>
   <string name="no_tab">Kein Tab</string>
   <string name="user_protected_summary">Du musst eine Follow-Anfrage an diesen geschützten Nutzer schicken um Tweets zu sehen</string>
+  <string name="pebble_notifications_summary">Notifications an Pebble senden</string>
 </resources>
