@@ -23,6 +23,13 @@
             android:key="background_toast_notification"
             android:summary="@string/background_toast_notification_summary"
             android:title="@string/background_toast_notification"/>
+
+        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+            android:defaultValue="false"
+            android:key="pebble_notifications"
+            android:dependency="stream_notifications"
+            android:summary="@string/pebble_notifications_summary"
+            android:title="@string/pebble_notifications"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

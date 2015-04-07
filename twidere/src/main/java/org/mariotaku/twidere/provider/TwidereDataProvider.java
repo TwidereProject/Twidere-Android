@@ -919,6 +919,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
             nm.notify("home_" + accountId, NOTIFICATION_ID_HOME_TIMELINE, builder.build());
+            Utils.sendPebbleNotification(context, notificationContent);
         } finally {
             statusCursor.close();
             userCursor.close();
@@ -1017,6 +1018,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             setNotificationPreferences(builder, pref, pref.getMentionsNotificationType());
             nm.notify("mentions_" + accountId, NOTIFICATION_ID_MENTIONS_TIMELINE,
                     builder.build());
+            Utils.sendPebbleNotification(context, notificationContent);
         } finally {
             statusCursor.close();
             userCursor.close();
@@ -1201,6 +1203,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getDirectMessagesNotificationType());
             nm.notify("messages_" + accountId, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
+            Utils.sendPebbleNotification(context, notificationContent);
         } finally {
             messageCursor.close();
             userCursor.close();

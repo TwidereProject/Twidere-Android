@@ -734,6 +734,8 @@
     <string name="user_type_protected">Protected</string>
     <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
     <string name="share_status">Share tweet</string>
+    <string name="pebble_notifications">Pebble Notifications</string>
+    <string name="pebble_notifications_summary">Send Notifications to your Pebble</string>
     <!-- 'Tweet' here is a verb -->
     <string name="tweet_from_name">Tweet from <xliff:g id="text">%1$s</xliff:g></string>
     <string name="permission_label_shorten_status">Shorten tweet</string>
