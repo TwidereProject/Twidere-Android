@@ -888,6 +888,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 Utils.setLastSeen(mContext, status.getUserMentionEntities(), System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
+                values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
                 final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                         Expression.or(Expression.equals(Statuses.STATUS_ID, status_id),
                                 Expression.equals(Statuses.RETWEET_ID, status_id)));

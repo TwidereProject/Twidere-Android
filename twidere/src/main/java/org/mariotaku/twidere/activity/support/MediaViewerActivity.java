@@ -41,10 +41,12 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.sprylab.android.widget.TextureVideoView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -193,7 +195,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             SUPPORTED_VIDEO_TYPES = new String[]{"video/mp4"};
         }
 
-        private WebView mWebView;
+        private TextureVideoView mVideoView;
         private VideoLoader mVideoLoader;
 
         @Override
@@ -224,7 +226,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onBaseViewCreated(View view, Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
-            mWebView = (WebView) view.findViewById(R.id.web_view);
+            mVideoView = (TextureVideoView) view.findViewById(R.id.video_view);
         }
 
         @Override
@@ -235,18 +237,15 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onResume() {
             super.onResume();
-            mWebView.onResume();
         }
 
         @Override
         public void onDestroyView() {
-            mWebView.destroy();
             super.onDestroyView();
         }
 
         @Override
         public void onPause() {
-            mWebView.onPause();
             super.onPause();
         }
 
@@ -260,7 +259,8 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public void onVideoLoadingComplete(String uri, VideoLoadingListener listener, File file) {
-            Toast.makeText(getActivity(), String.format("%s length: %d", file, file.length()), Toast.LENGTH_SHORT).show();
+            mVideoView.setVideoURI(Uri.fromFile(file));
+            mVideoView.start();
         }
 
         @Override

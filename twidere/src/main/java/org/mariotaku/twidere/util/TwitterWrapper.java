@@ -68,12 +68,12 @@ public class TwitterWrapper implements Constants {
 
     public static SingleResponse<Boolean> deleteProfileBannerImage(final Context context, final long account_id) {
         final Twitter twitter = getTwitterInstance(context, account_id, false);
-        if (twitter == null) return new SingleResponse<Boolean>(false, null);
+        if (twitter == null) return new SingleResponse<>(false, null);
         try {
             twitter.removeProfileBannerImage();
-            return new SingleResponse<Boolean>(true, null);
+            return new SingleResponse<>(true, null);
         } catch (final TwitterException e) {
-            return new SingleResponse<Boolean>(false, e);
+            return new SingleResponse<>(false, e);
         }
     }
 

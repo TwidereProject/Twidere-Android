@@ -22,11 +22,13 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <ImageView
+    <org.mariotaku.twidere.view.ForegroundImageView
         android:id="@+id/media_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/media"
+        android:foreground="@drawable/ic_action_play_circle"
+        android:foregroundGravity="center"
         android:scaleType="centerCrop"/>
 
     <ProgressBar

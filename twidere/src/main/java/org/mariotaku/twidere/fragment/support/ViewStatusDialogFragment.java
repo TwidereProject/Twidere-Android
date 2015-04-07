@@ -49,7 +49,7 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
         if (getShowsDialog()) {
             return inflater.inflate(R.layout.dialog_scrollable_status, parent, false);
         }
-        return inflater.inflate(R.layout.card_item_status_common, parent, false);
+        return inflater.inflate(R.layout.fragment_scrollable_status, parent, false);
     }
 
     @Override

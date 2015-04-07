@@ -433,13 +433,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public boolean scrollToStart() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final int tabPosition = getTabPosition();
-        if (twitter != null && tabPosition != -1) {
-            twitter.clearUnreadCountAsync(tabPosition);
-        }
+        saveReadPosition();
         mRecyclerView.smoothScrollToPosition(0);
-//        mRecyclerView.scrollToPosition(0);
         return true;
     }
 

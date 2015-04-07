@@ -1605,11 +1605,12 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
 
-    public static String getApiBaseUrl(final String format, final String domain) {
+    public static String getApiBaseUrl(String format, final String domain) {
         if (format == null) return null;
         final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]").matcher(format);
         if (!matcher.find()) {
             // For backward compatibility
+            format = substituteLegacyApiBaseUrl(format, domain);
             if (!format.endsWith("/1.1") && !format.endsWith("/1.1/")) {
                 return format;
             }
@@ -1620,6 +1621,13 @@ public final class Utils implements Constants, TwitterConstants {
         }
         if (TextUtils.isEmpty(domain)) return matcher.replaceAll("");
         return matcher.replaceAll(String.format("$1%s$2", domain));
+    }
+
+    private static String substituteLegacyApiBaseUrl(@NonNull String format, String domain) {
+        final int startOfHost = format.indexOf("://") + 3, endOfHost = format.indexOf('/', startOfHost);
+        final String host = format.substring(startOfHost, endOfHost);
+        if (!host.equalsIgnoreCase("api.twitter.com")) return format;
+        return format.substring(0, startOfHost) + domain + ".twitter.com" + format.substring(endOfHost);
     }
 
     public static String getApiUrl(final String pattern, final String domain, final String appendPath) {
