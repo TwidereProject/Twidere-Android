@@ -267,6 +267,8 @@ public interface SharedPreferenceConstants {
     String KEY_NOTIFICATION_TYPE_MENTIONS = "notification_type_mentions";
     String KEY_NOTIFICATION_TYPE_DIRECT_MESSAGES = "notification_type_direct_messages";
     String KEY_NOTIFICATION_FOLLOWING_ONLY = "notification_following_only";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    String KEY_PEBBLE_NOTIFICATIONS = "pebble_notifications";
 
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_COMPACT_CARDS = "compact_cards";
