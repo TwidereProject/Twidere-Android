@@ -3,6 +3,7 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -77,6 +78,31 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
         super.onSelectionChanged(selStart, selEnd);
         if (mOnSelectionChangeListener != null) {
             mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
+        }
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        if (text == null) {
+            super.setText(null, type);
+            return;
+        }
+        super.setText(new SafeSpannableStringWrapper(text), type);
+    }
+
+    private static class SafeSpannableStringWrapper extends SpannableString {
+
+        public SafeSpannableStringWrapper(CharSequence source) {
+            super(source);
+        }
+
+        @Override
+        public void setSpan(Object what, int start, int end, int flags) {
+            if (start < 0 || end < 0) {
+                // Silently ignore
+                return;
+            }
+            super.setSpan(what, start, end, flags);
         }
     }
 

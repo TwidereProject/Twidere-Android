@@ -110,6 +110,11 @@ public final class TwidereLinkify implements Constants {
         this(listener, highlightOption, true);
     }
 
+    public TwidereLinkify(final OnLinkClickListener listener, boolean addMovementMethod) {
+        this(listener, VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH, addMovementMethod);
+
+    }
+
     public TwidereLinkify(final OnLinkClickListener listener, final int highlightOption, boolean addMovementMethod) {
         mOnLinkClickListener = listener;
         mAddMovementMethod = addMovementMethod;

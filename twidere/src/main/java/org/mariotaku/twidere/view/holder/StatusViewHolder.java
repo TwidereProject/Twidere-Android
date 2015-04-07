@@ -44,6 +44,7 @@ import java.util.Locale;
 import twitter4j.TranslationResult;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
+import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 /**
@@ -158,10 +159,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         }
 
         if (status.is_quote) {
-            quotedNameView.setText(status.user_name);
+            quotedNameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
             quotedScreenNameView.setText("@" + status.user_screen_name);
             timeView.setTime(status.quote_timestamp);
-            nameView.setText(status.quoted_by_user_name);
+            nameView.setText(getUserNickname(context, status.quoted_by_user_id, status.quoted_by_user_name, true));
             screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
             if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
@@ -192,7 +193,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             final int userColor = UserColorNameUtils.getUserColor(context, status.quoted_by_user_id);
             itemContent.drawStart(userColor);
         } else {
-            nameView.setText(status.user_name);
+            nameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
             screenNameView.setText("@" + status.user_screen_name);
             timeView.setTime(status.timestamp);
 

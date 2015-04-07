@@ -106,6 +106,7 @@ import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
+import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwitterCardContainer;
@@ -514,6 +515,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final ActionMenuView menuBar;
         private final TextView nameView, screenNameView;
         private final StatusTextView textView;
+        private final TextView quoteTextView;
+        private final TextView quotedNameView, quotedScreenNameView;
         private final ShapedImageView profileImageView;
         private final ImageView profileTypeView;
         private final TextView timeSourceView;
@@ -527,11 +530,18 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final View mediaPreviewLoad;
         private final CardMediaContainer mediaPreview;
 
+        private final View quotedNameContainer;
+        private final ForegroundColorView quoteIndicator;
+
         private final TextView locationView;
         private final TwitterCardContainer twitterCard;
+        private final StatusLinkClickHandler linkClickHandler;
+        private final TwidereLinkify linkify;
 
         public DetailStatusViewHolder(StatusAdapter adapter, View itemView) {
             super(itemView);
+            this.linkClickHandler = new StatusLinkClickHandler(adapter.getContext(), null);
+            this.linkify = new TwidereLinkify(linkClickHandler, false);
             this.adapter = adapter;
             cardView = (CardView) itemView.findViewById(R.id.card);
             menuBar = (ActionMenuView) itemView.findViewById(R.id.menu_bar);
@@ -556,6 +566,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             profileContainer = itemView.findViewById(R.id.profile_container);
             twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
 
+            quoteTextView = (TextView) itemView.findViewById(R.id.quote_text);
+            quotedNameView = (TextView) itemView.findViewById(R.id.quoted_name);
+            quotedScreenNameView = (TextView) itemView.findViewById(R.id.quoted_screen_name);
+            quotedNameContainer = itemView.findViewById(R.id.quoted_name_container);
+            quoteIndicator = (ForegroundColorView) itemView.findViewById(R.id.quote_indicator);
+
             setIsRecyclable(false);
             initViews();
         }
@@ -568,6 +584,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final MediaLoaderWrapper loader = adapter.getImageLoader();
             final boolean nameFirst = adapter.isNameFirst();
 
+            linkClickHandler.setStatus(status);
+
             if (status.retweet_id > 0) {
                 final String retweetedBy = UserColorNameUtils.getDisplayName(context, status.retweeted_by_id,
                         status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst);
@@ -578,13 +596,36 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 retweetedByContainer.setVisibility(View.GONE);
             }
 
-            nameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
-            screenNameView.setText("@" + status.user_screen_name);
+            if (status.is_quote) {
+                quotedNameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
+                quotedScreenNameView.setText("@" + status.user_screen_name);
+
+                nameView.setText(getUserNickname(context, status.quoted_by_user_id, status.quoted_by_user_name, true));
+                screenNameView.setText("@" + status.quoted_by_user_screen_name);
+
+                quoteTextView.setText(Html.fromHtml(status.quote_text_html));
+                linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
+                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
+                timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                loader.displayProfileImage(profileImageView, status.quoted_by_user_profile_image);
+
+                quotedNameContainer.setVisibility(View.VISIBLE);
+                quoteTextView.setVisibility(View.VISIBLE);
+                quoteIndicator.setVisibility(View.VISIBLE);
+
+            } else {
+                nameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
+                screenNameView.setText("@" + status.user_screen_name);
+
+                loader.displayProfileImage(profileImageView, status.user_profile_image_url);
+
+                quotedNameContainer.setVisibility(View.GONE);
+                quoteTextView.setVisibility(View.GONE);
+                quoteIndicator.setVisibility(View.GONE);
+            }
 
             textView.setText(Html.fromHtml(status.text_html));
-            final StatusLinkClickHandler linkClickHandler = new StatusLinkClickHandler(context, null);
-            linkClickHandler.setStatus(status);
-            final TwidereLinkify linkify = new TwidereLinkify(linkClickHandler, VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH, false);
             linkify.applyAllLinks(textView, status.account_id, getAdapterPosition(), status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 
@@ -620,8 +661,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             repliesCountView.setText(getLocalizedNumber(locale, status.reply_count));
             retweetsCountView.setText(getLocalizedNumber(locale, status.retweet_count));
             favoritesCountView.setText(getLocalizedNumber(locale, status.favorite_count));
-
-            loader.displayProfileImage(profileImageView, status.user_profile_image_url);
 
             final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
             final int typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);
@@ -664,8 +703,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 ft.commit();
             } else {
                 twitterCard.setVisibility(View.GONE);
-                final FragmentManager fm = fragment.getChildFragmentManager();
-//                final FragmentTransaction ft = fm.beginTransaction();
             }
 
             Utils.setMenuForStatus(context, menuBar.getMenu(), status, adapter.getStatusAccount());
@@ -741,61 +778,76 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);
+            quotedNameView.setTextSize(defaultTextSize * 1.25f);
             textView.setTextSize(defaultTextSize * 1.25f);
+            quoteTextView.setTextSize(defaultTextSize * 1.25f);
             screenNameView.setTextSize(defaultTextSize * 0.85f);
+            quotedScreenNameView.setTextSize(defaultTextSize * 0.85f);
             locationView.setTextSize(defaultTextSize * 0.85f);
             timeSourceView.setTextSize(defaultTextSize * 0.85f);
 
             textView.setMovementMethod(StatusContentMovementMethod.getInstance());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                textView.setCustomSelectionActionModeCallback(new Callback() {
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        final FragmentActivity activity = fragment.getActivity();
-                        if (activity instanceof IThemedActivity) {
-                            final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-                            final int accentColor = ((IThemedActivity) activity).getCurrentThemeColor();
-                            ThemeUtils.applySupportActionModeBackground(mode, fragment.getActivity(), themeRes, accentColor, true);
-                        }
-                        mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
-                        final SpannableString string = SpannableString.valueOf(textView.getText());
-                        final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
-                        final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
-                        Utils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case android.R.id.copyUrl: {
-                                final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
-                                final SpannableString string = SpannableString.valueOf(textView.getText());
-                                final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
-                                if (spans.length != 1) return true;
-                                ClipboardUtils.setText(activity, spans[0].getURL());
-                                mode.finish();
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-
-                    }
-                });
+                quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, fragment, activity));
+                textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, fragment, activity));
             }
         }
 
 
+        private static class StatusActionModeCallback implements Callback {
+            private final TextView textView;
+            private final StatusFragment fragment;
+            private final FragmentActivity activity;
+
+            public StatusActionModeCallback(TextView textView, StatusFragment fragment, FragmentActivity activity) {
+                this.textView = textView;
+                this.fragment = fragment;
+                this.activity = activity;
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                final FragmentActivity activity = fragment.getActivity();
+                if (activity instanceof IThemedActivity) {
+                    final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
+                    final int accentColor = ((IThemedActivity) activity).getCurrentThemeColor();
+                    ThemeUtils.applySupportActionModeBackground(mode, fragment.getActivity(), themeRes, accentColor, true);
+                }
+                mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
+                final SpannableString string = SpannableString.valueOf(textView.getText());
+                final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
+                final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
+                Utils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
+                return true;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case android.R.id.copyUrl: {
+                        final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
+                        final SpannableString string = SpannableString.valueOf(textView.getText());
+                        final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
+                        if (spans.length != 1) return true;
+                        ClipboardUtils.setText(activity, spans[0].getURL());
+                        mode.finish();
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        }
     }
 
     static class LoadConversationTask extends AsyncTask<ParcelableStatus, ParcelableStatus,
