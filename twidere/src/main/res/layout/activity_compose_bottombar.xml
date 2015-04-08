@@ -20,6 +20,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:baselineAligned="false"
@@ -27,9 +28,7 @@
     android:dividerPadding="@dimen/element_spacing_normal"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:showDividers="middle"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    android:showDividers="middle">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -38,9 +37,9 @@
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/account_selector_button"
             style="?actionButtonStyle"
             android:layout_width="wrap_content"
-            android:id="@+id/account_selector_button"
             android:layout_height="match_parent"
             android:clickable="true"
             android:padding="@dimen/element_spacing_msmall">
@@ -57,12 +56,12 @@
 
             <org.mariotaku.twidere.view.BadgeView
                 android:id="@+id/accounts_count"
-                android:layout_alignTop="@id/account_profile_image"
-                android:layout_alignBottom="@id/account_profile_image"
-                android:layout_alignRight="@id/account_profile_image"
-                android:layout_alignLeft="@id/account_profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignBottom="@id/account_profile_image"
+                android:layout_alignLeft="@id/account_profile_image"
+                android:layout_alignRight="@id/account_profile_image"
+                android:layout_alignTop="@id/account_profile_image"
                 android:layout_gravity="center"
                 android:textColor="?android:colorForeground"/>
 

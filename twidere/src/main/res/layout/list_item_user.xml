@@ -28,7 +28,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <org.mariotaku.twidere.view.SquareShapedImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_list_item_small"

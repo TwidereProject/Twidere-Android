@@ -238,6 +238,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/media_preview"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:layout_toRightOf="@+id/quote_indicator"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -253,6 +254,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/status_content"
             android:layout_below="@+id/status_content"
+            android:layout_marginTop="@dimen/element_spacing_minus_small"
             android:layout_toLeftOf="@+id/item_menu"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -312,6 +314,9 @@
             android:layout_height="@dimen/button_size_content_card"
             android:layout_alignBottom="@+id/action_buttons"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/action_buttons"
+            android:layout_marginTop="@dimen/element_spacing_minus_small"
+            android:color="?android:textColorTertiary"
             android:focusable="false"
             android:src="@drawable/ic_action_more_horizontal"/>
 

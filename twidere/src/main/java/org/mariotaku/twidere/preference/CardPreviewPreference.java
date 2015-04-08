@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
@@ -74,18 +73,16 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         if (KEY_COMPACT_CARDS.equals(key)) {
             mCompactModeChanged = true;
         }
+        mAdapter.updateOptions();
         notifyChanged();
     }
 
     @Override
     protected void onBindView(@NonNull final View view) {
-        if (mPreferences == null) return;
+        if (mHolder == null) return;
         mCompactModeChanged = false;
-        final Context context = getContext();
-        final int highlightOption = Utils.getLinkHighlightingStyle(context);
-        mHolder = new StatusViewHolder(mAdapter, view);
+        mHolder.setupViewOptions();
         mHolder.displaySampleStatus();
-        mLinkify.setHighlightOption(highlightOption);
         super.onBindView(view);
     }
 
@@ -93,7 +90,9 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
     protected View onCreateView(final ViewGroup parent) {
         if (mPreferences != null && mPreferences.getBoolean(KEY_COMPACT_CARDS, false))
             return mInflater.inflate(R.layout.card_item_status_compact, parent, false);
-        return mInflater.inflate(R.layout.card_item_status, parent, false);
+        final View view = mInflater.inflate(R.layout.card_item_status, parent, false);
+        mHolder = new StatusViewHolder(mAdapter, view);
+        return view;
     }
 
 }

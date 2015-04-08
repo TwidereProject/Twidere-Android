@@ -268,9 +268,6 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         return true;
     }
 
-    public void showIndicator() {
-    }
-
     @Override
     public boolean triggerRefresh() {
         if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;

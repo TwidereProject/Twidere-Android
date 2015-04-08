@@ -90,6 +90,7 @@ import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
+import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
@@ -166,7 +167,8 @@ import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
         OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,
-        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback {
+        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback,
+        RefreshScrollTopInterface {
 
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
@@ -174,9 +176,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
-
+    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
     private MediaLoaderWrapper mProfileImageLoader;
-
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
@@ -202,109 +203,20 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private TextView mPagesErrorText;
     private View mProfileNameBackground;
     private View mProfileDetailsContainer;
-
     private SupportTabsAdapter mPagerAdapter;
-
     private Relationship mRelationship;
-    private ParcelableUser mUser = null;
 
+    private ParcelableUser mUser = null;
     private Locale mLocale;
     private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
     private int mBannerWidth;
-    private ActionBarDrawable mActionBarBackground;
-    private Fragment mCurrentVisibleFragment;
     private int mCardBackgroundColor;
     private int mUserUiColor;
 
+    private ActionBarDrawable mActionBarBackground;
+    private Fragment mCurrentVisibleFragment;
 
-    @Subscribe
-    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-        updateRefreshState();
-    }
 
-    @Subscribe
-    public void notifyFriendshipUpdated(FriendshipUpdatedEvent event) {
-        if (!event.user.equals(mUser)) return;
-        getFriendship();
-    }
-
-    private void updateRefreshState() {
-        final ParcelableUser user = getUser();
-        if (user == null) return;
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final boolean is_creating_friendship = twitter != null
-                && twitter.isCreatingFriendship(user.account_id, user.id);
-        final boolean is_destroying_friendship = twitter != null
-                && twitter.isDestroyingFriendship(user.account_id, user.id);
-        setProgressBarIndeterminateVisibility(is_creating_friendship || is_destroying_friendship);
-        invalidateOptionsMenu();
-    }
-
-    private final LoaderCallbacks<SingleResponse<ParcelableUser>> mUserInfoLoaderCallbacks = new LoaderCallbacks<SingleResponse<ParcelableUser>>() {
-
-        @Override
-        public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
-            final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            final long userId = args.getLong(EXTRA_USER_ID, -1);
-            final String screenName = args.getString(EXTRA_SCREEN_NAME);
-            if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
-                mCardContent.setVisibility(View.GONE);
-                mErrorRetryContainer.setVisibility(View.GONE);
-                mProgressContainer.setVisibility(View.VISIBLE);
-                mErrorMessageView.setText(null);
-                mErrorMessageView.setVisibility(View.GONE);
-                setListShown(false);
-            }
-            setProgressBarIndeterminateVisibility(true);
-            final ParcelableUser user = mUser;
-            return new ParcelableUserLoader(getActivity(), accountId, userId, screenName, getArguments(),
-                    omitIntentExtra, user == null || !user.is_cache && userId != user.id);
-        }
-
-        @Override
-        public void onLoaderReset(final Loader<SingleResponse<ParcelableUser>> loader) {
-
-        }
-
-        @Override
-        public void onLoadFinished(final Loader<SingleResponse<ParcelableUser>> loader,
-                                   final SingleResponse<ParcelableUser> data) {
-            if (getActivity() == null) return;
-            if (data.hasData()) {
-                final ParcelableUser user = data.getData();
-                mCardContent.setVisibility(View.VISIBLE);
-                mErrorRetryContainer.setVisibility(View.GONE);
-                mProgressContainer.setVisibility(View.GONE);
-                setListShown(true);
-                displayUser(user);
-                if (user.is_cache) {
-                    final Bundle args = new Bundle();
-                    args.putLong(EXTRA_ACCOUNT_ID, user.account_id);
-                    args.putLong(EXTRA_USER_ID, user.id);
-                    args.putString(EXTRA_SCREEN_NAME, user.screen_name);
-                    args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
-                    getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
-                }
-            } else if (mUser != null && mUser.is_cache) {
-                mCardContent.setVisibility(View.VISIBLE);
-                mErrorRetryContainer.setVisibility(View.GONE);
-                mProgressContainer.setVisibility(View.GONE);
-                setListShown(true);
-                displayUser(mUser);
-            } else {
-                if (data.hasException()) {
-                    mErrorMessageView.setText(getErrorMessage(getActivity(), data.getException()));
-                    mErrorMessageView.setVisibility(View.VISIBLE);
-                }
-                mCardContent.setVisibility(View.GONE);
-                mErrorRetryContainer.setVisibility(View.VISIBLE);
-                mProgressContainer.setVisibility(View.GONE);
-            }
-            setProgressBarIndeterminateVisibility(false);
-        }
-
-    };
     private final LoaderCallbacks<SingleResponse<Relationship>> mFriendshipLoaderCallbacks = new LoaderCallbacks<SingleResponse<Relationship>>() {
 
         @Override
@@ -402,6 +314,132 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     };
 
+    private final LoaderCallbacks<SingleResponse<ParcelableUser>> mUserInfoLoaderCallbacks = new LoaderCallbacks<SingleResponse<ParcelableUser>>() {
+
+        @Override
+        public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
+            final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
+            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String screenName = args.getString(EXTRA_SCREEN_NAME);
+            if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
+                mCardContent.setVisibility(View.GONE);
+                mErrorRetryContainer.setVisibility(View.GONE);
+                mProgressContainer.setVisibility(View.VISIBLE);
+                mErrorMessageView.setText(null);
+                mErrorMessageView.setVisibility(View.GONE);
+                setListShown(false);
+            }
+            setProgressBarIndeterminateVisibility(true);
+            final ParcelableUser user = mUser;
+            return new ParcelableUserLoader(getActivity(), accountId, userId, screenName, getArguments(),
+                    omitIntentExtra, user == null || !user.is_cache && userId != user.id);
+        }
+
+        @Override
+        public void onLoaderReset(final Loader<SingleResponse<ParcelableUser>> loader) {
+
+        }
+
+        @Override
+        public void onLoadFinished(final Loader<SingleResponse<ParcelableUser>> loader,
+                                   final SingleResponse<ParcelableUser> data) {
+            if (getActivity() == null) return;
+            if (data.hasData()) {
+                final ParcelableUser user = data.getData();
+                mCardContent.setVisibility(View.VISIBLE);
+                mErrorRetryContainer.setVisibility(View.GONE);
+                mProgressContainer.setVisibility(View.GONE);
+                setListShown(true);
+                displayUser(user);
+                if (user.is_cache) {
+                    final Bundle args = new Bundle();
+                    args.putLong(EXTRA_ACCOUNT_ID, user.account_id);
+                    args.putLong(EXTRA_USER_ID, user.id);
+                    args.putString(EXTRA_SCREEN_NAME, user.screen_name);
+                    args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
+                    getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
+                }
+            } else if (mUser != null && mUser.is_cache) {
+                mCardContent.setVisibility(View.VISIBLE);
+                mErrorRetryContainer.setVisibility(View.GONE);
+                mProgressContainer.setVisibility(View.GONE);
+                setListShown(true);
+                displayUser(mUser);
+            } else {
+                if (data.hasException()) {
+                    mErrorMessageView.setText(getErrorMessage(getActivity(), data.getException()));
+                    mErrorMessageView.setVisibility(View.VISIBLE);
+                }
+                mCardContent.setVisibility(View.GONE);
+                mErrorRetryContainer.setVisibility(View.VISIBLE);
+                mProgressContainer.setVisibility(View.GONE);
+            }
+            setProgressBarIndeterminateVisibility(false);
+        }
+
+    };
+
+    @Override
+    public boolean canScroll(float dy) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
+    }
+
+    @Override
+    public void cancelTouch() {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).cancelTouch();
+        }
+    }
+
+    @Override
+    public void fling(float velocity) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).fling(velocity);
+        }
+    }
+
+    @Override
+    public boolean isScrollContent(float x, float y) {
+        final ViewPager v = mViewPager;
+        final int[] location = new int[2];
+        v.getLocationOnScreen(location);
+        return x >= location[0] && x <= location[0] + v.getWidth()
+                && y >= location[1] && y <= location[1] + v.getHeight();
+    }
+
+    @Override
+    public void scrollBy(float dy) {
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).scrollBy(dy);
+        }
+    }
+
+    @Override
+    public boolean shouldLayoutHeaderBottom() {
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        final View card = mProfileDetailsContainer;
+        if (drawer == null || card == null) return false;
+        return card.getTop() + drawer.getHeaderTop() - drawer.getPaddingTop() <= 0;
+    }
+
+    @Override
+    public void topChanged(int top) {
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        if (drawer == null) return;
+        final int offset = drawer.getPaddingTop() - top;
+        updateScrollOffset(offset);
+
+        final Fragment fragment = mCurrentVisibleFragment;
+        if (fragment instanceof DrawerCallback) {
+            ((DrawerCallback) fragment).topChanged(top);
+        }
+    }
+
     public void displayUser(final ParcelableUser user) {
         mUser = user;
         final FragmentActivity activity = getActivity();
@@ -469,66 +507,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void fling(float velocity) {
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).fling(velocity);
-        }
-    }
-
-    @Override
-    public void scrollBy(float dy) {
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).scrollBy(dy);
-        }
-    }
-
-    @Override
-    public boolean canScroll(float dy) {
-        final Fragment fragment = mCurrentVisibleFragment;
-        return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        final ViewPager v = mViewPager;
-        final int[] location = new int[2];
-        v.getLocationOnScreen(location);
-        return x >= location[0] && x <= location[0] + v.getWidth()
-                && y >= location[1] && y <= location[1] + v.getHeight();
-    }
-
-    @Override
-    public void cancelTouch() {
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).cancelTouch();
-        }
-    }
-
-    @Override
-    public void topChanged(int top) {
-        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
-        if (drawer == null) return;
-        final int offset = drawer.getPaddingTop() - top;
-        updateScrollOffset(offset);
-
-        final Fragment fragment = mCurrentVisibleFragment;
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).topChanged(top);
-        }
-    }
-
-    @Override
-    public boolean shouldLayoutHeaderBottom() {
-        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
-        final View card = mProfileDetailsContainer;
-        if (drawer == null || card == null) return false;
-        return card.getTop() + drawer.getHeaderTop() - drawer.getPaddingTop() <= 0;
-    }
-
-    @Override
     public Fragment getCurrentVisibleFragment() {
         return mCurrentVisibleFragment;
     }
@@ -553,6 +531,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return false;
     }
 
+    public ParcelableUser getUser() {
+        return mUser;
+    }
+
     public void getUserInfo(final long accountId, final long userId, final String screenName,
                             final boolean omitIntentExtra) {
         final LoaderManager lm = getLoaderManager();
@@ -573,6 +555,24 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mCardContent.setVisibility(View.GONE);
             mErrorRetryContainer.setVisibility(View.GONE);
         }
+    }
+
+    @Subscribe
+    public void notifyFriendshipUpdated(FriendshipUpdatedEvent event) {
+        if (!event.user.equals(mUser)) return;
+        getFriendship();
+    }
+
+    @Subscribe
+    public void notifyProfileUpdated(ProfileUpdatedEvent event) {
+        final ParcelableUser user = getUser();
+        if (user == null || !user.equals(event.user)) return;
+        displayUser(event.user);
+    }
+
+    @Subscribe
+    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
+        updateRefreshState();
     }
 
     @Override
@@ -632,7 +632,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return view;
     }
 
-
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -671,20 +670,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         activity.setEnterSharedElementCallback(new SharedElementCallback() {
 
             @Override
-            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                int idx = sharedElementNames.indexOf(TRANSITION_NAME_PROFILE_IMAGE);
-                if (idx != -1) {
-                    final View view = sharedElements.get(idx);
-                    int[] location = new int[2];
-                    final RectF bounds = new RectF(0, 0, view.getWidth(), view.getHeight());
-                    view.getLocationOnScreen(location);
-                    bounds.offsetTo(location[0], location[1]);
-                    mProfileImageView.setTransitionDestination(bounds);
-                }
-                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-            }
-
-            @Override
             public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
                 final int idx = sharedElementNames.indexOf(TRANSITION_NAME_PROFILE_IMAGE);
                 if (idx != -1) {
@@ -696,6 +681,20 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mProfileImageView.setTransitionSource(bounds);
                 }
                 super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
+            }
+
+            @Override
+            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                int idx = sharedElementNames.indexOf(TRANSITION_NAME_PROFILE_IMAGE);
+                if (idx != -1) {
+                    final View view = sharedElements.get(idx);
+                    int[] location = new int[2];
+                    final RectF bounds = new RectF(0, 0, view.getWidth(), view.getHeight());
+                    view.getLocationOnScreen(location);
+                    bounds.offsetTo(location[0], location[1]);
+                    mProfileImageView.setTransitionDestination(bounds);
+                }
+                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
             }
 
         });
@@ -746,16 +745,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         bus.register(this);
     }
 
-
-    @Subscribe
-    public void notifyProfileUpdated(ProfileUpdatedEvent event) {
-        final ParcelableUser user = getUser();
-        if (user == null || !user.equals(event.user)) return;
-        displayUser(event.user);
-    }
-
-    public ParcelableUser getUser() {
-        return mUser;
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        outState.putParcelable(EXTRA_USER, getUser());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -763,12 +756,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.unregister(this);
         super.onStop();
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        outState.putParcelable(EXTRA_USER, getUser());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -990,6 +977,66 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
+    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
+        mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.user_profile_drawer);
+        final View headerView = mHeaderDrawerLayout.getHeader();
+        final View contentView = mHeaderDrawerLayout.getContent();
+        mCardContent = headerView.findViewById(R.id.card_content);
+        mErrorRetryContainer = headerView.findViewById(R.id.error_retry_container);
+        mProgressContainer = headerView.findViewById(R.id.progress_container);
+        mRetryButton = (Button) headerView.findViewById(R.id.retry);
+        mErrorMessageView = (TextView) headerView.findViewById(R.id.error_message);
+        mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
+        mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
+        mNameView = (TextView) headerView.findViewById(R.id.name);
+        mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
+        mDescriptionView = (TextView) headerView.findViewById(R.id.description);
+        mLocationView = (TextView) headerView.findViewById(R.id.location);
+        mURLView = (TextView) headerView.findViewById(R.id.url);
+        mCreatedAtView = (TextView) headerView.findViewById(R.id.created_at);
+        mListedContainer = headerView.findViewById(R.id.listed_container);
+        mListedCount = (TextView) headerView.findViewById(R.id.listed_count);
+        mFollowersContainer = headerView.findViewById(R.id.followers_container);
+        mFollowersCount = (TextView) headerView.findViewById(R.id.followers_count);
+        mFriendsContainer = headerView.findViewById(R.id.friends_container);
+        mFriendsCount = (TextView) headerView.findViewById(R.id.friends_count);
+        mProfileNameContainer = (ColorLabelRelativeLayout) headerView.findViewById(R.id.profile_name_container);
+        mProfileImageView = (ShapedImageView) headerView.findViewById(R.id.profile_image);
+        mProfileTypeView = (ImageView) headerView.findViewById(R.id.profile_type);
+        mDescriptionContainer = headerView.findViewById(R.id.description_container);
+        mLocationContainer = headerView.findViewById(R.id.location_container);
+        mURLContainer = headerView.findViewById(R.id.url_container);
+        mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
+        mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
+        mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
+        mFollowButton = (Button) headerView.findViewById(R.id.follow);
+        mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
+        mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
+        mPagesContent = view.findViewById(R.id.pages_content);
+        mPagesErrorContainer = view.findViewById(R.id.pages_error_container);
+        mPagesErrorIcon = (ImageView) view.findViewById(R.id.pages_error_icon);
+        mPagesErrorText = (TextView) view.findViewById(R.id.pages_error_text);
+        mProfileNameBackground = view.findViewById(R.id.profile_name_background);
+        mProfileDetailsContainer = view.findViewById(R.id.profile_details_container);
+    }
+
+    @Override
+    protected void fitSystemWindows(Rect insets) {
+        super.fitSystemWindows(insets);
+        mHeaderDrawerLayout.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        final FragmentActivity activity = getActivity();
+        final boolean isTransparentBackground;
+        if (activity instanceof IThemedActivity) {
+            final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
+            isTransparentBackground = ThemeUtils.isTransparentBackground(themeRes);
+        } else {
+            isTransparentBackground = ThemeUtils.isTransparentBackground(getActivity());
+        }
+        mHeaderDrawerLayout.setClipToPadding(isTransparentBackground);
+    }
+
+    @Override
     public void onClick(final View view) {
         final FragmentActivity activity = getActivity();
         final ParcelableUser user = getUser();
@@ -1115,63 +1162,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
-        mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.user_profile_drawer);
-        final View headerView = mHeaderDrawerLayout.getHeader();
-        final View contentView = mHeaderDrawerLayout.getContent();
-        mCardContent = headerView.findViewById(R.id.card_content);
-        mErrorRetryContainer = headerView.findViewById(R.id.error_retry_container);
-        mProgressContainer = headerView.findViewById(R.id.progress_container);
-        mRetryButton = (Button) headerView.findViewById(R.id.retry);
-        mErrorMessageView = (TextView) headerView.findViewById(R.id.error_message);
-        mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
-        mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
-        mNameView = (TextView) headerView.findViewById(R.id.name);
-        mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
-        mDescriptionView = (TextView) headerView.findViewById(R.id.description);
-        mLocationView = (TextView) headerView.findViewById(R.id.location);
-        mURLView = (TextView) headerView.findViewById(R.id.url);
-        mCreatedAtView = (TextView) headerView.findViewById(R.id.created_at);
-        mListedContainer = headerView.findViewById(R.id.listed_container);
-        mListedCount = (TextView) headerView.findViewById(R.id.listed_count);
-        mFollowersContainer = headerView.findViewById(R.id.followers_container);
-        mFollowersCount = (TextView) headerView.findViewById(R.id.followers_count);
-        mFriendsContainer = headerView.findViewById(R.id.friends_container);
-        mFriendsCount = (TextView) headerView.findViewById(R.id.friends_count);
-        mProfileNameContainer = (ColorLabelRelativeLayout) headerView.findViewById(R.id.profile_name_container);
-        mProfileImageView = (ShapedImageView) headerView.findViewById(R.id.profile_image);
-        mProfileTypeView = (ImageView) headerView.findViewById(R.id.profile_type);
-        mDescriptionContainer = headerView.findViewById(R.id.description_container);
-        mLocationContainer = headerView.findViewById(R.id.location_container);
-        mURLContainer = headerView.findViewById(R.id.url_container);
-        mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
-        mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
-        mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
-        mFollowButton = (Button) headerView.findViewById(R.id.follow);
-        mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
-        mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
-        mPagesContent = view.findViewById(R.id.pages_content);
-        mPagesErrorContainer = view.findViewById(R.id.pages_error_container);
-        mPagesErrorIcon = (ImageView) view.findViewById(R.id.pages_error_icon);
-        mPagesErrorText = (TextView) view.findViewById(R.id.pages_error_text);
-        mProfileNameBackground = view.findViewById(R.id.profile_name_background);
-        mProfileDetailsContainer = view.findViewById(R.id.profile_details_container);
+    public boolean scrollToStart() {
+        if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;
+        ((RefreshScrollTopInterface) mCurrentVisibleFragment).scrollToStart();
+        return true;
     }
 
     @Override
-    protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        mHeaderDrawerLayout.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        final FragmentActivity activity = getActivity();
-        final boolean isTransparentBackground;
-        if (activity instanceof IThemedActivity) {
-            final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-            isTransparentBackground = ThemeUtils.isTransparentBackground(themeRes);
-        } else {
-            isTransparentBackground = ThemeUtils.isTransparentBackground(getActivity());
-        }
-        mHeaderDrawerLayout.setClipToPadding(isTransparentBackground);
+    public boolean triggerRefresh() {
+        if (!(mCurrentVisibleFragment instanceof RefreshScrollTopInterface)) return false;
+        ((RefreshScrollTopInterface) mCurrentVisibleFragment).triggerRefresh();
+        return true;
     }
 
     public void setListShown(boolean shown) {
@@ -1211,43 +1212,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return false;
     }
 
-    private void updateFollowProgressState() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final ParcelableUser user = getUser();
-        if (twitter == null || user == null) {
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.GONE);
-            return;
-        }
-        final LoaderManager lm = getLoaderManager();
-        final boolean loadingRelationship = lm.getLoader(LOADER_ID_FRIENDSHIP) != null;
-        final boolean creatingFriendship = twitter.isCreatingFriendship(user.account_id, user.id);
-        final boolean destroyingFriendship = twitter.isDestroyingFriendship(user.account_id, user.id);
-        final boolean creatingBlock = twitter.isCreatingFriendship(user.account_id, user.id);
-        final boolean destroyingBlock = twitter.isDestroyingFriendship(user.account_id, user.id);
-        if (loadingRelationship || creatingFriendship || destroyingFriendship || creatingBlock || destroyingBlock) {
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.VISIBLE);
-        } else if (mRelationship != null) {
-            mFollowButton.setVisibility(View.VISIBLE);
-            mFollowProgress.setVisibility(View.GONE);
-        } else {
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.GONE);
-        }
-    }
-
-    private void setupBaseActionBar() {
-        final FragmentActivity activity = getActivity();
-        if (!(activity instanceof LinkHandlerActivity)) return;
-        final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
-        final ActionBar actionBar = linkHandler.getSupportActionBar();
-        if (actionBar == null) return;
-        final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
-        mActionBarBackground = new ActionBarDrawable(getResources(), shadow);
-        mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
-        mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
-        actionBar.setBackgroundDrawable(mActionBarBackground);
+    private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
+        final Drawable drawable = ThemeUtils.getCompatToolbarOverlay(activity);
+        if (drawable == null) return;
+        drawable.setAlpha(Math.round(alpha * 255));
     }
 
     private void setUserUiColor(int color) {
@@ -1281,6 +1250,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
+    private void setupBaseActionBar() {
+        final FragmentActivity activity = getActivity();
+        if (!(activity instanceof LinkHandlerActivity)) return;
+        final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
+        final ActionBar actionBar = linkHandler.getSupportActionBar();
+        if (actionBar == null) return;
+        final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
+        mActionBarBackground = new ActionBarDrawable(getResources(), shadow);
+        mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
+        mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
+        actionBar.setBackgroundDrawable(mActionBarBackground);
+    }
+
     private void setupUserPages() {
         final Context context = getActivity();
         final Bundle args = getArguments(), tabArgs = new Bundle();
@@ -1307,7 +1289,43 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return getActivity() instanceof LinkHandlerActivity;
     }
 
-    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
+    private void updateFollowProgressState() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final ParcelableUser user = getUser();
+        if (twitter == null || user == null) {
+            mFollowButton.setVisibility(View.GONE);
+            mFollowProgress.setVisibility(View.GONE);
+            return;
+        }
+        final LoaderManager lm = getLoaderManager();
+        final boolean loadingRelationship = lm.getLoader(LOADER_ID_FRIENDSHIP) != null;
+        final boolean creatingFriendship = twitter.isCreatingFriendship(user.account_id, user.id);
+        final boolean destroyingFriendship = twitter.isDestroyingFriendship(user.account_id, user.id);
+        final boolean creatingBlock = twitter.isCreatingFriendship(user.account_id, user.id);
+        final boolean destroyingBlock = twitter.isDestroyingFriendship(user.account_id, user.id);
+        if (loadingRelationship || creatingFriendship || destroyingFriendship || creatingBlock || destroyingBlock) {
+            mFollowButton.setVisibility(View.GONE);
+            mFollowProgress.setVisibility(View.VISIBLE);
+        } else if (mRelationship != null) {
+            mFollowButton.setVisibility(View.VISIBLE);
+            mFollowProgress.setVisibility(View.GONE);
+        } else {
+            mFollowButton.setVisibility(View.GONE);
+            mFollowProgress.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateRefreshState() {
+        final ParcelableUser user = getUser();
+        if (user == null) return;
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final boolean is_creating_friendship = twitter != null
+                && twitter.isCreatingFriendship(user.account_id, user.id);
+        final boolean is_destroying_friendship = twitter != null
+                && twitter.isDestroyingFriendship(user.account_id, user.id);
+        setProgressBarIndeterminateVisibility(is_creating_friendship || is_destroying_friendship);
+        invalidateOptionsMenu();
+    }
 
     private void updateScrollOffset(int offset) {
         final View space = mProfileBannerSpace;
@@ -1366,13 +1384,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         updateTitleColor();
     }
 
-    private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
-        final Drawable drawable = ThemeUtils.getCompatToolbarOverlay(activity);
-        if (drawable == null) return;
-        drawable.setAlpha(Math.round(alpha * 255));
-    }
-
     private void updateTitleColor() {
         final int[] location = new int[2];
         mNameView.getLocationOnScreen(location);
@@ -1395,6 +1406,71 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         activity.setTitle(spannedTitle);
+    }
+
+    private static class ActionBarDrawable extends LayerDrawable {
+
+        private final Drawable mShadowDrawable;
+        private final ColorDrawable mColorDrawable;
+
+        private float mFactor;
+        private int mColor;
+        private int mAlpha;
+        private float mOutlineAlphaFactor;
+
+        public ActionBarDrawable(Resources resources, Drawable shadow) {
+            super(new Drawable[]{shadow, new ActionBarColorDrawable(true)});
+            mShadowDrawable = getDrawable(0);
+            mColorDrawable = (ColorDrawable) getDrawable(1);
+            setAlpha(0xFF);
+            setOutlineAlphaFactor(1);
+        }
+
+        public int getColor() {
+            return mColor;
+        }
+
+        public void setColor(int color) {
+            mColor = color;
+            mColorDrawable.setColor(color);
+            setFactor(mFactor);
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void getOutline(Outline outline) {
+            mColorDrawable.getOutline(outline);
+            outline.setAlpha(mFactor * mOutlineAlphaFactor * 0.99f);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+            mAlpha = alpha;
+            setFactor(mFactor);
+        }
+
+        @Override
+        public int getIntrinsicWidth() {
+            return mColorDrawable.getIntrinsicWidth();
+        }
+
+        @Override
+        public int getIntrinsicHeight() {
+            return mColorDrawable.getIntrinsicHeight();
+        }
+
+        public void setFactor(float f) {
+            mFactor = f;
+            mShadowDrawable.setAlpha(Math.round(mAlpha * MathUtils.clamp(1 - f, 0, 1)));
+            final boolean hasColor = mColor != 0;
+            mColorDrawable.setAlpha(hasColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
+        }
+
+        public void setOutlineAlphaFactor(float f) {
+            mOutlineAlphaFactor = f;
+            invalidateSelf();
+        }
+
     }
 
     static class RelationshipLoader extends AsyncTaskLoader<SingleResponse<Relationship>> {
@@ -1433,71 +1509,5 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             forceLoad();
         }
     }
-
-    private static class ActionBarDrawable extends LayerDrawable {
-
-        private final Drawable mShadowDrawable;
-        private final ColorDrawable mColorDrawable;
-
-        private float mFactor;
-        private int mColor;
-        private int mAlpha;
-        private float mOutlineAlphaFactor;
-
-        public ActionBarDrawable(Resources resources, Drawable shadow) {
-            super(new Drawable[]{shadow, new ActionBarColorDrawable(true)});
-            mShadowDrawable = getDrawable(0);
-            mColorDrawable = (ColorDrawable) getDrawable(1);
-            setAlpha(0xFF);
-            setOutlineAlphaFactor(1);
-        }
-
-        public int getColor() {
-            return mColor;
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public void getOutline(Outline outline) {
-            mColorDrawable.getOutline(outline);
-            outline.setAlpha(mFactor * mOutlineAlphaFactor * 0.99f);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-            mAlpha = alpha;
-            setFactor(mFactor);
-        }
-
-        public void setOutlineAlphaFactor(float f) {
-            mOutlineAlphaFactor = f;
-            invalidateSelf();
-        }
-
-        @Override
-        public int getIntrinsicWidth() {
-            return mColorDrawable.getIntrinsicWidth();
-        }
-
-        @Override
-        public int getIntrinsicHeight() {
-            return mColorDrawable.getIntrinsicHeight();
-        }
-
-        public void setColor(int color) {
-            mColor = color;
-            mColorDrawable.setColor(color);
-            setFactor(mFactor);
-        }
-
-        public void setFactor(float f) {
-            mFactor = f;
-            mShadowDrawable.setAlpha(Math.round(mAlpha * MathUtils.clamp(1 - f, 0, 1)));
-            final boolean hasColor = mColor != 0;
-            mColorDrawable.setAlpha(hasColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
-        }
-
-    }
-
 
 }

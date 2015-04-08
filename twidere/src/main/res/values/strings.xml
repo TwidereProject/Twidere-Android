@@ -744,6 +744,7 @@
     <string name="thumbor_integration">Thumbor integration</string>
     <string name="server_address">Server address</string>
     <string name="security_key">Security key</string>
+    <string name="hide_card_actions">Hide card actions</string>
 
 
 </resources>

@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/element_spacing_normal"
-                android:layout_toLeftOf="@+id/item_menu"
+                android:layout_toLeftOf="@+id/extra_type"
                 android:layout_toRightOf="@id/profile_image"
                 android:orientation="vertical">
 
@@ -148,7 +148,6 @@
                     android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingBottom="@dimen/element_spacing_small"
                     android:paddingTop="@dimen/element_spacing_xsmall"
@@ -159,15 +158,18 @@
 
             </LinearLayout>
 
-            <org.mariotaku.twidere.view.ActionIconButton
-                android:id="@+id/item_menu"
-                style="?cardActionButtonStyle"
-                android:layout_width="@dimen/element_size_normal"
-                android:layout_height="@dimen/element_size_normal"
+            <org.mariotaku.twidere.view.ActionIconView
+                android:id="@+id/extra_type"
+                android:layout_width="@dimen/element_size_small"
+                android:layout_height="@dimen/element_size_small"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:focusable="false"
-                android:src="@drawable/ic_action_more_vertical"/>
+                android:layout_marginBottom="@dimen/element_spacing_normal"
+                android:layout_marginLeft="@dimen/element_spacing_mlarge"
+                android:layout_marginRight="@dimen/element_spacing_mlarge"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:color="?android:textColorSecondary"
+                tools:src="@drawable/ic_action_gallery"/>
 
         </RelativeLayout>
 
@@ -252,7 +254,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/media_preview"
-            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:layout_marginBottom="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:layout_toRightOf="@+id/quote_indicator"
             android:paddingLeft="@dimen/element_spacing_normal"
@@ -261,13 +263,13 @@
             android:textColor="?android:attr/textColorPrimary"
             tools:text="@string/sample_status_text"/>
 
-
         <LinearLayout
             android:id="@+id/action_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/profile_container"
             android:layout_below="@+id/text"
+            android:layout_marginTop="@dimen/element_spacing_minus_small"
             android:gravity="center_vertical|left"
             android:orientation="horizontal">
 
@@ -315,19 +317,20 @@
 
         </LinearLayout>
 
-        <org.mariotaku.twidere.view.ActionIconView
-            android:id="@+id/extra_type"
-            android:layout_width="@dimen/element_size_small"
-            android:layout_height="@dimen/element_size_small"
+        <org.mariotaku.twidere.view.ActionIconButton
+            android:id="@+id/item_menu"
+            style="?cardActionButtonStyle"
+            android:layout_width="@dimen/element_size_normal"
+            android:layout_height="@dimen/element_size_normal"
             android:layout_alignBottom="@+id/action_buttons"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/action_buttons"
-            android:layout_below="@+id/text"
-            android:layout_gravity="center|right"
+            android:layout_marginBottom="@dimen/element_spacing_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_weight="0"
-            android:color="?android:textColorSecondary"
-            tools:src="@drawable/ic_action_gallery"/>
+            android:color="?android:textColorTertiary"
+            android:focusable="false"
+            android:src="@drawable/ic_action_more_vertical"/>
+
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 </merge>

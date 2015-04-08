@@ -35,7 +35,7 @@
     app:ignorePadding="true"
     tools:context=".adapter.DirectMessagesEntryAdapter">
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <org.mariotaku.twidere.view.SquareShapedImageView
         android:id="@+id/profile_image"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"

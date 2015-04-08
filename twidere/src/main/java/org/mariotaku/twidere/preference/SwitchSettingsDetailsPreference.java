@@ -37,6 +37,8 @@ import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
  */
 public class SwitchSettingsDetailsPreference extends SwitchPreference implements Constants {
 
+    private View mView;
+
     public SwitchSettingsDetailsPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.src});
@@ -66,6 +68,12 @@ public class SwitchSettingsDetailsPreference extends SwitchPreference implements
             switchView.setClickable(true);
             switchView.setFocusable(true);
         }
+    }
+
+    @Override
+    protected View onCreateView(ViewGroup parent) {
+        if (mView != null) return mView;
+        return mView = super.onCreateView(parent);
     }
 
     private static View findViewByType(View view, Class<? extends View> cls) {

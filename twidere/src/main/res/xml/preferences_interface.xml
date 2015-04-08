@@ -45,18 +45,5 @@
         android:key="tab_display_option"
         android:title="@string/tab_display_option"/>
 
-    <org.mariotaku.twidere.preference.SummaryListPreference
-        android:defaultValue="@string/default_profile_image_style"
-        android:entries="@array/entries_profile_image_style"
-        android:entryValues="@array/values_profile_image_style"
-        android:key="profile_image_style"
-        android:title="@string/profile_image_style"/>
-
-    <org.mariotaku.twidere.preference.SummaryListPreference
-        android:defaultValue="crop"
-        android:entries="@array/entries_media_preview_style"
-        android:entryValues="@array/values_media_preview_style"
-        android:key="media_preview_style"
-        android:title="@string/media_preview_style"/>
 
 </PreferenceScreen>

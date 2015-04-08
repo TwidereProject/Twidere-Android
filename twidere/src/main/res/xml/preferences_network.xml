@@ -65,11 +65,28 @@
             android:summary="@string/default_api_settings_summary"
             android:title="@string/default_api_settings"/>
 
-        <org.mariotaku.twidere.preference.SwitchSettingsDetailsPreference
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_api"
+        android:title="@string/thumbor_integration">
+
+        <SwitchPreference
             android:defaultValue="false"
             android:key="thumbor_enabled"
-            android:src="@xml/preferences_thumbor"
             android:title="@string/thumbor_integration"/>
+
+        <org.mariotaku.twidere.preference.AutoFixEditTextPreference
+            android:dependency="thumbor_enabled"
+            android:inputType="textUri"
+            android:key="thumbor_address"
+            android:title="@string/server_address"/>
+
+        <org.mariotaku.twidere.preference.AutoFixEditTextPreference
+            android:dependency="thumbor_enabled"
+            android:inputType="textVisiblePassword"
+            android:key="thumbor_security_key"
+            android:title="@string/security_key"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

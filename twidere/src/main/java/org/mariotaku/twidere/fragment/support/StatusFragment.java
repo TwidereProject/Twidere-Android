@@ -1011,6 +1011,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mDisplayMediaPreview;
         private final boolean mDisplayProfileImage;
         private final boolean mSensitiveContentEnabled;
+        private final boolean mHideCardActions;
 
         private boolean mLoadMoreSupported;
         private boolean mLoadMoreIndicatorVisible;
@@ -1042,6 +1043,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
             mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
             mSensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
+            mHideCardActions = preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compact;
             } else {
@@ -1175,6 +1177,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public boolean isSensitiveContentEnabled() {
             return mSensitiveContentEnabled;
+        }
+
+        @Override
+        public boolean isCardActionsHidden() {
+            return mHideCardActions;
         }
 
         @Override

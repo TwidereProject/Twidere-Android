@@ -309,4 +309,6 @@ public interface SharedPreferenceConstants {
     String KEY_THUMBOR_ENABLED = "thumbor_enabled";
     String KEY_THUMBOR_ADDRESS = "thumbor_address";
     String KEY_THUMBOR_SECURITY_KEY = "thumbor_security_key";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    String KEY_HIDE_CARD_ACTIONS = "hide_card_actions";
 }
