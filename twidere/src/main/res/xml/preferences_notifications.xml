@@ -27,7 +27,6 @@
         <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
             android:defaultValue="false"
             android:key="pebble_notifications"
-            android:dependency="stream_notifications"
             android:summary="@string/pebble_notifications_summary"
             android:title="@string/pebble_notifications"/>
     </PreferenceCategory>

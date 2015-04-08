@@ -216,13 +216,13 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onPrepared(MediaPlayer mp) {
             if (getUserVisibleHint()) {
-                mp.start();
                 mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (mPlayAudio) {
                     mp.setVolume(1, 1);
                 } else {
                     mp.setVolume(0, 0);
                 }
+                mp.start();
             }
         }
 

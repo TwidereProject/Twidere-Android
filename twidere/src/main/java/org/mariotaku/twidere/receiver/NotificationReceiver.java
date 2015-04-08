@@ -39,7 +39,9 @@ import org.mariotaku.twidere.util.Utils;
 public class NotificationReceiver extends BroadcastReceiver implements Constants {
     @Override
     public void onReceive(Context context, Intent intent) {
-        switch (intent.getAction()) {
+        final String action = intent.getAction();
+        if (action == null) return;
+        switch (action) {
             case BROADCAST_NOTIFICATION_DELETED: {
                 final Uri uri = intent.getData();
                 final String tag = getPositionTag(uri.getLastPathSegment());

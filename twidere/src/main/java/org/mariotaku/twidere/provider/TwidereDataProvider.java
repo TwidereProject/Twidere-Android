@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.provider;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -522,46 +521,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
     }
 
-    private void buildNotification(final NotificationCompat.Builder builder, final AccountPreferences accountPrefs,
-                                   final int notificationType, final String ticker, final String title, final String message, final long when,
-                                   final int icon, final Bitmap largeIcon, final Intent contentIntent, final Intent deleteIntent) {
-        final Context context = getContext();
-        builder.setTicker(ticker);
-        builder.setContentTitle(title);
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-        builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(icon);
-        if (largeIcon != null) {
-            builder.setLargeIcon(largeIcon);
-        }
-        if (deleteIntent != null) {
-            builder.setDeleteIntent(PendingIntent.getBroadcast(context, 0, deleteIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        if (contentIntent != null) {
-            builder.setContentIntent(PendingIntent.getActivity(context, 0, contentIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        int defaults = 0;
-        if (isNotificationAudible()) {
-            if (AccountPreferences.isNotificationHasRingtone(notificationType)) {
-                final Uri ringtone = accountPrefs.getNotificationRingtone();
-                builder.setSound(ringtone, Notification.STREAM_DEFAULT);
-            }
-            if (AccountPreferences.isNotificationHasVibration(notificationType)) {
-                defaults |= Notification.DEFAULT_VIBRATE;
-            } else {
-                defaults &= ~Notification.DEFAULT_VIBRATE;
-            }
-        }
-        if (AccountPreferences.isNotificationHasLight(notificationType)) {
-            final int color = accountPrefs.getNotificationLightColor();
-            builder.setLights(color, 1000, 2000);
-        }
-        builder.setDefaults(defaults);
-    }
-
     private boolean checkPermission(final String... permissions) {
         return mPermissionsManager.checkCallingPermission(permissions);
     }
@@ -1039,6 +998,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private static PendingIntent getDeleteIntent(Context context, String type, long accountId, long position) {
         // Setup delete intent
         final Intent recvIntent = new Intent(context, NotificationReceiver.class);
+        recvIntent.setAction(BROADCAST_NOTIFICATION_DELETED);
         final Uri.Builder recvLinkBuilder = new Uri.Builder();
         recvLinkBuilder.scheme(SCHEME_TWIDERE);
         recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
@@ -1067,12 +1027,18 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (AccountPreferences.isNotificationHasLight(defaultFlags)) {
             notificationDefaults |= NotificationCompat.DEFAULT_LIGHTS;
         }
-        if (AccountPreferences.isNotificationHasVibration(defaultFlags)) {
-            notificationDefaults |= NotificationCompat.DEFAULT_VIBRATE;
-        }
-        if (AccountPreferences.isNotificationHasRingtone(defaultFlags)) {
-            notificationDefaults |= NotificationCompat.DEFAULT_SOUND;
-            builder.setSound(pref.getNotificationRingtone(), AudioManager.STREAM_NOTIFICATION);
+        if (isNotificationAudible()) {
+            if (AccountPreferences.isNotificationHasVibration(defaultFlags)) {
+                notificationDefaults |= NotificationCompat.DEFAULT_VIBRATE;
+            } else {
+                notificationDefaults &= ~NotificationCompat.DEFAULT_VIBRATE;
+            }
+            if (AccountPreferences.isNotificationHasRingtone(defaultFlags)) {
+                notificationDefaults |= NotificationCompat.DEFAULT_SOUND;
+                builder.setSound(pref.getNotificationRingtone(), AudioManager.STREAM_NOTIFICATION);
+            }
+        } else {
+            notificationDefaults &= ~(NotificationCompat.DEFAULT_VIBRATE | NotificationCompat.DEFAULT_SOUND);
         }
         builder.setDefaults(notificationDefaults);
     }
@@ -1279,10 +1245,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
         }
         return count;
-    }
-
-    private static <T> T safeGet(final List<T> list, final int index) {
-        return index >= 0 && index < list.size() ? list.get(index) : null;
     }
 
     private static boolean shouldReplaceOnConflict(final int table_id) {
