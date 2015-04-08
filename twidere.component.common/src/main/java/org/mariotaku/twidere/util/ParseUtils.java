@@ -161,6 +161,11 @@ public final class ParseUtils {
         return def;
     }
 
+    @Deprecated
+    public static String parseString(final String object) {
+        return object;
+    }
+
     public static String parseString(final Object object) {
         return parseString(object, null);
     }

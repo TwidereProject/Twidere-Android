@@ -335,15 +335,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             replyRetweetIcon.setVisibility(View.GONE);
         }
 
-        final int typeIconRes = getUserTypeIconRes(cursor.getShort(indices.is_verified) == 1,
-                cursor.getShort(indices.is_protected) == 1);
-        if (typeIconRes != 0) {
-            profileTypeView.setImageResource(typeIconRes);
-            profileTypeView.setVisibility(View.VISIBLE);
-        } else {
-            profileTypeView.setImageDrawable(null);
-            profileTypeView.setVisibility(View.GONE);
-        }
+        final int typeIconRes;
 
         if (cursor.getShort(indices.is_quote) == 1) {
             quotedNameView.setText(user_name);
@@ -380,6 +372,9 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
 
             final int userColor = UserColorNameUtils.getUserColor(context, cursor.getLong(indices.quoted_by_user_id));
             itemContent.drawStart(userColor);
+
+            typeIconRes = getUserTypeIconRes(cursor.getShort(indices.quoted_by_user_is_verified) == 1,
+                    cursor.getShort(indices.quoted_by_user_is_protected) == 1);
         } else {
             nameView.setText(user_name);
             screenNameView.setText("@" + user_screen_name);
@@ -401,8 +396,18 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             }
             final int userColor = UserColorNameUtils.getUserColor(context, user_id);
             itemContent.drawStart(userColor);
+
+            typeIconRes = getUserTypeIconRes(cursor.getShort(indices.is_verified) == 1,
+                    cursor.getShort(indices.is_protected) == 1);
         }
 
+        if (typeIconRes != 0) {
+            profileTypeView.setImageResource(typeIconRes);
+            profileTypeView.setVisibility(View.VISIBLE);
+        } else {
+            profileTypeView.setImageDrawable(null);
+            profileTypeView.setVisibility(View.GONE);
+        }
 
         if (adapter.shouldShowAccountsColor()) {
             itemContent.drawEnd(Utils.getAccountColor(context, account_id));

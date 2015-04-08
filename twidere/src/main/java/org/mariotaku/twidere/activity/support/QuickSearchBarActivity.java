@@ -574,8 +574,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                 final String queryEscaped = mQuery.replace("_", "^_");
                 final SharedPreferences nicknamePrefs = context.getSharedPreferences(
                         USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
-                final long[] nicknameIds = Utils.getMatchedNicknameIds(ParseUtils.parseString(mQuery),
-                        nicknamePrefs);
+                final long[] nicknameIds = Utils.getMatchedNicknameIds(mQuery, nicknamePrefs);
                 final Expression selection = Expression.or(
                         Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                         Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),

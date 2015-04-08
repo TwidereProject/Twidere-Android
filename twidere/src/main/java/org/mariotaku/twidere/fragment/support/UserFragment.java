@@ -114,6 +114,8 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor;
+import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -723,6 +725,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         mProfileNameBackground.setBackgroundColor(mCardBackgroundColor);
         mProfileDetailsContainer.setBackgroundColor(mCardBackgroundColor);
+        mPagerIndicator.setBackgroundColor(mCardBackgroundColor);
         mUuckyFooter.setBackgroundColor(mCardBackgroundColor);
 
         getUserInfo(accountId, userId, screenName, false);
@@ -1257,9 +1260,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final int actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
             mTintedStatusContent.setColor(actionBarColor, themed.getCurrentThemeBackgroundAlpha());
             mActionBarBackground.setColor(actionBarColor);
+            ActivityAccessor.setTaskDescription(activity, new TaskDescriptionCompat(null, null, actionBarColor));
         } else {
             mTintedStatusContent.setColor(color, themed.getCurrentThemeBackgroundAlpha());
             mActionBarBackground.setColor(color);
+            ActivityAccessor.setTaskDescription(activity, new TaskDescriptionCompat(null, null, color));
         }
         mDescriptionView.setLinkTextColor(color);
         mProfileBannerView.setBackgroundColor(color);

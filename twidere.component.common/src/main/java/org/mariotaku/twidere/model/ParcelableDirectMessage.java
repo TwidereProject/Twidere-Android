@@ -26,7 +26,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
@@ -122,10 +121,8 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         this.account_id = account_id;
         this.is_outgoing = is_outgoing;
         final User sender = message.getSender(), recipient = message.getRecipient();
-        final String sender_profile_image_url_string = sender != null ? ParseUtils.parseString(sender
-                .getProfileImageUrlHttps()) : null;
-        final String recipient_profile_image_url_string = recipient != null ? ParseUtils.parseString(recipient
-                .getProfileImageUrlHttps()) : null;
+        final String sender_profile_image_url = sender != null ? sender.getProfileImageUrlHttps() : null;
+        final String recipient_profile_image_url = recipient != null ? recipient.getProfileImageUrlHttps() : null;
         id = message.getId();
         timestamp = getTime(message.getCreatedAt());
         sender_id = sender != null ? sender.getId() : -1;
@@ -136,8 +133,8 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         recipient_name = recipient != null ? recipient.getName() : null;
         sender_screen_name = sender != null ? sender.getScreenName() : null;
         recipient_screen_name = recipient != null ? recipient.getScreenName() : null;
-        sender_profile_image_url = sender_profile_image_url_string;
-        recipient_profile_image_url = recipient_profile_image_url_string;
+        this.sender_profile_image_url = sender_profile_image_url;
+        this.recipient_profile_image_url = recipient_profile_image_url;
         text_unescaped = toPlainText(text_html);
         media = ParcelableMedia.fromEntities(message);
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.mariotaku.twidere"
+<manifest package="org.mariotaku.twidere"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
     <uses-sdk/>
@@ -45,18 +46,18 @@
 
     <permission
         android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"
-        android:label="@string/permission_label_shorten_status"
         android:description="@string/permission_description_shorten_status"
+        android:label="@string/permission_label_shorten_status"
         android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
     <permission
         android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"
-        android:label="@string/permission_label_upload_media"
         android:description="@string/permission_description_upload_media"
+        android:label="@string/permission_label_upload_media"
         android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
     <permission
         android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"
-        android:label="@string/permission_label_sync_timeline"
         android:description="@string/permission_description_sync_timeline"
+        android:label="@string/permission_label_sync_timeline"
         android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
 
     <application
@@ -593,8 +594,8 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.support.UsageStatisticsActivity"
-            android:theme="@android:style/Theme.NoDisplay"
-            android:label="@string/usage_statistics"/>
+            android:label="@string/usage_statistics"
+            android:theme="@android:style/Theme.NoDisplay"/>
 
         <service
             android:name=".service.RefreshService"
@@ -635,18 +636,28 @@
             android:authorities="twidere"
             android:exported="true"
             android:grantUriPermissions="true"
-            android:label="@string/label_tweetstore_provider"/>
+            android:label="@string/label_tweetstore_provider"
+            tools:ignore="ExportedContentProvider"/>
         <provider
             android:name=".provider.TwidereCommandProvider"
             android:authorities="twidere.command"
-            android:exported="true"/>
+            android:exported="true"
+            tools:ignore="ExportedContentProvider"/>
         <provider
             android:name=".provider.RecentSearchProvider"
-            android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"/>
+            android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"
+            tools:ignore="ExportedContentProvider"/>
 
         <receiver android:name=".receiver.ConnectivityStateReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.NotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.NOTIFICATION_DELETED"/>
             </intent-filter>
         </receiver>
         <receiver

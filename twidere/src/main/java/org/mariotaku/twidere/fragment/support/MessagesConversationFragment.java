@@ -758,7 +758,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 final String[] selectionArgs;
                 if (queryEscaped != null) {
                     final SharedPreferences nicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
-                    final long[] nicknameIds = Utils.getMatchedNicknameIds(ParseUtils.parseString(query), nicknamePrefs);
+                    final long[] nicknameIds = Utils.getMatchedNicknameIds(query, nicknamePrefs);
                     selection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                             Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                             Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));

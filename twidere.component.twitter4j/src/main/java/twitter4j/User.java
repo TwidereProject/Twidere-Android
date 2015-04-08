@@ -100,14 +100,14 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * 
 	 * @return the profile image url of the user
 	 */
-	URL getProfileImageURL();
+    String getProfileImageURL();
 
 	/**
 	 * Returns the profile image url of the user, served over SSL
 	 * 
 	 * @return the profile image url of the user, served over SSL
 	 */
-	URL getProfileImageUrlHttps();
+	String getProfileImageUrlHttps();
 
 	String getProfileLinkColor();
 
@@ -142,7 +142,7 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * 
 	 * @return the url of the user
 	 */
-	URL getURL();
+    String getURL();
 
 	URLEntity[] getURLEntities();
 

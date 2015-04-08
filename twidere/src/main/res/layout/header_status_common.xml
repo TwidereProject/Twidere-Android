@@ -226,14 +226,50 @@
             tools:text="\@username"/>
     </LinearLayout>
 
-    <include
+    <FrameLayout
         android:id="@+id/media_preview_container"
-        layout="@layout/layout_media_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/quoted_name_container"
         android:layout_toRightOf="@+id/quote_indicator"
-        android:visibility="gone"/>
+        tools:visibility="visible">
+
+        <org.mariotaku.twidere.view.CardMediaContainer
+            android:id="@+id/media_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:horizontalSpacing="@dimen/element_spacing_xsmall"
+            android:verticalSpacing="@dimen/element_spacing_xsmall"
+            android:visibility="gone">
+
+            <include layout="@layout/layout_card_media_preview"/>
+
+        </org.mariotaku.twidere.view.CardMediaContainer>
+
+        <LinearLayout
+            android:id="@+id/media_preview_load"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_button_size"
+            android:layout_gravity="center"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <org.mariotaku.twidere.view.ActionIconThemedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_action_gallery"
+                android:gravity="center_vertical"
+                android:text="@string/load_media"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <org.mariotaku.twidere.view.StatusTextView
         android:id="@+id/text"

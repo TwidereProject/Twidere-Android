@@ -37,14 +37,14 @@ public interface MediaEntity extends URLEntity, Serializable {
      *
      * @return the media URL
      */
-    URL getMediaURL();
+    String getMediaURL();
 
     /**
      * Returns the media secure URL.
      *
      * @return the media secure URL
      */
-    URL getMediaURLHttps();
+    String getMediaURLHttps();
 
     /**
      * Returns size variations of the media.

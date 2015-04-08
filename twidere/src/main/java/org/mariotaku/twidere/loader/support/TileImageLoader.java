@@ -38,7 +38,6 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.Exif;
 import org.mariotaku.twidere.util.ImageValidator;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.imageloader.AccountExtra;
 
 import java.io.File;
@@ -79,7 +78,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         }
         final String scheme = mUri.getScheme();
         if ("http".equals(scheme) || "https".equals(scheme)) {
-            final String url = ParseUtils.parseString(mUri.toString());
+            final String url = mUri.toString();
             if (url == null) return Result.nullInstance();
             final File cacheFile = mDiskCache.get(url);
             if (cacheFile != null) {

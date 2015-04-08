@@ -224,11 +224,10 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         description_expanded = TwitterContentUtils.formatExpandedUserDescription(user);
         description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
         location = user.getLocation();
-        profile_image_url = ParseUtils.parseString(user.getProfileImageUrlHttps());
+        profile_image_url = user.getProfileImageUrlHttps();
         profile_banner_url = user.getProfileBannerImageUrl();
-        url = ParseUtils.parseString(user.getURL());
-        url_expanded = url != null && urls_url_entities != null && urls_url_entities.length > 0 ? ParseUtils
-                .parseString(urls_url_entities[0].getExpandedURL()) : null;
+        url = user.getURL();
+        url_expanded = url != null && urls_url_entities != null && urls_url_entities.length > 0 ? urls_url_entities[0].getExpandedURL() : null;
         is_follow_request_sent = user.isFollowRequestSent();
         followers_count = user.getFollowersCount();
         friends_count = user.getFriendsCount();

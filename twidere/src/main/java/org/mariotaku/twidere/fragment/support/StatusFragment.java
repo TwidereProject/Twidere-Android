@@ -596,6 +596,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 retweetedByContainer.setVisibility(View.GONE);
             }
 
+
+            final int typeIconRes, typeDescriptionRes;
+            final long timestamp;
+            final String source;
             if (status.is_quote) {
                 quotedNameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
                 quotedScreenNameView.setText("@" + status.user_screen_name);
@@ -614,6 +618,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quoteTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
 
+                typeIconRes = getUserTypeIconRes(status.quoted_by_user_is_verified, status.quoted_by_user_is_protected);
+                typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.quoted_by_user_is_verified, status.quoted_by_user_is_protected);
+
+                timestamp = status.quote_timestamp;
+                source = status.quote_source;
             } else {
                 nameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
                 screenNameView.setText("@" + status.user_screen_name);
@@ -623,24 +632,38 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedNameContainer.setVisibility(View.GONE);
                 quoteTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
+
+                typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
+                typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);
+
+                timestamp = status.timestamp;
+                source = status.source;
             }
+
+            if (typeIconRes != 0 && typeDescriptionRes != 0) {
+                profileTypeView.setImageResource(typeIconRes);
+                profileTypeView.setContentDescription(context.getString(typeDescriptionRes));
+                profileTypeView.setVisibility(View.VISIBLE);
+            } else {
+                profileTypeView.setImageDrawable(null);
+                profileTypeView.setContentDescription(null);
+                profileTypeView.setVisibility(View.GONE);
+            }
+
+            final String timeString = formatToLongTimeString(context, timestamp);
+            if (!isEmpty(timeString) && !isEmpty(source)) {
+                timeSourceView.setText(Html.fromHtml(context.getString(R.string.time_source, timeString, source)));
+            } else if (isEmpty(timeString) && !isEmpty(source)) {
+                timeSourceView.setText(Html.fromHtml(context.getString(R.string.source, source)));
+            } else if (!isEmpty(timeString) && isEmpty(source)) {
+                timeSourceView.setText(timeString);
+            }
+            timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
+
 
             textView.setText(Html.fromHtml(status.text_html));
             linkify.applyAllLinks(textView, status.account_id, getAdapterPosition(), status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
-
-            final String timeString = formatToLongTimeString(context, status.timestamp);
-            final String sourceHtml = status.source;
-            if (!isEmpty(timeString) && !isEmpty(sourceHtml)) {
-                timeSourceView.setText(Html.fromHtml(context.getString(R.string.time_source,
-                        timeString, sourceHtml)));
-            } else if (isEmpty(timeString) && !isEmpty(sourceHtml)) {
-                timeSourceView.setText(Html.fromHtml(context.getString(R.string.source,
-                        sourceHtml)));
-            } else if (!isEmpty(timeString) && isEmpty(sourceHtml)) {
-                timeSourceView.setText(timeString);
-            }
-            timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
             if (!TextUtils.isEmpty(status.place_full_name)) {
                 locationView.setVisibility(View.VISIBLE);
@@ -662,30 +685,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             retweetsCountView.setText(getLocalizedNumber(locale, status.retweet_count));
             favoritesCountView.setText(getLocalizedNumber(locale, status.favorite_count));
 
-            final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
-            final int typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);
-            if (typeIconRes != 0 && typeDescriptionRes != 0) {
-                profileTypeView.setImageResource(typeIconRes);
-                profileTypeView.setContentDescription(context.getString(typeDescriptionRes));
-                profileTypeView.setVisibility(View.VISIBLE);
-            } else {
-                profileTypeView.setImageDrawable(null);
-                profileTypeView.setContentDescription(null);
-                profileTypeView.setVisibility(View.GONE);
-            }
 
             if (status.media == null) {
                 mediaPreviewContainer.setVisibility(View.GONE);
+                mediaPreview.setVisibility(View.GONE);
+                mediaPreviewLoad.setVisibility(View.GONE);
+                mediaPreview.displayMedia();
             } else if (adapter.isDetailMediaExpanded()) {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
-                mediaPreviewLoad.setVisibility(View.GONE);
                 mediaPreview.setVisibility(View.VISIBLE);
+                mediaPreviewLoad.setVisibility(View.GONE);
                 mediaPreview.displayMedia(status.media, loader, status.account_id,
                         adapter.getFragment(), adapter.getImageLoadingHandler());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
-                mediaPreviewLoad.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.GONE);
+                mediaPreviewLoad.setVisibility(View.VISIBLE);
+                mediaPreview.displayMedia();
             }
 
             if (TwitterCardUtils.isCardSupported(status.card)) {
@@ -785,6 +801,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             quotedScreenNameView.setTextSize(defaultTextSize * 0.85f);
             locationView.setTextSize(defaultTextSize * 0.85f);
             timeSourceView.setTextSize(defaultTextSize * 0.85f);
+
+            mediaPreview.setStyle(adapter.getMediaPreviewStyle());
 
             textView.setMovementMethod(StatusContentMovementMethod.getInstance());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

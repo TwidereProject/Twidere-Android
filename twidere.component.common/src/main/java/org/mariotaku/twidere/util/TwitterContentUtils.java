@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.common.R;
 
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.zip.CRC32;
 
@@ -59,7 +58,7 @@ public class TwitterContentUtils {
         final URLEntity[] urls = user.getDescriptionEntities();
         if (urls != null) {
             for (final URLEntity url : urls) {
-                final String expanded_url = ParseUtils.parseString(url.getExpandedURL());
+                final String expanded_url = url.getExpandedURL();
                 if (expanded_url != null) {
                     builder.addLink(expanded_url, expanded_url, url.getStart(), url.getEnd());
                 }
@@ -85,10 +84,9 @@ public class TwitterContentUtils {
         final URLEntity[] urls = user.getDescriptionEntities();
         if (urls != null) {
             for (final URLEntity url : urls) {
-                final URL expanded_url = url.getExpandedURL();
+                final String expanded_url = url.getExpandedURL();
                 if (expanded_url != null) {
-                    builder.addLink(ParseUtils.parseString(expanded_url), url.getDisplayURL(), url.getStart(),
-                            url.getEnd());
+                    builder.addLink(expanded_url, url.getDisplayURL(), url.getStart(), url.getEnd());
                 }
             }
         }
@@ -128,10 +126,9 @@ public class TwitterContentUtils {
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
                 final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
-                final URL mediaUrl = mediaEntity.getMediaURL();
+                final String mediaUrl = mediaEntity.getMediaURL();
                 if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(ParseUtils.parseString(mediaUrl), mediaEntity.getDisplayURL(),
-                            start, end);
+                    builder.addLink(mediaUrl, mediaEntity.getDisplayURL(), start, end);
                 }
             }
         }
@@ -139,10 +136,9 @@ public class TwitterContentUtils {
         if (urlEntities != null) {
             for (final URLEntity urlEntity : urlEntities) {
                 final int start = urlEntity.getStart(), end = urlEntity.getEnd();
-                final URL expandedUrl = urlEntity.getExpandedURL();
+                final String expandedUrl = urlEntity.getExpandedURL();
                 if (expandedUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(ParseUtils.parseString(expandedUrl), urlEntity.getDisplayURL(),
-                            start, end);
+                    builder.addLink(expandedUrl, urlEntity.getDisplayURL(), start, end);
                 }
             }
         }

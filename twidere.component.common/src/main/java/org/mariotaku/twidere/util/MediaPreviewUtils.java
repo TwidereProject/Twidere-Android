@@ -164,7 +164,7 @@ public class MediaPreviewUtils {
     private static final Pattern[] SUPPORTED_PATTERNS = {PATTERN_TWITTER_IMAGES, PATTERN_INSTAGRAM,
             PATTERN_GOOGLE_IMAGES, PATTERN_GOOGLE_PROXY_IMAGES, PATTERN_SINA_WEIBO_IMAGES, PATTERN_TWITPIC,
             PATTERN_IMGUR, PATTERN_IMGLY, PATTERN_YFROG, PATTERN_LOCKERZ, PATTERN_PLIXI, PATTERN_TWITGOO,
-            PATTERN_MOBYPICTURE, PATTERN_PHOTOZOU,PATTERN_TWITTER_DM_IMAGES};
+            PATTERN_MOBYPICTURE, PATTERN_PHOTOZOU, PATTERN_TWITTER_DM_IMAGES};
 
     private static final String URL_PHOTOZOU_PHOTO_INFO = "https://api.photozou.jp/rest/photo_info.json";
 
@@ -241,14 +241,14 @@ public class MediaPreviewUtils {
         final MediaEntity[] mediaEntities = status.getMediaEntities();
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
-                final String expanded = ParseUtils.parseString(mediaEntity.getMediaURLHttps());
+                final String expanded = mediaEntity.getMediaURLHttps();
                 if (getSupportedLink(expanded) != null) return expanded;
             }
         }
         final URLEntity[] urlEntities = status.getURLEntities();
         if (urlEntities != null) {
             for (final URLEntity urlEntity : urlEntities) {
-                final String expanded = ParseUtils.parseString(urlEntity.getExpandedURL());
+                final String expanded = urlEntity.getExpandedURL();
                 if (getSupportedLink(expanded) != null) return expanded;
             }
         }

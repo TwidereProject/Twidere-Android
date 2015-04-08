@@ -48,7 +48,7 @@ public interface URLEntity extends Serializable {
 	 * @return the expanded URL if mentioned URL is shorten, or null if no
 	 *         shorten URL was mentioned.
 	 */
-	URL getExpandedURL();
+	String getExpandedURL();
 
 	/**
 	 * Returns the index of the start character of the URL mentioned in the
@@ -64,5 +64,5 @@ public interface URLEntity extends Serializable {
 	 * 
 	 * @return the mentioned URL
 	 */
-	URL getURL();
+	String getURL();
 }
