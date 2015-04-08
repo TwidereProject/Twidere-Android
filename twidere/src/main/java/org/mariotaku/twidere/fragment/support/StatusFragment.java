@@ -20,7 +20,10 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -33,6 +36,7 @@ import android.nfc.NfcEvent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -54,7 +58,6 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -742,14 +745,19 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public void onClick(View v) {
+            final ParcelableStatus status = adapter.getStatus(getAdapterPosition());
+            final StatusFragment fragment = adapter.getFragment();
             switch (v.getId()) {
                 case R.id.media_preview_load: {
-                    adapter.setDetailMediaExpanded(true);
+                    if (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive) {
+                        adapter.setDetailMediaExpanded(true);
+                    } else {
+                        final LoadSensitiveImageConfirmDialogFragment f = new LoadSensitiveImageConfirmDialogFragment();
+                        f.show(fragment.getChildFragmentManager(), "load_sensitive_image_confirm");
+                    }
                     break;
                 }
                 case R.id.profile_container: {
-                    final ParcelableStatus status = adapter.getStatus(getPosition());
-                    final Fragment fragment = adapter.getFragment();
                     final FragmentActivity activity = fragment.getActivity();
                     final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
                             new Pair<View, String>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
@@ -759,14 +767,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.retweets_container: {
-                    final ParcelableStatus status = adapter.getStatus(getPosition());
-                    final Fragment fragment = adapter.getFragment();
                     final FragmentActivity activity = fragment.getActivity();
                     Utils.openStatusRetweeters(activity, status.account_id, status.id);
                     break;
                 }
                 case R.id.retweeted_by_container: {
-                    final ParcelableStatus status = adapter.getStatus(getPosition());
                     if (status.retweet_id > 0) {
                         Utils.openUserProfile(adapter.getContext(), status.account_id, status.user_id,
                                 status.user_screen_name, null);
@@ -774,7 +779,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.location_view: {
-                    final ParcelableStatus status = adapter.getStatus(getAdapterPosition());
                     final ParcelableLocation location = status.location;
                     if (!ParcelableLocation.isValidLocation(location)) return;
                     Utils.openMap(adapter.getContext(), location.latitude, location.longitude);
@@ -884,6 +888,41 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
     }
 
+    public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements
+            DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(final DialogInterface dialog, final int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    final Fragment f = getParentFragment();
+                    if (f instanceof StatusFragment) {
+                        final StatusAdapter adapter = ((StatusFragment) f).getAdapter();
+                        adapter.setDetailMediaExpanded(true);
+                    }
+                    break;
+                }
+            }
+
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(final Bundle savedInstanceState) {
+            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            builder.setTitle(android.R.string.dialog_alert_title);
+            builder.setMessage(R.string.sensitive_content_warning);
+            builder.setPositiveButton(android.R.string.ok, this);
+            builder.setNegativeButton(android.R.string.cancel, null);
+            return builder.create();
+        }
+    }
+
+    private StatusAdapter getAdapter() {
+        return mStatusAdapter;
+    }
+
     static class LoadConversationTask extends AsyncTask<ParcelableStatus, ParcelableStatus,
             ListResponse<ParcelableStatus>> {
 
@@ -971,6 +1010,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final int mLinkHighligingStyle;
         private final boolean mDisplayMediaPreview;
         private final boolean mDisplayProfileImage;
+        private final boolean mSensitiveContentEnabled;
 
         private boolean mLoadMoreSupported;
         private boolean mLoadMoreIndicatorVisible;
@@ -1001,6 +1041,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mIsCompact = compact;
             mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
             mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+            mSensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compact;
             } else {
@@ -1129,6 +1170,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         public boolean isNameFirst() {
             return mNameFirst;
+        }
+
+        @Override
+        public boolean isSensitiveContentEnabled() {
+            return mSensitiveContentEnabled;
         }
 
         @Override
