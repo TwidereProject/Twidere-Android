@@ -141,6 +141,7 @@ public interface IntentConstants {
     public static final String EXTRA_TYPE = "type";
     //	public static final String EXTRA_SUCCEED = "succeed";
     public static final String EXTRA_IDS = "ids";
+    public static final String EXTRA_REFRESH_IDS = "refresh_ids";
     public static final String EXTRA_IS_SHARE = "is_share";
     public static final String EXTRA_STATUS = "status";
     public static final String EXTRA_MESSAGE = "message";

@@ -322,7 +322,7 @@ public class MediaPreviewUtils {
 
     private static ParcelableMedia getInstagramImage(final String id, final String orig, final boolean fullImage) {
         if (isEmpty(id)) return null;
-        final String preview = String.format("https://instagram.com/p/%s/media/?size=%s", id, fullImage ? "l" : "t");
+        final String preview = String.format("https://instagram.com/p/%s/media/?size=%s", id, fullImage ? "l" : "m");
         return ParcelableMedia.newImage(preview, orig);
     }
 

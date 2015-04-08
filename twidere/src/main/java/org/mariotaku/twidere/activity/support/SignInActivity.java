@@ -482,9 +482,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
                 }
                 final long loggedId = result.user.getId();
                 final Intent intent = new Intent(this, HomeActivity.class);
-                final Bundle bundle = new Bundle();
-                bundle.putLongArray(EXTRA_IDS, new long[]{loggedId});
-                intent.putExtras(bundle);
+                intent.putExtra(EXTRA_REFRESH_IDS, new long[]{loggedId});
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 finish();

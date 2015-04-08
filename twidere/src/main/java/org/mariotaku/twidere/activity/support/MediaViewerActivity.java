@@ -17,8 +17,12 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -177,16 +181,22 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     }
 
     public static final class VideoPageFragment extends BaseSupportFragment
-            implements VideoLoadingListener {
+            implements VideoLoadingListener, OnPreparedListener {
 
         private static final String[] SUPPORTED_VIDEO_TYPES;
 
         static {
-            SUPPORTED_VIDEO_TYPES = new String[]{"video/mp4"};
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                SUPPORTED_VIDEO_TYPES = new String[]{"video/mp4"};
+            } else {
+                SUPPORTED_VIDEO_TYPES = new String[]{"video/webm", "video/mp4"};
+            }
         }
 
         private TextureVideoView mVideoView;
         private VideoLoader mVideoLoader;
+
+        private boolean mPlayAudio;
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -203,11 +213,24 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             }
         }
 
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            if (getUserVisibleHint()) {
+                mp.start();
+                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                if (mPlayAudio) {
+                    mp.setVolume(1, 1);
+                } else {
+                    mp.setVolume(0, 0);
+                }
+            }
+        }
+
         private String getBestVideoUrl(ParcelableMedia media) {
             if (media == null || media.video_info == null) return null;
-            for (Variant variant : media.video_info.variants) {
-                if (ArrayUtils.contains(SUPPORTED_VIDEO_TYPES, variant.content_type)) {
-                    return variant.url;
+            for (String supportedType : SUPPORTED_VIDEO_TYPES) {
+                for (Variant variant : media.video_info.variants) {
+                    if (supportedType.equalsIgnoreCase(variant.content_type)) return variant.url;
                 }
             }
             return null;
@@ -250,7 +273,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onVideoLoadingComplete(String uri, VideoLoadingListener listener, File file) {
             mVideoView.setVideoURI(Uri.fromFile(file));
-            mVideoView.start();
+            mVideoView.setOnPreparedListener(this);
         }
 
         @Override

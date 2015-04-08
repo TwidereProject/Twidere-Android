@@ -661,7 +661,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             return -1;
         }
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
-        final long[] refreshedIds = intent.getLongArrayExtra(EXTRA_IDS);
+        final long[] refreshedIds = intent.getLongArrayExtra(EXTRA_REFRESH_IDS);
         if (refreshedIds != null) {
             mTwitterWrapper.refreshAll(refreshedIds);
         } else if (firstCreate && refreshOnStart) {

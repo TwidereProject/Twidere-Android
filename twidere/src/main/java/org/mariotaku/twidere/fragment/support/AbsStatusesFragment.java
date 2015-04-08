@@ -298,13 +298,10 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         } else {
             lastVisiblePos = mLayoutManager.findFirstVisibleItemPosition();
         }
-        if (lastVisiblePos != -1) {
+        if (lastVisiblePos != RecyclerView.NO_POSITION) {
             lastReadId = mAdapter.getStatusId(lastVisiblePos);
-            if (readFromBottom) {
-                lastVisibleTop = mLayoutManager.getChildAt(mLayoutManager.getChildCount() - 1).getTop();
-            } else {
-                lastVisibleTop = mLayoutManager.getChildAt(0).getTop();
-            }
+            final View positionView = mLayoutManager.findViewByPosition(lastVisiblePos);
+            lastVisibleTop = positionView != null ? positionView.getTop() : 0;
         } else if (rememberPosition && tag != null) {
             lastReadId = mReadStateManager.getPosition(tag);
             lastVisibleTop = 0;
@@ -315,6 +312,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         mAdapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             mAdapter.setLoadMoreSupported(hasMoreData(data));
+            setRefreshEnabled(true);
             int pos = -1;
             for (int i = 0, j = mAdapter.getItemCount(); i < j; i++) {
                 if (lastReadId != -1 && lastReadId == mAdapter.getStatusId(i)) {

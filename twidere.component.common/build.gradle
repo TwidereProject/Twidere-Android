@@ -37,7 +37,7 @@ android {
 
 dependencies {
     compile 'com.android.support:support-annotations:22.0.0'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.apache.commons:commons-lang3:3.4'
     compile project(':twidere.component.jsonserializer')
     compile project(':twidere.component.querybuilder')
     compile project(':twidere.component.twitter4j')
