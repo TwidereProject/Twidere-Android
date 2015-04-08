@@ -96,8 +96,8 @@ public class CardEntityJSONImpl implements CardEntity {
             return type;
         }
 
-        private static BindingValue valueOf(String name, JSONObject json) throws JSONException {
-            final String type = json.optString("type");
+        private static BindingValue valueOf(String name, JSONObject json) throws JSONException, TwitterException {
+            final String type = json.getString("type");
             if (TYPE_STRING.equals(type)) {
                 return new StringValueImpl(name, json);
             } else if (TYPE_IMAGE.equals(type)) {
@@ -107,15 +107,17 @@ public class CardEntityJSONImpl implements CardEntity {
             } else if (TYPE_BOOLEAN.equals(type)) {
                 return new BooleanValueImpl(name, json);
             }
-            throw new UnsupportedOperationException(String.format("Unsupported type %s", type));
+            throw new TwitterException(String.format("Unsupported type %s", type));
         }
 
-        private static HashMap<String, BindingValue> valuesOf(JSONObject json) throws JSONException {
+        private static HashMap<String, BindingValue> valuesOf(JSONObject json) throws JSONException, TwitterException {
             final Iterator<String> keys = json.keys();
             final HashMap<String, BindingValue> values = new HashMap<>();
             while (keys.hasNext()) {
-                String key = keys.next();
-                values.put(key, valueOf(key, json.getJSONObject(key)));
+                final String key = keys.next();
+                if (!json.isNull("name")) {
+                    values.put(key, valueOf(key, json.getJSONObject(key)));
+                }
             }
             return values;
         }
