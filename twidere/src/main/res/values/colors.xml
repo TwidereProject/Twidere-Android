@@ -31,5 +31,6 @@
     <color name="background_color_card_item_dark">#1a1a1a</color>
     <color name="background_color_card_item_light">#fafafa</color>
     <color name="background_color_action_bar_dark">#212121</color>
+    <color name="bg_color_video_playback_progress">#A0000000</color>
 
 </resources>

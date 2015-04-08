@@ -154,10 +154,7 @@
     <string name="reported_user_for_spam">Reported this user for spam.</string>
     <string name="reported_users_for_spam">Reported these users for spam.</string>
     <string name="filename_hint">Filename</string>
-    <string name="overwrite_confirm">File exists, overwrite?</string>
-    <string name="save_as">Save as</string>
     <string name="please_wait">Please wait.</string>
-    <string name="file_saved_to">File saved to <xliff:g id="filename">%s</xliff:g> .</string>
     <string name="saved_to_gallery">Saved to gallery.</string>
     <string name="proxy">Proxy</string>
     <string name="http_proxy">HTTP Proxy</string>
@@ -229,9 +226,6 @@
     <string name="tabs">Tabs</string>
     <string name="add_tab">Add tab</string>
     <string name="edit_tab">Edit tab</string>
-    <string name="move_up">Move up</string>
-    <string name="move_down">Move down</string>
-    <string name="unsaved_change_back_pressed">You have unsaved changes, press BACK again to discard.</string>
     <string name="invalid_settings">Found invalid settings.</string>
     <string name="icon">Icon</string>
     <string name="pick_file">Pick file</string>
@@ -250,7 +244,6 @@
     <string name="error_message_image_uploader_not_found">Image uploader not found, maybe it was uninstalled.</string>
     <string name="image_upload_format">Tweet format with image</string>
     <string name="image_upload_format_summary">\"[LINK]\" = Image link\n\"[TEXT]\" = Tweet content\n(Extension only)</string>
-    <string name="tweet_shortener">Tweet shortener</string>
     <string name="status_shortener">Tweet shortener</string>
     <string name="status_shortener_default">None (Abort sending)</string>
     <string name="error_message_status_too_long">Tweet too long.</string>
@@ -262,15 +255,11 @@
     <string name="show_absolute_time_summary">Show absolute time in tweets</string>
     <string name="user_mentions">User mentions</string>
     <string name="dual_pane_layout">Dual Pane Layout</string>
-    <string name="landscape">Landscape</string>
-    <string name="portrait">Portrait</string>
     <string name="quick_send">Hit \"Enter\" to Send</string>
     <string name="quick_send_summary">Send tweet when hit \"Enter\".</string>
-    <string name="unsaved_status">Tweet not sent or saved yet.</string>
     <string name="discard">Discard</string>
     <string name="Nitems_selected_quantity_one">1 item selected</string>
     <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> items selected</string>
-    <string name="view">View</string>
     <string name="custom_host_mapping">Custom host mapping</string>
     <string name="custom_host_mapping_summary">Host mapping like /etc/hosts, but does not require any additional permissions.</string>
     <string name="host_mapping_host">Host</string>
@@ -308,8 +297,6 @@
     <string name="incoming_friendships">Pending follow requests</string>
     <string name="send_follow_request">Send follow request</string>
     <string name="follow_request_sent">Follow request sent</string>
-    <string name="separate_retweet_action">Separate retweet action</string>
-    <string name="separate_retweet_action_summary">Show both retweet and quote action in tweet menu</string>
     <string name="status">Tweet</string>
     <string name="preview">Preview</string>
     <string name="connection_timeout">Connection timeout</string>

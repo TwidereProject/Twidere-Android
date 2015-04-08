@@ -23,18 +23,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.sprylab.android.widget.TextureVideoView
-        android:id="@+id/video_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <com.sprylab.android.widget.TextureVideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+        <ProgressBar
+            android:id="@+id/video_view_progress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/element_spacing_xsmall"
+            android:layout_alignBottom="@+id/video_view"
+            android:layout_gravity="bottom"
+            android:background="@color/bg_color_video_playback_progress"
+            android:indeterminateDrawable="@android:color/transparent"
+            android:progressDrawable="@drawable/progress_bar_video"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
 
     <ProgressBar
-        android:visibility="gone"
         android:id="@+id/progress"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
 
 </FrameLayout>
