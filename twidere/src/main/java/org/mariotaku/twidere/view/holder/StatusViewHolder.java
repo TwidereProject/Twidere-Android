@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -178,10 +179,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             nameView.setText(getUserNickname(context, status.quoted_by_user_id, status.quoted_by_user_name, true));
             screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
+            final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
             if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                quoteTextView.setText(status.quote_text_unescaped);
+                final String text = status.quote_text_unescaped;
+                quoteTextView.setText(idx > 0 ? text.substring(0, idx - 1) : text);
             } else {
-                quoteTextView.setText(Html.fromHtml(status.quote_text_html));
+                final Spanned text = Html.fromHtml(status.quote_text_html);
+                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx - 1) : text);
                 linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
                 quoteTextView.setMovementMethod(null);
@@ -365,10 +369,13 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             nameView.setText(cursor.getString(indices.quoted_by_user_name));
             screenNameView.setText("@" + cursor.getString(indices.quoted_by_user_screen_name));
 
+            final String quote_text_unescaped = cursor.getString(indices.quote_text_unescaped);
+            final int idx = quote_text_unescaped.lastIndexOf(" twitter.com");
             if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                quoteTextView.setText(cursor.getString(indices.quote_text_unescaped));
+                quoteTextView.setText(idx > 0 ? quote_text_unescaped.substring(0, idx - 1) : quote_text_unescaped);
             } else {
-                quoteTextView.setText(Html.fromHtml(cursor.getString(indices.quote_text_html)));
+                final Spanned text = Html.fromHtml(cursor.getString(indices.quote_text_html));
+                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx - 1) : text);
                 linkify.applyAllLinks(quoteTextView, account_id, getLayoutPosition(),
                         cursor.getShort(indices.is_possibly_sensitive) == 1,
                         adapter.getLinkHighlightingStyle());

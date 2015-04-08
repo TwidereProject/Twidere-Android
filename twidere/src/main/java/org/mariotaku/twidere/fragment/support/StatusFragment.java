@@ -57,6 +57,7 @@ import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.view.ActionMode;
@@ -190,15 +191,25 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     };
 
     private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
-
+        if (position == null) return;
+        final int adapterPosition = mStatusAdapter.findPositionById(position.first);
+        if (adapterPosition == RecyclerView.NO_POSITION) return;
+        mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.second);
     }
 
     @Nullable
     private Pair<Long, Integer> saveReadPosition() {
         final int position = mLayoutManager.findFirstVisibleItemPosition();
         if (position == RecyclerView.NO_POSITION) return null;
-        final long itemId = mStatusAdapter.getItemId(position);
-        final View positionView = mLayoutManager.findViewByPosition(position);
+        long itemId = mStatusAdapter.getItemId(position);
+        final View positionView;
+        if (itemId == StatusAdapter.VIEW_TYPE_CONVERSATION_LOAD_INDICATOR) {
+            // Should be next item
+            positionView = mLayoutManager.findViewByPosition(position + 1);
+            itemId = mStatusAdapter.getItemId(position + 1);
+        } else {
+            positionView = mLayoutManager.findViewByPosition(position);
+        }
         return new Pair<>(itemId, positionView != null ? positionView.getTop() : -1);
     }
 
@@ -622,7 +633,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 nameView.setText(getUserNickname(context, status.quoted_by_user_id, status.quoted_by_user_name, true));
                 screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
-                quoteTextView.setText(Html.fromHtml(status.quote_text_html));
+                final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
+                final Spanned quote_text = Html.fromHtml(status.quote_text_html);
+                quoteTextView.setText(idx > 0 ? quote_text.subSequence(0, idx - 1) : quote_text);
                 linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
 
@@ -1065,7 +1078,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             for (int i = 0, j = getItemCount(); i < j; i++) {
                 if (getItemId(i) == itemId) return i;
             }
-            return -1;
+            return RecyclerView.NO_POSITION;
         }
 
         public StatusFragment getFragment() {
@@ -1338,13 +1351,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public long getItemId(int position) {
             final int conversationCount = getConversationCount();
             if (position == getItemCount() - 1) {
-                return 4;
+                return VIEW_TYPE_SPACE;
             } else if (position < conversationCount) {
-                return mConversation != null ? mConversation.get(position).id : 2;
+                return mConversation != null ? mConversation.get(position).id : VIEW_TYPE_CONVERSATION_LOAD_INDICATOR;
             } else if (position > conversationCount) {
-                return mReplies != null ? mReplies.get(position - conversationCount - 1).id : 3;
+                return mReplies != null ? mReplies.get(position - conversationCount - 1).id : VIEW_TYPE_REPLIES_LOAD_INDICATOR;
             } else {
-                return mStatus != null ? mStatus.id : 1;
+                return mStatus != null ? mStatus.id : VIEW_TYPE_DETAIL_STATUS;
             }
         }
 
