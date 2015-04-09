@@ -107,6 +107,14 @@ public class TabsAdapter extends FragmentStatePagerAdapter implements TabProvide
         }
     }
 
+    public void setTabLabel(int position, CharSequence label) {
+        for (TabSpec spec : mTabs) {
+            if (position == spec.position)
+                spec.name = label;
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onPageReselected(final int position) {
     }

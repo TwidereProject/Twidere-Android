@@ -174,6 +174,14 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
         return false;
     }
 
+    public void setTabLabel(int position, CharSequence label) {
+        for (SupportTabSpec spec : mTabs) {
+            if (position == spec.position)
+                spec.name = label;
+        }
+        notifyDataSetChanged();
+    }
+
     private Bundle getPageArguments(Bundle args, int position) {
         if (args == null) {
             args = new Bundle();

@@ -162,6 +162,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(CachedUsers.FRIENDS_COUNT, user.getFriendsCount());
         values.put(CachedUsers.STATUSES_COUNT, user.getStatusesCount());
         values.put(CachedUsers.LISTED_COUNT, user.getListedCount());
+        values.put(CachedUsers.MEDIA_COUNT, user.getMediaCount());
         values.put(CachedUsers.LOCATION, user.getLocation());
         values.put(CachedUsers.DESCRIPTION_PLAIN, user.getDescription());
         values.put(CachedUsers.DESCRIPTION_HTML, TwitterContentUtils.formatUserDescription(user));

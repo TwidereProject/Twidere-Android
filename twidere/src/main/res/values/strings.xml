@@ -732,6 +732,9 @@
     <string name="server_address">Server address</string>
     <string name="security_key">Security key</string>
     <string name="hide_card_actions">Hide card actions</string>
-
+    <string name="N_statuses_quantity_one"><xliff:g id="count">%d</xliff:g> tweet</string>
+    <string name="N_statuses_quantity_other"><xliff:g id="count">%d</xliff:g> tweets</string>
+    <string name="N_favorites_quantity_one"><xliff:g id="count">%d</xliff:g> favorites</string>
+    <string name="N_favorites_quantity_other"><xliff:g id="count">%d</xliff:g> favorites</string>
 
 </resources>

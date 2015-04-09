@@ -70,7 +70,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
     public final String description_plain, name, screen_name, location, profile_image_url, profile_banner_url, url,
             url_expanded, description_html, description_unescaped, description_expanded;
 
-    public final int followers_count, friends_count, statuses_count, favorites_count, listed_count;
+    public final int followers_count, friends_count, statuses_count, favorites_count, listed_count, media_count;
 
     public final int background_color, link_color, text_color;
 
@@ -102,6 +102,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = 0;
         favorites_count = 0;
         listed_count = 0;
+        media_count = 0;
         background_color = 0;
         link_color = 0;
         text_color = 0;
@@ -137,6 +138,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         background_color = indices.background_color != -1 ? cursor.getInt(indices.background_color) : 0;
         link_color = indices.link_color != -1 ? cursor.getInt(indices.link_color) : 0;
         text_color = indices.text_color != -1 ? cursor.getInt(indices.text_color) : 0;
+        media_count = indices.media_count != -1 ? cursor.getInt(indices.media_count) : 0;
         is_cache = true;
         is_basic = indices.description_plain == -1 || indices.url == -1 || indices.location == -1;
     }
@@ -164,6 +166,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = in.readInt("statuses_count");
         favorites_count = in.readInt("favorites_count");
         listed_count = in.readInt("listed_count");
+        media_count = in.readInt("media_count");
         url_expanded = in.readString("url_expanded");
         is_following = in.readBoolean("is_following");
         background_color = in.readInt("background_color");
@@ -196,6 +199,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = in.readInt();
         favorites_count = in.readInt();
         listed_count = in.readInt();
+        media_count = in.readInt();
         url_expanded = in.readString();
         is_following = in.readInt() == 1;
         background_color = in.readInt();
@@ -234,6 +238,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         statuses_count = user.getStatusesCount();
         favorites_count = user.getFavouritesCount();
         listed_count = user.getListedCount();
+        media_count = user.getMediaCount();
         is_following = user.isFollowing();
         background_color = ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0);
         link_color = ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0);
@@ -270,8 +275,8 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeLong(account_id);
         out.writeLong(id);
         out.writeLong(created_at);
-        out.writeInt(is_protected ? 1 : 0);
-        out.writeInt(is_verified ? 1 : 0);
+        out.writeByte((byte) (is_protected ? 1 : 0));
+        out.writeByte((byte) (is_verified ? 1 : 0));
         out.writeString(name);
         out.writeString(screen_name);
         out.writeString(description_plain);
@@ -282,19 +287,20 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeString(profile_image_url);
         out.writeString(profile_banner_url);
         out.writeString(url);
-        out.writeInt(is_follow_request_sent ? 1 : 0);
+        out.writeByte((byte) (is_follow_request_sent ? 1 : 0));
         out.writeInt(followers_count);
         out.writeInt(friends_count);
         out.writeInt(statuses_count);
         out.writeInt(favorites_count);
         out.writeInt(listed_count);
+        out.writeInt(media_count);
         out.writeString(url_expanded);
-        out.writeInt(is_following ? 1 : 0);
+        out.writeByte((byte) (is_following ? 1 : 0));
         out.writeInt(background_color);
         out.writeInt(link_color);
         out.writeInt(text_color);
-        out.writeInt(is_cache ? 1 : 0);
-        out.writeInt(is_basic ? 1 : 0);
+        out.writeByte((byte) (is_cache ? 1 : 0));
+        out.writeByte((byte) (is_basic ? 1 : 0));
     }
 
     @Override
@@ -393,6 +399,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         out.writeInt("statuses_count", statuses_count);
         out.writeInt("favorites_count", favorites_count);
         out.writeInt("listed_count", listed_count);
+        out.writeInt("media_count", media_count);
         out.writeString("url_expanded", url_expanded);
         out.writeBoolean("is_following", is_following);
         out.writeInt("background_color", background_color);
@@ -405,7 +412,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
     public static final class CachedIndices {
 
         public final int id, name, screen_name, profile_image_url, created_at, is_protected,
-                is_verified, favorites_count, listed_count, followers_count, friends_count,
+                is_verified, favorites_count, listed_count, media_count, followers_count, friends_count,
                 statuses_count, location, description_plain, description_html, description_expanded,
                 url, url_expanded, profile_banner_url, is_following, background_color, link_color, text_color;
 
@@ -419,6 +426,7 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
             is_verified = cursor.getColumnIndex(CachedUsers.IS_VERIFIED);
             favorites_count = cursor.getColumnIndex(CachedUsers.FAVORITES_COUNT);
             listed_count = cursor.getColumnIndex(CachedUsers.LISTED_COUNT);
+            media_count = cursor.getColumnIndex(CachedUsers.LISTED_COUNT);
             followers_count = cursor.getColumnIndex(CachedUsers.FOLLOWERS_COUNT);
             friends_count = cursor.getColumnIndex(CachedUsers.FRIENDS_COUNT);
             statuses_count = cursor.getColumnIndex(CachedUsers.STATUSES_COUNT);

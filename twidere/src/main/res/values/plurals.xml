@@ -50,5 +50,13 @@
         <item quantity="one">@string/from_name_and_name</item>
         <item quantity="other">@string/from_name_and_N_others</item>
     </plurals>
+    <plurals name="N_statuses">
+        <item quantity="one">@string/N_statuses_quantity_one</item>
+        <item quantity="other">@string/N_statuses_quantity_other</item>
+    </plurals>
+    <plurals name="N_favorites">
+        <item quantity="one">@string/N_favorites_quantity_one</item>
+        <item quantity="other">@string/N_favorites_quantity_other</item>
+    </plurals>
 
 </resources>

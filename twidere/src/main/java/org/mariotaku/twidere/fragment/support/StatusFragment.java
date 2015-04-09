@@ -636,10 +636,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
                 final Spanned quote_text = Html.fromHtml(status.quote_text_html);
                 quoteTextView.setText(idx > 0 ? quote_text.subSequence(0, idx) : quote_text);
-                final SpannableString originalTweetLink = SpannableString.valueOf("Original tweet");
-                originalTweetLink.setSpan(new URLSpan(LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id).toString()),
-                        0, originalTweetLink.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                quoteTextView.append(originalTweetLink);
                 linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
 
@@ -907,6 +903,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             }
         }
+
     }
 
     public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements

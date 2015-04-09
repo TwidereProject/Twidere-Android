@@ -539,7 +539,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
                     final ContentValues values = new ContentValues();
                     values.put(Tabs.TYPE, type);
                     values.put(Tabs.ARGUMENTS, ParseUtils.bundleToJSON(spec.args));
-                    values.put(Tabs.NAME, spec.name);
+                    values.put(Tabs.NAME, ParseUtils.parseString(spec.name));
                     if (spec.icon instanceof Integer) {
                         values.put(Tabs.ICON, CustomTabUtils.findTabIconKey((Integer) spec.icon));
                     } else if (spec.icon instanceof File) {

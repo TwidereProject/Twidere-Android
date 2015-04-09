@@ -28,7 +28,7 @@ import static org.mariotaku.twidere.util.CompareUtils.objectEquals;
 
 public class TabSpec {
 
-	public final CharSequence name;
+	public CharSequence name;
 	public final Object icon;
 	public final Class<? extends Fragment> cls;
 	public final Bundle args;

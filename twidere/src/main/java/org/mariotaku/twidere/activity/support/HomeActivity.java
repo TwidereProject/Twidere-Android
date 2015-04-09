@@ -322,13 +322,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         mTabDisplayOption = getTabDisplayOptionInt(this);
 
+        final int tabColumns = getResources().getInteger(R.integer.default_tab_columns);
+
         mColorStatusFrameLayout.setOnFitSystemWindowsListener(this);
         ThemeUtils.applyBackground(mTabIndicator);
-        mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, 1);
+        mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, tabColumns);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabIndicator.setViewPager(mViewPager);
         mTabIndicator.setOnPageChangeListener(this);
+        mTabIndicator.setColumns(tabColumns);
         if (mTabDisplayOption != 0) {
             mTabIndicator.setTabDisplayOption(mTabDisplayOption);
         } else {
@@ -994,4 +997,14 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
+            if (mSlidingMenu != null) {
+                mSlidingMenu.toggle(true);
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
 }

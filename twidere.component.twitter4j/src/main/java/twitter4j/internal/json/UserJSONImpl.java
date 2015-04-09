@@ -72,6 +72,7 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
     private int friendsCount;
     private Date createdAt;
     private int favouritesCount;
+    private int mediaCount;
     private int utcOffset;
     private String timeZone;
     private String profileBackgroundImageUrl;
@@ -432,6 +433,11 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
                 + isTranslator + ", listedCount=" + listedCount + ", isFollowRequestSent=" + isFollowRequestSent + '}';
     }
 
+    @Override
+    public int getMediaCount() {
+        return mediaCount;
+    }
+
     private void init(final JSONObject json) throws TwitterException {
         try {
             id = getLong("id", json);
@@ -460,6 +466,7 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
             friendsCount = getInt("friends_count", json);
             createdAt = getDate("created_at", json, "EEE MMM dd HH:mm:ss z yyyy");
             favouritesCount = getInt("favourites_count", json);
+            mediaCount = getInt("media_count", json);
             utcOffset = getInt("utc_offset", json);
             timeZone = getRawString("time_zone", json);
             profileBackgroundImageUrl = getRawString("profile_background_image_url", json);
@@ -526,8 +533,6 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
             return users;
         } catch (final JSONException jsone) {
             throw new TwitterException(jsone);
-        } catch (final TwitterException te) {
-            throw te;
         }
     }
 
@@ -550,8 +555,6 @@ import static twitter4j.internal.util.InternalParseUtil.getRawString;
             return users;
         } catch (final JSONException jsone) {
             throw new TwitterException(jsone);
-        } catch (final TwitterException te) {
-            throw te;
         }
     }
 }

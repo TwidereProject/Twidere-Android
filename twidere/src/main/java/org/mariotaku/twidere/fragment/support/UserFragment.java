@@ -170,13 +170,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback,
         RefreshScrollTopInterface {
 
+    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
+
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
     public static final String TRANSITION_NAME_CARD = "card";
 
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
-    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
+
+    private static final int TAB_POSITION_STATUSES = 0;
+    private static final int TAB_POSITION_MEDIA = 1;
+    private static final int TAB_POSITION_FAVORITES = 2;
+
     private MediaLoaderWrapper mProfileImageLoader;
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
@@ -444,7 +450,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mUser = user;
         final FragmentActivity activity = getActivity();
         if (user == null || user.id <= 0 || activity == null) return;
-        final Resources res = getResources();
+        final Resources resources = getResources();
+        final Resources res = resources;
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
@@ -502,6 +509,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             getFriendship();
         }
         activity.setTitle(UserColorNameUtils.getDisplayName(activity, user, true));
+
         updateTitleColor();
         invalidateOptionsMenu();
     }
@@ -1278,11 +1286,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
         }
-        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), R.drawable.ic_action_quote, 0, null);
+        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), R.drawable.ic_action_quote, TAB_POSITION_STATUSES, null);
         if (Utils.isOfficialKeyAccount(context, accountId)) {
-            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, 1, null);
+            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, TAB_POSITION_MEDIA, null);
         }
-        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), R.drawable.ic_action_star, 2, null);
+        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), R.drawable.ic_action_star, TAB_POSITION_FAVORITES, null);
     }
 
     private boolean shouldUseNativeMenu() {

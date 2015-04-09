@@ -135,6 +135,8 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 
 	int getStatusesCount();
 
+	int getMediaCount();
+
 	String getTimeZone();
 
 	/**
