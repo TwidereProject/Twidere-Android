@@ -42,6 +42,7 @@ public abstract class TwitterCardFragmentFactory {
 
     public static Fragment createGenericPlayerFragment(ParcelableCardEntity card) {
         final ParcelableValueItem player_url = ParcelableCardEntity.getValue(card, "player_url");
+        if (player_url == null) return null;
         return CardBrowserFragment.show((String) player_url.value);
     }
 }

@@ -326,12 +326,12 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
 
         @Override
         public void onClick(View v) {
-            indicator.dispatchTabClick(getAdapterPosition());
+            indicator.dispatchTabClick(getLayoutPosition());
         }
 
         @Override
         public boolean onLongClick(View v) {
-            final int position = getAdapterPosition();
+            final int position = getLayoutPosition();
             if (position == RecyclerView.NO_POSITION) return false;
             return indicator.dispatchTabLongClick(position);
         }

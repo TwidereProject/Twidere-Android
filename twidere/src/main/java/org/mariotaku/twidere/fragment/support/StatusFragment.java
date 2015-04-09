@@ -749,10 +749,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     twitterCard.setCardSize(0, 0);
                 }
                 final Fragment cardFragment = TwitterCardUtils.createCardFragment(status.card);
-                final FragmentManager fm = fragment.getChildFragmentManager();
-                final FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.twitter_card, cardFragment);
-                ft.commit();
+                if (cardFragment != null) {
+                    final FragmentManager fm = fragment.getChildFragmentManager();
+                    final FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.twitter_card, cardFragment);
+                    ft.commit();
+                } else {
+                    twitterCard.setVisibility(View.GONE);
+                }
             } else {
                 twitterCard.setVisibility(View.GONE);
             }

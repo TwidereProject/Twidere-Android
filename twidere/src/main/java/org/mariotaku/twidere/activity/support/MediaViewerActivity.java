@@ -411,7 +411,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                     updateScaleLimit();
                 }
             } else {
-                mImageView.setImage(null);
+                mImageView.recycle();
                 mImageView.setTag(null);
                 mImageView.setVisibility(View.GONE);
                 Utils.showErrorMessage(getActivity(), null, data.exception, true);

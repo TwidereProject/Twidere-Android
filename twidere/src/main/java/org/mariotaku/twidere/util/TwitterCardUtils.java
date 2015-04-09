@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.graphics.Point;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
@@ -36,6 +37,7 @@ public class TwitterCardUtils {
     public static final String CARD_NAME_AUDIO = "audio";
     public static final String CARD_NAME_ANIMATED_GIF = "animated_gif";
 
+    @Nullable
     public static Fragment createCardFragment(ParcelableCardEntity card) {
         if (CARD_NAME_PLAYER.equals(card.name)) {
             final Fragment playerFragment = sFactory.createPlayerFragment(card);

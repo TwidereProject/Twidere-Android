@@ -3557,17 +3557,15 @@ public final class Utils implements Constants, TwitterConstants {
         scrollListToPosition(list, 0);
     }
 
-    public static void setMenuForStatus(final Context context, final Menu menu,
-                                        final ParcelableStatus status) {
-        final ParcelableCredentials account
-                = ParcelableAccount.getCredentials(context, status.account_id);
+    public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status) {
+        if (status == null) return;
+        final ParcelableCredentials account = ParcelableAccount.getCredentials(context, status.account_id);
         setMenuForStatus(context, menu, status, account);
     }
 
-    public static void setMenuForStatus(final Context context, final Menu menu,
-                                        final ParcelableStatus status,
+    public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status,
                                         final ParcelableCredentials account) {
-        if (context == null || menu == null || status == null) return;
+        if (context == null || menu == null || status == null || account == null) return;
         final Resources resources = context.getResources();
         final int retweetHighlight = resources.getColor(R.color.highlight_retweet);
         final int favoriteHighlight = resources.getColor(R.color.highlight_favorite);

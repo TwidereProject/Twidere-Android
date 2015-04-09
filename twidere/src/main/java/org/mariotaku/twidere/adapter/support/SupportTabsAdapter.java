@@ -160,7 +160,7 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
     @Override
     public void onPageSelected(final int position) {
         Log.d(LOGTAG, "onPageSelected " + position);
-        if (mIndicator == null) return;
+        if (mIndicator == null || position < 0 || position >= getCount()) return;
         announceForAccessibilityCompat(mContext, (View) mIndicator, getPageTitle(position), getClass());
     }
 
