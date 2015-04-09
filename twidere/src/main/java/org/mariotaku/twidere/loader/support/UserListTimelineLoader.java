@@ -35,12 +35,11 @@ import twitter4j.TwitterException;
 
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
-public class UserListTimelineLoader extends Twitter4JStatusesLoader {
+public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
 
     private final long mUserId;
     private final String mScreenName, mListName;
     private final long mListId;
-    private final boolean mFiltersForRts;
 
     public UserListTimelineLoader(final Context context, final long accountId, final long listId,
                                   final long userId, final String screenName, final String listName,
@@ -51,28 +50,25 @@ public class UserListTimelineLoader extends Twitter4JStatusesLoader {
         mUserId = userId;
         mScreenName = screenName;
         mListName = listName;
-        mFiltersForRts = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getBoolean(
-                KEY_FILTERS_FOR_RTS, true);
     }
 
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
         if (mListId > 0)
             return twitter.getUserListStatuses(mListId, paging);
         else if (mListName == null)
-            return null;
+            throw new TwitterException("No list name or id given");
         else if (mUserId > 0)
             return twitter.getUserListStatuses(mListName.replace(' ', '-'), mUserId, paging);
         else if (mScreenName != null)
             return twitter.getUserListStatuses(mListName.replace(' ', '-'), mScreenName, paging);
-        return null;
+        throw new TwitterException("User id or screen name is required for list name");
     }
 
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return isFiltered(database, status, mFiltersForRts);
+        return isFiltered(database, status, true);
     }
 
 }

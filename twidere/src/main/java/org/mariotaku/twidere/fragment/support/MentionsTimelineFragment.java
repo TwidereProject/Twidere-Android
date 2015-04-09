@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 
 import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
@@ -57,8 +56,7 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
 
     @Override
     protected boolean isFilterEnabled() {
-        final SharedPreferences pref = getSharedPreferences();
-        return pref != null && pref.getBoolean(KEY_FILTERS_IN_MENTIONS_TIMELINE, true);
+        return true;
     }
 
     @Override

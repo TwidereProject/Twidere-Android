@@ -290,7 +290,7 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
 
     }
 
-    private static class DeleteDraftsTask extends AsyncTask<Void, Void, Integer> {
+    private static class DeleteDraftsTask extends AsyncTask<Object, Object, Integer> {
 
         private static final String FRAGMENT_TAG_DELETING_DRAFTS = "deleting_drafts";
         private final FragmentActivity mActivity;
@@ -306,7 +306,7 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
         }
 
         @Override
-        protected Integer doInBackground(final Void... params) {
+        protected Integer doInBackground(final Object... params) {
             final ContentResolver resolver = mActivity.getContentResolver();
             final Expression where = Expression.in(new Column(Drafts._ID), new RawItemArray(mIds));
             final String[] projection = {Drafts.MEDIA};

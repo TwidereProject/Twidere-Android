@@ -30,9 +30,11 @@ public class GetStatusesTaskEvent {
     @NonNull
     public final Uri uri;
     public final boolean running;
+    public final Exception exception;
 
-    public GetStatusesTaskEvent(@NonNull Uri uri, boolean running) {
+    public GetStatusesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
         this.uri = uri;
         this.running = running;
+        this.exception = exception;
     }
 }

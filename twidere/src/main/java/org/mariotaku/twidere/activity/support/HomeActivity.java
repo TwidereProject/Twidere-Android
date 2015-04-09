@@ -943,7 +943,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     }
 
-    private static class UpdateUnreadCountTask extends AsyncTask<Void, Void, Map<SupportTabSpec, Integer>> {
+    private static class UpdateUnreadCountTask extends AsyncTask<Object, Object, Map<SupportTabSpec, Integer>> {
         private final Context mContext;
         private final ReadStateManager mReadStateManager;
         private final TabPagerIndicator mIndicator;
@@ -957,7 +957,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
 
         @Override
-        protected Map<SupportTabSpec, Integer> doInBackground(final Void... params) {
+        protected Map<SupportTabSpec, Integer> doInBackground(final Object... params) {
             final Map<SupportTabSpec, Integer> result = new HashMap<>();
             for (SupportTabSpec spec : mTabs) {
                 switch (spec.type) {

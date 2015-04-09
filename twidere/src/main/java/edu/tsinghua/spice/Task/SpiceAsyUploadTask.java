@@ -23,7 +23,7 @@ import static org.mariotaku.twidere.util.Utils.copyStream;
  * Created by Denny C. Ng on 2/20/15.
  */
 
-public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
+public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
 
     private static final String PROFILE_SERVER_URL = "http://twidere-spice.mariotaku.org:18080/spice/usage";
 
@@ -73,7 +73,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(final Void... params) {
+    protected Object doInBackground(final Object... params) {
 
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
 

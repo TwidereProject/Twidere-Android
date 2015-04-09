@@ -215,7 +215,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
 
     }
 
-    static class GetRequestTokenTask extends AsyncTask<Void, Void, RequestToken> {
+    static class GetRequestTokenTask extends AsyncTask<Object, Object, RequestToken> {
 
         private final String mConsumerKey, mConsumerSecret;
         private final TwidereApplication mApplication;
@@ -232,7 +232,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
         }
 
         @Override
-        protected RequestToken doInBackground(final Void... params) {
+        protected RequestToken doInBackground(final Object... params) {
             final ConfigurationBuilder cb = new ConfigurationBuilder();
             final boolean enable_gzip_compressing = mPreferences.getBoolean(KEY_GZIP_COMPRESSING, false);
             final boolean ignore_ssl_error = mPreferences.getBoolean(KEY_IGNORE_SSL_ERROR, false);

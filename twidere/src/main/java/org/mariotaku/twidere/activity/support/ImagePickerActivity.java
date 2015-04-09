@@ -186,7 +186,7 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
 		}
 	}
 
-	private static class CopyImageTask extends AsyncTask<Void, Void, SingleResponse<File>> {
+	private static class CopyImageTask extends AsyncTask<Object, Object, SingleResponse<File>> {
 		private final ImagePickerActivity mActivity;
 		private final Uri mUri;
 
@@ -198,7 +198,7 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
 		}
 
 		@Override
-		protected SingleResponse<File> doInBackground(final Void... params) {
+		protected SingleResponse<File> doInBackground(final Object... params) {
 			final ContentResolver cr = mActivity.getContentResolver();
 			InputStream is = null;
 			OutputStream os = null;

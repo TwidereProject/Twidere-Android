@@ -33,7 +33,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-public class UserFavoritesLoader extends Twitter4JStatusesLoader {
+public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
 
     private final long mUserId;
     private final String mUserScreenName;

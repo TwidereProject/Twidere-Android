@@ -54,7 +54,11 @@ public class ShortTimeView extends ThemedTextView implements Constants, OnShared
     public ShortTimeView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         mTicker = new TickerRunnable(this);
-        mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        if (!isInEditMode()) {
+            mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        } else {
+            mPreferences = null;
+        }
         if (mPreferences != null) {
             mPreferences.registerOnSharedPreferenceChangeListener(this);
         }

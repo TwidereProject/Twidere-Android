@@ -126,6 +126,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
         timeView.setTime(System.currentTimeMillis());
         mediaPreview.setVisibility(adapter.isMediaPreviewEnabled() ? View.VISIBLE : View.GONE);
         mediaPreview.displayMedia(R.drawable.nyan_stars_background);
+        extraTypeView.setImageResource(R.drawable.ic_action_gallery);
     }
 
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {

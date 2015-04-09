@@ -36,7 +36,7 @@ import twitter4j.User;
 
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
-public class RetweetsOfMeLoader extends Twitter4JStatusesLoader {
+public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
 
     private int mTotalItemsCount;
 

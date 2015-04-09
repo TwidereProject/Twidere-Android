@@ -255,9 +255,6 @@ public interface SharedPreferenceConstants {
     String KEY_CONSUMER_KEY = "consumer_key";
     @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_SECRET_3)
     String KEY_CONSUMER_SECRET = "consumer_secret";
-    String KEY_FILTERS_IN_HOME_TIMELINE = "filters_in_home_timeline";
-    String KEY_FILTERS_IN_MENTIONS_TIMELINE = "filters_in_mentions";
-    String KEY_FILTERS_FOR_RTS = "filters_for_rts";
     String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_CARD_ANIMATION = "card_animation";

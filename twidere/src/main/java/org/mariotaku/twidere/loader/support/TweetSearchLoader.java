@@ -35,18 +35,15 @@ import twitter4j.TwitterException;
 
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
-public class TweetSearchLoader extends Twitter4JStatusesLoader {
+public class TweetSearchLoader extends TwitterAPIStatusesLoader {
 
     private final String mQuery;
-    private final boolean mFiltersForRts;
 
     public TweetSearchLoader(final Context context, final long accountId, final String query,
                              final long sinceId, final long maxId, final List<ParcelableStatus> data,
                              final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mQuery = query;
-        mFiltersForRts = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getBoolean(
-                KEY_FILTERS_FOR_RTS, true);
     }
 
     @NonNull
@@ -66,7 +63,7 @@ public class TweetSearchLoader extends Twitter4JStatusesLoader {
 
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return isFiltered(database, status, mFiltersForRts);
+        return isFiltered(database, status, true);
     }
 
 }

@@ -510,10 +510,10 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
 //    @Override
 //    public void onRefreshFromEnd() {
-//        new TwidereAsyncTask<Void, Void, long[][]>() {
+//        new TwidereAsyncTask<Object, Object, long[][]>() {
 //
 //            @Override
-//            protected long[][] doInBackground(final Void... params) {
+//            protected long[][] doInBackground(final Object... params) {
 //                final long[][] result = new long[2][];
 //                result[0] = getActivatedAccountIds(getActivity());
 //                result[1] = getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
@@ -677,10 +677,10 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
 //    private void loadMoreMessages() {
 //        if (isRefreshing()) return;
-//        new TwidereAsyncTask<Void, Void, long[][]>() {
+//        new TwidereAsyncTask<Object, Object, long[][]>() {
 //
 //            @Override
-//            protected long[][] doInBackground(final Void... params) {
+//            protected long[][] doInBackground(final Object... params) {
 //                final long[][] result = new long[3][];
 //                result[0] = getActivatedAccountIds(getActivity());
 //                result[1] = getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
@@ -786,7 +786,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
     }
 
-    private static class SetReadStateTask extends AsyncTask<Void, Void, Cursor> {
+    private static class SetReadStateTask extends AsyncTask<Object, Object, Cursor> {
         private final Context mContext;
         private final ReadStateManager mReadStateManager;
         private final ParcelableAccount mAccount;
@@ -811,7 +811,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
 
         @Override
-        protected Cursor doInBackground(Void... params) {
+        protected Cursor doInBackground(Object... params) {
             final ContentResolver resolver = mContext.getContentResolver();
             final String[] projection = {ConversationEntries.MESSAGE_ID};
             final String selection = Expression.and(

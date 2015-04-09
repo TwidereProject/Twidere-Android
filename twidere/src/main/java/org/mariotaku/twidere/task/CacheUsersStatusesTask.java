@@ -41,7 +41,7 @@ import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createStatus;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
-public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<twitter4j.Status>, Void, Void> implements Constants {
+public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<twitter4j.Status>, Object, Object> implements Constants {
 
     private final Context context;
 
@@ -51,7 +51,7 @@ public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<twitte
 
     @SafeVarargs
     @Override
-    protected final Void doInBackground(final TwitterListResponse<twitter4j.Status>... args) {
+    protected final Object doInBackground(final TwitterListResponse<twitter4j.Status>... args) {
         if (args == null || args.length == 0) return null;
         final ContentResolver resolver = context.getContentResolver();
         final Extractor extractor = new Extractor();

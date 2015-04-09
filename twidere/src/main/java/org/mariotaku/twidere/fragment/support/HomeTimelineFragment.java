@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -42,8 +41,7 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
 
     @Override
     protected boolean isFilterEnabled() {
-        final SharedPreferences pref = getSharedPreferences();
-        return pref != null && pref.getBoolean(KEY_FILTERS_IN_HOME_TIMELINE, true);
+        return true;
     }
 
     @Override

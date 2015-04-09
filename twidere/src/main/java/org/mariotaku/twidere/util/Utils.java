@@ -537,21 +537,17 @@ public final class Utils implements Constants, TwitterConstants {
         return builder.build();
     }
 
-    public static Expression buildStatusFilterWhereClause(final String table, final Expression extraSelection,
-                                                          final boolean enableInRts) {
+    public static Expression buildStatusFilterWhereClause(final String table, final Expression extraSelection) {
         if (table == null) return null;
         final SQLSelectQuery filteredUsersQuery = SQLQueryBuilder
                 .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
                 .from(new Tables(Filters.Users.TABLE_NAME))
                 .build();
-        final Expression filteredUsersWhere;
-        if (enableInRts) {
-            filteredUsersWhere = Expression.or(
-                    Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery),
-                    Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), filteredUsersQuery));
-        } else {
-            filteredUsersWhere = Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery);
-        }
+        final Expression filteredUsersWhere = Expression.or(
+                Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Statuses.QUOTED_BY_USER_ID), filteredUsersQuery)
+        );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(true, new Column(new Table(table), Statuses._ID))
                 .from(new Tables(table))
@@ -559,18 +555,30 @@ public final class Utils implements Constants, TwitterConstants {
                 .union()
                 .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Sources.TABLE_NAME))
-                .where(Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
-                        "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"))
+                .where(Expression.or(
+                        Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTE_SOURCE),
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
+                ))
                 .union()
                 .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Keywords.TABLE_NAME))
-                .where(Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_PLAIN),
-                        "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"))
+                .where(Expression.or(
+                        Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_PLAIN),
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTE_TEXT_PLAIN),
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
+                ))
                 .union()
                 .select(true, new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
-                .where(Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_HTML),
-                        "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"));
+                .where(Expression.or(
+                        Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_HTML),
+                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTE_TEXT_HTML),
+                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'")
+                ));
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build()),
                 Expression.equals(new Column(new Table(table), Statuses.IS_GAP), 1)
@@ -1455,7 +1463,7 @@ public final class Utils implements Constants, TwitterConstants {
         if (context == null) return 0;
         final ContentResolver resolver = context.getContentResolver();
         final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{Statuses.STATUS_ID},
-                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context)).getSQL(),
+                buildStatusFilterWhereClause(getTableNameByUri(uri), null).getSQL(),
                 null, null);
         if (cur == null) return 0;
         try {
@@ -1477,7 +1485,7 @@ public final class Utils implements Constants, TwitterConstants {
         final Expression selection = Expression.and(
                 Expression.in(new Column(Statuses.ACCOUNT_ID), idsIn),
                 Expression.greaterThan(Statuses.STATUS_ID, sinceId),
-                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context))
+                buildStatusFilterWhereClause(getTableNameByUri(uri), null)
         );
         final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{SQLFunctions.COUNT()},
                 selection.getSQL(),
@@ -1497,7 +1505,7 @@ public final class Utils implements Constants, TwitterConstants {
         if (context == null) return new long[0];
         final ContentResolver resolver = context.getContentResolver();
         final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{Statuses.STATUS_ID},
-                buildStatusFilterWhereClause(getTableNameByUri(uri), null, shouldEnableFiltersForRTs(context)).getSQL(),
+                buildStatusFilterWhereClause(getTableNameByUri(uri), null).getSQL(),
                 null, null);
         if (cur == null) return new long[0];
         final long[] ids = new long[cur.getCount()];
@@ -3665,12 +3673,6 @@ public final class Utils implements Constants, TwitterConstants {
                 Build.PRODUCT);
         cb.setHttpUserAgent(String.format(Locale.ROOT, "TwitterAndroid/%s (%d-%c-%d) %s",
                 "5.32.0", 3030745, 'r', 692, deviceInfo));
-    }
-
-    public static boolean shouldEnableFiltersForRTs(final Context context) {
-        if (context == null) return false;
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return prefs.getBoolean(KEY_FILTERS_FOR_RTS, true);
     }
 
     public static boolean shouldForceUsingPrivateAPIs(final Context context) {

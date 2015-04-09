@@ -50,17 +50,11 @@ public class MediaLoaderWrapper implements Constants {
         final DisplayImageOptions.Builder profileOptsBuilder = new DisplayImageOptions.Builder();
         profileOptsBuilder.cacheInMemory(true);
         profileOptsBuilder.cacheOnDisk(true);
-//        profileOptsBuilder.showImageForEmptyUri(R.drawable.ic_profile_image_default);
-//        profileOptsBuilder.showImageOnFail(R.drawable.ic_profile_image_default);
-//        profileOptsBuilder.showImageOnLoading(R.drawable.ic_profile_image_default);
         profileOptsBuilder.bitmapConfig(Bitmap.Config.ARGB_8888);
         profileOptsBuilder.resetViewBeforeLoading(true);
         final DisplayImageOptions.Builder ovalProfileOptsBuilder = new DisplayImageOptions.Builder();
         ovalProfileOptsBuilder.cacheInMemory(true);
         ovalProfileOptsBuilder.cacheOnDisk(true);
-//        ovalProfileOptsBuilder.showImageForEmptyUri(R.drawable.ic_profile_image_default);
-//        ovalProfileOptsBuilder.showImageOnFail(R.drawable.ic_profile_image_default);
-//        ovalProfileOptsBuilder.showImageOnLoading(R.drawable.ic_profile_image_default);
         ovalProfileOptsBuilder.bitmapConfig(Bitmap.Config.ARGB_8888);
         ovalProfileOptsBuilder.displayer(new OvalBitmapDisplayer());
         ovalProfileOptsBuilder.resetViewBeforeLoading(true);
@@ -77,7 +71,6 @@ public class MediaLoaderWrapper implements Constants {
         bannerOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
         bannerOptsBuilder.displayer(new FadeInBitmapDisplayer(200, true, true, true));
         final DisplayImageOptions.Builder dashboardProfileOptsBuilder = new DisplayImageOptions.Builder();
-//        dashboardProfileOptsBuilder.showImageOnLoading(android.R.color.transparent);
         dashboardProfileOptsBuilder.cacheInMemory(true);
         dashboardProfileOptsBuilder.cacheOnDisk(true);
         dashboardProfileOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);

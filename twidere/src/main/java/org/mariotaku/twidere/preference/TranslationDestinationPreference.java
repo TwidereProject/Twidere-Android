@@ -156,7 +156,7 @@ public class TranslationDestinationPreference extends Preference implements Cons
 
 	}
 
-	class GetLanguagesTask extends AsyncTask<Void, Void, ResponseList<Language>> implements OnCancelListener {
+	class GetLanguagesTask extends AsyncTask<Object, Object, ResponseList<Language>> implements OnCancelListener {
 
 		private final ProgressDialog mProgress;
 
@@ -170,7 +170,7 @@ public class TranslationDestinationPreference extends Preference implements Cons
 		}
 
 		@Override
-		protected ResponseList<Language> doInBackground(final Void... args) {
+		protected ResponseList<Language> doInBackground(final Object... args) {
 			final Twitter twitter = getDefaultTwitterInstance(getContext(), false);
 			final String pref = mPreferences.getString(KEY_TRANSLATION_DESTINATION, null);
 			if (twitter == null) return null;

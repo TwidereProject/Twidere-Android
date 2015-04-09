@@ -95,12 +95,6 @@ public class FiltersActivity extends BaseActionBarActivity implements TabListene
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        final boolean enable_in_home_timeline = mPreferences.getBoolean(KEY_FILTERS_IN_HOME_TIMELINE, true);
-        final boolean enable_in_mentions = mPreferences.getBoolean(KEY_FILTERS_IN_MENTIONS_TIMELINE, true);
-        final boolean enable_for_rts = mPreferences.getBoolean(KEY_FILTERS_FOR_RTS, true);
-        menu.findItem(R.id.enable_in_home_timeline).setChecked(enable_in_home_timeline);
-        menu.findItem(R.id.enable_in_mentions).setChecked(enable_in_mentions);
-        menu.findItem(R.id.enable_for_rts).setChecked(enable_for_rts);
         return true;
     }
 
@@ -130,24 +124,6 @@ public class FiltersActivity extends BaseActionBarActivity implements TabListene
                 dialog.setArguments(args);
                 dialog.show(getSupportFragmentManager(), "add_rule");
                 return true;
-            }
-            case R.id.enable_in_home_timeline: {
-                final SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putBoolean(KEY_FILTERS_IN_HOME_TIMELINE, !item.isChecked());
-                editor.apply();
-                break;
-            }
-            case R.id.enable_in_mentions: {
-                final SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putBoolean(KEY_FILTERS_IN_MENTIONS_TIMELINE, !item.isChecked());
-                editor.apply();
-                break;
-            }
-            case R.id.enable_for_rts: {
-                final SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putBoolean(KEY_FILTERS_FOR_RTS, !item.isChecked());
-                editor.apply();
-                break;
             }
         }
         return false;

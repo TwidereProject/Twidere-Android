@@ -15,24 +15,25 @@
         android:key="name_first"
         android:order="22"
         android:title="@string/name_first"/>
+
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
         android:key="display_profile_image"
         android:order="23"
         android:title="@string/profile_image"/>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
-        android:key="media_preview"
-        android:order="24"
-        android:title="@string/media_preview"/>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
         android:entryValues="@array/values_profile_image_style"
         android:key="profile_image_style"
-        android:order="25"
+        android:order="24"
         android:title="@string/profile_image_style"/>
 
+    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        android:defaultValue="false"
+        android:key="media_preview"
+        android:order="25"
+        android:title="@string/media_preview"/>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="crop"
         android:entries="@array/entries_media_preview_style"

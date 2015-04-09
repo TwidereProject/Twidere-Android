@@ -36,7 +36,7 @@ import twitter4j.TwitterException;
 import static org.mariotaku.twidere.util.Utils.getAccountId;
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
-public class UserTimelineLoader extends Twitter4JStatusesLoader {
+public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
     private final long mUserId;
     private final String mUserScreenName;

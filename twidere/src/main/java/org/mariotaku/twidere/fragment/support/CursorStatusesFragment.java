@@ -52,7 +52,6 @@ import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
 import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.getOldestStatusIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
-import static org.mariotaku.twidere.util.Utils.shouldEnableFiltersForRTs;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -185,10 +184,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     @Override
     public void onLoadMoreContents() {
         super.onLoadMoreContents();
-        AsyncTaskUtils.executeTask(new AsyncTask<Void, Void, long[][]>() {
+        AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
 
             @Override
-            protected long[][] doInBackground(final Void... params) {
+            protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[1] = getOldestStatusIds(result[0]);
@@ -205,10 +204,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     public boolean triggerRefresh() {
-        AsyncTaskUtils.executeTask(new AsyncTask<Void, Void, long[][]>() {
+        AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
 
             @Override
-            protected long[][] doInBackground(final Void... params) {
+            protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[2] = getNewestStatusIds(result[0]);
@@ -226,7 +225,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     protected Expression getFiltersWhere(String table) {
         if (!isFilterEnabled()) return null;
-        return buildStatusFilterWhereClause(table, null, shouldEnableFiltersForRTs(getActivity()));
+        return buildStatusFilterWhereClause(table, null);
     }
 
     protected long[] getNewestStatusIds(long[] accountIds) {

@@ -103,7 +103,7 @@ public class DataImportActivity extends BaseActionBarActivity implements FileSel
 		}
 	}
 
-	static class ImportSettingsTask extends AsyncTask<Void, Void, Boolean> {
+	static class ImportSettingsTask extends AsyncTask<Object, Object, Boolean> {
 		private static final String FRAGMENT_TAG = "import_settings_dialog";
 
 		private final DataImportActivity mActivity;
@@ -117,7 +117,7 @@ public class DataImportActivity extends BaseActionBarActivity implements FileSel
 		}
 
 		@Override
-		protected Boolean doInBackground(final Void... params) {
+		protected Boolean doInBackground(final Object... params) {
 			if (mPath == null) return false;
 			final File file = new File(mPath);
 			if (!file.isFile()) return false;
@@ -152,7 +152,7 @@ public class DataImportActivity extends BaseActionBarActivity implements FileSel
 
 	}
 
-	static class OpenImportTypeTask extends AsyncTask<Void, Void, Integer> {
+	static class OpenImportTypeTask extends AsyncTask<Object, Object, Integer> {
 
 		private static final String FRAGMENT_TAG = "read_settings_data_dialog";
 
@@ -165,7 +165,7 @@ public class DataImportActivity extends BaseActionBarActivity implements FileSel
 		}
 
 		@Override
-		protected Integer doInBackground(final Void... params) {
+		protected Integer doInBackground(final Object... params) {
 			if (mPath == null) return 0;
 			final File file = new File(mPath);
 			if (!file.isFile()) return 0;

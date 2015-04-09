@@ -19,7 +19,7 @@ import twitter4j.http.HttpResponse;
 
 import static org.mariotaku.twidere.util.Utils.copyStream;
 
-public class UploadTask extends AsyncTask<Void, Void, Void> {
+public class UploadTask extends AsyncTask<Object, Object, Object> {
 
     private static final String LAST_UPLOAD_DATE = "last_upload_time";
     private static final double MILLSECS_HALF_DAY = 1000 * 60 * 60 * 12;
@@ -74,7 +74,7 @@ public class UploadTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(final Void... params) {
+    protected Object doInBackground(final Object... params) {
 
         final SharedPreferences prefs = context.getSharedPreferences("ucd_data_profiling", Context.MODE_PRIVATE);
 

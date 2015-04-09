@@ -636,6 +636,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
                 final Spanned quote_text = Html.fromHtml(status.quote_text_html);
                 quoteTextView.setText(idx > 0 ? quote_text.subSequence(0, idx - 1) : quote_text);
+                final SpannableString originalTweetLink = SpannableString.valueOf("Original tweet");
+                originalTweetLink.setSpan(new URLSpan(LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id).toString()),
+                        0, originalTweetLink.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                quoteTextView.append(originalTweetLink);
                 linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
 
@@ -1140,6 +1144,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public void setLoadMoreIndicatorVisible(boolean enabled) {
             if (mLoadMoreIndicatorVisible == enabled) return;
             mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
+            updateItemDecoration();
             notifyDataSetChanged();
         }
 
@@ -1440,10 +1445,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private void updateItemDecoration() {
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
             decoration.setDecorationStart(0);
-            if (mReplies != null) {
-                decoration.setDecorationEndOffset(2);
-            } else {
+            if (isLoadMoreIndicatorVisible()) {
                 decoration.setDecorationEndOffset(3);
+            } else {
+                decoration.setDecorationEndOffset(mReplies != null && mReplies.size() > 0 ? 1 : 2);
             }
             mFragment.mRecyclerView.invalidateItemDecorations();
         }

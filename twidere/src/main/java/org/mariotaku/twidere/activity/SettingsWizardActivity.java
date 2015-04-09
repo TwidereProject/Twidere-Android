@@ -504,7 +504,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
         }
     }
 
-    static abstract class AbsInitialSettingsTask extends AsyncTask<Void, Void, Boolean> {
+    static abstract class AbsInitialSettingsTask extends AsyncTask<Object, Object, Boolean> {
 
         private static final String FRAGMENT_TAG = "initial_settings_dialog";
 
@@ -518,7 +518,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
         }
 
         @Override
-        protected Boolean doInBackground(final Void... params) {
+        protected Boolean doInBackground(final Object... params) {
             final ContentResolver resolver = mActivity.getContentResolver();
             final List<SupportTabSpec> tabs = CustomTabUtils.getHomeTabs(mActivity);
             if (wasConfigured(tabs)) return true;
