@@ -256,6 +256,7 @@ public interface SharedPreferenceConstants {
     String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_CARD_ANIMATION = "card_animation";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_UNREAD_COUNT = "unread_count";
     String KEY_NOTIFICATION = "notification";
     String KEY_NOTIFICATION_TYPE_HOME = "notification_type_home";
@@ -302,7 +303,9 @@ public interface SharedPreferenceConstants {
 
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_THUMBOR_ENABLED = "thumbor_enabled";
+    @Preference(type = STRING, hasDefault = false)
     String KEY_THUMBOR_ADDRESS = "thumbor_address";
+    @Preference(type = STRING, hasDefault = false)
     String KEY_THUMBOR_SECURITY_KEY = "thumbor_security_key";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_HIDE_CARD_ACTIONS = "hide_card_actions";
