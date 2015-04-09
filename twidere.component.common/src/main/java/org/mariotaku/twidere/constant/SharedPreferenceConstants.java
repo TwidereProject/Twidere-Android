@@ -157,8 +157,6 @@ public interface SharedPreferenceConstants {
     String KEY_GZIP_COMPRESSING = "gzip_compressing";
     @Preference(type = BOOLEAN)
     String KEY_IGNORE_SSL_ERROR = "ignore_ssl_error";
-    @Preference(type = BOOLEAN)
-    String KEY_LOAD_MORE_AUTOMATICALLY = "load_more_automatically";
     @Preference(type = STRING)
     String KEY_QUOTE_FORMAT = "quote_format";
     @Preference(type = BOOLEAN)

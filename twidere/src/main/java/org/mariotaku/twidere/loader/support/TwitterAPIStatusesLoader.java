@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -85,11 +86,14 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             }
         }
         if (!isFromUser()) return data;
+        final Twitter twitter = getTwitter();
+        if (twitter == null) return null;
         final List<Status> statuses;
         final boolean truncated;
         final Context context = getContext();
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int loadItemLimit = prefs.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
+        final boolean noItemsBefore = data == null || data.isEmpty();
         try {
             final Paging paging = new Paging();
             paging.setCount(loadItemLimit);
@@ -100,23 +104,41 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 paging.setSinceId(mSinceId - 1);
             }
             statuses = new ArrayList<>();
-            final Twitter twitter = getTwitter();
-            if (twitter == null) {
-                throw new TwitterException("Account is null");
-            }
             truncated = truncateStatuses(getStatuses(twitter, paging), statuses, mSinceId);
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
             Log.w(LOGTAG, e);
             return new CopyOnWriteArrayList<>(data);
         }
-        final long minStatusId = statuses.isEmpty() ? -1 : Collections.min(statuses).getId();
-        final boolean insertGap = minStatusId > 0 && statuses.size() > 1 && !data.isEmpty() && !truncated;
-        for (final Status status : statuses) {
+
+        final long[] statusIds = new long[statuses.size()];
+        long minId = -1;
+        int minIdx = -1;
+        int rowsDeleted = 0;
+        for (int i = 0, j = statuses.size(); i < j; i++) {
+            final twitter4j.Status status = statuses.get(i);
             final long id = status.getId();
-            final boolean deleted = deleteStatus(data, id);
-            data.add(new ParcelableStatus(status, mAccountId, minStatusId == id && insertGap && !deleted));
+            if (minId == -1 || id < minId) {
+                minId = id;
+                minIdx = i;
+            }
+            statusIds[i] = id;
+
+            if (deleteStatus(data, status.getId())) {
+                rowsDeleted++;
+            }
         }
+
+        // Insert a gap.
+        final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, mMaxId);
+        final boolean noRowsDeleted = rowsDeleted == 0;
+        final boolean insertGap = minId > 0 && (noRowsDeleted || deletedOldGap) && !truncated
+                && !noItemsBefore && statuses.size() > 1;
+        for (int i = 0, j = statuses.size(); i < j; i++) {
+            final Status status = statuses.get(i);
+            data.add(new ParcelableStatus(status, mAccountId, insertGap && minIdx == i));
+        }
+
         final ParcelableStatus[] array = data.toArray(new ParcelableStatus[data.size()]);
         for (int i = 0, size = array.length; i < size; i++) {
             final ParcelableStatus status = array[i];

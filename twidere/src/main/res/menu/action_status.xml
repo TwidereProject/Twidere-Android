@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@id/reply"
-        android:icon="@drawable/ic_action_reply"
-        android:title="@string/reply"/>
-    <item
-        android:id="@id/retweet"
-        android:icon="@drawable/ic_action_retweet"
-        android:title="@string/retweet"/>
-    <item
-        android:id="@id/quote"
-        android:icon="@drawable/ic_action_quote"
-        android:title="@string/quote"/>
-    <item
-        android:id="@id/favorite"
-        android:icon="@drawable/ic_action_star"
-        android:title="@string/favorite"/>
     <item
         android:id="@id/share"
         android:icon="@drawable/ic_action_share"
