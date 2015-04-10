@@ -50,7 +50,9 @@ import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
@@ -80,10 +82,26 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     private SharedPreferences mPreferences;
 
     private DraftsAdapter mAdapter;
-    private ListView mListView;
 
+    private ListView mListView;
+    private View mEmptyView;
+    private TextView mEmptyText;
+    private ImageView mEmptyIcon;
+    private View mListContainer, mProgressContainer;
 
     private float mTextSize;
+
+    @Override
+    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+        getMenuInflater().inflate(R.menu.action_multi_select_drafts, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+        updateTitle(mode);
+        return true;
+    }
 
     @Override
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
@@ -123,9 +141,8 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     }
 
     @Override
-    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        getMenuInflater().inflate(R.menu.action_multi_select_drafts, menu);
-        return true;
+    public void onDestroyActionMode(final ActionMode mode) {
+
     }
 
     @Override
@@ -137,8 +154,14 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     }
 
     @Override
-    public void onDestroyActionMode(final ActionMode mode) {
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+        mAdapter.swapCursor(cursor);
+        setListShown(true);
+    }
 
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
     }
 
     @Override
@@ -158,16 +181,6 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     }
 
     @Override
-    public void onLoaderReset(final Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
-    }
-
-    @Override
-    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mAdapter.swapCursor(cursor);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_HOME: {
@@ -179,29 +192,26 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     }
 
     @Override
-    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
-        updateTitle(mode);
-        return true;
-    }
-
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mResolver = getContentResolver();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
-        setContentView(R.layout.activity_drafts);
+        setContentView(R.layout.layout_list_with_empty_view);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         mAdapter = new DraftsAdapter(this);
-        mListView = (ListView) findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(mEmptyView);
         mListView.setOnItemClickListener(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(this);
+        mEmptyIcon.setImageResource(R.drawable.ic_info_drafts);
+        mEmptyText.setText(R.string.drafts_hint_messages);
         getSupportLoaderManager().initLoader(0, null, this);
+        setListShown(false);
     }
 
     @Override
@@ -227,6 +237,22 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
+        mListView = (ListView) findViewById(android.R.id.list);
+        mEmptyView = findViewById(android.R.id.empty);
+        mEmptyText = (TextView) findViewById(R.id.empty_text);
+        mEmptyIcon = (ImageView) findViewById(R.id.empty_icon);
+        mProgressContainer = findViewById(R.id.progress_container);
+        mListContainer = findViewById(R.id.list_container);
+    }
+
+    public void setListShown(boolean listShown) {
+        mListContainer.setVisibility(listShown ? View.VISIBLE : View.GONE);
+        mProgressContainer.setVisibility(listShown ? View.GONE : View.VISIBLE);
     }
 
     private void editDraft(final DraftItem draft) {
@@ -333,19 +359,6 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
         }
 
         @Override
-        protected void onPostExecute(final Integer result) {
-            super.onPostExecute(result);
-            final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DELETING_DRAFTS);
-            if (f instanceof DialogFragment) {
-                ((DialogFragment) f).dismiss();
-            }
-            for (long id : mIds) {
-                final String tag = Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(id)).toString();
-                mNotificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS);
-            }
-        }
-
-        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mHandler.post(new Runnable() {
@@ -356,6 +369,19 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
                     f.setCancelable(false);
                 }
             });
+        }
+
+        @Override
+        protected void onPostExecute(final Integer result) {
+            super.onPostExecute(result);
+            final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DELETING_DRAFTS);
+            if (f instanceof DialogFragment) {
+                ((DialogFragment) f).dismiss();
+            }
+            for (long id : mIds) {
+                final String tag = Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(id)).toString();
+                mNotificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS);
+            }
         }
     }
 }

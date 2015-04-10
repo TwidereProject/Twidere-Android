@@ -92,7 +92,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.FlymeUtils;
-import org.mariotaku.twidere.util.HotKeyHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -149,8 +149,8 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     private NotificationManager mNotificationManager;
 
     private MultiSelectEventHandler mMultiSelectHandler;
-    private HotKeyHandler mHotKeyHandler;
     private ReadStateManager mReadStateManager;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
 
     private SupportTabsAdapter mPagerAdapter;
 
@@ -169,7 +169,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     private UpdateUnreadCountTask mUpdateUnreadCountTask;
 
     private int mTabDisplayOption;
-    private float mPagerPosition;
     private Toolbar mActionBar;
 
     private OnSharedPreferenceChangeListener mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
@@ -279,6 +278,12 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         return null;
     }
 
+    @Override
+    protected boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+        mKeyboardShortcutsHandler.handleKey(null, keyCode, event);
+        return super.handleKeyboardShortcut(keyCode, event);
+    }
+
     /**
      * Called when the context is first created.
      */
@@ -299,7 +304,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mReadStateManager = TwidereApplication.getInstance(this).getReadStateManager();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
-        mHotKeyHandler = new HotKeyHandler(this);
+        mKeyboardShortcutsHandler = new KeyboardShortcutsHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
         final long[] accountIds = getAccountIds(this);
         if (accountIds.length == 0) {
@@ -358,7 +363,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
                 openAccountsDrawer();
             }
         }
-        mPagerPosition = Float.NaN;
         setupHomeTabs();
 
         final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
@@ -490,9 +494,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
                     return true;
                 }
                 break;
-            }
-            default: {
-                if (mHotKeyHandler.handleKey(keyCode, event)) return true;
             }
         }
         return super.onKeyUp(keyCode, event);

@@ -25,6 +25,7 @@ public interface IntentConstants {
 
     public static final String INTENT_ACTION_HOME = INTENT_PACKAGE_PREFIX + "HOME";
     public static final String INTENT_ACTION_COMPOSE = INTENT_PACKAGE_PREFIX + "COMPOSE";
+    public static final String INTENT_ACTION_QUICK_SEARCH = INTENT_PACKAGE_PREFIX + "QUICK_SEARCH";
     public static final String INTENT_ACTION_REPLY = INTENT_PACKAGE_PREFIX + "REPLY";
     public static final String INTENT_ACTION_QUOTE = INTENT_PACKAGE_PREFIX + "QUOTE";
     public static final String INTENT_ACTION_EDIT_DRAFT = INTENT_PACKAGE_PREFIX + "EDIT_DRAFT";

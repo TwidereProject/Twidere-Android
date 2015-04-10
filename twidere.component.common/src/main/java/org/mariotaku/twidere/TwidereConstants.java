@@ -45,6 +45,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     public static final String SILENT_NOTIFICATIONS_PREFERENCE_NAME = "silent_notifications";
     public static final String TIMELINE_POSITIONS_PREFERENCES_NAME = "timeline_positions";
     public static final String ACCOUNT_PREFERENCES_NAME_PREFIX = "account_preferences_";
+    public static final String KEYBOARD_SHORTCUTS_PREFERENCES_NAME = "keyboard_shortcuts_preferences";
 
     public static final String TWITTER_CONSUMER_KEY = "uAFVpMhBntJutfVj6abfA";
     public static final String TWITTER_CONSUMER_SECRET = "JARXkJTfxo0F8MyctYy9bUmrLISjo8vXAHsZHYuk2E";

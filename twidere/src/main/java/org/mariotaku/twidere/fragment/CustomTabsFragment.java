@@ -224,7 +224,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list_with_empty_view, container, false);
+        return inflater.inflate(R.layout.layout_draggable_list_with_empty_view, container, false);
     }
 
     @Override

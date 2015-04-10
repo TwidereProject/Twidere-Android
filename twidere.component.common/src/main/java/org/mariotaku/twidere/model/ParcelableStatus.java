@@ -401,10 +401,10 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         favorite_count = status.getFavoriteCount();
         reply_count = status.getReplyCount();
         descendent_reply_count = status.getDescendentReplyCount();
-        in_reply_to_name = TwitterContentUtils.getInReplyToName(status);
-        in_reply_to_screen_name = status.getInReplyToScreenName();
-        in_reply_to_status_id = status.getInReplyToStatusId();
-        in_reply_to_user_id = status.getInReplyToUserId();
+        in_reply_to_name = TwitterContentUtils.getInReplyToName(retweeted != null ? retweeted : orig);
+        in_reply_to_screen_name = (retweeted != null ? retweeted : orig).getInReplyToScreenName();
+        in_reply_to_status_id = (retweeted != null ? retweeted : orig).getInReplyToStatusId();
+        in_reply_to_user_id = (retweeted != null ? retweeted : orig).getInReplyToUserId();
         source = status.getSource();
         location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
         is_favorite = status.isFavorited();

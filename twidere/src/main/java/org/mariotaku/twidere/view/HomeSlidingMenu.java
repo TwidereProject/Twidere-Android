@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -20,8 +21,6 @@ import org.mariotaku.twidere.activity.support.HomeActivity;
  */
 public class HomeSlidingMenu extends SlidingMenu implements Constants {
 
-    private final HomeActivity mActivity;
-
     public HomeSlidingMenu(final Context context) {
         this(context, null);
     }
@@ -32,7 +31,6 @@ public class HomeSlidingMenu extends SlidingMenu implements Constants {
 
     public HomeSlidingMenu(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mActivity = (HomeActivity) context;
     }
 
     @Override
@@ -49,7 +47,9 @@ public class HomeSlidingMenu extends SlidingMenu implements Constants {
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
-        mActivity.setSystemWindowInsets(insets);
+        if (isInEditMode()) return false;
+        final HomeActivity activity = (HomeActivity) getContext();
+        activity.setSystemWindowInsets(insets);
         return false;
     }
 
@@ -59,9 +59,12 @@ public class HomeSlidingMenu extends SlidingMenu implements Constants {
         return new MyCustomViewBehind(context, this);
     }
 
+    @Nullable
     private ViewPager getViewPager() {
-        if (mActivity == null) return null;
-        return mActivity.getViewPager();
+        if (isInEditMode()) return null;
+        final HomeActivity activity = (HomeActivity) getContext();
+        if (activity == null) return null;
+        return activity.getViewPager();
     }
 
     private boolean isTouchingMargin(final MotionEvent e) {

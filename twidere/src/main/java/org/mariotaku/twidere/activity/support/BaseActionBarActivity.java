@@ -23,6 +23,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.Constants;
@@ -31,6 +33,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
@@ -48,6 +51,13 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
 
     public MessagesManager getMessagesManager() {
         return getTwidereApplication() != null ? getTwidereApplication().getMessagesManager() : null;
+    }
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        if (mSystemWindowsInsets == null) return false;
+        insets.set(mSystemWindowsInsets);
+        return true;
     }
 
     @Override
@@ -77,6 +87,18 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     }
 
     @Override
+    public void onFitSystemWindows(Rect insets) {
+        mSystemWindowsInsets = new Rect(insets);
+        notifyControlBarOffsetChanged();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        if (handleKeyboardShortcut(keyCode, event)) return true;
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_BACK: {
@@ -92,13 +114,12 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
         super.startActivity(intent);
     }
 
-    @Override
-    public void startActivityForResult(final Intent intent, final int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-    }
-
     protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
         return null;
+    }
+
+    protected boolean handleKeyboardShortcut(int keyCode,@NonNull KeyEvent event) {
+        return false;
     }
 
     protected boolean isStateSaved() {
@@ -108,25 +129,6 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onPause() {
-        mIsOnTop = false;
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mInstanceStateSaved = false;
-        mIsOnTop = true;
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        mInstanceStateSaved = true;
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -140,6 +142,30 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mInstanceStateSaved = false;
+        mIsOnTop = true;
+    }
+
+    @Override
+    protected void onPause() {
+        mIsOnTop = false;
+        super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        mInstanceStateSaved = true;
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void startActivityForResult(final Intent intent, final int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
     protected void onStop() {
         mIsVisible = false;
         final MessagesManager manager = getMessagesManager();
@@ -147,20 +173,6 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
             manager.removeMessageCallback(this);
         }
         super.onStop();
-    }
-
-
-    @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        if (mSystemWindowsInsets == null) return false;
-        insets.set(mSystemWindowsInsets);
-        return true;
-    }
-
-    @Override
-    public void onFitSystemWindows(Rect insets) {
-        mSystemWindowsInsets = new Rect(insets);
-        notifyControlBarOffsetChanged();
     }
 
     @Override

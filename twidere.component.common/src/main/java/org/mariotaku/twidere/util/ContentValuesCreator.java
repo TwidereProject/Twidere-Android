@@ -355,6 +355,17 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
             status = orig;
         }
+        if (orig.isRetweet()) {
+            values.put(Statuses.IN_REPLY_TO_STATUS_ID, status.getInReplyToStatusId());
+            values.put(Statuses.IN_REPLY_TO_USER_ID, status.getInReplyToUserId());
+            values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(status));
+            values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, status.getInReplyToScreenName());
+        } else {
+            values.put(Statuses.IN_REPLY_TO_STATUS_ID, orig.getInReplyToStatusId());
+            values.put(Statuses.IN_REPLY_TO_USER_ID, orig.getInReplyToUserId());
+            values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(orig));
+            values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, orig.getInReplyToScreenName());
+        }
         final User user = status.getUser();
         final long userId = user.getId();
         final String profileImageUrl = (user.getProfileImageUrlHttps());
@@ -374,10 +385,6 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.REPLY_COUNT, status.getReplyCount());
         values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
         values.put(Statuses.DESCENDENT_REPLY_COUNT, status.getDescendentReplyCount());
-        values.put(Statuses.IN_REPLY_TO_STATUS_ID, status.getInReplyToStatusId());
-        values.put(Statuses.IN_REPLY_TO_USER_ID, status.getInReplyToUserId());
-        values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(status));
-        values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, status.getInReplyToScreenName());
         values.put(Statuses.SOURCE, status.getSource());
         values.put(Statuses.IS_POSSIBLY_SENSITIVE, status.isPossiblySensitive());
         final GeoLocation location = status.getGeoLocation();
