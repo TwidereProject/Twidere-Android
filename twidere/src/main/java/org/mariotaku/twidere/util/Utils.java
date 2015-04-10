@@ -3580,11 +3580,11 @@ public final class Utils implements Constants, TwitterConstants {
             ActionIconDrawable.setMenuHighlight(retweet, new TwidereMenuInfo(isMyRetweet, retweetHighlight));
             retweet.setTitle(isMyRetweet ? R.string.cancel_retweet : R.string.retweet);
         }
-        final MenuItem retweetSubItem = menu.findItem(R.id.retweet_submenu);
-        if (retweetSubItem != null) {
-            ActionIconDrawable.setMenuHighlight(retweetSubItem, new TwidereMenuInfo(isMyRetweet,
-                    retweetHighlight));
-        }
+//        final MenuItem retweetSubItem = menu.findItem(R.id.retweet_submenu);
+//        if (retweetSubItem != null) {
+//            ActionIconDrawable.setMenuHighlight(retweetSubItem, new TwidereMenuInfo(isMyRetweet,
+//                    retweetHighlight));
+//        }
         final MenuItem favorite = menu.findItem(MENU_FAVORITE);
         if (favorite != null) {
             ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));

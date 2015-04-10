@@ -8,21 +8,10 @@
         android:title="@string/reply"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/retweet_submenu"
+        android:id="@id/retweet"
         android:icon="@drawable/ic_action_retweet"
         android:title="@string/retweet"
-        app:showAsAction="always">
-        <menu>
-            <item
-                android:id="@id/retweet"
-                android:icon="@drawable/ic_action_retweet"
-                android:title="@string/retweet"/>
-            <item
-                android:id="@id/quote"
-                android:icon="@drawable/ic_action_quote"
-                android:title="@string/quote"/>
-        </menu>
-    </item>
+        app:showAsAction="always"/>
     <item
         android:id="@id/favorite"
         android:icon="@drawable/ic_action_star"

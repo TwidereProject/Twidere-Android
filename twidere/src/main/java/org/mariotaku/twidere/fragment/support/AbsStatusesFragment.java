@@ -432,7 +432,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     @Override
     public boolean scrollToStart() {
         saveReadPosition();
-        mRecyclerView.smoothScrollToPosition(0);
+        mLayoutManager.scrollToPositionWithOffset(0, 0);
+        setControlVisible(true);
         return true;
     }
 

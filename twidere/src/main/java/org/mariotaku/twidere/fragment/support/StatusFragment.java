@@ -645,6 +645,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quoteTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
 
+                quoteIndicator.setColor(UserColorNameUtils.getUserColor(context, status.user_id));
+
                 profileContainer.drawStart(UserColorNameUtils.getUserColor(context, status.quoted_by_user_id));
 
                 typeIconRes = getUserTypeIconRes(status.quoted_by_user_is_verified, status.quoted_by_user_is_protected);
@@ -812,6 +814,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final AsyncTwitterWrapper twitter = fragment.getTwitterWrapper();
             final FragmentActivity activity = fragment.getActivity();
             final FragmentManager fm = fragment.getFragmentManager();
+            if (item.getItemId() == MENU_RETWEET) {
+                RetweetQuoteDialogFragment.show(fm, status);
+                return true;
+            }
             return Utils.handleMenuItemClick(activity, fragment, fm, twitter, status, item);
         }
 
