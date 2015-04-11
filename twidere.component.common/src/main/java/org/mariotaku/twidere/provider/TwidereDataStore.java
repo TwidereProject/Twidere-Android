@@ -783,8 +783,6 @@ public interface TwidereDataStore {
 
         String MY_RETWEET_ID = "my_retweet_id";
 
-        String MY_QUOTE_ID = "my_quote_id";
-
         String MEDIA_LIST = "media_list";
 
         String MENTIONS_LIST = "mentions_list";
@@ -803,6 +801,7 @@ public interface TwidereDataStore {
         String QUOTE_TEXT_HTML = "quote_text_html";
         String QUOTE_TEXT_PLAIN = "quote_text_plain";
         String QUOTE_TEXT_UNESCAPED = "quote_text_unescaped";
+        String QUOTE_MEDIA_JSON = "quote_media_json";
         String QUOTE_TIMESTAMP = "quote_timestamp";
         String QUOTE_SOURCE = "quote_source";
         String QUOTED_BY_USER_ID = "quoted_by_user_id";

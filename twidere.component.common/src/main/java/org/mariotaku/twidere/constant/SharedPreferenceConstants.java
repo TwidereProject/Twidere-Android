@@ -151,7 +151,7 @@ public interface SharedPreferenceConstants {
     String KEY_DISPLAY_PROFILE_IMAGE = "display_profile_image";
     @Preference(type = BOOLEAN)
     String KEY_LEFTSIDE_COMPOSE_BUTTON = "leftside_compose_button";
-    @Preference(type = BOOLEAN)
+    @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = false)
     String KEY_ATTACH_LOCATION = "attach_location";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_GZIP_COMPRESSING = "gzip_compressing";

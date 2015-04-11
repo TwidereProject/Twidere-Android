@@ -90,6 +90,7 @@ import com.twitter.Extractor;
 import org.mariotaku.dynamicgridview.DraggableArrayAdapter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.model.DraftItem;
@@ -108,6 +109,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -269,97 +271,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         outState.putString(EXTRA_ORIGINAL_TEXT, mOriginalText);
         outState.putParcelable(EXTRA_TEMP_URI, mTempPhotoUri);
         super.onSaveInstanceState(outState);
-    }
-
-    public boolean handleMenuItem(final MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_TAKE_PHOTO:
-            case R.id.take_photo_sub_item: {
-                takePhoto();
-                break;
-            }
-            case MENU_ADD_IMAGE:
-            case R.id.add_image_sub_item: {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || !openDocument()) {
-                    pickImage();
-                }
-                break;
-            }
-            case MENU_ADD_LOCATION: {
-                toggleLocation();
-                break;
-            }
-            case MENU_DRAFTS: {
-                startActivity(new Intent(INTENT_ACTION_DRAFTS));
-                break;
-            }
-            case MENU_DELETE: {
-                AsyncTaskUtils.executeTask(new DeleteImageTask(this));
-                break;
-            }
-            case MENU_TOGGLE_SENSITIVE: {
-                if (!hasMedia()) return false;
-                mIsPossiblySensitive = !mIsPossiblySensitive;
-                setMenu();
-                updateTextCount();
-                break;
-            }
-            case MENU_VIEW: {
-                if (mInReplyToStatus == null) return false;
-                final DialogFragment fragment = new ViewStatusDialogFragment();
-                final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_STATUS, mInReplyToStatus);
-                fragment.setArguments(args);
-                fragment.show(getSupportFragmentManager(), "view_status");
-                break;
-            }
-            default: {
-                final Intent intent = item.getIntent();
-                if (intent != null) {
-                    try {
-                        final String action = intent.getAction();
-                        if (INTENT_ACTION_EXTENSION_COMPOSE.equals(action)) {
-                            final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
-                            intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(mEditText.getText()));
-                            intent.putExtra(EXTRA_ACCOUNT_IDS, accountIds);
-                            if (accountIds.length > 0) {
-                                final long account_id = accountIds[0];
-                                intent.putExtra(EXTRA_NAME, getAccountName(this, account_id));
-                                intent.putExtra(EXTRA_SCREEN_NAME, getAccountScreenName(this, account_id));
-                            }
-                            if (mInReplyToStatusId > 0) {
-                                intent.putExtra(EXTRA_IN_REPLY_TO_ID, mInReplyToStatusId);
-                            }
-                            if (mInReplyToStatus != null) {
-                                intent.putExtra(EXTRA_IN_REPLY_TO_NAME, mInReplyToStatus.user_name);
-                                intent.putExtra(EXTRA_IN_REPLY_TO_SCREEN_NAME, mInReplyToStatus.user_screen_name);
-                            }
-                            startActivityForResult(intent, REQUEST_EXTENSION_COMPOSE);
-                        } else if (INTENT_ACTION_EXTENSION_EDIT_IMAGE.equals(action)) {
-                            // final ComponentName cmp = intent.getComponent();
-                            // if (cmp == null || !hasMedia()) return false;
-                            // final String name = new
-                            // File(mMediaUri.getPath()).getName();
-                            // final Uri data =
-                            // Uri.withAppendedPath(CacheFiles.CONTENT_URI,
-                            // Uri.encode(name));
-                            // intent.setData(data);
-                            // grantUriPermission(cmp.getPackageName(), data,
-                            // Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            // startActivityForResult(intent,
-                            // REQUEST_EDIT_IMAGE);
-                        } else {
-                            startActivity(intent);
-                        }
-                    } catch (final ActivityNotFoundException e) {
-                        Log.w(LOGTAG, e);
-                        return false;
-                    }
-                }
-                break;
-            }
-        }
-        return true;
     }
 
 
@@ -556,7 +467,100 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
-        return handleMenuItem(item);
+        switch (item.getItemId()) {
+            case MENU_TAKE_PHOTO:
+            case R.id.take_photo_sub_item: {
+                takePhoto();
+                break;
+            }
+            case MENU_ADD_IMAGE:
+            case R.id.add_image_sub_item: {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || !openDocument()) {
+                    pickImage();
+                }
+                break;
+            }
+            case MENU_ADD_LOCATION: {
+                toggleLocation();
+                break;
+            }
+            case MENU_DRAFTS: {
+                startActivity(new Intent(INTENT_ACTION_DRAFTS));
+                break;
+            }
+            case MENU_DELETE: {
+                AsyncTaskUtils.executeTask(new DeleteImageTask(this));
+                break;
+            }
+            case MENU_TOGGLE_SENSITIVE: {
+                if (!hasMedia()) return false;
+                mIsPossiblySensitive = !mIsPossiblySensitive;
+                setMenu();
+                updateTextCount();
+                break;
+            }
+            case MENU_VIEW: {
+                if (mInReplyToStatus == null) return false;
+                final DialogFragment fragment = new ViewStatusDialogFragment();
+                final Bundle args = new Bundle();
+                args.putParcelable(EXTRA_STATUS, mInReplyToStatus);
+                fragment.setArguments(args);
+                fragment.show(getSupportFragmentManager(), "view_status");
+                break;
+            }
+            case R.id.link_to_quoted_status: {
+                final boolean newValue = !item.isChecked();
+                item.setChecked(newValue);
+                mPreferences.edit().putBoolean(KEY_LINK_TO_QUOTED_TWEET, newValue).apply();
+                break;
+            }
+            default: {
+                final Intent intent = item.getIntent();
+                if (intent != null) {
+                    try {
+                        final String action = intent.getAction();
+                        if (INTENT_ACTION_EXTENSION_COMPOSE.equals(action)) {
+                            final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
+                            intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(mEditText.getText()));
+                            intent.putExtra(EXTRA_ACCOUNT_IDS, accountIds);
+                            if (accountIds.length > 0) {
+                                final long account_id = accountIds[0];
+                                intent.putExtra(EXTRA_NAME, getAccountName(this, account_id));
+                                intent.putExtra(EXTRA_SCREEN_NAME, getAccountScreenName(this, account_id));
+                            }
+                            if (mInReplyToStatusId > 0) {
+                                intent.putExtra(EXTRA_IN_REPLY_TO_ID, mInReplyToStatusId);
+                            }
+                            if (mInReplyToStatus != null) {
+                                intent.putExtra(EXTRA_IN_REPLY_TO_NAME, mInReplyToStatus.user_name);
+                                intent.putExtra(EXTRA_IN_REPLY_TO_SCREEN_NAME, mInReplyToStatus.user_screen_name);
+                            }
+                            startActivityForResult(intent, REQUEST_EXTENSION_COMPOSE);
+                        } else if (INTENT_ACTION_EXTENSION_EDIT_IMAGE.equals(action)) {
+                            // final ComponentName cmp = intent.getComponent();
+                            // if (cmp == null || !hasMedia()) return false;
+                            // final String name = new
+                            // File(mMediaUri.getPath()).getName();
+                            // final Uri data =
+                            // Uri.withAppendedPath(CacheFiles.CONTENT_URI,
+                            // Uri.encode(name));
+                            // intent.setData(data);
+                            // grantUriPermission(cmp.getPackageName(), data,
+                            // Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            // startActivityForResult(intent,
+                            // REQUEST_EDIT_IMAGE);
+                        } else {
+                            startActivity(intent);
+                        }
+                    } catch (final ActivityNotFoundException e) {
+                        Log.w(LOGTAG, e);
+                        return false;
+                    }
+                }
+                break;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -618,7 +622,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mPreferences = SharedPreferencesWrapper.getInstance(this, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences = SharedPreferencesWrapper.getInstance(this, SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
 
         final TwidereApplication app = TwidereApplication.getInstance(this);
         mTwitterWrapper = app.getTwitterWrapper();
@@ -638,7 +643,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         }
 //        mMenuBar.setIsBottomBar(true);
         mMenuBar.setOnMenuItemClickListener(this);
-        mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND, false) ? this : null);
+        mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND) ? this : null);
         mEditText.addTextChangedListener(this);
         mEditText.setCustomSelectionActionModeCallback(this);
         mAccountSelectorContainer.setOnClickListener(this);
@@ -794,7 +799,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
      */
     private boolean startLocationUpdateIfEnabled() {
         final LocationManager lm = mLocationManager;
-        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
         if (!attachLocation) {
             lm.removeUpdates(this);
             return false;
@@ -986,9 +991,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     }
 
     private boolean isQuotingProtectedStatus() {
-        if (INTENT_ACTION_QUOTE.equals(getIntent().getAction()) && mInReplyToStatus != null)
-            return mInReplyToStatus.user_is_protected && mInReplyToStatus.account_id != mInReplyToStatus.user_id;
-        return false;
+        if (!isQuote() || mInReplyToStatus == null) return false;
+        return mInReplyToStatus.user_is_protected && mInReplyToStatus.account_id != mInReplyToStatus.user_id;
     }
 
     private boolean noReplyContent(final String text) {
@@ -1076,20 +1080,19 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
          * Has media & Not reply: [Take photo][Media menu][Attach location][Drafts]
          * Is reply: [Media menu][View status][Attach location][Drafts]
          */
-        Utils.setMenuItemAvailability(menu, MENU_TAKE_PHOTO, !hasInReplyTo);
-        Utils.setMenuItemAvailability(menu, R.id.take_photo_sub_item, hasInReplyTo);
-        Utils.setMenuItemAvailability(menu, MENU_ADD_IMAGE, !hasMedia && !hasInReplyTo);
-        Utils.setMenuItemAvailability(menu, MENU_VIEW, hasInReplyTo);
-        Utils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia || hasInReplyTo);
-        Utils.setMenuItemAvailability(menu, MENU_TOGGLE_SENSITIVE, hasMedia);
-        Utils.setMenuItemAvailability(menu, MENU_EDIT_MEDIA, hasMedia);
+        MenuUtils.setMenuItemAvailability(menu, MENU_TAKE_PHOTO, !hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, R.id.take_photo_sub_item, hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, MENU_ADD_IMAGE, !hasMedia && !hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, MENU_VIEW, hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia || hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, MENU_TOGGLE_SENSITIVE, hasMedia);
+        MenuUtils.setMenuItemAvailability(menu, MENU_EDIT_MEDIA, hasMedia);
+        MenuUtils.setMenuItemAvailability(menu, R.id.link_to_quoted_status, isQuote());
 
         menu.setGroupEnabled(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
         menu.setGroupVisible(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
-        final MenuItem itemToggleSensitive = menu.findItem(MENU_TOGGLE_SENSITIVE);
-        if (itemToggleSensitive != null) {
-            itemToggleSensitive.setChecked(hasMedia && mIsPossiblySensitive);
-        }
+        MenuUtils.setMenuItemChecked(menu, MENU_TOGGLE_SENSITIVE, hasMedia && mIsPossiblySensitive);
+        MenuUtils.setMenuItemChecked(menu, R.id.link_to_quoted_status, mPreferences.getBoolean(KEY_LINK_TO_QUOTED_TWEET));
         ThemeUtils.resetCheatSheet(mMenuBar);
 //        mMenuBar.show();
     }
@@ -1152,7 +1155,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 //            setRecentLocation();
 //        }
         final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
-        final boolean isQuote = INTENT_ACTION_QUOTE.equals(getIntent().getAction());
+        final boolean isQuote = isQuote();
         final ParcelableLocation statusLocation = attachLocation ? mRecentLocation : null;
         final boolean linkToQuotedTweet = mPreferences.getBoolean(KEY_LINK_TO_QUOTED_TWEET, true);
         final long inReplyToStatusId = !isQuote || linkToQuotedTweet ? mInReplyToStatusId : -1;
@@ -1181,6 +1184,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             setResult(Activity.RESULT_OK);
             finish();
         }
+    }
+
+    private boolean isQuote() {
+        return INTENT_ACTION_QUOTE.equals(getIntent().getAction());
     }
 
     private void updateTextCount() {

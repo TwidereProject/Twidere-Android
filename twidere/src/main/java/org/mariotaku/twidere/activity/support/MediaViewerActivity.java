@@ -66,6 +66,7 @@ import org.mariotaku.twidere.loader.support.TileImageLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMedia.VideoInfo.Variant;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.SaveImageTask;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -370,6 +371,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onClick(View v) {
             final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+            if (activity == null) return;
             activity.toggleBar();
         }
 
@@ -440,9 +442,9 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             final Object imageTag = mImageView.getTag();
             final boolean isLoading = getLoaderManager().hasRunningLoaders();
             final boolean hasImage = imageTag instanceof File;
-            Utils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
-            Utils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
-            Utils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
             if (hasImage) {
                 final MenuItem shareItem = menu.findItem(R.id.share);
                 final ShareActionProvider shareProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);

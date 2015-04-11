@@ -183,10 +183,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
             if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                 final String text = status.quote_text_unescaped;
-                quoteTextView.setText(idx > 0 ? text.substring(0, idx ) : text);
+                quoteTextView.setText(idx > 0 ? text.substring(0, idx) : text);
             } else {
                 final Spanned text = Html.fromHtml(status.quote_text_html);
-                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx ) : text);
+                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx) : text);
                 linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
                 quoteTextView.setMovementMethod(null);
@@ -373,10 +373,10 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             final String quote_text_unescaped = cursor.getString(indices.quote_text_unescaped);
             final int idx = quote_text_unescaped.lastIndexOf(" twitter.com");
             if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                quoteTextView.setText(idx > 0 ? quote_text_unescaped.substring(0, idx ) : quote_text_unescaped);
+                quoteTextView.setText(idx > 0 ? quote_text_unescaped.substring(0, idx) : quote_text_unescaped);
             } else {
                 final Spanned text = Html.fromHtml(cursor.getString(indices.quote_text_html));
-                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx ) : text);
+                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx) : text);
                 linkify.applyAllLinks(quoteTextView, account_id, getLayoutPosition(),
                         cursor.getShort(indices.is_possibly_sensitive) == 1,
                         adapter.getLinkHighlightingStyle());

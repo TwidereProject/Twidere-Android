@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -231,7 +232,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, message.sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, message.recipient_profile_image_url);
         if (message.media != null) {
-            values.put(Statuses.MEDIA_LIST, SimpleValueSerializer.toSerializedString(message.media));
+            values.put(DirectMessages.MEDIA_LIST, SimpleValueSerializer.toSerializedString(message.media));
         }
         return values;
     }
@@ -302,8 +303,9 @@ public final class ContentValuesCreator implements TwidereConstants {
         return resultValuesArray;
     }
 
+    @NonNull
     public static ContentValues createStatus(final Status orig, final long accountId) {
-        if (orig == null || orig.getId() <= 0) return null;
+        if (orig == null) throw new NullPointerException();
         final ContentValues values = new ContentValues();
         values.put(Statuses.ACCOUNT_ID, accountId);
         values.put(Statuses.STATUS_ID, orig.getId());
@@ -345,11 +347,6 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.QUOTED_BY_USER_IS_VERIFIED, quoteUser.isVerified());
             values.put(Statuses.QUOTED_BY_USER_IS_PROTECTED, quoteUser.isProtected());
             values.put(Statuses.IS_QUOTE, true);
-            if (quotedById == accountId) {
-                values.put(Statuses.MY_QUOTE_ID, orig.getId());
-//            } else {
-//                values.put(Statuses.MY_QUOTE_ID, orig.getCurrentUserRetweet());
-            }
             status = quotedStatus;
         } else {
             values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());

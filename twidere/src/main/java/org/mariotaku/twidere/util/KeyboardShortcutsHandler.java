@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 
@@ -17,15 +18,29 @@ import java.util.Set;
 public class KeyboardShortcutsHandler implements Constants {
 
     private static final HashMap<String, Integer> sActionLabelMap = new HashMap<>();
+    private static final SparseArrayCompat<String> sMetaNameMap = new SparseArrayCompat<>();
 
     static {
         sActionLabelMap.put("compose", R.string.compose);
         sActionLabelMap.put("search", R.string.search);
+
+        sMetaNameMap.put(KeyEvent.META_FUNCTION_ON, "fn");
+        sMetaNameMap.put(KeyEvent.META_META_ON, "meta");
+        sMetaNameMap.put(KeyEvent.META_CTRL_ON, "ctrl");
+        sMetaNameMap.put(KeyEvent.META_ALT_ON, "alt");
+        sMetaNameMap.put(KeyEvent.META_SHIFT_ON, "shift");
     }
 
     private static final String KEYCODE_STRING_PREFIX = "KEYCODE_";
     private final Context mContext;
     private final SharedPreferencesWrapper mPreferences;
+
+    public static int getKeyEventMeta(String name) {
+        for (int i = 0, j = sMetaNameMap.size(); i < j; i++) {
+            if (sMetaNameMap.valueAt(i).equalsIgnoreCase(name)) return sMetaNameMap.keyAt(i);
+        }
+        return 0;
+    }
 
     public KeyboardShortcutsHandler(final Context context) {
         mContext = context;
@@ -38,6 +53,19 @@ public class KeyboardShortcutsHandler implements Constants {
         return context.getString(labelRes);
     }
 
+    public static String metaToHumanReadableString(int metaState) {
+        final StringBuilder keyNameBuilder = new StringBuilder();
+        for (int i = 0, j = sMetaNameMap.size(); i < j; i++) {
+            if ((sMetaNameMap.keyAt(i) & metaState) != 0) {
+                final String value = sMetaNameMap.valueAt(i);
+                keyNameBuilder.append(value.substring(0, 1).toUpperCase(Locale.US));
+                keyNameBuilder.append(value.substring(1));
+                keyNameBuilder.append("+");
+            }
+        }
+        return keyNameBuilder.toString();
+    }
+
     public static Set<String> getActions() {
         return sActionLabelMap.keySet();
     }
@@ -46,16 +74,15 @@ public class KeyboardShortcutsHandler implements Constants {
         final StringBuilder keyNameBuilder = new StringBuilder();
         if (!TextUtils.isEmpty(contextTag)) {
             keyNameBuilder.append(contextTag);
-            keyNameBuilder.append("_");
+            keyNameBuilder.append(".");
         }
-        if (event.isCtrlPressed()) {
-            keyNameBuilder.append("ctrl_");
-        }
-        if (event.isAltPressed()) {
-            keyNameBuilder.append("alt_");
-        }
-        if (event.isShiftPressed()) {
-            keyNameBuilder.append("shift_");
+        final int metaState = KeyEvent.normalizeMetaState(event.getMetaState());
+
+        for (int i = 0, j = sMetaNameMap.size(); i < j; i++) {
+            if ((sMetaNameMap.keyAt(i) & metaState) != 0) {
+                keyNameBuilder.append(sMetaNameMap.valueAt(i));
+                keyNameBuilder.append("+");
+            }
         }
         final String keyCodeString = KeyEvent.keyCodeToString(keyCode);
         if (keyCodeString.startsWith(KEYCODE_STRING_PREFIX)) {

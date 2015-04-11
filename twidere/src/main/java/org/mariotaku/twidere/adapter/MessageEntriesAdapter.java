@@ -34,7 +34,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -88,6 +87,10 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
                 updateReadState();
             }
         };
+    }
+
+    public void onUserProfileClick(int position) {
+        mListener.onUserClick(position, getEntry(position));
     }
 
     public void updateReadState() {
@@ -284,7 +287,9 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
     public interface MessageEntriesAdapterListener {
-        public void onEntryClick(int position, DirectMessageEntry entry);
+        void onEntryClick(int position, DirectMessageEntry entry);
+
+        void onUserClick(int position, DirectMessageEntry entry);
     }
 
     public static class DirectMessageEntry {

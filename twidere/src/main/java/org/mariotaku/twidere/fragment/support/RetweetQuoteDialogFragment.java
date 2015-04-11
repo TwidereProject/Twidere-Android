@@ -78,7 +78,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         final Context context = builder.getContext();
         final LayoutInflater inflater = LayoutInflater.from(context);
-        @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_scrollable_status, null);
+        @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
         final StatusViewHolder holder = new StatusViewHolder(new DummyStatusHolderAdapter(context), view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
 

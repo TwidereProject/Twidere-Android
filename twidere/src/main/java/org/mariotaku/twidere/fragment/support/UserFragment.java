@@ -109,6 +109,7 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -139,6 +140,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.util.MenuUtils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.ParseUtils.parseLong;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserColor;
 import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
@@ -162,7 +164,6 @@ import static org.mariotaku.twidere.util.Utils.openUserFollowers;
 import static org.mariotaku.twidere.util.Utils.openUserFriends;
 import static org.mariotaku.twidere.util.Utils.openUserLists;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
-import static org.mariotaku.twidere.util.Utils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
@@ -794,8 +795,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (mentionItem != null) {
             mentionItem.setTitle(getString(R.string.mention_user_name, UserColorNameUtils.getDisplayName(getActivity(), user)));
         }
-        Utils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
-        Utils.setMenuItemAvailability(menu, R.id.incoming_friendships, isMyself);
+        MenuUtils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
+        MenuUtils.setMenuItemAvailability(menu, R.id.incoming_friendships, isMyself);
 //        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
 //        followItem.setVisible(!isMyself);
 //        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself

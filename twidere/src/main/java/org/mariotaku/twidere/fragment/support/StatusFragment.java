@@ -100,6 +100,7 @@ import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
@@ -792,8 +793,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.retweeted_by_container: {
                     if (status.retweet_id > 0) {
-                        Utils.openUserProfile(adapter.getContext(), status.account_id, status.user_id,
-                                status.user_screen_name, null);
+                        Utils.openUserProfile(adapter.getContext(), status.account_id, status.retweeted_by_id,
+                                status.retweeted_by_screen_name, null);
                     }
                     break;
                 }
@@ -884,7 +885,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final SpannableString string = SpannableString.valueOf(textView.getText());
                 final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
                 final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
-                Utils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
+                MenuUtils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
                 return true;
             }
 

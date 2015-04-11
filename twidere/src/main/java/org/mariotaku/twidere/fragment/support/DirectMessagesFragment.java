@@ -75,7 +75,6 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
-import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -158,26 +157,13 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     }
 
     @Override
+    public void onUserClick(int position, DirectMessageEntry entry) {
+        Utils.openUserProfile(getActivity(), entry.account_id, entry.conversation_id, entry.screen_name, null);
+    }
+
+    @Override
     public void onRefresh() {
-        AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
-
-            @Override
-            protected long[][] doInBackground(final Object... params) {
-                final long[][] result = new long[2][];
-                result[0] = Utils.getActivatedAccountIds(getActivity());
-                result[1] = Utils.getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(final long[][] result) {
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
-                if (twitter == null) return;
-                twitter.getReceivedDirectMessagesAsync(result[0], null, result[1]);
-                twitter.getSentDirectMessagesAsync(result[0], null, null);
-            }
-
-        });
+        triggerRefresh();
     }
 
     private void setListShown(boolean shown) {
@@ -315,6 +301,25 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 
     @Override
     public boolean triggerRefresh() {
+        AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
+
+            @Override
+            protected long[][] doInBackground(final Object... params) {
+                final long[][] result = new long[2][];
+                result[0] = Utils.getActivatedAccountIds(getActivity());
+                result[1] = Utils.getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(final long[][] result) {
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (twitter == null) return;
+                twitter.getReceivedDirectMessagesAsync(result[0], null, result[1]);
+                twitter.getSentDirectMessagesAsync(result[0], null, null);
+            }
+
+        });
         return true;
     }
 

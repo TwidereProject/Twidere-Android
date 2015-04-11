@@ -377,7 +377,8 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
         cb.setOAuthBaseURL(Utils.getApiUrl(apiUrlFormat, "api", "/oauth/"));
         cb.setUploadBaseURL(Utils.getApiUrl(apiUrlFormat, "upload", versionSuffix));
         cb.setOAuthAuthorizationURL(Utils.getApiUrl(apiUrlFormat, null, "/oauth/authorize"));
-        cb.setHttpUserAgent(Utils.generateBrowserUserAgent());
+        final String userAgent = TwidereApplication.getInstance(this).getDefaultUserAgent();
+        cb.setHttpUserAgent(userAgent);
         if (!mSameOAuthSigningUrl) {
             cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
             cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);

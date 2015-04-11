@@ -509,7 +509,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - progressCircleDiameter;
         // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
         final int swipeDistance = Math.round(64 * density);
-        mSwipeRefreshLayout.setProgressViewOffset(true, swipeStart, swipeStart + swipeDistance);
+        mSwipeRefreshLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance);
     }
 
     protected final class StatusesBusCallback {

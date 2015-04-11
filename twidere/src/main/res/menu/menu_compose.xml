@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@id/take_photo"
         android:icon="@drawable/ic_action_camera"
         android:title="@string/take_photo"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@id/add_image"
         android:icon="@drawable/ic_action_gallery"
         android:title="@string/add_image"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@+id/media_menu"
         android:icon="@drawable/ic_action_gallery"
         android:title="@string/media"
         android:visible="false"
-        app:showAsAction="always">
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction">
         <menu>
             <item
                 android:id="@+id/take_photo_sub_item"
@@ -43,7 +47,8 @@
         android:icon="@drawable/ic_action_reply"
         android:title="@string/original_status"
         android:visible="false"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@id/add_location"
         android:checkable="true"
@@ -51,11 +56,19 @@
         android:icon="@drawable/ic_action_my_location"
         android:title="@string/location"
         android:visible="false"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@id/drafts"
         android:icon="@drawable/ic_action_draft"
         android:title="@string/drafts"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
+    <item
+        android:id="@+id/link_to_quoted_status"
+        android:icon="@drawable/ic_action_link"
+        android:checkable="true"
+        android:title="@string/link_to_quoted_status"
+        app:showAsAction="never"/>
 
 </menu>

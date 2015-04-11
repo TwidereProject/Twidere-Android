@@ -39,8 +39,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ExtensionsAdapter;
 import org.mariotaku.twidere.loader.ExtensionsListLoader;
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionsManager;
-import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -104,9 +104,9 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
         if (extensionInfo.pname != null && extensionInfo.settings != null) {
             final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SETTINGS);
             intent.setClassName(extensionInfo.pname, extensionInfo.settings);
-            Utils.setMenuItemAvailability(menu, MENU_SETTINGS, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
+            MenuUtils.setMenuItemAvailability(menu, MENU_SETTINGS, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
         } else {
-            Utils.setMenuItemAvailability(menu, MENU_SETTINGS, false);
+            MenuUtils.setMenuItemAvailability(menu, MENU_SETTINGS, false);
         }
 
     }

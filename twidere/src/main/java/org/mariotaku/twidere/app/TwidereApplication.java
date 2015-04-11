@@ -54,6 +54,7 @@ import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
+import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
@@ -97,9 +98,15 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private VideoLoader mVideoLoader;
     private ReadStateManager mReadStateManager;
 
+    private String mDefaultUserAgent;
+
     public AsyncTaskManager getAsyncTaskManager() {
         if (mAsyncTaskManager != null) return mAsyncTaskManager;
         return mAsyncTaskManager = AsyncTaskManager.getInstance();
+    }
+
+    public String getDefaultUserAgent() {
+        return mDefaultUserAgent;
     }
 
     public DiskCache getDiskCache() {
@@ -204,6 +211,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             StrictModeUtils.detectAllVmPolicy();
         }
         super.onCreate();
+        mDefaultUserAgent = UserAgentUtils.getDefaultUserAgentString(this);
         mHandler = new Handler();
         mMessageBus = new Bus();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
@@ -234,6 +242,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         migrateUsageStatisticsPreferences();
         startUsageStatisticsServiceIfNeeded(this);
         startRefreshServiceIfNeeded(this);
+
+        reloadConnectivitySettings();
     }
 
     private void migrateUsageStatisticsPreferences() {

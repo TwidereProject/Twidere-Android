@@ -67,6 +67,32 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     private SharedPreferences mPreferences;
 
     @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        mPreferences = getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        mAdapter = new HostMappingAdapter(getActivity());
+        setListAdapter(mAdapter);
+        mListView = getListView();
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setMultiChoiceModeListener(this);
+        reloadHostMappings();
+    }
+
+    @Override
+    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+        mode.getMenuInflater().inflate(R.menu.action_multi_select_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+        updateTitle(mode);
+        return true;
+    }
+
+    @Override
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_DELETE: {
@@ -91,39 +117,13 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     }
 
     @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-        mPreferences = getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mPreferences.registerOnSharedPreferenceChangeListener(this);
-        mAdapter = new HostMappingAdapter(getActivity());
-        setListAdapter(mAdapter);
-        mListView = getListView();
-        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setMultiChoiceModeListener(this);
-        reloadHostMappings();
-    }
-
-    @Override
-    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        mode.getMenuInflater().inflate(R.menu.action_multi_select_items, menu);
-        return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_host_mapping, menu);
-    }
-
-    @Override
     public void onDestroyActionMode(final ActionMode mode) {
 
     }
 
     @Override
-    public void onItemCheckedStateChanged(final ActionMode mode, final int position, final long id,
-                                          final boolean checked) {
-        updateTitle(mode);
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_host_mapping, menu);
     }
 
     @Override
@@ -138,9 +138,9 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     }
 
     @Override
-    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+    public void onItemCheckedStateChanged(final ActionMode mode, final int position, final long id,
+                                          final boolean checked) {
         updateTitle(mode);
-        return true;
     }
 
     @Override
@@ -170,13 +170,24 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         private CheckBox mCheckExclude;
 
         @Override
+        public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+            updateButton();
+        }
+
+        @Override
         public void afterTextChanged(final Editable s) {
 
         }
 
         @Override
-        public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateAddressField();
+            updateButton();
         }
 
         @Override
@@ -237,9 +248,8 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             updateButton();
         }
 
-        @Override
-        public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-            updateButton();
+        private void updateAddressField() {
+            mEditAddress.setVisibility(mCheckExclude.isChecked() ? View.GONE : View.VISIBLE);
         }
 
         private void updateButton() {
@@ -249,16 +259,6 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             final boolean addressValid = !isEmpty(mEditAddress.getText()) || mCheckExclude.isChecked();
             final Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setEnabled(hostValid && addressValid);
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            updateAddressField();
-            updateButton();
-        }
-
-        private void updateAddressField() {
-            mEditAddress.setVisibility(mCheckExclude.isChecked() ? View.GONE : View.VISIBLE);
         }
     }
 

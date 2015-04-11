@@ -64,9 +64,6 @@ public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<twitte
             for (int bulkIdx = 0, totalSize = list.size(); bulkIdx < totalSize; bulkIdx += 100) {
                 for (int idx = bulkIdx, end = Math.min(totalSize, bulkIdx + ContentResolverUtils.MAX_BULK_COUNT); idx < end; idx++) {
                     final twitter4j.Status status = list.get(idx);
-                    if (status == null || status.getId() <= 0) {
-                        continue;
-                    }
 
                     final Set<ContentValues> usersValues = new HashSet<>();
                     final Set<ContentValues> statusesValues = new HashSet<>();
