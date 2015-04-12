@@ -88,6 +88,15 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     }
 
     @Override
+    public void onFitSystemWindows(Rect insets) {
+        super.onFitSystemWindows(insets);
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
+        if (fragment instanceof IBaseFragment) {
+            ((IBaseFragment) fragment).requestFitSystemWindows();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_HOME: {
@@ -113,6 +122,35 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
                 return (IBasePullToRefreshFragment) curr;
         }
         return null;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
+        return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutRepeat(keyCode, repeatCount, event)) return true;
+        return super.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+    }
+
+
+    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+        }
+        return false;
+    }
+
+    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+        }
+        return false;
     }
 
     @Override
@@ -150,15 +188,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     protected void onStop() {
         mMultiSelectHandler.dispatchOnStop();
         super.onStop();
-    }
-
-    @Override
-    public void onFitSystemWindows(Rect insets) {
-        super.onFitSystemWindows(insets);
-        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
-        if (fragment instanceof IBaseFragment) {
-            ((IBaseFragment) fragment).requestFitSystemWindows();
-        }
     }
 
     @Override
@@ -262,6 +291,13 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
                 break;
             }
         }
+    }
+
+    @Override
+    public void setControlBarVisibleAnimate(boolean visible) {
+        // Currently only search page needs this pattern, so we only enable this feature for it.
+        if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
+        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
     }
 
     private boolean showFragment(final int linkId, final Uri uri) {
@@ -379,26 +415,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         return true;
     }
 
-    @Override
-    public void setControlBarVisibleAnimate(boolean visible) {
-        // Currently only search page needs this pattern, so we only enable this feature for it.
-        if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
-        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
-    }
-
-    @Override
-    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
-        if (handleCurrentFragmentKeyboardShortcut(keyCode, event)) return true;
-        return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
-    }
-
-    private boolean handleCurrentFragmentKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof ShortcutCallback) {
-            return ((ShortcutCallback) fragment).handleKeyboardShortcut(keyCode, event);
-        }
-        return false;
-    }
 
     @Override
     public void setControlBarOffset(float offset) {

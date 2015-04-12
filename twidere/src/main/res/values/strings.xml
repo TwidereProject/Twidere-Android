@@ -478,6 +478,7 @@
     <string name="card_animation">Card animation</string>
     <string name="name_first">Display name first</string>
     <string name="next">Next</string>
+    <string name="previous">Previous</string>
     <string name="settings_wizard">Settings wizard</string>
     <string name="wizard_page_welcome_title">Welcome</string>
     <string name="wizard_page_welcome_text">Thanks for choosing Twidere.\nWould you like to config it now?</string>
@@ -741,5 +742,6 @@
     <string name="keyboard_shortcut_hint">Press keys</string>
     <string name="conflicts_with_name">Conflicts with <xliff:g id="name">%s</xliff:g></string>
     <string name="overwrite">Overwrite</string>
+    <string name="navigation">Navigation</string>
 
 </resources>

@@ -95,8 +95,19 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        if (handleKeyboardShortcut(keyCode, event)) return true;
+        if (handleKeyboardShortcutSingle(keyCode, event)) return true;
         return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (handleKeyboardShortcutRepeat(keyCode, event.getRepeatCount(), event)) return true;
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
+        return super.onKeyMultiple(keyCode, repeatCount, event);
     }
 
     @Override
@@ -120,7 +131,12 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     }
 
     @Override
-    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
         return false;
     }
 

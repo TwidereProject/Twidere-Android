@@ -80,6 +80,10 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
         general.addPreference(makePreferences(null, "compose"));
         general.addPreference(makePreferences(null, "search"));
         general.addPreference(makePreferences(null, "message"));
+        final PreferenceCategory navigation = makeAndAddCategory(getString(R.string.navigation));
+        navigation.addPreference(makePreferences("navigation", "navigation.next"));
+        navigation.addPreference(makePreferences("navigation", "navigation.previous"));
+        navigation.addPreference(makePreferences("navigation", "navigation.refresh"));
         final PreferenceCategory statuses = makeAndAddCategory(getString(R.string.statuses));
         statuses.addPreference(makePreferences("status", "status.reply"));
         statuses.addPreference(makePreferences("status", "status.retweet"));
@@ -191,14 +195,14 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
             if (mAction.equals(oldAction) || TextUtils.isEmpty(oldAction)) {
                 mConflictLabel.setVisibility(View.GONE);
                 if (dialog instanceof AlertDialog) {
-                    ((AlertDialog) dialog).setButton(DialogInterface.BUTTON_POSITIVE, context.getString(android.R.string.ok), this);
+                    ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setText((android.R.string.ok));
                 }
             } else {
                 mConflictLabel.setVisibility(View.VISIBLE);
                 final String label = KeyboardShortcutsHandler.getActionLabel(context, oldAction);
                 mConflictLabel.setText(context.getString(R.string.conflicts_with_name, label));
                 if (dialog instanceof AlertDialog) {
-                    ((AlertDialog) dialog).setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.overwrite), this);
+                    ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setText((R.string.overwrite));
                 }
             }
             return true;

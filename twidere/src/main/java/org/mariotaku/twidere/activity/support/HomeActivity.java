@@ -178,6 +178,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             updateUnreadCount();
         }
     };
+    private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -188,7 +189,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     public Fragment getCurrentVisibleFragment() {
         return mCurrentVisibleFragment;
     }
-
 
     @Override
     public void onDetachFragment(final Fragment fragment) {
@@ -211,11 +211,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
                 && ((RefreshScrollTopInterface) f).triggerRefresh();
     }
 
-    private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
-
     @Override
     public void setControlBarVisibleAnimate(boolean visible) {
         mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
+    }
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        final int height = mTabIndicator != null ? mTabIndicator.getHeight() : 0;
+        insets.top = height != 0 ? height : Utils.getActionBarHeight(this);
+        return true;
     }
 
     @Override
@@ -230,13 +235,23 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         notifyControlBarOffsetChanged();
     }
 
-    public SlidingMenu getSlidingMenu() {
-        return mSlidingMenu;
-    }
-
     @Override
     public int getThemeResourceId() {
         return ThemeUtils.getNoActionBarThemeResource(this);
+    }
+
+    @Override
+    public boolean onKeyUp(final int keyCode, @NonNull final KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU: {
+                if (mSlidingMenu != null) {
+                    mSlidingMenu.toggle(true);
+                    return true;
+                }
+                break;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -269,10 +284,11 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     @Override
     protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
-        if (mCurrentVisibleFragment instanceof IBasePullToRefreshFragment)
-            return (IBasePullToRefreshFragment) mCurrentVisibleFragment;
-        else if (mCurrentVisibleFragment instanceof SupportFragmentCallback) {
-            final Fragment curr = ((SupportFragmentCallback) mCurrentVisibleFragment).getCurrentVisibleFragment();
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof IBasePullToRefreshFragment)
+            return (IBasePullToRefreshFragment) fragment;
+        else if (fragment instanceof SupportFragmentCallback) {
+            final Fragment curr = ((SupportFragmentCallback) fragment).getCurrentVisibleFragment();
             if (curr instanceof IBasePullToRefreshFragment)
                 return (IBasePullToRefreshFragment) curr;
         }
@@ -280,16 +296,15 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
-        if (handleCurrentFragmentKeyboardShortcut(keyCode, event)) return true;
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
         return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
     }
 
-    private boolean handleCurrentFragmentKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
-        if (mCurrentVisibleFragment instanceof ShortcutCallback) {
-            return ((ShortcutCallback) mCurrentVisibleFragment).handleKeyboardShortcut(keyCode, event);
-        }
-        return false;
+    @Override
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutRepeat(keyCode, repeatCount, event)) return true;
+        return super.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
     }
 
     /**
@@ -379,23 +394,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    protected void onPause() {
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONPAUSE));
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONRESUME));
-        invalidateOptionsMenu();
-        updateActionsButtonStyle();
-        updateActionsButton();
-        updateSmartBar();
-        updateSlidingMenuTouchMode();
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         mMultiSelectHandler.dispatchOnStart();
@@ -420,6 +418,23 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONRESUME));
+        invalidateOptionsMenu();
+        updateActionsButtonStyle();
+        updateActionsButton();
+        updateSmartBar();
+        updateSlidingMenuTouchMode();
+    }
+
+    @Override
+    protected void onPause() {
+        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONPAUSE));
+        super.onPause();
+    }
+
+    @Override
     protected void onStop() {
         mMultiSelectHandler.dispatchOnStop();
         mReadStateManager.unregisterOnSharedPreferenceChangeListener(mReadStateChangeListener);
@@ -437,13 +452,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Stop" + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
         //end
         super.onStop();
-    }
-
-    @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        final int height = mTabIndicator != null ? mTabIndicator.getHeight() : 0;
-        insets.top = height != 0 ? height : Utils.getActionBarHeight(this);
-        return true;
     }
 
     public ViewPager getViewPager() {
@@ -495,36 +503,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    public boolean onKeyUp(final int keyCode, @NonNull final KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_MENU: {
-                if (mSlidingMenu != null) {
-                    mSlidingMenu.toggle(true);
-                    return true;
-                }
-                break;
-            }
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public void onWindowFocusChanged(final boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (mSlidingMenu != null && mSlidingMenu.isMenuShowing()) {
-            updateDrawerPercentOpen(1, false);
-        } else {
-            updateDrawerPercentOpen(0, false);
-        }
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-        startActivity(new Intent(this, QuickSearchBarActivity.class));
-        return true;
-    }
-
-    @Override
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
             case R.id.action_buttons: {
@@ -545,12 +523,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    public float getControlBarOffset() {
-        final float totalHeight = getControlBarHeight();
-        return 1 + mTabsContainer.getTranslationY() / totalHeight;
-    }
-
-    @Override
     public void onPageSelected(final int position) {
         if (mSlidingMenu.isMenuShowing()) {
             mSlidingMenu.showContent();
@@ -561,13 +533,24 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    public int getControlBarHeight() {
-        return mTabIndicator.getHeight() - mTabIndicator.getStripHeight();
+    public void onPageScrollStateChanged(final int state) {
+        setControlBarVisibleAnimate(true);
     }
 
     @Override
-    public void onPageScrollStateChanged(final int state) {
-        setControlBarVisibleAnimate(true);
+    public void onWindowFocusChanged(final boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (mSlidingMenu != null && mSlidingMenu.isMenuShowing()) {
+            updateDrawerPercentOpen(1, false);
+        } else {
+            updateDrawerPercentOpen(0, false);
+        }
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        startActivity(new Intent(this, QuickSearchBarActivity.class));
+        return true;
     }
 
     public void openSearchView(final ParcelableAccount account) {
@@ -581,6 +564,12 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             ((AccountsDashboardFragment) fragment).setStatusBarHeight(insets.top);
         }
         mColorStatusFrameLayout.setStatusBarHeight(insets.top);
+    }
+
+    @Override
+    public float getControlBarOffset() {
+        final float totalHeight = getControlBarHeight();
+        return 1 + mTabsContainer.getTranslationY() / totalHeight;
     }
 
     public void updateUnreadCount() {
@@ -601,6 +590,11 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public int getControlBarHeight() {
+        return mTabIndicator.getHeight() - mTabIndicator.getStripHeight();
     }
 
     @Override
@@ -636,6 +630,17 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
+            if (mSlidingMenu != null) {
+                mSlidingMenu.toggle(true);
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
     public void onSupportContentChanged() {
         super.onSupportContentChanged();
         mActionBar = (Toolbar) findViewById(R.id.actionbar);
@@ -652,6 +657,22 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     @Override
     protected boolean shouldSetWindowBackground() {
+        return false;
+    }
+
+    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+        }
+        return false;
+    }
+
+    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+        }
         return false;
     }
 
@@ -1007,14 +1028,5 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
-            if (mSlidingMenu != null) {
-                mSlidingMenu.toggle(true);
-                return true;
-            }
-        }
-        return super.dispatchKeyEvent(event);
-    }
+
 }

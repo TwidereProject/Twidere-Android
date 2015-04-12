@@ -45,6 +45,9 @@ public class KeyboardShortcutsHandler implements Constants {
         sActionLabelMap.put("status.reply", R.string.reply);
         sActionLabelMap.put("status.retweet", R.string.retweet);
         sActionLabelMap.put("status.favorite", R.string.favorite);
+        sActionLabelMap.put("navigation.previous", R.string.previous);
+        sActionLabelMap.put("navigation.next", R.string.next);
+        sActionLabelMap.put("navigation.refresh", R.string.refresh);
 
         sMetaNameMap.put(KeyEvent.META_FUNCTION_ON, "fn");
         sMetaNameMap.put(KeyEvent.META_META_ON, "meta");
@@ -85,7 +88,7 @@ public class KeyboardShortcutsHandler implements Constants {
         return context.getString(labelRes);
     }
 
-    public static String metaToHumanReadableString(int metaState) {
+    public static String metaToFriendlyString(int metaState) {
         final StringBuilder keyNameBuilder = new StringBuilder();
         for (int i = 0, j = sMetaNameMap.size(); i < j; i++) {
             if ((sMetaNameMap.keyAt(i) & metaState) != 0) {
@@ -159,9 +162,7 @@ public class KeyboardShortcutsHandler implements Constants {
     }
 
     public boolean handleKey(final Context context, final String contextTag, final int keyCode, final KeyEvent event) {
-        if (!isValidForHotkey(keyCode, event)) return false;
-        final String key = getKeyEventKey(contextTag, keyCode, event);
-        final String action = mPreferences.getString(key, null);
+        final String action = getKeyAction(contextTag, keyCode, event);
         if (action == null) return false;
         switch (action) {
             case "compose": {
@@ -215,6 +216,9 @@ public class KeyboardShortcutsHandler implements Constants {
         editor.putString("n", "compose");
         editor.putString("m", "message");
         editor.putString("slash", "search");
+        editor.putString("navigation.period", "navigation.refresh");
+        editor.putString("navigation.j", "navigation.next");
+        editor.putString("navigation.k", "navigation.previous");
         editor.putString("status.f", "status.favorite");
         editor.putString("status.r", "status.reply");
         editor.putString("status.t", "status.retweet");
@@ -240,7 +244,9 @@ public class KeyboardShortcutsHandler implements Constants {
     }
 
     public static interface ShortcutCallback {
-        boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event);
+        boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event);
+
+        boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event);
     }
 
     /**
@@ -303,7 +309,15 @@ public class KeyboardShortcutsHandler implements Constants {
         }
 
         public String toKeyString() {
-            return metaToHumanReadableString(keyMeta) + keyName.toUpperCase(Locale.US);
+            return metaToFriendlyString(keyMeta) + keyToFriendlyString(keyName);
+        }
+
+        private static String keyToFriendlyString(String keyName) {
+            if (keyName == null) return null;
+            final String upperName = keyName.toUpperCase(Locale.US);
+            final int keyCode = KeyEvent.keyCodeFromString(KEYCODE_STRING_PREFIX + upperName);
+            if (keyCode == KeyEvent.KEYCODE_UNKNOWN) return upperName;
+            return String.valueOf(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode).getDisplayLabel());
         }
 
         @Override

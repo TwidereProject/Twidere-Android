@@ -49,6 +49,7 @@ import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -83,6 +84,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private ReadStateManager mReadStateManager;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private ParcelableStatus mSelectedStatus;
+
+    private int mPositionBackup;
+
     private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -123,14 +127,62 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     @Override
-    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
-        final View focusedChild = mLayoutManager.getFocusedChild();
-        final int position = mRecyclerView.getChildLayoutPosition(focusedChild);
+        String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+        final LinearLayoutManager layoutManager = mLayoutManager;
+        final RecyclerView recyclerView = mRecyclerView;
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.getFocusedChild());
+        final int position;
+        if (focusedChild != null) {
+            position = recyclerView.getChildLayoutPosition(focusedChild);
+        } else if (layoutManager.findFirstVisibleItemPosition() == 0) {
+            position = -1;
+        } else {
+            final int itemCount = mAdapter.getItemCount();
+            if (layoutManager.findLastVisibleItemPosition() == itemCount - 1) {
+                position = itemCount;
+            } else {
+                position = mPositionBackup;
+            }
+        }
+        mPositionBackup = position;
+        if (action != null) {
+            switch (action) {
+                case "navigation.previous": {
+                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, -1);
+                    return true;
+                }
+                case "navigation.next": {
+                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, 1);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
+        String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+        if ("navigation.refresh".equals(action)) {
+            triggerRefresh();
+            return true;
+        }
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, mLayoutManager.getFocusedChild());
+        final int position;
+        if (focusedChild != null && focusedChild.getParent() == mRecyclerView) {
+            position = mRecyclerView.getChildLayoutPosition(focusedChild);
+        } else {
+            return false;
+        }
         if (position == -1) return false;
         final ParcelableStatus status = mAdapter.getStatus(position);
         if (status == null) return false;
-        final String action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
+        if (action == null) {
+            action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
+        }
         if (action == null) return false;
         switch (action) {
             case "status.reply": {
@@ -420,25 +472,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_id, status.id);
-                    //spice
-                    SpiceProfilingUtil.profile(activity, status.account_id, status.id + ",Unfavor,"
-                            + status.account_id + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                    SpiceProfilingUtil.log(activity, status.id + ",Unfavor,"
-                            + status.account_id + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                    //end
+                    twitter.destroyFavoriteAsync(status);
                 } else {
-                    twitter.createFavoriteAsync(status.account_id, status.id);
-                    //spice
-                    SpiceProfilingUtil.profile(activity, status.account_id, status.id + ",Favor,"
-                            + status.account_id + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                    SpiceProfilingUtil.log(activity, status.id + ",Favor,"
-                            + status.account_id + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                    //end
+                    twitter.createFavoriteAsync(status);
                 }
                 break;
             }

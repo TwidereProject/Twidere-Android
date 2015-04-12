@@ -119,6 +119,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
         @Subscribe
         public void notifyStatusListChanged(StatusListChangedEvent event) {
+            getAdapter().notifyDataSetChanged();
         }
 
         @Subscribe

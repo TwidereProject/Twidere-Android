@@ -927,7 +927,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 Utils.setLastSeen(mContext, status.getUserMentionEntities(), System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
-                values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
+                if (status.isRetweet()) {
+                    values.put(Statuses.FAVORITE_COUNT, status.getRetweetedStatus().getFavoriteCount());
+                } else {
+                    values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
+                }
                 final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                         Expression.or(Expression.equals(Statuses.STATUS_ID, status_id),
                                 Expression.equals(Statuses.RETWEET_ID, status_id)));
@@ -1464,7 +1468,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 try {
                     final twitter4j.Status status = twitter.destroyFavorite(status_id);
                     final ContentValues values = new ContentValues();
-                    values.put(Statuses.IS_FAVORITE, 0);
+                    values.put(Statuses.IS_FAVORITE, false);
+                    if (status.isRetweet()) {
+                        values.put(Statuses.FAVORITE_COUNT, status.getRetweetedStatus().getFavoriteCount());
+                    } else {
+                        values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
+                    }
                     final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                             Expression.or(Expression.equals(Statuses.STATUS_ID, status_id), Expression.equals(Statuses.RETWEET_ID, status_id)));
                     for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
