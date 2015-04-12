@@ -2,7 +2,7 @@
 <!--
   ~ Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -18,27 +18,26 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
-    android:id="@+id/go_top"
-    style="?android:actionButtonStyle"
+<org.mariotaku.twidere.view.ExtendedLinearLayout
+    android:id="@+id/keyboard_shortcut_input"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:gravity="center"
+    android:padding="@dimen/element_spacing_xlarge">
 
-    <org.mariotaku.twidere.view.ActionBarTitleView
-        android:id="@+id/actionbar_title"
+    <TextView
+        android:id="@+id/keys_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"/>
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="@string/keyboard_shortcut_hint"/>
 
-    <org.mariotaku.twidere.view.ActionBarSubtitleView
-        android:id="@+id/actionbar_subtitle"
+    <TextView
+        android:id="@+id/conflict_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content"/>
 
-</LinearLayout>
+</org.mariotaku.twidere.view.ExtendedLinearLayout>

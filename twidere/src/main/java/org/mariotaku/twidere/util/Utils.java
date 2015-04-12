@@ -243,7 +243,6 @@ import java.util.zip.CRC32;
 import javax.net.ssl.SSLException;
 
 import edu.tsinghua.spice.SpiceService;
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.DirectMessage;
 import twitter4j.RateLimitStatus;
@@ -2925,9 +2924,9 @@ public final class Utils implements Constants, TwitterConstants {
         return null;
     }
 
-    public static void openMessageConversation(final FragmentActivity activity, final long accountId,
+    public static void openMessageConversation(final Context context, final long accountId,
                                                final long recipientId) {
-        if (activity == null) return;
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
@@ -2936,7 +2935,7 @@ public final class Utils implements Constants, TwitterConstants {
             builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openMedia(final Context context, final ParcelableDirectMessage message, final ParcelableMedia current) {
@@ -3569,15 +3568,9 @@ public final class Utils implements Constants, TwitterConstants {
         }
         final MenuItem retweet = menu.findItem(MENU_RETWEET);
         if (retweet != null) {
-            retweet.setVisible(!status.user_is_protected || isMyRetweet);
             ActionIconDrawable.setMenuHighlight(retweet, new TwidereMenuInfo(isMyRetweet, retweetHighlight));
             retweet.setTitle(isMyRetweet ? R.string.cancel_retweet : R.string.retweet);
         }
-//        final MenuItem retweetSubItem = menu.findItem(R.id.retweet_submenu);
-//        if (retweetSubItem != null) {
-//            ActionIconDrawable.setMenuHighlight(retweetSubItem, new TwidereMenuInfo(isMyRetweet,
-//                    retweetHighlight));
-//        }
         final MenuItem favorite = menu.findItem(MENU_FAVORITE);
         if (favorite != null) {
             ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));
@@ -3950,30 +3943,9 @@ public final class Utils implements Constants, TwitterConstants {
             }
             case MENU_FAVORITE: {
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_id, status.id);
-                    //spice
-                    SpiceProfilingUtil.profile(context,
-                            status.account_id, status.id + ",Unfavor," + status.account_id
-                                    + "," + status.user_id + "," + status.reply_count
-                                    + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.timestamp);
-                    SpiceProfilingUtil.log(context, status.id + ",Unfavor," + status.account_id
-                            + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count
-                            + "," + status.timestamp);
-                    //end
+                    twitter.destroyFavoriteAsync(status);
                 } else {
-                    twitter.createFavoriteAsync(status.account_id, status.id);
-                    //spice
-                    SpiceProfilingUtil.profile(context,
-                            status.account_id, status.id + ",Favor,"
-                                    + status.account_id + "," + status.user_id + "," + status.reply_count
-                                    + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.timestamp);
-                    SpiceProfilingUtil.log(context, status.id + ",Favor,"
-                            + status.account_id + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                    //end
+                    twitter.createFavoriteAsync(status);
                 }
                 break;
             }

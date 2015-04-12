@@ -93,6 +93,7 @@ import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -279,9 +280,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    protected boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
-        mKeyboardShortcutsHandler.handleKey(null, keyCode, event);
-        return super.handleKeyboardShortcut(keyCode, event);
+    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+        if (handleCurrentFragmentKeyboardShortcut(keyCode, event)) return true;
+        return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
+    }
+
+    private boolean handleCurrentFragmentKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+        if (mCurrentVisibleFragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) mCurrentVisibleFragment).handleKeyboardShortcut(keyCode, event);
+        }
+        return false;
     }
 
     /**
@@ -301,10 +309,11 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTwitterWrapper = getTwitterWrapper();
-        mReadStateManager = TwidereApplication.getInstance(this).getReadStateManager();
+        final TwidereApplication app = TwidereApplication.getInstance(this);
+        mReadStateManager = app.getReadStateManager();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
-        mKeyboardShortcutsHandler = new KeyboardShortcutsHandler(this);
+        mKeyboardShortcutsHandler = app.getKeyboardShortcutsHandler();
         mMultiSelectHandler.dispatchOnCreate();
         final long[] accountIds = getAccountIds(this);
         if (accountIds.length == 0) {

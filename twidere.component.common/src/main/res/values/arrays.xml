@@ -34,4 +34,18 @@
         <!--Twitter for Google TV-->
         <item>56d8f9ff</item>
     </string-array>
+    <string-array name="names_official_consumer_secret_crc32">
+        <!--Twitter for Android-->
+        <item>Twitter for Android</item>
+        <!--Twitter for iPhone-->
+        <item>Twitter for iPhone</item>
+        <!--Twitter for iPad-->
+        <item>Twitter for iPad</item>
+        <!--Twitter for Mac-->
+        <item>Twitter for Mac</item>
+        <!--Twitter for Windows Phone-->
+        <item>Twitter for Windows Phone</item>
+        <!--Twitter for Google TV-->
+        <item>Twitter for Google TV</item>
+    </string-array>
 </resources>

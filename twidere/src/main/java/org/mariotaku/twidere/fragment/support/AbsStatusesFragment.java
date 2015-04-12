@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -19,6 +20,7 @@ import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +46,8 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -63,7 +67,7 @@ import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
  */
 public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment implements LoaderCallbacks<Data>,
         OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, StatusAdapterListener,
-        ControlBarOffsetListener, ContentListSupport {
+        ControlBarOffsetListener, ContentListSupport, ShortcutCallback {
 
     private final Object mStatusesBusCallback;
     private AbsStatusesAdapter<Data> mAdapter;
@@ -77,6 +81,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     private int mControlBarOffsetPixels;
     private PopupMenu mPopupMenu;
     private ReadStateManager mReadStateManager;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private ParcelableStatus mSelectedStatus;
     private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
         @Override
@@ -115,6 +120,40 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     @Override
     public boolean isScrollContent(float x, float y) {
         return mDrawerCallback.isScrollContent(x, y);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
+        final View focusedChild = mLayoutManager.getFocusedChild();
+        final int position = mRecyclerView.getChildLayoutPosition(focusedChild);
+        if (position == -1) return false;
+        final ParcelableStatus status = mAdapter.getStatus(position);
+        if (status == null) return false;
+        final String action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
+        if (action == null) return false;
+        switch (action) {
+            case "status.reply": {
+                final Intent intent = new Intent(INTENT_ACTION_REPLY);
+                intent.putExtra(EXTRA_STATUS, status);
+                startActivity(intent);
+                return true;
+            }
+            case "status.retweet": {
+                RetweetQuoteDialogFragment.show(getFragmentManager(), status);
+                return true;
+            }
+            case "status.favorite": {
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (status.is_favorite) {
+                    twitter.destroyFavoriteAsync(status);
+                } else {
+                    twitter.createFavoriteAsync(status);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -175,6 +214,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mReadStateManager = getReadStateManager();
+        final FragmentActivity activity = getActivity();
+        final TwidereApplication application = TwidereApplication.getInstance(activity);
+        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();

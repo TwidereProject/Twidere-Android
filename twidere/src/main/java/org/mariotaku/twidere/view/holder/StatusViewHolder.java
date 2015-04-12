@@ -164,14 +164,7 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             replyRetweetIcon.setVisibility(View.GONE);
         }
 
-        final int typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
-        if (typeIconRes != 0) {
-            profileTypeView.setImageResource(typeIconRes);
-            profileTypeView.setVisibility(View.VISIBLE);
-        } else {
-            profileTypeView.setImageDrawable(null);
-            profileTypeView.setVisibility(View.GONE);
-        }
+        final int typeIconRes;
 
         if (status.is_quote) {
             quotedNameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
@@ -202,10 +195,14 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
                 profileTypeView.setVisibility(View.VISIBLE);
                 profileImageView.setVisibility(View.VISIBLE);
                 loader.displayProfileImage(profileImageView, status.quoted_by_user_profile_image);
+
+                typeIconRes = getUserTypeIconRes(status.quoted_by_user_is_verified, status.quoted_by_user_is_protected);
             } else {
                 profileTypeView.setVisibility(View.GONE);
                 profileImageView.setVisibility(View.GONE);
                 loader.cancelDisplayTask(profileImageView);
+
+                typeIconRes = 0;
             }
 
             final int userColor = UserColorNameUtils.getUserColor(context, status.quoted_by_user_id);
@@ -220,17 +217,28 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             quoteIndicator.setVisibility(View.GONE);
 
             if (adapter.isProfileImageEnabled()) {
-                final String user_profile_image_url = status.user_profile_image_url;
-                profileTypeView.setVisibility(View.VISIBLE);
                 profileImageView.setVisibility(View.VISIBLE);
+                final String user_profile_image_url = status.user_profile_image_url;
                 loader.displayProfileImage(profileImageView, user_profile_image_url);
+
+                typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
             } else {
                 profileTypeView.setVisibility(View.GONE);
                 profileImageView.setVisibility(View.GONE);
                 loader.cancelDisplayTask(profileImageView);
+
+                typeIconRes = 0;
             }
             final int userColor = UserColorNameUtils.getUserColor(context, status.user_id);
             itemContent.drawStart(userColor);
+        }
+
+        if (typeIconRes != 0) {
+            profileTypeView.setImageResource(typeIconRes);
+            profileTypeView.setVisibility(View.VISIBLE);
+        } else {
+            profileTypeView.setImageDrawable(null);
+            profileTypeView.setVisibility(View.GONE);
         }
 
 
@@ -390,20 +398,21 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             quoteIndicator.setColor(UserColorNameUtils.getUserColor(context, user_id));
 
             if (adapter.isProfileImageEnabled()) {
-                profileTypeView.setVisibility(View.VISIBLE);
                 profileImageView.setVisibility(View.VISIBLE);
                 loader.displayProfileImage(profileImageView, cursor.getString(indices.quoted_by_user_profile_image));
+
+                typeIconRes = getUserTypeIconRes(cursor.getShort(indices.quoted_by_user_is_verified) == 1,
+                        cursor.getShort(indices.quoted_by_user_is_protected) == 1);
             } else {
-                profileTypeView.setVisibility(View.GONE);
                 profileImageView.setVisibility(View.GONE);
                 loader.cancelDisplayTask(profileImageView);
+
+                typeIconRes = 0;
             }
 
             final int userColor = UserColorNameUtils.getUserColor(context, cursor.getLong(indices.quoted_by_user_id));
             itemContent.drawStart(userColor);
 
-            typeIconRes = getUserTypeIconRes(cursor.getShort(indices.quoted_by_user_is_verified) == 1,
-                    cursor.getShort(indices.quoted_by_user_is_protected) == 1);
         } else {
             nameView.setText(user_name);
             screenNameView.setText("@" + user_screen_name);
@@ -414,20 +423,21 @@ public class StatusViewHolder extends RecyclerView.ViewHolder implements Constan
             quoteIndicator.setVisibility(View.GONE);
 
             if (adapter.isProfileImageEnabled()) {
-                final String user_profile_image_url = cursor.getString(indices.user_profile_image_url);
-                profileTypeView.setVisibility(View.VISIBLE);
                 profileImageView.setVisibility(View.VISIBLE);
+
+                final String user_profile_image_url = cursor.getString(indices.user_profile_image_url);
                 loader.displayProfileImage(profileImageView, user_profile_image_url);
+
+                typeIconRes = getUserTypeIconRes(cursor.getShort(indices.is_verified) == 1,
+                        cursor.getShort(indices.is_protected) == 1);
             } else {
-                profileTypeView.setVisibility(View.GONE);
                 profileImageView.setVisibility(View.GONE);
                 loader.cancelDisplayTask(profileImageView);
+
+                typeIconRes = 0;
             }
             final int userColor = UserColorNameUtils.getUserColor(context, user_id);
             itemContent.drawStart(userColor);
-
-            typeIconRes = getUserTypeIconRes(cursor.getShort(indices.is_verified) == 1,
-                    cursor.getShort(indices.is_protected) == 1);
         }
 
         if (typeIconRes != 0) {

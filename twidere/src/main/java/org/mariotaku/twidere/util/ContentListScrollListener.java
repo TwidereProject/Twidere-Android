@@ -42,22 +42,13 @@ public class ContentListScrollListener extends OnScrollListener {
         mContentListSupport = contentListSupport;
     }
 
-    public void setOnScrollListener(OnScrollListener listener) {
-        mOnScrollListener = listener;
-    }
-
-
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         if (mOnScrollListener != null) {
             mOnScrollListener.onScrollStateChanged(recyclerView, newState);
         }
-        final IContentCardAdapter adapter = mContentListSupport.getAdapter();
-        final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (!mContentListSupport.isRefreshing() && adapter.isLoadMoreSupported()
-                && !adapter.isLoadMoreIndicatorVisible() && mScrollState != RecyclerView.SCROLL_STATE_IDLE
-                && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
-            mContentListSupport.onLoadMoreContents();
+        if (mScrollState != RecyclerView.SCROLL_STATE_IDLE) {
+            notifyScrollStateChanged(recyclerView);
         }
         mScrollState = newState;
     }
@@ -76,22 +67,37 @@ public class ContentListScrollListener extends OnScrollListener {
             mContentListSupport.setControlVisible(dy < 0);
             mScrollSum = 0;
         }
+        if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+            notifyScrollStateChanged(recyclerView);
+        }
     }
 
+    public void setOnScrollListener(OnScrollListener listener) {
+        mOnScrollListener = listener;
+    }
 
     public void setTouchSlop(int touchSlop) {
         mTouchSlop = touchSlop;
     }
 
-    public static interface ContentListSupport {
+    private void notifyScrollStateChanged(RecyclerView recyclerView) {
+        final IContentCardAdapter adapter = mContentListSupport.getAdapter();
+        final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (!mContentListSupport.isRefreshing() && adapter.isLoadMoreSupported() && !adapter.isLoadMoreIndicatorVisible()
+                && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
+            mContentListSupport.onLoadMoreContents();
+        }
+    }
 
-        boolean isRefreshing();
+    public static interface ContentListSupport {
 
         IContentCardAdapter getAdapter();
 
-        void setControlVisible(boolean visible);
+        boolean isRefreshing();
 
         void onLoadMoreContents();
+
+        void setControlVisible(boolean visible);
 
     }
 }

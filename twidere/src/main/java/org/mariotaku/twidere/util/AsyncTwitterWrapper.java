@@ -196,6 +196,21 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
+    public int createFavoriteAsync(final ParcelableStatus status) {
+        //spice
+        final Context context = getContext();
+        SpiceProfilingUtil.profile(context,
+                status.account_id, status.id + ",Favor,"
+                        + status.account_id + "," + status.user_id + "," + status.reply_count
+                        + "," + status.retweet_count + "," + status.favorite_count
+                        + "," + status.timestamp);
+        SpiceProfilingUtil.log(context, status.id + ",Favor,"
+                + status.account_id + "," + status.user_id + "," + status.reply_count
+                + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
+        //end
+        return createFavoriteAsync(status.account_id, status.id);
+    }
+
     public int createFriendshipAsync(final long accountId, final long userId) {
         final CreateFriendshipTask task = new CreateFriendshipTask(accountId, userId);
         return mAsyncTaskManager.add(task, true);
@@ -250,6 +265,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public int destroyFavoriteAsync(final long accountId, final long status_id) {
         final DestroyFavoriteTask task = new DestroyFavoriteTask(accountId, status_id);
         return mAsyncTaskManager.add(task, true);
+    }
+
+    public int destroyFavoriteAsync(final ParcelableStatus status) {
+        //spice
+        final Context context = getContext();
+        SpiceProfilingUtil.profile(context,
+                status.account_id, status.id + ",Unfavor," + status.account_id
+                        + "," + status.user_id + "," + status.reply_count
+                        + "," + status.retweet_count + "," + status.favorite_count
+                        + "," + status.timestamp);
+        SpiceProfilingUtil.log(context, status.id + ",Unfavor," + status.account_id
+                + "," + status.user_id + "," + status.reply_count
+                + "," + status.retweet_count + "," + status.favorite_count
+                + "," + status.timestamp);
+        //end
+        return destroyFavoriteAsync(status.account_id, status.id);
     }
 
     public int destroyFriendshipAsync(final long accountId, final long user_id) {
@@ -579,7 +610,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 Utils.showErrorMessage(mContext, R.string.action_updating_profile_banner_image, result.getException(),
                         true);
             }
-        }        @Override
+        }
+
+        @Override
         protected SingleResponse<ParcelableUser> doInBackground(final Object... params) {
             try {
                 final Twitter twitter = getTwitterInstance(mContext, mAccountId, true);
@@ -597,7 +630,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance(e);
             }
         }
-
 
 
     }
@@ -1379,7 +1411,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final TwitterException te = (TwitterException) e;
             return te.getErrorCode() == StatusCodeMessageUtils.PAGE_NOT_FOUND
                     || te.getStatusCode() == HttpResponseCode.NOT_FOUND;
-        }        @Override
+        }
+
+        @Override
         protected SingleResponse<DirectMessage> doInBackground(final Object... args) {
             final Twitter twitter = getTwitterInstance(mContext, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
@@ -1394,7 +1428,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance(null, e);
             }
         }
-
 
 
         @Override
@@ -1769,7 +1802,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         protected abstract Uri getDatabaseUri();
 
-        protected abstract boolean isOutgoing();        @Override
+        protected abstract boolean isOutgoing();
+
+        @Override
         protected List<MessageListResponse> doInBackground(final Object... params) {
 
             final List<MessageListResponse> result = new ArrayList<>();
@@ -1843,7 +1878,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
 
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1871,12 +1905,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         public ResponseList<twitter4j.Status> getStatuses(final Twitter twitter, final Paging paging)
                 throws TwitterException {
             return twitter.getHomeTimeline(paging);
-        }        @NonNull
+        }
+
+        @NonNull
         @Override
         protected Uri getDatabaseUri() {
             return Statuses.CONTENT_URI;
         }
-
 
 
         @Override
@@ -1966,11 +2001,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         public ResponseList<DirectMessage> getDirectMessages(final Twitter twitter, final Paging paging)
                 throws TwitterException {
             return twitter.getDirectMessages(paging);
-        }        @Override
+        }
+
+        @Override
         protected Uri getDatabaseUri() {
             return Inbox.CONTENT_URI;
         }
-
 
 
         @Override
@@ -2044,7 +2080,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         final boolean isMaxIdsValid() {
             return mMaxIds != null && mMaxIds.length == mAccountIds.length;
-        }        @SafeVarargs
+        }
+
+        @SafeVarargs
         @Override
         protected final void onProgressUpdate(TwitterListResponse<twitter4j.Status>... values) {
             AsyncTaskUtils.executeTask(new CacheUsersStatusesTask(mContext), values);

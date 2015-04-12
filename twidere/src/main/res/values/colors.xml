@@ -27,7 +27,7 @@
     <color name="unread_color">@color/material_red</color>
     <color name="branding_color">@color/material_cyan</color>
     <color name="bg_color_tab_pressed">#40808080</color>
-    <color name="bg_color_media_viewer">#a0000000</color>
+    <color name="bg_color_media_viewer">#cc000000</color>
     <color name="background_color_card_item_dark">#1a1a1a</color>
     <color name="background_color_card_item_light">#fafafa</color>
     <color name="background_color_action_bar_dark">#212121</color>

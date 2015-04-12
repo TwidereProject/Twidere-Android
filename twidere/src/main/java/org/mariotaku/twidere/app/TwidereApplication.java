@@ -49,6 +49,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -97,6 +98,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private Bus mMessageBus;
     private VideoLoader mVideoLoader;
     private ReadStateManager mReadStateManager;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
 
     private String mDefaultUserAgent;
 
@@ -136,6 +138,15 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public ReadStateManager getReadStateManager() {
         if (mReadStateManager != null) return mReadStateManager;
         return mReadStateManager = new ReadStateManager(this);
+    }
+
+    public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
+        if (mKeyboardShortcutsHandler != null) return mKeyboardShortcutsHandler;
+        mKeyboardShortcutsHandler = new KeyboardShortcutsHandler(this);
+        if (mKeyboardShortcutsHandler.isEmpty()) {
+            mKeyboardShortcutsHandler.reset();
+        }
+        return mKeyboardShortcutsHandler;
     }
 
     public ImageDownloader getImageDownloader() {

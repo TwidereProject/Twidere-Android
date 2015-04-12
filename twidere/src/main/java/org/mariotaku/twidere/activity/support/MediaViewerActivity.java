@@ -72,6 +72,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
+import org.mariotaku.twidere.view.LinePageIndicator;
 
 import java.io.File;
 
@@ -82,6 +83,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     private MediaPagerAdapter mAdapter;
     private ActionBar mActionBar;
     private View mMediaStatusContainer;
+    private LinePageIndicator mIndicator;
 
 
     @Override
@@ -124,6 +126,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     public void onSupportContentChanged() {
         super.onSupportContentChanged();
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mIndicator = (LinePageIndicator) findViewById(R.id.pager_indicator);
         mMediaStatusContainer = findViewById(R.id.media_status_container);
     }
 
@@ -137,16 +140,19 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         mViewPager.setAdapter(mAdapter);
         mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.element_spacing_normal));
         mViewPager.setOnPageChangeListener(this);
+        mIndicator.setSelectedColor(getCurrentThemeColor());
+        mIndicator.setViewPager(mViewPager);
         final Intent intent = getIntent();
         final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
         final ParcelableMedia[] media = Utils.newParcelableArray(intent.getParcelableArrayExtra(EXTRA_MEDIA), ParcelableMedia.CREATOR);
         final ParcelableMedia currentMedia = intent.getParcelableExtra(EXTRA_CURRENT_MEDIA);
         mAdapter.setMedia(accountId, media);
+        mIndicator.notifyDataSetChanged();
         final int currentIndex = ArrayUtils.indexOf(media, currentMedia);
         if (currentIndex != -1) {
             mViewPager.setCurrentItem(currentIndex, false);
         }
-        if (intent.hasExtra(EXTRA_STATUS)) {
+        if (isMediaStatusEnabled() && intent.hasExtra(EXTRA_STATUS)) {
             mMediaStatusContainer.setVisibility(View.VISIBLE);
             final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             final Fragment f = new ViewStatusDialogFragment();
@@ -175,8 +181,14 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             mActionBar.hide();
         }
 
-        mMediaStatusContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mIndicator.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mMediaStatusContainer.setVisibility(isMediaStatusEnabled() && visible ? View.VISIBLE : View.GONE);
     }
+
+    private boolean isMediaStatusEnabled() {
+        return false;
+    }
+
 
     private void toggleBar() {
         setBarVisibility(!isBarShowing());

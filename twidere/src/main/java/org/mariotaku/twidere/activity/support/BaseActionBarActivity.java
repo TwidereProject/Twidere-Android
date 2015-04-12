@@ -33,7 +33,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
@@ -42,7 +42,8 @@ import java.util.ArrayList;
 
 @SuppressLint("Registered")
 public class BaseActionBarActivity extends ThemedActionBarActivity implements Constants,
-        OnFitSystemWindowsListener, SystemWindowsInsetsCallback, IControlBarActivity {
+        OnFitSystemWindowsListener, SystemWindowsInsetsCallback, IControlBarActivity,
+        ShortcutCallback {
 
     private boolean mInstanceStateSaved, mIsVisible, mIsOnTop;
 
@@ -118,7 +119,8 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
         return null;
     }
 
-    protected boolean handleKeyboardShortcut(int keyCode,@NonNull KeyEvent event) {
+    @Override
+    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
         return false;
     }
 

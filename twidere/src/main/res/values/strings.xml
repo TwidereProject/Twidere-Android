@@ -738,5 +738,8 @@
     <string name="N_favorites_quantity_other"><xliff:g id="count">%d</xliff:g> favorites</string>
     <string name="drafts_hint_messages">Your unsent tweets will goes here</string>
     <string name="keyboard_shortcuts">Keyboard shortcuts</string>
+    <string name="keyboard_shortcut_hint">Press keys</string>
+    <string name="conflicts_with_name">Conflicts with <xliff:g id="name">%s</xliff:g></string>
+    <string name="overwrite">Overwrite</string>
 
 </resources>

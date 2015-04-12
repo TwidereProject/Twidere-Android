@@ -25,6 +25,7 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
         super(context, attrs);
     }
 
+
     public StatusTextView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -46,6 +47,32 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
 
     public void setOnSelectionChangeListener(final OnSelectionChangeListener l) {
         mOnSelectionChangeListener = l;
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        if (text == null) {
+            super.setText(null, type);
+            return;
+        }
+        super.setText(new SafeSpannableStringWrapper(text), type);
+    }
+
+    @Override
+    protected void onSelectionChanged(final int selStart, final int selEnd) {
+        super.onSelectionChanged(selStart, selEnd);
+        if (mOnSelectionChangeListener != null) {
+            mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
+        }
+    }
+
+    @Override
+    public final boolean onTouchEvent(@NonNull final MotionEvent event) {
+        if (mTouchInterceptor != null) {
+            final boolean ret = mTouchInterceptor.onTouchEvent(this, event);
+            if (ret) return true;
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -73,21 +100,8 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
         }
     }
 
-    @Override
-    protected void onSelectionChanged(final int selStart, final int selEnd) {
-        super.onSelectionChanged(selStart, selEnd);
-        if (mOnSelectionChangeListener != null) {
-            mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
-        }
-    }
-
-    @Override
-    public void setText(CharSequence text, BufferType type) {
-        if (text == null) {
-            super.setText(null, type);
-            return;
-        }
-        super.setText(new SafeSpannableStringWrapper(text), type);
+    public interface OnSelectionChangeListener {
+        void onSelectionChanged(int selStart, int selEnd);
     }
 
     private static class SafeSpannableStringWrapper extends SpannableString {
@@ -104,19 +118,6 @@ public class StatusTextView extends ThemedTextView implements IExtendedView {
             }
             super.setSpan(what, start, end, flags);
         }
-    }
-
-    @Override
-    public final boolean onTouchEvent(@NonNull final MotionEvent event) {
-        if (mTouchInterceptor != null) {
-            final boolean ret = mTouchInterceptor.onTouchEvent(this, event);
-            if (ret) return true;
-        }
-        return super.onTouchEvent(event);
-    }
-
-    public interface OnSelectionChangeListener {
-        void onSelectionChanged(int selStart, int selEnd);
     }
 
 }

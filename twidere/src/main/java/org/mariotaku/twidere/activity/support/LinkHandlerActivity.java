@@ -25,26 +25,26 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
-import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -55,13 +55,16 @@ import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
 
-public class LinkHandlerActivity extends BaseActionBarActivity implements OnClickListener,
-        OnLongClickListener, SystemWindowsInsetsCallback, IControlBarActivity, SupportFragmentCallback {
+public class LinkHandlerActivity extends BaseActionBarActivity implements SystemWindowsInsetsCallback,
+        IControlBarActivity, SupportFragmentCallback {
 
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
 
     private MultiSelectEventHandler mMultiSelectHandler;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+
     private TintedStatusFrameLayout mMainContent;
+
     private boolean mFinishOnly;
 
     @Override
@@ -81,35 +84,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
 
     @Override
     public boolean triggerRefresh(int position) {
-        return false;
-    }
-
-    @Override
-    public void onClick(final View v) {
-        switch (v.getId()) {
-            case R.id.go_top: {
-                final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
-                if (fragment instanceof RefreshScrollTopInterface) {
-                    ((RefreshScrollTopInterface) fragment).scrollToStart();
-                } else if (fragment instanceof ListFragment) {
-                    ((ListFragment) fragment).setSelection(0);
-                }
-                break;
-            }
-        }
-    }
-
-    @Override
-    public boolean onLongClick(final View v) {
-        switch (v.getId()) {
-            case R.id.go_top: {
-                final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
-                if (fragment instanceof RefreshScrollTopInterface) {
-                    ((RefreshScrollTopInterface) fragment).triggerRefresh();
-                }
-                return true;
-            }
-        }
         return false;
     }
 
@@ -150,6 +124,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
         final int linkId = matchLinkId(data);
         requestWindowFeatures(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
+        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -411,6 +386,19 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements OnClic
         mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
     }
 
+    @Override
+    public boolean handleKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+        if (handleCurrentFragmentKeyboardShortcut(keyCode, event)) return true;
+        return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
+    }
+
+    private boolean handleCurrentFragmentKeyboardShortcut(int keyCode, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcut(keyCode, event);
+        }
+        return false;
+    }
 
     @Override
     public void setControlBarOffset(float offset) {

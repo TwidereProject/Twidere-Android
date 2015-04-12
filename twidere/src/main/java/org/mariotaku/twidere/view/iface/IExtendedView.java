@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.view.iface;
 
 import android.graphics.Rect;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 

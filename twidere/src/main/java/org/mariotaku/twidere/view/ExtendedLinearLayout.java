@@ -47,7 +47,7 @@ public class ExtendedLinearLayout extends LinearLayout implements IExtendedView 
     }
 
     @Override
-    public final boolean dispatchTouchEvent(final MotionEvent event) {
+    public final boolean dispatchTouchEvent(@NonNull final MotionEvent event) {
         if (mTouchInterceptor != null) {
             final boolean ret = mTouchInterceptor.dispatchTouchEvent(this, event);
             if (ret) return true;
@@ -80,6 +80,7 @@ public class ExtendedLinearLayout extends LinearLayout implements IExtendedView 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         if (mOnFitSystemWindowsListener != null) {
             mOnFitSystemWindowsListener.onFitSystemWindows(insets);
