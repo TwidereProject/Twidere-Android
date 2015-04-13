@@ -16,6 +16,7 @@ import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 public class SpiceService extends Service {
 
     private AlarmManager mAlarmManager;
+    private PendingIntent mUploadIntent;
 
     @Override
     public IBinder onBind(final Intent intent) {
@@ -31,12 +32,13 @@ public class SpiceService extends Service {
 
         // Upload Service
         final Intent uploadIntent = new Intent(SpiceUploadReceiver.ACTION_UPLOAD_PROFILE);
-        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-                12 * 60 * 60 * 1000, PendingIntent.getBroadcast(this, 0, uploadIntent, 0));
+        mUploadIntent = PendingIntent.getBroadcast(this, 0, uploadIntent, 0);
+        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 12 * 60 * 60 * 1000, mUploadIntent);
     }
 
     @Override
     public void onDestroy() {
+        mAlarmManager.cancel(mUploadIntent);
         super.onDestroy();
     }
 
