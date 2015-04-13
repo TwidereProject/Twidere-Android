@@ -197,17 +197,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int createFavoriteAsync(final ParcelableStatus status) {
-        //spice
-        final Context context = getContext();
-        SpiceProfilingUtil.profile(context,
-                status.account_id, status.id + ",Favor,"
-                        + status.account_id + "," + status.user_id + "," + status.reply_count
-                        + "," + status.retweet_count + "," + status.favorite_count
-                        + "," + status.timestamp);
-        SpiceProfilingUtil.log(context, status.id + ",Favor,"
-                + status.account_id + "," + status.user_id + "," + status.reply_count
-                + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-        //end
         return createFavoriteAsync(status.account_id, status.id);
     }
 
@@ -268,18 +257,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int destroyFavoriteAsync(final ParcelableStatus status) {
-        //spice
-        final Context context = getContext();
-        SpiceProfilingUtil.profile(context,
-                status.account_id, status.id + ",Unfavor," + status.account_id
-                        + "," + status.user_id + "," + status.reply_count
-                        + "," + status.retweet_count + "," + status.favorite_count
-                        + "," + status.timestamp);
-        SpiceProfilingUtil.log(context, status.id + ",Unfavor," + status.account_id
-                + "," + status.user_id + "," + status.reply_count
-                + "," + status.retweet_count + "," + status.favorite_count
-                + "," + status.timestamp);
-        //end
         return destroyFavoriteAsync(status.account_id, status.id);
     }
 
@@ -957,8 +934,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
             mCreatingFavoriteIds.remove(account_id, status_id);
             if (result.hasData()) {
+                final ParcelableStatus status = result.getData();
+
+                //spice
+                final Context context = getContext();
+                SpiceProfilingUtil.profile(context,
+                        status.account_id, status.id + ",Favor,"
+                                + status.account_id + "," + status.user_id + "," + status.reply_count
+                                + "," + status.retweet_count + "," + status.favorite_count
+                                + "," + status.timestamp);
+                SpiceProfilingUtil.log(context, status.id + ",Favor,"
+                        + status.account_id + "," + status.user_id + "," + status.reply_count
+                        + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
+                //end
+
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
-                bus.post(new FavoriteCreatedEvent(result.getData()));
+                bus.post(new FavoriteCreatedEvent(status));
                 mMessagesManager.showOkMessage(R.string.status_favorited, false);
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_favoriting, result.getException(), true);
@@ -1499,8 +1490,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
             mDestroyingFavoriteIds.remove(account_id, status_id);
             if (result.hasData()) {
+                final ParcelableStatus status = result.getData();
+                //spice
+                final Context context = getContext();
+                SpiceProfilingUtil.profile(context,
+                        status.account_id, status.id + ",Unfavor," + status.account_id
+                                + "," + status.user_id + "," + status.reply_count
+                                + "," + status.retweet_count + "," + status.favorite_count
+                                + "," + status.timestamp);
+                SpiceProfilingUtil.log(context, status.id + ",Unfavor," + status.account_id
+                        + "," + status.user_id + "," + status.reply_count
+                        + "," + status.retweet_count + "," + status.favorite_count
+                        + "," + status.timestamp);
+                //end
+
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
-                bus.post(new FavoriteDestroyedEvent(result.getData()));
+                bus.post(new FavoriteDestroyedEvent(status));
                 mMessagesManager.showInfoMessage(R.string.status_unfavorited, false);
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_unfavoriting, result.getException(), true);
@@ -2400,8 +2405,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), null);
                 }
-                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
-                bus.post(new StatusRetweetedEvent(status));
                 //spice
                 if (status.media == null) {
                     SpiceProfilingUtil.log(getContext(), status.id + ",Retweet," + account_id + ","
@@ -2428,6 +2431,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     }
                 }
                 //end
+                final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                bus.post(new StatusRetweetedEvent(status));
                 mMessagesManager.showOkMessage(R.string.status_retweeted, false);
             } else {
                 mMessagesManager.showErrorMessage(R.string.action_retweeting, result.getException(), true);

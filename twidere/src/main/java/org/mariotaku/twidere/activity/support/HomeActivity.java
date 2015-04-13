@@ -179,6 +179,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
     };
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
+    private int mTabColumns;
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -225,7 +226,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     @Override
     public void setControlBarOffset(float offset) {
-        mTabsContainer.setTranslationY(getControlBarHeight() * (offset - 1));
+        mTabsContainer.setTranslationY(mTabColumns > 1 ? 1 : getControlBarHeight() * (offset - 1));
         final ViewGroup.LayoutParams lp = mActionsButton.getLayoutParams();
         if (lp instanceof MarginLayoutParams) {
             mActionsButton.setTranslationY((((MarginLayoutParams) lp).bottomMargin + mActionsButton.getHeight()) * (1 - offset));
@@ -351,16 +352,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         mTabDisplayOption = getTabDisplayOptionInt(this);
 
-        final int tabColumns = getResources().getInteger(R.integer.default_tab_columns);
+        mTabColumns = getResources().getInteger(R.integer.default_tab_columns);
 
         mColorStatusFrameLayout.setOnFitSystemWindowsListener(this);
         ThemeUtils.applyBackground(mTabIndicator);
-        mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, tabColumns);
+        mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, mTabColumns);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabIndicator.setViewPager(mViewPager);
         mTabIndicator.setOnPageChangeListener(this);
-        mTabIndicator.setColumns(tabColumns);
+        mTabIndicator.setColumns(mTabColumns);
         if (mTabDisplayOption != 0) {
             mTabIndicator.setTabDisplayOption(mTabDisplayOption);
         } else {
@@ -568,6 +569,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     @Override
     public float getControlBarOffset() {
+        if (mTabColumns > 1) {
+            final ViewGroup.LayoutParams lp = mActionsButton.getLayoutParams();
+            float total;
+            if (lp instanceof MarginLayoutParams) {
+                total = ((MarginLayoutParams) lp).bottomMargin + mActionsButton.getHeight();
+            } else {
+                total = mActionsButton.getHeight();
+            }
+            return 1 - mActionsButton.getTranslationY() / total;
+        }
         final float totalHeight = getControlBarHeight();
         return 1 + mTabsContainer.getTranslationY() / totalHeight;
     }
