@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.widget.AutoCompleteTextView;
 
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.iface.IThemedView;
 
 public class ThemedAutoCompleteTextView extends AutoCompleteTextView implements IThemedView {
@@ -45,6 +45,6 @@ public class ThemedAutoCompleteTextView extends AutoCompleteTextView implements 
 
     @Override
     public void setThemeTintColor(ColorStateList color) {
-        ViewAccessor.setBackgroundTintList(this, color);
+        ViewUtils.setBackgroundTintList(this, color);
     }
 }

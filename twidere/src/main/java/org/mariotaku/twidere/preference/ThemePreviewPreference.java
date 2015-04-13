@@ -42,7 +42,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 import org.mariotaku.twidere.view.iface.IExtendedView.TouchInterceptor;
 
@@ -109,10 +109,10 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final int cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
         final int accentColor = ThemeUtils.getUserAccentColor(context);
 
-        ViewAccessor.setBackground(windowBackgroundView, ThemeUtils.getWindowBackground(context));
+        ViewUtils.setBackground(windowBackgroundView, ThemeUtils.getWindowBackground(context));
 //        ViewAccessor.setBackground(windowContentOverlayView, ThemeUtils.getWindowContentOverlay(context));
-        ViewAccessor.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes, accentColor, true));
-        ViewAccessor.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
+        ViewUtils.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes, accentColor, true));
+        ViewUtils.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
         cardView.setCardBackgroundColor(cardBackgroundColor);
 
         actionBarView.setTitle(R.string.app_name);
@@ -122,7 +122,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         inflater.inflate(R.menu.menu_status, menuBar.getMenu());
         ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_STATUS_SHARE);
         if (statusContentView != null) {
-            ViewAccessor.setBackground(statusContentView, ThemeUtils.getWindowBackground(context));
+            ViewUtils.setBackground(statusContentView, ThemeUtils.getWindowBackground(context));
 
             final View profileView = statusContentView.findViewById(R.id.profile_container);
             final ImageView profileImageView = (ImageView) statusContentView.findViewById(R.id.profile_image);

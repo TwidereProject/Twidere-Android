@@ -21,6 +21,7 @@ package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -30,8 +31,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 
@@ -43,6 +47,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
+import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -66,10 +71,17 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     private TintedStatusFrameLayout mMainContent;
 
     private boolean mFinishOnly;
+    private int mActionBarItemsColor;
 
     @Override
     public Fragment getCurrentVisibleFragment() {
         return getSupportFragmentManager().findFragmentById(R.id.main_content);
+    }
+
+
+    @Override
+    public int getThemeResourceId() {
+        return R.style.Theme_Twidere_Light_DialogWhenLarge;
     }
 
     @Override
@@ -154,6 +166,19 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     }
 
     @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        final boolean result = super.onPrepareOptionsPanel(view, menu);
+        if (mActionBarItemsColor != 0) {
+            final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
+            if (actionBarView instanceof Toolbar) {
+                ((Toolbar) actionBarView).setTitleTextColor(mActionBarItemsColor);
+                ThemeUtils.setActionBarOverflowColor((Toolbar) actionBarView, mActionBarItemsColor);
+            }
+        }
+        return result;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
@@ -166,7 +191,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            setActionBarBackground(actionBar, linkId, data);
+            setActionBarTheme(actionBar, linkId, data);
         }
         setContentView(R.layout.activity_content_fragment);
         mMainContent.setOnFitSystemWindowsListener(this);
@@ -206,6 +231,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         final int transitionRes;
@@ -230,28 +256,34 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     }
 
     @SuppressLint("AppCompatMethod")
-    private void setActionBarBackground(ActionBar actionBar, int linkId, Uri data) {
+    private void setActionBarTheme(ActionBar actionBar, int linkId, Uri data) {
+        final int currentThemeColor = getCurrentThemeColor();
+        int actionBarItemsColor = ColorUtils.getContrastYIQ(currentThemeColor, 192);
         switch (linkId) {
             case LINK_ID_USER: {
+                actionBarItemsColor = Color.WHITE;
                 break;
             }
             case LINK_ID_SEARCH:
             case LINK_ID_USER_LISTS: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
-                        getCurrentThemeColor(), false);
+                        currentThemeColor, false);
                 ThemeUtils.applyActionBarBackground(getActionBar(), this, getCurrentThemeResourceId(),
-                        getCurrentThemeColor(), true);
+                        currentThemeColor, true);
                 break;
             }
             default: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
-                        getCurrentThemeColor(), true);
+                        currentThemeColor, true);
                 ThemeUtils.applyActionBarBackground(getActionBar(), this, getCurrentThemeResourceId(),
-                        getCurrentThemeColor(), true);
+                        currentThemeColor, true);
                 break;
             }
         }
-
+        if (actionBarItemsColor != 0) {
+            ThemeUtils.setActionBarItemsColor(getWindow(), actionBar, actionBarItemsColor);
+        }
+        mActionBarItemsColor = actionBarItemsColor;
     }
 
     private void setStatusBarColor(int linkId, Uri uri) {

@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -193,6 +194,7 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         mResolver = getContentResolver();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);

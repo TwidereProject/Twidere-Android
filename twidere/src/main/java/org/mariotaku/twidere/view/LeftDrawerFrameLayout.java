@@ -29,7 +29,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 
 public class LeftDrawerFrameLayout extends FrameLayout {
 
@@ -48,7 +48,7 @@ public class LeftDrawerFrameLayout extends FrameLayout {
     public LeftDrawerFrameLayout(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         final Drawable bg = ThemeUtils.getWindowBackground(context, ThemeUtils.getDrawerThemeResource(context));
-        ViewAccessor.setBackground(this, bg);
+        ViewUtils.setBackground(this, bg);
         setWillNotDraw(false);
         mClipPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }

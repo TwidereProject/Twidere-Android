@@ -68,7 +68,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 
@@ -327,7 +327,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
         mEditPassword.addTextChangedListener(this);
         final Resources resources = getResources();
         final ColorStateList color = ColorStateList.valueOf(resources.getColor(R.color.material_light_green));
-        ViewAccessor.setBackgroundTintList(mSignInButton, color);
+        ViewUtils.setBackgroundTintList(mSignInButton, color);
         setSignInButton();
     }
 

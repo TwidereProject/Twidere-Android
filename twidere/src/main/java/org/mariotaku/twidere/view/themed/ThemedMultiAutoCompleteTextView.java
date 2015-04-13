@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.widget.MultiAutoCompleteTextView;
 
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.iface.IThemedView;
 
 public class ThemedMultiAutoCompleteTextView extends MultiAutoCompleteTextView implements IThemedView {
@@ -45,7 +45,7 @@ public class ThemedMultiAutoCompleteTextView extends MultiAutoCompleteTextView i
 
     @Override
     public void setThemeTintColor(ColorStateList color) {
-        ViewAccessor.setBackgroundTintList(this, color);
+        ViewUtils.setBackgroundTintList(this, color);
         setLinkTextColor(color);
         setHighlightColor(color.getDefaultColor());
     }

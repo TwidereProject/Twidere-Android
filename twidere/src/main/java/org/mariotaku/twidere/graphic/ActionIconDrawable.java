@@ -30,13 +30,24 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
  */
 public class ActionIconDrawable extends DrawableWrapper {
 
-    private final int mDefaultColor;
+    private int mDefaultColor;
+    private int mHighlightColor;
 
     public ActionIconDrawable(Drawable drawable, int defaultColor) {
         super(drawable);
         mDefaultColor = defaultColor;
         setHighlightColor(0);
     }
+
+    public int getDefaultColor() {
+        return mDefaultColor;
+    }
+
+    public void setDefaultColor(int defaultColor) {
+        mDefaultColor = defaultColor;
+        updateColorFilter();
+    }
+
 
     public static void setMenuHighlight(MenuItem item, TwidereMenuInfo info) {
         final Drawable icon = item.getIcon();
@@ -46,7 +57,12 @@ public class ActionIconDrawable extends DrawableWrapper {
     }
 
     private void setHighlightColor(int color) {
-        setColorFilter(color == 0 ? mDefaultColor : color, Mode.SRC_ATOP);
+        mHighlightColor = color;
+        updateColorFilter();
+    }
+
+    private void updateColorFilter() {
+        setColorFilter(mHighlightColor == 0 ? mDefaultColor : mHighlightColor, Mode.SRC_ATOP);
     }
 
 }

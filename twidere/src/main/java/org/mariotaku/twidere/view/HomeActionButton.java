@@ -39,9 +39,9 @@ import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
-import org.mariotaku.twidere.util.accessor.ViewAccessor.OutlineCompat;
-import org.mariotaku.twidere.util.accessor.ViewAccessor.ViewOutlineProviderCompat;
+import org.mariotaku.twidere.util.ViewUtils;
+import org.mariotaku.twidere.util.ViewUtils.OutlineCompat;
+import org.mariotaku.twidere.util.ViewUtils.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
 import me.uucky.colorpicker.internal.EffectViewHelper;
@@ -92,14 +92,14 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
         }
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
-        ViewAccessor.setOutlineProvider(this, new HomeActionButtonOutlineProvider());
+        ViewUtils.setOutlineProvider(this, new HomeActionButtonOutlineProvider());
         setClipToOutline(true);
         setButtonColor(Color.WHITE);
     }
 
     @Override
     public void setButtonColor(int color) {
-        ViewAccessor.setBackground(this, new ColorDrawable(color));
+        ViewUtils.setBackground(this, new ColorDrawable(color));
     }
 
     @Override

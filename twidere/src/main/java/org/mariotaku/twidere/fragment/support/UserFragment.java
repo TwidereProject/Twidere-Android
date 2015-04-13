@@ -57,6 +57,8 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -85,6 +87,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
+import org.mariotaku.twidere.activity.support.ThemedActionBarActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
@@ -116,9 +119,9 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
@@ -218,9 +221,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
     private int mBannerWidth;
     private int mCardBackgroundColor;
+    private int mActionBarShadowColor;
     private int mUserUiColor;
 
     private ActionBarDrawable mActionBarBackground;
+    private Drawable mActionBarHomeAsUpIndicator;
     private Fragment mCurrentVisibleFragment;
 
 
@@ -413,7 +418,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public boolean isScrollContent(float x, float y) {
         final ViewPager v = mViewPager;
         final int[] location = new int[2];
-        v.getLocationOnScreen(location);
+        v.getLocationInWindow(location);
         return x >= location[0] && x <= location[0] + v.getWidth()
                 && y >= location[1] && y <= location[1] + v.getHeight();
     }
@@ -652,6 +657,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 .registerOnSharedPreferenceChangeListener(this);
         mLocale = getResources().getConfiguration().locale;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity);
+        mActionBarShadowColor = 0xA0000000;
         mProfileImageLoader = getApplication().getMediaLoaderWrapper();
         final Bundle args = getArguments();
         long accountId = -1, userId = -1;
@@ -1233,7 +1239,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
-        final FragmentActivity activity = getActivity();
+        final ActionBarActivity activity = (ActionBarActivity) getActivity();
         final IThemedActivity themed = (IThemedActivity) activity;
         final int themeRes = themed.getCurrentThemeResourceId();
         if (ThemeUtils.isDarkTheme(themeRes)) {
@@ -1250,7 +1256,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerView.setBackgroundColor(color);
         mLocationView.setLinkTextColor(color);
         mURLView.setLinkTextColor(color);
-        ViewAccessor.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity, themeRes, color, true));
+        ViewUtils.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity, themeRes, color, true));
 
         final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
         if (drawer != null) {
@@ -1270,6 +1276,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
         mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
         actionBar.setBackgroundDrawable(mActionBarBackground);
+        mActionBarHomeAsUpIndicator = ThemeUtils.getActionBarHomeAsUpIndicator(actionBar);
+        actionBar.setHomeAsUpIndicator(mActionBarHomeAsUpIndicator);
     }
 
     private void setupUserPages() {
@@ -1358,35 +1366,43 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             mActionBarBackground.setOutlineAlphaFactor(tabOutlineAlphaFactor);
 
-            final FragmentActivity activity = getActivity();
+            final ThemedActionBarActivity activity = (ThemedActionBarActivity) getActivity();
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);
             }
 
-            if (activity instanceof IThemedActivity) {
-                final Drawable drawable = mPagerIndicator.getBackground();
-                final int stackedTabColor;
-                if (ThemeUtils.isDarkTheme(((IThemedActivity) activity).getCurrentThemeResourceId())) {
-                    stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
-                    final int contrastColor = ColorUtils.getContrastYIQ(stackedTabColor, 192);
-                    mPagerIndicator.setIconColor(contrastColor);
-                    mPagerIndicator.setLabelColor(contrastColor);
-                    mPagerIndicator.setStripColor(mUserUiColor);
-                } else if (drawable instanceof ColorDrawable) {
-                    stackedTabColor = mUserUiColor;
-                    final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
-                    ((ColorDrawable) drawable).setColor(tabColor);
-                    final int contrastColor = ColorUtils.getContrastYIQ(tabColor, 192);
-                    mPagerIndicator.setIconColor(contrastColor);
-                    mPagerIndicator.setLabelColor(contrastColor);
-                    mPagerIndicator.setStripColor(contrastColor);
-                }
-            } else {
-                final int contrastColor = ColorUtils.getContrastYIQ(mUserUiColor, 192);
+            final Drawable drawable = mPagerIndicator.getBackground();
+            final int stackedTabColor;
+            if (ThemeUtils.isDarkTheme(activity.getCurrentThemeResourceId())) {
+                stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
+                final int contrastColor = ColorUtils.getContrastYIQ(stackedTabColor, 192);
+                mPagerIndicator.setIconColor(contrastColor);
+                mPagerIndicator.setLabelColor(contrastColor);
+                mPagerIndicator.setStripColor(mUserUiColor);
+            } else if (drawable instanceof ColorDrawable) {
+                stackedTabColor = mUserUiColor;
+                final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
+                ((ColorDrawable) drawable).setColor(tabColor);
+                final int contrastColor = ColorUtils.getContrastYIQ(tabColor, 192);
                 mPagerIndicator.setIconColor(contrastColor);
                 mPagerIndicator.setLabelColor(contrastColor);
                 mPagerIndicator.setStripColor(contrastColor);
+            } else {
+                // This shouldn't happen, return
+                return;
+            }
+            final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
+            final int itemColor = ColorUtils.getContrastYIQ(barColor, 192);
+            if (mActionBarHomeAsUpIndicator != null) {
+                mActionBarHomeAsUpIndicator.setColorFilter(itemColor, Mode.SRC_ATOP);
+            }
+            final View actionBarView = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
+            if (actionBarView instanceof Toolbar) {
+                final Toolbar toolbar = (Toolbar) actionBarView;
+                toolbar.setTitleTextColor(itemColor);
+                ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
+                ThemeUtils.wrapToolbarMenuIcon(toolbar, itemColor, itemColor);
             }
             mPagerIndicator.updateAppearance();
         }
@@ -1395,7 +1411,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     private void updateTitleColor() {
         final int[] location = new int[2];
-        mNameView.getLocationOnScreen(location);
+        mNameView.getLocationInWindow(location);
         final float nameShowingRatio = (mHeaderDrawerLayout.getPaddingTop() - location[1])
                 / (float) mNameView.getHeight();
         final int textAlpha = Math.round(0xFF * MathUtils.clamp(nameShowingRatio, 0, 1));

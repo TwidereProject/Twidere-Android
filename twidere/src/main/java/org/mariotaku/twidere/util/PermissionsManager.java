@@ -76,8 +76,7 @@ public class PermissionsManager implements Constants {
 	}
 
 	public boolean checkSignature(final int uid) {
-		final String pname = getPackageNameByUid(uid);
-		return checkSignature(pname);
+        return checkSignature(getPackageNameByUid(uid));
 	}
 
 	public boolean checkSignature(final String pname) {

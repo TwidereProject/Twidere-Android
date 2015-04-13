@@ -141,8 +141,6 @@ public interface SharedPreferenceConstants {
     String KEY_THEME_BACKGROUND = "theme_background";
     @Preference(type = INT, hasDefault = true, defaultInt = DEFAULT_THEME_BACKGROUND_ALPHA)
     String KEY_THEME_BACKGROUND_ALPHA = "theme_background_alpha";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_THEME_DARK_ACTIONBAR = "theme_dark_actionbar";
     @Preference(type = INT)
     String KEY_THEME_COLOR = "theme_color";
     @Preference(type = STRING, hasDefault = true, defaultString = DEFAULT_THEME_FONT_FAMILY)

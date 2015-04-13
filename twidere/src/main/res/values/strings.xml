@@ -743,5 +743,7 @@
     <string name="conflicts_with_name">Conflicts with <xliff:g id="name">%s</xliff:g></string>
     <string name="overwrite">Overwrite</string>
     <string name="navigation">Navigation</string>
+    <string name="reset_to_default">Reset to default</string>
+    <string name="reset_keyboard_shortcuts_confirm">Reset keyboard shortcuts to default?</string>
 
 </resources>

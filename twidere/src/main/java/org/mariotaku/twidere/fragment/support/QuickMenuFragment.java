@@ -34,7 +34,7 @@ import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment.TrendsAd
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
@@ -127,7 +127,7 @@ public class QuickMenuFragment extends BaseSupportFragment implements OnFitSyste
         mSlidingUpPanel = (SlidingUpPanelLayout) view.findViewById(R.id.activities_drawer);
         mActivitiesConfigButton = (ImageButton) view.findViewById(R.id.activities_config_button);
         final View activitiesContainer = view.findViewById(R.id.activities_container);
-        ViewAccessor.setBackground(activitiesContainer, ThemeUtils.getWindowBackground(getThemedContext()));
+        ViewUtils.setBackground(activitiesContainer, ThemeUtils.getWindowBackground(getThemedContext()));
     }
 
     @Override

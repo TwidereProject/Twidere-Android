@@ -114,6 +114,7 @@ public interface Constants extends TwidereConstants {
     int MENU_ACCOUNTS = R.id.accounts;
     int MENU_INVERSE_SELECTION = R.id.inverse_selection;
     int MENU_EDIT_MEDIA = R.id.edit_media;
+    int MENU_RESET = R.id.reset;
 
     int LINK_ID_STATUS = 1;
     int LINK_ID_USER = 2;
@@ -162,19 +163,6 @@ public interface Constants extends TwidereConstants {
     String EASTER_EGG_RESTORE_TEXT_PART3 = "\u77E5\u9519";
 
     float DEFAULT_PULL_TO_REFRESH_SCROLL_DISTANCE = 0.3f;
-
-    String ENTRY_PREFERENCES = "preferences.json";
-    String ENTRY_NICKNAMES = "nicknames.json";
-    String ENTRY_USER_COLORS = "user_colors.json";
-    String ENTRY_HOST_MAPPING = "host_mapping.json";
-
-    int FLAG_PREFERENCES = 0x1;
-    int FLAG_NICKNAMES = 0x2;
-    int FLAG_USER_COLORS = 0x4;
-    int FLAG_HOST_MAPPING = 0x8;
-
-    int FLAG_ALL = FLAG_PREFERENCES | FLAG_NICKNAMES | FLAG_USER_COLORS | FLAG_HOST_MAPPING;
-
 
     int[] PRESET_COLORS = {R.color.material_red, R.color.material_pink,
             R.color.material_purple, R.color.material_deep_purple, R.color.material_indigo,

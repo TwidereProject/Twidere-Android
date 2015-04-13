@@ -21,9 +21,7 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
       xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:showAsAction="always"
-        android:id="@id/add"
-        android:icon="@drawable/ic_action_add"
-        android:title="@string/add"
+        android:id="@id/reset"
+        android:title="@string/reset_to_default"
         tools:ignore="AppCompatResource"/>
 </menu>

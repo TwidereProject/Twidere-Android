@@ -88,6 +88,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public void drawVertical(Canvas c, RecyclerView parent) {
+        if (mDivider == null) return;
         final int left = parent.getPaddingLeft();
         final int right = parent.getWidth() - parent.getPaddingRight();
 
@@ -109,6 +110,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public void drawHorizontal(Canvas c, RecyclerView parent) {
+        if (mDivider == null) return;
         final int top = parent.getPaddingTop();
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
 
@@ -131,6 +133,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+        if (mDivider == null) return;
         final int childPos = parent.getChildAdapterPosition(view);
         final int start = getDecorationStart(), end = getDecorationEnd(parent);
         if (start >= 0 && childPos < start || end >= 0 && childPos > end) {

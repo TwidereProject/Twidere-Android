@@ -102,7 +102,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.view.ExtendedViewPager;
@@ -234,11 +234,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             mActionsButton.setTranslationY(mActionsButton.getHeight() * (1 - offset));
         }
         notifyControlBarOffsetChanged();
-    }
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoActionBarThemeResource(this);
     }
 
     @Override
@@ -789,7 +784,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
-        ViewAccessor.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor, true));
+        ViewUtils.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor, true));
         if (ThemeUtils.isDarkTheme(themeResId)) {
             final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
             final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());
@@ -817,7 +812,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);
-        ViewAccessor.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
+        ViewUtils.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
     }
 
     private void setupHomeTabs() {
@@ -859,7 +854,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mSlidingMenu.setBehindCanvasTransformer(new ListenerCanvasTransformer(this));
         final Window window = getWindow();
         final Drawable windowBackground = ThemeUtils.getWindowBackground(this, getCurrentThemeResourceId());
-        ViewAccessor.setBackground(mSlidingMenu.getContent(), windowBackground);
+        ViewUtils.setBackground(mSlidingMenu.getContent(), windowBackground);
         window.setBackgroundDrawable(new EmptyDrawable(windowBackground));
     }
 

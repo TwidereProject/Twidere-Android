@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.mariotaku.twidere"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto">
+<manifest
+    package="org.mariotaku.twidere"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto">
 
     <uses-sdk/>
 
@@ -276,6 +277,7 @@
             android:label="@string/set_color"
             android:theme="@style/Theme.Twidere.Light.NoDisplay"/>
         <activity
+            android:theme="@style/Theme.Twidere.Light.DialogWhenLarge"
             android:name=".activity.support.LinkHandlerActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data

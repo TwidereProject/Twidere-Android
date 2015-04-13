@@ -23,6 +23,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
@@ -55,7 +56,7 @@ public final class SupportFragmentReloadCursorObserver extends ContentObserver i
 	}
 
 	private static Handler createHandler() {
-		if (Thread.currentThread().getId() != 1) return null;
+		if (Thread.currentThread().getId() != 1) return new Handler(Looper.getMainLooper());
 		return new Handler();
 	}
 }

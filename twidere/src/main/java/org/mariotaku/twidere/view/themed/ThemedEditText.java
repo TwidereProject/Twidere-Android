@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.accessor.ViewAccessor;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.iface.IThemedView;
 
 public class ThemedEditText extends EditText implements IThemedView {
@@ -45,6 +45,6 @@ public class ThemedEditText extends EditText implements IThemedView {
 
     @Override
     public void setThemeTintColor(ColorStateList color) {
-        ViewAccessor.setBackgroundTintList(this, color);
+        ViewUtils.setBackgroundTintList(this, color);
     }
 }

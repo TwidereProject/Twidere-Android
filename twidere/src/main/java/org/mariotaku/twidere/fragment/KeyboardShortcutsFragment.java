@@ -23,8 +23,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -38,6 +40,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -54,8 +57,21 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
     private KeyboardShortcutsHandler mKeyboardShortcutHandler;
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_RESET: {
+                final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
+                f.show(getFragmentManager().beginTransaction(), "reset_keyboard_shortcut_confirm");
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         final Activity activity = getActivity();
         mKeyboardShortcutHandler = TwidereApplication.getInstance(activity).getKeyboardShortcutsHandler();
         final PreferenceScreen defaultScreen = getPreferenceScreen();
@@ -211,6 +227,29 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
         private void updateSummary() {
             final KeyboardShortcutSpec spec = mKeyboardShortcutHandler.findKey(mAction);
             setSummary(spec != null ? spec.toKeyString() : null);
+        }
+    }
+
+    public static class ResetKeyboardShortcutConfirmDialogFragment extends DialogFragment implements OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    TwidereApplication app = TwidereApplication.getInstance(getActivity());
+                    app.getKeyboardShortcutsHandler().reset();
+                    break;
+                }
+            }
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.reset_keyboard_shortcuts_confirm);
+            builder.setPositiveButton(android.R.string.ok, this);
+            builder.setNegativeButton(android.R.string.cancel, this);
+            return builder.create();
         }
     }
 }

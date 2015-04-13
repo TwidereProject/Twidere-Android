@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.accessor;
+package org.mariotaku.twidere.util;
 
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
@@ -27,11 +27,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
-public final class ViewAccessor {
+public final class ViewUtils {
 
     public static boolean isInLayout(View view) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -84,6 +85,18 @@ public final class ViewAccessor {
     public static void setProgressTintList(ProgressBar view, ColorStateList list) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         ViewAccessorL.setProgressTintList(view, list);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends View> T findViewByType(View view, Class<T> cls) {
+        if (cls.isAssignableFrom(view.getClass())) return (T) view;
+        if (view instanceof ViewGroup) {
+            for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
+                final View found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
+                if (found != null) return (T) found;
+            }
+        }
+        return null;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -142,7 +155,7 @@ public final class ViewAccessor {
 
 
     /**
-     * Interface by which a View builds its {@link org.mariotaku.twidere.util.accessor.ViewAccessor.OutlineCompat}, used for shadow casting and clipping.
+     * Interface by which a View builds its {@link ViewUtils.OutlineCompat}, used for shadow casting and clipping.
      */
     public static abstract class ViewOutlineProviderCompat {
         /**

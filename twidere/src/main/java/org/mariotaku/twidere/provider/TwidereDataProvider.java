@@ -540,11 +540,15 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final String[] credentialsCols = {Accounts.BASIC_AUTH_PASSWORD, Accounts.OAUTH_TOKEN,
                         Accounts.OAUTH_TOKEN_SECRET, Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
                 if (projection == null || TwidereArrayUtils.contains(projection, credentialsCols)
-                        && !checkPermission(PERMISSION_ACCOUNTS))
+                        && !checkPermission(PERMISSION_ACCOUNTS)) {
+                    final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
                     throw new SecurityException("Access column " + TwidereArrayUtils.toString(projection, ',', true)
-                            + " in database accounts requires level PERMISSION_LEVEL_ACCOUNTS");
-                if (!checkPermission(PERMISSION_READ))
-                    throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ");
+                            + " in database accounts requires level PERMISSION_LEVEL_ACCOUNTS, package: " + pkgName);
+                }
+                if (!checkPermission(PERMISSION_READ)) {
+                    final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
+                    throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ, package: " + pkgName);
+                }
                 break;
             }
             case TABLE_ID_DIRECT_MESSAGES:
@@ -734,9 +738,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void notifyContentObserver(final Uri uri) {
-        final ContentResolver cr = getContentResolver();
-        if (uri == null || cr == null) return;
-        cr.notifyChange(uri, null);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final ContentResolver cr = getContentResolver();
+                if (uri == null || cr == null) return;
+                cr.notifyChange(uri, null);
+            }
+        });
     }
 
 

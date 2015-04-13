@@ -81,6 +81,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
     private static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
+    private static final String KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized";
 
     private Handler mHandler;
     private MediaLoaderWrapper mMediaLoaderWrapper;
@@ -143,8 +144,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
         if (mKeyboardShortcutsHandler != null) return mKeyboardShortcutsHandler;
         mKeyboardShortcutsHandler = new KeyboardShortcutsHandler(this);
-        if (mKeyboardShortcutsHandler.isEmpty()) {
+        final SharedPreferences preferences = getSharedPreferences();
+        if (mKeyboardShortcutsHandler.isEmpty()
+                && !preferences.getBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, false)) {
             mKeyboardShortcutsHandler.reset();
+            preferences.edit().putBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, true);
         }
         return mKeyboardShortcutsHandler;
     }
@@ -225,8 +229,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         mDefaultUserAgent = UserAgentUtils.getDefaultUserAgentString(this);
         mHandler = new Handler();
         mMessageBus = new Bus();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        mPreferences.registerOnSharedPreferenceChangeListener(this);
         initializeAsyncTask();
         initAccountColor(this);
         initUserColor(this);
@@ -258,17 +260,25 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     private void migrateUsageStatisticsPreferences() {
-        final boolean hasUsageStatistics = mPreferences.contains(KEY_USAGE_STATISTICS);
+        final SharedPreferences preferences = getSharedPreferences();
+        final boolean hasUsageStatistics = preferences.contains(KEY_USAGE_STATISTICS);
         if (hasUsageStatistics) return;
-        if (mPreferences.contains(KEY_UCD_DATA_PROFILING) || mPreferences.contains(KEY_SPICE_DATA_PROFILING)) {
-            final boolean prevUsageEnabled = mPreferences.getBoolean(KEY_UCD_DATA_PROFILING, false)
-                    || mPreferences.getBoolean(KEY_SPICE_DATA_PROFILING, false);
-            final Editor editor = mPreferences.edit();
+        if (preferences.contains(KEY_UCD_DATA_PROFILING) || preferences.contains(KEY_SPICE_DATA_PROFILING)) {
+            final boolean prevUsageEnabled = preferences.getBoolean(KEY_UCD_DATA_PROFILING, false)
+                    || preferences.getBoolean(KEY_SPICE_DATA_PROFILING, false);
+            final Editor editor = preferences.edit();
             editor.putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled);
             editor.remove(KEY_UCD_DATA_PROFILING);
             editor.remove(KEY_SPICE_DATA_PROFILING);
             editor.apply();
         }
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        if (mPreferences != null) return mPreferences;
+        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        return mPreferences;
     }
 
     @Override
