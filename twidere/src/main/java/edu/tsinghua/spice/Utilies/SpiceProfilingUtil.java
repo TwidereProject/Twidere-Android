@@ -29,6 +29,7 @@ public class SpiceProfilingUtil {
     public static final String FILE_NAME_NETWORK = "Network_SPICE";
     public static final String FILE_NAME_ONWIFI = "onWifi_SPICE";
     public static final String FILE_NAME_ONLAUNCH = "onLaunch_SPICE";
+    public static final String FILE_NAME_SCREEN = "Screen_SPICE";
 
     public static boolean isCharging(final Context context) {
         if (context == null) return false;
