@@ -167,7 +167,7 @@ public class ThemeUtils implements Constants {
     }
 
     public static void applyWindowBackground(Context context, Window window, int theme, String option, int alpha) {
-        if (window.isFloating()) return;
+        if (isWindowFloating(context, theme)) return;
         if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
             window.setBackgroundDrawable(ThemeUtils.getWindowBackgroundApplyAlpha(context, alpha));
