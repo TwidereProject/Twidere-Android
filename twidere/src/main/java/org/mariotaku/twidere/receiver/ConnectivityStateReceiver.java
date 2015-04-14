@@ -22,12 +22,15 @@ package org.mariotaku.twidere.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.Utils;
 
+import edu.tsinghua.spice.SpiceService;
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
@@ -37,6 +40,7 @@ import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeed
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
 
 	private static final String RECEIVER_LOGTAG = LOGTAG + "." + "Connectivity";
+    private LocationManager mLocationManager;
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
@@ -48,5 +52,15 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
 		startRefreshServiceIfNeeded(context);
         //spice
         SpiceProfilingUtil.profile(context,SpiceProfilingUtil.FILE_NAME_ONWIFI, NetworkStateUtil.getConnectedType(context));
+        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (mLocationManager == null) return;
+        final String provider = LocationManager.NETWORK_PROVIDER;
+        if (mLocationManager.isProviderEnabled(provider)) {
+            final Location location = mLocationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_LOCATION, location.getTime() + ","
+                        + location.getLatitude() + "," + location.getLongitude() + "," + location.getProvider());
+            }
+        }
 	}
 }
