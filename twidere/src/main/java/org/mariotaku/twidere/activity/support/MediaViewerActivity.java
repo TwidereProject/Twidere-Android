@@ -76,6 +76,9 @@ import org.mariotaku.twidere.view.LinePageIndicator;
 
 import java.io.File;
 
+import pl.droidsonroids.gif.GifTextureView;
+import pl.droidsonroids.gif.InputSource.FileSource;
+
 
 public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants, OnPageChangeListener {
 
@@ -368,15 +371,19 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             implements DownloadListener, LoaderCallbacks<Result>, OnLayoutChangeListener, OnClickListener {
 
         private SubsamplingScaleImageView mImageView;
+        private GifTextureView mGifImageView;
         private ProgressWheel mProgressBar;
         private boolean mLoaderInitialized;
         private float mContentLength;
         private SaveImageTask mSaveImageTask;
 
+        private File mImageFile;
+
         @Override
         public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
             mImageView = (SubsamplingScaleImageView) view.findViewById(R.id.image_view);
+            mGifImageView = (GifTextureView) view.findViewById(R.id.gif_image_view);
             mProgressBar = (ProgressWheel) view.findViewById(R.id.progress);
         }
 
@@ -405,29 +412,27 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onLoadFinished(final Loader<TileImageLoader.Result> loader, final TileImageLoader.Result data) {
             if (data.hasData()) {
-                mImageView.setVisibility(View.VISIBLE);
-                mImageView.setTag(data.file);
+                mImageFile = data.file;
                 if (data.useDecoder) {
+                    mGifImageView.setVisibility(View.GONE);
+                    mImageView.setVisibility(View.VISIBLE);
                     mImageView.setImage(ImageSource.uri(Uri.fromFile(data.file)));
                 } else if ("image/gif".equals(data.options.outMimeType)) {
-//                    try {
-//                        final FileDescriptor fd = new RandomAccessFile(data.file, "r").getFD();
-//                        mImageView.setImageDrawable(new GifDrawable(fd));
-//                    } catch (IOException e) {
-//                        mImageView.setImage(null);
-//                        mImageView.setTag(null);
-//                        mImageView.setVisibility(View.GONE);
-//                        Utils.showErrorMessage(getActivity(), null, e, true);
-//                    }
+                    mGifImageView.setVisibility(View.VISIBLE);
+                    mImageView.setVisibility(View.GONE);
+                    mGifImageView.setInputSource(new FileSource(data.file));
                     updateScaleLimit();
                 } else {
+                    mGifImageView.setVisibility(View.GONE);
+                    mImageView.setVisibility(View.VISIBLE);
                     mImageView.setImage(ImageSource.bitmap(data.bitmap));
                     updateScaleLimit();
                 }
             } else {
                 mImageView.recycle();
-                mImageView.setTag(null);
+                mImageFile = null;
                 mImageView.setVisibility(View.GONE);
+                mGifImageView.setVisibility(View.GONE);
                 Utils.showErrorMessage(getActivity(), null, data.exception, true);
             }
             mProgressBar.setVisibility(View.GONE);
@@ -451,28 +456,26 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         @Override
         public void onPrepareOptionsMenu(Menu menu) {
             super.onPrepareOptionsMenu(menu);
-            final Object imageTag = mImageView.getTag();
+            final File file = mImageFile;
             final boolean isLoading = getLoaderManager().hasRunningLoaders();
-            final boolean hasImage = imageTag instanceof File;
+            final boolean hasImage = file != null && file.exists();
             MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
             MenuUtils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
             MenuUtils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
-            if (hasImage) {
-                final MenuItem shareItem = menu.findItem(R.id.share);
-                final ShareActionProvider shareProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-                final File file = (File) imageTag;
-                final Intent intent = new Intent(Intent.ACTION_SEND);
-                final Uri fileUri = Uri.fromFile(file);
-                intent.setDataAndType(fileUri, Utils.getImageMimeType(file));
-                intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
-                if (activity.hasStatus()) {
-                    final ParcelableStatus status = activity.getStatus();
-                    intent.putExtra(Intent.EXTRA_TEXT, Utils.getStatusShareText(activity, status));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, Utils.getStatusShareSubject(activity, status));
-                }
-                shareProvider.setShareIntent(intent);
+            if (!hasImage) return;
+            final MenuItem shareItem = menu.findItem(R.id.share);
+            final ShareActionProvider shareProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            final Uri fileUri = Uri.fromFile(file);
+            intent.setDataAndType(fileUri, Utils.getImageMimeType(file));
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+            if (activity.hasStatus()) {
+                final ParcelableStatus status = activity.getStatus();
+                intent.putExtra(Intent.EXTRA_TEXT, Utils.getStatusShareText(activity, status));
+                intent.putExtra(Intent.EXTRA_SUBJECT, Utils.getStatusShareSubject(activity, status));
             }
+            shareProvider.setShareIntent(intent);
         }
 
         @Override
@@ -501,14 +504,11 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         private void saveToGallery() {
             if (mSaveImageTask != null && mSaveImageTask.getStatus() == Status.RUNNING) return;
-            final Object imageTag = mImageView.getTag();
-            final boolean hasImage = imageTag instanceof File;
-            if (hasImage) {
-                mSaveImageTask = new SaveImageTask(getActivity(), (File) imageTag);
-                mSaveImageTask.execute();
-            } else {
-
-            }
+            final File file = mImageFile;
+            final boolean hasImage = file != null && file.exists();
+            if (!hasImage) return;
+            mSaveImageTask = new SaveImageTask(getActivity(), file);
+            mSaveImageTask.execute();
         }
 
         private void openInBrowser() {

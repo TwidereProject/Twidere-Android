@@ -154,7 +154,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
 
     private void dump(final InputStream is, final OutputStream os) throws IOException {
-        final byte buffer[] = new byte[1024];
+        final byte buffer[] = new byte[128];
         int rc = is.read(buffer, 0, buffer.length);
         long downloaded = 0;
         while (rc > 0) {
