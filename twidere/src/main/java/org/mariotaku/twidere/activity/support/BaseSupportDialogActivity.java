@@ -46,11 +46,6 @@ public class BaseSupportDialogActivity extends ThemedFragmentActivity implements
         return (TwidereApplication) getApplication();
     }
 
-    @Override
-    protected final boolean shouldSetWindowBackground() {
-        return false;
-    }
-
     protected boolean isStateSaved() {
         return mInstanceStateSaved;
     }

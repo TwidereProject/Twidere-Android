@@ -136,37 +136,6 @@
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.Transparent">
-
-        <!-- Colors -->
-        <item name="android:colorBackgroundCacheHint">@null</item>
-
-        <!-- Window attributes -->
-        <!--<item name="android:windowBackground">@color/bg_color_transparent_dark</item>-->
-        <item name="android:windowShowWallpaper">true</item>
-    </style>
-
-    <style name="Theme.Twidere.Light.Transparent">
-        <!-- Colors -->
-        <item name="android:colorBackgroundCacheHint">@null</item>
-
-        <!-- Window attributes -->
-        <!--<item name="android:windowBackground">@color/bg_color_transparent_light</item>-->
-        <item name="android:windowShowWallpaper">true</item>
-    </style>
-
-    <style name="Theme.Twidere.Dark.SolidBackground">
-
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@android:color/black</item>
-    </style>
-
-    <style name="Theme.Twidere.Light.SolidBackground">
-
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@android:color/white</item>
-    </style>
-
     <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Base.Dialog">
 
         <!-- Custom view styles -->
@@ -296,25 +265,8 @@
     </style>
 
     <style name="Theme.Twidere.Drawer.Dark" parent="Theme.Twidere.Dark">
-
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/bg_color_drawer_dark</item>
-    </style>
-
-    <style name="Theme.Twidere.Drawer.Dark.Transparent" parent="Theme.Twidere.Dark.Transparent">
-
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@color/bg_color_drawer_transparent_dark</item>
-    </style>
-
-    <style name="Theme.Twidere.Drawer.Light" parent="Theme.Twidere.Light">
-
-        <!-- Window attributes -->
-    </style>
-
-    <style name="Theme.Twidere.Drawer.Light.Transparent" parent="Theme.Twidere.Light.Transparent">
-
-        <!-- Window attributes -->
     </style>
 
     <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Compat.Base">

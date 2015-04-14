@@ -1094,8 +1094,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final FragmentActivity activity = getActivity();
         final boolean isTransparentBackground;
         if (activity instanceof IThemedActivity) {
-            final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-            isTransparentBackground = ThemeUtils.isTransparentBackground(themeRes);
+            final String backgroundOption = ((IThemedActivity) activity).getCurrentThemeBackgroundOption();
+            isTransparentBackground = ThemeUtils.isTransparentBackground(backgroundOption);
         } else {
             isTransparentBackground = ThemeUtils.isTransparentBackground(getActivity());
         }
@@ -1324,8 +1324,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (actionBar == null) return;
         final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
         mActionBarBackground = new ActionBarDrawable(shadow);
-        mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
-        mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
+        if (!ThemeUtils.isWindowFloating(linkHandler, linkHandler.getCurrentThemeResourceId())
+                && ThemeUtils.isTransparentBackground(linkHandler.getCurrentThemeBackgroundOption())) {
+            mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
+            mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
+        }
         actionBar.setBackgroundDrawable(mActionBarBackground);
         mActionBarHomeAsUpIndicator = ThemeUtils.getActionBarHomeAsUpIndicator(actionBar);
         actionBar.setHomeAsUpIndicator(mActionBarHomeAsUpIndicator);

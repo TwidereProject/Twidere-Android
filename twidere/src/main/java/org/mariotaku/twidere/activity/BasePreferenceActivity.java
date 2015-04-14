@@ -35,6 +35,7 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
         IThemedActivity {
 
     private int mCurrentThemeResource;
+    private String mCurrentThemeBackgroundOption;
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -99,10 +100,21 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         setTheme(mCurrentThemeResource = getThemeResourceId());
+        mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         super.onCreate(savedInstanceState);
         setActionBarBackground();
     }
 
+    @Override
+    public String getCurrentThemeBackgroundOption() {
+        return mCurrentThemeBackgroundOption;
+    }
+
+
+    @Override
+    public String getThemeBackgroundOption() {
+        return ThemeUtils.getThemeBackgroundOption(this);
+    }
     @Override
     protected void onResume() {
         super.onResume();

@@ -23,17 +23,21 @@ import android.content.res.Resources;
 
 public interface IThemedActivity {
 
+    public int getCurrentThemeBackgroundAlpha();
+
+    public String getCurrentThemeBackgroundOption();
+
+    public int getCurrentThemeColor();
+
     public int getCurrentThemeResourceId();
 
     public Resources getDefaultResources();
 
     public int getThemeBackgroundAlpha();
 
-    public int getCurrentThemeBackgroundAlpha();
+    String getThemeBackgroundOption();
 
     public int getThemeColor();
-
-    public int getCurrentThemeColor();
 
     public String getThemeFontFamily();
 

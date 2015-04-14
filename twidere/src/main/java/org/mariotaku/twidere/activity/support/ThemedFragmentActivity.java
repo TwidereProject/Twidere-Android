@@ -47,11 +47,7 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
     @ShapeStyle
     private int mProfileImageStyle;
-
-    @Override
-    public Resources getDefaultResources() {
-        return super.getResources();
-    }
+    private String mCurrentThemeBackgroundOption;
 
     @Override
     public final int getCurrentThemeResourceId() {
@@ -59,13 +55,28 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
+    public Resources getDefaultResources() {
+        return super.getResources();
+    }
+
+    @Override
     public int getThemeBackgroundAlpha() {
-        return ThemeUtils.isTransparentBackground(this) ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xff;
+        return ThemeUtils.getUserThemeBackgroundAlpha(this);
     }
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
         return mCurrentThemeBackgroundAlpha;
+    }
+
+    @Override
+    public String getCurrentThemeBackgroundOption() {
+        return mCurrentThemeBackgroundOption;
+    }
+
+    @Override
+    public String getThemeBackgroundOption() {
+        return ThemeUtils.getThemeBackgroundOption(this);
     }
 
     @Override
@@ -99,22 +110,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onTitleChanged(CharSequence title, int color) {
-        final SpannableStringBuilder builder = new SpannableStringBuilder(title);
-        final int themeResId = getCurrentThemeResourceId();
-        final int themeColor = getThemeColor(), contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
-        if (!ThemeUtils.isDarkTheme(themeResId)) {
-            builder.setSpan(new ForegroundColorSpan(contrastColor), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        super.onTitleChanged(title, color);
-    }
-
-    @Override
     public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
         final View view = ThemeUtils.createView(name, context, attrs, mCurrentThemeColor);
         if (view instanceof ShapedImageView) {
@@ -130,8 +125,20 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         super.onResume();
     }
 
-    protected boolean shouldSetWindowBackground() {
-        return true;
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onTitleChanged(CharSequence title, int color) {
+        final SpannableStringBuilder builder = new SpannableStringBuilder(title);
+        final int themeResId = getCurrentThemeResourceId();
+        final int themeColor = getThemeColor(), contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
+        if (!ThemeUtils.isDarkTheme(themeResId)) {
+            builder.setSpan(new ForegroundColorSpan(contrastColor), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        super.onTitleChanged(title, color);
     }
 
     private void setTheme() {
@@ -139,9 +146,8 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         mCurrentThemeColor = getThemeColor();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mProfileImageStyle = Utils.getProfileImageStyle(this);
+        mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         setTheme(mCurrentThemeResource);
-        if (shouldSetWindowBackground() && ThemeUtils.isTransparentBackground(mCurrentThemeResource)) {
-            getWindow().setBackgroundDrawable(ThemeUtils.getWindowBackground(this));
-        }
+        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
     }
 }

@@ -100,9 +100,9 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
-import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.view.ExtendedViewPager;
@@ -661,11 +661,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mColorStatusFrameLayout = (TintedStatusFrameLayout) findViewById(R.id.home_content);
     }
 
-    @Override
-    protected boolean shouldSetWindowBackground() {
-        return false;
-    }
-
     private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof ShortcutCallback) {
@@ -780,7 +775,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     private void setupBars() {
         final int themeColor = getThemeColor();
         final int themeResId = getCurrentThemeResourceId();
-        final boolean isTransparent = ThemeUtils.isTransparentBackground(themeResId);
+        final boolean isTransparent = ThemeUtils.isTransparentBackground(getCurrentThemeBackgroundOption());
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
@@ -846,14 +841,14 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mLeftDrawerContainer = (LeftDrawerFrameLayout) mSlidingMenu.getMenu().findViewById(R.id.left_drawer_container);
         mRightDrawerContainer = (RightDrawerFrameLayout) mSlidingMenu.getSecondaryMenu().findViewById(
                 R.id.right_drawer_container);
-        final boolean isTransparentBackground = ThemeUtils.isTransparentBackground(this);
+        final boolean isTransparentBackground = ThemeUtils.isTransparentBackground(getCurrentThemeBackgroundOption());
         mLeftDrawerContainer.setClipEnabled(isTransparentBackground);
         mLeftDrawerContainer.setScrollScale(mSlidingMenu.getBehindScrollScale());
         mRightDrawerContainer.setClipEnabled(isTransparentBackground);
         mRightDrawerContainer.setScrollScale(mSlidingMenu.getBehindScrollScale());
         mSlidingMenu.setBehindCanvasTransformer(new ListenerCanvasTransformer(this));
         final Window window = getWindow();
-        final Drawable windowBackground = ThemeUtils.getWindowBackground(this, getCurrentThemeResourceId());
+        final Drawable windowBackground = ThemeUtils.getWindowBackground(this);
         ViewUtils.setBackground(mSlidingMenu.getContent(), windowBackground);
         window.setBackgroundDrawable(new EmptyDrawable(windowBackground));
     }

@@ -78,10 +78,9 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         return getSupportFragmentManager().findFragmentById(R.id.main_content);
     }
 
-
     @Override
     public int getThemeResourceId() {
-        return R.style.Theme_Twidere_Light_DialogWhenLarge;
+        return ThemeUtils.getDialogWhenLargeThemeResource(this);
     }
 
     @Override
@@ -172,6 +171,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
             final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
             if (actionBarView instanceof Toolbar) {
                 ((Toolbar) actionBarView).setTitleTextColor(mActionBarItemsColor);
+                ((Toolbar) actionBarView).setSubtitleTextColor(mActionBarItemsColor);
                 ThemeUtils.setActionBarOverflowColor((Toolbar) actionBarView, mActionBarItemsColor);
             }
         }
@@ -250,7 +250,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
             }
         }
         if (transitionRes != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                && !ThemeUtils.isTransparentBackground(this)) {
+                && !ThemeUtils.isTransparentBackground(getCurrentThemeBackgroundOption())) {
             Utils.setSharedElementTransition(this, window, transitionRes);
         }
     }
