@@ -72,9 +72,14 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
         clear();
     }
 
-    public void addTab(final Class<? extends Fragment> cls, final Bundle args, final String name, final Integer icon,
-                       final int position, final String tag) {
+    public void addTab(final Class<? extends Fragment> cls, final Bundle args, final String name,
+                       final Integer icon, final int position, final String tag) {
         addTab(new SupportTabSpec(name, icon, cls, args, position, tag));
+    }
+
+    public void addTab(final Class<? extends Fragment> cls, final Bundle args, final String name,
+                       final Integer icon, final String type, final int position, final String tag) {
+        addTab(new SupportTabSpec(name, icon, type, cls, args, position, tag));
     }
 
     public void addTab(final SupportTabSpec spec) {

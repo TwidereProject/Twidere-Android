@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public final class ViewUtils {
 
@@ -94,6 +95,18 @@ public final class ViewUtils {
             for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
                 final View found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
                 if (found != null) return (T) found;
+            }
+        }
+        return null;
+    }
+
+    public static TextView findViewByText(View view, CharSequence text) {
+        if (view instanceof TextView && CompareUtils.textEquals(text, ((TextView) view).getText()))
+            return (TextView) view;
+        if (view instanceof ViewGroup) {
+            for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
+                final TextView found = findViewByText(((ViewGroup) view).getChildAt(i), text);
+                if (found != null) return found;
             }
         }
         return null;

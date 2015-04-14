@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.Window;
@@ -48,6 +49,7 @@ public class BrowserActivity extends BaseActionBarActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

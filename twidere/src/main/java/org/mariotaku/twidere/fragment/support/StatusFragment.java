@@ -1229,11 +1229,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         public boolean isDetailMediaExpanded() {
+            if (mDetailMediaExpanded) return true;
             if (mDisplayMediaPreview) {
                 final ParcelableStatus status = mStatus;
                 return status != null && (mSensitiveContentEnabled || !status.is_possibly_sensitive);
             }
-            return mDetailMediaExpanded;
+            return false;
         }
 
         public void setDetailMediaExpanded(boolean expanded) {

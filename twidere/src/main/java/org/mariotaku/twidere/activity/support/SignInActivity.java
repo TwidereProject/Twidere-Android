@@ -38,6 +38,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -293,6 +294,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mResolver = getContentResolver();

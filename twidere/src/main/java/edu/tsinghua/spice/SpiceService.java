@@ -34,11 +34,10 @@ public class SpiceService extends Service {
         SpiceProfilingUtil.log(this, "onCreate");
         mAlarmManager = (AlarmManager) getSystemService(Service.ALARM_SERVICE);
 
-        IntentFilter mScreenOnFilter = new IntentFilter("android.intent.action.SCREEN_ON");
-        SpiceService.this.registerReceiver(mScreenOReceiver, mScreenOnFilter);
-
-        IntentFilter mScreenOffFilter = new IntentFilter("android.intent.action.SCREEN_OFF");
-        SpiceService.this.registerReceiver(mScreenOReceiver, mScreenOffFilter);
+        IntentFilter screenFilter = new IntentFilter();
+        screenFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(mScreenReceiver, screenFilter);
 
         // Upload Service
         final Intent uploadIntent = new Intent(SpiceUploadReceiver.ACTION_UPLOAD_PROFILE);
@@ -49,19 +48,20 @@ public class SpiceService extends Service {
     @Override
     public void onDestroy() {
         mAlarmManager.cancel(mUploadIntent);
+        unregisterReceiver(mScreenReceiver);
         super.onDestroy();
     }
 
-    private BroadcastReceiver mScreenOReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mScreenReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals("android.intent.action.SCREEN_ON")) {
-                SpiceProfilingUtil.profile(context,SpiceProfilingUtil.FILE_NAME_SCREEN, "SCREEN ON" + "," +  NetworkStateUtil.getConnectedType(context));
-                SpiceProfilingUtil.log(context, "SCREEN ON" + "," +  NetworkStateUtil.getConnectedType(context));
-            } else if (action.equals("android.intent.action.SCREEN_OFF")) {
-                SpiceProfilingUtil.profile(context,SpiceProfilingUtil.FILE_NAME_SCREEN, "SCREEN OFF" + "," +  NetworkStateUtil.getConnectedType(context));
-                SpiceProfilingUtil.log(context, "SCREEN OFF" + "," +  NetworkStateUtil.getConnectedType(context));
+            if (action.equals(Intent.ACTION_SCREEN_ON)) {
+                SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_SCREEN, "SCREEN ON" + "," + NetworkStateUtil.getConnectedType(context));
+                SpiceProfilingUtil.log(context, "SCREEN ON" + "," + NetworkStateUtil.getConnectedType(context));
+            } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_SCREEN, "SCREEN OFF" + "," + NetworkStateUtil.getConnectedType(context));
+                SpiceProfilingUtil.log(context, "SCREEN OFF" + "," + NetworkStateUtil.getConnectedType(context));
             }
         }
 
