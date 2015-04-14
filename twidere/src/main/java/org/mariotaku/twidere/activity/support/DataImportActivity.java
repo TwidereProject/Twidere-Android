@@ -25,11 +25,6 @@ public class DataImportActivity extends BaseActionBarActivity implements FileSel
 	private OpenImportTypeTask mOpenImportTypeTask;
 
 	@Override
-	public Resources getResources() {
-		return getDefaultResources();
-	}
-
-	@Override
 	public int getThemeResourceId() {
 		return ThemeUtils.getNoDisplayThemeResource(this);
 	}

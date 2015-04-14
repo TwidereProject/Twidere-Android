@@ -26,11 +26,6 @@ public class DataExportActivity extends BaseActionBarActivity implements FileSel
 	private ExportSettingsTask mTask;
 
 	@Override
-	public Resources getResources() {
-		return getDefaultResources();
-	}
-
-	@Override
 	public int getThemeResourceId() {
 		return ThemeUtils.getNoDisplayThemeResource(this);
 	}

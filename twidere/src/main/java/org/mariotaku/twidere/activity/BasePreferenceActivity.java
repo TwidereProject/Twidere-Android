@@ -19,11 +19,8 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.NavUtils;
-import android.view.Menu;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -36,11 +33,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
 
     private int mCurrentThemeResource;
     private String mCurrentThemeBackgroundOption;
-
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        return super.onMenuOpened(featureId, menu);
-    }
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
@@ -58,11 +50,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     }
 
     @Override
-    public Resources getDefaultResources() {
-        return super.getResources();
-    }
-
-    @Override
     public int getThemeBackgroundAlpha() {
         return 0;
     }
@@ -72,7 +59,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
         return 0;
     }
 
-
     @Override
     public String getThemeFontFamily() {
         return VALUE_THEME_FONT_FAMILY_REGULAR;
@@ -81,11 +67,6 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     @Override
     public int getThemeResourceId() {
         return ThemeUtils.getSettingsThemeResource(this);
-    }
-
-    @Override
-    public void navigateUpFromSameTask() {
-        NavUtils.navigateUpFromSameTask(this);
     }
 
     @Override
@@ -115,6 +96,7 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
     public String getThemeBackgroundOption() {
         return ThemeUtils.getThemeBackgroundOption(this);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -123,7 +105,7 @@ public abstract class BasePreferenceActivity extends PreferenceActivity implemen
         }
     }
 
-    private final void setActionBarBackground() {
+    private void setActionBarBackground() {
         // ThemeUtils.applyActionBarBackground(getActionBar(), this,
         // mCurrentThemeResource);
     }

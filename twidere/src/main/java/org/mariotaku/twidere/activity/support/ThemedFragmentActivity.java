@@ -55,11 +55,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    public Resources getDefaultResources() {
-        return super.getResources();
-    }
-
-    @Override
     public int getThemeBackgroundAlpha() {
         return ThemeUtils.getUserThemeBackgroundAlpha(this);
     }
@@ -87,11 +82,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     @Override
     public String getThemeFontFamily() {
         return ThemeUtils.getThemeFontFamily(this);
-    }
-
-    @Override
-    public void navigateUpFromSameTask() {
-        NavUtils.navigateUpFromSameTask(this);
     }
 
     @Override

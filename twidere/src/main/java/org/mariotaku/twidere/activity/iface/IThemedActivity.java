@@ -23,28 +23,24 @@ import android.content.res.Resources;
 
 public interface IThemedActivity {
 
-    public int getCurrentThemeBackgroundAlpha();
+    int getCurrentThemeBackgroundAlpha();
 
-    public String getCurrentThemeBackgroundOption();
+    String getCurrentThemeBackgroundOption();
 
-    public int getCurrentThemeColor();
+    int getCurrentThemeColor();
 
-    public int getCurrentThemeResourceId();
+    int getCurrentThemeResourceId();
 
-    public Resources getDefaultResources();
-
-    public int getThemeBackgroundAlpha();
+    int getThemeBackgroundAlpha();
 
     String getThemeBackgroundOption();
 
-    public int getThemeColor();
+    int getThemeColor();
 
-    public String getThemeFontFamily();
+    String getThemeFontFamily();
 
     int getThemeResourceId();
 
-    public void navigateUpFromSameTask();
-
-    public void restart();
+    void restart();
 
 }

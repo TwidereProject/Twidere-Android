@@ -277,7 +277,7 @@
             android:label="@string/set_color"
             android:theme="@style/Theme.Twidere.Light.NoDisplay"/>
         <activity
-            android:theme="@style/Theme.Twidere.Light.DialogWhenLarge"
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
             android:name=".activity.support.LinkHandlerActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data

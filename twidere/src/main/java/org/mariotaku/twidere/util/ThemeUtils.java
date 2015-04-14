@@ -657,9 +657,6 @@ public class ThemeUtils implements Constants {
     }
 
     public static Resources getResources(final Context context) {
-        if (context instanceof IThemedActivity) {
-            return ((IThemedActivity) context).getDefaultResources();
-        }
         return context.getResources();
     }
 
@@ -727,11 +724,10 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getThemeColor(final Context context) {
-        final Resources res = getResources(context);
-        final Context wrapped = getThemedContext(context, res);
-        final TypedArray a = wrapped.obtainStyledAttributes(new int[]{android.R.attr.colorActivatedHighlight});
+        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.colorActivatedHighlight});
         try {
-            return a.getColor(0, res.getColor(R.color.material_light_blue));
+            final Resources resources = context.getResources();
+            return a.getColor(0, resources.getColor(R.color.material_light_blue));
         } finally {
             a.recycle();
         }
@@ -856,10 +852,6 @@ public class ThemeUtils implements Constants {
 
 
     public static int getUserThemeBackgroundAlpha(final Context context) {
-        if (context instanceof IThemedActivity) {
-            final int alpha = ((IThemedActivity) context).getCurrentThemeBackgroundAlpha();
-            if (alpha >= 0) return alpha;
-        }
         if (context == null) return DEFAULT_THEME_BACKGROUND_ALPHA;
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         return pref.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA);
@@ -867,8 +859,8 @@ public class ThemeUtils implements Constants {
 
     public static int getUserAccentColor(final Context context) {
         if (context == null) return Color.TRANSPARENT;
-        final Resources res = getResources(context);
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
+        final Resources res = context.getResources();
         final int def = res.getColor(R.color.branding_color);
         return pref.getInt(KEY_THEME_COLOR, def);
     }
@@ -941,10 +933,6 @@ public class ThemeUtils implements Constants {
     }
 
     public static boolean isTransparentBackground(final Context context) {
-        if (context instanceof IThemedActivity) {
-            final String option = ((IThemedActivity) context).getCurrentThemeBackgroundOption();
-            if (option != null) return isTransparentBackground(option);
-        }
         return isTransparentBackground(getThemeBackgroundOption(context));
     }
 

@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -114,7 +115,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
                 if (mFinishOnly) {
                     finish();
                 } else {
-                    navigateUpFromSameTask();
+                    NavUtils.navigateUpFromSameTask(this);
                 }
                 break;
             }
