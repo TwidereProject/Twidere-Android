@@ -33,7 +33,6 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
     private final Context context;
     private final HttpClientWrapper client;
 
-//    private SpiceHttpUtil uploadClient;
 
     public SpiceAsyUploadTask(final Context context) {
         this.context = context;
