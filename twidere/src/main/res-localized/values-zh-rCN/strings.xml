@@ -490,7 +490,7 @@
   <string name="users_statuses">用户的推文</string>
   <string name="card_animation">卡片动画</string>
   <string name="name_first">优先显示名字</string>
-  <string name="next">下一步</string>
+  <string name="next_step">下一步</string>
   <string name="settings_wizard">设定向导</string>
   <string name="wizard_page_welcome_title">欢迎</string>
   <string name="wizard_page_welcome_text">感谢你选择Twidere。\n你想现在设定它吗？</string>

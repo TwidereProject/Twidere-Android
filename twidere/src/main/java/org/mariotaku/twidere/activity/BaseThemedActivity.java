@@ -104,7 +104,6 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     }
 
     private void setActionBarBackground() {
-        ThemeUtils.applyActionBarBackground(getActionBar(), this, mCurrentThemeResource);
     }
 
     private void setTheme() {

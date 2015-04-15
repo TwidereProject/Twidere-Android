@@ -444,7 +444,7 @@
   <string name="users_statuses">Твіти користувача</string>
   <string name="card_animation">Анімація картки</string>
   <string name="name_first">Відображати спершу ім\'я</string>
-  <string name="next">Далі</string>
+  <string name="next_step">Далі</string>
   <string name="settings_wizard">Параметри майстра</string>
   <string name="wizard_page_welcome_title">Ласкаво просимо</string>
   <string name="wizard_page_welcome_text">Дякуємо за вибір Twidere.\nВи б хотіли налаштувати його зараз?</string>

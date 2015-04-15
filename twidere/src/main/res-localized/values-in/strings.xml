@@ -479,7 +479,7 @@
   <string name="users_statuses">Twit pengguna</string>
   <string name="card_animation">Animasi kartu</string>
   <string name="name_first">Tampilkan nama depan</string>
-  <string name="next">Lanjut</string>
+  <string name="next_step">Lanjut</string>
   <string name="settings_wizard">Pengaturan</string>
   <string name="wizard_page_welcome_title">Selamat datang</string>
   <string name="wizard_page_welcome_text">Terima kasih telah memilih Twidere.\nAnda mau konfigurasi sekarang?</string>

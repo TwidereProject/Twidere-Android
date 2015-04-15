@@ -436,7 +436,7 @@
   <string name="users_statuses">تغريدات المستخدم</string>
   <string name="card_animation">حركة البطاقات</string>
   <string name="name_first">إظهار الاسم أولاً</string>
-  <string name="next">التالي</string>
+  <string name="next_step">التالي</string>
   <string name="settings_wizard">مساعد الخيارات</string>
   <string name="wizard_page_welcome_title">مرحبا</string>
   <string name="wizard_page_welcome_text">شكر ﻹختياكك تويدر.\nهل ترغب في إعداده الأن ؟</string>

@@ -32,7 +32,6 @@ import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -848,9 +847,10 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mRightDrawerContainer.setScrollScale(mSlidingMenu.getBehindScrollScale());
         mSlidingMenu.setBehindCanvasTransformer(new ListenerCanvasTransformer(this));
         final Window window = getWindow();
-        final Drawable windowBackground = ThemeUtils.getWindowBackground(this);
-        ViewUtils.setBackground(mSlidingMenu.getContent(), windowBackground);
-        window.setBackgroundDrawable(new EmptyDrawable(windowBackground));
+        ThemeUtils.applyWindowBackground(this, mSlidingMenu.getContent(),
+                getCurrentThemeResourceId(), getThemeBackgroundOption(),
+                getCurrentThemeBackgroundAlpha());
+        window.setBackgroundDrawable(new EmptyDrawable());
     }
 
     private void showDataProfilingRequest() {

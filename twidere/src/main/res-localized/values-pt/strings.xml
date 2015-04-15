@@ -460,7 +460,7 @@
   <string name="users_statuses">Tweets do usuário</string>
   <string name="card_animation">Cartão animado</string>
   <string name="name_first">Exibir o nome primeiro</string>
-  <string name="next">Próximo</string>
+  <string name="next_step">Próximo</string>
   <string name="settings_wizard">Assistente de configuração</string>
   <string name="wizard_page_welcome_title">Bem-vindo</string>
   <string name="wizard_page_welcome_text">Obrigado por escolher o Twidere.\nO que você quer configurar agora?</string>

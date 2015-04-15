@@ -490,7 +490,7 @@
   <string name="users_statuses">用戶的推文</string>
   <string name="card_animation">卡片動畫</string>
   <string name="name_first">優先顯示名字</string>
-  <string name="next">下一步</string>
+  <string name="next_step">下一步</string>
   <string name="settings_wizard">設定精靈</string>
   <string name="wizard_page_welcome_title">歡迎</string>
   <string name="wizard_page_welcome_text">感謝您選擇 Twidere。\n您想現在設定它嗎？</string>

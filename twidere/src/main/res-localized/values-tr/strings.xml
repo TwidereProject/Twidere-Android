@@ -475,7 +475,7 @@
   <string name="users_statuses">Kullanıcının tweet\'ları</string>
   <string name="card_animation">Kart animasyonu</string>
   <string name="name_first">İsmi ilk göster</string>
-  <string name="next">Sonraki</string>
+  <string name="next_step">Sonraki</string>
   <string name="settings_wizard">Ayar sihirbazı</string>
   <string name="wizard_page_welcome_title">Merhaba</string>
   <string name="wizard_page_welcome_text">Twidere\'ı seçtiğiniz için teşekkürler.\nŞimdi ayarlamak istermisin?</string>

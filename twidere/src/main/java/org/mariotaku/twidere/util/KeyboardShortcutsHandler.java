@@ -45,8 +45,8 @@ public class KeyboardShortcutsHandler implements Constants {
         sActionLabelMap.put("status.reply", R.string.reply);
         sActionLabelMap.put("status.retweet", R.string.retweet);
         sActionLabelMap.put("status.favorite", R.string.favorite);
-        sActionLabelMap.put("navigation.previous", R.string.previous);
-        sActionLabelMap.put("navigation.next", R.string.next);
+        sActionLabelMap.put("navigation.previous", R.string.previous_item);
+        sActionLabelMap.put("navigation.next", R.string.next_item);
         sActionLabelMap.put("navigation.refresh", R.string.refresh);
 
         sMetaNameMap.put(KeyEvent.META_FUNCTION_ON, "fn");

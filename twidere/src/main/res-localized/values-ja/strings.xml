@@ -468,7 +468,7 @@
   <string name="users_statuses">ユーザーのツイート</string>
   <string name="card_animation">カードアニメーション</string>
   <string name="name_first">名前を先に表示</string>
-  <string name="next">次へ</string>
+  <string name="next_step">次へ</string>
   <string name="settings_wizard">設定ウィザード</string>
   <string name="wizard_page_welcome_title">ようこそ</string>
   <string name="wizard_page_welcome_text">Twidereを選んで頂きありがとうございます。\n初期設定をしますか?</string>

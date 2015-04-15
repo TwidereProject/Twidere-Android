@@ -457,7 +457,7 @@
   <string name="users_statuses">Gebruikers tweets</string>
   <string name="card_animation">Kaart animatie</string>
   <string name="name_first">Toon naam eerst</string>
-  <string name="next">Volgende</string>
+  <string name="next_step">Volgende</string>
   <string name="settings_wizard">Instellingen tovenaar</string>
   <string name="wizard_page_welcome_title">Welkom</string>
   <string name="wizard_page_welcome_text">Bedankt voor het kiezen van Twidere!\nWil je het nu configureren?</string>

@@ -241,7 +241,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
         protected abstract int getHeaderTitle();
 
         protected int getNextPageTitle() {
-            return R.string.next;
+            return R.string.next_step;
         }
 
         protected abstract int getPreferenceResource();
@@ -301,7 +301,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
         @Override
         protected int getNextPageTitle() {
-            return R.string.next;
+            return R.string.next_step;
         }
 
         @Override

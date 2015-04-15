@@ -127,7 +127,7 @@ public class QuickMenuFragment extends BaseSupportFragment implements OnFitSyste
         mSlidingUpPanel = (SlidingUpPanelLayout) view.findViewById(R.id.activities_drawer);
         mActivitiesConfigButton = (ImageButton) view.findViewById(R.id.activities_config_button);
         final View activitiesContainer = view.findViewById(R.id.activities_container);
-        ViewUtils.setBackground(activitiesContainer, ThemeUtils.getWindowBackground(getThemedContext()));
+//        ViewUtils.setBackground(activitiesContainer, ThemeUtils.getWindowBackground(getThemedContext()));
     }
 
     @Override

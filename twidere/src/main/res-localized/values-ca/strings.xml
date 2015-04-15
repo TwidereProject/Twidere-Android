@@ -476,7 +476,7 @@
   <string name="users_statuses">Piulades de l\'usuari</string>
   <string name="card_animation">Animació de les targetes</string>
   <string name="name_first">Mostra el nom al principi</string>
-  <string name="next">Següent</string>
+  <string name="next_step">Següent</string>
   <string name="settings_wizard">Ajudant de configuració</string>
   <string name="wizard_page_welcome_title">Benvingut/da</string>
   <string name="wizard_page_welcome_text">Gràcies per escollir el Twidere.\nVoleu configurar-lo ara?</string>

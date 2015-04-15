@@ -475,7 +475,7 @@
   <string name="users_statuses">Käyttäjän twiitit</string>
   <string name="card_animation">Korttianimaatio</string>
   <string name="name_first">Näytä ensin nimi</string>
-  <string name="next">Seuraava</string>
+  <string name="next_step">Seuraava</string>
   <string name="settings_wizard">Ohjatut asetukset</string>
   <string name="wizard_page_welcome_title">Tervetuloa</string>
   <string name="wizard_page_welcome_text">Kiitos, että valitsit Twideren\nHaluatko määrittää asetukset heti?</string>

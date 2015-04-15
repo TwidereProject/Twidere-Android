@@ -31,7 +31,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.querybuilder.Columns.Column;
@@ -48,6 +47,7 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.ShapedImageView;
 
 import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
@@ -70,6 +70,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     private final EditText mEditText;
 
     private final boolean mDisplayProfileImage;
+    private final int mProfileImageStyle;
 
     private int mProfileImageUrlIdx, mNameIdx, mScreenNameIdx, mUserIdIdx;
     private char mToken = '@';
@@ -89,6 +90,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         mProfileImageLoader = app.getMediaLoaderWrapper();
         mDatabase = app.getSQLiteDatabase();
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
     }
 
     public UserHashtagAutoCompleteAdapter(final EditText view) {
@@ -100,7 +102,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         if (isCursorClosed()) return;
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-        final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
+        final ShapedImageView icon = (ShapedImageView) view.findViewById(android.R.id.icon);
 
         // Clear images in prder to prevent images in recycled view shown.
         icon.setImageDrawable(null);
@@ -117,12 +119,13 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             if (mDisplayProfileImage) {
                 final String profileImageUrl = cursor.getString(mProfileImageUrlIdx);
                 mProfileImageLoader.displayProfileImage(icon, profileImageUrl);
+                icon.setStyle(mProfileImageStyle);
             } else {
                 mProfileImageLoader.cancelDisplayTask(icon);
-//                icon.setImageResource(R.drawable.ic_profile_image_default);
             }
             icon.clearColorFilter();
         } else {
+            icon.setStyle(mProfileImageStyle);
             icon.setImageResource(R.drawable.ic_action_hashtag);
             icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
         }

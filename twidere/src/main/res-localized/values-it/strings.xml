@@ -485,7 +485,7 @@
   <string name="users_statuses">Tweet dell\'utente</string>
   <string name="card_animation">Animazione delle schede</string>
   <string name="name_first">Visualizza prima il nome</string>
-  <string name="next">Prossimo</string>
+  <string name="next_step">Prossimo</string>
   <string name="settings_wizard">Impostazione guidata</string>
   <string name="wizard_page_welcome_title">Benvenuto</string>
   <string name="wizard_page_welcome_text">Grazie per aver scelto Twidere.\nVuoi configurarlo adesso?</string>

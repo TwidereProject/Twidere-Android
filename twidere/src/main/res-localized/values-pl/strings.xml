@@ -475,7 +475,7 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="users_statuses">Tweety użytkownika</string>
   <string name="card_animation">Animacja tweetów</string>
   <string name="name_first">Najpierw wyświetlana nazwa</string>
-  <string name="next">Dalej</string>
+  <string name="next_step">Dalej</string>
   <string name="settings_wizard">Kreator ustawień</string>
   <string name="wizard_page_welcome_title">Witamy</string>
   <string name="wizard_page_welcome_text">Dziękujemy za wybranie Twidere.\nCzy chcesz go skonfigurować teraz?</string>

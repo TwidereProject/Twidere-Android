@@ -68,7 +68,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPagerIndicator);
         setTabExpandEnabled(a.getBoolean(R.styleable.TabPagerIndicator_tabExpandEnabled, false));
         setHorizontalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabHorizontalPadding, 0));
-        setVerticalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabHorizontalPadding, 0));
+        setVerticalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabVerticalPadding, 0));
         setStripColor(a.getColor(R.styleable.TabPagerIndicator_tabStripColor, 0));
         setIconColor(a.getColor(R.styleable.TabPagerIndicator_tabIconColor, 0));
         setLabelColor(a.getColor(R.styleable.TabPagerIndicator_tabLabelColor, ThemeUtils.getTextColorPrimary(context)));

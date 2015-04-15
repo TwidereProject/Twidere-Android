@@ -370,7 +370,7 @@
   <string name="link_highlight_option">Link kiemelési lehetőség</string>
   <string name="users_statuses">Felhasználó tweetjei</string>
   <string name="name_first">Először a név jelenjen meg</string>
-  <string name="next">Következő</string>
+  <string name="next_step">Következő</string>
   <string name="settings_wizard">Beállítások varázsló</string>
   <string name="wizard_page_welcome_text">Köszönjük, hogy a Twidere programot választotta.\nSzeretné most konfigurálni?</string>
   <string name="wizard_page_welcome_yes">Igen</string>

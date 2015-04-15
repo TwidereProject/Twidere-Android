@@ -109,7 +109,8 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final int cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
         final int accentColor = ThemeUtils.getUserAccentColor(context);
 
-        ViewUtils.setBackground(windowBackgroundView, ThemeUtils.getWindowBackground(context));
+        ThemeUtils.applyWindowBackground(context, windowBackgroundView, ThemeUtils.getThemeResource(context),
+                ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
 //        ViewAccessor.setBackground(windowContentOverlayView, ThemeUtils.getWindowContentOverlay(context));
         ViewUtils.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes, accentColor, true));
         ViewUtils.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
@@ -122,7 +123,6 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         inflater.inflate(R.menu.menu_status, menuBar.getMenu());
         ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_STATUS_SHARE);
         if (statusContentView != null) {
-            ViewUtils.setBackground(statusContentView, ThemeUtils.getWindowBackground(context));
 
             final View profileView = statusContentView.findViewById(R.id.profile_container);
             final ImageView profileImageView = (ImageView) statusContentView.findViewById(R.id.profile_image);

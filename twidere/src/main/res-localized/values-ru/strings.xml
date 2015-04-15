@@ -489,7 +489,7 @@
   <string name="users_statuses">Твиты пользователя</string>
   <string name="card_animation">Анимация карточек</string>
   <string name="name_first">Отображать имя сначала</string>
-  <string name="next">Далее</string>
+  <string name="next_step">Далее</string>
   <string name="settings_wizard">Мастер настройки</string>
   <string name="wizard_page_welcome_title">Добро пожаловать</string>
   <string name="wizard_page_welcome_text">Спасибо за то, что выбрали Twidere. Вы бы хотели настроить его сейчас?</string>

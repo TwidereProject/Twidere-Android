@@ -138,7 +138,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         setContentView(R.layout.activity_user_profile_editor);
         setSupportActionBar(mToolbar);
         ViewUtils.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
-        ViewUtils.setBackground(mToolbar, ThemeUtils.getActionBarBackground(mToolbar.getContext(),
+        ViewUtils.setBackground(mToolbar, ThemeUtils.getSupportActionBarBackground(mToolbar.getContext(),
                 getCurrentThemeResourceId()));
         // setOverrideExitAniamtion(false);
         mEditName.addTextChangedListener(this);
