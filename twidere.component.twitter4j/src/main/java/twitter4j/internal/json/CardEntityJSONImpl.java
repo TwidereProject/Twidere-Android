@@ -21,6 +21,7 @@ package twitter4j.internal.json;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mariotaku.twidere.library.twitter4j.BuildConfig;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,11 +39,19 @@ import twitter4j.internal.util.InternalParseUtil;
 public class CardEntityJSONImpl implements CardEntity {
 
     private final String name;
+    private final String url;
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
     private final Map<String, BindingValue> bindingValues;
     private final User[] users;
 
     public CardEntityJSONImpl(JSONObject json) throws JSONException, TwitterException {
         this.name = json.getString("name");
+        this.url = json.optString("url");
         this.bindingValues = BindingValueImpl.valuesOf(json.getJSONObject("binding_values"));
         if (!json.isNull("users")) {
             final JSONObject usersJSON = json.getJSONObject("users");
@@ -63,7 +72,7 @@ public class CardEntityJSONImpl implements CardEntity {
     }
 
     @Override
-    public User[] gerUsers() {
+    public User[] getUsers() {
         return users;
     }
 
@@ -107,7 +116,11 @@ public class CardEntityJSONImpl implements CardEntity {
             } else if (TYPE_BOOLEAN.equals(type)) {
                 return new BooleanValueImpl(name, json);
             }
-            throw new TwitterException(String.format("Unsupported type %s", type));
+            if (BuildConfig.DEBUG) {
+                throw new RuntimeException(String.format("Unsupported type %s", type));
+            } else {
+                throw new TwitterException(String.format("Unsupported type %s", type));
+            }
         }
 
         private static HashMap<String, BindingValue> valuesOf(JSONObject json) throws JSONException, TwitterException {
@@ -115,7 +128,7 @@ public class CardEntityJSONImpl implements CardEntity {
             final HashMap<String, BindingValue> values = new HashMap<>();
             while (keys.hasNext()) {
                 final String key = keys.next();
-                if (!json.isNull("name")) {
+                if (!json.isNull(key)) {
                     values.put(key, valueOf(key, json.getJSONObject(key)));
                 }
             }

@@ -849,10 +849,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());
 
             textView.setMovementMethod(StatusContentMovementMethod.getInstance());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, fragment, activity));
                 textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, fragment, activity));
-            }
+//            }
         }
 
 

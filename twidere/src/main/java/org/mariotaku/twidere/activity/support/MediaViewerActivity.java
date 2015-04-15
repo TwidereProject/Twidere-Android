@@ -82,6 +82,8 @@ import pl.droidsonroids.gif.InputSource.FileSource;
 
 public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants, OnPageChangeListener {
 
+    private static final String EXTRA_LOOP = "loop";
+
     private ViewPager mViewPager;
     private MediaPagerAdapter mAdapter;
     private ActionBar mActionBar;
@@ -228,6 +230,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 //            mVideoViewProgress.setVisibility(View.GONE);
         }
 
+        public boolean isLoopEnabled() {
+            return getArguments().getBoolean(EXTRA_LOOP, false);
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_media_page_video, container, false);
@@ -291,6 +297,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                 } else {
                     mp.setVolume(0, 0);
                 }
+                mp.setLooping(isLoopEnabled());
                 mp.start();
                 mVideoViewProgress.setVisibility(View.VISIBLE);
                 mVideoViewProgress.post(mVideoProgressRunnable);
@@ -298,13 +305,25 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
 
         private String getBestVideoUrl(ParcelableMedia media) {
-            if (media == null || media.video_info == null) return null;
-            for (String supportedType : SUPPORTED_VIDEO_TYPES) {
-                for (Variant variant : media.video_info.variants) {
-                    if (supportedType.equalsIgnoreCase(variant.content_type)) return variant.url;
+            if (media == null) return null;
+            switch (media.type) {
+                case ParcelableMedia.TYPE_VIDEO: {
+                    if (media.video_info == null) return null;
+                    for (String supportedType : SUPPORTED_VIDEO_TYPES) {
+                        for (Variant variant : media.video_info.variants) {
+                            if (supportedType.equalsIgnoreCase(variant.content_type))
+                                return variant.url;
+                        }
+                    }
+                    return null;
+                }
+                case ParcelableMedia.TYPE_CARD_ANIMATED_GIF: {
+                    return media.media_url;
+                }
+                default: {
+                    return null;
                 }
             }
-            return null;
         }
 
         @Override
@@ -637,6 +656,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             args.putLong(EXTRA_ACCOUNT_ID, mAccountId);
             args.putParcelable(EXTRA_MEDIA, media);
             switch (media.type) {
+                case ParcelableMedia.TYPE_CARD_ANIMATED_GIF: {
+                    args.putBoolean(EXTRA_LOOP, true);
+                    return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
+                }
                 case ParcelableMedia.TYPE_VIDEO: {
                     return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
                 }

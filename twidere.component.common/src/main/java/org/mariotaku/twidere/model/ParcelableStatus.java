@@ -395,7 +395,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_verified = user.isVerified();
         user_is_following = user.isFollowing();
         text_html = TwitterContentUtils.formatStatusText(status);
-        media = ParcelableMedia.fromEntities(status);
+        media = ParcelableMedia.fromStatus(status);
         text_plain = status.getText();
         retweet_count = status.getRetweetCount();
         favorite_count = status.getFavoriteCount();
@@ -732,7 +732,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
 
         public ParcelableCardEntity(CardEntity card, long account_id) {
             name = card.getName();
-            users = ParcelableUser.fromUsersArray(card.gerUsers(), account_id);
+            users = ParcelableUser.fromUsersArray(card.getUsers(), account_id);
             final BindingValue[] bindingValues = card.getBindingValues();
             if (bindingValues != null) {
                 values = new ParcelableValueItem[bindingValues.length];

@@ -71,7 +71,7 @@ public class TwitterCardUtils {
 
     public static boolean isCardSupported(ParcelableCardEntity card) {
         if (card == null) return false;
-        return CARD_NAME_PLAYER.equals(card.name) || CARD_NAME_AUDIO.equals(card.name) || CARD_NAME_ANIMATED_GIF.equals(card.name);
+        return CARD_NAME_PLAYER.equals(card.name) || CARD_NAME_AUDIO.equals(card.name);
     }
 
 }

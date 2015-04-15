@@ -28,7 +28,9 @@ public interface CardEntity extends Serializable {
 
     String getName();
 
-    User[] gerUsers();
+    String getUrl();
+
+    User[] getUsers();
 
     BindingValue getBindingValue(String key);
 

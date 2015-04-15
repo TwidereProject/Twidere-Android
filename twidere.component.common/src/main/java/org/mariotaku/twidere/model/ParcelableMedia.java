@@ -2,35 +2,53 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.mariotaku.jsonserializer.JSONParcel;
 import org.mariotaku.jsonserializer.JSONParcelable;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.SimpleValueSerializer.Reader;
 import org.mariotaku.twidere.util.SimpleValueSerializer.SerializationException;
 import org.mariotaku.twidere.util.SimpleValueSerializer.SimpleValueSerializable;
 import org.mariotaku.twidere.util.SimpleValueSerializer.Writer;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import twitter4j.CardEntity;
+import twitter4j.CardEntity.BindingValue;
+import twitter4j.CardEntity.ImageValue;
+import twitter4j.CardEntity.StringValue;
 import twitter4j.EntitySupport;
 import twitter4j.ExtendedEntitySupport;
 import twitter4j.MediaEntity;
 import twitter4j.MediaEntity.Size;
 import twitter4j.MediaEntity.Type;
+import twitter4j.Status;
 import twitter4j.URLEntity;
 
 @SuppressWarnings("unused")
 public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueSerializable {
 
+    @IntDef({TYPE_UNKNOWN, TYPE_IMAGE, TYPE_VIDEO, TYPE_CARD_ANIMATED_GIF})
+    public @interface MediaType {
+
+    }
+
+    @MediaType
     public static final int TYPE_UNKNOWN = 0;
+    @MediaType
     public static final int TYPE_IMAGE = 1;
+    @MediaType
     public static final int TYPE_VIDEO = 2;
+    @MediaType
+    public static final int TYPE_CARD_ANIMATED_GIF = 3;
 
     public static final Parcelable.Creator<ParcelableMedia> CREATOR = new Parcelable.Creator<ParcelableMedia>() {
         @Override
@@ -72,8 +90,12 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public String media_url;
 
     @Nullable
-    public String page_url;
-    public int start, end, type;
+    public String page_url, preview_url;
+    public int start;
+    public int end;
+
+    @MediaType
+    public int type;
     public int width, height;
 
     public VideoInfo video_info;
@@ -86,8 +108,10 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public ParcelableMedia(final JSONParcel in) {
         media_url = in.readString("media_url");
         page_url = in.readString("page_url");
+        preview_url = in.readString("preview_url");
         start = in.readInt("start");
         end = in.readInt("end");
+        //noinspection ResourceType
         type = in.readInt("type");
         width = in.readInt("width");
         height = in.readInt("height");
@@ -96,6 +120,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public ParcelableMedia(final MediaEntity entity) {
         page_url = entity.getMediaURL();
         media_url = entity.getMediaURL();
+        preview_url = entity.getMediaURL();
         start = entity.getStart();
         end = entity.getEnd();
         type = getTypeInt(entity.getType());
@@ -108,6 +133,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public ParcelableMedia(ParcelableMediaUpdate update) {
         media_url = update.uri;
         page_url = update.uri;
+        preview_url = update.uri;
         type = update.type;
     }
 
@@ -135,8 +161,10 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public ParcelableMedia(final Parcel in) {
         page_url = in.readString();
         media_url = in.readString();
+        preview_url = in.readString();
         start = in.readInt();
         end = in.readInt();
+        //noinspection ResourceType
         type = in.readInt();
         width = in.readInt();
         height = in.readInt();
@@ -144,9 +172,11 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     }
 
     private ParcelableMedia(@NonNull final String media_url, @Nullable final String page_url,
-                            final int start, final int end, final int type) {
+                            @Nullable final String preview_url, final int start, final int end,
+                            final int type) {
         this.page_url = page_url;
         this.media_url = media_url;
+        this.preview_url = preview_url;
         this.start = start;
         this.end = end;
         this.type = type;
@@ -165,6 +195,10 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
                     page_url = reader.nextString();
                     break;
                 }
+                case "preview_url": {
+                    preview_url = reader.nextString();
+                    break;
+                }
                 case "start": {
                     start = reader.nextInt();
                     break;
@@ -174,6 +208,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
                     break;
                 }
                 case "type": {
+                    //noinspection ResourceType
                     type = reader.nextInt();
                     break;
                 }
@@ -240,6 +275,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public void write(Writer writer) {
         writer.write("media_url", media_url);
         writer.write("page_url", page_url);
+        writer.write("preview_url", preview_url);
         writer.write("start", String.valueOf(start));
         writer.write("end", String.valueOf(end));
         writer.write("type", String.valueOf(type));
@@ -251,6 +287,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public void writeToParcel(final JSONParcel out) {
         out.writeString("media_url", media_url);
         out.writeString("page_url", page_url);
+        out.writeString("preview_url", preview_url);
         out.writeInt("start", start);
         out.writeInt("end", end);
         out.writeInt("type", type);
@@ -262,6 +299,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(page_url);
         dest.writeString(media_url);
+        dest.writeString(preview_url);
         dest.writeInt(start);
         dest.writeInt(end);
         dest.writeInt(type);
@@ -270,7 +308,60 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
         dest.writeParcelable(video_info, flags);
     }
 
-    public static ParcelableMedia[] fromEntities(final EntitySupport entities) {
+
+    @Nullable
+    public static ParcelableMedia[] fromStatus(final Status status) {
+        final ParcelableMedia[] fromEntities = fromEntities(status);
+        final ParcelableMedia[] fromCard = fromCard(status.getCard(), status.getURLEntities());
+        if (fromEntities == null) {
+            return fromCard;
+        } else if (fromCard == null) {
+            return fromEntities;
+        }
+        final ParcelableMedia[] merged = new ParcelableMedia[fromCard.length + fromEntities.length];
+        TwidereArrayUtils.mergeArray(merged, fromEntities, fromCard);
+        return merged;
+    }
+
+    @Nullable
+    private static ParcelableMedia[] fromCard(@Nullable CardEntity card, @Nullable URLEntity[] entities) {
+        if (card == null) return null;
+        if ("animated_gif".equals(card.getName())) {
+            final BindingValue player_stream_url = card.getBindingValue("player_stream_url");
+            if (player_stream_url == null || !BindingValue.TYPE_STRING.equals(player_stream_url.getType()))
+                return null;
+
+            final ParcelableMedia media = new ParcelableMedia();
+            media.type = ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
+            media.media_url = ((StringValue) player_stream_url).getValue();
+            media.page_url = card.getUrl();
+            final BindingValue player_image = card.getBindingValue("player_image");
+            if (player_image instanceof ImageValue) {
+                media.preview_url = ((ImageValue) player_image).getUrl();
+            }
+            final BindingValue player_width = card.getBindingValue("player_width");
+            final BindingValue player_height = card.getBindingValue("player_height");
+            if (player_width instanceof StringValue && player_height instanceof StringValue) {
+                media.width = ParseUtils.parseInt(((StringValue) player_width).getValue());
+                media.height = ParseUtils.parseInt(((StringValue) player_height).getValue());
+            }
+            if (entities != null) {
+                for (URLEntity entity : entities) {
+                    if (entity.getURL().equals(media.page_url)) {
+                        media.start = entity.getStart();
+                        media.end = entity.getEnd();
+                        break;
+                    }
+                }
+            }
+            return new ParcelableMedia[]{media};
+        }
+        return null;
+    }
+
+    @Nullable
+    public static ParcelableMedia[] fromEntities(@Nullable final EntitySupport entities) {
+        if (entities == null) return null;
         final List<ParcelableMedia> list = new ArrayList<>();
         final MediaEntity[] mediaEntities;
         if (entities instanceof ExtendedEntitySupport) {
@@ -294,7 +385,14 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
                 final String expanded = url.getExpandedURL();
                 final String media_url = MediaPreviewUtils.getSupportedLink(expanded);
                 if (expanded != null && media_url != null) {
-                    list.add(new ParcelableMedia(media_url, expanded, url.getStart(), url.getEnd(), TYPE_IMAGE));
+                    final ParcelableMedia media = new ParcelableMedia();
+                    media.type = TYPE_IMAGE;
+                    media.page_url = expanded;
+                    media.media_url = media_url;
+                    media.preview_url = media_url;
+                    media.start = url.getStart();
+                    media.end = url.getEnd();
+                    list.add(media);
                 }
             }
         }
@@ -310,6 +408,10 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
         public long duration;
 
         public VideoInfo(Reader source) {
+
+        }
+
+        public VideoInfo() {
 
         }
 
@@ -431,7 +533,7 @@ public class ParcelableMedia implements Parcelable, JSONParcelable, SimpleValueS
     }
 
     public static ParcelableMedia newImage(final String media_url, final String url) {
-        return new ParcelableMedia(media_url, url, 0, 0, TYPE_IMAGE);
+        return new ParcelableMedia(media_url, url, media_url, 0, 0, TYPE_IMAGE);
     }
 
     public static class MediaSize {

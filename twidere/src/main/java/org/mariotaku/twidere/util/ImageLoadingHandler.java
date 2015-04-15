@@ -92,7 +92,8 @@ public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingPr
     private static boolean isVideoItem(ViewGroup parent) {
         final Object tag = parent.getTag();
         if (tag instanceof ParcelableMedia) {
-            return ((ParcelableMedia) tag).type == ParcelableMedia.TYPE_VIDEO;
+            final int type = ((ParcelableMedia) tag).type;
+            return type == ParcelableMedia.TYPE_VIDEO || type == ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
         }
         return false;
     }

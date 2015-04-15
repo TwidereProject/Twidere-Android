@@ -30,50 +30,37 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 public class TypeMappingUtil {
 
     public static String getLinkType(int type) {
-        String linkType = "";
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION:
-                linkType = "mention";
-                break;
+                return "mention";
             case TwidereLinkify.LINK_TYPE_CASHTAG:
-                linkType = "cashTag";
-                break;
+                return "cashTag";
             case TwidereLinkify.LINK_TYPE_LINK:
-                linkType = "urlLink";
-                break;
+                return "urlLink";
             case TwidereLinkify.LINK_TYPE_LIST:
-                linkType = "userList";
-                break;
+                return "userList";
             case TwidereLinkify.LINK_TYPE_STATUS:
-                linkType = "status";
-                break;
+                return "status";
             case TwidereLinkify.LINK_TYPE_USER_ID:
-                linkType = "userID";
-                break;
+                return "userID";
             case TwidereLinkify.LINK_TYPE_HASHTAG:
-                linkType = "hashTag";
-                break;
+                return "hashTag";
             default:
-                linkType = "unknown";
-                break;
+                return "unknown";
         }
-        return linkType;
     }
 
 
     public static String getMediaType(int type) {
-        String mediaType = "";
         switch (type) {
             case ParcelableMedia.TYPE_IMAGE:
-                mediaType = "image";
-                break;
+                return "image";
             case ParcelableMedia.TYPE_VIDEO:
-                mediaType = "video";
-                break;
+                return "video";
+            case ParcelableMedia.TYPE_CARD_ANIMATED_GIF:
+                return "card_animated_gif";
             default:
-                mediaType = "unknown";
-                break;
+                return "unknown";
         }
-        return mediaType;
     }
 }
