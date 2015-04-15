@@ -104,7 +104,7 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     public void setProgressBarIndeterminateVisibility(final boolean visible) {
         final Activity activity = getActivity();
         if (activity instanceof BaseActionBarActivity) {
-            ((BaseActionBarActivity) activity).setProgressBarIndeterminateVisibility(visible);
+            activity.setProgressBarIndeterminateVisibility(visible);
         }
     }
 

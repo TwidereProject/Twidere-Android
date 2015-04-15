@@ -90,7 +90,6 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                 intent.setClassName(activityInfo.packageName, activityInfo.name);
                 startActivity(intent);
                 finish();
-                return;
             }
         }
     }

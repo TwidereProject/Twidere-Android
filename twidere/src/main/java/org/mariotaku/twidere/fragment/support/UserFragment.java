@@ -836,13 +836,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        if (!shouldUseNativeMenu()) return;
         inflater.inflate(R.menu.menu_user_profile, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(final Menu menu) {
-        if (!shouldUseNativeMenu() || !menu.hasVisibleItems()) return;
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final ParcelableUser user = getUser();
         final Relationship relationship = mRelationship;
@@ -1354,10 +1352,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null);
         }
         mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), R.drawable.ic_action_star, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);
-    }
-
-    private boolean shouldUseNativeMenu() {
-        return getActivity() instanceof LinkHandlerActivity;
     }
 
     private void updateFollowProgressState() {

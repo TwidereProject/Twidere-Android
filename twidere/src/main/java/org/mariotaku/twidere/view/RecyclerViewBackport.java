@@ -23,12 +23,9 @@ import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.InputDevice;
 import android.view.MotionEvent;
-
-import org.mariotaku.twidere.Constants;
 
 /**
  * Created by mariotaku on 15/3/30.

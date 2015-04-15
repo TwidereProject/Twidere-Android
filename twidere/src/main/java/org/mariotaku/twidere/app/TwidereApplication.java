@@ -51,7 +51,6 @@ import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
@@ -92,7 +91,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private MultiSelectManager mMultiSelectManager;
     private TwidereImageDownloader mImageDownloader, mFullImageDownloader;
     private DiskCache mDiskCache, mFullDiskCache;
-    private MessagesManager mCroutonsManager;
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private HostAddressResolver mResolver;
     private SQLiteDatabase mDatabase;
@@ -191,11 +189,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     public Bus getMessageBus() {
         return mMessageBus;
-    }
-
-    public MessagesManager getMessagesManager() {
-        if (mCroutonsManager != null) return mCroutonsManager;
-        return mCroutonsManager = new MessagesManager(this);
     }
 
     public MultiSelectManager getMultiSelectManager() {

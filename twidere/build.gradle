@@ -84,7 +84,7 @@ dependencies {
     compile 'com.github.mariotaku:MessageBubbleView:1.0'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.mariotaku:SlidingMenu:1.3'
-    compile 'com.github.uucky:ColorPicker-Android:0.9.1'
+    compile 'com.github.uucky:ColorPicker-Android:0.9.3'
     compile 'com.sprylab.android.texturevideoview:texturevideoview:1.0.0'
     compile 'com.squareup:pollexor:2.0.2'
     compile 'org.apache.commons:commons-lang3:3.4'

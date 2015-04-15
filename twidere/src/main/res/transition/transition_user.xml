@@ -20,11 +20,16 @@
 
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:duration="@android:integer/config_shortAnimTime">
     <changeBounds android:duration="@android:integer/config_shortAnimTime">
         <targets>
-            <target android:targetId="@id/profile_image"/>
-            <target android:targetId="@id/profile_type"/>
+            <target
+                android:targetId="@id/profile_image"
+                tools:ignore="UnusedAttribute"/>
+            <target
+                android:targetId="@id/profile_type"
+                tools:ignore="UnusedAttribute"/>
         </targets>
     </changeBounds>
     <!--<autoTransition>-->

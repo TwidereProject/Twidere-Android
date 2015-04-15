@@ -20,6 +20,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -46,7 +47,8 @@
             android:id="@+id/alpha_slider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            tools:ignore="NestedWeights"/>
 
         <ImageView
             android:id="@+id/alpha_preview"
@@ -56,7 +58,8 @@
             android:layout_weight="0"
             android:scaleType="centerInside"
             android:src="@mipmap/ic_launcher"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:ignore="ContentDescription"/>
 
     </LinearLayout>
 

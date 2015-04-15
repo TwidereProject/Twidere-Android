@@ -106,11 +106,8 @@
   <string name="pick_color">إختيار لون</string>
   <string name="follow">متابعه</string>
   <string name="unfollow">الغاء متابعه</string>
-  <string name="bottom_compose_button">زر \"التأليف\" في الأسفل</string>
-  <string name="bottom_compose_button_summary">وضع زر كتابة التغريدة على اليسار, مناسب للأجهزة ذات الشاشة الكبيرة.</string>
   <string name="leftside_compose_button">زر كتابة التغريدة على اليسار</string>
   <string name="leftside_compose_button_summary">وضع زر كتابة التغريدة على اليسار.</string>
-  <string name="bottom_send_button">زر \"إرسال\" في الأسفل</string>
   <string name="load_item_limit">الحد الأقصى لعدد التغريدات</string>
   <string name="load_item_limit_summary">الحد الأقصى لعدد التغريدات المحملة في كل مرة.</string>
   <string name="load_more_automatically">تحميل محتويات التغريدة تلقائياً</string>
@@ -146,12 +143,7 @@
   <string name="reported_user_for_spam">التبليغ عن إساءة هذا المستخدم</string>
   <string name="reported_users_for_spam">بلغ عنهم على أنهم رسائل احتيال-سبام-.</string>
   <string name="filename_hint">إسم الملف</string>
-  <string name="overwrite_confirm">الملف موجود سابقًا, هل تود الكتابة عليه؟</string>
-  <string name="save_as">حفظ ك</string>
   <string name="please_wait">يرجى الإنتظار.</string>
-  <string name="file_saved_to">تم التخزين في <xliff:g id="filename">%s</xliff:g> .
-
-</string>
   <string name="saved_to_gallery">حفظت في المعرض.</string>
   <string name="proxy">البروكسي</string>
   <string name="http_proxy">بروكسي HTTP</string>
@@ -221,9 +213,6 @@
   <string name="tabs">التبويبات</string>
   <string name="add_tab">إضافة تبويب</string>
   <string name="edit_tab">تعديل علامة تبويب</string>
-  <string name="move_up">التحرك للأعلى</string>
-  <string name="move_down">التحرك للأسفل</string>
-  <string name="unsaved_change_back_pressed">انت لم تحفظ التغييرات،اضغط زر الرجوع مرة أخرى للخروج وعدم الحفظ.</string>
   <string name="invalid_settings">تم العثور على إعدادات غير صحيحة.</string>
   <string name="icon">أيقونة</string>
   <string name="pick_file">اختيار ملف</string>
@@ -241,7 +230,6 @@
   <string name="error_message_image_upload_failed">فشل في رفع الصورة.</string>
   <string name="error_message_image_uploader_not_found">لم يتم العثور على مركز رفع الصور،ربما تم إلغاء تثبيته.</string>
   <string name="image_upload_format">شكل التغريدة ذات الصورة</string>
-  <string name="tweet_shortener">مقصِّر التغريدة</string>
   <string name="status_shortener">مُقصّر التغريدة</string>
   <string name="status_shortener_default">لايوجد (الغِ الارسال)</string>
   <string name="error_message_status_too_long">تغريدتك طويلة جدا.</string>
@@ -253,18 +241,12 @@
   <string name="show_absolute_time_summary">إظهار الوقت المطلق في التغريدات</string>
   <string name="user_mentions">الإشارات للمستخدم</string>
   <string name="dual_pane_layout">تخطيط الجزء المزدوج</string>
-  <string name="landscape">الوضع المائل</string>
-  <string name="portrait">الوضع المعتدل</string>
   <string name="quick_send">اضغط \"Enter\" للارسال</string>
   <string name="quick_send_summary">ارسل التغريدة عندما يُضغط على \"Enter\".</string>
-  <string name="unsaved_status">لم تُرسل التغريدة بعد أو لم تُحفظ.</string>
   <string name="discard">تجاهل</string>
   <string name="Nitems_selected_quantity_one">تم تحديد عنصر ١</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> العناصر المحددة</string>
-  <string name="view">عرض</string>
   <string name="custom_host_mapping">تعيين المضيف مخصص</string>
-  <string name="host_mapping_host">المضيف</string>
-  <string name="host_mapping_address">العنوان (يمكن أن يكون عنوان مضيف آخر)</string>
   <string name="dns_server">خادم DNS</string>
   <string name="activities_about_me">الاحداث المتعلقة بي</string>
   <string name="activities_by_friends">أنشطة الأصدقاء</string>
@@ -278,8 +260,6 @@
   <string name="incoming_friendships">في انتظار طلب المتابعة</string>
   <string name="send_follow_request">إبعث طلب المتابعة</string>
   <string name="follow_request_sent">تم بعث طلب المتابعة</string>
-  <string name="separate_retweet_action">فصل عمليات إعادة التغريد</string>
-  <string name="separate_retweet_action_summary">إظهار إعادة التغريد والاقتباس في قائمة التغريد</string>
   <string name="status">تغريدة</string>
   <string name="preview">معاينة</string>
   <string name="connection_timeout">مهلة الاتصال</string>
@@ -399,7 +379,6 @@
   <string name="subscribe">الانخراط</string>
   <string name="unsubscribe">إلغاء الإنخراط</string>
   <string name="original_status">التغريدة الأصلية</string>
-  <string name="compose_quit_action">عند إلغاء \"التأليف\"</string>
   <string name="ask">سأل</string>
   <string name="no_close_after_status_updated">ترك \"كتابة التغريدة\" مفتوح بعد إرسال التغريدة</string>
   <string name="status_saved_to_draft">تم حفض التغربدة كمسودة.</string>
@@ -419,15 +398,10 @@
   <string name="theme_light">فاتح</string>
   <string name="settings_interface">الواجهة</string>
   <string name="no_rule">ولا قاعدة</string>
-  <string name="enable_in_mentions">تفعيل في الإشارات</string>
-  <string name="enable_in_home_timeline">تفعيل في الخط الزمني الرئيسي</string>
-  <string name="enable_for_rts">تفعيل من أجل إعادة التغريدات</string>
   <string name="safety">الأمن</string>
   <string name="updating_status_notification">جاري إرسال التغريدة&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">طلب</string>
-  <string name="nickname_only">اللقب فقط</string>
-  <string name="nickname_only_summary">تغير إسم المستخدم باللقب إن كان متواجدا</string>
   <string name="input_text">إدخال النص</string>
   <string name="users_lists_with_name">قواءم <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">قوائم تتبع <xliff:g id="name">%s</xliff:g></string>
@@ -436,7 +410,6 @@
   <string name="users_statuses">تغريدات المستخدم</string>
   <string name="card_animation">حركة البطاقات</string>
   <string name="name_first">إظهار الاسم أولاً</string>
-  <string name="next_step">التالي</string>
   <string name="settings_wizard">مساعد الخيارات</string>
   <string name="wizard_page_welcome_title">مرحبا</string>
   <string name="wizard_page_welcome_text">شكر ﻹختياكك تويدر.\nهل ترغب في إعداده الأن ؟</string>
@@ -499,7 +472,6 @@
   <string name="center">الوسط</string>
   <string name="multi_select">اختيار متعدد</string>
   <string name="long_click_to_open_menu">اضغط مطولا لفتح القائمة</string>
-  <string name="swipe_back">مرر للإغلاق</string>
   <string name="tab_display_option_icon">أيقونة</string>
   <string name="tab_display_option_label">تسمية</string>
   <string name="tab_display_option_icon_and_label">أيقونة وتسمية</string>

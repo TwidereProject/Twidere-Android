@@ -38,7 +38,7 @@ public class ComponentStatePreference extends CheckBoxPreference {
     }
 
     @Override
-    protected Object onGetDefaultValue(final TypedArray a, final int index) {
+    protected Object onGetDefaultValue(@NonNull final TypedArray a, final int index) {
         return isComponentEnabled();
     }
 

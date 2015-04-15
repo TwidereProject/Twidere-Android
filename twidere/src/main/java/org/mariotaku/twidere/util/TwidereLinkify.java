@@ -277,10 +277,6 @@ public final class TwidereLinkify implements Constants {
                 addCashtagLinks(string, accountId, extraId, listener, highlightOption);
                 break;
             }
-            default: {
-                return;
-            }
-
         }
     }
 

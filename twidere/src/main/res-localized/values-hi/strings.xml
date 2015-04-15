@@ -105,9 +105,7 @@
   <string name="user_unblocked">इस उपयोगकर्ता को अन्ब्लाक किया |</string>
   <string name="reported_user_for_spam">स्पैम के लिए इस उपयोगकर्ता का शिकायत किया |</string>
   <string name="filename_hint">फ़ाइलनाम</string>
-  <string name="save_as">सेव करे</string>
   <string name="please_wait">कृपया प्रतीक्षा करें |</string>
-  <string name="file_saved_to">फाइल सेव हुआ <xliff:g id="filename">%s</xliff:g> में |</string>
   <string name="proxy">प्रॉक्सी</string>
   <string name="http_proxy">HTTP प्रॉक्सी</string>
   <string name="http_proxy_summary">HTTP प्रोक्सी का प्रयोग सभी नेटवर्क रेकुएस्ट के लिए करे |</string>

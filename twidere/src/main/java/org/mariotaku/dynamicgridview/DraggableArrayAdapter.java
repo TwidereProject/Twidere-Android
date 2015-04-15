@@ -29,7 +29,7 @@ public class DraggableArrayAdapter<T> extends ArrayAdapter<T> implements Draggab
 
     final int INVALID_ID = -1;
 
-    private final HashMap<T, Integer> mIdMap = new HashMap<T, Integer>();
+    private final HashMap<T, Integer> mIdMap = new HashMap<>();
 
     public DraggableArrayAdapter(final Context context, final int layoutRes) {
         this(context, layoutRes, null);

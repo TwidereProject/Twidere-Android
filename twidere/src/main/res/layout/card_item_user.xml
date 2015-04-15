@@ -56,7 +56,8 @@
             android:layout_alignRight="@id/profile_image"
             android:layout_marginBottom="@dimen/element_spacing_minus_small"
             android:layout_marginRight="@dimen/element_spacing_minus_normal"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            tools:ignore="ContentDescription"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

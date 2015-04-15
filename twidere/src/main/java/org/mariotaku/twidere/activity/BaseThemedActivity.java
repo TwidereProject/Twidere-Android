@@ -20,10 +20,7 @@
 package org.mariotaku.twidere.activity;
 
 import android.app.Activity;
-import android.content.res.Resources;
-import android.content.res.Resources.Theme;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.CompareUtils;

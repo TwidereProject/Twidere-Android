@@ -111,11 +111,8 @@
   <string name="pick_color">색상 선택</string>
   <string name="follow">팔로우</string>
   <string name="unfollow">언팔로우</string>
-  <string name="bottom_compose_button">\"작성\" 버튼을 아래로</string>
-  <string name="bottom_compose_button_summary">작성 버튼을 아래로 옮깁니다. 화면이 크다면 설정하십시오.</string>
   <string name="leftside_compose_button">작성 버튼을 왼쪽으로</string>
   <string name="leftside_compose_button_summary">작성 버튼을 왼쪽으로 옮깁니다.</string>
-  <string name="bottom_send_button">\"전송\" 버튼 아래에 두기</string>
   <string name="load_item_limit">불러들일 항목 제한</string>
   <string name="load_item_limit_summary">불러들일 개수를 설정합니다.</string>
   <string name="load_more_automatically">더 많은 콘텐츠를 자동으로 불러오기</string>
@@ -151,10 +148,7 @@
   <string name="reported_user_for_spam">이 사용자를 스팸으로 신고하였습니다.</string>
   <string name="reported_users_for_spam">이 유저들을 스팸으로 신고하였습니다.</string>
   <string name="filename_hint">파일명</string>
-  <string name="overwrite_confirm">파일이 이미 존재합니다. 덮어쓰시겠습니까?</string>
-  <string name="save_as">다른 이름으로 저장</string>
   <string name="please_wait">기다려 주세요.</string>
-  <string name="file_saved_to"><xliff:g id="filename">%s</xliff:g>로 저장 합니다.</string>
   <string name="saved_to_gallery">갤러리에 저장됨.</string>
   <string name="proxy">프록시</string>
   <string name="http_proxy">HTTP 프록시</string>
@@ -226,9 +220,6 @@
   <string name="tabs">탭</string>
   <string name="add_tab">탭 추가</string>
   <string name="edit_tab">탭 편집</string>
-  <string name="move_up">위로 이동</string>
-  <string name="move_down">아래로 이동</string>
-  <string name="unsaved_change_back_pressed">변경사항이 저장되지 않았습니다. 뒤로가기 버튼을 누르면 변경사항은 무시됩니다.</string>
   <string name="invalid_settings">잘못된 설정이 있습니다.</string>
   <string name="icon">아이콘</string>
   <string name="pick_file">파일 선택</string>
@@ -247,7 +238,6 @@
   <string name="error_message_image_uploader_not_found">이미지 업로더를 찾을 수 없습니다. 아마도 삭제되었을겁니다.</string>
   <string name="image_upload_format">이미지 올릴 때 양식</string>
   <string name="image_upload_format_summary">\"[LINK]\" = 이미지 주소\n\"[TEXT]\" = 트윗할 내용\n(플러그인에서만)</string>
-  <string name="tweet_shortener">트윗 축약 서비스</string>
   <string name="status_shortener">트윗 축소 서비스</string>
   <string name="status_shortener_default">없음 (전송 취소)</string>
   <string name="error_message_status_too_long">트윗이 너무 깁니다. </string>
@@ -259,19 +249,13 @@
   <string name="show_absolute_time_summary">트윗에 절대시간 표시</string>
   <string name="user_mentions">멘션</string>
   <string name="dual_pane_layout">듀얼 패널 레이아웃</string>
-  <string name="landscape">가로</string>
-  <string name="portrait">세로</string>
   <string name="quick_send">\"Enter\" 키를 눌러 보내기</string>
   <string name="quick_send_summary">\"Enter\" 키를 눌러 트윗을 보내세요.</string>
-  <string name="unsaved_status">트윗이 전송되지 않았거나 이미 저장되어 있습니다.</string>
   <string name="discard">지우기</string>
   <string name="Nitems_selected_quantity_one">1개 항목 선택</string>
   <string name="Nitems_selected_quantity_other">선택된 항목 <xliff:g id="items">%d</xliff:g></string>
-  <string name="view">보기</string>
   <string name="custom_host_mapping">커스텀 호스트 매핑</string>
   <string name="custom_host_mapping_summary">/etc/hosts 에 지정하는 것처럼 호스트를 매핑합니다. 다른 권한은 전혀 필요 없습니다.</string>
-  <string name="host_mapping_host">호스트</string>
-  <string name="host_mapping_address">주소 (대체 호스트 주소가 될 수 있음)</string>
   <string name="add_host_mapping">호스트 매핑 추가</string>
   <string name="tcp_dns_query">TCP DNS 쿼리</string>
   <string name="tcp_dns_query_summary">TCP 프로토콜로 DNS 요청을 통신하고 DNS 캐시의 오염을 막습니다.</string>
@@ -293,8 +277,6 @@
   <string name="incoming_friendships">보류한 팔로우 요청</string>
   <string name="send_follow_request">팔로우 요청 보내기</string>
   <string name="follow_request_sent">팔로우 요청을 보냄</string>
-  <string name="separate_retweet_action">리트윗 활동 분리</string>
-  <string name="separate_retweet_action_summary">트윗 메뉴에서 리트윗과 인용 메뉴를 함께 표시합니다.</string>
   <string name="status">트윗</string>
   <string name="preview">미리보기</string>
   <string name="connection_timeout">연결시간 초과</string>
@@ -435,7 +417,6 @@
   <string name="background_toast_notification">백그라운드 토스트 알림</string>
   <string name="background_toast_notification_summary">백그라운드로 전환되었을 때 토스트 알림을 보여줍니다.</string>
   <string name="original_status">원본 트윗</string>
-  <string name="compose_quit_action">\"작성\"을 취소할 때</string>
   <string name="ask">물어보기</string>
   <string name="no_close_after_status_updated">\"작성\"창을 트윗을 보내고도 유지한다</string>
   <string name="no_close_after_status_updated_summary">트윗 입력창에 작은 특전이 있습니다.</string>
@@ -457,15 +438,10 @@
   <string name="theme_light">밝음</string>
   <string name="settings_interface">인터페이스</string>
   <string name="no_rule">규칙 없음</string>
-  <string name="enable_in_mentions">멘션 활성화</string>
-  <string name="enable_in_home_timeline">홈 타임라인에서 활성화</string>
-  <string name="enable_for_rts">리트윗 활성화</string>
   <string name="safety">안전</string>
   <string name="updating_status_notification">트윗 보내는 중...</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">쿼리</string>
-  <string name="nickname_only">별명만</string>
-  <string name="nickname_only_summary">별명이 있다면 사용자 이름 대신 표시</string>
   <string name="input_text">입력</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>님의 리스트</string>
   <string name="lists_following_user_with_name"><xliff:g id="name">%s</xliff:g>님이 멤버인 리스트</string>
@@ -475,7 +451,6 @@
   <string name="users_statuses">사용자 트윗</string>
   <string name="card_animation">카드 애니메이션</string>
   <string name="name_first">이름 먼저 표시</string>
-  <string name="next_step">다음</string>
   <string name="settings_wizard">설정 마법사</string>
   <string name="wizard_page_welcome_title">환영합니다.</string>
   <string name="wizard_page_welcome_text">Twidere를 선택한 것에 감사 드립니다.\n지금 설정하겠습니까?</string>
@@ -542,12 +517,6 @@
   <string name="view_replies">답글 보기</string>
   <string name="compact_cards">작은 카드</string>
   <string name="compact_cards_summary">더 많은 카드를 화면에 표시합니다.</string>
-  <string name="dashclock_home_unread_count_name">Twidere 홈의 읽지 않은 개수</string>
-  <string name="dashclock_home_unread_count_description">홈의 읽지 않은 개수</string>
-  <string name="dashclock_mentions_unread_count_name">Twidere 멘션의 읽지 않은 개수</string>
-  <string name="dashclock_mentions_unread_count_description">멘션 읽지 않은 개수</string>
-  <string name="dashclock_messages_unread_count_name">Twidere 쪽지 읽지 않은 개수</string>
-  <string name="dashclock_messages_unread_count_description">쪽지 읽지 않은 개수</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g>개의 새로운 트윗</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g>개의 새로운 트윗</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g>개의 새로운 멘션</string>
@@ -566,7 +535,6 @@
   <string name="center">중앙</string>
   <string name="multi_select">여러개 선택</string>
   <string name="long_click_to_open_menu">오래 눌러 메뉴 표시</string>
-  <string name="swipe_back">스와이프하여 닫기</string>
   <string name="tab_display_option_icon">아이콘</string>
   <string name="tab_display_option_label">라벨</string>
   <string name="tab_display_option_icon_and_label">아이콘과 라벨</string>
@@ -600,12 +568,10 @@
   <string name="status_text_limit">텍스트 리밋 트윗</string>
   <string name="load_more_from_top">위에서부터 더 많이 불러오기</string>
   <string name="load_more_from_top_summary">밑에서 위로 읽으려 할 때 더 편합니다.</string>
-  <string name="twitter_link_handler">트위터 링크 핸들러</string>
   <string name="compose_now">지금 트윗</string>
   <string name="compose_now_summary">\'구글 나우\' 키(검색 키)를 누르면 작성 화면을 띄웁니다.</string>
   <string name="compose_now_action">\'지금 트윗\' 동작</string>
   <string name="open_with_account">계정으로 열기</string>
-  <string name="card_highlight_option">카드 강조 설정</string>
   <string name="card_highlight_option_highlight">강조색 칠하기</string>
   <string name="card_highlight_option_line">강조 줄 긋기</string>
   <string name="timeline_sync_service">타임라인 동기화 서비스</string>

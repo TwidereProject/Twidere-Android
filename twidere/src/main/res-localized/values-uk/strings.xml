@@ -99,11 +99,8 @@
   <string name="pick_color">Вибрати колір</string>
   <string name="follow">Підписатися</string>
   <string name="unfollow">Відписатися</string>
-  <string name="bottom_compose_button">Кнопка Створити внизу</string>
-  <string name="bottom_compose_button_summary">Розмістити кнопку Створити внизу, ви можете увімкнути цей параметр, якщо у вас великий екран.</string>
   <string name="leftside_compose_button">Кнопка Створити зліва</string>
   <string name="leftside_compose_button_summary">Розмістити кнопку Створити зліва.</string>
-  <string name="bottom_send_button">Кнопка „надіслати“ внизу</string>
   <string name="load_item_limit">Кількість завантажених елементів</string>
   <string name="load_item_limit_summary">Встановити обмеження кількості елементів для завантаження.</string>
   <string name="load_more_automatically">Завантажувати додатковий матеріал автоматично</string>
@@ -137,10 +134,7 @@
   <string name="reported_user_for_spam">Повідомити про спам від цього користувача.</string>
   <string name="reported_users_for_spam">Повідомити про спам від цих користувачів.</string>
   <string name="filename_hint">Ім\'я файлу</string>
-  <string name="overwrite_confirm">Файл існує, переписати?</string>
-  <string name="save_as">Зберегти як</string>
   <string name="please_wait">Зачекайте.</string>
-  <string name="file_saved_to">Файл збережено до <xliff:g id="filename">%s</xliff:g> .</string>
   <string name="proxy">Проксі</string>
   <string name="http_proxy">HTTP проксі</string>
   <string name="http_proxy_summary">Використовувати HTTP проксі для всіх мережевих запитів.</string>
@@ -203,9 +197,6 @@
   <string name="tabs">Вкладки</string>
   <string name="add_tab">Додати вкладку</string>
   <string name="edit_tab">Редагувати вкладку</string>
-  <string name="move_up">Перемістити вниз</string>
-  <string name="move_down">Перемістити вгору</string>
-  <string name="unsaved_change_back_pressed">Зміни не збережені, натисніть НАЗАД для скасування.</string>
   <string name="invalid_settings">Знайдено недопустимі налаштування.</string>
   <string name="icon">Піктограма</string>
   <string name="pick_file">Вибрати файл</string>
@@ -223,7 +214,6 @@
   <string name="error_message_image_uploader_not_found">Завантажувач зображень не знайдено, можливо, він видалений.</string>
   <string name="image_upload_format">Формат твіта із зображенням</string>
   <string name="image_upload_format_summary">\"[LINK]\" = посилання зображення\n\"[TEXT]\" = Текст твіту\n(Розширення тільки)</string>
-  <string name="tweet_shortener">Твіт надто короткий</string>
   <string name="error_message_status_too_long">Твіт надто довгий.</string>
   <string name="error_message_no_content">Нема вмісту</string>
   <string name="error_message_tweet_shorten_failed">Помилка скорочувача посилань.</string>
@@ -233,19 +223,13 @@
   <string name="show_absolute_time_summary">Показувати абсолютний час у твітах</string>
   <string name="user_mentions">Згадки користувача</string>
   <string name="dual_pane_layout">Двопанельний інтерфейс</string>
-  <string name="landscape">Ландшафтний</string>
-  <string name="portrait">Портретний</string>
   <string name="quick_send">Натисніть Enter для надсилання</string>
   <string name="quick_send_summary">Надсилати твіт натисканням Enter.</string>
-  <string name="unsaved_status">Твіт ще не надіслано і не збережено.</string>
   <string name="discard">Вийти</string>
   <string name="Nitems_selected_quantity_one">1 елемент вибрано</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> елементів вибрано</string>
-  <string name="view">Вигляд</string>
   <string name="custom_host_mapping">Перенаправлення вузлів</string>
   <string name="custom_host_mapping_summary">Перенаправлення вузлів, як за допомогою /etc/hosts, але не потребує додаткових дозволів.</string>
-  <string name="host_mapping_host">Хост</string>
-  <string name="host_mapping_address">Адреса (може бути інша адреса)</string>
   <string name="add_host_mapping">Додати перенаправлення вузлів</string>
   <string name="tcp_dns_query">TCP DNS запит</string>
   <string name="tcp_dns_query_summary">Використовувати протокол TCP для DNS-запитів, це допоможе уникнути DNS Cache Poisoning.</string>
@@ -267,8 +251,6 @@
   <string name="incoming_friendships">Очікування запитів на підписку</string>
   <string name="send_follow_request">Надіслати запит на підписку</string>
   <string name="follow_request_sent">Запит на підписку надіслано</string>
-  <string name="separate_retweet_action">Різні дії ретвіту</string>
-  <string name="separate_retweet_action_summary">Показувати у меню обидві дії Ретвітнути і Цитувати</string>
   <string name="status">Твіт</string>
   <string name="preview">Перегляд</string>
   <string name="connection_timeout">Затримка з\'єднання</string>
@@ -406,7 +388,6 @@
   <string name="background_toast_notification">Тостове фонове сповіщення</string>
   <string name="background_toast_notification_summary">Показувати тостові сповіщення при переключенні у фоновий режим</string>
   <string name="original_status">Первісний твіт</string>
-  <string name="compose_quit_action">На завершення „створити“</string>
   <string name="ask">Прохання</string>
   <string name="no_close_after_status_updated">Зберігати \"Створити\" відкритою після надсилання твіту</string>
   <string name="no_close_after_status_updated_summary">Маленький подарунок для базіки</string>
@@ -426,15 +407,10 @@
   <string name="theme_light">Світла</string>
   <string name="settings_interface">Інтерфейс</string>
   <string name="no_rule">Без правил</string>
-  <string name="enable_in_mentions">Увімкнути у згадках</string>
-  <string name="enable_in_home_timeline">Увімкнути у домашній стрічці</string>
-  <string name="enable_for_rts">Увімкнути для RTs</string>
   <string name="safety">Безпечність</string>
   <string name="updating_status_notification">Надсилання твіту&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Запит</string>
-  <string name="nickname_only">Лише прізвисько</string>
-  <string name="nickname_only_summary">Замінити ім\'я користувача прізвиськом за можливості</string>
   <string name="input_text">Ввід тексту</string>
   <string name="users_lists_with_name">Списки <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Списки підписників <xliff:g id="name">%s</xliff:g></string>
@@ -444,7 +420,6 @@
   <string name="users_statuses">Твіти користувача</string>
   <string name="card_animation">Анімація картки</string>
   <string name="name_first">Відображати спершу ім\'я</string>
-  <string name="next_step">Далі</string>
   <string name="settings_wizard">Параметри майстра</string>
   <string name="wizard_page_welcome_title">Ласкаво просимо</string>
   <string name="wizard_page_welcome_text">Дякуємо за вибір Twidere.\nВи б хотіли налаштувати його зараз?</string>
@@ -507,12 +482,6 @@
   <string name="view_replies">Переглянути відповіді</string>
   <string name="compact_cards">Компактні карти</string>
   <string name="compact_cards_summary">Відображати більше карт на екрані</string>
-  <string name="dashclock_home_unread_count_name">Число непрочитаних на головній Twidere</string>
-  <string name="dashclock_home_unread_count_description">Число непрочитаних на головній</string>
-  <string name="dashclock_mentions_unread_count_name">Число непрочитаних згадок Twidere</string>
-  <string name="dashclock_mentions_unread_count_description">Число непрочитаних згадок</string>
-  <string name="dashclock_messages_unread_count_name">Число непрочитаних повідомлень Twidere</string>
-  <string name="dashclock_messages_unread_count_description">Число непрочитаних повідомлень</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> новий твіт</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> нові твіти</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> нова згадка</string>
@@ -531,7 +500,6 @@
   <string name="center">Центр</string>
   <string name="multi_select">Множинний вибір</string>
   <string name="long_click_to_open_menu">Довгий натиск для відкриття меню</string>
-  <string name="swipe_back">Проведіть, щоб закрити</string>
   <string name="tab_display_option_icon">Піктограма</string>
   <string name="tab_display_option_label">Мітка</string>
   <string name="tab_display_option_icon_and_label">Піктограма і мітка</string>

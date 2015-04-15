@@ -27,6 +27,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 
 import org.mariotaku.twidere.R;
@@ -51,7 +52,8 @@ public class PhishingLinkWarningDialogFragment extends BaseSupportDialogFragment
 
 	}
 
-	@Override
+	@NonNull
+    @Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
 		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);

@@ -45,7 +45,6 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
-import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
 import org.mariotaku.twidere.util.ColorUtils;
@@ -121,19 +120,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof IBasePullToRefreshFragment)
-            return (IBasePullToRefreshFragment) fragment;
-        else if (fragment instanceof SupportFragmentCallback) {
-            final Fragment curr = ((SupportFragmentCallback) fragment).getCurrentVisibleFragment();
-            if (curr instanceof IBasePullToRefreshFragment)
-                return (IBasePullToRefreshFragment) curr;
-        }
-        return null;
     }
 
     @Override

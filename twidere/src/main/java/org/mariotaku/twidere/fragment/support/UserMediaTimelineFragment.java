@@ -78,7 +78,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
 
     private SimpleDrawerCallback mDrawerCallback;
 
-    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         }

@@ -56,14 +56,14 @@ public class NoDuplicatesArrayList<E> extends ArrayList<E> {
 
 	@Override
 	public boolean addAll(final Collection<? extends E> collection) {
-		final Collection<E> copy = new ArrayList<E>(collection);
+		final Collection<E> copy = new ArrayList<>(collection);
 		copy.removeAll(this);
 		return super.addAll(copy);
 	}
 
 	@Override
 	public boolean addAll(final int index, final Collection<? extends E> collection) {
-		final Collection<E> copy = new ArrayList<E>(collection);
+		final Collection<E> copy = new ArrayList<>(collection);
 		copy.removeAll(this);
 		return super.addAll(index, copy);
 	}

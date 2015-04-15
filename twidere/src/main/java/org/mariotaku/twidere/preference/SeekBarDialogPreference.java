@@ -24,6 +24,7 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -132,7 +133,7 @@ public class SeekBarDialogPreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(final View view) {
+    protected void onBindDialogView(@NonNull final View view) {
         super.onBindDialogView(view);
 
         final CharSequence message = getDialogMessage();
@@ -261,7 +262,7 @@ public class SeekBarDialogPreference extends DialogPreference {
         }
 
         @Override
-        public void writeToParcel(final Parcel dest, final int flags) {
+        public void writeToParcel(@NonNull final Parcel dest, final int flags) {
             super.writeToParcel(dest, flags);
 
             dest.writeInt(minProgress);

@@ -18,7 +18,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -61,4 +61,4 @@
         app:lineWidth="@dimen/line_indicator_line_width_wizard"
         app:selectedColor="?android:colorActivatedHighlight"
         app:strokeWidth="@dimen/line_indicator_stroke_width_wizard"/>
-</FrameLayout>
+</merge>

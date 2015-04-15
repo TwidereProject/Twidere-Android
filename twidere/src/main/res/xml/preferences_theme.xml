@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/theme">
 
     <PreferenceCategory
@@ -25,10 +26,10 @@
         android:title="@string/background"/>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
-        android:defaultValue="@color/branding_color"
         android:key="theme_color"
         android:order="25"
-        android:title="@string/color"/>
+        android:title="@string/color"
+        app:defaultColor="@color/branding_color"/>
 
 
 </PreferenceScreen>

@@ -93,10 +93,8 @@
   <string name="pick_color">Velg farge</string>
   <string name="follow">Følg</string>
   <string name="unfollow">Avfølg</string>
-  <string name="bottom_compose_button_summary">Plasser ny-tweet knappen på bunn. Du kan aktivere dette hvis skjermen er stor.</string>
   <string name="leftside_compose_button">Ny-tweet knappen på venstre side</string>
   <string name="leftside_compose_button_summary">Plasser ny-tweet knappen til venstre.</string>
-  <string name="bottom_send_button">Send knappen på bunn</string>
   <string name="load_item_limit">Last element grensen</string>
   <string name="load_item_limit_summary">Sett elementgrensen per innlasting.</string>
   <string name="load_more_automatically">Last mer innhold automatisk</string>
@@ -130,10 +128,7 @@
   <string name="reported_user_for_spam">Rapportert denne brukeren for spam.</string>
   <string name="reported_users_for_spam">Rapportert disse brukerne for spam.</string>
   <string name="filename_hint">Filnavn</string>
-  <string name="overwrite_confirm">Filen finnes fra før, overskrive?</string>
-  <string name="save_as">Lagre som</string>
   <string name="please_wait">Vennligst vent.</string>
-  <string name="file_saved_to">Fil lagret til <xliff:g id="filename">%s</xliff:g>.</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">Bruk HTTP Proxy for alle nettverksforespørsler.</string>
@@ -196,9 +191,6 @@
   <string name="tabs">Faner</string>
   <string name="add_tab">Legg til fane</string>
   <string name="edit_tab">Rediger fane</string>
-  <string name="move_up">Flytt opp</string>
-  <string name="move_down">Flytt ned</string>
-  <string name="unsaved_change_back_pressed">Du har ulagrede endringer, trykk Tilbake igjen for å forkaste.</string>
   <string name="invalid_settings">Fant ugyldige innstillinger.</string>
   <string name="icon">Ikon</string>
   <string name="pick_file">Velg fil</string>
@@ -216,13 +208,9 @@
   <string name="error_message_image_upload_failed">Bildeopplasting feilet.</string>
   <string name="show_absolute_time">Vis absolutt tid</string>
   <string name="show_absolute_time_summary">Vis absolutt tid i tweets</string>
-  <string name="landscape">Landskap</string>
-  <string name="portrait">Portrett</string>
   <string name="quick_send">Trykk \"Enter\" for å sende</string>
   <string name="quick_send_summary">Send tweet når du trykker \"Enter\".</string>
-  <string name="unsaved_status">Tweet ikke sendt eller lagret enda.</string>
   <string name="discard">Forkast</string>
-  <string name="view">Vis</string>
   <string name="dns_server">DNS-server</string>
   <string name="dns_server_summary">Velg DNS-server for API-forespørsler.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> lagt til<xliff:g id="target">%2$s</xliff:g> til liste.</string>

@@ -35,8 +35,8 @@ import static android.text.TextUtils.isEmpty;
 
 public class UserColorNameUtils implements TwidereConstants {
 
-    private static LongSparseArray<Integer> sUserColors = new LongSparseArray<>();
-    private static LongSparseArray<String> sUserNicknames = new LongSparseArray<>();
+    private static final LongSparseArray<Integer> sUserColors = new LongSparseArray<>();
+    private static final LongSparseArray<String> sUserNicknames = new LongSparseArray<>();
 
     private UserColorNameUtils() {
         throw new AssertionError();

@@ -116,8 +116,7 @@ public final class AsyncTaskManager {
 
     public boolean isExecuting(final int hashCode) {
         final ManagedAsyncTask<?, ?, ?> task = findTask(hashCode);
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) return true;
-        return false;
+        return task != null && task.getStatus() == AsyncTask.Status.RUNNING;
     }
 
     public void remove(final int hashCode) {
@@ -128,7 +127,7 @@ public final class AsyncTaskManager {
         }
     }
 
-    private <T> ManagedAsyncTask<?, ?, ?> findTask(final int hashCode) {
+    private ManagedAsyncTask<?, ?, ?> findTask(final int hashCode) {
         for (final ManagedAsyncTask<?, ?, ?> task : getTaskSpecList()) {
             if (hashCode == task.hashCode()) return task;
         }

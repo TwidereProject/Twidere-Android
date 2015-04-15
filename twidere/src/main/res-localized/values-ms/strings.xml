@@ -23,20 +23,16 @@
   <string name="clear_databases_summary">Bersihkan semua tweet, profail, mesej. Maklumat akaun anda tidak akan hilang.</string>
   <string name="leftside_compose_button_summary">Letakkan butang karang ke kiri.</string>
   <string name="quote_format_summary">\"[TEKS]\" = teks Tweet\n\"[NAMA] = nama pengguna Twitter</string>
-  <string name="overwrite_confirm">Fail telah wujud, tindihkan?</string>
   <string name="load_images">Memuatkan gambar</string>
   <string name="image_uploader_default">Lalai (Twitter)</string>
   <string name="error_message_image_upload_failed">Gagal memuat naik imej.</string>
   <string name="error_message_image_uploader_not_found">Pemuat naik imej tidak ditemui, mungkin telah dibuang.</string>
-  <string name="tweet_shortener">Penyingkat tweet</string>
   <string name="error_message_status_too_long">Tweet terlalu panjang.</string>
   <string name="error_message_tweet_shorten_failed">Singkatan tweet gagal.</string>
   <string name="error_message_tweet_shortener_not_found">Penyingkat tweet tidak ditemui, mungkin telah dibuang.</string>
   <string name="show_absolute_time">Tunjukkan masa mutlak</string>
   <string name="show_absolute_time_summary">Tunjukkan masa mutlak di tweet</string>
   <string name="user_mentions">Sebutan pengguna</string>
-  <string name="host_mapping_host">Hos</string>
-  <string name="host_mapping_address">Alamat (Boleh jadi sebagai alamat host yang lain)</string>
   <string name="add_host_mapping">Tambah pemetaan hos</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="dns_server_summary">Tetapkan pelayan DNS untuk permintaan API.</string>

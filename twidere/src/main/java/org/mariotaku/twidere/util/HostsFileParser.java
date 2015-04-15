@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class HostsFileParser {
 
-	private final Map<String, String> mHosts = new HashMap<String, String>();
+	private final Map<String, String> mHosts = new HashMap<>();
 	private final String mPath;
 
 	public HostsFileParser() {
@@ -47,7 +47,7 @@ public class HostsFileParser {
 	}
 
 	public Map<String, String> getAll() {
-		return new HashMap<String, String>(mHosts);
+		return new HashMap<>(mHosts);
 	}
 
 	public boolean reload() {

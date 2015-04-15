@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -57,15 +58,11 @@ import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
-import java.io.File;
-
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.Utils.createPickImageIntent;
-import static org.mariotaku.twidere.util.Utils.createTakePhotoIntent;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
@@ -201,23 +198,20 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
                 break;
             }
             case R.id.profile_image_camera: {
-                final Uri uri = createTempFileUri();
-                final Intent intent = createTakePhotoIntent(uri, null, null, 1, 1, true);
-                mTask = new UpdateProfileImageTaskInternal(this, mAsyncTaskManager, mAccountId, uri, true);
+                final Intent intent = new Intent(this, ImagePickerActivity.class);
+                intent.setAction(INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_image_gallery: {
-                final Uri uri = createTempFileUri();
-                final Intent intent = createPickImageIntent(uri, null, null, 1, 1, true);
-                mTask = new UpdateProfileImageTaskInternal(this, mAsyncTaskManager, mAccountId, uri, true);
+                final Intent intent = new Intent(this, ImagePickerActivity.class);
+                intent.setAction(INTENT_ACTION_TAKE_PHOTO);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_banner_gallery: {
-                final Uri uri = createTempFileUri();
-                final Intent intent = createPickImageIntent(uri, null, null, 2, 1, true);
-                mTask = new UpdateProfileBannerImageTaskInternal(this, mAsyncTaskManager, mAccountId, uri, true);
+                final Intent intent = new Intent(this, ImagePickerActivity.class);
+                intent.setAction(INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
                 break;
             }
@@ -316,12 +310,14 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         if (resultCode == RESULT_CANCELED) return;
         switch (requestCode) {
             case REQUEST_UPLOAD_PROFILE_BANNER_IMAGE: {
-                if (mTask == null || mTask.getStatus() != AsyncTask.Status.PENDING) return;
+                if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
+                mTask = new UpdateProfileBannerImageTaskInternal(this, mAsyncTaskManager, mAccountId, data.getData(), true);
                 AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
-                if (mTask == null || mTask.getStatus() != AsyncTask.Status.PENDING) return;
+                if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
+                mTask = new UpdateProfileImageTaskInternal(this, mAsyncTaskManager, mAccountId, data.getData(), true);
                 AsyncTaskUtils.executeTask(mTask);
                 break;
             }
@@ -354,12 +350,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         if (mLinkColor.getColor() != user.link_color) return true;
         if (mBackgroundColor.getColor() != user.background_color) return true;
         return false;
-    }
-
-    private Uri createTempFileUri() {
-        final File cache_dir = getExternalCacheDir();
-        final File file = new File(cache_dir, "tmp_image_" + System.currentTimeMillis());
-        return Uri.fromFile(file);
     }
 
     private void displayUser(final ParcelableUser user) {

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -48,7 +49,7 @@ public class ExtendedViewPager extends ViewPager {
     }
 
     @Override
-    protected boolean fitSystemWindows(Rect insets) {
+    protected boolean fitSystemWindows(@NonNull Rect insets) {
         return super.fitSystemWindows(insets);
     }
 

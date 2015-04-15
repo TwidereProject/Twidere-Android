@@ -19,14 +19,17 @@
 
 package org.mariotaku.twidere.preference;
 
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.preference.Preference;
+import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -36,18 +39,12 @@ import org.mariotaku.twidere.util.ColorUtils;
 
 import me.uucky.colorpicker.ColorPickerDialog;
 
-public class ColorPickerPreference extends Preference implements DialogInterface.OnClickListener, Constants {
+public class ColorPickerPreference extends DialogPreference implements DialogInterface.OnClickListener, Constants {
 
-    protected int mDefaultValue = Color.WHITE;
+    private int mDefaultValue = Color.WHITE;
     private boolean mAlphaSliderEnabled = false;
 
-    private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
-    private static final String ATTR_DEFAULTVALUE = "defaultValue";
-    private static final String ATTR_ALPHASLIDER = "alphaSlider";
-
-    private final Resources mResources;
-
-    private ColorPickerDialog mDialog;
+    private ColorPickerDialog.Controller mController;
 
     public ColorPickerPreference(final Context context, final AttributeSet attrs) {
         this(context, attrs, android.R.attr.preferenceStyle);
@@ -55,57 +52,12 @@ public class ColorPickerPreference extends Preference implements DialogInterface
 
     public ColorPickerPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mResources = context.getResources();
         setWidgetLayoutResource(R.layout.preference_widget_color_picker);
-        init(context, attrs);
-    }
 
-    public void onActivityDestroy() {
-        if (mDialog == null || !mDialog.isShowing()) return;
-        mDialog.dismiss();
-    }
-
-    @Override
-    public void onClick(final DialogInterface dialog, final int which) {
-        switch (which) {
-            case DialogInterface.BUTTON_POSITIVE:
-                if (mDialog == null) return;
-                final int color = mDialog.getColor();
-                if (isPersistent()) {
-                    persistInt(color);
-                }
-                final OnPreferenceChangeListener listener = getOnPreferenceChangeListener();
-                if (listener != null) {
-                    listener.onPreferenceChange(this, color);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void setDefaultValue(final Object value) {
-        if (!(value instanceof Integer)) return;
-        mDefaultValue = (Integer) value;
-    }
-
-    protected void init(final Context context, final AttributeSet attrs) {
-        if (attrs != null) {
-            final String defaultValue = attrs.getAttributeValue(ANDROID_NS, ATTR_DEFAULTVALUE);
-            if (defaultValue != null && defaultValue.startsWith("#")) {
-                try {
-                    setDefaultValue(Color.parseColor(defaultValue));
-                } catch (final IllegalArgumentException e) {
-                    Log.e("ColorPickerPreference", "Wrong color: " + defaultValue);
-                    setDefaultValue(Color.WHITE);
-                }
-            } else {
-                final int colorResourceId = attrs.getAttributeResourceValue(ANDROID_NS, ATTR_DEFAULTVALUE, 0);
-                if (colorResourceId != 0) {
-                    setDefaultValue(context.getResources().getColor(colorResourceId));
-                }
-            }
-            mAlphaSliderEnabled = attrs.getAttributeBooleanValue(null, ATTR_ALPHASLIDER, false);
-        }
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ColorPickerPreferences);
+        mAlphaSliderEnabled = a.getBoolean(R.styleable.ColorPickerPreferences_alphaSlider, false);
+        setDefaultValue(a.getColor(R.styleable.ColorPickerPreferences_defaultColor, 0));
+        a.recycle();
     }
 
     @Override
@@ -116,26 +68,54 @@ public class ColorPickerPreference extends Preference implements DialogInterface
     }
 
     @Override
-    protected void onClick() {
-        if (mDialog != null && mDialog.isShowing()) return;
-        final Context context = getContext();
-        mDialog = new ColorPickerDialog(context);
-        final Resources res = context.getResources();
-        for (int presetColor : PRESET_COLORS) {
-            mDialog.addColor(res.getColor(presetColor));
-        }
-        mDialog.setInitialColor(getValue());
-        mDialog.setAlphaEnabled(mAlphaSliderEnabled);
-        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, mResources.getString(android.R.string.ok), this);
-        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, mResources.getString(android.R.string.cancel), this);
-        mDialog.show();
-        return;
+    public void setDefaultValue(final Object value) {
+        if (!(value instanceof Integer)) return;
+        mDefaultValue = (Integer) value;
     }
 
     @Override
     protected void onSetInitialValue(final boolean restoreValue, final Object defaultValue) {
         if (isPersistent() && defaultValue instanceof Integer) {
             persistInt(restoreValue ? getValue() : (Integer) defaultValue);
+        }
+    }
+
+    @Override
+    protected void onPrepareDialogBuilder(Builder builder) {
+        mController = ColorPickerDialog.Controller.applyToDialogBuilder(builder);
+        final Resources res = builder.getContext().getResources();
+        for (int presetColor : PRESET_COLORS) {
+            mController.addColor(res.getColor(presetColor));
+        }
+        mController.setInitialColor(getValue());
+        mController.setAlphaEnabled(mAlphaSliderEnabled);
+        builder.setPositiveButton(res.getString(android.R.string.ok), this);
+        builder.setNegativeButton(res.getString(android.R.string.cancel), this);
+    }
+
+    @Override
+    protected void showDialog(Bundle state) {
+        super.showDialog(state);
+        final Dialog dialog = getDialog();
+        if (dialog != null && mController != null) {
+            dialog.setOnShowListener(mController);
+        }
+    }
+
+    @Override
+    public void onClick(final DialogInterface dialog, final int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE:
+                if (mController == null) return;
+                final int color = mController.getColor();
+                if (isPersistent()) {
+                    persistInt(color);
+                }
+                final OnPreferenceChangeListener listener = getOnPreferenceChangeListener();
+                if (listener != null) {
+                    listener.onPreferenceChange(this, color);
+                }
+                break;
         }
     }
 

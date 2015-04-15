@@ -50,7 +50,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
     private CheckBox mEditSameOAuthSigningUrl, mEditNoVersionSuffix;
     private EditText mEditConsumerKey, mEditConsumerSecret;
     private RadioGroup mEditAuthType;
-    private RadioButton mButtonOAuth, mButtonxAuth, mButtonBasic, mButtonTwipOMode;
+    private RadioButton mButtonOAuth, mButtonXAuth, mButtonBasic, mButtonTWIPOMode;
     private Button mSaveButton;
     private View mAPIFormatHelpButton;
     private boolean mEditNoVersionSuffixChanged;
@@ -93,9 +93,9 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         mEditAPIUrlFormat = (EditText) findViewById(R.id.api_url_format);
         mEditAuthType = (RadioGroup) findViewById(R.id.auth_type);
         mButtonOAuth = (RadioButton) findViewById(R.id.oauth);
-        mButtonxAuth = (RadioButton) findViewById(R.id.xauth);
+        mButtonXAuth = (RadioButton) findViewById(R.id.xauth);
         mButtonBasic = (RadioButton) findViewById(R.id.basic);
-        mButtonTwipOMode = (RadioButton) findViewById(R.id.twip_o);
+        mButtonTWIPOMode = (RadioButton) findViewById(R.id.twip_o);
         mEditSameOAuthSigningUrl = (CheckBox) findViewById(R.id.same_oauth_signing_url);
         mEditNoVersionSuffix = (CheckBox) findViewById(R.id.no_version_suffix);
         mEditConsumerKey = (EditText) findViewById(R.id.consumer_key);
@@ -188,9 +188,9 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements Twit
         mEditConsumerSecret.setText(consumerSecret);
 
         mButtonOAuth.setChecked(authType == Accounts.AUTH_TYPE_OAUTH);
-        mButtonxAuth.setChecked(authType == Accounts.AUTH_TYPE_XAUTH);
+        mButtonXAuth.setChecked(authType == Accounts.AUTH_TYPE_XAUTH);
         mButtonBasic.setChecked(authType == Accounts.AUTH_TYPE_BASIC);
-        mButtonTwipOMode.setChecked(authType == Accounts.AUTH_TYPE_TWIP_O_MODE);
+        mButtonTWIPOMode.setChecked(authType == Accounts.AUTH_TYPE_TWIP_O_MODE);
         if (mEditAuthType.getCheckedRadioButtonId() == -1) {
             mButtonOAuth.setChecked(true);
         }

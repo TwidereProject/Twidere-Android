@@ -112,11 +112,8 @@
   <string name="pick_color">Choisir une couleur</string>
   <string name="follow">Suivre</string>
   <string name="unfollow">Ne plus suivre</string>
-  <string name="bottom_compose_button">Bouton « Composer » en bas</string>
-  <string name="bottom_compose_button_summary">Placer le bouton « Composer » en bas, vous pouvez activer cette option si vous avez un écran large.</string>
   <string name="leftside_compose_button">Bouton Écrire à gauche</string>
   <string name="leftside_compose_button_summary">Placer le bouton d\'écriture à gauche.</string>
-  <string name="bottom_send_button">Bouton « Envoyer » en bas</string>
   <string name="load_item_limit">Limite de chargement</string>
   <string name="load_item_limit_summary">Nombre de tweets par chargement.</string>
   <string name="load_more_automatically">Charger plus de contenu automatiquement</string>
@@ -152,10 +149,7 @@
   <string name="reported_user_for_spam">Utilisateur signalé pour spam.</string>
   <string name="reported_users_for_spam">Utilisateurs signalés pour spam.</string>
   <string name="filename_hint">Nom du fichier</string>
-  <string name="overwrite_confirm">Le fichier existe déjà, le remplacer ?</string>
-  <string name="save_as">Enregistrer sous</string>
   <string name="please_wait">Veuillez patienter.</string>
-  <string name="file_saved_to">Fichier enregistré dans <xliff:g id="filename">%s</xliff:g>.</string>
   <string name="saved_to_gallery">Sauvegardé dans la gallerie.</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">Proxy HTTP</string>
@@ -227,9 +221,6 @@
   <string name="tabs">Onglets</string>
   <string name="add_tab">Ajouter un onglet</string>
   <string name="edit_tab">Modifier l\'onglet</string>
-  <string name="move_up">Déplacez vers le haut</string>
-  <string name="move_down">Déplacer vers le bas</string>
-  <string name="unsaved_change_back_pressed">Vous avez des modifications non enregistrées, appuyez à nouveau sur RETOUR pour annuler les changements.</string>
   <string name="invalid_settings">Paramètres invalides trouvés.</string>
   <string name="icon">Icône</string>
   <string name="pick_file">Choisir un fichier</string>
@@ -248,7 +239,6 @@
   <string name="error_message_image_uploader_not_found">Téléverseur d\'image non trouvé, peut-être qu\'il a été désinstallé.</string>
   <string name="image_upload_format">Format des tweets avec image</string>
   <string name="image_upload_format_summary">\"[LIEN]\" = Lien de l\'image\n\"[TEXTE]\" = Contenu du tweet\n(Extension seulement)</string>
-  <string name="tweet_shortener">Raccourcisseur de tweet</string>
   <string name="status_shortener">Raccourcisseur de tweet</string>
   <string name="status_shortener_default">Aucun (Annuler l\'envoi)</string>
   <string name="error_message_status_too_long">Tweet trop long.</string>
@@ -260,19 +250,15 @@
   <string name="show_absolute_time_summary">Afficher le temps absolu dans les tweets</string>
   <string name="user_mentions">Mentions de l\'utilisateur</string>
   <string name="dual_pane_layout">Disposition double panneau</string>
-  <string name="landscape">Paysage</string>
-  <string name="portrait">Potrait</string>
   <string name="quick_send">Appuyez  « Entrée » pour envoyer</string>
   <string name="quick_send_summary">Envoyer le tweet lorsqu\'on appuye sur « Entrée ».</string>
-  <string name="unsaved_status">Tweet non envoyé ou non sauvegardé pour le moment.</string>
   <string name="discard">Supprimer</string>
   <string name="Nitems_selected_quantity_one">1 élément sélectionné</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> éléments séléctionnés</string>
-  <string name="view">Voir</string>
   <string name="custom_host_mapping">Mappage d\'hôte personnalisée</string>
   <string name="custom_host_mapping_summary">Mappage d\'hôte comme /etc/hosts, mais n\'exige pas de permissions supplémentaires.</string>
   <string name="host_mapping_host">Hôte</string>
-  <string name="host_mapping_address">Adresse (peut-être une autre adresse hôte)</string>
+  <string name="host_mapping_address">Adresse (peut être l\'adresse d\'un autre hôte)</string>
   <string name="add_host_mapping">Ajouter un hôte personnalisé</string>
   <string name="tcp_dns_query">Requête DNS TCP</string>
   <string name="tcp_dns_query_summary">Utiliser le protocole TCP pour faire des requêtes DNS, cela peut éviter un empoisonnement du cache DNS.</string>
@@ -306,8 +292,6 @@
   <string name="incoming_friendships">Demandes d\'abonnement en attente</string>
   <string name="send_follow_request">Envoyer une demande d\'abonnement</string>
   <string name="follow_request_sent">Demande d\'abonnement envoyée</string>
-  <string name="separate_retweet_action">Séparer l\'action retweeter</string>
-  <string name="separate_retweet_action_summary">Montrer à la fois l\'action retweet et celle citation dans le menu tweet</string>
   <string name="status">Tweet</string>
   <string name="preview">Prévisualiser</string>
   <string name="connection_timeout">Délai de connexion dépassé</string>
@@ -448,7 +432,6 @@
   <string name="background_toast_notification">Notification de fond</string>
   <string name="background_toast_notification_summary">Afficher une notification lorsque l\'application est en arrière-plan</string>
   <string name="original_status">Tweet original</string>
-  <string name="compose_quit_action">Abandon de «composer»</string>
   <string name="ask">Demander</string>
   <string name="no_close_after_status_updated">Gardez « Composer » ouvert après avoir envoyé le tweet</string>
   <string name="no_close_after_status_updated_summary">Un petit cadeau pour Chatterbox</string>
@@ -470,15 +453,10 @@
   <string name="theme_light">Clair</string>
   <string name="settings_interface">Interface</string>
   <string name="no_rule">Aucune règle</string>
-  <string name="enable_in_mentions">Activer dans les mentions</string>
-  <string name="enable_in_home_timeline">Activer dans le fil d\'actualité</string>
-  <string name="enable_for_rts">Activer pour les RT</string>
   <string name="safety">Sécurité</string>
   <string name="updating_status_notification">Envoi du tweet&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Requête</string>
-  <string name="nickname_only">Pseudo seulement</string>
-  <string name="nickname_only_summary">Remplacer le nom de l\'utilisateur par son pseudo lorsque cela est possible</string>
   <string name="input_text">Saisir le texte</string>
   <string name="users_lists_with_name">Listes de <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Listes suivant <xliff:g id="name">%s</xliff:g></string>
@@ -488,7 +466,6 @@
   <string name="users_statuses">Tweets de l\'utilisateur</string>
   <string name="card_animation">Animation de la carte</string>
   <string name="name_first">Afficher le nom en premier</string>
-  <string name="next_step">Suivant</string>
   <string name="settings_wizard">Assistant de configuration</string>
   <string name="wizard_page_welcome_title">Bienvenue</string>
   <string name="wizard_page_welcome_text">Merci d\'avoir choisi Twidere.\nVoulez-vous le configurer maintenant ?</string>
@@ -556,12 +533,6 @@
   <string name="view_replies">Voir les réponses</string>
   <string name="compact_cards">Cartes compactes</string>
   <string name="compact_cards_summary">Afficher plus de cartes à l\'écran</string>
-  <string name="dashclock_home_unread_count_name">Décompte de tweets non-lus dans Twidere</string>
-  <string name="dashclock_home_unread_count_description">Décompte de tweets non-lus</string>
-  <string name="dashclock_mentions_unread_count_name">Décompte de mentions non-lues dans Twidere</string>
-  <string name="dashclock_mentions_unread_count_description">Décompte de mentions non-lues</string>
-  <string name="dashclock_messages_unread_count_name">Décompte de messages privés non-lus dans Twidere</string>
-  <string name="dashclock_messages_unread_count_description">Décompte de messages privés non-lus</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> nouveau tweet</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> nouveaux tweets</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> nouvelle mention</string>
@@ -582,7 +553,6 @@
   <string name="center">Centre</string>
   <string name="multi_select">Sélection multiple</string>
   <string name="long_click_to_open_menu">Pression longue pour ouvrir le menu</string>
-  <string name="swipe_back">Glisser pour fermer</string>
   <string name="tab_display_option_icon">Icône</string>
   <string name="tab_display_option_label">Label</string>
   <string name="tab_display_option_icon_and_label">Icône et étiquette</string>
@@ -610,12 +580,10 @@
   <string name="status_text_limit">Limite de caractères du Tweet</string>
   <string name="load_more_from_top">Chargement par le haut</string>
   <string name="load_more_from_top_summary">Pratique si vous préférez lire de bas en haut</string>
-  <string name="twitter_link_handler">Manipulateur de liens Twitter</string>
   <string name="compose_now">Écrire Maintenant</string>
   <string name="compose_now_summary">Remplacer le raccourci Google Now pour l\'écran d\'écriture</string>
   <string name="compose_now_action">Action pour Écrire Maintenant</string>
   <string name="open_with_account">Ouvrir avec le compte</string>
-  <string name="card_highlight_option">Option de mise en valeur des cartes</string>
   <string name="card_highlight_option_highlight">Surligner</string>
   <string name="card_highlight_option_line">Ligne</string>
   <string name="timeline_sync_service">Service de synchronisation de la Timeline</string>
@@ -723,4 +691,15 @@
   <string name="scale">Mise à l\'echelle</string>
   <string name="user_type_verified">Vérifié</string>
   <string name="user_type_protected">Protégé</string>
+  <string name="share_status">Partager le tweet</string>
+  <string name="pebble_notifications">Notifications Pebble</string>
+  <string name="pebble_notifications_summary">Envoyer les notifications à votre Pebble</string>
+  <string name="tweet_from_name">Envoyer un tweet à partir de <xliff:g id="text">%1$s</xliff:g></string>
+  <string name="permission_label_shorten_status">Raccourcir le tweet</string>
+  <string name="permission_label_upload_media">Téléverser un média</string>
+  <string name="permission_label_sync_timeline">Synchroniser le fil d\'actualités</string>
+  <string name="thumbor_integration">Intégration de Thumbor</string>
+  <string name="server_address">Adresse du serveur</string>
+  <string name="security_key">Clé de sécurité</string>
+  <string name="hide_card_actions">Cacher les actions de carte</string>
 </resources>

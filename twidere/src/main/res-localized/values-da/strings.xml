@@ -85,9 +85,7 @@
   <string name="search_statuses">Søg i tweets</string>
   <string name="remember_position">Husk placering</string>
   <string name="user_blocked">Bloker denne bruger.</string>
-  <string name="save_as">Gem som</string>
   <string name="please_wait">Vent venligst.</string>
-  <string name="file_saved_to">Fil gemt som <xliff:g id="filename">%s</xliff:g> .</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP proxy</string>
   <string name="block">Bloker</string>

@@ -114,11 +114,8 @@
     <string name="pick_color">Pick color</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
-    <string name="bottom_compose_button">Bottom \"compose\" button</string>
-    <string name="bottom_compose_button_summary">Place the compose button in the bottom, you can enable this if your screen is large.</string>
     <string name="leftside_compose_button">Left side compose button</string>
     <string name="leftside_compose_button_summary">Put the compose button on the left.</string>
-    <string name="bottom_send_button">Bottom \"send\" button</string>
     <string name="load_item_limit">Load item limit</string>
     <string name="load_item_limit_summary">Set items limit per load.</string>
     <string name="load_more_automatically">Load more content automatically</string>
@@ -437,7 +434,6 @@
     <string name="background_toast_notification">Background Toast notification</string>
     <string name="background_toast_notification_summary">Show Toast notification when switched to background</string>
     <string name="original_status">Original tweet</string>
-    <string name="compose_quit_action">On aborting \"compose\"</string>
     <string name="ask">Ask</string>
     <string name="no_close_after_status_updated">Keep \"Compose\" open after tweet sent</string>
     <string name="no_close_after_status_updated_summary">A little gift for chatterbox</string>
@@ -459,15 +455,10 @@
     <string name="theme_light">Light</string>
     <string name="settings_interface">Interface</string>
     <string name="no_rule">No rule</string>
-    <string name="enable_in_mentions">Enable in mentions</string>
-    <string name="enable_in_home_timeline">Enable in home timeline</string>
-    <string name="enable_for_rts">Enable for RTs</string>
     <string name="safety">Safety</string>
     <string name="updating_status_notification">Sending tweet…</string>
     <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
     <string name="query">Query</string>
-    <string name="nickname_only">Nickname only</string>
-    <string name="nickname_only_summary">Replace user name with nickname when available</string>
     <string name="input_text">Input text</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="lists_following_user_with_name">Lists following <xliff:g id="name">%s</xliff:g></string>
@@ -549,12 +540,6 @@
     <string name="view_replies">View Replies</string>
     <string name="compact_cards">Compact cards</string>
     <string name="compact_cards_summary">Display more cards on screen</string>
-    <string name="dashclock_home_unread_count_name">Twidere home unread count</string>
-    <string name="dashclock_home_unread_count_description">Home unread count</string>
-    <string name="dashclock_mentions_unread_count_name">Twidere mentions unread count</string>
-    <string name="dashclock_mentions_unread_count_description">Mentions unread count</string>
-    <string name="dashclock_messages_unread_count_name">Twidere messages unread count</string>
-    <string name="dashclock_messages_unread_count_description">Messages unread count</string>
     <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> new tweet</string>
     <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> new tweets</string>
     <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> new mention</string>
@@ -575,7 +560,6 @@
     <string name="center">Center</string>
     <string name="multi_select">Multi select</string>
     <string name="long_click_to_open_menu">Long click to open menu</string>
-    <string name="swipe_back">Swipe to close</string>
     <string name="tab_display_option_icon">Icon</string>
     <string name="tab_display_option_label">Label</string>
     <string name="tab_display_option_icon_and_label">Icon and label</string>
@@ -603,12 +587,10 @@
     <string name="status_text_limit">Tweet text limit</string>
     <string name="load_more_from_top">Load more from top</string>
     <string name="load_more_from_top_summary">Useful if you prefer to read from bottom to top</string>
-    <string name="twitter_link_handler">Twitter link handler</string>
     <string name="compose_now">Compose Now</string>
     <string name="compose_now_summary">Replaces Google Now shortcut for Compose screen</string>
     <string name="compose_now_action">Compose Now action</string>
     <string name="open_with_account">Open with account</string>
-    <string name="card_highlight_option">Card highlight option</string>
     <string name="card_highlight_option_highlight">Highlight</string>
     <string name="card_highlight_option_line">Line</string>
     <string name="timeline_sync_service">Timeline sync service</string>

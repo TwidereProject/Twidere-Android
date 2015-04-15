@@ -53,8 +53,8 @@ public class BadgeView extends View {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
         final int hPadding = (int) (Math.round(w * (Math.pow(2, 0.5f) - 1)) / 2);
         final int vPadding = (int) (Math.round(h * (Math.pow(2, 0.5f) - 1)) / 2);
         setPadding(hPadding, vPadding, hPadding, vPadding);

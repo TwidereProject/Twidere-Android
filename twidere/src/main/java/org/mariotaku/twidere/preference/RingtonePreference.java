@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -69,7 +70,7 @@ public class RingtonePreference extends AutoInvalidateListPreference {
     }
 
     @Override
-    protected void onPrepareDialogBuilder(final Builder builder) {
+    protected void onPrepareDialogBuilder(@NonNull final Builder builder) {
         loadRingtones(getContext());
         setSelectedItem(ArrayUtils.indexOf(mValues, getPersistedString(null)));
         builder.setSingleChoiceItems(getEntries(), getSelectedItem(), new OnClickListener() {

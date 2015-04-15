@@ -524,7 +524,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
             if (wasConfigured(tabs)) return true;
             Collections.sort(tabs);
             int i = 0;
-            final List<ContentValues> values_list = new ArrayList<ContentValues>();
+            final List<ContentValues> values_list = new ArrayList<>();
             for (final String type : DEFAULT_TAB_TYPES) {
                 final ContentValues values = new ContentValues();
                 final CustomTabConfiguration conf = CustomTabUtils.getTabConfiguration(type);

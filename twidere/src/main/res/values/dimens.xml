@@ -51,12 +51,6 @@
     <dimen name="line_indicator_stroke_width_wizard">3dp</dimen>
 
     <!-- Size of the item menu -->
-    <dimen name="item_menu_width_default">32dp</dimen>
-    <dimen name="item_menu_height_default">40dp</dimen>
-    <dimen name="item_menu_padding_top_default">4dp</dimen>
-    <dimen name="item_menu_padding_start_default">6dp</dimen>
-    <dimen name="item_menu_padding_bottom_default">2dp</dimen>
-    <dimen name="item_menu_padding_end_default">10dp</dimen>
     <dimen name="item_menu_card_padding_compact">28dp</dimen>
 
     <!-- Dimensions for color picker -->

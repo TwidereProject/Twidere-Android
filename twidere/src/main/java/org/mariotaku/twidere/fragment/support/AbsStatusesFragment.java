@@ -198,9 +198,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             case "status.favorite": {
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status);
+                    twitter.destroyFavoriteAsync(status.account_id, status.id);
                 } else {
-                    twitter.createFavoriteAsync(status);
+                    twitter.createFavoriteAsync(status.account_id, status.id);
                 }
                 return true;
             }
@@ -472,9 +472,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status);
+                    twitter.destroyFavoriteAsync(status.account_id, status.id);
                 } else {
-                    twitter.createFavoriteAsync(status);
+                    twitter.createFavoriteAsync(status.account_id, status.id);
                 }
                 break;
             }

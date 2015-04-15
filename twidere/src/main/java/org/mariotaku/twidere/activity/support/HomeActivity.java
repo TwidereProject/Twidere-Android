@@ -74,7 +74,6 @@ import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
-import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
@@ -90,7 +89,6 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
-import org.mariotaku.twidere.util.FlymeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MathUtils;
@@ -278,19 +276,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     }
 
     @Override
-    protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof IBasePullToRefreshFragment)
-            return (IBasePullToRefreshFragment) fragment;
-        else if (fragment instanceof SupportFragmentCallback) {
-            final Fragment curr = ((SupportFragmentCallback) fragment).getCurrentVisibleFragment();
-            if (curr instanceof IBasePullToRefreshFragment)
-                return (IBasePullToRefreshFragment) curr;
-        }
-        return null;
-    }
-
-    @Override
     public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
         return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
@@ -371,7 +356,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         showDataProfilingRequest();
         initUnreadCount();
         updateActionsButton();
-        updateSmartBar();
         updateSlidingMenuTouchMode();
 
         if (savedInstanceState == null) {
@@ -419,7 +403,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         invalidateOptionsMenu();
         updateActionsButtonStyle();
         updateActionsButton();
-        updateSmartBar();
         updateSlidingMenuTouchMode();
     }
 
@@ -467,7 +450,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     @Subscribe
     public void notifyTaskStateChanged(TaskStateChangedEvent event) {
         updateActionsButton();
-        updateSmartBar();
     }
 
     @Subscribe
@@ -524,7 +506,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         }
         updateSlidingMenuTouchMode();
         updateActionsButton();
-        updateSmartBar();
     }
 
     @Override
@@ -738,11 +719,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         return false;
     }
 
-    private boolean hasActivatedTask() {
-        if (mTwitterWrapper == null) return false;
-        return mTwitterWrapper.hasActivatedTask();
-    }
-
     private void initUnreadCount() {
         for (int i = 0, j = mTabIndicator.getCount(); i < j; i++) {
             mTabIndicator.setBadge(i, 0);
@@ -937,12 +913,6 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mSlidingMenu.setTouchModeAbove(mode);
     }
 
-    private void updateSmartBar() {
-        final boolean useBottomActionItems = FlymeUtils.hasSmartBar();
-        if (useBottomActionItems) {
-            invalidateOptionsMenu();
-        }
-    }
 
     private static final class AccountChangeObserver extends ContentObserver {
         private final HomeActivity mActivity;

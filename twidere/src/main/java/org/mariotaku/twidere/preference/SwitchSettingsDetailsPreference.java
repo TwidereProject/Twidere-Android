@@ -64,7 +64,7 @@ public class SwitchSettingsDetailsPreference extends SwitchPreference implements
         if (view instanceof ViewGroup) {
             ((ViewGroup) view).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         }
-        final Switch switchView = (Switch) ViewUtils.findViewByType(view, Switch.class);
+        final Switch switchView = ViewUtils.findViewByType(view, Switch.class);
         if (switchView != null) {
             switchView.setClickable(true);
             switchView.setFocusable(true);

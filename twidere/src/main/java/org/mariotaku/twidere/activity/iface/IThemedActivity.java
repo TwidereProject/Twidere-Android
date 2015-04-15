@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.activity.iface;
 
-import android.content.res.Resources;
-
 public interface IThemedActivity {
 
     int getCurrentThemeBackgroundAlpha();

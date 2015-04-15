@@ -40,9 +40,9 @@ public class ColorUtils {
         final Bitmap bm = Bitmap.createBitmap(width, height, Config.ARGB_8888);
         final Canvas canvas = new Canvas(bm);
 
-        final int rectrangleSize = (int) (density * 5);
-        final int numRectanglesHorizontal = (int) Math.ceil(width / rectrangleSize);
-        final int numRectanglesVertical = (int) Math.ceil(height / rectrangleSize);
+        final int rectangleSize = (int) (density * 5);
+        final int numRectanglesHorizontal = (int) Math.ceil(width / rectangleSize);
+        final int numRectanglesVertical = (int) Math.ceil(height / rectangleSize);
         final Rect r = new Rect();
         boolean verticalStartWhite = true;
         for (int i = 0; i <= numRectanglesVertical; i++) {
@@ -50,10 +50,10 @@ public class ColorUtils {
             boolean isWhite = verticalStartWhite;
             for (int j = 0; j <= numRectanglesHorizontal; j++) {
 
-                r.top = i * rectrangleSize;
-                r.left = j * rectrangleSize;
-                r.bottom = r.top + rectrangleSize;
-                r.right = r.left + rectrangleSize;
+                r.top = i * rectangleSize;
+                r.left = j * rectangleSize;
+                r.bottom = r.top + rectangleSize;
+                r.right = r.left + rectangleSize;
                 final Paint paint = new Paint();
                 paint.setColor(isWhite ? Color.WHITE : Color.GRAY);
 

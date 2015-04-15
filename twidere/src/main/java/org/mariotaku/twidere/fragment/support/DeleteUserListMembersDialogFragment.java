@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
 import org.mariotaku.twidere.R;
@@ -55,7 +56,8 @@ public class DeleteUserListMembersDialogFragment extends BaseSupportDialogFragme
 		}
 	}
 
-	@Override
+	@NonNull
+    @Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
 		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);

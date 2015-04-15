@@ -627,7 +627,8 @@
             android:exported="true"
             android:icon="@drawable/nyan_sakamoto_thumbnail"
             android:label="@string/nyan_sakamoto"
-            android:process=":daydream">
+            android:process=":daydream"
+            tools:ignore="ExportedService">
             <intent-filter android:priority="1">
                 <action android:name="android.service.dreams.DreamService"/>
             </intent-filter>

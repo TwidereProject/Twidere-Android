@@ -108,7 +108,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 final Intent intent = new Intent(INTENT_ACTION_REPLY_MULTIPLE);
                 final Bundle bundle = new Bundle();
                 final String[] accountScreenNames = getAccountScreenNames(mActivity);
-                final Collection<String> allMentions = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                final Collection<String> allMentions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
                 for (final Object object : selectedItems) {
                     if (object instanceof ParcelableStatus) {
                         final ParcelableStatus status = (ParcelableStatus) object;
@@ -135,8 +135,8 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             }
             case MENU_MUTE_USER: {
                 final ContentResolver resolver = mActivity.getContentResolver();
-                final ArrayList<ContentValues> valuesList = new ArrayList<ContentValues>();
-                final Set<Long> userIds = new HashSet<Long>();
+                final ArrayList<ContentValues> valuesList = new ArrayList<>();
+                final Set<Long> userIds = new HashSet<>();
                 for (final Object object : selectedItems) {
                     if (object instanceof ParcelableStatus) {
                         final ParcelableStatus status = (ParcelableStatus) object;
@@ -146,8 +146,6 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                         final ParcelableUser user = (ParcelableUser) object;
                         userIds.add(user.id);
                         valuesList.add(ContentValuesCreator.createFilteredUser(user));
-                    } else {
-                        continue;
                     }
                 }
                 bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userIds, null, false);

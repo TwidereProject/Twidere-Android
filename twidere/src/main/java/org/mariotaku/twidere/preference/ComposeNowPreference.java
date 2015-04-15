@@ -21,10 +21,7 @@ package org.mariotaku.twidere.preference;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 
 import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.util.Utils;

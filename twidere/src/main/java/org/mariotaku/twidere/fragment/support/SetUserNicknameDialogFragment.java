@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -65,7 +66,8 @@ public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment imp
 
 	}
 
-	@Override
+	@NonNull
+    @Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		final Bundle args = getArguments();
 		final String nick = args.getString(EXTRA_NAME);

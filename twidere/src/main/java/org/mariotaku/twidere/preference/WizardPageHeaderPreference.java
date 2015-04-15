@@ -21,6 +21,7 @@ package org.mariotaku.twidere.preference;
 
 import android.content.Context;
 import android.preference.Preference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ public final class WizardPageHeaderPreference extends Preference {
 	}
 
 	@Override
-	protected void onBindView(final View view) {
+	protected void onBindView(@NonNull final View view) {
 		super.onBindView(view);
 		final TextView title = (TextView) view.findViewById(android.R.id.title);
 		final TextView summary = (TextView) view.findViewById(android.R.id.summary);

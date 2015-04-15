@@ -21,11 +21,8 @@ package org.mariotaku.twidere.util;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
-
-import org.mariotaku.twidere.Constants;
 
 /**
  * Created by mariotaku on 15/4/13.
@@ -64,8 +61,7 @@ public class RecyclerViewUtils {
                 viewToFocus = firstVisibleView;
                 firstVisibleView.requestFocus();
             } else if (view != null) {
-                final View recyclerViewChild = findRecyclerViewChild(recyclerView, view);
-                viewToFocus = recyclerViewChild;
+                viewToFocus = findRecyclerViewChild(recyclerView, view);
             } else {
                 viewToFocus = null;
             }

@@ -34,10 +34,8 @@ public class BackStackEntryAccessor {
 			final Field fragmentField = mHead.getClass().getField("fragment");
 			final Object fragment = fragmentField.get(mHead);
 			if (fragment instanceof Fragment) return (Fragment) fragment;
-		} catch (final NoSuchFieldException e) {
-		} catch (final IllegalArgumentException e) {
-		} catch (final IllegalAccessException e) {
+		} catch (final NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 		}
-		return null;
+        return null;
 	}
 }

@@ -1,5 +1,6 @@
 package edu.tsinghua.spice.Utilies;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -31,12 +32,15 @@ public class SpiceProfilingUtil {
     public static final String FILE_NAME_ONLAUNCH = "onLaunch_SPICE";
     public static final String FILE_NAME_SCREEN = "Screen_SPICE";
 
+    @SuppressLint("InlinedApi")
     public static boolean isCharging(final Context context) {
         if (context == null) return false;
         final Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         if (intent == null) return false;
         final int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
+        return plugged == BatteryManager.BATTERY_PLUGGED_AC
+                || plugged == BatteryManager.BATTERY_PLUGGED_USB
+                || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
     public static boolean log(final Context context, final String msg) {
@@ -87,8 +91,6 @@ public class SpiceProfilingUtil {
                     e.printStackTrace();
                 }
             }
-
-            ;
         }.start();
     }
 }

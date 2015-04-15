@@ -84,12 +84,9 @@
   <string name="url">URL</string>
   <string name="name">Jméno</string>
   <string name="item_3_minutes">3 minuty</string>
-  <string name="landscape">Vodorovně</string>
-  <string name="portrait">Svisle</string>
   <string name="discard">Zahodit</string>
   <string name="preview">Náhled</string>
   <string name="ask">Dotaz</string>
-  <string name="next_step">Další</string>
   <string name="wizard_page_welcome_yes">Ano</string>
   <string name="wizard_page_finished_title">Dokončeno</string>
 </resources>

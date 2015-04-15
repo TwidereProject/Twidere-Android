@@ -11,6 +11,7 @@
   <string name="remove_location">位置情報を削除</string>
   <string name="remove_image">画像を削除</string>
   <string name="remove_photo">写真を削除</string>
+  <string name="status_hint">いまどうしてる？</string>
   <string name="sign_up">新規登録</string>
   <string name="sign_in">ログイン</string>
   <string name="rest_base_url">REST Base URL</string>
@@ -18,7 +19,7 @@
   <string name="signing_oauth_base_url">Signing OAuth Base URL</string>
   <string name="signing_rest_base_url">Signing REST Base URL</string>
   <string name="api_url_format">API URLの形式</string>
-  <string name="same_oauth_signing_url">OAuthサインインと同じURLを使う</string>
+  <string name="same_oauth_signing_url">OAuthサインにもこのURLを使う</string>
   <string name="auth_type">認証タイプ</string>
   <string name="oauth">OAuth</string>
   <string name="xauth">xAuth</string>
@@ -85,8 +86,12 @@
   <string name="look_and_feel">テーマ</string>
   <string name="display_profile_image">プロフィール画像を表示</string>
   <string name="image_load_summary">無効にするとリストのスクロール速度が速くなり、データ通信量を抑えられます。</string>
+  <string name="in_reply_to_name"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
+  <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> さんがリツイートしました</string>
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> さんと他のユーザーがリツイート</string>
+  <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> と他 <xliff:g id="retweet_count">%2$d</xliff:g> 人がリツイート</string>
   <string name="N_retweeted_quantity_one"><xliff:g id="retweet_count">%d</xliff:g> 回のリツイート</string>
+  <string name="N_retweeted_quantity_other"><xliff:g id="retweet_count">%d</xliff:g> 回のリツイート</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>によってリツイートされました</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> さんと <xliff:g id="retweet_count">%2$d</xliff:g>人によってリツイートしました</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> 人によってリツイートされました</string>
@@ -107,14 +112,12 @@
   <string name="pick_color">色を選択</string>
   <string name="follow">フォロー</string>
   <string name="unfollow">フォローを解除</string>
-  <string name="bottom_compose_button">ツイートボタンを下に置く</string>
-  <string name="bottom_compose_button_summary">ツイートボタンを下に置きます。</string>
   <string name="leftside_compose_button">つぶやきボタンを左に置く</string>
   <string name="leftside_compose_button_summary">つぶやきボタンを左に置きます。</string>
-  <string name="bottom_send_button">送信ボタンを下に置く</string>
   <string name="load_item_limit">ツイートの読み込み上限</string>
   <string name="load_item_limit_summary">一度に読み込むツイートの数を制限します。</string>
   <string name="load_more_automatically">ツイートの自動読み込み</string>
+  <string name="load_more_automatically_summary">コンテンツ（写真やマップ、ツイート）を自動で読み込みます。</string>
   <string name="quote">引用</string>
   <string name="add_rule">ルールを追加</string>
   <string name="text_size">フォントサイズ</string>
@@ -146,10 +149,7 @@
   <string name="reported_user_for_spam">このユーザーをスパム報告しました。</string>
   <string name="reported_users_for_spam">選択したユーザーをスパムとして報告しました。</string>
   <string name="filename_hint">ファイル名</string>
-  <string name="overwrite_confirm">ファイルはすでに存在します。上書きしますか？</string>
-  <string name="save_as">名前を付けて保存</string>
   <string name="please_wait">しばらくお待ちください…</string>
-  <string name="file_saved_to"><xliff:g id="filename">%s</xliff:g> にファイルが保存されました。</string>
   <string name="saved_to_gallery">ギャラリーに保存</string>
   <string name="proxy">プロキシ</string>
   <string name="http_proxy">HTTP プロキシ</string>
@@ -220,9 +220,6 @@
   <string name="tabs">タブ</string>
   <string name="add_tab">タブを追加</string>
   <string name="edit_tab">タブを編集</string>
-  <string name="move_up">上に移動</string>
-  <string name="move_down">下に移動</string>
-  <string name="unsaved_change_back_pressed">保存されていない変更があります。もう一度戻るボタンを押すと破棄します。</string>
   <string name="invalid_settings">無効な設定が見つかりました。</string>
   <string name="icon">アイコン</string>
   <string name="pick_file">ファイルを選択</string>
@@ -241,7 +238,6 @@
   <string name="error_message_image_uploader_not_found">画像アップローダーが見つかりません。</string>
   <string name="image_upload_format">画像付きツイートの書式</string>
   <string name="image_upload_format_summary">\"[LINK]\" = 画像リンク\n\"[TEXT]\" = ツイート内容\n(拡張機能のみ)</string>
-  <string name="tweet_shortener">ツイート短縮サービス</string>
   <string name="status_shortener">ツイート短縮サービス</string>
   <string name="status_shortener_default">なし (送信を取り消す)</string>
   <string name="error_message_status_too_long">ツイートのテキストが長過ぎます。</string>
@@ -253,19 +249,15 @@
   <string name="show_absolute_time_summary">ツイートの時間を絶対時間で表示します。</string>
   <string name="user_mentions">ユーザー宛ての@ツイート</string>
   <string name="dual_pane_layout">デュアルペインレイアウトの使用</string>
-  <string name="landscape">横向き</string>
-  <string name="portrait">縦向き</string>
   <string name="quick_send">エンターキーで送信</string>
   <string name="quick_send_summary">エンターキーを押すと送信します。</string>
-  <string name="unsaved_status">ツイートは送信されず、保存されていません。</string>
   <string name="discard">破棄</string>
   <string name="Nitems_selected_quantity_one">1 アイテムを選択</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> アイテムを選択</string>
-  <string name="view">表示</string>
   <string name="custom_host_mapping">ホストマッピングの設定</string>
   <string name="custom_host_mapping_summary">rootedでなくても/etc/hostsのようにホストマッピングができます。</string>
   <string name="host_mapping_host">ホスト</string>
-  <string name="host_mapping_address">アドレス (他のホストアドレスも可)</string>
+  <string name="host_mapping_address">アドレス (もしくは他のホストアドレス)</string>
   <string name="add_host_mapping">ホストマッピングを追加</string>
   <string name="tcp_dns_query">TCP DNS クエリー</string>
   <string name="tcp_dns_query_summary">TCP プロトコルでDNS リクエストを通信し、DNSキャッシュ汚染を回避できます。</string>
@@ -274,6 +266,7 @@
   <string name="activities_about_me">みんなの反応</string>
   <string name="activities_by_friends">アクティビティ</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g>さんは、あなたのツイートをお気に入りに登録しました </string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g>さんはあなたのリツイートををお気に入りに登録しました</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> があなたをフォローしました。</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g>さんがあなたのツイートをリツイートしました。</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g>さんがあなたをリストに追加しました。</string>
@@ -287,8 +280,6 @@
   <string name="incoming_friendships">保留中のフォローリクエスト</string>
   <string name="send_follow_request">フォローリクエストを送信</string>
   <string name="follow_request_sent">フォローリクエストを送信しました。</string>
-  <string name="separate_retweet_action">リツイートと引用の分離</string>
-  <string name="separate_retweet_action_summary">リツイートと引用の両方をメニューに同時表示します。</string>
   <string name="status">ツイート</string>
   <string name="preview">プレビュー</string>
   <string name="connection_timeout">接続タイムアウト</string>
@@ -428,7 +419,6 @@
   <string name="background_toast_notification">バックグラウンドトースト通知</string>
   <string name="background_toast_notification_summary">バックグラウンドに切り替わったときにトースト通知を表示します。</string>
   <string name="original_status">元のツイート</string>
-  <string name="compose_quit_action">ツイート破棄時の動作</string>
   <string name="ask">尋ねる</string>
   <string name="no_close_after_status_updated">編集画面をツイート送信後に開いたままにする</string>
   <string name="no_close_after_status_updated_summary">ツイート編集画面の動作を変更します。</string>
@@ -450,15 +440,10 @@
   <string name="theme_light">ライト</string>
   <string name="settings_interface">インターフェース</string>
   <string name="no_rule">ルールなし</string>
-  <string name="enable_in_mentions">つながりで有効にする</string>
-  <string name="enable_in_home_timeline">ホームTLで有効にする</string>
-  <string name="enable_for_rts">RTで有効にする</string>
   <string name="safety">安全性</string>
   <string name="updating_status_notification">ツイートの送信中...</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">クエリ</string>
-  <string name="nickname_only">ニックネームのみ表示</string>
-  <string name="nickname_only_summary">ニックネームがある場合ユーザー名の代わりに表示します。</string>
   <string name="input_text">テキストを入力</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>が保存しているリスト</string>
   <string name="lists_following_user_with_name"><xliff:g id="name">%s</xliff:g>が追加されているリスト</string>
@@ -468,7 +453,6 @@
   <string name="users_statuses">ユーザーのツイート</string>
   <string name="card_animation">カードアニメーション</string>
   <string name="name_first">名前を先に表示</string>
-  <string name="next_step">次へ</string>
   <string name="settings_wizard">設定ウィザード</string>
   <string name="wizard_page_welcome_title">ようこそ</string>
   <string name="wizard_page_welcome_text">Twidereを選んで頂きありがとうございます。\n初期設定をしますか?</string>
@@ -535,12 +519,6 @@
   <string name="view_replies">返信を表示</string>
   <string name="compact_cards">カードのコンパクト化</string>
   <string name="compact_cards_summary">画面あたりのカード表示数を増やせます。</string>
-  <string name="dashclock_home_unread_count_name">Twidere ホームTL未読数表示</string>
-  <string name="dashclock_home_unread_count_description">ホームTLの未読数を表示</string>
-  <string name="dashclock_mentions_unread_count_name">Twidere @ツイート未読数表示</string>
-  <string name="dashclock_mentions_unread_count_description">自分宛の未読@ツイート数を表示</string>
-  <string name="dashclock_messages_unread_count_name">Twidere DM未読数表示</string>
-  <string name="dashclock_messages_unread_count_description">未読DM数を表示</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g>件の未読ツイート</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g>件の未読ツイート</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g>件の未読@ツイート</string>
@@ -559,7 +537,6 @@
   <string name="center">中央</string>
   <string name="multi_select">複数選択</string>
   <string name="long_click_to_open_menu">長押しでメニューを表示</string>
-  <string name="swipe_back">スワイプで閉じる</string>
   <string name="tab_display_option_icon">アイコン</string>
   <string name="tab_display_option_label">ラベル</string>
   <string name="tab_display_option_icon_and_label">アイコンとラベル</string>
@@ -587,12 +564,10 @@
   <string name="status_text_limit">ツイート文字数制限</string>
   <string name="load_more_from_top">上からさらに読み込む</string>
   <string name="load_more_from_top_summary">下から上に読みたい場合に便利です。</string>
-  <string name="twitter_link_handler">Twitterリンクハンドラ</string>
   <string name="compose_now">Tweet Now</string>
   <string name="compose_now_summary">ホームキーを上にスワイプしたときに出るGoogle NowショートカットをTweet Nowアクションに変更します。</string>
   <string name="compose_now_action">Tweet Nowアクション</string>
   <string name="open_with_account">アカウントを選んで開く</string>
-  <string name="card_highlight_option">カードの強調オプション</string>
   <string name="card_highlight_option_highlight">ハイライト</string>
   <string name="card_highlight_option_line">下線</string>
   <string name="timeline_sync_service">タイムライン同期サービス</string>
@@ -632,10 +607,18 @@
   <string name="unmute">ミュートの解除</string>
   <string name="action_muting">ミュート中</string>
   <string name="action_unmuting">ミュート解除中</string>
-  <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんをミュートしますか? フォローしたままにしますが、このユーザーのツイートを表示しないようにします。</string>
+  <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんをミュートしますか? フォローしたままで、このユーザーのツイートは表示されなくなります。</string>
   <string name="remove_from_filter">フィルタから削除</string>
   <string name="sort_timeline_by_id">IDでタイムラインを並び替え</string>
+  <string name="style">スタイル</string>
+  <string name="color">カラー</string>
+  <string name="font_family">フォントファミリー</string>
+  <string name="appearance">外観</string>
+  <string name="function">機能</string>
+  <string name="replies">返信</string>
+  <string name="profile_banner">ヘッダー画像</string>
   <string name="profile">プロフィール</string>
+  <string name="listed">リスト</string>
   <string name="state_blocking">ブロックしています</string>
   <string name="load_more">さらに読み込む</string>
   <string name="photo">写真</string>
@@ -643,17 +626,46 @@
   <string name="remove">削除</string>
   <string name="profile_text_color">テキストの色</string>
   <string name="profile_background_color">背景色</string>
+  <string name="profile_link_color_main_color">テーマカラー</string>
   <string name="retweet_quote_confirm_title">フォロワーにリツイートしますか？</string>
   <string name="font">フォント</string>
   <string name="size">サイズ</string>
   <string name="just_now">たった今</string>
+  <string name="round">丸型</string>
+  <string name="square">四角</string>
+  <string name="profile_image_style">プロフィール画像のスタイル</string>
+  <string name="media_preview_style">画像プレビューのスタイル</string>
+  <string name="draft_saved">下書きを保存</string>
+  <string name="open_twitter_links">Twitterリンクを開く</string>
   <string name="no_user_found">ユーザーが見つかりません。</string>
+  <string name="members">追加されているユーザー</string>
+  <string name="subscribers">追加しているユーザー</string>
+  <string name="follows">保存している</string>
+  <string name="belongs_to">保存されている</string>
+  <string name="select_accounts">アカウントを選択</string>
   <string name="media_preview">メディアのプレビュー</string>
   <string name="edit_tabs">タブの編集</string>
   <string name="getting_location">位置を取得しています。</string>
+  <string name="save_to_gallery">ギャラリーに保存</string>
+  <string name="usage_statistics">匿名利用状況データ</string>
+  <string name="unknown_location">場所不明</string>
+  <string name="designed_by">作成者：</string>
   <string name="import_export_settings">設定の保存/読み込み</string>
+  <string name="usage_statistics_header_summary">ツイデレは研究プロジェクトに参加された事が有ります。貴方はプロジェクトに参加する事で、ツイデレや他将来のアプリケーションはより良く成ります。</string>
   <string name="no_tab">タブがありません</string>
   <string name="user_protected_summary">このツイートは非公開です。見るためにはフォローリクエストを送信し、承認される必要があります</string>
+  <string name="no_account">アカウント無し</string>
+  <string name="usage_statistics_notification_summary">Twidereの機能向上にご協力ください</string>
+  <string name="projects_we_took_part">参加されたプロジェクト：</string>
   <string name="activated_accounts">アクティブアカウント</string>
   <string name="search">検索</string>
+  <string name="crop">切り取り</string>
+  <string name="scale">拡大縮小</string>
+  <string name="user_type_verified">認証された</string>
+  <string name="user_type_protected">保護されている</string>
+  <string name="share_status">ツイートをシエア</string>
+  <string name="thumbor_integration">Thumbor 連携</string>
+  <string name="server_address">サーバーのアドレス</string>
+  <string name="security_key">セキュリティーキー</string>
+  <string name="hide_card_actions">アクションボタンを非表示</string>
 </resources>

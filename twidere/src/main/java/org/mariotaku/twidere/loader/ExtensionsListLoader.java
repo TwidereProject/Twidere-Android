@@ -57,7 +57,7 @@ public class ExtensionsListLoader extends AsyncTaskLoader<List<ExtensionsListLoa
     @Override
     public List<ExtensionInfo> loadInBackground() {
         final List<ApplicationInfo> apps = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-        final List<ExtensionInfo> extensions = new ArrayList<ExtensionInfo>();
+        final List<ExtensionInfo> extensions = new ArrayList<>();
         for (final ApplicationInfo info : apps) {
             final Bundle meta = info.metaData;
             if (meta != null && meta.getBoolean(METADATA_KEY_EXTENSION, false)) {

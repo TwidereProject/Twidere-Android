@@ -68,7 +68,7 @@ public class BitmapUtils {
             FileOutputStream fos = null;
             try {
                 final Bitmap b = BitmapDecodeHelper.decode(path, o);
-                final Bitmap.CompressFormat format = Utils.getBitmapCompressFormatByMimetype(o.outMimeType,
+                final Bitmap.CompressFormat format = Utils.getBitmapCompressFormatByMimeType(o.outMimeType,
                         Bitmap.CompressFormat.PNG);
                 fos = new FileOutputStream(imageFile);
                 return b.compress(format, quality, fos);

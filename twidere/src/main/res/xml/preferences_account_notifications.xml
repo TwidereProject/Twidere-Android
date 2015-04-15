@@ -13,9 +13,9 @@
         android:title="@string/notification_ringtone"/>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
-        android:defaultValue="@color/branding_color"
         android:key="notification_light_color"
-        android:title="@string/notification_light_color"/>
+        android:title="@string/notification_light_color"
+        app:defaultColor="@color/branding_color"/>
 
     <PreferenceCategory
         android:key="cat_notifications_type"

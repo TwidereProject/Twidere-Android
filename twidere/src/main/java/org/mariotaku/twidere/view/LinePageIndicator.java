@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
@@ -211,7 +212,7 @@ public class LinePageIndicator extends View implements PagerIndicator {
     }
 
     @Override
-    public boolean onTouchEvent(final android.view.MotionEvent ev) {
+    public boolean onTouchEvent(@NonNull final android.view.MotionEvent ev) {
         if (super.onTouchEvent(ev)) return true;
         if (mViewPager == null || mViewPager.getAdapter().getCount() == 0) return false;
 
@@ -424,7 +425,7 @@ public class LinePageIndicator extends View implements PagerIndicator {
         }
 
         @Override
-        public void writeToParcel(final Parcel dest, final int flags) {
+        public void writeToParcel(@NonNull final Parcel dest, final int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(currentPage);
         }

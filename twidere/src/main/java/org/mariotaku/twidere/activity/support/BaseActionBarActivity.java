@@ -31,10 +31,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
-import org.mariotaku.twidere.fragment.iface.IBasePullToRefreshFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
-import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
@@ -45,14 +43,11 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
         OnFitSystemWindowsListener, SystemWindowsInsetsCallback, IControlBarActivity,
         ShortcutCallback {
 
-    private boolean mInstanceStateSaved, mIsVisible, mIsOnTop;
+    private boolean mInstanceStateSaved;
+    private boolean mIsVisible;
 
     private Rect mSystemWindowsInsets;
     private ArrayList<ControlBarOffsetListener> mControlBarOffsetListeners = new ArrayList<>();
-
-    public MessagesManager getMessagesManager() {
-        return getTwidereApplication() != null ? getTwidereApplication().getMessagesManager() : null;
-    }
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
@@ -77,10 +72,6 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
 
     public AsyncTwitterWrapper getTwitterWrapper() {
         return getTwidereApplication() != null ? getTwidereApplication().getTwitterWrapper() : null;
-    }
-
-    public boolean isOnTop() {
-        return mIsOnTop;
     }
 
     public boolean isVisible() {
@@ -126,10 +117,6 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
         super.startActivity(intent);
     }
 
-    protected IBasePullToRefreshFragment getCurrentPullToRefreshFragment() {
-        return null;
-    }
-
     @Override
     public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
         return false;
@@ -153,22 +140,16 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     protected void onStart() {
         super.onStart();
         mIsVisible = true;
-        final MessagesManager manager = getMessagesManager();
-        if (manager != null) {
-            manager.addMessageCallback(this);
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mInstanceStateSaved = false;
-        mIsOnTop = true;
     }
 
     @Override
     protected void onPause() {
-        mIsOnTop = false;
         super.onPause();
     }
 
@@ -186,10 +167,6 @@ public class BaseActionBarActivity extends ThemedActionBarActivity implements Co
     @Override
     protected void onStop() {
         mIsVisible = false;
-        final MessagesManager manager = getMessagesManager();
-        if (manager != null) {
-            manager.removeMessageCallback(this);
-        }
         super.onStop();
     }
 

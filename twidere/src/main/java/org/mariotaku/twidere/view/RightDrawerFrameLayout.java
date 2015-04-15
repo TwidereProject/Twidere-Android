@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -76,7 +77,7 @@ public class RightDrawerFrameLayout extends FrameLayout {
     }
 
     @Override
-    protected void dispatchDraw(final Canvas canvas) {
+    protected void dispatchDraw(@NonNull final Canvas canvas) {
         super.dispatchDraw(canvas);
         if (mClipEnabled && mPercentOpen > 0 && mPercentOpen < 1) {
             final int right = Math.round(getWidth() * (1 - mPercentOpen) * (1 - mScrollScale));

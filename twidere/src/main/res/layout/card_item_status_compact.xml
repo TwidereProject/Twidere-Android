@@ -229,7 +229,8 @@
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:layout_toRightOf="@+id/quote_indicator"
                 android:horizontalSpacing="@dimen/element_spacing_xsmall"
-                android:verticalSpacing="@dimen/element_spacing_xsmall">
+                android:verticalSpacing="@dimen/element_spacing_xsmall"
+                tools:ignore="DuplicateIncludedIds">
 
                 <include layout="@layout/layout_card_media_preview"/>
 

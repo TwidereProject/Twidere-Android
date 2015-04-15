@@ -52,9 +52,7 @@ public class StringLongPair {
 
         StringLongPair that = (StringLongPair) o;
 
-        if (!key.equals(that.key)) return false;
-
-        return true;
+        return key.equals(that.key);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class StringLongPair {
     }
 
     public static String toString(StringLongPair[] pairs) {
-        if (pairs==null)return null;
+        if (pairs == null) return null;
         return TwidereArrayUtils.toString(pairs, ';', false);
     }
 

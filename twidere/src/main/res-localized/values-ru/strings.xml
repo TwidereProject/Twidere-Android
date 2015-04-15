@@ -112,11 +112,8 @@
   <string name="pick_color">Выбрать цвет</string>
   <string name="follow">Читать</string>
   <string name="unfollow">Перестать читать</string>
-  <string name="bottom_compose_button">Кнопка \"Написать\" внизу</string>
-  <string name="bottom_compose_button_summary">Поместить кнопку \"Написать\" внизу. Вы можете включить эту опцию, если у вас большой экран.</string>
   <string name="leftside_compose_button">Кнопка \"написать\" слева</string>
   <string name="leftside_compose_button_summary">Поместить кнопку \"написать\" слева.</string>
-  <string name="bottom_send_button">Кнопка \"Отправить\" внизу</string>
   <string name="load_item_limit">Предел загружаемых элементов</string>
   <string name="load_item_limit_summary">Установить ограничение кол-ва элементов для загрузки.</string>
   <string name="load_more_automatically">Загружать дополнительный контент автоматически</string>
@@ -152,10 +149,7 @@
   <string name="reported_user_for_spam">Сообщить о спаме от этого пользователя.</string>
   <string name="reported_users_for_spam">Сообщить о спаме от этих пользователей.</string>
   <string name="filename_hint">Имя файла</string>
-  <string name="overwrite_confirm">Файл существует, перезаписать?</string>
-  <string name="save_as">Сохранить как</string>
   <string name="please_wait">Пожалуйста, подождите.</string>
-  <string name="file_saved_to">Файл сохранен в <xliff:g id="filename">%s</xliff:g> .</string>
   <string name="saved_to_gallery">Сохранено в галерее.</string>
   <string name="proxy">Прокси</string>
   <string name="http_proxy">HTTP прокси</string>
@@ -227,9 +221,6 @@
   <string name="tabs">Вкладки</string>
   <string name="add_tab">Добавить вкладку</string>
   <string name="edit_tab">Редактировать вкладку</string>
-  <string name="move_up">Переместить вверх</string>
-  <string name="move_down">Переместить вниз</string>
-  <string name="unsaved_change_back_pressed">Изменения не сохранены, нажмите НАЗАД для отмены.</string>
   <string name="invalid_settings">Найдены недопустимые настройки</string>
   <string name="icon">Иконка</string>
   <string name="pick_file">Выбрать файл</string>
@@ -248,7 +239,6 @@
   <string name="error_message_image_uploader_not_found">Хостинг изображений не найден, возможно он был удалён.</string>
   <string name="image_upload_format">Формат твита с изображением</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Ссылка изображ.\n\"[TEXT]\" = Текст твита\n(Расширение)</string>
-  <string name="tweet_shortener">Укоротитель твита</string>
   <string name="status_shortener">Укорачиватель твитов</string>
   <string name="status_shortener_default">Ничего (Отмена отправки)</string>
   <string name="error_message_status_too_long">Твит слишком длинный.</string>
@@ -260,19 +250,13 @@
   <string name="show_absolute_time_summary">Показывать абсолютное время в твитах</string>
   <string name="user_mentions">Упоминания пользователя</string>
   <string name="dual_pane_layout">Двухпанельный интерфейс</string>
-  <string name="landscape">Ландшафтный</string>
-  <string name="portrait">Портретный</string>
   <string name="quick_send">Нажмите «Enter» для отправки</string>
   <string name="quick_send_summary">Отправлять твит по нажатию «Enter».</string>
-  <string name="unsaved_status">Твит еще не отправлен или не сохранен.</string>
   <string name="discard">Отменить</string>
   <string name="Nitems_selected_quantity_one">Выбран 1 элемент</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> элементов выбрано</string>
-  <string name="view">Вид</string>
   <string name="custom_host_mapping">Перенаправление узлов</string>
   <string name="custom_host_mapping_summary">Перенаправление узлов, как с помощью /etc/hosts, но не требующее дополнительных разрешений.</string>
-  <string name="host_mapping_host">Хост</string>
-  <string name="host_mapping_address">Адрес (Может быть указан другой адрес)</string>
   <string name="add_host_mapping">Добавить перенаправление узлов</string>
   <string name="tcp_dns_query">TCP DNS-запрос</string>
   <string name="tcp_dns_query_summary">Использовать протокол TCP для запросов DNS в целях предотвращения DNS Cache Poisoning.</string>
@@ -306,8 +290,6 @@
   <string name="incoming_friendships">Ожидание запросов на подписку</string>
   <string name="send_follow_request">Послать запрос на подписку</string>
   <string name="follow_request_sent">Запрос на подписку послан</string>
-  <string name="separate_retweet_action">Различные виды ретвита</string>
-  <string name="separate_retweet_action_summary">Показывает в меню оба действия: ретвит и цитировать</string>
   <string name="status">Твит</string>
   <string name="preview">Предпросмотр</string>
   <string name="connection_timeout">Таймаут соединения</string>
@@ -449,7 +431,6 @@
   <string name="background_toast_notification">Фоновое всплывающее уведомление</string>
   <string name="background_toast_notification_summary">Показывать всплывающее уведомление когда свернуто в фон</string>
   <string name="original_status">Исходный твит</string>
-  <string name="compose_quit_action">При выходе из диалога написания</string>
   <string name="ask">Спросить</string>
   <string name="no_close_after_status_updated">Оставлять диалог открытым после отправки твита</string>
   <string name="no_close_after_status_updated_summary">Небольшой подарок для любителей поболтать</string>
@@ -471,15 +452,10 @@
   <string name="theme_light">Светлый</string>
   <string name="settings_interface">Интерфейс</string>
   <string name="no_rule">Правил нет</string>
-  <string name="enable_in_mentions">Включить в упоминания</string>
-  <string name="enable_in_home_timeline">Включить в домашней ленте</string>
-  <string name="enable_for_rts">Включить для Ретвитов</string>
   <string name="safety">Безопасность</string>
   <string name="updating_status_notification">Отправление твита&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>(<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Запрос</string>
-  <string name="nickname_only">Только никнеймы</string>
-  <string name="nickname_only_summary">Заменить имя пользователя никнеймом, когда возможно</string>
   <string name="input_text">Ввод текста</string>
   <string name="users_lists_with_name">Списки <xliff:g id="name">%s</xliff:g> </string>
   <string name="lists_following_user_with_name">Лист читающих <xliff:g id="name">%s</xliff:g></string>
@@ -489,7 +465,6 @@
   <string name="users_statuses">Твиты пользователя</string>
   <string name="card_animation">Анимация карточек</string>
   <string name="name_first">Отображать имя сначала</string>
-  <string name="next_step">Далее</string>
   <string name="settings_wizard">Мастер настройки</string>
   <string name="wizard_page_welcome_title">Добро пожаловать</string>
   <string name="wizard_page_welcome_text">Спасибо за то, что выбрали Twidere. Вы бы хотели настроить его сейчас?</string>
@@ -557,12 +532,6 @@
   <string name="view_replies">Посмотреть ответы</string>
   <string name="compact_cards">Компактные карточки твитов</string>
   <string name="compact_cards_summary">Отображать на экране больше карточек</string>
-  <string name="dashclock_home_unread_count_name">Счётчик непрочитанного для ленты Twidere</string>
-  <string name="dashclock_home_unread_count_description">Количество непрочитанных твитов в домашней ленте</string>
-  <string name="dashclock_mentions_unread_count_name">Количество непрочитанных уведомлений Twidere</string>
-  <string name="dashclock_mentions_unread_count_description">Количество непрочитанных уведомлений</string>
-  <string name="dashclock_messages_unread_count_name">Количество непрочитанных сообщений</string>
-  <string name="dashclock_messages_unread_count_description">Количество непрочитанных сообщений</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> новый твит</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> новых твитов</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> новое упоминание</string>
@@ -583,7 +552,6 @@
   <string name="center">Центр</string>
   <string name="multi_select">Выбрать несколько</string>
   <string name="long_click_to_open_menu">Долгий тап для контекстного меню</string>
-  <string name="swipe_back">Закрывать твит свайпом</string>
   <string name="tab_display_option_icon">Иконка</string>
   <string name="tab_display_option_label">Подпись</string>
   <string name="tab_display_option_icon_and_label">Иконка и подпись</string>
@@ -611,12 +579,10 @@
   <string name="status_text_limit">Ограничение на длину твита</string>
   <string name="load_more_from_top">Загружать больше начиная сверху ленты</string>
   <string name="load_more_from_top_summary">Полезно если вы читаете ленту снизу вверх</string>
-  <string name="twitter_link_handler">Обработчик ссылок твиттера</string>
   <string name="compose_now">Написать</string>
   <string name="compose_now_summary">Заменить Google Now для экрана отправки</string>
   <string name="compose_now_action">Изменить действие Now</string>
   <string name="open_with_account">Открыть аккаунтом</string>
-  <string name="card_highlight_option">Настройки подсветки карточки</string>
   <string name="card_highlight_option_highlight">Подсветка</string>
   <string name="card_highlight_option_line">Линия</string>
   <string name="timeline_sync_service">Сервис синхронизации ленты</string>

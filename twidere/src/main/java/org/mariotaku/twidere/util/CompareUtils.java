@@ -23,15 +23,11 @@ import android.os.Bundle;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.Iterator;
-
 public class CompareUtils {
 
     public static boolean bundleEquals(final Bundle bundle1, final Bundle bundle2, final String... ignoredKeys) {
         if (bundle1 == null || bundle2 == null) return bundle1 == bundle2;
-        final Iterator<String> keys = bundle1.keySet().iterator();
-        while (keys.hasNext()) {
-            final String key = keys.next();
+        for (String key : bundle1.keySet()) {
             if (!ArrayUtils.contains(ignoredKeys, key) && !objectEquals(bundle1.get(key), bundle2.get(key)))
                 return false;
         }

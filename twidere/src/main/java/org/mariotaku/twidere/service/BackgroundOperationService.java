@@ -68,7 +68,6 @@ import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ListUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
-import org.mariotaku.twidere.util.MessagesManager;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
@@ -110,7 +109,6 @@ public class BackgroundOperationService extends IntentService implements Constan
     private ContentResolver mResolver;
     private NotificationManager mNotificationManager;
     private AsyncTwitterWrapper mTwitter;
-    private MessagesManager mMessagesManager;
 
     private MediaUploaderInterface mUploader;
     private StatusShortenerInterface mShortener;
@@ -131,7 +129,6 @@ public class BackgroundOperationService extends IntentService implements Constan
         mResolver = getContentResolver();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mTwitter = app.getTwitterWrapper();
-        mMessagesManager = app.getMessagesManager();
         final String uploaderComponent = mPreferences.getString(KEY_MEDIA_UPLOADER, null);
         final String shortenerComponent = mPreferences.getString(KEY_STATUS_SHORTENER, null);
         mUseUploader = !ServicePickerPreference.isNoneValue(uploaderComponent);
@@ -146,44 +143,45 @@ public class BackgroundOperationService extends IntentService implements Constan
         return START_STICKY;
     }
 
-    public void showErrorMessage(final CharSequence message, final boolean long_message) {
+    public void showErrorMessage(final CharSequence message, final boolean longMessage) {
         mHandler.post(new Runnable() {
 
             @Override
             public void run() {
-                mMessagesManager.showErrorMessage(message, long_message);
+                Utils.showErrorMessage(BackgroundOperationService.this, message, longMessage);
             }
         });
     }
 
-    public void showErrorMessage(final int action_res, final Exception e, final boolean long_message) {
-
+    public void showErrorMessage(final int actionRes, final Exception e, final boolean longMessage) {
         mHandler.post(new Runnable() {
 
             @Override
             public void run() {
-                mMessagesManager.showErrorMessage(action_res, e, long_message);
+                Utils.showErrorMessage(BackgroundOperationService.this, actionRes, e, longMessage);
             }
         });
     }
 
-    public void showErrorMessage(final int action_res, final String message, final boolean long_message) {
-
+    public void showErrorMessage(final int actionRes, final String message, final boolean longMessage) {
         mHandler.post(new Runnable() {
 
             @Override
             public void run() {
-                mMessagesManager.showErrorMessage(action_res, message, long_message);
+                Utils.showErrorMessage(BackgroundOperationService.this, actionRes, message, longMessage);
             }
         });
     }
 
-    public void showOkMessage(final int message_res, final boolean long_message) {
-        mHandler.post(new Runnable() {
+    public void showOkMessage(final int messageRes, final boolean longMessage) {
+        showToast(getString(messageRes), longMessage);
+    }
 
+    private void showToast(final CharSequence message, final boolean longMessage) {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mMessagesManager.showOkMessage(message_res, long_message);
+                Toast.makeText(BackgroundOperationService.this, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
             }
         });
     }
@@ -297,10 +295,10 @@ public class BackgroundOperationService extends IntentService implements Constan
             statuses[0] = status;
         } else
             return;
-        startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotificaion(this, builder, 0, null));
+        startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(this, builder, 0, null));
         for (final ParcelableStatusUpdate item : statuses) {
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
-                    updateUpdateStatusNotificaion(this, builder, 0, item));
+                    updateUpdateStatusNotification(this, builder, 0, item));
             final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item,
                     ParcelableAccount.getAccountIds(item.accounts));
             final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
@@ -459,16 +457,16 @@ public class BackgroundOperationService extends IntentService implements Constan
             final boolean hasMedia = statusUpdate.media != null && statusUpdate.media.length > 0;
 
             final String overrideStatusText;
-            if (mUseUploader && hasMedia) {
+            if (mUseUploader && mUploader != null && hasMedia) {
                 final MediaUploadResult uploadResult;
                 try {
-                    if (mUploader != null) {
-                        mUploader.waitForService();
-                    }
+                    mUploader.waitForService();
                     uploadResult = mUploader.upload(statusUpdate,
                             UploaderMediaItem.getFromStatusUpdate(this, statusUpdate));
                 } catch (final Exception e) {
                     throw new UploadException(this);
+                } finally {
+                    mUploader.unbindService();
                 }
                 if (mUseUploader && hasMedia && uploadResult == null)
                     throw new UploadException(this);
@@ -491,6 +489,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                         shortenedResult = mShortener.shorten(statusUpdate, unShortenedText);
                     } catch (final Exception e) {
                         throw new ShortenException(this);
+                    } finally {
+                        mShortener.unbindService();
                     }
                     if (shortenedResult == null || shortenedResult.shortened == null)
                         throw new ShortenException(this);
@@ -605,8 +605,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         }
     }
 
-    private static Notification updateSendDirectMessageNotificaion(final Context context,
-                                                                   final NotificationCompat.Builder builder, final int progress, final String message) {
+    private static Notification updateSendDirectMessageNotification(final Context context,
+                                                                    final NotificationCompat.Builder builder, final int progress, final String message) {
         builder.setContentTitle(context.getString(R.string.sending_direct_message));
         if (message != null) {
             builder.setContentText(message);
@@ -617,8 +617,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         return builder.build();
     }
 
-    private static Notification updateUpdateStatusNotificaion(final Context context,
-                                                              final NotificationCompat.Builder builder, final int progress, final ParcelableStatusUpdate status) {
+    private static Notification updateUpdateStatusNotification(final Context context,
+                                                               final NotificationCompat.Builder builder, final int progress, final ParcelableStatusUpdate status) {
         builder.setContentTitle(context.getString(R.string.updating_status_notification));
         if (status != null) {
             builder.setContentText(status.text);
@@ -670,7 +670,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             final int percent = length > 0 ? (int) (position * 100 / length) : 0;
             if (this.percent != percent) {
                 manager.notify(NOTIFICATION_ID_SEND_DIRECT_MESSAGE,
-                        updateSendDirectMessageNotificaion(context, builder, percent, message));
+                        updateSendDirectMessageNotification(context, builder, percent, message));
             }
             this.percent = percent;
         }
@@ -714,7 +714,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             final int percent = length > 0 ? (int) (position * 100 / length) : 0;
             if (this.percent != percent) {
                 manager.notify(NOTIFICATION_ID_UPDATE_STATUS,
-                        updateUpdateStatusNotificaion(context, builder, percent, statusUpdate));
+                        updateUpdateStatusNotification(context, builder, percent, statusUpdate));
             }
             this.percent = percent;
         }

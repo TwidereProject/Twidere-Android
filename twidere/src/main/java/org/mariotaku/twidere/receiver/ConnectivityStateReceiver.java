@@ -30,7 +30,6 @@ import android.util.Log;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.Utils;
 
-import edu.tsinghua.spice.SpiceService;
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 

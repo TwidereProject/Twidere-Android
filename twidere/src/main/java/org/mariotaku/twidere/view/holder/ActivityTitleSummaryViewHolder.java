@@ -165,7 +165,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             return;
         }
         final int length = Math.min(profileImageViews.length, statuses.length);
-        final boolean shouldDisplayImages = true;
+        final boolean shouldDisplayImages = adapter.isProfileImageEnabled();
         profileImagesContainer.setVisibility(shouldDisplayImages ? View.VISIBLE : View.GONE);
         if (!shouldDisplayImages) return;
         for (int i = 0, j = profileImageViews.length; i < j; i++) {

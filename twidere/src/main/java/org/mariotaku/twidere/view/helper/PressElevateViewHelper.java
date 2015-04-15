@@ -79,7 +79,6 @@ public class PressElevateViewHelper implements Animator.AnimatorListener {
 
     @Override
     public void onAnimationRepeat(Animator animation) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
     }
 
     public void updateButtonState() {

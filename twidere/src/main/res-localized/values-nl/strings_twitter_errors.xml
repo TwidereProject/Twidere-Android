@@ -14,6 +14,6 @@
   <string name="error_twitter_172">Je hebt deze zoekopdracht al opgeslagen.</string>
   <string name="error_twitter_179">Je kunt deze beschermde gebruiker\'s tweet niet zien.</string>
   <string name="error_twitter_187">Je hebt deze tweet al verzonden.</string>
-  <string name="error_twitter_193">De foto die je upload is te groot.</string>
+  <string name="error_twitter_193">Deze foto is te groot om te uploaden.</string>
   <string name="error_twitter_215">U moet waarschijnlijk opnieuw inloggen.</string>
 </resources>

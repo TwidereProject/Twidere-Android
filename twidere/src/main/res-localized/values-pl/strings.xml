@@ -11,6 +11,7 @@
   <string name="remove_location">Usuń lokalizację</string>
   <string name="remove_image">Usuń obraz</string>
   <string name="remove_photo">Usuń zdjęcie</string>
+  <string name="status_hint">Co się dzieje?</string>
   <string name="sign_up">Zarejestruj się</string>
   <string name="sign_in">Zaloguj się</string>
   <string name="rest_base_url">REST Base URL</string>
@@ -111,11 +112,8 @@
   <string name="pick_color">Wybierz kolor</string>
   <string name="follow">Obserwuj</string>
   <string name="unfollow">Przestań obserwować</string>
-  <string name="bottom_compose_button">Przycisk \"Tweetnij\" na dole</string>
-  <string name="bottom_compose_button_summary">Pokazuje przycisk \"Tweetnij\" na dole ekranu, możesz włączyć jeśli masz duży ekran.</string>
   <string name="leftside_compose_button">Przycisk \"Tweetnij\" po lewej stronie</string>
   <string name="leftside_compose_button_summary">Pokaż przycisk \"Tweetnij\" po lewej stronie ekranu.</string>
-  <string name="bottom_send_button">Przycisk \"wyślij\" na dole</string>
   <string name="load_item_limit">Limit ładowania</string>
   <string name="load_item_limit_summary">Ustaw ilość wpisów ładowanych jednorazowo.</string>
   <string name="load_more_automatically">Ładuj więcej tweetów automatycznie</string>
@@ -151,10 +149,7 @@
   <string name="reported_user_for_spam">Zgłoszono tego użytkownika jako spamera.</string>
   <string name="reported_users_for_spam">Zgłoszono tych użytkowników jako spamerów.</string>
   <string name="filename_hint">Nazwa pliku</string>
-  <string name="overwrite_confirm">Plik istnieje, zastąpić?</string>
-  <string name="save_as">Zapisz jako</string>
   <string name="please_wait">Proszę czekać...</string>
-  <string name="file_saved_to">Plik zapisany do <xliff:g id="filename">%s</xliff:g> .</string>
   <string name="saved_to_gallery">Zapisano do galerii.</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
@@ -226,9 +221,6 @@
   <string name="tabs">Karty</string>
   <string name="add_tab">Dodaj zakładkę</string>
   <string name="edit_tab">Edytuj zakładkę</string>
-  <string name="move_up">Przenieś w górę</string>
-  <string name="move_down">Przenieś w dół</string>
-  <string name="unsaved_change_back_pressed">Masz niezapisane zmiany, aby wyjść naciśnij ponownie przycisk \"Wstecz\".</string>
   <string name="invalid_settings">Znaleziono niepoprawne ustawienia.</string>
   <string name="icon">Ikona</string>
   <string name="pick_file">Wybierz plik</string>
@@ -246,7 +238,6 @@
   <string name="error_message_image_uploader_not_found">Program do ładowania obrazów nie znaleziony, może został odinstalowany.</string>
   <string name="image_upload_format">Format tweeta z obrazem</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Link do obrazu\n\"[TEXT]\" = Zawartość tweeta\n(tylko rozszerzenie)</string>
-  <string name="tweet_shortener">Skracanie tweeta</string>
   <string name="status_shortener">Skracacz tweetów</string>
   <string name="status_shortener_default">Brak (przerwij wysyłanie)</string>
   <string name="error_message_status_too_long">Za długi tweet.</string>
@@ -258,19 +249,14 @@
   <string name="show_absolute_time_summary">Pokazuj czas bezwzględny w tweetach</string>
   <string name="user_mentions">Wzmianki</string>
   <string name="dual_pane_layout">Układ z podwójnym panelem</string>
-  <string name="landscape">Układ poziomy</string>
-  <string name="portrait">Układ pionowy</string>
   <string name="quick_send">\"Enter\" wysyła</string>
   <string name="quick_send_summary">Wyślij tweeta wciskając \"Enter\".</string>
-  <string name="unsaved_status">Tweet nie został wysłany ani zachowany.</string>
   <string name="discard">Zrezygnuj</string>
   <string name="Nitems_selected_quantity_one">1 element zaznaczony</string>
   <string name="Nitems_selected_quantity_other">Elementów zaznaczonych: <xliff:g id="items">%d</xliff:g></string>
-  <string name="view">Wyświetl</string>
   <string name="custom_host_mapping">Ustawianie mapowania hosta</string>
   <string name="custom_host_mapping_summary">Mapowanie hostów, nie wymaga żadnych dodatkowych uprawnień.</string>
   <string name="host_mapping_host">Host</string>
-  <string name="host_mapping_address">Adres (może być inny adres hosta)</string>
   <string name="add_host_mapping">Dodaj mapowanie hosta</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Używa protokołu TCP do zapytań DNS, może pozwolić uniknąć zatrucia DNS.</string>
@@ -292,8 +278,6 @@
   <string name="incoming_friendships">Oczekujące prośby obserwowania</string>
   <string name="send_follow_request">Wyślij prośbę obserwowania</string>
   <string name="follow_request_sent">Prośba obserwowania wysłana</string>
-  <string name="separate_retweet_action">Osobna akcja przesłania dalej</string>
-  <string name="separate_retweet_action_summary">Pokaż zarówno opcje przesłania dalej i cytowania w menu tweeta</string>
   <string name="status">Tweet</string>
   <string name="preview">Podgląd</string>
   <string name="connection_timeout">Przekroczono limit czasu oczekiwania</string>
@@ -435,7 +419,6 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="background_toast_notification">Powiadomienia Toast</string>
   <string name="background_toast_notification_summary">Pokazuje powiadomienia Toas gdy aplikacja działa w tle</string>
   <string name="original_status">Oryginalny tweet</string>
-  <string name="compose_quit_action">Przy anulowaniu \"Tweetnij\"</string>
   <string name="ask">Zapytaj</string>
   <string name="no_close_after_status_updated">Zostaw okno \"Tweetnij\" otwarte po wysłaniu tweeta</string>
   <string name="no_close_after_status_updated_summary">Drobny prezent dla gaduł</string>
@@ -457,15 +440,10 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="theme_light">Jasny</string>
   <string name="settings_interface">Interfejs</string>
   <string name="no_rule">Brak reguł</string>
-  <string name="enable_in_mentions">Włącz we wzmiankach</string>
-  <string name="enable_in_home_timeline">Włącz w strumieniu głównym</string>
-  <string name="enable_for_rts">Włącz dla przesłanych ponownie</string>
   <string name="safety">Bezpieczeństwo</string>
   <string name="updating_status_notification">Wysyłanie tweeta&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Zapytanie</string>
-  <string name="nickname_only">Tylko pseudonim</string>
-  <string name="nickname_only_summary">Zastępuje nazwę użytkownika pseudonimem, tam gdzie to możliwe</string>
   <string name="input_text">Tekst wejściowy</string>
   <string name="users_lists_with_name">Listy użytkownika <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Listy obserwujące <xliff:g id="name">%s</xliff:g></string>
@@ -475,7 +453,6 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="users_statuses">Tweety użytkownika</string>
   <string name="card_animation">Animacja tweetów</string>
   <string name="name_first">Najpierw wyświetlana nazwa</string>
-  <string name="next_step">Dalej</string>
   <string name="settings_wizard">Kreator ustawień</string>
   <string name="wizard_page_welcome_title">Witamy</string>
   <string name="wizard_page_welcome_text">Dziękujemy za wybranie Twidere.\nCzy chcesz go skonfigurować teraz?</string>
@@ -541,12 +518,6 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="view_replies">Zobacz odpowiedzi</string>
   <string name="compact_cards">Zwarty widok tweetów</string>
   <string name="compact_cards_summary">Wyświetla więcej tweetów na ekranie</string>
-  <string name="dashclock_home_unread_count_name">Ilość nieprzeczytanych tweetów</string>
-  <string name="dashclock_home_unread_count_description">Ilość nieprzeczytanych tweetów</string>
-  <string name="dashclock_mentions_unread_count_name">Licznik nieprzeczytanych wzmianek Twidere</string>
-  <string name="dashclock_mentions_unread_count_description">Licznik nieprzeczytanych wzmianek</string>
-  <string name="dashclock_messages_unread_count_name">Licznik nieprzeczytanych wiadomości Twidere</string>
-  <string name="dashclock_messages_unread_count_description">Licznik nieprzeczytanych wiadomości</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> nowy tweet</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> nowych tweetów</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> nowa wzmianka</string>
@@ -565,7 +536,6 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="center">Wyśrodkuj</string>
   <string name="multi_select">Zaznaczanie wielokrotne</string>
   <string name="long_click_to_open_menu">Przytrzymaj aby otworzyć menu</string>
-  <string name="swipe_back">Przeciągnij aby zamknąć</string>
   <string name="tab_display_option_icon">Ikona</string>
   <string name="tab_display_option_label">Etykieta</string>
   <string name="tab_display_option_icon_and_label">Ikona i etykieta</string>
@@ -593,12 +563,10 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="status_text_limit">Limit długości tweeta</string>
   <string name="load_more_from_top">Wczytaj więcej od góry</string>
   <string name="load_more_from_top_summary">Użyteczne przy czytaniu od dołu do góry</string>
-  <string name="twitter_link_handler">Obsługa linków Twitter</string>
   <string name="compose_now">Tweetnij teraz</string>
   <string name="compose_now_summary">Zastępuje skrót Google Now przez ekran wysyłania tweeta</string>
   <string name="compose_now_action">Akcja tweetnij teraz</string>
   <string name="open_with_account">Otwórz przy pomocy konta</string>
-  <string name="card_highlight_option">Opcje podświetlania tweeta</string>
   <string name="card_highlight_option_highlight">Podświetlenie</string>
   <string name="card_highlight_option_line">Linia</string>
   <string name="timeline_sync_service">Usługa synchronizacji strumienia</string>

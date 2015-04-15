@@ -11,6 +11,7 @@
   <string name="remove_location">Elimina la ubicació</string>
   <string name="remove_image">Elimina la imatge</string>
   <string name="remove_photo">Elimina la foto</string>
+  <string name="status_hint">Què està passant?</string>
   <string name="sign_up">Registreu-me</string>
   <string name="sign_in">Inicia la sessió</string>
   <string name="rest_base_url">Base URL de REST</string>
@@ -112,11 +113,8 @@
   <string name="pick_color">Tria un color</string>
   <string name="follow">Segueix</string>
   <string name="unfollow">Deixa de seguir</string>
-  <string name="bottom_compose_button">Botó «redacta» a sota</string>
-  <string name="bottom_compose_button_summary">Mostra el botó de redactar a la part de baix. Activeu-ho si teniu una pantalla gran.</string>
   <string name="leftside_compose_button">Botó de redactar al costat esquerre</string>
   <string name="leftside_compose_button_summary">Mostra el botó de redactar a la part esquerra.</string>
-  <string name="bottom_send_button">Botó «envia» a sota</string>
   <string name="load_item_limit">Límit d\'elements per càrrega</string>
   <string name="load_item_limit_summary">Estableix el nombre màxim d\'elements per càrrega.</string>
   <string name="load_more_automatically">Carrega automàticament més continguts</string>
@@ -152,10 +150,7 @@
   <string name="reported_user_for_spam">S\'ha informat de l\'abús d\'aquest usuari.</string>
   <string name="reported_users_for_spam">S\'ha informat de l\'abús d\'aquests usuaris.</string>
   <string name="filename_hint">Nom del fitxer</string>
-  <string name="overwrite_confirm">El fitxer ja existeix, voleu sobreescriure\'l?</string>
-  <string name="save_as">Anomena i desa</string>
   <string name="please_wait">Espereu, si us plau.</string>
-  <string name="file_saved_to">Fitxer desat com a <xliff:g id="filename">%s</xliff:g> .</string>
   <string name="saved_to_gallery">Desat a la galeria.</string>
   <string name="proxy">Servidor intermediari</string>
   <string name="http_proxy">Servidor HTTP intermediari</string>
@@ -227,9 +222,6 @@
   <string name="tabs">Pestanyes</string>
   <string name="add_tab">Afegeix una pestanya</string>
   <string name="edit_tab">Edita la pestanya</string>
-  <string name="move_up">Mou amunt</string>
-  <string name="move_down">Mou avall</string>
-  <string name="unsaved_change_back_pressed">Tens canvis sense desar, premeu «enrere» un altre cop per descartar-los.</string>
   <string name="invalid_settings">S\'han trobat paràmetres invàlids.</string>
   <string name="icon">Icona</string>
   <string name="pick_file">Tria un fitxer</string>
@@ -248,7 +240,6 @@
   <string name="error_message_image_uploader_not_found">No s\'ha trobat el servei per carregar imatges; potser s\'ha desinstal·lat.</string>
   <string name="image_upload_format">Format de les piulades amb imatge</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Enllaç de la imatge\n\"[TEXT]\" = Contingut de la piulada\n(sols l\'extensió)</string>
-  <string name="tweet_shortener">Servei per escurçar piulades</string>
   <string name="status_shortener">Escurçador de piulades</string>
   <string name="status_shortener_default">Cap (Atura l\'enviament)</string>
   <string name="error_message_status_too_long">Piulada massa llarga.</string>
@@ -260,18 +251,13 @@
   <string name="show_absolute_time_summary">Mostra data i hora absolutes a les piulades</string>
   <string name="user_mentions">Mencions de l\'usuari</string>
   <string name="dual_pane_layout">Visualitza amb panell doble</string>
-  <string name="landscape">Horitzontal</string>
-  <string name="portrait">Vertical</string>
   <string name="quick_send">Premeu «Retorn» per enviar</string>
   <string name="quick_send_summary">Envia la piulada quan es premi «Retorn».</string>
-  <string name="unsaved_status">No s\'ha desat o enviat la piulada.</string>
   <string name="discard">Descarta</string>
   <string name="Nitems_selected_quantity_one">1 element seleccionat</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> elements seleccionats</string>
-  <string name="view">Mostra</string>
   <string name="custom_host_mapping">Associacions de servidors personalitzades</string>
   <string name="custom_host_mapping_summary">Associa servidors com el fitxer /etc/hosts sense requerir permisos addicionals.</string>
-  <string name="host_mapping_host">Servidor</string>
   <string name="host_mapping_address">Adreça (pot ser una altra adreça de servidor)</string>
   <string name="add_host_mapping">Afegeix una associació de servidor</string>
   <string name="tcp_dns_query">Petició DNS per TCP</string>
@@ -294,8 +280,6 @@
   <string name="incoming_friendships">Peticions de seguiment pendents</string>
   <string name="send_follow_request">Envia una petició de seguiment</string>
   <string name="follow_request_sent">S\'ha enviat la petició de seguiment</string>
-  <string name="separate_retweet_action">Separa l\'acció de repiular</string>
-  <string name="separate_retweet_action_summary">Mostra les accions de repiular i citar en el menú de piulada</string>
   <string name="status">Piulada</string>
   <string name="preview">Previsualització</string>
   <string name="connection_timeout">Temps màxim de connexió exhaurit</string>
@@ -436,7 +420,6 @@
   <string name="background_toast_notification">Notificació en segon pla</string>
   <string name="background_toast_notification_summary">Mostra una notificació emergent en canviar a segon pla</string>
   <string name="original_status">Piulada original</string>
-  <string name="compose_quit_action">En canceŀlar «redacta»</string>
   <string name="ask">Pregunta</string>
   <string name="no_close_after_status_updated">Mantén el menú «redacta» obert després d\'haver enviat la piulada</string>
   <string name="no_close_after_status_updated_summary">Un regalet per a «chatterbox»</string>
@@ -458,15 +441,10 @@
   <string name="theme_light">Clar</string>
   <string name="settings_interface">Interfície</string>
   <string name="no_rule">No hi ha regles</string>
-  <string name="enable_in_mentions">Habilita en les mencions</string>
-  <string name="enable_in_home_timeline">Habilita en la cronologia</string>
-  <string name="enable_for_rts">Habilita per a repiulades</string>
   <string name="safety">Seguretat</string>
   <string name="updating_status_notification">S\'està enviant la piulada&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Consulta</string>
-  <string name="nickname_only">Només el sobrenom</string>
-  <string name="nickname_only_summary">Substitueix el nom de l\'usuari pel seu sobrenom quan sigui possible</string>
   <string name="input_text">Entrada de text</string>
   <string name="users_lists_with_name">Llistes de <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Llistes que segueixen a <xliff:g id="name">%s</xliff:g></string>
@@ -476,7 +454,6 @@
   <string name="users_statuses">Piulades de l\'usuari</string>
   <string name="card_animation">Animació de les targetes</string>
   <string name="name_first">Mostra el nom al principi</string>
-  <string name="next_step">Següent</string>
   <string name="settings_wizard">Ajudant de configuració</string>
   <string name="wizard_page_welcome_title">Benvingut/da</string>
   <string name="wizard_page_welcome_text">Gràcies per escollir el Twidere.\nVoleu configurar-lo ara?</string>
@@ -544,12 +521,6 @@
   <string name="view_replies">Mostra les respostes</string>
   <string name="compact_cards">Targetes més compactes</string>
   <string name="compact_cards_summary">Fa que es vegin més piulades per pàgina</string>
-  <string name="dashclock_home_unread_count_name">Recompte de piulades no vistes a «Inici» de tot Twidere</string>
-  <string name="dashclock_home_unread_count_description">Recompte de piulades no vistes a «Inici»</string>
-  <string name="dashclock_mentions_unread_count_name">Recompte de mencions no vistes al Twidere</string>
-  <string name="dashclock_mentions_unread_count_description">Recompte de mencions no vistes</string>
-  <string name="dashclock_messages_unread_count_name">Recompte de missatges no vistos a Twidere</string>
-  <string name="dashclock_messages_unread_count_description">Recompte de missatges no vistos</string>
   <string name="N_new_statuses_quantity_one">Hi ha <xliff:g id="items">%d</xliff:g> nova piulada</string>
   <string name="N_new_statuses_quantity_other">Hi ha <xliff:g id="items">%d</xliff:g> noves piulades</string>
   <string name="N_new_mentions_quantity_one">Hi ha <xliff:g id="items">%d</xliff:g> nova menció</string>
@@ -568,7 +539,6 @@
   <string name="center">Centre</string>
   <string name="multi_select">Selecció múltiple</string>
   <string name="long_click_to_open_menu">Clic llarg per a obrir el menú</string>
-  <string name="swipe_back">Fes lliscar el dit per a tancar</string>
   <string name="tab_display_option_icon">Icona</string>
   <string name="tab_display_option_label">Nom</string>
   <string name="tab_display_option_icon_and_label">Icona i etiqueta</string>
@@ -596,12 +566,10 @@
   <string name="status_text_limit">Límit de llargària del tuit</string>
   <string name="load_more_from_top">Carrega piulades amagades per sobre</string>
   <string name="load_more_from_top_summary">Útil si t\'estimes més llegir d\'avall cap amunt</string>
-  <string name="twitter_link_handler">Gestor d\'enllaços de Twitter</string>
   <string name="compose_now">Redacta ara</string>
   <string name="compose_now_summary">Reemplaça la drecera de Google Now per la pantalla «Composa»</string>
   <string name="compose_now_action">Acció «Redacta ara»</string>
   <string name="open_with_account">Obre amb un altre compte</string>
-  <string name="card_highlight_option">Opció de ressaltament de targetes</string>
   <string name="card_highlight_option_highlight">Ressalta</string>
   <string name="card_highlight_option_line">Línia</string>
   <string name="timeline_sync_service">Servei de sincronització de la cronologia</string>
@@ -658,4 +626,38 @@
   <string name="photo">Foto</string>
   <string name="gallery">Galeria</string>
   <string name="remove">Suprimeix</string>
+  <string name="load_media">Carregar multimèdia</string>
+  <string name="profile_text_color">Color de la lletra</string>
+  <string name="profile_background_color">Color de fons</string>
+  <string name="retweet_quote_confirm_title">Retweet als teus seguidors?</string>
+  <string name="font">Font</string>
+  <string name="size">Tamany</string>
+  <string name="just_now">Just ara</string>
+  <string name="N_others_quantity_one">Altre</string>
+  <string name="type_name_to_search">Escriu el nom a cerca</string>
+  <string name="no_user_found">No s\'ha trobat cap usuari</string>
+  <string name="members">Membres</string>
+  <string name="subscribers">Subscriptor</string>
+  <string name="read_from_bottom">Llegeix des de sota</string>
+  <string name="register">Registrar-se</string>
+  <string name="follows">Segueix</string>
+  <string name="belongs_to">Pertany a</string>
+  <string name="select_accounts">Escolliu un compte</string>
+  <string name="media_preview">Previsualització multimèdia</string>
+  <string name="edit_tabs">Editar pestanyes</string>
+  <string name="no_location">Sense localització</string>
+  <string name="save_to_gallery">Desar a la galeria</string>
+  <string name="unknown_location">Localització desconeguda</string>
+  <string name="designed_by">Disenyat per</string>
+  <string name="import_export_settings">Importar/Exportar configuració</string>
+  <string name="usage_statistics_header_summary">Twidere forma part en alguns projectes d\'investigació; contribuint a aquests projectes faràs Twidere i altres aplicacions futures millor.</string>
+  <string name="no_tab">No hi ha pestanyes</string>
+  <string name="no_account">Sense compte</string>
+  <string name="usage_statistics_notification_summary">Ajuda\'ns a millorar Twidere!</string>
+  <string name="projects_we_took_part">Projectes dels quals formem part</string>
+  <string name="activated_accounts">Comptes activades</string>
+  <string name="search">Cerca</string>
+  <string name="share_status">Compartir tweet</string>
+  <string name="permission_label_upload_media">Pujar multimèdia</string>
+  <string name="server_address">Direcció del servidor</string>
 </resources>

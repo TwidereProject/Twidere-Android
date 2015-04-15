@@ -3,8 +3,6 @@ package edu.tsinghua.spice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 
 import org.mariotaku.twidere.util.Utils;
 

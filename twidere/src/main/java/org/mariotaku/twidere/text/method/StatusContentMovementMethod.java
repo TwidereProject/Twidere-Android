@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.text.method;
 
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.NoCopySpan;
 import android.text.Selection;
@@ -47,7 +48,7 @@ public class StatusContentMovementMethod extends ArrowKeyMovementMethod {
 	}
 
 	@Override
-	public void onTakeFocus(final TextView view, final Spannable text, final int dir) {
+	public void onTakeFocus(@NonNull final TextView view, @NonNull final Spannable text, final int dir) {
 		Selection.removeSelection(text);
 
 		if ((dir & View.FOCUS_BACKWARD) != 0) {
@@ -58,7 +59,7 @@ public class StatusContentMovementMethod extends ArrowKeyMovementMethod {
 	}
 
 	@Override
-	public boolean onTouchEvent(final TextView widget, final Spannable buffer, final MotionEvent event) {
+	public boolean onTouchEvent(@NonNull final TextView widget, @NonNull final Spannable buffer, @NonNull final MotionEvent event) {
 		final int action = event.getAction();
 
 		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {

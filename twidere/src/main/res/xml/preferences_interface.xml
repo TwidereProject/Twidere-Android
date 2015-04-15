@@ -27,7 +27,7 @@
         android:key="unread_count"
         android:title="@string/unread_count"/>
 
-    <org.mariotaku.twidere.preference.LeftsideComposeButtonPreference
+    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="leftside_compose_button"
         android:summary="@string/leftside_compose_button_summary"

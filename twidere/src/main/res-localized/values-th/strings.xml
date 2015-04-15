@@ -99,11 +99,8 @@
   <string name="pick_color">เลือกสี</string>
   <string name="follow">ติดตาม</string>
   <string name="unfollow">เลิกติดตาม</string>
-  <string name="bottom_compose_button">ปุ่มเขียนทวีตอยู่ด้านล่าง</string>
-  <string name="bottom_compose_button_summary">วางปุ่มทวีตเอาไว้ด้านล่าง  เหมาะกับหน้าจอขนาดใหญ่.</string>
   <string name="leftside_compose_button">ปุ่มทวีตอยู่ด้านซ็าย</string>
   <string name="leftside_compose_button_summary">วางปุ่มทวีตไว้ด้านซ้าย</string>
-  <string name="bottom_send_button">ปุ่ม \"ส่ง\" อยู่ด้านล่าง</string>
   <string name="load_item_limit">จำกัดทวีตต่อโหลด</string>
   <string name="load_item_limit_summary">จำกัดจำนวนทวีตที่โหลดต่อการรีเฟรชหนึ่งครั้ง</string>
   <string name="load_more_automatically">โหลดเนื้อหาเพิ่มเติมอัตโนมัติ</string>
@@ -137,10 +134,7 @@
   <string name="reported_user_for_spam">รายงานว่าผู้ใช้นี้เป็นสแปมแล้ว</string>
   <string name="reported_users_for_spam">รายงานว่าผู้ใช้เหล่านี้เป็นสแปมแล้ว</string>
   <string name="filename_hint">ชื่อไฟล์</string>
-  <string name="overwrite_confirm">มีไฟล์อยู่แล้ว  เขียนทับหรือไม่?</string>
-  <string name="save_as">บันทึกเป็น...</string>
   <string name="please_wait">กรุณารอ</string>
-  <string name="file_saved_to">บัยทึกไฟล์ไปยัง <xliff:g id="filename">%s</xliff:g></string>
   <string name="proxy">พร็อกซี่</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">ใช้ HTTP Proxy สำหรับการร้องขอเครือข่ายทั้งหมด</string>
@@ -203,9 +197,6 @@
   <string name="tabs">แท็บ</string>
   <string name="add_tab">เพิ่มแท็บ</string>
   <string name="edit_tab">แก้ไขแท็บ</string>
-  <string name="move_up">ย้ายขึ้น</string>
-  <string name="move_down">ย้ายลง</string>
-  <string name="unsaved_change_back_pressed">คุณมีการเปลี่ยนแปลงที่ยังไม่ได้บันทึก กด back เพื่อทิ้งการเปลี่ยนแปลงนี้</string>
   <string name="invalid_settings">พบการตั้งค่าที่ไม่ถูกต้อง</string>
   <string name="icon">ไอคอน</string>
   <string name="pick_file">เลือกไฟล์</string>
@@ -223,7 +214,6 @@
   <string name="error_message_image_uploader_not_found">ไม่พบค่าโฮสต์เก็บภาพ  มันอาจจะถูกถอนการติดตั้งไปแล้ว</string>
   <string name="image_upload_format">รูปแบบทวีตพร้อมรูปภาพ</string>
   <string name="image_upload_format_summary">\"[LINK]\" = ลิงค์รูป\n\"[TEXT]\" = เนื้อหาทวีต\n(Extension เท่านั้น)</string>
-  <string name="tweet_shortener">ตัวย่อทวีต</string>
   <string name="error_message_status_too_long">ทวีตยาวเกินไป</string>
   <string name="error_message_no_content">ไม่มีเนื้อหา</string>
   <string name="error_message_tweet_shorten_failed">การย่อทวีตล้มเหลว</string>
@@ -233,19 +223,13 @@
   <string name="show_absolute_time_summary">แสดงเวลาจริงในทวีต</string>
   <string name="user_mentions">การพูดถึง</string>
   <string name="dual_pane_layout">การจัดหน้าแบบสองคอลัมน์</string>
-  <string name="landscape">แนวนอน</string>
-  <string name="portrait">แนวตั้ง</string>
   <string name="quick_send">ใช้ปุ่ม Enter เพื่อส่งทวีต</string>
   <string name="quick_send_summary">ส่งทวีตเมื่อกด Enter</string>
-  <string name="unsaved_status">ทวีตยังไม่ถูกส่ง หรือยังไม่ถูกบันทึกไว้</string>
   <string name="discard">โยนทิ้ง</string>
   <string name="Nitems_selected_quantity_one">1 รายการที่เลือกไว้</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> รายการที่เลือกไว้</string>
-  <string name="view">เปิดดู</string>
   <string name="custom_host_mapping">กำหนดที่อยู่ host เอง</string>
   <string name="custom_host_mapping_summary">กำหนดที่อยู่ host เอง (เหมือนในไฟล์ /etc/hosts) ซึ่งการกระทำนี้ไม่ต้องการสิทธิ์ใดๆ เพิ่มเติม</string>
-  <string name="host_mapping_host">โฮสต์</string>
-  <string name="host_mapping_address">ที่อยู่ (สามารถใช้ที่อยู่โฮสต์อื่นได้)</string>
   <string name="add_host_mapping">เพิ่มการกำหนดโฮสต์</string>
   <string name="tcp_dns_query">การสืบค้น DNS ทาง TCP</string>
   <string name="tcp_dns_query_summary">ใช้โปรโตคอล TCP เพื่อร้องขอ DNS ซึ่งสามารถหลบเลี่ยงการโจมตีแบบ DNS Cache Poisoning ได้</string>
@@ -262,8 +246,6 @@
   <string name="incoming_friendships">คำขอติดตามทที่รอตรวจสอบ</string>
   <string name="send_follow_request">ส่งคำขอติดตาม</string>
   <string name="follow_request_sent">ส่งคำขอติดตามแล้ว</string>
-  <string name="separate_retweet_action">แยกปุ่มรีทวีต</string>
-  <string name="separate_retweet_action_summary">แสดงทั้งปุ่มรีทวีตและปุ่มอ้างอิงในเมนูข้อความ</string>
   <string name="status">ข้อความ</string>
   <string name="preview">ตัวอย่าง</string>
   <string name="connection_timeout">หมดเวลาเชื่อมต่อ</string>

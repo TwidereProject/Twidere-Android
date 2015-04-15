@@ -30,6 +30,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -119,9 +120,9 @@ public class DynamicGridView extends GridView {
 		}
 	};
 
-	private final HashMap<Long, Integer> mItemIdTops = new HashMap<Long, Integer>();
+	private final HashMap<Long, Integer> mItemIdTops = new HashMap<>();
 
-	private final HashMap<Long, Integer> mItemIdLefts = new HashMap<Long, Integer>();
+	private final HashMap<Long, Integer> mItemIdLefts = new HashMap<>();
 
 	/**
 	 * This TypeEvaluator is used to animate the BitmapDrawable back to its
@@ -264,7 +265,7 @@ public class DynamicGridView extends GridView {
 			if (id == itemID) return v;
 		}
 		return null;
-	};
+	}
 
 	public View getViewForPosition(final int position) {
 		if (position < 0) return null;
@@ -309,7 +310,7 @@ public class DynamicGridView extends GridView {
 	}
 
 	@Override
-	public boolean onTouchEvent(final MotionEvent event) {
+	public boolean onTouchEvent(@NonNull final MotionEvent event) {
 
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 			case MotionEvent.ACTION_DOWN:
@@ -383,7 +384,7 @@ public class DynamicGridView extends GridView {
 	 * over the gridview's items whenever the gridview is redrawn.
 	 */
 	@Override
-	protected void dispatchDraw(final Canvas canvas) {
+	protected void dispatchDraw(@NonNull final Canvas canvas) {
 		super.dispatchDraw(canvas);
 		if (mHoverCell != null) {
 			mHoverCell.draw(canvas);

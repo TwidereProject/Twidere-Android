@@ -72,7 +72,7 @@ public abstract class AbsActivitiesFragment<Data> extends BaseSupportFragment im
     private RecyclerView mRecyclerView;
     private AbsActivitiesAdapter<Data> mAdapter;
     private SimpleDrawerCallback mDrawerCallback;
-    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
 
         private int mScrollState;
 

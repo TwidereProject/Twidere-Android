@@ -89,7 +89,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     }
 
     @Override
-    protected void onAttachedToHierarchy(final PreferenceManager preferenceManager) {
+    protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
         AsyncTaskUtils.executeTask(new LoadAccountsTask(this));
     }

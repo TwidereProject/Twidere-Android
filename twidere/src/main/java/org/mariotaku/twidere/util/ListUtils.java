@@ -26,7 +26,7 @@ public class ListUtils {
 
 	public static List<Long> fromArray(final long[] array) {
 		if (array == null) return null;
-		final List<Long> list = new ArrayList<Long>();
+		final List<Long> list = new ArrayList<>();
 		for (final long item : array) {
 			list.add(item);
 		}

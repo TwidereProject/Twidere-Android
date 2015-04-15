@@ -16,6 +16,10 @@
         <attr name="ignorePadding" format="boolean"/>
         <attr name="backgroundColor" format="color"/>
     </declare-styleable>
+    <declare-styleable name="ColorPickerPreferences">
+        <attr name="defaultColor" format="color"/>
+        <attr name="alphaSlider" format="boolean"/>
+    </declare-styleable>
     <declare-styleable name="TabPagerIndicator">
         <attr name="tabStripColor" format="color"/>
         <attr name="tabIconColor" format="color"/>

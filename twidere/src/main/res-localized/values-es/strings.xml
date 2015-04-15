@@ -11,7 +11,7 @@
   <string name="remove_location">Eliminar ubicación</string>
   <string name="remove_image">Quitar imagen</string>
   <string name="remove_photo">Eliminar foto</string>
-  <string name="status_hint">Que paso?</string>
+  <string name="status_hint">¿Qué esta sucediendo?</string>
   <string name="sign_up">Únete</string>
   <string name="sign_in">Inicia sesión</string>
   <string name="rest_base_url">REST Base URL</string>
@@ -114,11 +114,8 @@
   <string name="pick_color">Elegir color</string>
   <string name="follow">Seguir</string>
   <string name="unfollow">Dejar de Seguir</string>
-  <string name="bottom_compose_button">Botón «redactar» en la parte inferior</string>
-  <string name="bottom_compose_button_summary">Reubicar el botón «redactar»  en la parte inferior, puedes habilitar esto si dispones de una gran pantalla.</string>
   <string name="leftside_compose_button">Botón «redactar» en el lado izquierdo</string>
   <string name="leftside_compose_button_summary">Colocar el botón de escribir en la izquierda.</string>
-  <string name="bottom_send_button">Botón «enviar» en la parte inferior</string>
   <string name="load_item_limit">Límite de carga de elemento</string>
   <string name="load_item_limit_summary">Establecer el límite por carga.</string>
   <string name="load_more_automatically">Cargar automáticamente más contenido</string>
@@ -154,10 +151,7 @@
   <string name="reported_user_for_spam">Reportat a este usuario por spam.</string>
   <string name="reported_users_for_spam">Estos usuarios han sido reportados por spam.</string>
   <string name="filename_hint">Nombre de archivo</string>
-  <string name="overwrite_confirm">El archivo existe, ¿sobreescribirlo?</string>
-  <string name="save_as">Guardar como</string>
   <string name="please_wait">Por favor espera.</string>
-  <string name="file_saved_to">Guardar archivo a <xliff:g id="filename">%s</xliff:g> .</string>
   <string name="saved_to_gallery">Guardado en la galería.</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
@@ -229,9 +223,6 @@
   <string name="tabs">Pestañas</string>
   <string name="add_tab">Agregar pestaña</string>
   <string name="edit_tab">Editar pestaña</string>
-  <string name="move_up">Desplazar hacia arriba</string>
-  <string name="move_down">Desplazar hacia abajo</string>
-  <string name="unsaved_change_back_pressed">Tiene cambios sin guardar, presione ATRÁS nuevamente para descartar.</string>
   <string name="invalid_settings">Se encontraron ajustes no válidos.</string>
   <string name="icon">Icono</string>
   <string name="pick_file">Selecciona el archivo</string>
@@ -250,7 +241,6 @@
   <string name="error_message_image_uploader_not_found">No se ha encontrado la aplicación para subir imágenes, quizás se ha desinstalado.</string>
   <string name="image_upload_format">Formato de tweet con imagen</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Enlace de la imagen\n\"[TEXT]\" = Contenido del tuit\n(Sólo con extensión)</string>
-  <string name="tweet_shortener">Acortador de Tweets</string>
   <string name="status_shortener">Acortador de tweets</string>
   <string name="status_shortener_default">Nada (Cancelar envío)</string>
   <string name="error_message_status_too_long">Tweet demasiado largo.</string>
@@ -262,15 +252,11 @@
   <string name="show_absolute_time_summary">Mostrar tiempo absoluto en los tweets</string>
   <string name="user_mentions">Menciones del usuario</string>
   <string name="dual_pane_layout">Diseño con doble panel</string>
-  <string name="landscape">Horizontal</string>
-  <string name="portrait">Vertical</string>
   <string name="quick_send">Pulsa «Intro» para enviar</string>
   <string name="quick_send_summary">Enviar el tweet al pulsar \"Intro\".</string>
-  <string name="unsaved_status">Tweet no enviado o guardado aún.</string>
   <string name="discard">Descartar</string>
   <string name="Nitems_selected_quantity_one">1 elemento seleccionado</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> elementos seleccionados</string>
-  <string name="view">Vista</string>
   <string name="custom_host_mapping">Asignación de host personalizado</string>
   <string name="custom_host_mapping_summary">Funciona como \"/etc/hosts\", pero no requiere permisos adicionales.</string>
   <string name="host_mapping_host">Host</string>
@@ -308,8 +294,6 @@
   <string name="incoming_friendships">Solicitudes de seguimiento pendientes</string>
   <string name="send_follow_request">Enviar petición de seguimiento</string>
   <string name="follow_request_sent">Petición de seguimiento enviada</string>
-  <string name="separate_retweet_action">Separar la acción de retweet</string>
-  <string name="separate_retweet_action_summary">Mostrar al mismo tiempo retweet y citar en el menú del tweet</string>
   <string name="status">Tweet</string>
   <string name="preview">Previsualización</string>
   <string name="connection_timeout">Tiempo de espera de conexión agotado</string>
@@ -450,7 +434,6 @@
   <string name="background_toast_notification">Notificaciones emergentes en segundo plano</string>
   <string name="background_toast_notification_summary">Mostrar notificaciones emergentes cuando esté activa en segundo plano</string>
   <string name="original_status">Tweet original</string>
-  <string name="compose_quit_action">Al cancelar «redactar»</string>
   <string name="ask">Preguntar</string>
   <string name="no_close_after_status_updated">Mantener «redactar» abierto después de enviar el tweet</string>
   <string name="no_close_after_status_updated_summary">Un pequeño regalo para chatterbox</string>
@@ -472,15 +455,10 @@
   <string name="theme_light">Claro</string>
   <string name="settings_interface">Interfaz</string>
   <string name="no_rule">Sin regla</string>
-  <string name="enable_in_mentions">Habilitar en menciones</string>
-  <string name="enable_in_home_timeline">Habilitar en la cronología</string>
-  <string name="enable_for_rts">Habilitar para RTs</string>
   <string name="safety">Seguro</string>
   <string name="updating_status_notification">Enviando tweet&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Consulta</string>
-  <string name="nickname_only">Solamente Apodo</string>
-  <string name="nickname_only_summary">Cambia el nombre de usuario con el apodo cuando esté disponible</string>
   <string name="input_text">Introduce el texto</string>
   <string name="users_lists_with_name">Listas de <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Listas seguidas por <xliff:g id="name">%s</xliff:g></string>
@@ -491,6 +469,8 @@
   <string name="card_animation">Animación en tarjetas</string>
   <string name="name_first">Mostrar nombre primero</string>
   <string name="next_step">Siguiente</string>
+  <string name="previous_item">Anterior</string>
+  <string name="next_item">Siguiente</string>
   <string name="settings_wizard">Asistente de configuración</string>
   <string name="wizard_page_welcome_title">Bienvenido</string>
   <string name="wizard_page_welcome_text">Gracias por escoger Twidere.\n¿Quieres configurarlo ahora?</string>
@@ -558,12 +538,6 @@
   <string name="view_replies">Ver respuestas</string>
   <string name="compact_cards">Compactar tarjetas</string>
   <string name="compact_cards_summary">Visualizar más tarjetas en pantalla</string>
-  <string name="dashclock_home_unread_count_name">Contador \"No Leídos\" en Inicio de Twidere</string>
-  <string name="dashclock_home_unread_count_description">Contador \"No Leídos\" en Inicio</string>
-  <string name="dashclock_mentions_unread_count_name">Contador \"No Leídos\" en menciones Twidere</string>
-  <string name="dashclock_mentions_unread_count_description">Contador \"No Leídos\" en menciones</string>
-  <string name="dashclock_messages_unread_count_name">Contador \"No Leídos\" en mensajes Twidere</string>
-  <string name="dashclock_messages_unread_count_description">Contador \"No Leídos\" en mensajes</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> nuevo tweet</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> nuevos tweets</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> nueva mención</string>
@@ -584,7 +558,6 @@
   <string name="center">Centro</string>
   <string name="multi_select">Selección múltiple</string>
   <string name="long_click_to_open_menu">Mantener cliqueado para abrir menú</string>
-  <string name="swipe_back">Deslizar para cerrar</string>
   <string name="tab_display_option_icon">Icono</string>
   <string name="tab_display_option_label">Etiqueta</string>
   <string name="tab_display_option_icon_and_label">Icono y etiqueta</string>
@@ -612,12 +585,10 @@
   <string name="status_text_limit">Límite de caracteres del tweet</string>
   <string name="load_more_from_top">Cargar más desde arriba</string>
   <string name="load_more_from_top_summary">Útil si prefieres leer desde abajo hacia arriba</string>
-  <string name="twitter_link_handler">Controlador de link de Twitter</string>
   <string name="compose_now">Redactar ahora</string>
   <string name="compose_now_summary">Reemplaza el atajo de Google Now por la pantalla de redactar tweets</string>
   <string name="compose_now_action">Acción de redactar ahora</string>
   <string name="open_with_account">Abrir desde otra cuenta</string>
-  <string name="card_highlight_option">Opción de resaltado de tarjetas</string>
   <string name="card_highlight_option_highlight">Resaltar</string>
   <string name="card_highlight_option_line">Subrayar</string>
   <string name="timeline_sync_service">Servicio de sincronización de la cronología</string>
@@ -732,6 +703,27 @@
   <string name="scale">Escalar</string>
   <string name="user_type_verified">Verificado</string>
   <string name="user_type_protected">Protegido</string>
-  <string name="pebble_notifications">Pebble</string>
-  <string name="pebble_notifications_summary">Enviar notificaciones a Pebble</string>
+  <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
+  <string name="share_status">Compartir tweet</string>
+  <string name="pebble_notifications">Notificaciones Pebble</string>
+  <string name="pebble_notifications_summary">Enviar notificaciones a tu Pebble</string>
+  <string name="tweet_from_name">Tweet de <xliff:g id="text">%1$s</xliff:g></string>
+  <string name="permission_label_shorten_status">Acortar tweet</string>
+  <string name="permission_label_upload_media">Subir archivos multimédia</string>
+  <string name="permission_label_sync_timeline">Sincronizar cronología</string>
+  <string name="server_address">Dirección del servidor</string>
+  <string name="security_key">Llave de seguridad</string>
+  <string name="hide_card_actions">Ocultar acciones de las tarjetas</string>
+  <string name="N_statuses_quantity_one"><xliff:g id="count">%d</xliff:g> tweet</string>
+  <string name="N_statuses_quantity_other"><xliff:g id="count">%d</xliff:g> tweets</string>
+  <string name="N_favorites_quantity_one"><xliff:g id="count">%d</xliff:g> favoritos</string>
+  <string name="N_favorites_quantity_other"><xliff:g id="count">%d</xliff:g> favoritos</string>
+  <string name="drafts_hint_messages">Tus tweets sin enviar se guardarán aquí</string>
+  <string name="keyboard_shortcuts">Atajos de teclado</string>
+  <string name="keyboard_shortcut_hint">Presionar teclas</string>
+  <string name="conflicts_with_name">Conflictos con <xliff:g id="name">%s</xliff:g></string>
+  <string name="overwrite">Sobreescribir</string>
+  <string name="navigation">Navegación</string>
+  <string name="reset_to_default">Restablecer a los valores por defecto</string>
+  <string name="reset_keyboard_shortcuts_confirm">¿Restablecer a valores por defecto los atajos de teclado?</string>
 </resources>

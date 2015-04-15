@@ -114,11 +114,8 @@
   <string name="pick_color">选取颜色</string>
   <string name="follow">关注</string>
   <string name="unfollow">取消关注</string>
-  <string name="bottom_compose_button">底部放置的撰写按钮</string>
-  <string name="bottom_compose_button_summary">将撰写按钮放置在底部，当你的手机屏幕难以单手操作，它会有不少帮助</string>
   <string name="leftside_compose_button">左侧撰写按钮</string>
   <string name="leftside_compose_button_summary">将撰写按钮放置在左边</string>
-  <string name="bottom_send_button">底部放置的发送按钮</string>
   <string name="load_item_limit">载入条目上限</string>
   <string name="load_item_limit_summary">设定一次载入条目的数量上限</string>
   <string name="load_more_automatically">自动载入更多内容</string>
@@ -154,10 +151,7 @@
   <string name="reported_user_for_spam">你已报告这个用户发送垃圾信息</string>
   <string name="reported_users_for_spam">你已报告这些用户发送垃圾信息</string>
   <string name="filename_hint">文件名</string>
-  <string name="overwrite_confirm">文件已经存在，覆盖吗？</string>
-  <string name="save_as">保存为</string>
   <string name="please_wait">请稍等</string>
-  <string name="file_saved_to">文件已经保存到 <xliff:g id="filename">%s</xliff:g></string>
   <string name="saved_to_gallery">已保存到相册</string>
   <string name="proxy">代理服务器</string>
   <string name="http_proxy">HTTP代理</string>
@@ -229,9 +223,6 @@
   <string name="tabs">标签页</string>
   <string name="add_tab">添加标签页</string>
   <string name="edit_tab">编辑标签页</string>
-  <string name="move_up">上移</string>
-  <string name="move_down">下移</string>
-  <string name="unsaved_change_back_pressed">你有未保存的更改，再按BACK键一次以舍弃</string>
   <string name="invalid_settings">发现无效设定</string>
   <string name="icon">图标</string>
   <string name="pick_file">选取文件</string>
@@ -250,7 +241,6 @@
   <string name="error_message_image_uploader_not_found">未找到图片上传扩展，它可能已经被卸载了</string>
   <string name="image_upload_format">上传图片的推文格式</string>
   <string name="image_upload_format_summary">\"[LINK]\" = 图像链接\n\"[TEXT]\" = 推文内容\n（仅第三方有效。）</string>
-  <string name="tweet_shortener">推文缩短服务</string>
   <string name="status_shortener">推文缩短服务</string>
   <string name="status_shortener_default">无（不发送过长推文）</string>
   <string name="error_message_status_too_long">推文太长</string>
@@ -262,15 +252,11 @@
   <string name="show_absolute_time_summary">在推文等列表里显示绝对时间</string>
   <string name="user_mentions">提及用户的推文</string>
   <string name="dual_pane_layout">双栏布局</string>
-  <string name="landscape">横向模式</string>
-  <string name="portrait">纵向模式</string>
   <string name="quick_send">按“回车”发送</string>
   <string name="quick_send_summary">按“回车”发送推文</string>
-  <string name="unsaved_status">推文还没有发送或保存</string>
   <string name="discard">舍弃</string>
   <string name="Nitems_selected_quantity_one">已选择 1 项</string>
   <string name="Nitems_selected_quantity_other">已选择 <xliff:g id="items">%d</xliff:g> 项</string>
-  <string name="view">查看</string>
   <string name="custom_host_mapping">自定义主机映射</string>
   <string name="custom_host_mapping_summary">如同/etc/hosts的主机映射，但不需要任何额外的权限</string>
   <string name="host_mapping_host">主机名</string>
@@ -308,8 +294,6 @@
   <string name="incoming_friendships">待定的关注请求</string>
   <string name="send_follow_request">发送关注请求</string>
   <string name="follow_request_sent">已发送关注请求</string>
-  <string name="separate_retweet_action">分离的转推操作</string>
-  <string name="separate_retweet_action_summary">在推文菜单中同时显示“转推”和“引用”</string>
   <string name="status">推文</string>
   <string name="preview">预览</string>
   <string name="connection_timeout">连接超时</string>
@@ -450,7 +434,6 @@
   <string name="background_toast_notification">背景Toast通知</string>
   <string name="background_toast_notification_summary">切换到后台后显示Toast通知</string>
   <string name="original_status">原推文</string>
-  <string name="compose_quit_action">退出“撰写”界面的操作</string>
   <string name="ask">询问</string>
   <string name="no_close_after_status_updated">发送推文之后仍然保持“撰写”开启</string>
   <string name="no_close_after_status_updated_summary">给不二的小礼物</string>
@@ -472,15 +455,10 @@
   <string name="theme_light">亮色</string>
   <string name="settings_interface">界面</string>
   <string name="no_rule">没有规则</string>
-  <string name="enable_in_mentions">在提及启用</string>
-  <string name="enable_in_home_timeline">在主页时间轴启用</string>
-  <string name="enable_for_rts">在转推启用</string>
   <string name="safety">安全</string>
   <string name="updating_status_notification">正在发送推文&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>（<xliff:g id="nickname">%2$s</xliff:g>）</string>
   <string name="query">查询</string>
-  <string name="nickname_only">仅显示昵称</string>
-  <string name="nickname_only_summary">当昵称可用时替代用户名</string>
   <string name="input_text">输入文本</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>的列表</string>
   <string name="lists_following_user_with_name">关注<xliff:g id="name">%s</xliff:g>的列表</string>
@@ -491,6 +469,8 @@
   <string name="card_animation">卡片动画</string>
   <string name="name_first">优先显示名字</string>
   <string name="next_step">下一步</string>
+  <string name="previous_item">上一条</string>
+  <string name="next_item">下一条</string>
   <string name="settings_wizard">设定向导</string>
   <string name="wizard_page_welcome_title">欢迎</string>
   <string name="wizard_page_welcome_text">感谢你选择Twidere。\n你想现在设定它吗？</string>
@@ -558,12 +538,6 @@
   <string name="view_replies">查看回复</string>
   <string name="compact_cards">紧凑卡片视图</string>
   <string name="compact_cards_summary">在屏幕中显示更多卡片</string>
-  <string name="dashclock_home_unread_count_name">Twidere主页未读条数</string>
-  <string name="dashclock_home_unread_count_description">主页未读条数</string>
-  <string name="dashclock_mentions_unread_count_name">Twidere提及未读条数</string>
-  <string name="dashclock_mentions_unread_count_description">提及未读条数</string>
-  <string name="dashclock_messages_unread_count_name">Twidere私信未读条数</string>
-  <string name="dashclock_messages_unread_count_description">私信未读条数</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g>条新推文</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g>条新推文</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g>条提及</string>
@@ -584,7 +558,6 @@
   <string name="center">居中</string>
   <string name="multi_select">多选</string>
   <string name="long_click_to_open_menu">长按打开菜单</string>
-  <string name="swipe_back">滑动关闭</string>
   <string name="tab_display_option_icon">图标</string>
   <string name="tab_display_option_label">标签</string>
   <string name="tab_display_option_icon_and_label">图标和标签</string>
@@ -612,12 +585,10 @@
   <string name="status_text_limit">推文字数限制</string>
   <string name="load_more_from_top">从顶部载入更多</string>
   <string name="load_more_from_top_summary">如果你偏好从底部向上阅读的话会很有用</string>
-  <string name="twitter_link_handler">处理Twitter链接</string>
   <string name="compose_now">即时撰写</string>
   <string name="compose_now_summary">用Twidere的撰写界面替代Google Now的上滑操作</string>
   <string name="compose_now_action">“即时撰写”的默认操作</string>
   <string name="open_with_account">用帐号打开</string>
-  <string name="card_highlight_option">卡片高亮选项</string>
   <string name="card_highlight_option_highlight">高亮</string>
   <string name="card_highlight_option_line">线条</string>
   <string name="timeline_sync_service">时间轴同步服务</string>
@@ -699,7 +670,7 @@
   <string name="register">注册</string>
   <string name="follows">关注</string>
   <string name="belongs_to">属于</string>
-  <string name="blocked_by_user_summary">你被<xliff:g id="name">%s</xliff:g>阻止关注</string>
+  <string name="blocked_by_user_summary">因为<xliff:g id="name">%s</xliff:g>太傻逼看不懂你在说什么，所以阻止了你的关注</string>
   <string name="select_accounts">选择帐号</string>
   <string name="media_preview">媒体预览</string>
   <string name="edit_tabs">编辑标签页</string>
@@ -733,4 +704,27 @@
   <string name="user_type_verified">验证用户</string>
   <string name="user_type_protected">受保护用户</string>
   <string name="tweet_hashtag">发推 #<xliff:g id="text">%1$s</xliff:g></string>
+  <string name="share_status">分享推文</string>
+  <string name="pebble_notifications">Pebble通知</string>
+  <string name="pebble_notifications_summary">发送通知到你的Pebble</string>
+  <string name="tweet_from_name">用<xliff:g id="text">%1$s</xliff:g>发推</string>
+  <string name="permission_label_shorten_status">缩短推文</string>
+  <string name="permission_label_upload_media">上传媒体</string>
+  <string name="permission_label_sync_timeline">同步时间轴</string>
+  <string name="thumbor_integration">Thumbor集成</string>
+  <string name="server_address">服务器地址</string>
+  <string name="security_key">密钥</string>
+  <string name="hide_card_actions">隐藏卡片动作按钮</string>
+  <string name="N_statuses_quantity_one"><xliff:g id="count">%d</xliff:g>推文</string>
+  <string name="N_statuses_quantity_other"><xliff:g id="count">%d</xliff:g>推文</string>
+  <string name="N_favorites_quantity_one"><xliff:g id="count">%d</xliff:g>收藏</string>
+  <string name="N_favorites_quantity_other"><xliff:g id="count">%d</xliff:g>收藏</string>
+  <string name="drafts_hint_messages">你未发送的推文会被保存在这里</string>
+  <string name="keyboard_shortcuts">快捷键</string>
+  <string name="keyboard_shortcut_hint">按下按键</string>
+  <string name="conflicts_with_name">与<xliff:g id="name">%s</xliff:g>冲突</string>
+  <string name="overwrite">覆盖</string>
+  <string name="navigation">导航</string>
+  <string name="reset_to_default">重置</string>
+  <string name="reset_keyboard_shortcuts_confirm">重置快捷键到默认？</string>
 </resources>

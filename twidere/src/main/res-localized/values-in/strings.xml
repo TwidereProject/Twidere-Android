@@ -114,11 +114,8 @@
   <string name="pick_color">Pilih warna</string>
   <string name="follow">Follow</string>
   <string name="unfollow">Unfollow</string>
-  <string name="bottom_compose_button">Tombol \"menulis\" di bawah</string>
-  <string name="bottom_compose_button_summary">Taruh tombol susun di bawah, Anda dapat mengaktifkan ini jika layar Anda besar.</string>
   <string name="leftside_compose_button">Tombol susun di kiri</string>
   <string name="leftside_compose_button_summary">Pasang tombol susun di kiri.</string>
-  <string name="bottom_send_button">Tombol \"kirim\" di bawah</string>
   <string name="load_item_limit">Memuat batas item</string>
   <string name="load_item_limit_summary">Tetapkan batas item per pengambilan.</string>
   <string name="load_more_automatically">Muat konten selanjutnya secara otomatis</string>
@@ -154,10 +151,7 @@
   <string name="reported_user_for_spam">Laporkan sebagai spam.</string>
   <string name="reported_users_for_spam">Laporkan pengguna ini sebagai spam.</string>
   <string name="filename_hint">Nama berkas</string>
-  <string name="overwrite_confirm">Berkas telah ada, timpa?</string>
-  <string name="save_as">Simpan sebagai</string>
   <string name="please_wait">Tunggu sebentar.</string>
-  <string name="file_saved_to">File disimpan ke <xliff:g id="filename">%s</xliff:g>.</string>
   <string name="saved_to_gallery">Simpan ke galeri.</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">Proxy HTTP</string>
@@ -229,9 +223,6 @@
   <string name="tabs">Tab</string>
   <string name="add_tab">Tambah tab</string>
   <string name="edit_tab">Sunting tab</string>
-  <string name="move_up">Gerak atas</string>
-  <string name="move_down">Gerak ke bawah</string>
-  <string name="unsaved_change_back_pressed">Anda memiliki perubahan tak tersimpan, tekan BACK lagi untuk mengabaikan.</string>
   <string name="invalid_settings">Pengaturan salah ditemukan.</string>
   <string name="icon">Ikon</string>
   <string name="pick_file">Pilih berkas</string>
@@ -250,7 +241,6 @@
   <string name="error_message_image_uploader_not_found">Penggunggah gambar tidak ditemukan, mungkin belum terinstal.</string>
   <string name="image_upload_format">Tweet format dengan gambar</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Tautan gambar\n\"[TEXT]\" = Isi tweet\n(Ekstensi saja)</string>
-  <string name="tweet_shortener">Penyingkat tweet</string>
   <string name="status_shortener">Penyingkat kicauan</string>
   <string name="status_shortener_default">Tidak ada (Batal mengirim)</string>
   <string name="error_message_status_too_long">Kicauan terlalu panjang.</string>
@@ -262,19 +252,13 @@
   <string name="show_absolute_time_summary">Tampilkan waktu absulut di tweet</string>
   <string name="user_mentions">Mention pengguna</string>
   <string name="dual_pane_layout">Tata Letak Kotak Ganda</string>
-  <string name="landscape">Lanskap</string>
-  <string name="portrait">Layar Tegak</string>
   <string name="quick_send">Tekan \"Enter\" untuk Mengirim</string>
   <string name="quick_send_summary">Kirim tweet saat menekan \"Enter\".</string>
-  <string name="unsaved_status">Kicauan tidak terkirim atau belum tersimpan.</string>
   <string name="discard">Buang</string>
   <string name="Nitems_selected_quantity_one">1 item terpilih</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> item terpilih</string>
-  <string name="view">Lihat</string>
   <string name="custom_host_mapping">Kustom host mapping</string>
   <string name="custom_host_mapping_summary">Host pemetaan sperti /etc/hosts, tanpa butuh permisi tambahan.</string>
-  <string name="host_mapping_host">Host</string>
-  <string name="host_mapping_address">Alamat (dapat berupa alamat host lain)</string>
   <string name="add_host_mapping">Tambah pemetaan host</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Gunakan protokol TCP untuk permintaan DNS dan menghindari DNS Cache Posioning.</string>
@@ -297,8 +281,6 @@
   <string name="incoming_friendships">Permintaan mengikuti ditahan</string>
   <string name="send_follow_request">Kirim permintaan mengikuti</string>
   <string name="follow_request_sent">Permintaan mengikuti terkirim</string>
-  <string name="separate_retweet_action">Pisahkan aksi retweet</string>
-  <string name="separate_retweet_action_summary">Tampilkan kedua aksi kicauan ulang dan kutip di menu kicauan</string>
   <string name="status">Tweet</string>
   <string name="preview">Pratinjau</string>
   <string name="connection_timeout">Waktu koneksi habis</string>
@@ -439,7 +421,6 @@
   <string name="background_toast_notification">Notifikasi Toast latar belakang</string>
   <string name="background_toast_notification_summary">Tampilkan notifikasi Toast saat diset ke latar belakang</string>
   <string name="original_status">Cuit asli</string>
-  <string name="compose_quit_action">Dalam membatalkan \"menulis\"</string>
   <string name="ask">Bertanya</string>
   <string name="no_close_after_status_updated">Tetap \"Menulis\" terbuka setelah tweet terkirim</string>
   <string name="no_close_after_status_updated_summary">Pemberian kecil untuk chatterbox</string>
@@ -461,15 +442,10 @@
   <string name="theme_light">Terang</string>
   <string name="settings_interface">Antarmuka</string>
   <string name="no_rule">Tak ada aturan</string>
-  <string name="enable_in_mentions">Aktifkan di mentions</string>
-  <string name="enable_in_home_timeline">Aktifkan di Beranda timeline</string>
-  <string name="enable_for_rts">Aktifkan untuk RTs</string>
   <string name="safety">Keamanan</string>
   <string name="updating_status_notification">Mengirim cuit&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Menanyakan</string>
-  <string name="nickname_only">Hanya nama panggilan</string>
-  <string name="nickname_only_summary">Mengganti nama pengguna dengan nama panggilan ketika tersedia</string>
   <string name="input_text">Masukkan teks</string>
   <string name="users_lists_with_name">Daftar <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Daftar mengikuti <xliff:g id="name">%s</xliff:g></string>
@@ -479,7 +455,6 @@
   <string name="users_statuses">Twit pengguna</string>
   <string name="card_animation">Animasi kartu</string>
   <string name="name_first">Tampilkan nama depan</string>
-  <string name="next_step">Lanjut</string>
   <string name="settings_wizard">Pengaturan</string>
   <string name="wizard_page_welcome_title">Selamat datang</string>
   <string name="wizard_page_welcome_text">Terima kasih telah memilih Twidere.\nAnda mau konfigurasi sekarang?</string>
@@ -546,12 +521,6 @@
   <string name="view_replies">Lihat balasan</string>
   <string name="compact_cards">Kartu compact</string>
   <string name="compact_cards_summary">Tampilkan kartu lebih banyak</string>
-  <string name="dashclock_home_unread_count_name">Beranda Twidere belum terbaca</string>
-  <string name="dashclock_home_unread_count_description">Belum terbaca pada beranda</string>
-  <string name="dashclock_mentions_unread_count_name">Sebutan Twidere belum terbaca</string>
-  <string name="dashclock_mentions_unread_count_description">Mentions belum terbaca</string>
-  <string name="dashclock_messages_unread_count_name">Pesan Twidere belum terbaca</string>
-  <string name="dashclock_messages_unread_count_description">Pesan belum terbaca</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> tweet baru</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> tweets baru</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> mention baru</string>
@@ -570,7 +539,6 @@
   <string name="center">Pusat</string>
   <string name="multi_select">Pemilihan banyak</string>
   <string name="long_click_to_open_menu">Click lama untuk membuka menu</string>
-  <string name="swipe_back">Geser untuk menutup</string>
   <string name="tab_display_option_icon">Gambar</string>
   <string name="tab_display_option_label">Tanda</string>
   <string name="tab_display_option_icon_and_label">Gambar dan tanda</string>
@@ -598,12 +566,10 @@
   <string name="status_text_limit">Batas teks tweet</string>
   <string name="load_more_from_top">Muat lebih banyak dari atas</string>
   <string name="load_more_from_top_summary">Berguna jika Anda lebih suka membaca dari bawah ke atas</string>
-  <string name="twitter_link_handler">Pengendali tautan Twitter</string>
   <string name="compose_now">Buat Sekarang</string>
   <string name="compose_now_summary">Gantikan jalan pintas Google Now untuk layar Pembuatan</string>
   <string name="compose_now_action">tindakan Pembuatan Sekarang</string>
   <string name="open_with_account">Buka dengan akun</string>
-  <string name="card_highlight_option">Pilihan kartu sorotan</string>
   <string name="card_highlight_option_highlight">Menyoroti</string>
   <string name="card_highlight_option_line">Baris</string>
   <string name="timeline_sync_service">Layanan sinkronisasi timeline</string>

@@ -94,7 +94,7 @@ public class PermissionsManager implements Constants {
 	}
 
 	public Map<String, String> getAll() {
-		final Map<String, String> map = new HashMap<String, String>();
+		final Map<String, String> map = new HashMap<>();
 		for (final Map.Entry<String, ?> entry : mPreferences.getAll().entrySet()) {
 			if (entry.getValue() instanceof String) {
 				map.put(entry.getKey(), (String) entry.getValue());

@@ -25,6 +25,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -72,7 +73,7 @@ public class ValueDependencySeekBarDialogPreference extends SeekBarDialogPrefere
     }
 
     @Override
-    protected void onAttachedToHierarchy(final PreferenceManager preferenceManager) {
+    protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
         final SharedPreferences prefs = getSharedPreferences();
         if (prefs != null) {

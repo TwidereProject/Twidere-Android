@@ -111,11 +111,8 @@
   <string name="pick_color">Valitse väri</string>
   <string name="follow">Seuraa</string>
   <string name="unfollow">Älä seuraa</string>
-  <string name="bottom_compose_button">Alaosan Kirjoita-painike</string>
-  <string name="bottom_compose_button_summary">Sijoita Kirjoita-painike alareunaan. Voit ottaa tämän valinnan käyttöön, jos näyttösi on iso.</string>
   <string name="leftside_compose_button">Vasemman reunan Kirjoita-painike</string>
   <string name="leftside_compose_button_summary">Sijoita Kirjoita-painike vasempaan reunaan.</string>
-  <string name="bottom_send_button">Alaosan Lähetä-painike</string>
   <string name="load_item_limit">Kohteiden latausrajoitus</string>
   <string name="load_item_limit_summary">Aseta rajoitus kohteiden latausmäärälle.</string>
   <string name="load_more_automatically">Lataa automaattisesti lisää sisältöä</string>
@@ -151,10 +148,7 @@
   <string name="reported_user_for_spam">Käyttäjä ilmiannettu roskapostittamisesta.</string>
   <string name="reported_users_for_spam">Käyttäjät ilmiannettu roskapostittamisesta.</string>
   <string name="filename_hint">Tiedostonimi</string>
-  <string name="overwrite_confirm">Tiedosto on olemassa. Ylikirjoitetaanko?</string>
-  <string name="save_as">Tallenna nimellä</string>
   <string name="please_wait">Odota.</string>
-  <string name="file_saved_to">Tiedosto tallennettu kohteeseen <xliff:g id="filename">%s</xliff:g>.</string>
   <string name="saved_to_gallery">Tallennettu galleriaan.</string>
   <string name="proxy">Välityspalvelin</string>
   <string name="http_proxy">HTTP-välityspalvelin</string>
@@ -226,9 +220,6 @@
   <string name="tabs">Välilehdet</string>
   <string name="add_tab">Lisää välilehti</string>
   <string name="edit_tab">Muokkaa välilehteä</string>
-  <string name="move_up">Siirrä ylös</string>
-  <string name="move_down">Siirrä alas</string>
-  <string name="unsaved_change_back_pressed">Sinulla on tallentamattomia muutoksia. Hylkää muutokset siirtymällä taaksepäin.</string>
   <string name="invalid_settings">Asetukset ovat virheelliset.</string>
   <string name="icon">Kuvake</string>
   <string name="pick_file">Valitse tiedosto</string>
@@ -247,7 +238,6 @@
   <string name="error_message_image_uploader_not_found">Kuvansiirtäjää ei ole. Ehkä se on poistettu.</string>
   <string name="image_upload_format">Kuvallisen twiitin muoto</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Kuvan linkki\n\"[TEXT]\" = Twiitin sisältö\n(Vain laajennuksissa)</string>
-  <string name="tweet_shortener">Twiitinlyhentäjä</string>
   <string name="status_shortener">Twiitinlyhentäjä</string>
   <string name="status_shortener_default">Älä lyhennä (keskeytä lähetys)</string>
   <string name="error_message_status_too_long">Twiitti on liian pitkä.</string>
@@ -259,19 +249,13 @@
   <string name="show_absolute_time_summary">Näytä twiiteissä absoluuttinen aika</string>
   <string name="user_mentions">Käyttäjän maininnat</string>
   <string name="dual_pane_layout">Kaksipaneelinen asettelu</string>
-  <string name="landscape">Vaakakuva</string>
-  <string name="portrait">Pystykuva</string>
   <string name="quick_send">Lähetä painamalla \"Enter\"</string>
   <string name="quick_send_summary">Lähetä twiitti, kun painetaan \"Enter\".</string>
-  <string name="unsaved_status">Twiittiä ei ole vielä lähetetty tai tallennettu.</string>
   <string name="discard">Hylkää</string>
   <string name="Nitems_selected_quantity_one">1 kohta valittu</string>
   <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> kohtaa valittu</string>
-  <string name="view">Näytä</string>
   <string name="custom_host_mapping">Mukautettu Host Mapping -määrittely</string>
   <string name="custom_host_mapping_summary">Verkkonimet määritellään kuten /etc/hosts -tiedostossa, mutta ylimääräisiä oikeuksia ei tarvita.</string>
-  <string name="host_mapping_host">Host</string>
-  <string name="host_mapping_address">Osoite (voi olla toinen host-osoite)</string>
   <string name="add_host_mapping">Lisää host mapping</string>
   <string name="tcp_dns_query">TCP DNS -kysely</string>
   <string name="tcp_dns_query_summary">Käytä TCP-yhteyskäytäntöä DNS-pyyntöihin, jotta vältyttäisiin DNS Cache Poisoning -verkkohuijauksilta.</string>
@@ -293,8 +277,6 @@
   <string name="incoming_friendships">Käsiteltävät seurauspyynnöt</string>
   <string name="send_follow_request">Lähetä seurauspyyntö</string>
   <string name="follow_request_sent">Seurauspyyntö lähetetty</string>
-  <string name="separate_retweet_action">Erillinen toiminto uudelleentwiittaukselle</string>
-  <string name="separate_retweet_action_summary">Näytä uudelleentwiittaus- ja lainaustoiminto twiittivalikossa</string>
   <string name="status">Twiitti</string>
   <string name="preview">Esikatselu</string>
   <string name="connection_timeout">Yhteyden aikakatkaisu</string>
@@ -435,7 +417,6 @@
   <string name="background_toast_notification">Taustapalvelun ilmoitukset tilapalkissa</string>
   <string name="background_toast_notification_summary">Näytä tilapalkin ilmoitukset, kun ohjelma on taustalla</string>
   <string name="original_status">Alkuperäinen twiitti</string>
-  <string name="compose_quit_action">Kirjoituksen keskeyttäminen</string>
   <string name="ask">Kysy</string>
   <string name="no_close_after_status_updated">Pidä Kirjoita-näkymä auki twiitin lähettämisen jälkeen</string>
   <string name="no_close_after_status_updated_summary">Pieni lisä chatterboxiin</string>
@@ -457,15 +438,10 @@
   <string name="theme_light">Vaalea</string>
   <string name="settings_interface">Käyttöliittymä</string>
   <string name="no_rule">Ei sääntöä</string>
-  <string name="enable_in_mentions">Ota käyttöön maininnoissa</string>
-  <string name="enable_in_home_timeline">Ota käyttöön aikajanassasi</string>
-  <string name="enable_for_rts">Ota käyttöön uudelleentwiittauksissa</string>
   <string name="safety">Turvallisuus</string>
   <string name="updating_status_notification">Lähetetään twiittiä&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Kysely</string>
-  <string name="nickname_only">Vain kutsumanimi</string>
-  <string name="nickname_only_summary">Korvaa käyttäjänimi kutsumanimellä aina kun mahdollista</string>
   <string name="input_text">Syötä tekstiä</string>
   <string name="users_lists_with_name">Listat käyttäjältä <xliff:g id="name">%s</xliff:g></string>
   <string name="lists_following_user_with_name">Listat, jotka seuraavat käyttäjää <xliff:g id="name">%s</xliff:g></string>
@@ -475,7 +451,6 @@
   <string name="users_statuses">Käyttäjän twiitit</string>
   <string name="card_animation">Korttianimaatio</string>
   <string name="name_first">Näytä ensin nimi</string>
-  <string name="next_step">Seuraava</string>
   <string name="settings_wizard">Ohjatut asetukset</string>
   <string name="wizard_page_welcome_title">Tervetuloa</string>
   <string name="wizard_page_welcome_text">Kiitos, että valitsit Twideren\nHaluatko määrittää asetukset heti?</string>
@@ -542,12 +517,6 @@
   <string name="view_replies">Näytä vastaukset</string>
   <string name="compact_cards">Tiiviit kortit</string>
   <string name="compact_cards_summary">Näytä ruudulla enemmän kortteja</string>
-  <string name="dashclock_home_unread_count_name">Kodin lukemattomien viestien määrä</string>
-  <string name="dashclock_home_unread_count_description">Kodin lukemattomien viestien määrä</string>
-  <string name="dashclock_mentions_unread_count_name">Mainintojen lukumäärä</string>
-  <string name="dashclock_mentions_unread_count_description">Mainintojen lukumäärä</string>
-  <string name="dashclock_messages_unread_count_name">Lukemattomien viestien määrä</string>
-  <string name="dashclock_messages_unread_count_description">Lukemattomien viestien määrä</string>
   <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> uusi twiitti</string>
   <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> uutta twiittiä</string>
   <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> uusi maininta</string>
@@ -566,7 +535,6 @@
   <string name="center">Keskus</string>
   <string name="multi_select">Monivalinta</string>
   <string name="long_click_to_open_menu">Valikon avaus pitkällä painalluksella</string>
-  <string name="swipe_back">Sulje pyyhkäisemällä</string>
   <string name="tab_display_option_icon">Kuvake</string>
   <string name="tab_display_option_label">Nimike</string>
   <string name="tab_display_option_icon_and_label">Kuvake ja nimike</string>
@@ -594,12 +562,10 @@
   <string name="status_text_limit">Twiitin merkkirajoitus</string>
   <string name="load_more_from_top">Lataa lisää ylhäältä</string>
   <string name="load_more_from_top_summary">Valinta on hyödyllinen, jos lukujärjestyksesi on alemmista twiiteistä ylempiin</string>
-  <string name="twitter_link_handler">Twitterin linkkien käsittelijä</string>
   <string name="compose_now">Kirjoita heti</string>
   <string name="compose_now_summary">Vaihtaa kirjoitusnäkymän Google Now -pikakuvakkeeseen</string>
   <string name="compose_now_action">Compose Now -toiminto</string>
   <string name="open_with_account">Avaa tilillä</string>
-  <string name="card_highlight_option">Kortin korostuksen valinta</string>
   <string name="card_highlight_option_highlight">Korosta</string>
   <string name="card_highlight_option_line">Viiva</string>
   <string name="timeline_sync_service">Aikajanan synkronointipalvelu</string>

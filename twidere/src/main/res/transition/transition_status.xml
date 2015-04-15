@@ -19,10 +19,13 @@
   -->
 
 <transitionSet
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <fade>
         <targets>
-            <target android:targetId="@id/card"/>
+            <target
+                android:targetId="@id/card"
+                tools:ignore="UnusedAttribute"/>
         </targets>
     </fade>
 </transitionSet>

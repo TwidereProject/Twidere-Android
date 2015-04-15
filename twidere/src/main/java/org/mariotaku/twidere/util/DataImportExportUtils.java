@@ -112,7 +112,7 @@ public class DataImportExportUtils implements Constants {
 
     public static HashMap<String, Preference> getSupportedPreferencesMap() {
         final Field[] fields = SharedPreferenceConstants.class.getDeclaredFields();
-        final HashMap<String, Preference> supportedPrefsMap = new HashMap<String, Preference>();
+        final HashMap<String, Preference> supportedPrefsMap = new HashMap<>();
         for (final Field field : fields) {
             final Preference annotation = field.getAnnotation(Preference.class);
             if (Modifier.isStatic(field.getModifiers()) && CompareUtils.classEquals(field.getType(), String.class)

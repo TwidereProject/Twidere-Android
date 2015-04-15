@@ -87,7 +87,6 @@
   <string name="pick_color">בחר צבע</string>
   <string name="follow">עקוב אחרי</string>
   <string name="unfollow">הפסק לעקוב אחרי</string>
-  <string name="bottom_compose_button_summary">ממקום את כפתור הציוץ בתחתית, ניתן לאפשר כשהמסך גדול.</string>
   <string name="text_size">גודל טקסט</string>
   <string name="cannot_get_location">לא ניתן לאתר את מיקומך.</string>
   <string name="drafts">טיוטות</string>
@@ -137,7 +136,6 @@
   <string name="add_tab">הוסף כרטיסייה</string>
   <string name="edit_tab">ערוך כרטיסייה</string>
   <string name="pick_file">בחר קובץ</string>
-  <string name="unsaved_status">ציוץ עדיין לא נשלח או נשמר.</string>
   <string name="status_not_updated">ציוץ לא נשלח.</string>
   <string name="preview">תצוגה מקדימה</string>
   <string name="action_getting_status">מקבל ציוץ</string>
