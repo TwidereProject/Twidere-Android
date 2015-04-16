@@ -159,12 +159,17 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     @Override
     public void onUserClick(UserViewHolder holder, int position) {
-
+        if (mUserAdapterListener == null) return;
+        mUserAdapterListener.onUserClick(holder, position);
     }
 
     @Override
     public boolean onUserLongClick(UserViewHolder holder, int position) {
-        return false;
+        return mUserAdapterListener != null && mUserAdapterListener.onUserLongClick(holder, position);
+    }
+
+    public void setListener(UserAdapterListener userAdapterListener) {
+        mUserAdapterListener = userAdapterListener;
     }
 
     @Override
@@ -179,4 +184,14 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     protected abstract void bindStatus(UserViewHolder holder, int position);
 
+
+    private UserAdapterListener mUserAdapterListener;
+
+    public static interface UserAdapterListener {
+
+        void onUserClick(UserViewHolder holder, int position);
+
+        boolean onUserLongClick(UserViewHolder holder, int position);
+
+    }
 }

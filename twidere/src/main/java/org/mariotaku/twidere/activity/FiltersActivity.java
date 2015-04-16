@@ -80,7 +80,7 @@ public class FiltersActivity extends BaseActionBarActivity {
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         super.onCreate(savedInstanceState);
         ThemeUtils.applyActionBarBackground(getSupportActionBar(), this, getCurrentThemeResourceId(),
-                getCurrentThemeColor(), false);
+                getCurrentThemeColor(), getThemeBackgroundOption(), false);
         setContentView(R.layout.activity_content_pages);
         mMainContent.setOnFitSystemWindowsListener(this);
         mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null, 1);

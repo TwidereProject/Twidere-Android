@@ -31,7 +31,6 @@ import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -122,7 +121,8 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     protected void onTitleChanged(CharSequence title, int color) {
         final SpannableStringBuilder builder = new SpannableStringBuilder(title);
         final int themeResId = getCurrentThemeResourceId();
-        final int themeColor = getThemeColor(), contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
+        final int themeColor = getThemeColor();
+        final int contrastColor = ThemeUtils.getContrastActionBarTitleColor(this, themeResId, themeColor);
         if (!ThemeUtils.isDarkTheme(themeResId)) {
             builder.setSpan(new ForegroundColorSpan(contrastColor), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

@@ -1422,7 +1422,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
             final Drawable drawable = mPagerIndicator.getBackground();
             final int stackedTabColor;
-            if (ThemeUtils.isDarkTheme(activity.getCurrentThemeResourceId())) {
+            final int themeId = activity.getCurrentThemeResourceId();
+            if (ThemeUtils.isDarkTheme(themeId)) {
                 stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
                 final int contrastColor = ColorUtils.getContrastYIQ(stackedTabColor, 192);
                 mPagerIndicator.setIconColor(contrastColor);
@@ -1441,7 +1442,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return;
             }
             final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
-            final int itemColor = ColorUtils.getContrastYIQ(barColor, 192);
+            final int itemColor = ThemeUtils.getContrastActionBarItemColor(activity, themeId, barColor);
             if (mActionBarHomeAsUpIndicator != null) {
                 mActionBarHomeAsUpIndicator.setColorFilter(itemColor, Mode.SRC_ATOP);
             }

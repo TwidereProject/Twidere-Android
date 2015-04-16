@@ -40,7 +40,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView;
@@ -109,15 +108,17 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final int cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
         final int accentColor = ThemeUtils.getUserAccentColor(context);
 
-        ThemeUtils.applyWindowBackground(context, windowBackgroundView, ThemeUtils.getThemeResource(context),
-                ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
-//        ViewAccessor.setBackground(windowContentOverlayView, ThemeUtils.getWindowContentOverlay(context));
-        ViewUtils.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes, accentColor, true));
+        final int themeId = ThemeUtils.getThemeResource(context);
+        final String backgroundOption = ThemeUtils.getThemeBackgroundOption(context);
+        ThemeUtils.applyWindowBackground(context, windowBackgroundView, themeId, backgroundOption,
+                ThemeUtils.getUserThemeBackgroundAlpha(context));
+        ViewUtils.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes,
+                accentColor, backgroundOption, true));
         ViewUtils.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
         cardView.setCardBackgroundColor(cardBackgroundColor);
 
         actionBarView.setTitle(R.string.app_name);
-        actionBarView.setTitleTextColor(ColorUtils.getContrastYIQ(accentColor, 192));
+        actionBarView.setTitleTextColor(ThemeUtils.getContrastActionBarTitleColor(context, themeId, accentColor));
         menuBar.setEnabled(false);
         final MenuInflater inflater = new SupportMenuInflater(context);
         inflater.inflate(R.menu.menu_status, menuBar.getMenu());

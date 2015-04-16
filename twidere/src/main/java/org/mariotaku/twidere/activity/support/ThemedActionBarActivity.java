@@ -23,15 +23,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -91,7 +87,7 @@ public abstract class ThemedActionBarActivity extends ActionBarActivity implemen
     public void onSupportActionModeStarted(android.support.v7.view.ActionMode mode) {
         super.onSupportActionModeStarted(mode);
         ThemeUtils.applySupportActionModeBackground(mode, this, getCurrentThemeResourceId(),
-                getCurrentThemeColor(), true);
+                getCurrentThemeColor(), getThemeBackgroundOption(), true);
     }
 
     @Override
@@ -102,17 +98,6 @@ public abstract class ThemedActionBarActivity extends ActionBarActivity implemen
         }
         setupTheme();
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onTitleChanged(CharSequence title, int color) {
-        final SpannableStringBuilder builder = new SpannableStringBuilder(title);
-        final int themeResId = getCurrentThemeResourceId();
-        final int themeColor = getThemeColor(), contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
-        if (!ThemeUtils.isDarkTheme(themeResId)) {
-            builder.setSpan(new ForegroundColorSpan(contrastColor), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        super.onTitleChanged(title, color);
     }
 
     @Override

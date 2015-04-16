@@ -47,7 +47,6 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
-import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -244,8 +243,10 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
 
     @SuppressLint("AppCompatMethod")
     private void setActionBarTheme(ActionBar actionBar, int linkId, Uri data) {
-        final int currentThemeColor = getCurrentThemeColor();
-        int actionBarItemsColor = ColorUtils.getContrastYIQ(currentThemeColor, 192);
+        final int themeColor = getCurrentThemeColor();
+        final int themeId = getCurrentThemeResourceId();
+        final String option = getThemeBackgroundOption();
+        int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
         switch (linkId) {
             case LINK_ID_USER: {
                 actionBarItemsColor = Color.WHITE;
@@ -253,17 +254,13 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
             }
             case LINK_ID_SEARCH:
             case LINK_ID_USER_LISTS: {
-                ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
-                        currentThemeColor, false);
-                ThemeUtils.applyActionBarBackground(getActionBar(), this, getCurrentThemeResourceId(),
-                        currentThemeColor, true);
+                ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, false);
+                ThemeUtils.applyActionBarBackground(getActionBar(), this, themeId, themeColor, option, true);
                 break;
             }
             default: {
-                ThemeUtils.applyActionBarBackground(actionBar, this, getCurrentThemeResourceId(),
-                        currentThemeColor, true);
-                ThemeUtils.applyActionBarBackground(getActionBar(), this, getCurrentThemeResourceId(),
-                        currentThemeColor, true);
+                ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, true);
+                ThemeUtils.applyActionBarBackground(getActionBar(), this, themeId, themeColor, option, true);
                 break;
             }
         }

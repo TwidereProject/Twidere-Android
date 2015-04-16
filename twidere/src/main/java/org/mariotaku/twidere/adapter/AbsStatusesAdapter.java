@@ -192,19 +192,10 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     @Override
     public void onUserProfileClick(final StatusViewHolder holder, final int position) {
+        if (mStatusAdapterListener==null)return;
         final ParcelableStatus status = getStatus(position);
         if (status == null) return;
-        final Context context = getContext();
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        if (context instanceof FragmentActivity) {
-            final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                    new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                    new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-        } else {
-            Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
-        }
+        mStatusAdapterListener.onUserProfileClick(holder, status, position);
     }
 
     public boolean isShowInReplyTo() {
@@ -319,6 +310,8 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         boolean onStatusLongClick(StatusViewHolder holder, int position);
 
         void onStatusMenuClick(StatusViewHolder holder, View menuView, int position);
+
+        void onUserProfileClick(StatusViewHolder holder, ParcelableStatus status, int position);
     }
 
 }

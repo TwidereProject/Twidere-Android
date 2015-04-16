@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -82,12 +83,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
-
-    @Override
-    public final boolean scrollToStart() {
-        saveReadPosition();
-        return super.scrollToStart();
-    }
 
     @Override
     public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
@@ -174,29 +169,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mReadStateManager = getReadStateManager();
-        final FragmentActivity activity = getActivity();
-        final TwidereApplication application = TwidereApplication.getInstance(activity);
-        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
-        getAdapter().setListener(this);
-        getScrollListener().setOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    saveReadPosition();
-                }
-            }
-        });
-
-        final Bundle loaderArgs = new Bundle(getArguments());
-        loaderArgs.putBoolean(EXTRA_FROM_USER, true);
-        getLoaderManager().initLoader(0, loaderArgs, this);
-        setListShown(false);
-    }
-
-    @Override
     public final Loader<Data> onCreateLoader(int id, Bundle args) {
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
         args.remove(EXTRA_FROM_USER);
@@ -257,9 +229,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
             ((IExtendedLoader) loader).setFromUser(false);
         }
     }
-
-    protected abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
-                                                        final boolean fromUser);
 
     @Override
     public void onGapClick(GapViewHolder holder, int position) {
@@ -351,6 +320,17 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     @Override
+    public void onUserProfileClick(StatusViewHolder holder, ParcelableStatus status, int position) {
+        final FragmentActivity activity = getActivity();
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        final Bundle options = Utils.makeSceneTransitionOption(activity,
+                new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+        Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name, options);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
@@ -370,6 +350,35 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
             mPopupMenu.dismiss();
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public final boolean scrollToStart() {
+        saveReadPosition();
+        return super.scrollToStart();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mReadStateManager = getReadStateManager();
+        final FragmentActivity activity = getActivity();
+        final TwidereApplication application = TwidereApplication.getInstance(activity);
+        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
+        getAdapter().setListener(this);
+        getScrollListener().setOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    saveReadPosition();
+                }
+            }
+        });
+
+        final Bundle loaderArgs = new Bundle(getArguments());
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true);
+        getLoaderManager().initLoader(0, loaderArgs, this);
+        setListShown(false);
     }
 
     protected Object createMessageBusCallback() {
@@ -393,6 +402,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     protected abstract boolean hasMoreData(Data data);
+
+    protected abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
+                                                           final boolean fromUser);
 
     protected abstract void onLoadingFinished();
 

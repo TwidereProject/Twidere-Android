@@ -22,14 +22,20 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
+import android.view.View;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
+import org.mariotaku.twidere.adapter.AbsUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.holder.UserViewHolder;
 
-abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAdapter<Data>> implements LoaderCallbacks<Data> {
+abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAdapter<Data>> implements LoaderCallbacks<Data>, UserAdapterListener {
 
     public final Data getData() {
         return getAdapter().getData();
@@ -38,6 +44,9 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        getAdapter().setListener(this);
+
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
@@ -69,6 +78,25 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
+    }
+
+    @Override
+    public void onUserClick(UserViewHolder holder, int position) {
+        final ParcelableUser user = getAdapter().getUser(position);
+        final FragmentActivity activity = getActivity();
+        final View profileImageView = holder.getProfileImageView();
+        final View profileTypeView = holder.getProfileTypeView();
+        final Bundle options = Utils.makeSceneTransitionOption(activity,
+                new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
+                new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
+        Utils.openUserProfile(activity, user.account_id, user.id, user.screen_name, options);
+    }
+
+
+    @Override
+    public boolean onUserLongClick(UserViewHolder holder, int position) {
+
+        return true;
     }
 
     protected ParcelableUser getSelectedUser() {

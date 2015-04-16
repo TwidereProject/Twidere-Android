@@ -750,11 +750,13 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     private void setupBars() {
         final int themeColor = getThemeColor();
         final int themeResId = getCurrentThemeResourceId();
-        final boolean isTransparent = ThemeUtils.isTransparentBackground(getCurrentThemeBackgroundOption());
+        final String backgroundOption = getCurrentThemeBackgroundOption();
+        final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
-        ViewUtils.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor, true));
+        ViewUtils.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
+                backgroundOption, true));
         if (ThemeUtils.isDarkTheme(themeResId)) {
             final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
             final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());

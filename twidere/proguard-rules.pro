@@ -17,6 +17,7 @@
 #}
 -keepclassmembers class android.support.v7.internal.app.WindowDecorActionBar {
     private mContextView;
+    private mDecorToolbar;
 }
 -keepclassmembers class android.support.v7.internal.widget.ActionBarOverlayLayout {
     private mWindowContentOverlay;
