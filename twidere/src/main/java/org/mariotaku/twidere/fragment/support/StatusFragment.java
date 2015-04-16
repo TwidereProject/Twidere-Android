@@ -96,9 +96,9 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
@@ -854,8 +854,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             textView.setMovementMethod(StatusContentMovementMethod.getInstance());
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, fragment, activity));
-                textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, fragment, activity));
+            quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, fragment, activity));
+            textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, fragment, activity));
 //            }
         }
 
@@ -873,12 +873,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                final FragmentActivity activity = fragment.getActivity();
-                if (activity instanceof IThemedActivity) {
-                    final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
-                    final int accentColor = ((IThemedActivity) activity).getCurrentThemeColor();
-                    ThemeUtils.applySupportActionModeBackground(mode, fragment.getActivity(), themeRes, accentColor, true);
-                }
                 mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
                 return true;
             }

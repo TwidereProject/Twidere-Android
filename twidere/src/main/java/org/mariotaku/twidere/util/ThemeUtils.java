@@ -190,8 +190,13 @@ public class ThemeUtils implements Constants {
         // Very dirty implementation
         if (!(mode instanceof SupportActionModeWrapper) || !(activity instanceof IThemedActivity))
             return;
-        final android.support.v7.view.ActionMode modeCompat =
-                SupportActionModeWrapperTrojan.getWrappedObject((SupportActionModeWrapper) mode);
+        final android.support.v7.view.ActionMode modeCompat = SupportActionModeWrapperTrojan.getWrappedObject((SupportActionModeWrapper) mode);
+        applySupportActionModeBackground(modeCompat, activity, themeRes, accentColor, outlineEnabled);
+    }
+
+    public static void applySupportActionModeBackground(android.support.v7.view.ActionMode modeCompat,
+                                                        FragmentActivity activity, int themeRes,
+                                                        int accentColor, boolean outlineEnabled) {
         if (!(modeCompat instanceof ActionModeImpl)) return;
         try {
             WindowDecorActionBar actionBar = null;
@@ -919,6 +924,12 @@ public class ThemeUtils implements Constants {
             field.set(view, background);
         } catch (Exception ignore) {
         }
+    }
+
+    public static void setCompatToolbarOverlayMode(Activity activity, boolean mode) {
+        final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.decor_content_parent);
+        if (!(view instanceof ActionBarOverlayLayout)) return;
+        ((ActionBarOverlayLayout) view).setOverlayMode(mode);
     }
 
     public static void setupDrawerBackground(Context context, View view) {

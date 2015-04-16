@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/pages_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/view_pager_tabs"/>
+
+        <org.mariotaku.twidere.view.TabPagerIndicator
+            android:id="@+id/view_pager_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/element_size_normal"
+            android:outlineProvider="background"
+            android:textColor="?android:textColorSecondary"
+            app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
+            app:tabExpandEnabled="true"
+            app:tabHorizontalPadding="@dimen/element_spacing_large"
+            app:tabIconColor="?android:colorForeground"
+            app:tabShowDivider="true"
+            tools:ignore="UnusedAttribute"/>
+
+        <View
+            android:id="@+id/pager_window_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/view_pager"
+            android:layout_alignTop="@+id/view_pager"
+            android:background="?android:windowContentOverlay"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/pages_error_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/element_spacing_large"
+        android:visibility="gone">
+
+        <org.mariotaku.twidere.view.ActionIconView
+            android:id="@+id/pages_error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="?android:textColorSecondary"
+            android:src="@drawable/ic_info_error_generic"/>
+
+        <TextView
+            android:id="@+id/pages_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:textAppearance="?android:textAppearanceMedium"/>
+    </LinearLayout>
+
+
+</merge>

@@ -88,6 +88,13 @@ public abstract class ThemedActionBarActivity extends ActionBarActivity implemen
     }
 
     @Override
+    public void onSupportActionModeStarted(android.support.v7.view.ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        ThemeUtils.applySupportActionModeBackground(mode, this, getCurrentThemeResourceId(),
+                getCurrentThemeColor(), true);
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();

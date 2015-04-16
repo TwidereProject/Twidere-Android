@@ -286,7 +286,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
                 mMainContent.setDrawColor(true);
                 mMainContent.setFactor(1);
                 final int color = getCurrentThemeColor();
-                final int alpha = getCurrentThemeBackgroundAlpha();
+                final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
                 if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
                     mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark), alpha);
                 } else {

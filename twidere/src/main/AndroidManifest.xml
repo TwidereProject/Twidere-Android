@@ -232,7 +232,9 @@
         </activity>
         <activity
             android:name=".activity.FiltersActivity"
-            android:label="@string/filters">
+            android:label="@string/filters"
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.FILTERS"/>
 
@@ -277,8 +279,8 @@
             android:label="@string/set_color"
             android:theme="@style/Theme.Twidere.Light.NoDisplay"/>
         <activity
-            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
             android:name=".activity.support.LinkHandlerActivity"
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

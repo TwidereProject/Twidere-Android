@@ -24,9 +24,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
@@ -56,32 +53,10 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
     @Override
     public void onLoadFinished(Loader<Data> loader, Data data) {
         final AbsUsersAdapter<Data> adapter = getAdapter();
-        final long lastReadId;
-        final int lastVisiblePos, lastVisibleTop;
-        final LinearLayoutManager layoutManager = getLayoutManager();
-        lastVisiblePos = layoutManager.findFirstVisibleItemPosition();
-        if (lastVisiblePos != RecyclerView.NO_POSITION) {
-            lastReadId = adapter.getUserId(lastVisiblePos);
-            final View positionView = layoutManager.findViewByPosition(lastVisiblePos);
-            lastVisibleTop = positionView != null ? positionView.getTop() : 0;
-        } else {
-            lastReadId = -1;
-            lastVisibleTop = 0;
-        }
         adapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             adapter.setLoadMoreSupported(hasMoreData(data));
             setRefreshEnabled(true);
-            int pos = -1;
-            for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
-                if (lastReadId != -1 && lastReadId == adapter.getUserId(i)) {
-                    pos = i;
-                    break;
-                }
-            }
-            if (pos != -1 && adapter.isUser(pos) && (lastVisiblePos != 0)) {
-                layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
-            }
         }
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
