@@ -33,16 +33,16 @@ import twitter4j.User;
 
 public class UserBlocksLoader extends CursorSupportUsersLoader {
 
-	public UserBlocksLoader(final Context context, final long account_id, final long cursor,
-			final List<ParcelableUser> data) {
-		super(context, account_id, cursor, data);
-	}
+    public UserBlocksLoader(final Context context, final long accountId, final long cursor,
+                            final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountId, cursor, data, fromUser);
+    }
 
-	@Override
-	protected final PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
-			throws TwitterException {
-		if (twitter == null) return null;
-		return twitter.getBlocksList(paging);
-	}
+    @Override
+    protected final PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
+            throws TwitterException {
+        if (twitter == null) return null;
+        return twitter.getBlocksList(paging);
+    }
 
 }

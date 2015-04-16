@@ -23,38 +23,51 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ParcelableUsersLoader extends AsyncTaskLoader<List<ParcelableUser>> implements Constants {
+public abstract class ParcelableUsersLoader extends AsyncTaskLoader<List<ParcelableUser>> implements IExtendedLoader, Constants {
 
-	private final List<ParcelableUser> mData = Collections
-			.synchronizedList(new NoDuplicatesArrayList<ParcelableUser>());
+    private final List<ParcelableUser> mData = Collections
+            .synchronizedList(new NoDuplicatesArrayList<ParcelableUser>());
+    private boolean mFromUser;
 
-	public ParcelableUsersLoader(final Context context, final List<ParcelableUser> data) {
-		super(context);
-		if (data != null) {
-			mData.addAll(data);
-		}
-	}
+    public ParcelableUsersLoader(final Context context, final List<ParcelableUser> data, boolean fromUser) {
+        super(context);
+        setFromUser(fromUser);
+        if (data != null) {
+            mData.addAll(data);
+        }
+    }
 
-	@Override
-	public void onStartLoading() {
-		forceLoad();
-	}
+    @Override
+    public void setFromUser(boolean fromUser) {
+        mFromUser = fromUser;
+    }
 
-	protected List<ParcelableUser> getData() {
-		return mData;
-	}
+    @Override
+    public boolean isFromUser() {
+        return mFromUser;
+    }
 
-	protected boolean hasId(final long id) {
-		for (final ParcelableUser user : mData) {
-			if (user.id == id) return true;
-		}
-		return false;
-	}
+    @Override
+    public void onStartLoading() {
+        forceLoad();
+    }
+
+    protected List<ParcelableUser> getData() {
+        return mData;
+    }
+
+    protected boolean hasId(final long id) {
+        for (final ParcelableUser user : mData) {
+            if (user.id == id) return true;
+        }
+        return false;
+    }
 
 }

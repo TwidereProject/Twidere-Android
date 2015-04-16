@@ -19,12 +19,13 @@
   -->
 
 <org.mariotaku.twidere.view.ColorLabelFrameLayout
-    android:id="@+id/content"
+    android:id="@+id/item_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/element_spacing_small"
+    android:background="?android:selectableItemBackground"
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
     android:paddingTop="@dimen/element_spacing_small"
@@ -40,13 +41,13 @@
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/profile_image"
+            style="?profileImageStyle"
             android:layout_width="@dimen/icon_size_card_list_item"
             android:layout_height="@dimen/icon_size_card_list_item"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:contentDescription="@string/profile_image"
-            android:scaleType="fitCenter"/>
+            android:contentDescription="@string/profile_image"/>
 
         <ImageView
             android:id="@+id/profile_type"

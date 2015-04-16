@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +98,10 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     public abstract D getData();
 
+    public boolean isUser(int position) {
+        return position < getUsersCount();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
@@ -104,16 +109,16 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
                 final View view;
                 if (mCompactCards) {
                     view = mInflater.inflate(R.layout.card_item_user_compact, parent, false);
-//                    final View itemContent = view.findViewById(R.id.item_content);
-//                    itemContent.setBackgroundColor(mCardBackgroundColor);
+                    final View itemContent = view.findViewById(R.id.item_content);
+                    itemContent.setBackgroundColor(mCardBackgroundColor);
                 } else {
                     view = mInflater.inflate(R.layout.card_item_user, parent, false);
-//                    final CardView cardView = (CardView) view.findViewById(R.id.card);
-//                    cardView.setCardBackgroundColor(mCardBackgroundColor);
+                    final CardView cardView = (CardView) view.findViewById(R.id.card);
+                    cardView.setCardBackgroundColor(mCardBackgroundColor);
                 }
                 final UserViewHolder holder = new UserViewHolder(this, view);
-//                holder.setOnClickListeners();
-//                holder.setupViewOptions();
+                holder.setOnClickListeners();
+                holder.setupViewOptions();
                 return holder;
             }
             case ITEM_VIEW_TYPE_LOAD_INDICATOR: {
@@ -134,16 +139,32 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         }
     }
 
-    public boolean isUser(int position) {
-        return position < getUsersCount();
-    }
-
     @Override
     public int getItemViewType(int position) {
         if (position == getUsersCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
         return ITEM_VIEW_TYPE_USER;
+    }
+
+    @Override
+    public void onItemActionClick(ViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
+
+    }
+
+    @Override
+    public void onUserClick(UserViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public boolean onUserLongClick(UserViewHolder holder, int position) {
+        return false;
     }
 
     @Override

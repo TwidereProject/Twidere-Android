@@ -31,7 +31,7 @@ import java.util.List;
 public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
 
     @Override
-    public Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+    protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
                                                                  final Bundle args,
                                                                  final boolean fromUser) {
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);

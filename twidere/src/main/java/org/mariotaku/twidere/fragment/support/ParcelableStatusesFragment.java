@@ -126,7 +126,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     public void onLoadMoreContents() {
         super.onLoadMoreContents();
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        final long[] maxIds = new long[]{adapter.getStatus(adapter.getStatusesCount() - 1).id};
+        final long[] maxIds = new long[]{adapter.getStatusId(adapter.getStatusesCount() - 1)};
         getStatuses(null, maxIds, null);
     }
 

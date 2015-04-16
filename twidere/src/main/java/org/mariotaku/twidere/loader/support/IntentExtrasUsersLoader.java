@@ -31,8 +31,8 @@ public class IntentExtrasUsersLoader extends ParcelableUsersLoader {
 
 	private final Bundle mExtras;
 
-	public IntentExtrasUsersLoader(final Context context, final Bundle extras, final List<ParcelableUser> data) {
-		super(context, data);
+	public IntentExtrasUsersLoader(final Context context, final Bundle extras, final List<ParcelableUser> data, boolean fromUser) {
+		super(context, data, fromUser);
 		mExtras = extras;
 	}
 

@@ -33,24 +33,25 @@ import twitter4j.User;
 
 public class UserFollowersLoader extends CursorSupportUsersLoader {
 
-	private final long mUserId;
-	private final String mScreenName;
+    private final long mUserId;
+    private final String mScreenName;
 
-	public UserFollowersLoader(final Context context, final long account_id, final long user_id,
-			final String screen_name, final long cursor, final List<ParcelableUser> data) {
-		super(context, account_id, cursor, data);
-		mUserId = user_id;
-		mScreenName = screen_name;
-	}
+    public UserFollowersLoader(final Context context, final long accountId, final long userId,
+                               final String screenName, final long cursor, final List<ParcelableUser> data,
+                               boolean fromUser) {
+        super(context, accountId, cursor, data, fromUser);
+        mUserId = userId;
+        mScreenName = screenName;
+    }
 
-	@Override
-	protected PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
-			throws TwitterException {
-		if (twitter == null) return null;
-		if (mUserId > 0)
-			return twitter.getFollowersList(mUserId, paging);
-		else if (mScreenName != null) return twitter.getFollowersList(mScreenName, paging);
-		return null;
-	}
+    @Override
+    protected PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
+            throws TwitterException {
+        if (twitter == null) return null;
+        if (mUserId > 0)
+            return twitter.getFollowersList(mUserId, paging);
+        else if (mScreenName != null) return twitter.getFollowersList(mScreenName, paging);
+        return null;
+    }
 
 }

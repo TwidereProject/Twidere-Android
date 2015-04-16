@@ -34,9 +34,9 @@ public class UserSearchLoader extends Twitter4JUsersLoader {
     private final String mQuery;
     private final int mPage;
 
-    public UserSearchLoader(final Context context, final long account_id, final String query, final int page,
-                            final List<ParcelableUser> data) {
-        super(context, account_id, data);
+    public UserSearchLoader(final Context context, final long accountId, final String query, final int page,
+                            final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountId, data, fromUser);
         mQuery = query;
         mPage = page;
     }

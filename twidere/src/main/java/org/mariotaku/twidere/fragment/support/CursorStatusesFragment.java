@@ -69,7 +69,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     public abstract Uri getContentUri();
 
     @Override
-    public Loader<Cursor> onCreateStatusesLoader(final Context context,
+    protected Loader<Cursor> onCreateStatusesLoader(final Context context,
                                                  final Bundle args,
                                                  final boolean fromUser) {
         final Uri uri = getContentUri();

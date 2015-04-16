@@ -28,12 +28,12 @@ import org.mariotaku.twidere.loader.support.UserFriendsLoader;
 public class UserFriendsFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public CursorSupportUsersLoader newLoaderInstance(final Context context, final Bundle args) {
+	public CursorSupportUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
 		final long user_id = args.getLong(EXTRA_USER_ID, -1);
 		final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-		return new UserFriendsLoader(context, account_id, user_id, screen_name, getNextCursor(), getData());
+		return new UserFriendsLoader(context, account_id, user_id, screen_name, getNextCursor(), getData(), fromUser);
 	}
 
 }

@@ -37,10 +37,10 @@ public class UserListSubscribersLoader extends CursorSupportUsersLoader {
     private final long mUserId;
     private final String mScreenName, mListName;
 
-    public UserListSubscribersLoader(final Context context, final long account_id, final long listId,
+    public UserListSubscribersLoader(final Context context, final long accountId, final long listId,
                                      final long userId, final String screenName, final String listName, final long cursor,
-                                     final List<ParcelableUser> data) {
-        super(context, account_id, cursor, data);
+                                     final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountId, cursor, data, fromUser);
         mListId = listId;
         mUserId = userId;
         mScreenName = screenName;

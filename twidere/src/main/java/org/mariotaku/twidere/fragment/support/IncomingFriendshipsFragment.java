@@ -28,10 +28,10 @@ import org.mariotaku.twidere.loader.support.IncomingFriendshipsLoader;
 public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment {
 
     @Override
-    public IDsUsersLoader newLoaderInstance(final Context context, final Bundle args) {
+    public IDsUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
         if (args == null) return null;
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-        return new IncomingFriendshipsLoader(context, accountId, getNextCursor(), getData());
+        return new IncomingFriendshipsLoader(context, accountId, getNextCursor(), getData(), fromUser);
     }
 
 }

@@ -33,25 +33,25 @@ import twitter4j.User;
 
 public abstract class CursorSupportUsersLoader extends BaseCursorSupportUsersLoader {
 
-	public CursorSupportUsersLoader(final Context context, final long account_id, final long cursor,
-			final List<ParcelableUser> data) {
-		super(context, account_id, cursor, data);
-	}
+    public CursorSupportUsersLoader(final Context context, final long accountId, final long cursor,
+                                    final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountId, cursor, data, fromUser);
+    }
 
-	protected abstract PageableResponseList<User> getCursoredUsers(Twitter twitter, CursorPaging paging)
-			throws TwitterException;
+    protected abstract PageableResponseList<User> getCursoredUsers(Twitter twitter, CursorPaging paging)
+            throws TwitterException;
 
-	@Override
-	protected final List<User> getUsers(final Twitter twitter) throws TwitterException {
-		if (twitter == null) return null;
-		final CursorPaging paging = new CursorPaging(getCount());
-		if (getCursor() > 0) {
-			paging.setCursor(getCursor());
-		}
-		final PageableResponseList<User> users = getCursoredUsers(twitter, paging);
-		if (users == null) return null;
-		setCursorIds(users);
-		return users;
-	}
+    @Override
+    protected final List<User> getUsers(final Twitter twitter) throws TwitterException {
+        if (twitter == null) return null;
+        final CursorPaging paging = new CursorPaging(getCount());
+        if (getCursor() > 0) {
+            paging.setCursor(getCursor());
+        }
+        final PageableResponseList<User> users = getCursoredUsers(twitter, paging);
+        if (users == null) return null;
+        setCursorIds(users);
+        return users;
+    }
 
 }

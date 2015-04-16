@@ -28,7 +28,7 @@ import org.mariotaku.twidere.loader.support.UserListSubscribersLoader;
 public class UserListSubscribersFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public CursorSupportUsersLoader newLoaderInstance(final Context context, final Bundle args) {
+	public CursorSupportUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long listId = args.getLong(EXTRA_LIST_ID, -1);
 		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
@@ -36,7 +36,7 @@ public class UserListSubscribersFragment extends CursorSupportUsersListFragment 
 		final String screenName = args.getString(EXTRA_SCREEN_NAME);
 		final String listName = args.getString(EXTRA_LIST_NAME);
 		return new UserListSubscribersLoader(context, accountId, listId, userId, screenName, listName,
-				getNextCursor(), getData());
+				getNextCursor(), getData(), fromUser);
 	}
 
 }

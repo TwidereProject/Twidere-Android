@@ -33,24 +33,25 @@ import twitter4j.User;
 
 public class UserFriendsLoader extends CursorSupportUsersLoader {
 
-	private final long mUserId;
-	private final String mScreenName;
+    private final long mUserId;
+    private final String mScreenName;
 
-	public UserFriendsLoader(final Context context, final long account_id, final long user_id,
-			final String screen_name, final long max_id, final List<ParcelableUser> users_list) {
-		super(context, account_id, max_id, users_list);
-		mUserId = user_id;
-		mScreenName = screen_name;
-	}
+    public UserFriendsLoader(final Context context, final long accountId, final long userId,
+                             final String screenName, final long maxId, final List<ParcelableUser> userList,
+                             boolean fromUser) {
+        super(context, accountId, maxId, userList, fromUser);
+        mUserId = userId;
+        mScreenName = screenName;
+    }
 
-	@Override
-	protected PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
-			throws TwitterException {
-		if (twitter == null) return null;
-		if (mUserId > 0)
-			return twitter.getFriendsList(mUserId, paging);
-		else if (mScreenName != null) return twitter.getFriendsList(mScreenName, paging);
-		return null;
-	}
+    @Override
+    protected PageableResponseList<User> getCursoredUsers(final Twitter twitter, final CursorPaging paging)
+            throws TwitterException {
+        if (twitter == null) return null;
+        if (mUserId > 0)
+            return twitter.getFriendsList(mUserId, paging);
+        else if (mScreenName != null) return twitter.getFriendsList(mScreenName, paging);
+        return null;
+    }
 
 }

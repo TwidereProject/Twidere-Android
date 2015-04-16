@@ -39,21 +39,22 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
     }
 
     @Override
-    public Loader<Data> onCreateLoader(int id, Bundle args) {
-        return newLoaderInstance(getActivity(), args);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
     }
 
     @Override
-    public final void onLoadFinished(Loader<Data> loader, Data data) {
+    public final Loader<Data> onCreateLoader(int id, Bundle args) {
+        final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
+        args.remove(EXTRA_FROM_USER);
+        return onCreateUsersLoader(getActivity(), args, fromUser);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Data> loader, Data data) {
         final AbsUsersAdapter<Data> adapter = getAdapter();
         final long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
@@ -86,10 +87,7 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
             ((IExtendedLoader) loader).setFromUser(false);
         }
         setListShown(true);
-        onLoadingFinished(data);
     }
-
-    protected abstract boolean hasMoreData(Data data);
 
     @Override
     public void onLoaderReset(Loader<Data> loader) {
@@ -103,8 +101,8 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
         return null;
     }
 
-    protected abstract Loader<Data> newLoaderInstance(Context context, Bundle args);
+    protected abstract boolean hasMoreData(Data data);
 
-    protected abstract void onLoadingFinished(Data data);
+    protected abstract Loader<Data> onCreateUsersLoader(Context context, Bundle args, boolean fromUser);
 
 }

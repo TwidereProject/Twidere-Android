@@ -21,12 +21,12 @@ package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
+import org.mariotaku.twidere.view.holder.UserViewHolder.UserClickListener;
 
 /**
  * Created by mariotaku on 15/4/16.
  */
-public interface IUsersAdapter<Data> extends IContentCardAdapter {
+public interface IUsersAdapter<Data> extends IContentCardAdapter, UserClickListener {
 
     ParcelableUser getUser(int position);
 

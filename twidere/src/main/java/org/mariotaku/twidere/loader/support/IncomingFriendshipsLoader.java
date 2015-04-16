@@ -32,9 +32,9 @@ import twitter4j.TwitterException;
 
 public class IncomingFriendshipsLoader extends IDsUsersLoader {
 
-	public IncomingFriendshipsLoader(final Context context, final long account_id, final long max_id,
-			final List<ParcelableUser> users_list) {
-		super(context, account_id, max_id, users_list);
+	public IncomingFriendshipsLoader(final Context context, final long accountId, final long maxId,
+                                     final List<ParcelableUser> data, boolean fromUser) {
+		super(context, accountId, maxId, data, fromUser);
 	}
 
 	@Override

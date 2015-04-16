@@ -35,7 +35,7 @@ import java.util.List;
 public class StatusesSearchFragment extends ParcelableStatusesFragment {
 
     @Override
-    public Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+    protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
                                                                  final Bundle args,
                                                                  final boolean fromUser) {
         setRefreshing(true);

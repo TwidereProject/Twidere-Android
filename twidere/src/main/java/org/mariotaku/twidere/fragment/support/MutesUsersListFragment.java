@@ -28,10 +28,10 @@ import org.mariotaku.twidere.loader.support.MutesUsersLoader;
 public class MutesUsersListFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public CursorSupportUsersLoader newLoaderInstance(final Context context, final Bundle args) {
+	public CursorSupportUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		return new MutesUsersLoader(context, account_id, getNextCursor(), getData());
+		return new MutesUsersLoader(context, account_id, getNextCursor(), getData(), fromUser);
 	}
 
 }

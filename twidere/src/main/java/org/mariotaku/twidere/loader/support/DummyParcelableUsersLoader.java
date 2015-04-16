@@ -28,8 +28,8 @@ import java.util.List;
 
 public final class DummyParcelableUsersLoader extends ParcelableUsersLoader {
 
-	public DummyParcelableUsersLoader(final Context context) {
-		super(context, null);
+	public DummyParcelableUsersLoader(final Context context, boolean fromUser) {
+		super(context, null, fromUser);
 	}
 
 	@Override

@@ -28,11 +28,11 @@ import org.mariotaku.twidere.loader.support.StatusRetweetersLoader;
 public class StatusRetweetersListFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public IDsUsersLoader newLoaderInstance(final Context context, final Bundle args) {
+	public IDsUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
 		final long status_id = args.getLong(EXTRA_STATUS_ID, -1);
-		return new StatusRetweetersLoader(context, account_id, status_id, getNextCursor(), getData());
+		return new StatusRetweetersLoader(context, account_id, status_id, getNextCursor(), getData(), fromUser);
 	}
 
 }

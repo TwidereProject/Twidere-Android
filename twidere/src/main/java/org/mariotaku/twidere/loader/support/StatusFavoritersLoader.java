@@ -34,10 +34,10 @@ public class StatusFavoritersLoader extends IDsUsersLoader {
 
 	private final long mStatusId;
 
-	public StatusFavoritersLoader(final Context context, final long account_id, final long status_id,
-			final long cursor, final List<ParcelableUser> data) {
-		super(context, account_id, cursor, data);
-		mStatusId = status_id;
+	public StatusFavoritersLoader(final Context context, final long accountId, final long statusId,
+                                  final long cursor, final List<ParcelableUser> data, boolean fromUser) {
+		super(context, accountId, cursor, data, fromUser);
+		mStatusId = statusId;
 	}
 
 	@Override

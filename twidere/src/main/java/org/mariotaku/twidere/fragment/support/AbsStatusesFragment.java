@@ -258,7 +258,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         }
     }
 
-    public abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
+    protected abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
                                                         final boolean fromUser);
 
     @Override
