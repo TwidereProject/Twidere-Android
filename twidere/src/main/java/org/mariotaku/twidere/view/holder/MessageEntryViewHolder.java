@@ -67,7 +67,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
 
     public void displayMessage(Cursor cursor, boolean isUnread) {
         final Context context = adapter.getContext();
-        final MediaLoaderWrapper loader = adapter.getImageLoader();
+        final MediaLoaderWrapper loader = adapter.getMediaLoader();
 
         final long accountId = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
         final long conversationId = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);

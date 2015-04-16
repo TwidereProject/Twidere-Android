@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -37,7 +38,6 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -62,6 +62,8 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     private final int mMediaPreviewStyle;
     private final ReadStateManager mReadStateManager;
     private final OnSharedPreferenceChangeListener mReadStateChangeListener;
+    private final boolean mDisplayProfileImage;
+    private final AsyncTwitterWrapper mTwitterWrapper;
     private boolean mLoadMoreSupported;
     private boolean mLoadMoreIndicatorVisible;
     private Cursor mCursor;
@@ -74,10 +76,12 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
         mImageLoader = app.getMediaLoaderWrapper();
+        mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mReadStateManager = app.getReadStateManager();
         mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
@@ -89,32 +93,8 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         };
     }
 
-    public void onUserProfileClick(int position) {
-        mListener.onUserClick(position, getEntry(position));
-    }
-
-    public void updateReadState() {
-        mPositionPairs = mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES);
-        notifyDataSetChanged();
-    }
-
-    public DirectMessageEntry getEntry(final int position) {
-        final Cursor c = mCursor;
-        if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
-        return new DirectMessageEntry(c);
-    }
-
-    public MediaLoaderWrapper getImageLoader() {
-        return mImageLoader;
-    }
-
     public Context getContext() {
         return mContext;
-    }
-
-    @Override
-    public ImageLoadingHandler getImageLoadingHandler() {
-        return null;
     }
 
     @Override
@@ -123,29 +103,41 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     }
 
     @Override
-    public int getMediaPreviewStyle() {
-        return mMediaPreviewStyle;
-    }
-
-    @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return null;
-    }
-
-    @Override
     public float getTextSize() {
         return mTextSize;
     }
 
+    @NonNull
+    @Override
+    public AsyncTwitterWrapper getTwitterWrapper() {
+        return mTwitterWrapper;
+    }
 
     @Override
-    public void onReadStateChanged() {
+    public boolean isProfileImageEnabled() {
+        return mDisplayProfileImage;
+    }
 
+    public DirectMessageEntry getEntry(final int position) {
+        final Cursor c = mCursor;
+        if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
+        return new DirectMessageEntry(c);
+    }
+
+    public MediaLoaderWrapper getMediaLoader() {
+        return mImageLoader;
     }
 
     @Override
     public boolean isLoadMoreIndicatorVisible() {
         return mLoadMoreIndicatorVisible;
+    }
+
+    @Override
+    public void setLoadMoreIndicatorVisible(boolean enabled) {
+        if (mLoadMoreIndicatorVisible == enabled) return;
+        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -160,24 +152,6 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
             mLoadMoreIndicatorVisible = false;
         }
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void setLoadMoreIndicatorVisible(boolean enabled) {
-        if (mLoadMoreIndicatorVisible == enabled) return;
-        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
-        notifyDataSetChanged();
-    }
-
-
-    @Override
-    public boolean isGapItem(int position) {
-        return false;
-    }
-
-    @Override
-    public void onGapClick(ViewHolder holder, int position) {
-
     }
 
     @Override
@@ -226,18 +200,6 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         }
     }
 
-    private boolean isUnread(Cursor c) {
-        if (mPositionPairs == null) return true;
-        final long accountId = c.getLong(ConversationEntries.IDX_ACCOUNT_ID);
-        final long conversationId = c.getLong(ConversationEntries.IDX_CONVERSATION_ID);
-        final long messageId = c.getLong(ConversationEntries.IDX_MESSAGE_ID);
-        final String key = accountId + "-" + conversationId;
-        for (StringLongPair pair : mPositionPairs) {
-            if (key.equals(pair.getKey())) return messageId > pair.getValue();
-        }
-        return true;
-    }
-
     @Override
     public int getItemViewType(int position) {
         if (position == getMessagesCount()) {
@@ -251,19 +213,18 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         return getMessagesCount() + (mLoadMoreIndicatorVisible ? 1 : 0);
     }
 
-    @Override
-    public void onItemActionClick(ViewHolder holder, int id, int position) {
-
-    }
-
-    @Override
-    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
-
-    }
-
     public void onMessageClick(int position) {
         if (mListener == null) return;
         mListener.onEntryClick(position, getEntry(position));
+    }
+
+    @Override
+    public void onReadStateChanged() {
+
+    }
+
+    public void onUserProfileClick(int position) {
+        mListener.onUserClick(position, getEntry(position));
     }
 
     public void setCursor(Cursor cursor) {
@@ -280,10 +241,27 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         mListener = listener;
     }
 
+    public void updateReadState() {
+        mPositionPairs = mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES);
+        notifyDataSetChanged();
+    }
+
     private int getMessagesCount() {
         final Cursor c = mCursor;
         if (c == null || c.isClosed()) return 0;
         return c.getCount();
+    }
+
+    private boolean isUnread(Cursor c) {
+        if (mPositionPairs == null) return true;
+        final long accountId = c.getLong(ConversationEntries.IDX_ACCOUNT_ID);
+        final long conversationId = c.getLong(ConversationEntries.IDX_CONVERSATION_ID);
+        final long messageId = c.getLong(ConversationEntries.IDX_MESSAGE_ID);
+        final String key = accountId + "-" + conversationId;
+        for (StringLongPair pair : mPositionPairs) {
+            if (key.equals(pair.getKey())) return messageId > pair.getValue();
+        }
+        return true;
     }
 
     public interface MessageEntriesAdapterListener {

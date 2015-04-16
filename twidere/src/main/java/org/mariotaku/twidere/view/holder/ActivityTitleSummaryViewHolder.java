@@ -156,7 +156,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
     }
 
     private void displayUserProfileImages(final ParcelableUser[] statuses) {
-        final MediaLoaderWrapper imageLoader = adapter.getImageLoader();
+        final MediaLoaderWrapper imageLoader = adapter.getMediaLoader();
         if (statuses == null) {
             for (final ImageView view : profileImageViews) {
                 imageLoader.cancelDisplayTask(view);

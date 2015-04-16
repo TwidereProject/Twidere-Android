@@ -1,19 +1,14 @@
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -21,40 +16,26 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ColorUtils;
-import org.mariotaku.twidere.util.ContentListScrollListener;
-import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
-import org.mariotaku.twidere.util.SimpleDrawerCallback;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
-import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
@@ -66,27 +47,15 @@ import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 /**
  * Created by mariotaku on 14/11/5.
  */
-public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment implements LoaderCallbacks<Data>,
-        OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, StatusAdapterListener,
-        ControlBarOffsetListener, ContentListSupport, ShortcutCallback {
+public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<AbsStatusesAdapter<Data>>
+        implements LoaderCallbacks<Data>, StatusAdapterListener, ShortcutCallback {
 
     private final Object mStatusesBusCallback;
-    private AbsStatusesAdapter<Data> mAdapter;
-    private LinearLayoutManager mLayoutManager;
     private SharedPreferences mPreferences;
-    private View mProgressContainer;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private SimpleDrawerCallback mDrawerCallback;
-    private Rect mSystemWindowsInsets = new Rect();
-    private int mControlBarOffsetPixels;
     private PopupMenu mPopupMenu;
     private ReadStateManager mReadStateManager;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private ParcelableStatus mSelectedStatus;
-
-    private int mPositionBackup;
-
     private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -101,65 +70,23 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                     getFragmentManager(), getTwitterWrapper(), status, item);
         }
     };
+    private int mPositionBackup;
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
     }
 
-    @Override
-    public boolean canScroll(float dy) {
-        return mDrawerCallback.canScroll(dy);
+    public SharedPreferences getSharedPreferences() {
+        if (mPreferences != null) return mPreferences;
+        return mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    @Override
-    public void cancelTouch() {
-        mDrawerCallback.cancelTouch();
-    }
+    public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
 
     @Override
-    public void fling(float velocity) {
-        mDrawerCallback.fling(velocity);
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        return mDrawerCallback.isScrollContent(x, y);
-    }
-
-    @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
-        String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
-        final LinearLayoutManager layoutManager = mLayoutManager;
-        final RecyclerView recyclerView = mRecyclerView;
-        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.getFocusedChild());
-        final int position;
-        if (focusedChild != null) {
-            position = recyclerView.getChildLayoutPosition(focusedChild);
-        } else if (layoutManager.findFirstVisibleItemPosition() == 0) {
-            position = -1;
-        } else {
-            final int itemCount = mAdapter.getItemCount();
-            if (layoutManager.findLastVisibleItemPosition() == itemCount - 1) {
-                position = itemCount;
-            } else {
-                position = mPositionBackup;
-            }
-        }
-        mPositionBackup = position;
-        if (action != null) {
-            switch (action) {
-                case "navigation.previous": {
-                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, -1);
-                    return true;
-                }
-                case "navigation.next": {
-                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, 1);
-                    return true;
-                }
-            }
-        }
-        return false;
+    public final boolean scrollToStart() {
+        saveReadPosition();
+        return super.scrollToStart();
     }
 
     @Override
@@ -170,7 +97,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             triggerRefresh();
             return true;
         }
-        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, mLayoutManager.getFocusedChild());
+        final RecyclerView mRecyclerView = getRecyclerView();
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, layoutManager.getFocusedChild());
         final int position;
         if (focusedChild != null && focusedChild.getParent() == mRecyclerView) {
             position = mRecyclerView.getChildLayoutPosition(focusedChild);
@@ -178,7 +107,7 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             return false;
         }
         if (position == -1) return false;
-        final ParcelableStatus status = mAdapter.getStatus(position);
+        final ParcelableStatus status = getAdapter().getStatus(position);
         if (status == null) return false;
         if (action == null) {
             action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
@@ -209,57 +138,39 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     @Override
-    public void scrollBy(float dy) {
-        mDrawerCallback.scrollBy(dy);
-    }
-
-    @Override
-    public boolean shouldLayoutHeaderBottom() {
-        return mDrawerCallback.shouldLayoutHeaderBottom();
-    }
-
-    @Override
-    public void topChanged(int offset) {
-        mDrawerCallback.topChanged(offset);
-    }
-
-    public SharedPreferences getSharedPreferences() {
-        if (mPreferences != null) return mPreferences;
-        return mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-    }
-
-    public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
-
-    public abstract boolean isRefreshing();
-
-    public AbsStatusesAdapter<Data> getAdapter() {
-        return mAdapter;
-    }
-
-    public void setControlVisible(boolean visible) {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof BaseActionBarActivity) {
-            ((BaseActionBarActivity) activity).setControlBarVisibleAnimate(visible);
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
+        String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        final RecyclerView recyclerView = getRecyclerView();
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.getFocusedChild());
+        final int position;
+        if (focusedChild != null) {
+            position = recyclerView.getChildLayoutPosition(focusedChild);
+        } else if (layoutManager.findFirstVisibleItemPosition() == 0) {
+            position = -1;
+        } else {
+            final int itemCount = getAdapter().getItemCount();
+            if (layoutManager.findLastVisibleItemPosition() == itemCount - 1) {
+                position = itemCount;
+            } else {
+                position = mPositionBackup;
+            }
         }
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        if (refreshing == mSwipeRefreshLayout.isRefreshing()) return;
-//        if (!refreshing) updateRefreshProgressOffset();
-        mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).registerControlBarOffsetListener(this);
+        mPositionBackup = position;
+        if (action != null) {
+            switch (action) {
+                case "navigation.previous": {
+                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, -1);
+                    return true;
+                }
+                case "navigation.next": {
+                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, 1);
+                    return true;
+                }
+            }
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        return false;
     }
 
     @Override
@@ -269,30 +180,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = TwidereApplication.getInstance(activity);
         mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
-        final View view = getView();
-        if (view == null) throw new AssertionError();
-        final Context context = view.getContext();
-        final boolean compact = Utils.isCompactCards(context);
-        mDrawerCallback = new SimpleDrawerCallback(mRecyclerView);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
-        final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
-        final int colorRes = ColorUtils.getContrastYIQ(backgroundColor,
-                R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
-        mAdapter = onCreateAdapter(context, compact);
-        mLayoutManager = new FixedLinearLayoutManager(context);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        if (compact) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, mLayoutManager.getOrientation()));
-        }
-        mRecyclerView.setAdapter(mAdapter);
-
-        final ContentListScrollListener scrollListener = new ContentListScrollListener(this);
-        scrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
-        scrollListener.setOnScrollListener(new OnScrollListener() {
+        getAdapter().setListener(this);
+        getScrollListener().setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -300,76 +189,11 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
                 }
             }
         });
-        mRecyclerView.setOnScrollListener(scrollListener);
-        mAdapter.setListener(this);
+
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
         setListShown(false);
-    }
-
-    @Override
-    public void onLoadMoreContents() {
-        setLoadMoreIndicatorVisible(true);
-        setRefreshEnabled(false);
-    }
-
-    public void setLoadMoreIndicatorVisible(boolean visible) {
-        mAdapter.setLoadMoreIndicatorVisible(visible);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.register(mStatusesBusCallback);
-    }
-
-    @Override
-    public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.unregister(mStatusesBusCallback);
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
-        }
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
-        mProgressContainer = view.findViewById(R.id.progress_container);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-    }
-
-    @Override
-    public void onDetach() {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
-        }
-        super.onDetach();
-    }
-
-    @Override
-    protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        mProgressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        mSystemWindowsInsets.set(insets);
-        updateRefreshProgressOffset();
-    }
-
-    @Override
-    public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
-        mControlBarOffsetPixels = Math.round(activity.getControlBarHeight() * (1 - offset));
-        updateRefreshProgressOffset();
     }
 
     @Override
@@ -381,19 +205,21 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public final void onLoadFinished(Loader<Data> loader, Data data) {
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
         final SharedPreferences preferences = getSharedPreferences();
         final boolean rememberPosition = preferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = preferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
         final long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
         final String tag = getCurrentReadPositionTag();
+        final LinearLayoutManager mLayoutManager = getLayoutManager();
         if (readFromBottom) {
             lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
         } else {
             lastVisiblePos = mLayoutManager.findFirstVisibleItemPosition();
         }
         if (lastVisiblePos != RecyclerView.NO_POSITION) {
-            lastReadId = mAdapter.getStatusId(lastVisiblePos);
+            lastReadId = adapter.getStatusId(lastVisiblePos);
             final View positionView = mLayoutManager.findViewByPosition(lastVisiblePos);
             lastVisibleTop = positionView != null ? positionView.getTop() : 0;
         } else if (rememberPosition && tag != null) {
@@ -403,18 +229,18 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
             lastReadId = -1;
             lastVisibleTop = 0;
         }
-        mAdapter.setData(data);
+        adapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            mAdapter.setLoadMoreSupported(hasMoreData(data));
+            adapter.setLoadMoreSupported(hasMoreData(data));
             setRefreshEnabled(true);
             int pos = -1;
-            for (int i = 0, j = mAdapter.getItemCount(); i < j; i++) {
-                if (lastReadId != -1 && lastReadId == mAdapter.getStatusId(i)) {
+            for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
+                if (lastReadId != -1 && lastReadId == adapter.getStatusId(i)) {
                     pos = i;
                     break;
                 }
             }
-            if (pos != -1 && mAdapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
+            if (pos != -1 && adapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
                 mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
             }
         }
@@ -423,12 +249,6 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         }
         setListShown(true);
         onLoadingFinished();
-    }
-
-    protected abstract void onLoadingFinished();
-
-    public void setRefreshEnabled(boolean enabled) {
-        mSwipeRefreshLayout.setEnabled(enabled);
     }
 
     @Override
@@ -443,8 +263,9 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public void onGapClick(GapViewHolder holder, int position) {
-        final ParcelableStatus status = mAdapter.getStatus(position);
-        final long sinceId = position + 1 < mAdapter.getStatusesCount() ? mAdapter.getStatus(position + 1).id : -1;
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatus status = adapter.getStatus(position);
+        final long sinceId = position + 1 < adapter.getStatusesCount() ? adapter.getStatus(position + 1).id : -1;
         final long[] accountIds = {status.account_id};
         final long[] maxIds = {status.id};
         final long[] sinceIds = {sinceId};
@@ -452,8 +273,27 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     }
 
     @Override
+    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatus status = adapter.getStatus(position);
+        if (status == null) return;
+        Utils.openMedia(getActivity(), status, media);
+        //spice
+        SpiceProfilingUtil.log(getActivity(),
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + adapter.isMediaPreviewEnabled() + "," + status.timestamp);
+        SpiceProfilingUtil.profile(getActivity(), status.account_id,
+                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
+                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + adapter.isMediaPreviewEnabled() + "," + status.timestamp);
+        //end
+    }
+
+    @Override
     public void onStatusActionClick(StatusViewHolder holder, int id, int position) {
-        final ParcelableStatus status = mAdapter.getStatus(position);
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
         final FragmentActivity activity = getActivity();
         switch (id) {
@@ -483,7 +323,14 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     @Override
     public void onStatusClick(StatusViewHolder holder, int position) {
-        Utils.openStatus(getActivity(), mAdapter.getStatus(position), null);
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        Utils.openStatus(getActivity(), adapter.getStatus(position), null);
+    }
+
+    @Override
+    public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+        //TODO handle long click event
+        return true;
     }
 
     @Override
@@ -491,28 +338,38 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();
         }
-        final PopupMenu popupMenu = new PopupMenu(mAdapter.getContext(), menuView,
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final PopupMenu popupMenu = new PopupMenu(adapter.getContext(), menuView,
                 Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
         popupMenu.setOnMenuItemClickListener(mOnStatusMenuItemClickListener);
         popupMenu.inflate(R.menu.action_status);
-        final ParcelableStatus status = mAdapter.getStatus(position);
-        setMenuForStatus(mAdapter.getContext(), popupMenu.getMenu(), status);
+        final ParcelableStatus status = adapter.getStatus(position);
+        setMenuForStatus(adapter.getContext(), popupMenu.getMenu(), status);
         popupMenu.show();
         mPopupMenu = popupMenu;
         mSelectedStatus = status;
     }
 
     @Override
-    public void onRefresh() {
-        triggerRefresh();
+    public void onStart() {
+        super.onStart();
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(mStatusesBusCallback);
     }
 
     @Override
-    public boolean scrollToStart() {
-        saveReadPosition();
-        mLayoutManager.scrollToPositionWithOffset(0, 0);
-        setControlVisible(true);
-        return true;
+    public void onStop() {
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(mStatusesBusCallback);
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mPopupMenu != null) {
+            mPopupMenu.dismiss();
+        }
+        super.onDestroyView();
     }
 
     protected Object createMessageBusCallback() {
@@ -522,11 +379,13 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
     protected abstract long[] getAccountIds();
 
     protected Data getAdapterData() {
-        return mAdapter.getData();
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        return adapter.getData();
     }
 
     protected void setAdapterData(Data data) {
-        mAdapter.setData(data);
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        adapter.setData(data);
     }
 
     protected String getReadPositionTag() {
@@ -535,14 +394,16 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
     protected abstract boolean hasMoreData(Data data);
 
-    protected abstract AbsStatusesAdapter<Data> onCreateAdapter(Context context, boolean compact);
+    protected abstract void onLoadingFinished();
 
     protected void saveReadPosition() {
         final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
-        final int position = mLayoutManager.findFirstVisibleItemPosition();
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        final int position = layoutManager.findFirstVisibleItemPosition();
         if (position == RecyclerView.NO_POSITION) return;
-        final ParcelableStatus status = mAdapter.getStatus(position);
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
         mReadStateManager.setPosition(readPositionTag, status.id);
         mReadStateManager.setPosition(getCurrentReadPositionTag(), status.id, true);
@@ -558,38 +419,6 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
         return Utils.getReadPositionTagWithAccounts(getReadPositionTag(), getAccountIds());
     }
 
-    private void setListShown(boolean shown) {
-        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
-        mSwipeRefreshLayout.setVisibility(shown ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
-        final ParcelableStatus status = mAdapter.getStatus(position);
-        if (status == null) return;
-        Utils.openMedia(getActivity(), status, media);
-        //spice
-        SpiceProfilingUtil.log(getActivity(),
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + mAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + mAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        //end
-    }
-
-    private void updateRefreshProgressOffset() {
-        if (mSystemWindowsInsets.top == 0 || mSwipeRefreshLayout == null || isRefreshing()) return;
-        final float density = getResources().getDisplayMetrics().density;
-        final int progressCircleDiameter = mSwipeRefreshLayout.getProgressCircleDiameter();
-        final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - progressCircleDiameter;
-        // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
-        final int swipeDistance = Math.round(64 * density);
-        mSwipeRefreshLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance);
-    }
-
     protected final class StatusesBusCallback {
 
         protected StatusesBusCallback() {
@@ -597,7 +426,8 @@ public abstract class AbsStatusesFragment<Data> extends BaseSupportFragment impl
 
         @Subscribe
         public void notifyStatusListChanged(StatusListChangedEvent event) {
-            mAdapter.notifyDataSetChanged();
+            final AbsStatusesAdapter<Data> adapter = getAdapter();
+            adapter.notifyDataSetChanged();
         }
 
     }

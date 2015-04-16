@@ -22,7 +22,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
@@ -162,13 +162,13 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
 
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
-        private final ImageLoadingHandler mLoadingHandler;
+        private final MediaLoadingHandler mLoadingHandler;
         private List<ParcelableStatus> mData;
 
         MediaTimelineAdapter(Context context) {
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
-            mLoadingHandler = new ImageLoadingHandler(R.id.media_image_progress);
+            mLoadingHandler = new MediaLoadingHandler(R.id.media_image_progress);
         }
 
         @Override
@@ -208,7 +208,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
             mediaTextView = (TextView) itemView.findViewById(R.id.media_text);
         }
 
-        public void setMedia(MediaLoaderWrapper loader, ImageLoadingHandler loadingHandler, ParcelableStatus status) {
+        public void setMedia(MediaLoaderWrapper loader, MediaLoadingHandler loadingHandler, ParcelableStatus status) {
             final ParcelableMedia[] media = status.media;
             if (media == null || media.length < 1) return;
             final ParcelableMedia firstMedia = media[0];

@@ -1,7 +1,7 @@
 /*
  * Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,17 +19,25 @@
 
 package org.mariotaku.twidere.adapter.iface;
 
-import android.support.v7.widget.RecyclerView.ViewHolder;
+import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 
 /**
- * Created by mariotaku on 14/12/3.
+ * Created by mariotaku on 15/4/16.
  */
-public interface IGapSupportedAdapter {
+public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
-    int ITEM_VIEW_TYPE_GAP = 1;
+    ParcelableUser getUser(int position);
 
-    boolean isGapItem(int position);
+    long getUserId(int position);
 
-    void onGapClick(ViewHolder holder, int position);
+    int getUsersCount();
+
+    void setData(Data data);
+
+    boolean shouldShowAccountsColor();
+
+    MediaLoaderWrapper getMediaLoader();
 
 }

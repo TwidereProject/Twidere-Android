@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 
 import com.squareup.otto.Bus;
@@ -107,6 +108,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         return new ParcelableStatusesBusCallback();
     }
 
+    @NonNull
     @Override
     protected ParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
         return new ParcelableStatusesAdapter(context, compact);

@@ -39,16 +39,16 @@ import org.mariotaku.twidere.view.ForegroundImageView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ImageLoadingHandler implements ImageLoadingListener, ImageLoadingProgressListener {
+public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingProgressListener {
 
     private final Map<View, String> mLoadingUris = new HashMap<>();
     private final int[] mProgressBarIds;
 
-    public ImageLoadingHandler() {
+    public MediaLoadingHandler() {
         this(R.id.media_preview_progress);
     }
 
-    public ImageLoadingHandler(final int... progressBarIds) {
+    public MediaLoadingHandler(final int... progressBarIds) {
         mProgressBarIds = progressBarIds;
     }
 

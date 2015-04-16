@@ -20,11 +20,14 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
+import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 
 /**
  * Created by mariotaku on 14/11/18.
  */
-public interface IActivitiesAdapter<Data> extends IContentCardAdapter {
+public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSupportedAdapter {
 
     ParcelableActivity getActivity(int position);
 
@@ -32,4 +35,10 @@ public interface IActivitiesAdapter<Data> extends IContentCardAdapter {
 
     void setData(Data data);
 
+    @PreviewStyle
+    int getMediaPreviewStyle();
+
+    MediaLoaderWrapper getMediaLoader();
+
+    MediaLoadingHandler getMediaLoadingHandler();
 }

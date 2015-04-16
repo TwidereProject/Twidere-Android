@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
@@ -40,7 +41,7 @@ import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -69,7 +70,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final MediaLoaderWrapper mImageLoader;
-    private final ImageLoadingHandler mLoadingHandler;
+    private final MediaLoadingHandler mLoadingHandler;
     private final AsyncTwitterWrapper mTwitterWrapper;
     private final int mCardBackgroundColor;
     private final int mTextSize;
@@ -90,7 +91,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
         mInflater = LayoutInflater.from(context);
         mImageLoader = app.getMediaLoaderWrapper();
-        mLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
+        mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -115,7 +116,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     public abstract void setData(Data data);
 
     @Override
-    public MediaLoaderWrapper getImageLoader() {
+    public MediaLoaderWrapper getMediaLoader() {
         return mImageLoader;
     }
 
@@ -125,7 +126,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     }
 
     @Override
-    public ImageLoadingHandler getImageLoadingHandler() {
+    public MediaLoadingHandler getMediaLoadingHandler() {
         return mLoadingHandler;
     }
 
@@ -139,6 +140,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         return mMediaPreviewStyle;
     }
 
+    @NonNull
     @Override
     public AsyncTwitterWrapper getTwitterWrapper() {
         return mTwitterWrapper;
@@ -187,7 +189,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         return mNameFirst;
     }
 
-    @Override
     public boolean isProfileImageEnabled() {
         return mDisplayProfileImage;
     }
@@ -302,6 +303,11 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
                 break;
             }
         }
+    }
+
+    @Override
+    public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+        return false;
     }
 
     @Override

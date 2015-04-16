@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import com.squareup.otto.Subscribe;
@@ -172,6 +173,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
         return cursor != null && cursor.getCount() != 0;
     }
 
+    @NonNull
     @Override
     protected CursorStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
         return new CursorStatusesAdapter(context, compact);

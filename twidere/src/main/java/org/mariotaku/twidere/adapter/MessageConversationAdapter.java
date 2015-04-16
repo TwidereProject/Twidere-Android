@@ -36,7 +36,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -61,7 +61,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
     private final LayoutInflater mInflater;
     private final MediaLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
-    private final ImageLoadingHandler mImageLoadingHandler;
+    private final MediaLoadingHandler mMediaLoadingHandler;
 
     private Cursor mCursor;
     private CursorIndices mIndices;
@@ -74,7 +74,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null));
         mMultiSelectManager = app.getMultiSelectManager();
         mImageLoader = app.getMediaLoaderWrapper();
-        mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
+        mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
         mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context);
     }

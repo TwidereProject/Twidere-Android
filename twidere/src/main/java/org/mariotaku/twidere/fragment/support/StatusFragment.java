@@ -96,7 +96,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
-import org.mariotaku.twidere.util.ImageLoadingHandler;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -367,6 +367,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
+    public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+        return false;
+    }
+
+    @Override
     public void onStatusMenuClick(StatusViewHolder holder, View menuView, int position) {
         //TODO show status menu
         if (mPopupMenu != null) {
@@ -606,7 +611,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();
             final Resources resources = context.getResources();
-            final MediaLoaderWrapper loader = adapter.getImageLoader();
+            final MediaLoaderWrapper loader = adapter.getMediaLoader();
             final boolean nameFirst = adapter.isNameFirst();
 
             linkClickHandler.setStatus(status);
@@ -730,7 +735,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mediaPreview.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.GONE);
                 mediaPreview.displayMedia(status.media, loader, status.account_id,
-                        adapter.getFragment(), adapter.getImageLoadingHandler());
+                        adapter.getFragment(), adapter.getMediaLoadingHandler());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.GONE);
@@ -1021,7 +1026,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final StatusFragment mFragment;
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
-        private final ImageLoadingHandler mImageLoadingHandler;
+        private final MediaLoadingHandler mMediaLoadingHandler;
         private final TwidereLinkify mTwidereLinkify;
 
         private final boolean mNameFirst;
@@ -1056,7 +1061,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
-            mImageLoadingHandler = new ImageLoadingHandler(R.id.media_preview_progress);
+            mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
             mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
@@ -1096,7 +1101,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mFragment;
         }
 
-        public MediaLoaderWrapper getImageLoader() {
+        public MediaLoaderWrapper getMediaLoader() {
             return mImageLoader;
         }
 
@@ -1105,8 +1110,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public ImageLoadingHandler getImageLoadingHandler() {
-            return mImageLoadingHandler;
+        public MediaLoadingHandler getMediaLoadingHandler() {
+            return mMediaLoadingHandler;
         }
 
         @Override
@@ -1119,6 +1124,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mMediaPreviewStyle;
         }
 
+        @NonNull
         @Override
         public AsyncTwitterWrapper getTwitterWrapper() {
             return mFragment.getTwitterWrapper();
@@ -1264,6 +1270,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (mStatusAdapterListener != null) {
                 mStatusAdapterListener.onStatusClick(holder, position);
             }
+        }
+
+        @Override
+        public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+            return false;
         }
 
         @Override

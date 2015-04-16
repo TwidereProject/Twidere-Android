@@ -94,12 +94,12 @@ public class MediaLoaderWrapper implements Constants {
         mImageLoader.displayImage(uri, view, mImageDisplayOptions);
     }
 
-    public void displayPreviewImage(final ImageView view, final String url, final ImageLoadingHandler loadingHandler) {
+    public void displayPreviewImage(final ImageView view, final String url, final MediaLoadingHandler loadingHandler) {
         mImageLoader.displayImage(url, view, mImageDisplayOptions, loadingHandler, loadingHandler);
     }
 
     public void displayPreviewImageWithCredentials(final ImageView view, final String url, final long accountId,
-                                                   final ImageLoadingHandler loadingHandler) {
+                                                   final MediaLoadingHandler loadingHandler) {
         final DisplayImageOptions.Builder b = new DisplayImageOptions.Builder();
         b.cloneFrom(mImageDisplayOptions);
         b.extraForDownloader(new AccountExtra(accountId));

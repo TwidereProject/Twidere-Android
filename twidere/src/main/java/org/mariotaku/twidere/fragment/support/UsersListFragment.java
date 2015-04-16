@@ -28,7 +28,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-public class UsersListFragment extends BaseUsersListFragment {
+public class UsersListFragment extends ParcelableUsersFragment {
 
 	@Override
 	public Loader<List<ParcelableUser>> newLoaderInstance(final Context context, final Bundle args) {

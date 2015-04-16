@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
@@ -36,6 +37,7 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
         return Mentions.CONTENT_URI;
     }
 
+    @NonNull
     @Override
     protected CursorStatusesAdapter onCreateAdapter(Context context, boolean compact) {
         final CursorStatusesAdapter adapter = super.onCreateAdapter(context, compact);
