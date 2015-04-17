@@ -44,10 +44,15 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenStreetMapViewerActivity extends BaseActionBarActivity implements Constants {
+public class OpenStreetMapViewerActivity extends ThemedActionBarActivity implements Constants {
 
     private MapView mMapView;
     private double mLatitude, mLongitude;
+
+    @Override
+    public int getThemeColor() {
+        return ThemeUtils.getUserAccentColor(this);
+    }
 
     @Override
     public int getThemeResourceId() {

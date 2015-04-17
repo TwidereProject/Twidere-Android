@@ -32,6 +32,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -53,6 +54,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
@@ -79,11 +81,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     }
 
     @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getDialogWhenLargeThemeResource(this);
-    }
-
-    @Override
     public void onDetachFragment(Fragment fragment) {
 
     }
@@ -96,6 +93,11 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     @Override
     public boolean triggerRefresh(int position) {
         return false;
+    }
+
+    @Override
+    public int getThemeResourceId() {
+        return ThemeUtils.getDialogWhenLargeThemeResource(this);
     }
 
     @Override
@@ -132,37 +134,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutRepeat(keyCode, repeatCount, event)) return true;
         return super.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
-    }
-
-
-    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof ShortcutCallback) {
-            return ((ShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
-        }
-        return false;
-    }
-
-    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof ShortcutCallback) {
-            return ((ShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
-        }
-        return false;
-    }
-
-    @Override
-    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
-        final boolean result = super.onPrepareOptionsPanel(view, menu);
-        if (mActionBarItemsColor != 0) {
-            final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-            if (actionBarView instanceof Toolbar) {
-                ((Toolbar) actionBarView).setTitleTextColor(mActionBarItemsColor);
-                ((Toolbar) actionBarView).setSubtitleTextColor(mActionBarItemsColor);
-                ThemeUtils.setActionBarOverflowColor((Toolbar) actionBarView, mActionBarItemsColor);
-            }
-        }
-        return result;
     }
 
     @Override
@@ -203,15 +174,65 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
-        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        final boolean result = super.onPrepareOptionsMenu(menu);
+        if (!shouldSetActionItemColor()) return result;
+        final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
+        if (actionBarView instanceof Toolbar) {
+            final int themeColor = getCurrentThemeColor();
+            final int themeId = getCurrentThemeResourceId();
+            final int itemColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
+            final Toolbar toolbar = (Toolbar) actionBarView;
+            ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
+            ThemeUtils.wrapToolbarMenuIcon(ViewUtils.findViewByType(actionBarView, ActionMenuView.class), itemColor, itemColor);
+        }
+        return result;
     }
 
     public final void setSubtitle(CharSequence subtitle) {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
         actionBar.setSubtitle(subtitle);
+    }
+
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        final boolean result = super.onPrepareOptionsPanel(view, menu);
+        if (mActionBarItemsColor != 0) {
+            final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
+            if (actionBarView instanceof Toolbar) {
+                ((Toolbar) actionBarView).setTitleTextColor(mActionBarItemsColor);
+                ((Toolbar) actionBarView).setSubtitleTextColor(mActionBarItemsColor);
+                ThemeUtils.setActionBarOverflowColor((Toolbar) actionBarView, mActionBarItemsColor);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void onSupportContentChanged() {
+        super.onSupportContentChanged();
+        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
+    }
+
+    protected boolean shouldSetActionItemColor() {
+        return !(getCurrentVisibleFragment() instanceof UserFragment);
+    }
+
+    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+        }
+        return false;
+    }
+
+    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof ShortcutCallback) {
+            return ((ShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+        }
+        return false;
     }
 
     private void requestWindowFeatures(Window window, int linkId, Uri uri) {
@@ -295,11 +316,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         }
     }
 
-    @Override
-    protected boolean shouldSetActionItemColor() {
-        return !(getCurrentVisibleFragment() instanceof UserFragment);
-    }
-
     private void setTaskInfo(int linkId, Uri uri) {
         switch (linkId) {
             case LINK_ID_USER: {
@@ -313,13 +329,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
                 break;
             }
         }
-    }
-
-    @Override
-    public void setControlBarVisibleAnimate(boolean visible) {
-        // Currently only search page needs this pattern, so we only enable this feature for it.
-        if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
-        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
     }
 
     private boolean showFragment(final int linkId, final Uri uri) {
@@ -437,6 +446,12 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         return true;
     }
 
+    @Override
+    public void setControlBarVisibleAnimate(boolean visible) {
+        // Currently only search page needs this pattern, so we only enable this feature for it.
+        if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
+        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
+    }
 
     @Override
     public void setControlBarOffset(float offset) {

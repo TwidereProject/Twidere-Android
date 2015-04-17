@@ -17,18 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.support;
+package org.mariotaku.twidere.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
 
-public class UsageStatisticsActivity extends BaseActionBarActivity implements Constants {
+public class UsageStatisticsActivity extends Activity implements Constants {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

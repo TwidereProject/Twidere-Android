@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -32,7 +31,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,8 +38,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -58,7 +54,6 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTa
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
@@ -215,12 +210,6 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        final Window window = getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
         mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();

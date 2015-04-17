@@ -64,12 +64,6 @@ public class FiltersActivity extends BaseDialogWhenLargeActivity {
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filters);
         mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null, 1);

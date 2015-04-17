@@ -38,7 +38,12 @@ import org.mariotaku.twidere.fragment.support.WebMapFragment;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
-public class GoogleMapViewerActivity extends BaseActionBarActivity implements Constants {
+public class GoogleMapViewerActivity extends ThemedActionBarActivity implements Constants {
+
+    @Override
+    public int getThemeColor() {
+        return ThemeUtils.getUserAccentColor(this);
+    }
 
     @Override
     public int getThemeResourceId() {
