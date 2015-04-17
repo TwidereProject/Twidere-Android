@@ -47,6 +47,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -292,6 +293,11 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
                 break;
             }
         }
+    }
+
+    @Override
+    protected boolean shouldSetActionItemColor() {
+        return !(getCurrentVisibleFragment() instanceof UserFragment);
     }
 
     private void setTaskInfo(int linkId, Uri uri) {

@@ -373,7 +373,8 @@
             android:name=".activity.support.DraftsActivity"
             android:exported="false"
             android:label="@string/drafts"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.DRAFTS"/>
 
@@ -388,7 +389,8 @@
             android:name=".activity.support.AccountsManagerActivity"
             android:exported="false"
             android:label="@string/accounts"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.ACCOUNTS"/>
 

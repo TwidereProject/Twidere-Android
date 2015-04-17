@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -27,6 +28,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.Utils;
 
@@ -36,6 +38,7 @@ import org.mariotaku.twidere.util.Utils;
 public class TintedStatusFrameLayout extends ExtendedFrameLayout {
 
     private final Paint mBlackPaint, mShadowPaint, mColorPaint;
+    private final boolean mSetPadding;
 
     private int mStatusBarHeight;
     private float mFactor;
@@ -52,6 +55,8 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout {
 
     public TintedStatusFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TintedStatusLayout);
+        mSetPadding = a.getBoolean(R.styleable.TintedStatusLayout_setPadding, false);
         mBlackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBlackPaint.setColor(Color.BLACK);
         mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -111,6 +116,9 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout {
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
+        if (mSetPadding) {
+            setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
         return super.fitSystemWindows(insets);
     }
 

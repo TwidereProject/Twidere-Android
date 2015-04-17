@@ -29,7 +29,7 @@ import android.view.MenuItem;
 import android.view.WindowManager.LayoutParams;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
+import org.mariotaku.twidere.activity.support.BaseDialogWhenLargeActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredKeywordsFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredLinksFragment;
@@ -38,11 +38,9 @@ import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredUsersFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
-public class FiltersActivity extends BaseActionBarActivity {
+public class FiltersActivity extends BaseDialogWhenLargeActivity {
 
-    private TintedStatusFrameLayout mMainContent;
     private TabPagerIndicator mPagerIndicator;
     private ViewPager mViewPager;
 
@@ -51,12 +49,6 @@ public class FiltersActivity extends BaseActionBarActivity {
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
         return false;
-    }
-
-    @Override
-    public void onFitSystemWindows(Rect insets) {
-        super.onFitSystemWindows(insets);
-        mMainContent.setPadding(insets.left, insets.top, insets.right, insets.bottom);
     }
 
     @Override
@@ -79,10 +71,7 @@ public class FiltersActivity extends BaseActionBarActivity {
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         super.onCreate(savedInstanceState);
-        ThemeUtils.applyActionBarBackground(getSupportActionBar(), this, getCurrentThemeResourceId(),
-                getCurrentThemeColor(), getThemeBackgroundOption(), false);
-        setContentView(R.layout.activity_content_pages);
-        mMainContent.setOnFitSystemWindowsListener(this);
+        setContentView(R.layout.activity_filters);
         mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null, 1);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
@@ -99,22 +88,16 @@ public class FiltersActivity extends BaseActionBarActivity {
         ThemeUtils.initPagerIndicatorAsActionBarTab(this, mPagerIndicator);
         ThemeUtils.setCompatToolbarOverlay(this, new EmptyDrawable());
 
-        mMainContent.setDrawShadow(false);
-        mMainContent.setDrawColor(true);
-        mMainContent.setFactor(1);
-        final int color = getCurrentThemeColor();
-        final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
-        if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
-            mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark), alpha);
-        } else {
-            mMainContent.setColor(color, alpha);
-        }
+    }
+
+    @Override
+    protected boolean isActionBarOutlineEnabled() {
+        return false;
     }
 
     @Override
     public void onSupportContentChanged() {
         super.onSupportContentChanged();
-        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) findViewById(R.id.view_pager_tabs);
     }

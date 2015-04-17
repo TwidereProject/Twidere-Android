@@ -21,7 +21,6 @@ package org.mariotaku.twidere.activity.support;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -62,7 +61,6 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.view.ForegroundColorView;
-import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import twitter4j.Twitter;
@@ -74,7 +72,7 @@ import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 
-public class UserProfileEditorActivity extends BaseActionBarActivity implements OnSizeChangedListener, TextWatcher,
+public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity implements OnSizeChangedListener, TextWatcher,
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>> {
 
     private static final int LOADER_ID_USER = 1;
@@ -86,7 +84,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private AsyncTask<Object, Object, ?> mTask;
-    private TintedStatusFrameLayout mMainContent;
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
     private EditText mEditName, mEditDescription, mEditLocation, mEditUrl;
@@ -111,124 +108,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
 
     @Override
     public void afterTextChanged(final Editable s) {
-    }
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getDialogWhenLargeThemeResource(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_HOME: {
-                finish();
-                return true;
-            }
-            case MENU_SAVE: {
-                final String name = ParseUtils.parseString(mEditName.getText());
-                final String url = ParseUtils.parseString(mEditUrl.getText());
-                final String location = ParseUtils.parseString(mEditLocation.getText());
-                final String description = ParseUtils.parseString(mEditDescription.getText());
-                final int linkColor = mLinkColor.getColor();
-                final int backgroundColor = mBackgroundColor.getColor();
-                mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
-                        description, linkColor, backgroundColor);
-                AsyncTaskUtils.executeTask(mTask);
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        final Window window = getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-        super.onCreate(savedInstanceState);
-        mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
-        mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
-        final Intent intent = getIntent();
-        final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
-        mAccountId = accountId;
-        if (!isMyAccount(this, accountId)) {
-            finish();
-            return;
-        }
-
-        final ActionBar actionBar = getSupportActionBar();
-        final int themeColor = getCurrentThemeColor();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            final int themeId = getCurrentThemeResourceId();
-            final String option = getThemeBackgroundOption();
-            final int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
-            ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, true);
-            ThemeUtils.setActionBarItemsColor(getWindow(), actionBar, actionBarItemsColor);
-        }
-        setContentView(R.layout.activity_user_profile_editor);
-
-        mMainContent.setOnFitSystemWindowsListener(this);
-        if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
-            mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark));
-        } else {
-            mMainContent.setColor(themeColor);
-        }
-        mMainContent.setDrawColor(true);
-        // setOverrideExitAniamtion(false);
-        mEditName.addTextChangedListener(this);
-        mEditDescription.addTextChangedListener(this);
-        mEditLocation.addTextChangedListener(this);
-        mEditUrl.addTextChangedListener(this);
-        mProfileImageView.setOnClickListener(this);
-        mProfileBannerView.setOnClickListener(this);
-        mProfileImageCamera.setOnClickListener(this);
-        mProfileImageGallery.setOnClickListener(this);
-        mProfileBannerGallery.setOnClickListener(this);
-        mProfileBannerRemove.setOnClickListener(this);
-        mSetLinkColor.setOnClickListener(this);
-        mSetBackgroundColor.setOnClickListener(this);
-
-        if (savedInstanceState != null && savedInstanceState.getParcelable(EXTRA_USER) != null) {
-            final ParcelableUser user = savedInstanceState.getParcelable(EXTRA_USER);
-            displayUser(user);
-            mEditName.setText(savedInstanceState.getString(EXTRA_NAME, user.name));
-            mEditLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, user.location));
-            mEditDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, user.description_expanded));
-            mEditUrl.setText(savedInstanceState.getString(EXTRA_URL, user.url_expanded));
-        } else {
-            getUserInfo();
-        }
-    }
-
-    @Override
-    public void onFitSystemWindows(Rect insets) {
-        mMainContent.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        super.onFitSystemWindows(insets);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(EXTRA_USER, mUser);
-        outState.putString(EXTRA_NAME, ParseUtils.parseString(mEditName.getText()));
-        outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(mEditDescription.getText()));
-        outState.putString(EXTRA_LOCATION, ParseUtils.parseString(mEditLocation.getText()));
-        outState.putString(EXTRA_URL, ParseUtils.parseString(mEditUrl.getText()));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     @Override
@@ -312,13 +191,106 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_HOME: {
+                finish();
+                return true;
+            }
+            case MENU_SAVE: {
+                final String name = ParseUtils.parseString(mEditName.getText());
+                final String url = ParseUtils.parseString(mEditUrl.getText());
+                final String location = ParseUtils.parseString(mEditLocation.getText());
+                final String description = ParseUtils.parseString(mEditDescription.getText());
+                final int linkColor = mLinkColor.getColor();
+                final int backgroundColor = mBackgroundColor.getColor();
+                mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
+                        description, linkColor, backgroundColor);
+                AsyncTaskUtils.executeTask(mTask);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        final Window window = getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
+        super.onCreate(savedInstanceState);
+        mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
+        mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
+        final Intent intent = getIntent();
+        final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
+        mAccountId = accountId;
+        if (!isMyAccount(this, accountId)) {
+            finish();
+            return;
+        }
+
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        setContentView(R.layout.activity_user_profile_editor);
+
+        // setOverrideExitAniamtion(false);
+        mEditName.addTextChangedListener(this);
+        mEditDescription.addTextChangedListener(this);
+        mEditLocation.addTextChangedListener(this);
+        mEditUrl.addTextChangedListener(this);
+        mProfileImageView.setOnClickListener(this);
+        mProfileBannerView.setOnClickListener(this);
+        mProfileImageCamera.setOnClickListener(this);
+        mProfileImageGallery.setOnClickListener(this);
+        mProfileBannerGallery.setOnClickListener(this);
+        mProfileBannerRemove.setOnClickListener(this);
+        mSetLinkColor.setOnClickListener(this);
+        mSetBackgroundColor.setOnClickListener(this);
+
+        if (savedInstanceState != null && savedInstanceState.getParcelable(EXTRA_USER) != null) {
+            final ParcelableUser user = savedInstanceState.getParcelable(EXTRA_USER);
+            displayUser(user);
+            mEditName.setText(savedInstanceState.getString(EXTRA_NAME, user.name));
+            mEditLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, user.location));
+            mEditDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, user.description_expanded));
+            mEditUrl.setText(savedInstanceState.getString(EXTRA_URL, user.url_expanded));
+        } else {
+            getUserInfo();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(EXTRA_USER, mUser);
+        outState.putString(EXTRA_NAME, ParseUtils.parseString(mEditName.getText()));
+        outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(mEditDescription.getText()));
+        outState.putString(EXTRA_LOCATION, ParseUtils.parseString(mEditLocation.getText()));
+        outState.putString(EXTRA_URL, ParseUtils.parseString(mEditUrl.getText()));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onSizeChanged(final View view, final int w, final int h, final int oldw, final int oldh) {
     }
 
     @Override
     public void onSupportContentChanged() {
         super.onSupportContentChanged();
-        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
         mProgressContainer = findViewById(R.id.progress_container);
         mEditProfileContent = findViewById(R.id.edit_profile_content);
         mProfileBannerView = (ImageView) findViewById(R.id.profile_banner);

@@ -90,6 +90,9 @@
         <attr name="headerLayout" format="reference"/>
         <attr name="contentLayout" format="reference"/>
     </declare-styleable>
+    <declare-styleable name="TintedStatusLayout">
+        <attr name="setPadding" format="boolean"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

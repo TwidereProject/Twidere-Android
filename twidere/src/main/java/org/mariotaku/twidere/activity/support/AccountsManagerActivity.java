@@ -18,9 +18,17 @@ import org.mariotaku.twidere.view.TintedStatusFrameLayout;
  * Accounts manager
  * Created by mariotaku on 14/10/26.
  */
-public class AccountsManagerActivity extends BaseActionBarActivity {
+public class AccountsManagerActivity extends BaseDialogWhenLargeActivity {
 
-    private TintedStatusFrameLayout mMainContent;
+    @Override
+    public void onFitSystemWindows(Rect insets) {
+        super.onFitSystemWindows(insets);
+        final FragmentManager fm = getSupportFragmentManager();
+        final Fragment f = fm.findFragmentById(R.id.main_content);
+        if (f instanceof IBaseFragment) {
+            ((IBaseFragment) f).requestFitSystemWindows();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -34,12 +42,6 @@ public class AccountsManagerActivity extends BaseActionBarActivity {
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
-        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
@@ -48,20 +50,9 @@ public class AccountsManagerActivity extends BaseActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.activity_content_fragment);
-        mMainContent.setOnFitSystemWindowsListener(this);
         final FragmentManager fm = getSupportFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.main_content, new AccountsManagerFragment());
         ft.commit();
-    }
-
-    @Override
-    public void onFitSystemWindows(Rect insets) {
-        super.onFitSystemWindows(insets);
-        final FragmentManager fm = getSupportFragmentManager();
-        final Fragment f = fm.findFragmentById(R.id.main_content);
-        if (f instanceof IBaseFragment) {
-            ((IBaseFragment) f).requestFitSystemWindows();
-        }
     }
 }

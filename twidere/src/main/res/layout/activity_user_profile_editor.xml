@@ -19,21 +19,20 @@
   -->
 
 <org.mariotaku.twidere.view.TintedStatusFrameLayout
+    android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/main_content"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:setPadding="true">
 
     <ScrollView
         android:id="@+id/edit_profile_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/done_bar"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -344,8 +343,6 @@
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/done_bar"
         android:visibility="visible"
         tools:visibility="gone">
 

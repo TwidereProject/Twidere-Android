@@ -21,9 +21,7 @@
 <org.mariotaku.twidere.view.TintedStatusFrameLayout
     android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <include layout="@layout/layout_content_pages_common"/>
-
-</org.mariotaku.twidere.view.TintedStatusFrameLayout>
+    android:layout_height="match_parent"
+    app:setPadding="true"/>

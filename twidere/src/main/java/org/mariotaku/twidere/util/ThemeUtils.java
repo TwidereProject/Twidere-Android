@@ -933,6 +933,7 @@ public class ThemeUtils implements Constants {
         }
         actionBar.setHomeAsUpIndicator(drawable);
         setActionBarTitleTextColor(window, itemColor);
+        setActionBarSubtitleTextColor(window, itemColor);
     }
 
     public static void setActionBarOverflowColor(Toolbar toolbar, int itemColor) {

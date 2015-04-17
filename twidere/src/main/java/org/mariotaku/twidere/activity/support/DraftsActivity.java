@@ -29,8 +29,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -48,6 +50,7 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -69,6 +72,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -76,7 +80,7 @@ import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultTextSize;
 
-public class DraftsActivity extends BaseActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener,
+public class DraftsActivity extends BaseDialogWhenLargeActivity implements LoaderCallbacks<Cursor>, OnItemClickListener,
         MultiChoiceModeListener {
 
     private ContentResolver mResolver;
@@ -194,12 +198,19 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         super.onCreate(savedInstanceState);
         mResolver = getContentResolver();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
-        setContentView(R.layout.layout_list_with_empty_view);
+
+        setContentView(R.layout.activity_drafts);
+
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -217,6 +228,15 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
     }
 
     @Override
+    protected void onStart() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        if (twitter != null) {
+            twitter.clearNotificationAsync(NOTIFICATION_ID_DRAFTS);
+        }
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         final float text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
@@ -225,15 +245,6 @@ public class DraftsActivity extends BaseActionBarActivity implements LoaderCallb
             mTextSize = text_size;
             mListView.invalidateViews();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        if (twitter != null) {
-            twitter.clearNotificationAsync(NOTIFICATION_ID_DRAFTS);
-        }
-        super.onStart();
     }
 
     @Override
