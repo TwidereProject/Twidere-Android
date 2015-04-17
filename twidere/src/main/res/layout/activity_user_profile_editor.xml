@@ -18,11 +18,12 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
+<org.mariotaku.twidere.view.TintedStatusFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/main_content"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:orientation="vertical">
@@ -355,34 +356,4 @@
             android:layout_gravity="center"/>
     </FrameLayout>
 
-    <org.mariotaku.twidere.view.TwidereToolbar
-        android:id="@+id/done_bar"
-        style="?actionBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:dividerPadding="12dp"
-            android:orientation="horizontal"
-            android:showDividers="middle">
-
-            <include layout="@layout/include_cancel_button"/>
-
-            <include layout="@layout/include_done_button"/>
-        </LinearLayout>
-
-    </org.mariotaku.twidere.view.TwidereToolbar>
-
-    <View
-        android:id="@+id/actionbar_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/done_bar"/>
-
-</RelativeLayout>
+</org.mariotaku.twidere.view.TintedStatusFrameLayout>

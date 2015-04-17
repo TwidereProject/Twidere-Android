@@ -10,13 +10,22 @@ import android.view.Window;
 public class WindowAccessor {
     public static void setStatusBarColor(Window window, int color) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        WindowAccessorL.setStatusBarColor(window, color);
+        WindowAccessorLollipop.setStatusBarColor(window, color);
+    }
+
+    public static void setSharedElementsUseOverlay(Window window, boolean sharedElementsUseOverlay) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        WindowAccessorLollipop.setSharedElementsUseOverlay(window, sharedElementsUseOverlay);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static class WindowAccessorL {
+    private static class WindowAccessorLollipop {
         public static void setStatusBarColor(Window window, int color) {
             window.setStatusBarColor(color);
+        }
+
+        public static void setSharedElementsUseOverlay(Window window, boolean sharedElementsUseOverlay) {
+            window.setSharedElementsUseOverlay(sharedElementsUseOverlay);
         }
     }
 }

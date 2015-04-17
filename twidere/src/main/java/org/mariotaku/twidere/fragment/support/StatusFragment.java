@@ -75,7 +75,6 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -108,7 +107,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.ForegroundColorView;
@@ -296,14 +295,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
         if (status == null) return;
-        Utils.openMedia(getActivity(), status, media);
+        //TODO open media animation
+        Bundle options = null;
+        Utils.openMedia(getActivity(), status, media, options);
         SpiceProfilingUtil.log(getActivity(),
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         SpiceProfilingUtil.profile(getActivity(), status.account_id,
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
     }
 
@@ -379,15 +380,17 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
-        Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media);
+        //TODO open media animation
+        Bundle options = null;
+        Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
         //spice
         SpiceProfilingUtil.log(getActivity(),
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         SpiceProfilingUtil.profile(getActivity(), status.account_id,
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
+                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         //end
     }
@@ -444,31 +447,31 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                     + "," + status.text_plain.length() + "," + status.timestamp);
         } else {
-            for (final ParcelableMedia spiceMedia : status.media) {
-                if (spiceMedia.type == ParcelableMedia.TYPE_IMAGE) {
+            for (final ParcelableMedia media : status.media) {
+                if (media.type == ParcelableMedia.TYPE_IMAGE) {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
-                                    + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
+                                    + "," + media.media_url + "," + media.width + "x" + media.height
                                     + "," + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
-                                    + "," + spiceMedia.media_url + "," + spiceMedia.width + "x" + spiceMedia.height
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
+                                    + "," + media.media_url + "," + media.width + "x" + media.height
                                     + "," + status.timestamp);
                 } else {
                     SpiceProfilingUtil.profile(getActivity(), status.account_id,
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
-                                    + "," + spiceMedia.media_url + "," + status.timestamp);
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
+                                    + "," + media.preview_url + "," + media.media_url + "," + status.timestamp);
                     SpiceProfilingUtil.log(getActivity(),
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(spiceMedia.type)
-                                    + "," + spiceMedia.media_url + "," + status.timestamp);
+                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
+                                    + "," + media.preview_url + "," + media.media_url + "," + status.timestamp);
                 }
             }
         }
@@ -1057,7 +1060,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mInflater = LayoutInflater.from(context);
             mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
             mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
-            mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
+            mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
             mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
             mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));

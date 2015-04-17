@@ -41,8 +41,8 @@ import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -88,7 +88,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mImageLoader = app.getMediaLoaderWrapper();
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);

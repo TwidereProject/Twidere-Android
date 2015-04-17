@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -36,8 +37,8 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -76,7 +77,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
         mImageLoader = app.getMediaLoaderWrapper();
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
-        mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context);
+        mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
     }
 
 
@@ -172,7 +173,9 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
             case R.id.media_preview: {
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.media == null) return;
-                openMedia(mContext, message, null);
+                //TODO open media animation
+                Bundle options = null;
+                openMedia(mContext, message, null, options);
             }
         }
     }

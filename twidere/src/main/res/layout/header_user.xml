@@ -24,7 +24,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/fragment_user">
 
     <org.mariotaku.twidere.view.ProfileBannerSpace
         android:id="@+id/profile_banner_space"

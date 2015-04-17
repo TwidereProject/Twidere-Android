@@ -37,7 +37,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -279,6 +278,10 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             }
         }
         return indicesCount;
+    }
+
+    public interface OnMediaClickListener {
+        void onMediaClick(View view, ParcelableMedia media, long accountId);
     }
 
     private static class ImageGridClickListener implements View.OnClickListener {

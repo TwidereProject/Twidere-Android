@@ -211,6 +211,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
@@ -2084,14 +2085,17 @@ public final class Utils implements Constants, TwitterConstants {
         return Proxy.NO_PROXY;
     }
 
-    public static String getQuoteStatus(final Context context, final String screen_name, final String text) {
+    public static String getQuoteStatus(final Context context, long statusId, final String screen_name, final String text) {
         if (context == null) return null;
-        String quote_format = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
+        String quoteFormat = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
                 KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT);
-        if (isEmpty(quote_format)) {
-            quote_format = DEFAULT_QUOTE_FORMAT;
+        if (isEmpty(quoteFormat)) {
+            quoteFormat = DEFAULT_QUOTE_FORMAT;
         }
-        return quote_format.replace(FORMAT_PATTERN_NAME, screen_name).replace(FORMAT_PATTERN_TEXT, text);
+        String result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.getTwitterStatusLink(screen_name, statusId).toString());
+        result = result.replace(FORMAT_PATTERN_NAME, screen_name);
+        result = result.replace(FORMAT_PATTERN_TEXT, text);
+        return result;
     }
 
     public static String getReasonablySmallTwitterProfileImage(final String url) {
@@ -2890,22 +2894,22 @@ public final class Utils implements Constants, TwitterConstants {
         context.startActivity(intent);
     }
 
-    public static void openMedia(final Context context, final ParcelableDirectMessage message, final ParcelableMedia current) {
-        openMedia(context, message.account_id, false, null, message, current, message.media);
+    public static void openMedia(final Context context, final ParcelableDirectMessage message, final ParcelableMedia current, Bundle options) {
+        openMedia(context, message.account_id, false, null, message, current, message.media, options);
     }
 
-    public static void openMedia(final Context context, final ParcelableStatus status, final ParcelableMedia current) {
-        openMedia(context, status.account_id, status.is_possibly_sensitive, status, null, current, status.media);
+    public static void openMedia(final Context context, final ParcelableStatus status, final ParcelableMedia current, Bundle options) {
+        openMedia(context, status.account_id, status.is_possibly_sensitive, status, null, current, status.media, options);
     }
 
     public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
-                                 final ParcelableMedia current, final ParcelableMedia[] media) {
-        openMedia(context, accountId, isPossiblySensitive, null, null, current, media);
+                                 final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
+        openMedia(context, accountId, isPossiblySensitive, null, null, current, media, options);
     }
 
     public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
                                  final ParcelableStatus status, final ParcelableDirectMessage message,
-                                 final ParcelableMedia current, final ParcelableMedia[] media) {
+                                 final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
         if (context == null || media == null) return;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         if (context instanceof FragmentActivity && isPossiblySensitive
@@ -2923,10 +2927,11 @@ public final class Utils implements Constants, TwitterConstants {
                 args.putParcelable(EXTRA_MESSAGE, message);
             }
             args.putParcelableArray(EXTRA_MEDIA, media);
+            args.putBundle(EXTRA_ACTIVITY_OPTIONS, options);
             fragment.setArguments(args);
             fragment.show(fm, "sensitive_content_warning");
         } else {
-            openMediaDirectly(context, accountId, status, message, current, media);
+            openMediaDirectly(context, accountId, status, message, current, media, options);
         }
     }
 
@@ -2942,19 +2947,19 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void openMediaDirectly(final Context context, final long accountId,
                                          final ParcelableStatus status, final ParcelableMedia current,
-                                         final ParcelableMedia[] media) {
-        openMediaDirectly(context, accountId, status, null, current, media);
+                                         final ParcelableMedia[] media, Bundle options) {
+        openMediaDirectly(context, accountId, status, null, current, media, options);
     }
 
     public static void openMediaDirectly(final Context context, final long accountId,
                                          final ParcelableDirectMessage message, final ParcelableMedia current,
-                                         final ParcelableMedia[] media) {
-        openMediaDirectly(context, accountId, null, message, current, media);
+                                         final ParcelableMedia[] media, Bundle options) {
+        openMediaDirectly(context, accountId, null, message, current, media, options);
     }
 
     public static void openMediaDirectly(final Context context, final long accountId,
                                          final ParcelableStatus status, final ParcelableDirectMessage message,
-                                         final ParcelableMedia current, final ParcelableMedia[] media) {
+                                         final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
         if (context == null || media == null) return;
         final Intent intent = new Intent(INTENT_ACTION_VIEW_MEDIA);
         intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
@@ -2967,7 +2972,11 @@ public final class Utils implements Constants, TwitterConstants {
             intent.putExtra(EXTRA_MESSAGE, message);
         }
         intent.setClass(context, MediaViewerActivity.class);
-        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ActivityCompat.startActivity((Activity) context, intent, options);
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     public static void openIncomingFriendships(final Context context, final long accountId) {
@@ -4094,10 +4103,6 @@ public final class Utils implements Constants, TwitterConstants {
     public static void setSharedElementTransition(Context context, Window window, int transitionRes) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         UtilsL.setSharedElementTransition(context, window, transitionRes);
-    }
-
-    public interface OnMediaClickListener {
-        void onMediaClick(View view, ParcelableMedia media, long accountId);
     }
 
     static class UtilsL {

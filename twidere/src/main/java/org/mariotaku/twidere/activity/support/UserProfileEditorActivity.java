@@ -21,9 +21,11 @@ package org.mariotaku.twidere.activity.support;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -31,11 +33,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.view.WindowCompat;
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,7 +50,6 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
-import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -55,8 +61,8 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
-import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.ForegroundColorView;
+import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import twitter4j.Twitter;
@@ -77,28 +83,21 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     private static final int REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2;
     private static final int REQUEST_PICK_LINK_COLOR = 3;
     private static final int REQUEST_PICK_BACKGROUND_COLOR = 4;
-
     private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private AsyncTask<Object, Object, ?> mTask;
-
+    private TintedStatusFrameLayout mMainContent;
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
     private EditText mEditName, mEditDescription, mEditLocation, mEditUrl;
     private View mProgressContainer, mEditProfileContent;
     private View mProfileImageCamera, mProfileImageGallery;
     private View mProfileBannerGallery, mProfileBannerRemove;
-    private View mActionBarOverlay;
-    private View mCancelButton, mDoneButton;
     private View mSetLinkColor, mSetBackgroundColor;
     private ForegroundColorView mLinkColor, mBackgroundColor;
-    private Toolbar mToolbar;
-
     private long mAccountId;
     private ParcelableUser mUser;
-
     private boolean mUserInfoLoaderInitialized;
-
     private boolean mGetUserInfoCalled;
 
     @Override
@@ -116,29 +115,70 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
 
     @Override
     public int getThemeResourceId() {
-        return ThemeUtils.getThemeResource(this);
+        return ThemeUtils.getDialogWhenLargeThemeResource(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_HOME: {
+                finish();
+                return true;
+            }
+            case MENU_SAVE: {
+                final String name = ParseUtils.parseString(mEditName.getText());
+                final String url = ParseUtils.parseString(mEditUrl.getText());
+                final String location = ParseUtils.parseString(mEditLocation.getText());
+                final String description = ParseUtils.parseString(mEditDescription.getText());
+                final int linkColor = mLinkColor.getColor();
+                final int backgroundColor = mBackgroundColor.getColor();
+                mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
+                        description, linkColor, backgroundColor);
+                AsyncTaskUtils.executeTask(mTask);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        final Window window = getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
+        mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
+        mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
         final Intent intent = getIntent();
         final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
+        mAccountId = accountId;
         if (!isMyAccount(this, accountId)) {
             finish();
             return;
         }
-        mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
-        mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
-        mAccountId = accountId;
 
-
+        final ActionBar actionBar = getSupportActionBar();
+        final int themeColor = getCurrentThemeColor();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            final int themeId = getCurrentThemeResourceId();
+            final String option = getThemeBackgroundOption();
+            final int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
+            ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, true);
+            ThemeUtils.setActionBarItemsColor(getWindow(), actionBar, actionBarItemsColor);
+        }
         setContentView(R.layout.activity_user_profile_editor);
-        setSupportActionBar(mToolbar);
-        ViewUtils.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
-        ViewUtils.setBackground(mToolbar, ThemeUtils.getSupportActionBarBackground(mToolbar.getContext(),
-                getCurrentThemeResourceId()));
-        ThemeUtils.setCompatToolbarOverlay(this, new EmptyDrawable());
+
+        mMainContent.setOnFitSystemWindowsListener(this);
+        if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
+            mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark));
+        } else {
+            mMainContent.setColor(themeColor);
+        }
+        mMainContent.setDrawColor(true);
         // setOverrideExitAniamtion(false);
         mEditName.addTextChangedListener(this);
         mEditDescription.addTextChangedListener(this);
@@ -150,8 +190,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         mProfileImageGallery.setOnClickListener(this);
         mProfileBannerGallery.setOnClickListener(this);
         mProfileBannerRemove.setOnClickListener(this);
-        mCancelButton.setOnClickListener(this);
-        mDoneButton.setOnClickListener(this);
         mSetLinkColor.setOnClickListener(this);
         mSetBackgroundColor.setOnClickListener(this);
 
@@ -168,6 +206,17 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     }
 
     @Override
+    public void onFitSystemWindows(Rect insets) {
+        mMainContent.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        super.onFitSystemWindows(insets);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_USER, mUser);
@@ -175,11 +224,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(mEditDescription.getText()));
         outState.putString(EXTRA_LOCATION, ParseUtils.parseString(mEditLocation.getText()));
         outState.putString(EXTRA_URL, ParseUtils.parseString(mEditUrl.getText()));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -222,22 +266,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
                 AsyncTaskUtils.executeTask(mTask);
                 break;
             }
-            case R.id.actionbar_cancel: {
-                finish();
-                break;
-            }
-            case R.id.actionbar_done: {
-                final String name = ParseUtils.parseString(mEditName.getText());
-                final String url = ParseUtils.parseString(mEditUrl.getText());
-                final String location = ParseUtils.parseString(mEditLocation.getText());
-                final String description = ParseUtils.parseString(mEditDescription.getText());
-                final int linkColor = mLinkColor.getColor();
-                final int backgroundColor = mBackgroundColor.getColor();
-                mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
-                        description, linkColor, backgroundColor);
-                AsyncTaskUtils.executeTask(mTask);
-                break;
-            }
             case R.id.set_link_color: {
                 final Intent intent = new Intent(this, ColorPickerDialogActivity.class);
                 intent.putExtra(EXTRA_COLOR, user.link_color);
@@ -269,7 +297,6 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         if (data.getData() != null && data.getData().id > 0) {
             displayUser(data.getData());
         } else if (mUser == null) {
-            finish();
         }
     }
 
@@ -279,13 +306,19 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_profile_editor, menu);
+        return true;
+    }
+
+    @Override
     public void onSizeChanged(final View view, final int w, final int h, final int oldw, final int oldh) {
     }
 
     @Override
     public void onSupportContentChanged() {
         super.onSupportContentChanged();
-        mToolbar = (Toolbar) findViewById(R.id.done_bar);
+        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
         mProgressContainer = findViewById(R.id.progress_container);
         mEditProfileContent = findViewById(R.id.edit_profile_content);
         mProfileBannerView = (ImageView) findViewById(R.id.profile_banner);
@@ -294,15 +327,12 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
         mEditDescription = (EditText) findViewById(R.id.description);
         mEditLocation = (EditText) findViewById(R.id.location);
         mEditUrl = (EditText) findViewById(R.id.url);
-        mActionBarOverlay = findViewById(R.id.actionbar_overlay);
         mProfileImageCamera = findViewById(R.id.profile_image_camera);
         mProfileImageGallery = findViewById(R.id.profile_image_gallery);
         mProfileBannerGallery = findViewById(R.id.profile_banner_gallery);
         mProfileBannerRemove = findViewById(R.id.profile_banner_remove);
         mLinkColor = (ForegroundColorView) findViewById(R.id.link_color);
         mBackgroundColor = (ForegroundColorView) findViewById(R.id.background_color);
-        mCancelButton = findViewById(R.id.actionbar_cancel);
-        mDoneButton = findViewById(R.id.actionbar_done);
         mSetLinkColor = findViewById(R.id.set_link_color);
         mSetBackgroundColor = findViewById(R.id.set_background_color);
     }
@@ -411,7 +441,7 @@ public class UserProfileEditorActivity extends BaseActionBarActivity implements 
     }
 
     private void updateDoneButton() {
-        mDoneButton.setEnabled(isProfileChanged());
+
     }
 
     static class UpdateProfileTaskInternal extends AsyncTask<Object, Object, SingleResponse<ParcelableUser>> {

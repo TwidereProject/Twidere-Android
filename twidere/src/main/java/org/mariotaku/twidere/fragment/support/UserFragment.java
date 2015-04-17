@@ -680,7 +680,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
         mLocale = getResources().getConfiguration().locale;
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity);
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity, ThemeUtils.getThemeBackgroundOption(activity), ThemeUtils.getUserThemeBackgroundAlpha(activity));
         mActionBarShadowColor = 0xA0000000;
         mProfileImageLoader = getApplication().getMediaLoaderWrapper();
         final Bundle args = getArguments();
@@ -1113,14 +1113,18 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.profile_image: {
                 final String url = Utils.getOriginalTwitterProfileImage(user.profile_image_url);
                 final ParcelableMedia[] media = {ParcelableMedia.newImage(url, url)};
-                Utils.openMedia(activity, user.account_id, false, null, media);
+                //TODO open media animation
+                Bundle options = null;
+                Utils.openMedia(activity, user.account_id, false, null, media, options);
                 break;
             }
             case R.id.profile_banner: {
                 if (user.profile_banner_url == null) return;
                 final String url = user.profile_banner_url + "/ipad_retina";
                 final ParcelableMedia[] media = {ParcelableMedia.newImage(url, url)};
-                Utils.openMedia(activity, user.account_id, false, null, media);
+                //TODO open media animation
+                Bundle options = null;
+                Utils.openMedia(activity, user.account_id, false, null, media, options);
                 break;
             }
             case R.id.listed_container: {

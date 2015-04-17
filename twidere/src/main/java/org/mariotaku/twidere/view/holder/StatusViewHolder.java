@@ -25,15 +25,15 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatus.CursorIndices;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -210,7 +210,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             nameView.setText(getUserNickname(context, status.user_id, status.user_name, true));
             screenNameView.setText("@" + status.user_screen_name);
-            timeView.setTime(status.timestamp);
+            if (status.is_retweet) {
+                timeView.setTime(status.retweet_timestamp);
+            } else {
+                timeView.setTime(status.timestamp);
+            }
 
             quotedNameContainer.setVisibility(View.GONE);
             quoteTextView.setVisibility(View.GONE);
@@ -417,7 +421,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             nameView.setText(user_name);
             screenNameView.setText("@" + user_screen_name);
-            timeView.setTime(cursor.getLong(indices.status_timestamp));
+            if (retweet_id > 0) {
+                timeView.setTime(cursor.getLong(indices.retweet_timestamp));
+            } else {
+                timeView.setTime(cursor.getLong(indices.status_timestamp));
+            }
 
             quotedNameContainer.setVisibility(View.GONE);
             quoteTextView.setVisibility(View.GONE);

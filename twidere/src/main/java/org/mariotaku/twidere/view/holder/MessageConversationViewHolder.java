@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.view.View;
@@ -38,7 +39,7 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.Utils.OnMediaClickListener;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
 
 public class MessageConversationViewHolder extends ViewHolder implements OnMediaClickListener {
@@ -89,7 +90,9 @@ public class MessageConversationViewHolder extends ViewHolder implements OnMedia
 
     @Override
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
-        Utils.openMedia(adapter.getContext(), adapter.getDirectMessage(getAdapterPosition()), media);
+        //TODO open media animation
+        Bundle options = null;
+        Utils.openMedia(adapter.getContext(), adapter.getDirectMessage(getAdapterPosition()), media, options);
     }
 
     public void setMessageColor(int color) {

@@ -77,7 +77,7 @@
                 tools:ignore="ContentDescription"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/profile_image"
@@ -106,12 +106,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="0.2dp"
-            android:background="#40808080"/>
-
         <org.mariotaku.twidere.view.themed.ThemedTextView
             android:id="@+id/description"
             android:layout_width="match_parent"
@@ -120,7 +114,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <org.mariotaku.twidere.view.ActionIconThemedTextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,11 +124,11 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <org.mariotaku.twidere.view.ActionIconThemedTextView
             android:id="@+id/url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_indicator_web"
+            android:drawableLeft="@drawable/ic_indicator_link"
             android:drawablePadding="4dp"
             android:padding="8dp"
             android:singleLine="true"

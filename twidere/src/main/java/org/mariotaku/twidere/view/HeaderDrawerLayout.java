@@ -284,7 +284,7 @@ public class HeaderDrawerLayout extends ViewGroup {
     }
 
     private boolean shouldLayoutHeaderBottomCallback() {
-        if (mDragCallback == null) return false;
+        if (mDragCallback == null || isInEditMode()) return false;
         return mDrawerCallback.shouldLayoutHeaderBottom();
     }
 

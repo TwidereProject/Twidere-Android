@@ -72,7 +72,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     public AbsStatusesAdapter(Context context, boolean compact) {
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mMediaLoader = app.getMediaLoaderWrapper();
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);

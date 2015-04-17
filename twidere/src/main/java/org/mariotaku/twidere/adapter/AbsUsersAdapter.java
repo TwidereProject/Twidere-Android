@@ -58,7 +58,7 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     public AbsUsersAdapter(final Context context, final boolean compact) {
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mContext = context;
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context);
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mMediaLoader = app.getMediaLoaderWrapper();
         mTwitterWrapper = app.getTwitterWrapper();

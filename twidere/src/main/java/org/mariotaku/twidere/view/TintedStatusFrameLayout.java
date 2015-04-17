@@ -57,6 +57,7 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout {
         mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         setWillNotDraw(false);
+        setFactor(1);
     }
 
 
