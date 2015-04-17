@@ -22,30 +22,24 @@ package org.mariotaku.twidere.graphic;
 import android.annotation.TargetApi;
 import android.graphics.Outline;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 
 /**
  * Created by mariotaku on 14/12/8.
  */
-public class ActionBarColorDrawable extends ColorDrawable {
-
-    private final boolean outlineEnabled;
-
+public class ActionBarColorDrawable extends ActionBarColorDrawableBase {
     public ActionBarColorDrawable(boolean outlineEnabled) {
-        super();
-        this.outlineEnabled = outlineEnabled;
+        super(outlineEnabled);
     }
 
     public ActionBarColorDrawable(int color, boolean outlineEnabled) {
-        super(color);
-        this.outlineEnabled = outlineEnabled;
+        super(color, outlineEnabled);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void getOutline(Outline outline) {
-        if (!outlineEnabled) return;
+        if (!isOutlineEnabled()) return;
         final Rect bounds = getBounds();
         // Very very dirty hack to make outline shadow in action bar not visible beneath status bar
         outline.setRect(bounds.left - bounds.width() / 2, -bounds.height(),

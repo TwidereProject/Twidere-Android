@@ -327,7 +327,12 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final Bundle options = Utils.makeSceneTransitionOption(activity,
                 new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
                 new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-        Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name, options);
+        if (status.is_quote) {
+            Utils.openUserProfile(activity, status.account_id, status.quoted_by_user_id,
+                    status.quoted_by_user_screen_name, options);
+        } else {
+            Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name, options);
+        }
     }
 
     @Override

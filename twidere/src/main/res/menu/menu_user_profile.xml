@@ -49,6 +49,10 @@
         android:icon="@drawable/ic_action_profile"
         android:title="@string/incoming_friendships"/>
     <item
+        android:id="@+id/user_mentions"
+        android:icon="@drawable/ic_action_at"
+        android:title="@string/user_mentions"/>
+    <item
         android:id="@id/report_spam"
         android:icon="@drawable/ic_action_warning"
         android:title="@string/report_for_spam"/>

@@ -447,6 +447,7 @@
             android:name=".activity.support.UserProfileEditorActivity"
             android:exported="false"
             android:label="@string/edit_profile"
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.EDIT_USER_PROFILE"/>
