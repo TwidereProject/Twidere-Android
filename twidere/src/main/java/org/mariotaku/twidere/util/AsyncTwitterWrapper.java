@@ -2393,10 +2393,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         } else {
                             SpiceProfilingUtil.log(getContext(), status.id + ",RetweetO," + account_id + ","
                                     + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
+                                    + ","  + spiceMedia.preview_url + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
                             SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetO," + account_id + ","
                                     + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
+                                    + ","  + spiceMedia.preview_url + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
                         }
                     }
                 }
