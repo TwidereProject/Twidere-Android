@@ -33,8 +33,8 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShortTimeView;
@@ -576,7 +576,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
         if (statusClickListener == null) return;
         final int position = getLayoutPosition();
-        statusClickListener.onMediaClick(this, media, position);
+        statusClickListener.onMediaClick(this, view, media, position);
     }
 
     public void setOnClickListeners() {
@@ -651,7 +651,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
     public static interface StatusClickListener extends ContentCardClickListener {
 
-        void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position);
+        void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position);
 
         void onStatusClick(StatusViewHolder holder, int position);
 
@@ -835,7 +835,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
 
         @Override
-        public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
 
         }
 

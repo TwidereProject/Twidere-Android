@@ -206,7 +206,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     }
 
     @Override
-    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+    public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
 
     }
 

@@ -83,11 +83,6 @@
     <style name="Theme.Twidere.Dark.DialogWhenLarge" parent="Theme.Compat.Base.DialogWhenLarge">
 
         <item name="windowActionBar">false</item>
-        <!-- Colors -->
-        <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>-->
-
-        <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@color/background_color_window_dark</item>
 
         <!-- ActionBar styles -->
@@ -111,18 +106,6 @@
     <style name="Theme.Twidere.Light.DialogWhenLarge" parent="Theme.Compat.Base.Light.DialogWhenLarge">
 
         <item name="windowActionBar">false</item>
-        <!-- Colors -->
-        <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
-
-        <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
-        <!--<item name="android:windowBackground">@color/background_color_window_light</item>-->
-
-        <!-- ActionBar styles -->
-        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light.DarkActionBar</item>-->
-        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>-->
-
-        <!-- Custom view styles -->
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -243,7 +226,6 @@
     <style name="Theme.Twidere.Viewer" parent="Theme.AppCompat">
 
         <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@color/bg_color_media_viewer</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
@@ -349,8 +331,6 @@
         <!-- Colors -->
         <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
 
-        <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@color/background_color_window_light</item>
 
         <!-- Custom view styles -->

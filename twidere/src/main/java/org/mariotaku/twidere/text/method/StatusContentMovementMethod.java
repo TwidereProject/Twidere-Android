@@ -37,68 +37,67 @@ import android.widget.TextView;
  */
 public class StatusContentMovementMethod extends ArrowKeyMovementMethod {
 
-	private static StatusContentMovementMethod sInstance;
+    private static StatusContentMovementMethod sInstance;
 
-	private static Object FROM_BELOW = new NoCopySpan.Concrete();
+    private static Object FROM_BELOW = new NoCopySpan.Concrete();
 
-	@Override
-	public void initialize(final TextView widget, final Spannable text) {
-		Selection.removeSelection(text);
-		text.removeSpan(FROM_BELOW);
-	}
+    @Override
+    public void initialize(final TextView widget, final Spannable text) {
+        Selection.removeSelection(text);
+        text.removeSpan(FROM_BELOW);
+    }
 
-	@Override
-	public void onTakeFocus(@NonNull final TextView view, @NonNull final Spannable text, final int dir) {
-		Selection.removeSelection(text);
+    @Override
+    public void onTakeFocus(@NonNull final TextView view, @NonNull final Spannable text, final int dir) {
+        Selection.removeSelection(text);
 
-		if ((dir & View.FOCUS_BACKWARD) != 0) {
-			text.setSpan(FROM_BELOW, 0, 0, Spannable.SPAN_POINT_POINT);
-		} else {
-			text.removeSpan(FROM_BELOW);
-		}
-	}
+        if ((dir & View.FOCUS_BACKWARD) != 0) {
+            text.setSpan(FROM_BELOW, 0, 0, Spannable.SPAN_POINT_POINT);
+        } else {
+            text.removeSpan(FROM_BELOW);
+        }
+    }
 
-	@Override
-	public boolean onTouchEvent(@NonNull final TextView widget, @NonNull final Spannable buffer, @NonNull final MotionEvent event) {
-		final int action = event.getAction();
+    @Override
+    public boolean onTouchEvent(@NonNull final TextView widget, @NonNull final Spannable buffer, @NonNull final MotionEvent event) {
+        final int action = event.getAction();
 
-		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
-			int x = (int) event.getX();
-			int y = (int) event.getY();
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
 
-			x -= widget.getTotalPaddingLeft();
-			y -= widget.getTotalPaddingTop();
+            x -= widget.getTotalPaddingLeft();
+            y -= widget.getTotalPaddingTop();
 
-			x += widget.getScrollX();
-			y += widget.getScrollY();
+            x += widget.getScrollX();
+            y += widget.getScrollY();
 
-			final Layout layout = widget.getLayout();
-			final int line = layout.getLineForVertical(y);
-			final int off = layout.getOffsetForHorizontal(line, x);
+            final Layout layout = widget.getLayout();
+            final int line = layout.getLineForVertical(y);
+            final int off = layout.getOffsetForHorizontal(line, x);
 
-			final ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
+            final ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
 
-			if (link.length != 0) {
-				if (action == MotionEvent.ACTION_UP) {
-					link[0].onClick(widget);
-				} else if (action == MotionEvent.ACTION_DOWN) {
-					Selection.setSelection(buffer, buffer.getSpanStart(link[0]), buffer.getSpanEnd(link[0]));
-				}
+            if (link.length != 0) {
+                if (action == MotionEvent.ACTION_UP) {
+                    link[0].onClick(widget);
+                } else {
+                    Selection.setSelection(buffer, buffer.getSpanStart(link[0]), buffer.getSpanEnd(link[0]));
+                }
+                return true;
+            } else {
+                Selection.removeSelection(buffer);
+            }
+        }
 
-				return true;
-			} else {
-				Selection.removeSelection(buffer);
-			}
-		}
+        return super.onTouchEvent(widget, buffer, event);
+    }
 
-		return super.onTouchEvent(widget, buffer, event);
-	}
+    public static MovementMethod getInstance() {
+        if (sInstance == null) {
+            sInstance = new StatusContentMovementMethod();
+        }
 
-	public static MovementMethod getInstance() {
-		if (sInstance == null) {
-			sInstance = new StatusContentMovementMethod();
-		}
-
-		return sInstance;
-	}
+        return sInstance;
+    }
 }

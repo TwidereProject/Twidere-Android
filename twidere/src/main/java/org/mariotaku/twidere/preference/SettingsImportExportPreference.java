@@ -41,6 +41,7 @@ public class SettingsImportExportPreference extends DialogPreference {
 
     public SettingsImportExportPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setDialogTitle(null);
         setPositiveButtonText(null);
         setNegativeButtonText(null);
     }

@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -37,6 +38,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -107,8 +109,8 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -292,11 +294,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+    public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
         if (status == null) return;
-        //TODO open media animation
-        Bundle options = null;
+        view.buildDrawingCache();
+        final Bitmap drawingCache = Bitmap.createBitmap(view.getDrawingCache());
+        final Bundle options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
+        view.destroyDrawingCache();
         Utils.openMedia(getActivity(), status, media, options);
         SpiceProfilingUtil.log(getActivity(),
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
@@ -380,8 +384,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
-        //TODO open media animation
-        Bundle options = null;
+        view.buildDrawingCache();
+        final Bitmap drawingCache = Bitmap.createBitmap(view.getDrawingCache());
+        final Bundle options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
+        view.destroyDrawingCache();
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
         //spice
         SpiceProfilingUtil.log(getActivity(),
@@ -397,16 +403,18 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     private void addConversation(ParcelableStatus status, int position) {
         mStatusAdapter.addConversation(status, position);
-    }    @Override
+    }
+
+    private StatusAdapter getAdapter() {
+        return mStatusAdapter;
+    }
+
+    @Override
     public Loader<SingleResponse<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
         final Bundle fragmentArgs = getArguments();
         final long accountId = fragmentArgs.getLong(EXTRA_ACCOUNT_ID, -1);
         final long statusId = fragmentArgs.getLong(EXTRA_STATUS_ID, -1);
         return new ParcelableStatusLoader(getActivity(), false, fragmentArgs, accountId, statusId);
-    }
-
-    private StatusAdapter getAdapter() {
-        return mStatusAdapter;
     }
 
     private DividerItemDecoration getItemDecoration() {
@@ -476,29 +484,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
         }
         //end
-    }    @Override
-    public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
-                               final SingleResponse<ParcelableStatus> data) {
-        if (data.hasData()) {
-            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
-            final View firstChild = mLayoutManager.getChildAt(0);
-            final int top = firstChild != null ? firstChild.getTop() : 0;
-            final ParcelableStatus status = data.getData();
-            if (mStatusAdapter.setStatus(status)) {
-                mLayoutManager.scrollToPositionWithOffset(1, 0);
-                mStatusAdapter.setConversation(null);
-                mStatusAdapter.setReplies(null);
-                loadReplies(status);
-                loadConversation(status);
-            } else {
-                final int position = mStatusAdapter.findPositionById(itemId);
-                mLayoutManager.scrollToPositionWithOffset(position, top);
-            }
-            setState(STATE_LOADED);
-        } else {
-            //TODO show errors
-            setState(STATE_ERROR);
-        }
     }
 
     private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
@@ -522,6 +507,31 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             positionView = mLayoutManager.findViewByPosition(position);
         }
         return new Pair<>(itemId, positionView != null ? positionView.getTop() : -1);
+    }
+
+    @Override
+    public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
+                               final SingleResponse<ParcelableStatus> data) {
+        if (data.hasData()) {
+            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
+            final View firstChild = mLayoutManager.getChildAt(0);
+            final int top = firstChild != null ? firstChild.getTop() : 0;
+            final ParcelableStatus status = data.getData();
+            if (mStatusAdapter.setStatus(status)) {
+                mLayoutManager.scrollToPositionWithOffset(1, 0);
+                mStatusAdapter.setConversation(null);
+                mStatusAdapter.setReplies(null);
+                loadReplies(status);
+                loadConversation(status);
+            } else {
+                final int position = mStatusAdapter.findPositionById(itemId);
+                mLayoutManager.scrollToPositionWithOffset(position, top);
+            }
+            setState(STATE_LOADED);
+        } else {
+            //TODO show errors
+            setState(STATE_ERROR);
+        }
     }
 
     private void setConversation(List<ParcelableStatus> data) {
@@ -865,22 +875,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());
 
+            quoteTextView.setTextIsSelectable(true);
+            textView.setTextIsSelectable(true);
+
+            quoteTextView.setMovementMethod(StatusContentMovementMethod.getInstance());
             textView.setMovementMethod(StatusContentMovementMethod.getInstance());
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, fragment, activity));
-            textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, fragment, activity));
-//            }
+
+            quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, activity));
+            textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, activity));
         }
 
 
         private static class StatusActionModeCallback implements Callback {
             private final TextView textView;
-            private final StatusFragment fragment;
             private final FragmentActivity activity;
 
-            public StatusActionModeCallback(TextView textView, StatusFragment fragment, FragmentActivity activity) {
+            public StatusActionModeCallback(TextView textView, FragmentActivity activity) {
                 this.textView = textView;
-                this.fragment = fragment;
                 this.activity = activity;
             }
 
@@ -1388,9 +1399,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position) {
+        public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
             if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onMediaClick(holder, media, position);
+                mStatusAdapterListener.onMediaClick(holder, view, media, position);
             }
         }
 
@@ -1519,14 +1530,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     }
 
+
     @Override
     public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
 
     }
-
-
-
-
 
 
 }

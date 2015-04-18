@@ -47,14 +47,12 @@
             android:dependency="enable_proxy"
             android:key="proxy_host"
             android:singleLine="true"
-            android:summary="%s"
             android:title="@string/proxy_host"/>
         <org.mariotaku.twidere.preference.SummaryEditTextPreference
             android:dependency="enable_proxy"
             android:inputType="number"
             android:key="proxy_port"
             android:singleLine="true"
-            android:summary="%s"
             android:title="@string/proxy_port"/>
     </PreferenceCategory>
     <PreferenceCategory
@@ -68,21 +66,21 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="category_api"
+        android:key="category_tumbor"
         android:title="@string/thumbor_integration">
 
-        <SwitchPreference
+        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
             android:defaultValue="false"
             android:key="thumbor_enabled"
             android:title="@string/thumbor_integration"/>
 
-        <org.mariotaku.twidere.preference.AutoFixEditTextPreference
+        <org.mariotaku.twidere.preference.SummaryEditTextPreference
             android:dependency="thumbor_enabled"
             android:inputType="textUri"
             android:key="thumbor_address"
             android:title="@string/server_address"/>
 
-        <org.mariotaku.twidere.preference.AutoFixEditTextPreference
+        <org.mariotaku.twidere.preference.SummaryEditTextPreference
             android:dependency="thumbor_enabled"
             android:inputType="textVisiblePassword"
             android:key="thumbor_security_key"

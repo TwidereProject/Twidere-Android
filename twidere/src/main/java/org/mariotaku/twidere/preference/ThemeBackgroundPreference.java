@@ -43,9 +43,6 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         public void onClick(DialogInterface dialog, int which) {
             final String value = mBackgroundValues[which];
             setValue(value);
-//            if (!VALUE_THEME_BACKGROUND_TRANSPARENT.equals(value)) {
-//                ThemeBackgroundPreference.this.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
-//            }
         }
     };
 
@@ -112,11 +109,6 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
 
     public String getValue() {
         return mValue;
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        super.onClick(dialog, which);
     }
 
     public ThemeBackgroundPreference(Context context) {

@@ -34,6 +34,10 @@
         android:title="@string/compose_now_action"/>
 
     <Preference
+        android:fragment="org.mariotaku.twidere.fragment.KeyboardShortcutsFragment"
+        android:title="@string/keyboard_shortcuts"/>
+
+    <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:key="data_profiling_settings"
         android:title="@string/usage_statistics">
@@ -43,11 +47,7 @@
     </Preference>
 
     <org.mariotaku.twidere.preference.SettingsImportExportPreference
-        android:title="@string/import_export_settings"
-        android:key="import_export_settings"/>
-
-    <Preference
-        android:title="@string/keyboard_shortcuts"
-        android:fragment="org.mariotaku.twidere.fragment.KeyboardShortcutsFragment"/>
+        android:key="import_export_settings"
+        android:title="@string/import_export_settings"/>
 
 </PreferenceScreen>

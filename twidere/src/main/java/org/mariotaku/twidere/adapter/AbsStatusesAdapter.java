@@ -1,10 +1,7 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -15,7 +12,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -185,14 +181,14 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     @Override
-    public void onMediaClick(StatusViewHolder holder, final ParcelableMedia media, int position) {
+    public void onMediaClick(StatusViewHolder holder, View view, final ParcelableMedia media, int position) {
         if (mStatusAdapterListener == null) return;
-        mStatusAdapterListener.onMediaClick(holder, media, position);
+        mStatusAdapterListener.onMediaClick(holder, view, media, position);
     }
 
     @Override
     public void onUserProfileClick(final StatusViewHolder holder, final int position) {
-        if (mStatusAdapterListener==null)return;
+        if (mStatusAdapterListener == null) return;
         final ParcelableStatus status = getStatus(position);
         if (status == null) return;
         mStatusAdapterListener.onUserProfileClick(holder, status, position);
@@ -301,7 +297,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     public static interface StatusAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
 
-        void onMediaClick(StatusViewHolder holder, ParcelableMedia media, int position);
+        void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position);
 
         void onStatusActionClick(StatusViewHolder holder, int id, int position);
 

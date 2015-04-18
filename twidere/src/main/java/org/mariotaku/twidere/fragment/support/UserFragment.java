@@ -826,6 +826,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         MenuUtils.setMenuItemAvailability(menu, MENU_MENTION, !isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.incoming_friendships, isMyself);
+        MenuUtils.setMenuItemAvailability(menu, R.id.saved_searches, isMyself);
 //        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
 //        followItem.setVisible(!isMyself);
 //        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
@@ -1001,6 +1002,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.user_mentions: {
                 Utils.openUserMentions(getActivity(), user.account_id, user.screen_name);
+                return true;
+            }
+            case R.id.saved_searches: {
+                Utils.openSavedSearches(getActivity(), user.account_id);
                 return true;
             }
             default: {

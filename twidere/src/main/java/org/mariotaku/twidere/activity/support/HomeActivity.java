@@ -224,7 +224,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     @Override
     public void setControlBarOffset(float offset) {
-        mTabsContainer.setTranslationY(mTabColumns > 1 ? 1 : getControlBarHeight() * (offset - 1));
+        mTabsContainer.setTranslationY(mTabColumns > 1 ? 0 : getControlBarHeight() * (offset - 1));
         final ViewGroup.LayoutParams lp = mActionsButton.getLayoutParams();
         if (lp instanceof MarginLayoutParams) {
             mActionsButton.setTranslationY((((MarginLayoutParams) lp).bottomMargin + mActionsButton.getHeight()) * (1 - offset));

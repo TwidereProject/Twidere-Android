@@ -100,7 +100,7 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * 
 	 * @return the profile image url of the user
 	 */
-    String getProfileImageURL();
+    String getProfileImageUrl();
 
 	/**
 	 * Returns the profile image url of the user, served over SSL
