@@ -57,45 +57,19 @@ public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingPr
     }
 
     @Override
-    public void onLoadingCancelled(final String imageUri, final View view) {
+    public void onLoadingStarted(final String imageUri, final View view) {
         if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
-        mLoadingUris.remove(view);
+        ViewGroup parent = (ViewGroup) view.getParent();
         if (view instanceof ForegroundImageView) {
             ((ForegroundImageView) view).setForeground(null);
         }
-        final ProgressBar progress = findProgressBar(view.getParent());
-        if (progress != null) {
-            progress.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onLoadingComplete(final String imageUri, final View view, final Bitmap bitmap) {
-        if (view == null) return;
-        mLoadingUris.remove(view);
-        final ViewGroup parent = (ViewGroup) view.getParent();
-        if (view instanceof ForegroundImageView) {
-            final Drawable foreground;
-            if (isVideoItem(parent)) {
-                foreground = ResourcesCompat.getDrawable(view.getResources(), R.drawable.ic_card_media_play, null);
-            } else {
-                foreground = null;
-            }
-            ((ForegroundImageView) view).setForeground(foreground);
-        }
+        mLoadingUris.put(view, imageUri);
         final ProgressBar progress = findProgressBar(parent);
         if (progress != null) {
-            progress.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            progress.setIndeterminate(true);
+            progress.setMax(100);
         }
-    }
-
-    private static boolean isVideoItem(ViewGroup parent) {
-        final Object tag = parent.getTag();
-        if (tag instanceof ParcelableMedia) {
-            final int type = ((ParcelableMedia) tag).type;
-            return type == ParcelableMedia.TYPE_VIDEO || type == ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
-        }
-        return false;
     }
 
     @Override
@@ -115,17 +89,40 @@ public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingPr
     }
 
     @Override
-    public void onLoadingStarted(final String imageUri, final View view) {
+    public void onLoadingComplete(final String imageUri, final View view, final Bitmap bitmap) {
+        if (view == null) return;
+        mLoadingUris.remove(view);
+        final ViewGroup parent = (ViewGroup) view.getParent();
+        setVideoIndicator(view, parent);
+        final ProgressBar progress = findProgressBar(parent);
+        if (progress != null) {
+            progress.setVisibility(View.GONE);
+        }
+    }
+
+    public static void setVideoIndicator(View view, ViewGroup parent) {
+        if (view instanceof ForegroundImageView) {
+            final Drawable foreground;
+            if (isVideoItem(parent)) {
+                foreground = ResourcesCompat.getDrawable(view.getResources(),
+                        R.drawable.ic_card_media_play, null);
+            } else {
+                foreground = null;
+            }
+            ((ForegroundImageView) view).setForeground(foreground);
+        }
+    }
+
+    @Override
+    public void onLoadingCancelled(final String imageUri, final View view) {
         if (view == null || imageUri == null || imageUri.equals(mLoadingUris.get(view))) return;
+        mLoadingUris.remove(view);
         if (view instanceof ForegroundImageView) {
             ((ForegroundImageView) view).setForeground(null);
         }
-        mLoadingUris.put(view, imageUri);
         final ProgressBar progress = findProgressBar(view.getParent());
         if (progress != null) {
-            progress.setVisibility(View.VISIBLE);
-            progress.setIndeterminate(true);
-            progress.setMax(100);
+            progress.setVisibility(View.GONE);
         }
     }
 
@@ -147,5 +144,14 @@ public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingPr
             if (progress instanceof ProgressBar) return (ProgressBar) progress;
         }
         return null;
+    }
+
+    private static boolean isVideoItem(ViewGroup parent) {
+        final Object tag = parent.getTag();
+        if (tag instanceof ParcelableMedia) {
+            final int type = ((ParcelableMedia) tag).type;
+            return type == ParcelableMedia.TYPE_VIDEO || type == ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
+        }
+        return false;
     }
 }

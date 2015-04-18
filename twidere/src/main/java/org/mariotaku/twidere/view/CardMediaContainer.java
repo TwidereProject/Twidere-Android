@@ -35,8 +35,8 @@ import android.widget.TextView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -48,7 +48,6 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     private static final float WIDTH_HEIGHT_RATIO = 0.5f;
 
-    private final int mMaxColumns;
     private final int mHorizontalSpacing, mVerticalSpacing;
     private int[] mTempIndices;
     private int mMediaPreviewStyle;
@@ -63,7 +62,6 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     public CardMediaContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mMaxColumns = 3;
         final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{
                 android.R.attr.horizontalSpacing, android.R.attr.verticalSpacing});
         mHorizontalSpacing = a.getDimensionPixelSize(0, 0);
@@ -95,6 +93,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
         if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
             for (int i = 0, j = getChildCount(); i < j; i++) {
                 final View child = getChildAt(i);
+                child.setTag(null);
                 child.setVisibility(GONE);
             }
             return;
