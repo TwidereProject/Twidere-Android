@@ -55,16 +55,13 @@ public class SaveFileTask extends AsyncTask<Object, Object, File> implements Con
     }
 
     public static SaveFileTask saveImage(final Activity activity, final File source) {
-        final String name = source.getName();
         final String mimeType = Utils.getImageMimeType(source);
         final MimeTypeMap map = MimeTypeMap.getSingleton();
         final String extension = map.getExtensionFromMimeType(mimeType);
         if (extension == null) return null;
-        final String nameToSave = name.contains(".") ? name : name + "." + extension;
         final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         final File saveDir = new File(pubDir, "Twidere");
-        final File saveFile = new File(saveDir, nameToSave);
-        return new SaveFileTask(activity, source, mimeType, saveFile);
+        return new SaveFileTask(activity, source, mimeType, saveDir);
     }
 
     @Override
@@ -116,12 +113,7 @@ public class SaveFileTask extends AsyncTask<Object, Object, File> implements Con
             if (extension == null) return null;
             final String nameToSave = name.contains(".") ? name : name + "." + extension;
             if (!destination.isDirectory() && !destination.mkdirs()) return null;
-            final File saveFile;
-            if (destination.isDirectory()) {
-                saveFile = new File(destination, nameToSave);
-            } else {
-                saveFile = destination;
-            }
+            final File saveFile = new File(destination, nameToSave);
             FileUtils.copyFile(source, saveFile);
             if (mimeType != null) {
                 MediaScannerConnection.scanFile(context, new String[]{saveFile.getPath()},

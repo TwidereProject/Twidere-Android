@@ -684,17 +684,13 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             final Pair<String, String> urlAndType = mVideoUrlAndType;
             final boolean hasVideo = file != null && file.exists() && urlAndType != null;
             if (!hasVideo) return;
-
-            final String name = file.getName();
             final String mimeType = urlAndType.second;
             final MimeTypeMap map = MimeTypeMap.getSingleton();
             final String extension = map.getExtensionFromMimeType(mimeType);
             if (extension == null) return;
-            final String nameToSave = name.contains(".") ? name : name + "." + extension;
             final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
             final File saveDir = new File(pubDir, "Twidere");
-            final File saveFile = new File(saveDir, nameToSave);
-            mSaveFileTask = AsyncTaskUtils.executeTask(new SaveFileTask(getActivity(), file, mimeType, saveFile));
+            mSaveFileTask = AsyncTaskUtils.executeTask(new SaveFileTask(getActivity(), file, mimeType, saveDir));
         }
 
         @Override

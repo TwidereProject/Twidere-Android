@@ -438,7 +438,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, status.account_id);
         args.putLong(EXTRA_STATUS_ID, status.retweet_id > 0 ? status.retweet_id : status.id);
-        args.putString(EXTRA_SCREEN_NAME, status.user_screen_name);
+        args.putString(EXTRA_SCREEN_NAME, status.retweet_id > 0 ? status.retweeted_by_screen_name : status.user_screen_name);
         if (mRepliesLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
             return;
