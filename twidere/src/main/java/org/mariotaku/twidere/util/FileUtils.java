@@ -75,7 +75,7 @@ public final class FileUtils {
             if (!parentFile.mkdirs() && !parentFile.isDirectory())
                 throw new IOException("Destination '" + parentFile + "' directory cannot be created");
         }
-        if (destFile.exists() && destFile.canWrite() == false)
+        if (destFile.exists() && !destFile.canWrite())
             throw new IOException("Destination '" + destFile + "' exists but is read-only");
         doCopyFile(srcFile, destFile, true);
     }

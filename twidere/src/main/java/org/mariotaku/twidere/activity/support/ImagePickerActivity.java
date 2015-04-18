@@ -88,6 +88,14 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
     }
 
     @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (mImageSelectedRunnable != null) {
+            runOnUiThread(mImageSelectedRunnable);
+        }
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Intent intent = getIntent();
@@ -98,14 +106,6 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
             pickImage();
         } else {
             new ImageSourceDialogFragment().show(getSupportFragmentManager(), "image_source");
-        }
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        if (mImageSelectedRunnable != null) {
-            runOnUiThread(mImageSelectedRunnable);
         }
     }
 
@@ -147,52 +147,26 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
         try {
             startActivityForResult(intent, REQUEST_TAKE_PHOTO);
         } catch (final ActivityNotFoundException ignored) {
+            takePhotoFallback(mTempPhotoUri);
         }
     }
 
-    public static class ImageSourceDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
 
-        @Override
-        public void onCancel(final DialogInterface dialog) {
-            super.onCancel(dialog);
-            final FragmentActivity a = getActivity();
-            if (a != null) {
-                a.finish();
-            }
+    private boolean takePhotoFallback(Uri uri) {
+        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        try {
+            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+        } catch (final ActivityNotFoundException e) {
+            return false;
         }
-
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            final FragmentActivity activity = getActivity();
-            if (!(activity instanceof ImagePickerActivity)) return;
-            final ImagePickerActivity addImageActivity = (ImagePickerActivity) activity;
-            final String source = getResources().getStringArray(R.array.value_image_sources)[which];
-            if ("gallery".equals(source)) {
-                addImageActivity.pickImage();
-            } else if ("camera".equals(source)) {
-                addImageActivity.takePhoto();
-            }
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setItems(R.array.entries_image_sources, this);
-            return builder.create();
-        }
-
-        @Override
-        public void onDismiss(final DialogInterface dialog) {
-            super.onDismiss(dialog);
-        }
+        return true;
     }
 
     private static class CopyImageTask extends AsyncTask<Object, Object, SingleResponse<File>> {
+        private static final String TAG_COPYING_IMAGE = "copying_image";
         private final ImagePickerActivity mActivity;
         private final Uri mUri;
-
-        private static final String TAG_COPYING_IMAGE = "copying_image";
 
         public CopyImageTask(final ImagePickerActivity activity, final Uri uri) {
             mActivity = activity;
@@ -226,6 +200,12 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            final ProgressDialogFragment f = ProgressDialogFragment.show(mActivity, TAG_COPYING_IMAGE);
+            f.setCancelable(false);
+        }
+
+        @Override
         protected void onPostExecute(final SingleResponse<File> result) {
             final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(TAG_COPYING_IMAGE);
             if (f instanceof DialogFragment) {
@@ -240,11 +220,43 @@ public class ImagePickerActivity extends ThemedActionBarActivity {
             }
             mActivity.finish();
         }
+    }
+
+    public static class ImageSourceDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
 
         @Override
-        protected void onPreExecute() {
-            final ProgressDialogFragment f = ProgressDialogFragment.show(mActivity, TAG_COPYING_IMAGE);
-            f.setCancelable(false);
+        public void onClick(final DialogInterface dialog, final int which) {
+            final FragmentActivity activity = getActivity();
+            if (!(activity instanceof ImagePickerActivity)) return;
+            final ImagePickerActivity addImageActivity = (ImagePickerActivity) activity;
+            final String source = getResources().getStringArray(R.array.value_image_sources)[which];
+            if ("gallery".equals(source)) {
+                addImageActivity.pickImage();
+            } else if ("camera".equals(source)) {
+                addImageActivity.takePhoto();
+            }
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(final Bundle savedInstanceState) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setItems(R.array.entries_image_sources, this);
+            return builder.create();
+        }
+
+        @Override
+        public void onCancel(final DialogInterface dialog) {
+            super.onCancel(dialog);
+            final FragmentActivity a = getActivity();
+            if (a != null) {
+                a.finish();
+            }
+        }
+
+        @Override
+        public void onDismiss(final DialogInterface dialog) {
+            super.onDismiss(dialog);
         }
     }
 }

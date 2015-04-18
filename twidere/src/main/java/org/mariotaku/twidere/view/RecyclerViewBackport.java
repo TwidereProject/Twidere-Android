@@ -57,19 +57,19 @@ public class RecyclerViewBackport extends RecyclerView {
             if (event.getAction() == MotionEventCompat.ACTION_SCROLL) {
                 final float vScroll, hScroll;
                 if (lm.canScrollVertically()) {
-                    vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                    vScroll = -event.getAxisValue(MotionEvent.AXIS_VSCROLL);
                 } else {
                     vScroll = 0f;
                 }
                 if (lm.canScrollHorizontally()) {
-                    hScroll = event.getAxisValue(MotionEvent.AXIS_HSCROLL);
+                    hScroll = -event.getAxisValue(MotionEvent.AXIS_HSCROLL);
                 } else {
                     hScroll = 0f;
                 }
 
                 if (vScroll != 0 || hScroll != 0) {
                     final float scrollFactor = getScrollFactorBackport();
-                    scrollBy((int) (hScroll * scrollFactor), (int) (vScroll * scrollFactor));
+                    smoothScrollBy((int) (hScroll * scrollFactor), (int) (vScroll * scrollFactor));
                 }
             }
         }

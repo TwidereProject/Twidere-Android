@@ -38,24 +38,39 @@ import java.io.File;
 import java.io.IOException;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.Utils.getImageMimeType;
 
-public class SaveImageTask extends AsyncTask<Object, Object, File> implements Constants {
+public class SaveFileTask extends AsyncTask<Object, Object, File> implements Constants {
 
     private static final String PROGRESS_FRAGMENT_TAG = "progress";
 
-    private final File src;
+    private final File source, destination;
     private final Activity activity;
+    private final String mimeType;
 
-    public SaveImageTask(final Activity activity, final File src) {
+    public SaveFileTask(final Activity activity, final File source, final String mimeType, final File destination) {
         this.activity = activity;
-        this.src = src;
+        this.source = source;
+        this.mimeType = mimeType;
+        this.destination = destination;
+    }
+
+    public static SaveFileTask saveImage(final Activity activity, final File source) {
+        final String name = source.getName();
+        final String mimeType = Utils.getImageMimeType(source);
+        final MimeTypeMap map = MimeTypeMap.getSingleton();
+        final String extension = map.getExtensionFromMimeType(mimeType);
+        if (extension == null) return null;
+        final String nameToSave = name.contains(".") ? name : name + "." + extension;
+        final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        final File saveDir = new File(pubDir, "Twidere");
+        final File saveFile = new File(saveDir, nameToSave);
+        return new SaveFileTask(activity, source, mimeType, saveFile);
     }
 
     @Override
     protected File doInBackground(final Object... args) {
-        if (src == null) return null;
-        return saveImage(activity, src);
+        if (source == null) return null;
+        return saveFile(activity, source, mimeType, destination);
     }
 
     @Override
@@ -91,21 +106,23 @@ public class SaveImageTask extends AsyncTask<Object, Object, File> implements Co
         super.onPreExecute();
     }
 
-    public static File saveImage(final Context context, final File image_file) {
-        if (context == null && image_file == null) return null;
+    public static File saveFile(final Context context, final File source, final String mimeType, final File destination) {
+        if (context == null && source == null) return null;
         try {
-            final String name = image_file.getName();
+            final String name = source.getName();
             if (isEmpty(name)) return null;
-            final String mimeType = getImageMimeType(image_file);
             final MimeTypeMap map = MimeTypeMap.getSingleton();
             final String extension = map.getExtensionFromMimeType(mimeType);
             if (extension == null) return null;
             final String nameToSave = name.contains(".") ? name : name + "." + extension;
-            final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            final File saveDir = new File(pubDir, "Twidere");
-            if (!saveDir.isDirectory() && !saveDir.mkdirs()) return null;
-            final File saveFile = new File(saveDir, nameToSave);
-            FileUtils.copyFile(image_file, saveFile);
+            if (!destination.isDirectory() && !destination.mkdirs()) return null;
+            final File saveFile;
+            if (destination.isDirectory()) {
+                saveFile = new File(destination, nameToSave);
+            } else {
+                saveFile = destination;
+            }
+            FileUtils.copyFile(source, saveFile);
             if (mimeType != null) {
                 MediaScannerConnection.scanFile(context, new String[]{saveFile.getPath()},
                         new String[]{mimeType}, null);
