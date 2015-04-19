@@ -91,6 +91,7 @@ import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
@@ -787,6 +788,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             quoteTextView.setTextIsSelectable(true);
             textView.setTextIsSelectable(true);
+
+            quoteTextView.setMovementMethod(StatusContentMovementMethod.getInstance());
+            textView.setMovementMethod(StatusContentMovementMethod.getInstance());
         }
 
         @Override

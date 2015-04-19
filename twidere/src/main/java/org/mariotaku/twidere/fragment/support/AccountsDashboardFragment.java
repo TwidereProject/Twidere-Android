@@ -411,7 +411,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     }
 
     public long[] getActivatedAccountIds() {
-        if (mAccountOptionsAdapter == null) {
+        if (mAccountActionProvider == null) {
             return Utils.getActivatedAccountIds(getActivity());
         }
         return mAccountActionProvider.getActivatedAccountIds();

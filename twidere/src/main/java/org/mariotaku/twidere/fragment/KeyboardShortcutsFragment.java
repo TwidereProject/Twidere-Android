@@ -37,6 +37,7 @@ import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -203,7 +204,10 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
                 return true;
             }
             final KeyboardShortcutSpec spec = KeyboardShortcutsHandler.getKeyboardShortcutSpec(mContextTag, keyCode, event);
-            if (spec == null || !spec.isValid()) return false;
+            if (spec == null || !spec.isValid()) {
+                Log.d(LOGTAG, String.format("Invalid key %s", spec));
+                return false;
+            }
             mKeySpec = spec;
             mKeysLabel.setText(spec.toKeyString());
             final String oldAction = mKeyboardShortcutHandler.findAction(spec);
