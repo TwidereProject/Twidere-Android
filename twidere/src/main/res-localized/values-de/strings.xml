@@ -344,9 +344,9 @@
   <string name="hashtag">Hashtag</string>
   <string name="links">Links</string>
   <string name="edit_profile">Profil bearbeiten</string>
-  <string name="display_sensitive_contents">Heikelen Inhanlt anzeigen</string>
-  <string name="display_sensitive_contents_summary">Heikelen Inhanlt ohne Mitteilung anzeigen</string>
-  <string name="sensitive_content_warning">Dieser Tweet könnte heikelen Inhalt haben, fortfahren?</string>
+  <string name="display_sensitive_contents">Heiklen Inhalt anzeigen</string>
+  <string name="display_sensitive_contents_summary">Heiklen Inhalt ohne Mitteilung anzeigen</string>
+  <string name="sensitive_content_warning">Dieser Tweet könnte heiklen Inhalt haben, fortfahren?</string>
   <string name="mark_as_sensitive">Als heikel markieren</string>
   <string name="remove_sensitive_mark">Markieren als heikel entfernen</string>
   <string name="none">Nichts</string>
