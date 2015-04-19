@@ -835,8 +835,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+            final int layoutPosition = getLayoutPosition();
+            if (layoutPosition < 0) return false;
             final StatusFragment fragment = adapter.getFragment();
-            final ParcelableStatus status = adapter.getStatus(getAdapterPosition());
+            final ParcelableStatus status = adapter.getStatus(layoutPosition);
             if (status == null || fragment == null) return false;
             final AsyncTwitterWrapper twitter = fragment.getTwitterWrapper();
             final FragmentActivity activity = fragment.getActivity();
