@@ -855,6 +855,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     private boolean handleIntent(final Intent intent) {
         final String action = intent.getAction();
+        if (action == null) return false;
         mShouldSaveAccounts = false;
         mMentionUser = intent.getParcelableExtra(EXTRA_USER);
         mInReplyToStatus = intent.getParcelableExtra(EXTRA_STATUS);

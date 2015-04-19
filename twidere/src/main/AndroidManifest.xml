@@ -233,6 +233,7 @@
         <activity
             android:name=".activity.FiltersActivity"
             android:label="@string/filters"
+            android:exported="false"
             android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

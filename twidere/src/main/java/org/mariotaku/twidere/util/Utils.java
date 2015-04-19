@@ -711,6 +711,18 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
+    public static Bundle createMediaViewerActivityOption(View view) {
+        view.buildDrawingCache();
+        try {
+            final Bitmap viewDrawingCache = view.getDrawingCache();
+            if (viewDrawingCache == null) return null;
+            final Bitmap drawingCache = Bitmap.createBitmap(viewDrawingCache);
+            return ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
+        } finally {
+            view.destroyDrawingCache();
+        }
+    }
+
     public static int[] getAccountColors(@Nullable final ParcelableAccount[] accounts) {
         if (accounts == null) return null;
         final int[] colors = new int[accounts.length];
@@ -2851,17 +2863,19 @@ public final class Utils implements Constants, TwitterConstants {
         return false;
     }
 
-    public static int matchLinkId(final Uri uri) {
+    public static int matchLinkId(@Nullable final Uri uri) {
+        if (uri == null) return UriMatcher.NO_MATCH;
         return LINK_HANDLER_URI_MATCHER.match(uri);
     }
 
 
-    public static int matchTabCode(final Uri uri) {
+    public static int matchTabCode(@Nullable final Uri uri) {
+        if (uri == null) return UriMatcher.NO_MATCH;
         return HOME_TABS_URI_MATCHER.match(uri);
     }
 
 
-    public static String matchTabType(final Uri uri) {
+    public static String matchTabType(@Nullable final Uri uri) {
         return getTabType(matchTabCode(uri));
     }
 

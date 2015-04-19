@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -38,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -297,10 +295,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
         if (status == null) return;
-        view.buildDrawingCache();
-        final Bitmap drawingCache = Bitmap.createBitmap(view.getDrawingCache());
-        final Bundle options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
-        view.destroyDrawingCache();
+        final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
         SpiceProfilingUtil.log(getActivity(),
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
@@ -384,10 +379,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
-        view.buildDrawingCache();
-        final Bitmap drawingCache = Bitmap.createBitmap(view.getDrawingCache());
-        final Bundle options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
-        view.destroyDrawingCache();
+        final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
         //spice
         SpiceProfilingUtil.log(getActivity(),

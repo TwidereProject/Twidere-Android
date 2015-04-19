@@ -3,11 +3,9 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -248,11 +246,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
-        //TODO open media animation
-        view.buildDrawingCache();
-        final Bitmap drawingCache = Bitmap.createBitmap(view.getDrawingCache());
-        final Bundle options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
-        view.destroyDrawingCache();
+        final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
         //spice
         SpiceProfilingUtil.log(getActivity(),

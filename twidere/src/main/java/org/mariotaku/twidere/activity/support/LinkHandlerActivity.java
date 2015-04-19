@@ -156,7 +156,7 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
         setStatusBarColor(linkId, data);
         setTaskInfo(linkId, data);
         setSupportProgressBarIndeterminateVisibility(false);
-        if (data == null || !showFragment(linkId, data)) {
+        if (!showFragment(linkId, data)) {
             finish();
         }
     }

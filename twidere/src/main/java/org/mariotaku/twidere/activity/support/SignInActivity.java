@@ -184,7 +184,8 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
                 break;
             }
             case R.id.sign_in_method_introduction: {
-                new SignInMethodIntroductionDialogFragment().show(getSupportFragmentManager(),
+                final FragmentManager fm = getSupportFragmentManager();
+                new SignInMethodIntroductionDialogFragment().show(fm.beginTransaction(),
                         "sign_in_method_introduction");
                 break;
             }

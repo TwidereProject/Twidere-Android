@@ -45,9 +45,6 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.MessageConversationViewHolder;
 
-import static org.mariotaku.twidere.util.Utils.findDirectMessageInDatabases;
-import static org.mariotaku.twidere.util.Utils.openMedia;
-
 public class MessageConversationAdapter extends Adapter<ViewHolder>
         implements Constants, IDirectMessagesAdapter, OnClickListener {
 
@@ -160,7 +157,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
         c.moveToPosition(position);
         final long account_id = c.getLong(mIndices.account_id);
         final long message_id = c.getLong(mIndices.message_id);
-        return findDirectMessageInDatabases(mContext, account_id, message_id);
+        return Utils.findDirectMessageInDatabases(mContext, account_id, message_id);
     }
 
     @Override
@@ -175,7 +172,7 @@ public class MessageConversationAdapter extends Adapter<ViewHolder>
                 if (message == null || message.media == null) return;
                 //TODO open media animation
                 Bundle options = null;
-                openMedia(mContext, message, null, options);
+                Utils.openMedia(mContext, message, null, options);
             }
         }
     }
