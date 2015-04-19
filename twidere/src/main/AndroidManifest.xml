@@ -232,8 +232,8 @@
         </activity>
         <activity
             android:name=".activity.FiltersActivity"
-            android:label="@string/filters"
             android:exported="false"
+            android:label="@string/filters"
             android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -570,6 +570,7 @@
         </activity>
         <activity
             android:name=".activity.AssistLauncherActivity"
+            android:enabled="false"
             android:excludeFromRecents="true"
             android:taskAffinity=":twidere_assist_launcher"
             android:theme="@style/Theme.Launcher">

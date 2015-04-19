@@ -140,7 +140,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private MediaLoaderWrapper mImageLoader;
     private SupportAccountActionProvider mAccountActionProvider;
     private boolean mSwitchAccountAnimationPlaying;
-
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
@@ -218,16 +217,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         initAccountActionsAdapter(accounts);
         updateAccountOptionsSeparatorLabel(null);
         updateDefaultAccountState();
-    }
-
-    void initAccountActionsAdapter(ParcelableAccount[] accounts) {
-        mAccountOptionsAdapter.clear();
-        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
-        if (accounts.length > 1) {
-            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
-        }
-        mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
-        mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));
     }
 
     @Override
@@ -421,6 +410,23 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         super.onStop();
     }
 
+    public long[] getActivatedAccountIds() {
+        if (mAccountOptionsAdapter == null) {
+            return Utils.getActivatedAccountIds(getActivity());
+        }
+        return mAccountActionProvider.getActivatedAccountIds();
+    }
+
+    void initAccountActionsAdapter(ParcelableAccount[] accounts) {
+        mAccountOptionsAdapter.clear();
+        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
+        if (accounts.length > 1) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
+        }
+        mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
+        mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));
+    }
+
     private void closeAccountsDrawer() {
         final Activity activity = getActivity();
         if (activity instanceof HomeActivity) {
@@ -428,17 +434,17 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         }
     }
 
+    private void getLocationOnScreen(View view, RectF rectF) {
+        final int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        rectF.set(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
+    }
+
     private Context getThemedContext() {
         if (mThemedContext != null) return mThemedContext;
         final Context context = getActivity();
         final int themeResource = ThemeUtils.getDrawerThemeResource(context);
         return mThemedContext = new ContextThemeWrapper(context, themeResource);
-    }
-
-    private void getLocationOnScreen(View view, RectF rectF) {
-        final int[] location = new int[2];
-        view.getLocationOnScreen(location);
-        rectF.set(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
     }
 
     private void onAccountSelected(AccountProfileImageViewHolder holder, final ParcelableAccount account) {
@@ -505,6 +511,16 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
                 finishAnimation();
             }
 
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                finishAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+
             private void finishAnimation() {
                 final Editor editor = mPreferences.edit();
                 editor.putLong(KEY_DEFAULT_ACCOUNT_ID, account.account_id);
@@ -521,16 +537,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
                 clickedImageView.setScaleY(1);
                 clickedImageView.setAlpha(1f);
                 mSwitchAccountAnimationPlaying = false;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                finishAnimation();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
             }
         });
         set.start();
@@ -585,18 +591,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         }
     }
 
-    private static final class AppMenuAdapter extends OptionItemsAdapter {
-
-        public AppMenuAdapter(final Context context) {
-            super(context);
-            add(new OptionItem(R.string.accounts, R.drawable.ic_action_accounts, MENU_ACCOUNTS));
-            add(new OptionItem(R.string.drafts, R.drawable.ic_action_draft, MENU_DRAFTS));
-            add(new OptionItem(R.string.filters, R.drawable.ic_action_speaker_muted, MENU_FILTERS));
-            add(new OptionItem(R.string.settings, R.drawable.ic_action_settings, MENU_SETTINGS));
-        }
-
-    }
-
     static class AccountProfileImageViewHolder extends ViewHolder implements OnClickListener {
 
         private final AccountSelectorAdapter adapter;
@@ -624,6 +618,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
         private final AccountsDashboardFragment mFragment;
+        private final LongSparseArray<Long> positionMap = new LongSparseArray<>();
         private ParcelableAccount[] mInternalAccounts;
 
         AccountSelectorAdapter(Context context, AccountsDashboardFragment fragment) {
@@ -633,11 +628,58 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             setHasStableIds(true);
         }
 
-        private static int indexOfAccount(List<ParcelableAccount> accounts, long accountId) {
-            for (int i = 0, j = accounts.size(); i < j; i++) {
-                if (accounts.get(i).account_id == accountId) return i;
+        public ParcelableAccount getAdapterAccount(int adapterPosition) {
+            if (mInternalAccounts == null || mInternalAccounts.length < 1) {
+                return null;
             }
-            return -1;
+            return mInternalAccounts[adapterPosition + 1];
+        }
+
+        @Nullable
+        public ParcelableAccount getSelectedAccount() {
+            if (mInternalAccounts == null || mInternalAccounts.length == 0) {
+                return null;
+            }
+            return mInternalAccounts[0];
+        }
+
+        public long getSelectedAccountId() {
+            final ParcelableAccount selectedAccount = getSelectedAccount();
+            if (selectedAccount == null) return -1;
+            return selectedAccount.account_id;
+        }
+
+        public void setSelectedAccountId(long accountId) {
+            final ParcelableAccount selectedAccount = getSelectedAccount();
+            if (selectedAccount == null) return;
+            swap(accountId, selectedAccount.account_id);
+        }
+
+        @Override
+        public AccountProfileImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            final View view = mInflater.inflate(R.layout.adapter_item_dashboard_account, parent, false);
+            return new AccountProfileImageViewHolder(this, view);
+        }
+
+        @Override
+        public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
+//            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
+            final ParcelableAccount account = getAdapterAccount(position);
+            mImageLoader.cancelDisplayTask(holder.icon);
+//            holder.icon.setImageDrawable(null);
+            mImageLoader.displayDashboardProfileImage(holder.icon, account.profile_image_url, null);
+            holder.icon.setBorderColor(account.color);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return getAdapterAccount(position).account_id;
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mInternalAccounts == null || mInternalAccounts.length == 0) return 0;
+            return mInternalAccounts.length - 1;
         }
 
         public void setAccounts(ParcelableAccount[] accounts) {
@@ -664,15 +706,16 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             notifyDataSetChanged();
         }
 
-
-        public ParcelableAccount getAdapterAccount(int adapterPosition) {
-            if (mInternalAccounts == null || mInternalAccounts.length < 1) {
-                return null;
-            }
-            return mInternalAccounts[adapterPosition + 1];
+        private void dispatchItemSelected(AccountProfileImageViewHolder holder) {
+            mFragment.onAccountSelected(holder, getAdapterAccount(holder.getAdapterPosition()));
         }
 
-        private final LongSparseArray<Long> positionMap = new LongSparseArray<>();
+        private static int indexOfAccount(List<ParcelableAccount> accounts, long accountId) {
+            for (int i = 0, j = accounts.size(); i < j; i++) {
+                if (accounts.get(i).account_id == accountId) return i;
+            }
+            return -1;
+        }
 
         private void swap(long fromId, long toId) {
             int fromIdx = -1, toIdx = -1;
@@ -691,57 +734,18 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             mInternalAccounts[fromIdx] = temp;
             notifyDataSetChanged();
         }
+    }
 
-        @Nullable
-        public ParcelableAccount getSelectedAccount() {
-            if (mInternalAccounts == null || mInternalAccounts.length == 0) {
-                return null;
-            }
-            return mInternalAccounts[0];
+    private static final class AppMenuAdapter extends OptionItemsAdapter {
+
+        public AppMenuAdapter(final Context context) {
+            super(context);
+            add(new OptionItem(R.string.accounts, R.drawable.ic_action_accounts, MENU_ACCOUNTS));
+            add(new OptionItem(R.string.drafts, R.drawable.ic_action_draft, MENU_DRAFTS));
+            add(new OptionItem(R.string.filters, R.drawable.ic_action_speaker_muted, MENU_FILTERS));
+            add(new OptionItem(R.string.settings, R.drawable.ic_action_settings, MENU_SETTINGS));
         }
 
-        public long getSelectedAccountId() {
-            final ParcelableAccount selectedAccount = getSelectedAccount();
-            if (selectedAccount == null) return -1;
-            return selectedAccount.account_id;
-        }
-
-        public void setSelectedAccountId(long accountId) {
-            final ParcelableAccount selectedAccount = getSelectedAccount();
-            if (selectedAccount == null) return;
-            swap(accountId, selectedAccount.account_id);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getAdapterAccount(position).account_id;
-        }
-
-        @Override
-        public AccountProfileImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = mInflater.inflate(R.layout.adapter_item_dashboard_account, parent, false);
-            return new AccountProfileImageViewHolder(this, view);
-        }
-
-        @Override
-        public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
-//            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
-            final ParcelableAccount account = getAdapterAccount(position);
-            mImageLoader.cancelDisplayTask(holder.icon);
-//            holder.icon.setImageDrawable(null);
-            mImageLoader.displayDashboardProfileImage(holder.icon, account.profile_image_url, null);
-            holder.icon.setBorderColor(account.color);
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mInternalAccounts == null || mInternalAccounts.length == 0) return 0;
-            return mInternalAccounts.length - 1;
-        }
-
-        private void dispatchItemSelected(AccountProfileImageViewHolder holder) {
-            mFragment.onAccountSelected(holder, getAdapterAccount(holder.getAdapterPosition()));
-        }
     }
 
     private static class OptionItem {

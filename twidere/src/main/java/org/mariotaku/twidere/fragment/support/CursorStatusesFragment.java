@@ -29,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 
 import com.squareup.otto.Subscribe;
@@ -36,6 +37,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
 import org.mariotaku.twidere.loader.support.ExtendedCursorLoader;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -70,8 +72,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     protected Loader<Cursor> onCreateStatusesLoader(final Context context,
-                                                 final Bundle args,
-                                                 final boolean fromUser) {
+                                                    final Bundle args,
+                                                    final boolean fromUser) {
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
@@ -134,6 +136,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
         final Bundle args = getArguments();
         if (args != null && args.getLong(EXTRA_ACCOUNT_ID) > 0) {
             return new long[]{args.getLong(EXTRA_ACCOUNT_ID)};
+        }
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof HomeActivity) {
+            return ((HomeActivity) activity).getActivatedAccountIds();
         }
         return Utils.getActivatedAccountIds(getActivity());
     }

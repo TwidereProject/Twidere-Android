@@ -642,6 +642,14 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         mColorStatusFrameLayout = (TintedStatusFrameLayout) findViewById(R.id.home_content);
     }
 
+    public long[] getActivatedAccountIds() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.left_drawer);
+        if (fragment instanceof AccountsDashboardFragment) {
+            ((AccountsDashboardFragment) fragment).getActivatedAccountIds();
+        }
+        return Utils.getActivatedAccountIds(this);
+    }
+
     private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof ShortcutCallback) {
