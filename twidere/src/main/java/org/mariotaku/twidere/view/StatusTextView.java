@@ -1,7 +1,10 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.view.themed.ThemedTextView;
@@ -11,29 +14,22 @@ public class StatusTextView extends ThemedTextView {
     private OnSelectionChangeListener mOnSelectionChangeListener;
 
     public StatusTextView(final Context context) {
-        super(context);
+        this(context, null);
     }
 
     public StatusTextView(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
 
     public StatusTextView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+        setEditableFactory(new SafeEditableFactory());
+        setSpannableFactory(new SafeSpannableFactory());
     }
 
     public void setOnSelectionChangeListener(final OnSelectionChangeListener l) {
         mOnSelectionChangeListener = l;
-    }
-
-    @Override
-    public void setText(CharSequence text, BufferType type) {
-        if (text == null) {
-            super.setText(null, type);
-            return;
-        }
-        super.setText(new SafeSpannableStringWrapper(text), type);
     }
 
     @Override
@@ -48,9 +44,9 @@ public class StatusTextView extends ThemedTextView {
         void onSelectionChanged(int selStart, int selEnd);
     }
 
-    private static class SafeSpannableStringWrapper extends SpannableString {
+    private static class SafeSpannableString extends SpannableString {
 
-        public SafeSpannableStringWrapper(CharSequence source) {
+        public SafeSpannableString(CharSequence source) {
             super(source);
         }
 
@@ -64,4 +60,33 @@ public class StatusTextView extends ThemedTextView {
         }
     }
 
+    private static class SafeSpannableStringBuilder extends SpannableStringBuilder {
+
+        public SafeSpannableStringBuilder(CharSequence source) {
+            super(source);
+        }
+
+        @Override
+        public void setSpan(Object what, int start, int end, int flags) {
+            if (start < 0 || end < 0) {
+                // Silently ignore
+                return;
+            }
+            super.setSpan(what, start, end, flags);
+        }
+    }
+
+    private class SafeEditableFactory extends Editable.Factory {
+        @Override
+        public Editable newEditable(CharSequence source) {
+            return new SafeSpannableStringBuilder(source);
+        }
+    }
+
+    private class SafeSpannableFactory extends Spannable.Factory {
+        @Override
+        public Spannable newSpannable(CharSequence source) {
+            return new SafeSpannableString(source);
+        }
+    }
 }

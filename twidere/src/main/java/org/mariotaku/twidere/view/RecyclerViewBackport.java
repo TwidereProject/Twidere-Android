@@ -27,24 +27,28 @@ import android.util.TypedValue;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 
+import org.mariotaku.twidere.util.MouseScrollDirectionDecider;
+
 /**
  * Created by mariotaku on 15/3/30.
  */
 public class RecyclerViewBackport extends RecyclerView {
 
+    private final MouseScrollDirectionDecider mMouseScrollDirectionDecider;
     // This value is used when handling generic motion events.
     private float mScrollFactor = Float.MIN_VALUE;
 
     public RecyclerViewBackport(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public RecyclerViewBackport(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public RecyclerViewBackport(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        mMouseScrollDirectionDecider = new MouseScrollDirectionDecider(context, getScrollFactorBackport());
     }
 
     @Override
@@ -57,19 +61,28 @@ public class RecyclerViewBackport extends RecyclerView {
             if (event.getAction() == MotionEventCompat.ACTION_SCROLL) {
                 final float vScroll, hScroll;
                 if (lm.canScrollVertically()) {
-                    vScroll = -event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                    vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                    if (!mMouseScrollDirectionDecider.isVerticalAvailable()) {
+                        mMouseScrollDirectionDecider.guessDirection(event);
+                    }
                 } else {
                     vScroll = 0f;
                 }
                 if (lm.canScrollHorizontally()) {
-                    hScroll = -event.getAxisValue(MotionEvent.AXIS_HSCROLL);
+                    hScroll = event.getAxisValue(MotionEvent.AXIS_HSCROLL);
+                    if (!mMouseScrollDirectionDecider.isHorizontalAvailable()) {
+                        mMouseScrollDirectionDecider.guessDirection(event);
+                    }
                 } else {
                     hScroll = 0f;
                 }
-
-                if (vScroll != 0 || hScroll != 0) {
+                if ((vScroll != 0 || hScroll != 0)) {
                     final float scrollFactor = getScrollFactorBackport();
-                    smoothScrollBy((int) (hScroll * scrollFactor), (int) (vScroll * scrollFactor));
+                    float horizontalDirection = mMouseScrollDirectionDecider.getHorizontalDirection();
+                    float verticalDirection = mMouseScrollDirectionDecider.getVerticalDirection();
+                    final float hFactor = scrollFactor * (horizontalDirection != 0 ? horizontalDirection : -1);
+                    final float vFactor = scrollFactor * (verticalDirection != 0 ? verticalDirection : -1);
+                    smoothScrollBy((int) (hScroll * hFactor), (int) (vScroll * vFactor));
                 }
             }
         }

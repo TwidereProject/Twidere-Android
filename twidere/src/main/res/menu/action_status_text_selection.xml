@@ -5,7 +5,7 @@
     <item
         android:id="@android:id/copyUrl"
         android:icon="@drawable/ic_action_web"
-        app:showAsAction="always|withText"
-        android:title="@android:string/copyUrl"/>
+        android:title="@android:string/copyUrl"
+        app:showAsAction="always"/>
 
 </menu>

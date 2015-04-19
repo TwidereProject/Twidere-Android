@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -46,6 +47,14 @@ public class MenuUtils {
         final MenuItem item = menu.findItem(id);
         if (item == null) return;
         item.setIcon(icon);
+    }
+
+    public static void setMenuItemShowAsActionFlags(Menu menu, int id, int flags) {
+        if (menu == null) return;
+        final MenuItem item = menu.findItem(id);
+        if (item == null) return;
+        item.setShowAsActionFlags(flags);
+        MenuItemCompat.setShowAsAction(item, flags);
     }
 
     public static void setMenuItemTitle(final Menu menu, final int id, final int icon) {

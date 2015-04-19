@@ -176,7 +176,6 @@
         android:paddingRight="@dimen/element_spacing_normal"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
-        android:textIsSelectable="true"
         android:visibility="gone"
         tools:text="@string/sample_status_text"
         tools:visibility="visible"/>
@@ -244,8 +243,9 @@
             android:verticalSpacing="@dimen/element_spacing_xsmall"
             android:visibility="gone">
 
-            <include layout="@layout/layout_card_media_preview"
-                     tools:ignore="DuplicateIncludedIds"/>
+            <include
+                layout="@layout/layout_card_media_preview"
+                tools:ignore="DuplicateIncludedIds"/>
 
         </org.mariotaku.twidere.view.CardMediaContainer>
 
@@ -283,7 +283,6 @@
         android:singleLine="false"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
-        android:textIsSelectable="true"
         tools:text="@string/sample_status_text"/>
 
     <org.mariotaku.twidere.view.TwitterCardContainer
@@ -294,7 +293,7 @@
         android:layout_toRightOf="@+id/quote_indicator"
         android:visibility="gone"/>
 
-    <org.mariotaku.twidere.view.themed.ThemedTextView
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
         android:id="@+id/location_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
