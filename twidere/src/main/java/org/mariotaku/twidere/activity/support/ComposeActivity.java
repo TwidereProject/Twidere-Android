@@ -77,6 +77,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -371,12 +372,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
 
     @Override
     public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-        if (event == null) return false;
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_ENTER: {
-                updateStatus();
-                return true;
-            }
+        if (actionId == EditorInfo.IME_ACTION_SEND) {
+            updateStatus();
+            return true;
         }
         return false;
     }
@@ -604,7 +602,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         }
 //        mMenuBar.setIsBottomBar(true);
         mMenuBar.setOnMenuItemClickListener(this);
-        mEditText.setOnEditorActionListener(mPreferences.getBoolean(KEY_QUICK_SEND) ? this : null);
+        boolean quickSend = mPreferences.getBoolean(KEY_QUICK_SEND);
+        if (quickSend) {
+            mEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+            mEditText.setComposeInputSingleLine(true);
+        } else {
+            mEditText.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
+            mEditText.setComposeInputSingleLine(false);
+        }
+        mEditText.setOnEditorActionListener(this);
         mEditText.addTextChangedListener(this);
         mEditText.setCustomSelectionActionModeCallback(this);
         mAccountSelectorContainer.setOnClickListener(this);
@@ -732,6 +738,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         final File file = new File(getCacheDir(), "tmp_image_" + System.currentTimeMillis());
         return Uri.fromFile(file);
     }
+
 
     private void displayNewDraftNotification(String text, Uri draftUri) {
         final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

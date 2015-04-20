@@ -49,6 +49,8 @@ public class KeyboardShortcutsHandler implements Constants {
         sActionLabelMap.put("navigation.previous", R.string.previous_item);
         sActionLabelMap.put("navigation.next", R.string.next_item);
         sActionLabelMap.put("navigation.refresh", R.string.refresh);
+        sActionLabelMap.put("navigation.previous_tab", R.string.previous_tab);
+        sActionLabelMap.put("navigation.next_tab", R.string.next_tab);
 
         sMetaNameMap.put(KeyEvent.META_FUNCTION_ON, "fn");
         sMetaNameMap.put(KeyEvent.META_META_ON, "meta");
@@ -221,6 +223,8 @@ public class KeyboardShortcutsHandler implements Constants {
         editor.putString("navigation.period", "navigation.refresh");
         editor.putString("navigation.j", "navigation.next");
         editor.putString("navigation.k", "navigation.previous");
+        editor.putString("navigation.h", "navigation.previous_tab");
+        editor.putString("navigation.l", "navigation.next_tab");
         editor.putString("status.f", "status.favorite");
         editor.putString("status.r", "status.reply");
         editor.putString("status.t", "status.retweet");
