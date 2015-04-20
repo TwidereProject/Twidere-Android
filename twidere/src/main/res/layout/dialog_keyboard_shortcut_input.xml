@@ -24,20 +24,21 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="@dimen/element_spacing_xlarge">
 
     <TextView
         android:id="@+id/keys_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:text="@string/keyboard_shortcut_hint"/>
+        android:text="@string/keyboard_shortcut_hint"
+        android:textAppearance="?android:textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/conflict_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </org.mariotaku.twidere.view.ExtendedLinearLayout>

@@ -298,7 +298,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
-        SpiceProfilingUtil.log(getActivity(),
+        SpiceProfilingUtil.log(
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
                         + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
@@ -383,7 +383,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
         //spice
-        SpiceProfilingUtil.log(getActivity(),
+        SpiceProfilingUtil.log(
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
                         + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
@@ -444,7 +444,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count
                             + "," + status.retweet_count + "," + status.favorite_count
                             + "," + status.text_plain.length() + "," + status.timestamp);
-            SpiceProfilingUtil.log(getActivity(), status.id + ",Words," + status.account_id + "," + status.user_id
+            SpiceProfilingUtil.log(status.id + ",Words," + status.account_id + "," + status.user_id
                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                     + "," + status.text_plain.length() + "," + status.timestamp);
         } else {
@@ -456,7 +456,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                                     + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
                                     + "," + media.media_url + "," + media.width + "x" + media.height
                                     + "," + status.timestamp);
-                    SpiceProfilingUtil.log(getActivity(),
+                    SpiceProfilingUtil.log(
                             status.id + ",PreviewM," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
@@ -468,7 +468,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
                                     + "," + media.preview_url + "," + media.media_url + "," + status.timestamp);
-                    SpiceProfilingUtil.log(getActivity(),
+                    SpiceProfilingUtil.log(
                             status.id + ",PreviewO," + status.account_id + "," + status.user_id
                                     + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
                                     + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)

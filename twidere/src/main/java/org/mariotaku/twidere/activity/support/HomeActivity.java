@@ -44,6 +44,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -279,6 +280,19 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     @Override
     public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
+        final String action = mKeyboardShortcutsHandler.getKeyAction("home", keyCode, event);
+        if (action != null) {
+            switch (action) {
+                case "home.accounts_dashboard": {
+                    if (mSlidingMenu.isMenuShowing()) {
+                        mSlidingMenu.showContent(true);
+                    } else {
+                        mSlidingMenu.showMenu(true);
+                    }
+                    return true;
+                }
+            }
+        }
         return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
     }
 
@@ -645,7 +659,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
     public long[] getActivatedAccountIds() {
         final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.left_drawer);
         if (fragment instanceof AccountsDashboardFragment) {
-            ((AccountsDashboardFragment) fragment).getActivatedAccountIds();
+            return ((AccountsDashboardFragment) fragment).getActivatedAccountIds();
         }
         return Utils.getActivatedAccountIds(this);
     }

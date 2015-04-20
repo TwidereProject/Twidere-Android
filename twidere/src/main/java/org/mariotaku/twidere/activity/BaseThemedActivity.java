@@ -39,6 +39,11 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     private String mCurrentThemeBackgroundOption;
 
     @Override
+    public String getCurrentThemeBackgroundOption() {
+        return mCurrentThemeBackgroundOption;
+    }
+
+    @Override
     public int getCurrentThemeBackgroundAlpha() {
         return mCurrentThemeBackgroundAlpha;
     }

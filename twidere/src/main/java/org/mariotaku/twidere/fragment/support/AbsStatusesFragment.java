@@ -249,7 +249,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
         //spice
-        SpiceProfilingUtil.log(getActivity(),
+        SpiceProfilingUtil.log(
                 status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
                         + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
                         + "," + adapter.isMediaPreviewEnabled() + "," + status.timestamp);

@@ -42,6 +42,7 @@ public class KeyboardShortcutsHandler implements Constants {
         sActionLabelMap.put("compose", R.string.compose);
         sActionLabelMap.put("search", R.string.search);
         sActionLabelMap.put("message", R.string.new_direct_message);
+        sActionLabelMap.put("home.accounts_dashboard", R.string.open_accounts_dashboard);
         sActionLabelMap.put("status.reply", R.string.reply);
         sActionLabelMap.put("status.retweet", R.string.retweet);
         sActionLabelMap.put("status.favorite", R.string.favorite);
@@ -216,6 +217,7 @@ public class KeyboardShortcutsHandler implements Constants {
         editor.putString("n", "compose");
         editor.putString("m", "message");
         editor.putString("slash", "search");
+        editor.putString("home.q", "home.accounts_dashboard");
         editor.putString("navigation.period", "navigation.refresh");
         editor.putString("navigation.j", "navigation.next");
         editor.putString("navigation.k", "navigation.previous");
@@ -280,6 +282,10 @@ public class KeyboardShortcutsHandler implements Constants {
             this.action = action;
         }
 
+        public KeyboardShortcutSpec copy() {
+            return new KeyboardShortcutSpec(contextTag, keyMeta, keyName, action);
+        }
+
         public String getContextTag() {
             return contextTag;
         }
@@ -306,6 +312,10 @@ public class KeyboardShortcutsHandler implements Constants {
 
         public boolean isValid() {
             return keyName != null;
+        }
+
+        public void setContextTag(String contextTag) {
+            this.contextTag = contextTag;
         }
 
         public String toKeyString() {

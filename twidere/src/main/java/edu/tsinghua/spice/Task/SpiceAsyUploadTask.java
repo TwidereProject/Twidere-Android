@@ -46,7 +46,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
         final File tmp_dir = new File(app_root + "/spice");
         if (!tmp_dir.exists()) {
             if (!tmp_dir.mkdirs()) {
-                SpiceProfilingUtil.log(context, "cannot create folder spice, do nothing.");
+                SpiceProfilingUtil.log("cannot create folder spice, do nothing.");
                 return;
             }
         }
@@ -58,12 +58,12 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
             final String url = PROFILE_SERVER_URL;
             final HttpParameter[] parameters = {new HttpParameter("file", tmp)};
             client.post(url, url, parameters);
-            SpiceProfilingUtil.log(context, "server has already received file " + tmp.getName());
+            SpiceProfilingUtil.log("server has already received file " + tmp.getName());
             tmp.delete();
         } catch (Exception e) {
             if (Utils.isDebugBuild()) {
                 Log.w(LOGTAG, e);
-                SpiceProfilingUtil.log(context, "server does not receive file " + tmp.getName());
+                SpiceProfilingUtil.log("server does not receive file " + tmp.getName());
             }
             putBackProfile(context, tmp, file);
         }
@@ -80,7 +80,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
             final long lastUpload = prefs.getLong(LAST_UPLOAD_DATE, System.currentTimeMillis());
             final double deltaDays = (System.currentTimeMillis() - lastUpload) / (MILLSECS_HALF_DAY * 2);
             if (deltaDays < 1) {
-                SpiceProfilingUtil.log(context, "Last uploaded was conducted in 1 day ago.");
+                SpiceProfilingUtil.log("Last uploaded was conducted in 1 day ago.");
                 return null;
             }
         }
@@ -99,7 +99,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
                 continue;
             }
             final String url = PROFILE_SERVER_URL;
-            SpiceProfilingUtil.log(context, url);
+            SpiceProfilingUtil.log(url);
             uploadMultipart(file);
         }
         return false;
@@ -121,15 +121,15 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
             }
 
             if (success && tmp.renameTo(profile) && tmp.delete()) {
-                SpiceProfilingUtil.log(context, "put profile back success");
+                SpiceProfilingUtil.log("put profile back success");
             } else {
-                SpiceProfilingUtil.log(context, "put profile back failed");
+                SpiceProfilingUtil.log("put profile back failed");
             }
         } else {
             if (tmp.renameTo(profile)) {
-                SpiceProfilingUtil.log(context, "put profile back success");
+                SpiceProfilingUtil.log("put profile back success");
             } else {
-                SpiceProfilingUtil.log(context, "put profile back failed");
+                SpiceProfilingUtil.log("put profile back failed");
             }
         }
     }

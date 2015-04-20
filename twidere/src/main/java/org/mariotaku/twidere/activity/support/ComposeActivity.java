@@ -914,6 +914,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         if (status == null || status.id <= 0) return false;
         final String myScreenName = Utils.getAccountScreenName(this, status.account_id);
         if (TextUtils.isEmpty(myScreenName)) return false;
+        if (!TextUtils.isEmpty(status.quoted_by_user_name)) {
+            mEditText.append("@" + status.quoted_by_user_name + " ");
+        }
         mEditText.append("@" + status.user_screen_name + " ");
         final int selectionStart = mEditText.length();
         if (!TextUtils.isEmpty(status.retweeted_by_screen_name)) {

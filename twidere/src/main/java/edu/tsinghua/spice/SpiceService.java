@@ -31,7 +31,7 @@ public class SpiceService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        SpiceProfilingUtil.log(this, "onCreate");
+        SpiceProfilingUtil.log("onCreate");
         mAlarmManager = (AlarmManager) getSystemService(Service.ALARM_SERVICE);
 
         IntentFilter screenFilter = new IntentFilter();
@@ -58,10 +58,10 @@ public class SpiceService extends Service {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
                 SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_SCREEN, "SCREEN ON" + "," + NetworkStateUtil.getConnectedType(context));
-                SpiceProfilingUtil.log(context, "SCREEN ON" + "," + NetworkStateUtil.getConnectedType(context));
+                SpiceProfilingUtil.log("SCREEN ON" + "," + NetworkStateUtil.getConnectedType(context));
             } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_SCREEN, "SCREEN OFF" + "," + NetworkStateUtil.getConnectedType(context));
-                SpiceProfilingUtil.log(context, "SCREEN OFF" + "," + NetworkStateUtil.getConnectedType(context));
+                SpiceProfilingUtil.log("SCREEN OFF" + "," + NetworkStateUtil.getConnectedType(context));
             }
         }
 

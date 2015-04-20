@@ -585,6 +585,9 @@
                 android:resource="@drawable/ic_assist_twidere"/>
         </activity>
         <activity
+            android:name=".activity.KeyboardShortcutPreferenceCompatActivity"
+            android:theme="@style/Theme.Blank.Dialog"/>
+        <activity
             android:name=".activity.TestActivity"
             android:enabled="false"
             android:label="Twidere test"

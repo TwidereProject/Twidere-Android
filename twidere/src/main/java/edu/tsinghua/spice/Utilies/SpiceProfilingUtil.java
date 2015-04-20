@@ -43,11 +43,11 @@ public class SpiceProfilingUtil {
                 || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
-    public static boolean log(final Context context, final String msg) {
-        if (Utils.isDebuggable(context)) {
+    public static boolean log(final String msg) {
+        if (Utils.isDebugBuild()) {
             final StackTraceElement ste = new Throwable().fillInStackTrace().getStackTrace()[1];
-            final String fullname = ste.getClassName();
-            final String name = fullname.substring(fullname.lastIndexOf('.'));
+            final String fullName = ste.getClassName();
+            final String name = fullName.substring(fullName.lastIndexOf('.'));
             final String tag = name + "." + ste.getMethodName();
             Log.d(tag, msg);
             return true;

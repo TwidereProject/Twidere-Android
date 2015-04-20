@@ -35,7 +35,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.Resources.Theme;
@@ -56,6 +55,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -172,6 +172,7 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
+import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -2511,11 +2512,7 @@ public final class Utils implements Constants, TwitterConstants {
                 cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
             }
         }
-        if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
-            setMockOfficialUserAgent(context, cb);
-        } else {
-            setUserAgent(context, cb);
-        }
+        setClientUserAgent(context, consumerKey, consumerSecret, cb);
 
         cb.setIncludeEntitiesEnabled(includeEntities);
         cb.setIncludeRTsEnabled(includeRetweets);
@@ -2683,17 +2680,6 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static boolean isDebugBuild() {
         return BuildConfig.DEBUG;
-    }
-
-    public static boolean isDebuggable(final Context context) {
-        if (context == null) return false;
-        final ApplicationInfo info;
-        try {
-            info = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-        } catch (final NameNotFoundException e) {
-            return false;
-        }
-        return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final long user_id, final String text_plain,
@@ -3600,28 +3586,58 @@ public final class Utils implements Constants, TwitterConstants {
      * TwitterAndroid/[versionName] ([versionCode]-[buildName]-[r|d)]-[buildNumber]) [deviceInfo]
      *
      * @param context
+     * @param consumerKey
+     * @param consumerSecret
      * @param cb
      */
-    public static void setMockOfficialUserAgent(final Context context, final ConfigurationBuilder cb) {
-        final PackageManager pm = context.getPackageManager();
-        cb.setClientName("TwitterAndroid");
-        cb.setClientURL(null);
-        String versionName;
-        int versionCode;
-        try {
-            final PackageInfo packageInfo = pm.getPackageInfo("com.twitter.android", 0);
-            versionName = packageInfo.versionName;
-            versionCode = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            versionName = "5.53.0";
-            versionCode = 4030814;
+    public static void setClientUserAgent(final Context context, String consumerKey, String consumerSecret, final ConfigurationBuilder cb) {
+        final ConsumerKeyType officialKeyType = TwitterContentUtils.getOfficialKeyType(context, consumerKey, consumerSecret);
+        if (officialKeyType == ConsumerKeyType.UNKNOWN) {
+            setUserAgent(context, cb);
+            return;
         }
-        cb.setClientVersion(versionName);
-        final String deviceInfo = String.format(Locale.ROOT, "%s/%s (%s;%s;%s;%s;)",
-                Build.MODEL, Build.VERSION.RELEASE, Build.MANUFACTURER, Build.MODEL, Build.BRAND,
-                Build.PRODUCT);
-        cb.setHttpUserAgent(String.format(Locale.ROOT, "TwitterAndroid/%s (%d-%c-%d) %s",
-                versionName, versionCode, 'r', versionCode / 4200, deviceInfo));
+        final String userAgentName = getUserAgentName(officialKeyType);
+        cb.setClientName(userAgentName);
+        cb.setClientURL(null);
+        cb.setClientVersion(null);
+        cb.setHttpUserAgent(userAgentName);
+//        final PackageManager pm = context.getPackageManager();
+//        final String clientName = "TwitterAndroid";
+//        cb.setClientName(clientName);
+//        cb.setClientURL(null);
+//        String versionName;
+//        int versionCode;
+//        try {
+//            final PackageInfo packageInfo = pm.getPackageInfo("com.twitter.android", 0);
+//            versionName = packageInfo.versionName;
+//            versionCode = packageInfo.versionCode;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            versionName = "5.53.0";
+//            versionCode = 4030814;
+//        }
+//        cb.setClientVersion(versionName);
+//        final String deviceInfo = String.format(Locale.ROOT, "%s/%s (%s;%s;%s;%s;)", Build.MODEL,
+//                Build.VERSION.RELEASE, Build.MANUFACTURER, Build.MODEL, Build.BRAND, Build.PRODUCT);
+//        cb.setHttpUserAgent(String.format(Locale.ROOT, "%s/%s (%d-%c-%d) %s", clientName,
+//                versionName, versionCode, 'r', versionCode / 4200, deviceInfo));
+    }
+
+    private static String getUserAgentName(ConsumerKeyType type) {
+        switch (type) {
+            case TWITTER_FOR_ANDROID: {
+                return "TwitterAndroid";
+            }
+            case TWITTER_FOR_IPHONE: {
+                return "Twitter-iPhone";
+            }
+            case TWITTER_FOR_IPAD: {
+                return "Twitter-iPad";
+            }
+            case TWITTER_FOR_MAC: {
+                return "Twitter-Mac";
+            }
+        }
+        return "Twitter";
     }
 
     public static boolean shouldForceUsingPrivateAPIs(final Context context) {
@@ -3793,14 +3809,19 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void startRefreshServiceIfNeeded(final Context context) {
         final Intent refreshServiceIntent = new Intent(context, RefreshService.class);
-        if (isNetworkAvailable(context) && hasAutoRefreshAccounts(context)) {
-            if (isDebugBuild()) {
-                Log.d(LOGTAG, "Start background refresh service");
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                if (isNetworkAvailable(context) && hasAutoRefreshAccounts(context)) {
+                    if (isDebugBuild()) {
+                        Log.d(LOGTAG, "Start background refresh service");
+                    }
+                    context.startService(refreshServiceIntent);
+                } else {
+                    context.stopService(refreshServiceIntent);
+                }
             }
-            context.startService(refreshServiceIntent);
-        } else {
-            context.stopService(refreshServiceIntent);
-        }
+        });
     }
 
     public static void startStatusShareChooser(final Context context, final ParcelableStatus status) {
@@ -3838,10 +3859,10 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static boolean truncateMessages(final List<DirectMessage> in, final List<DirectMessage> out,
-                                           final long since_id) {
+                                           final long sinceId) {
         if (in == null) return false;
         for (final DirectMessage message : in) {
-            if (since_id > 0 && message.getId() <= since_id) {
+            if (sinceId > 0 && message.getId() <= sinceId) {
                 continue;
             }
             out.add(message);
