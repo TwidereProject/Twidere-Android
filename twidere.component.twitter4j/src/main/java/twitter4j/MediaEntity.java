@@ -17,7 +17,6 @@
 package twitter4j;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Map;
 
 /**
@@ -61,13 +60,15 @@ public interface MediaEntity extends URLEntity, Serializable {
     Type getType();
 
     enum Type {
-        PHOTO, VIDEO, UNKNOWN;
+        PHOTO, VIDEO, ANIMATED_GIF, UNKNOWN;
 
         public static Type parse(String typeString) {
             if ("photo".equalsIgnoreCase(typeString)) {
                 return PHOTO;
             } else if ("video".equalsIgnoreCase(typeString)) {
                 return VIDEO;
+            } else if ("animated_gif".equalsIgnoreCase(typeString)) {
+                return ANIMATED_GIF;
             }
             return UNKNOWN;
         }

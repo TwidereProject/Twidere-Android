@@ -482,6 +482,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             args.putLong(EXTRA_ACCOUNT_ID, mAccountId);
             args.putParcelable(EXTRA_MEDIA, media);
             switch (media.type) {
+                case ParcelableMedia.TYPE_ANIMATED_GIF:
                 case ParcelableMedia.TYPE_CARD_ANIMATED_GIF: {
                     args.putBoolean(EXTRA_LOOP, true);
                     return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
@@ -649,7 +650,8 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         private Pair<String, String> getBestVideoUrlAndType(ParcelableMedia media) {
             if (media == null) return null;
             switch (media.type) {
-                case ParcelableMedia.TYPE_VIDEO: {
+                case ParcelableMedia.TYPE_VIDEO:
+                case ParcelableMedia.TYPE_ANIMATED_GIF: {
                     if (media.video_info == null) return null;
                     for (String supportedType : SUPPORTED_VIDEO_TYPES) {
                         for (Variant variant : media.video_info.variants) {

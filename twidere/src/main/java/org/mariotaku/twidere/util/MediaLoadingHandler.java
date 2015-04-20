@@ -150,7 +150,8 @@ public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingPr
         final Object tag = parent.getTag();
         if (tag instanceof ParcelableMedia) {
             final int type = ((ParcelableMedia) tag).type;
-            return type == ParcelableMedia.TYPE_VIDEO || type == ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
+            return type == ParcelableMedia.TYPE_VIDEO || type == ParcelableMedia.TYPE_ANIMATED_GIF
+                    || type == ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
         }
         return false;
     }

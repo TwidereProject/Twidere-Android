@@ -626,7 +626,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         public void displayStatus(ParcelableStatus status) {
             if (status == null) return;
-            if (status.equals(this.status)) return;
             this.status = status;
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();

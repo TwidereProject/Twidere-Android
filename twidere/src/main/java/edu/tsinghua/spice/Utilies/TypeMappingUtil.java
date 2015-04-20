@@ -57,6 +57,8 @@ public class TypeMappingUtil {
                 return "image";
             case ParcelableMedia.TYPE_VIDEO:
                 return "video";
+            case ParcelableMedia.TYPE_ANIMATED_GIF:
+                return "animated_gif";
             case ParcelableMedia.TYPE_CARD_ANIMATED_GIF:
                 return "card_animated_gif";
             default:
