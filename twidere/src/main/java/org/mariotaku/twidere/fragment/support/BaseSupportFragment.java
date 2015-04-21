@@ -35,7 +35,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
-import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -146,32 +145,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     @Override
     public void onBaseViewCreated(View view, Bundle savedInstanceState) {
 
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        final Fragment fragment = getParentFragment();
-        if (fragment instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) fragment).onDetachFragment(this);
-        }
-        final Activity activity = getActivity();
-        if (activity instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) activity).onDetachFragment(this);
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        final Activity activity = getActivity();
-        final Fragment fragment = getParentFragment();
-        if (fragment instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) fragment).onSetUserVisibleHint(this, isVisibleToUser);
-        }
-        if (activity instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) activity).onSetUserVisibleHint(this, isVisibleToUser);
-        }
     }
 
     protected void fitSystemWindows(Rect insets) {

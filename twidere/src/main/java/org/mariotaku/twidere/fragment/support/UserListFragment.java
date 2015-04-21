@@ -136,17 +136,16 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         }
     };
     private boolean mUserListLoaderInitialized;
-    private Fragment mCurrentVisibleFragment;
 
     @Override
     public boolean canScroll(float dy) {
-        final Fragment fragment = mCurrentVisibleFragment;
+        final Fragment fragment = getCurrentVisibleFragment();
         return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
     }
 
     @Override
     public void cancelTouch() {
-        final Fragment fragment = mCurrentVisibleFragment;
+        final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof DrawerCallback) {
             ((DrawerCallback) fragment).cancelTouch();
         }
@@ -154,7 +153,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public void fling(float velocity) {
-        final Fragment fragment = mCurrentVisibleFragment;
+        final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof DrawerCallback) {
             ((DrawerCallback) fragment).fling(velocity);
         }
@@ -171,7 +170,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public void scrollBy(float dy) {
-        final Fragment fragment = mCurrentVisibleFragment;
+        final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof DrawerCallback) {
             ((DrawerCallback) fragment).scrollBy(dy);
         }
@@ -214,17 +213,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public Fragment getCurrentVisibleFragment() {
-        return mCurrentVisibleFragment;
-    }
-
-    @Override
-    public void onDetachFragment(Fragment fragment) {
-
-    }
-
-    @Override
-    public void onSetUserVisibleHint(Fragment fragment, boolean isVisibleToUser) {
-        mCurrentVisibleFragment = isVisibleToUser ? fragment : null;
+        final int currentItem = mViewPager.getCurrentItem();
+        if (currentItem < 0 || currentItem >= mPagerAdapter.getCount()) return null;
+        return (Fragment) mPagerAdapter.instantiateItem(mViewPager, currentItem);
     }
 
     @Override

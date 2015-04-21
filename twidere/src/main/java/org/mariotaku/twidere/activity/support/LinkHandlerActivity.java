@@ -81,16 +81,6 @@ public class LinkHandlerActivity extends BaseActionBarActivity implements System
     }
 
     @Override
-    public void onDetachFragment(Fragment fragment) {
-
-    }
-
-    @Override
-    public void onSetUserVisibleHint(Fragment fragment, boolean isVisibleToUser) {
-
-    }
-
-    @Override
     public boolean triggerRefresh(int position) {
         return false;
     }

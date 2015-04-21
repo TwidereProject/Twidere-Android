@@ -40,6 +40,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -58,6 +59,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,6 +95,8 @@ import org.mariotaku.twidere.menu.SupportAccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
@@ -112,9 +116,9 @@ import static org.mariotaku.twidere.util.Utils.openUserLists;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 public class AccountsDashboardFragment extends BaseSupportListFragment implements LoaderCallbacks<Cursor>,
-        OnSharedPreferenceChangeListener, OnCheckedChangeListener, ImageLoadingListener, OnClickListener {
+        OnSharedPreferenceChangeListener, OnCheckedChangeListener, ImageLoadingListener, OnClickListener,
+        KeyboardShortcutCallback {
 
-    private static final int MENU_GROUP_ACCOUNT_TOGGLE = 101;
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
 
@@ -139,7 +143,63 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private Context mThemedContext;
     private MediaLoaderWrapper mImageLoader;
     private SupportAccountActionProvider mAccountActionProvider;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+
     private boolean mSwitchAccountAnimationPlaying;
+
+    public long[] getActivatedAccountIds() {
+        if (mAccountActionProvider == null) {
+            return Utils.getActivatedAccountIds(getActivity());
+        }
+        return mAccountActionProvider.getActivatedAccountIds();
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        final String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+        if (action == null) return false;
+        final int offset;
+        switch (action) {
+            case "navigation.previous": {
+                offset = -1;
+                break;
+            }
+            case "navigation.next": {
+                offset = 1;
+                break;
+            }
+            default: {
+                return false;
+            }
+        }
+        final ListView listView = getListView();
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        final int selectedItem = listView.getSelectedItemPosition();
+        final int count = listView.getCount();
+        int resultPosition;
+        if (!listView.isFocused() || selectedItem == ListView.INVALID_POSITION) {
+            resultPosition = firstVisiblePosition;
+        } else {
+            resultPosition = selectedItem + offset;
+            while (resultPosition >= 0 && resultPosition < count && !mAdapter.isEnabled(resultPosition)) {
+                resultPosition += offset;
+            }
+        }
+        final View focusedChild = listView.getFocusedChild();
+        if (focusedChild == null) {
+            listView.requestChildFocus(listView.getChildAt(0), null);
+        }
+        if (resultPosition >= 0 && resultPosition < count) {
+            listView.setSelection(resultPosition);
+        }
+        return true;
+    }
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
@@ -340,9 +400,12 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();
-        mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
+        final TwidereApplication application = TwidereApplication.getInstance(context);
+        mImageLoader = application.getMediaLoaderWrapper();
+        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
         final LayoutInflater inflater = LayoutInflater.from(context);
         final ListView listView = getListView();
+        listView.setItemsCanFocus(true);
         mAdapter = new MergeAdapter();
         mAccountsAdapter = new AccountSelectorAdapter(context, this);
         mAccountOptionsAdapter = new AccountOptionsAdapter(context);
@@ -381,7 +444,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
         mAccountProfileContainer.setOnClickListener(this);
 
-        mAdapter.addView(mAccountSelectorView, false);
+        mAdapter.addView(mAccountSelectorView, true);
         mAdapter.addAdapter(mAccountOptionsAdapter);
         mAdapter.addView(mAppMenuSectionView, false);
         mAdapter.addAdapter(mAppMenuAdapter);
@@ -408,13 +471,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mReloadContentObserver);
         super.onStop();
-    }
-
-    public long[] getActivatedAccountIds() {
-        if (mAccountActionProvider == null) {
-            return Utils.getActivatedAccountIds(getActivity());
-        }
-        return mAccountActionProvider.getActivatedAccountIds();
     }
 
     void initAccountActionsAdapter(ParcelableAccount[] accounts) {
@@ -560,6 +616,8 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final ImageView bannerView = mAccountProfileBannerView;
         if (bannerView.getDrawable() == null || !CompareUtils.objectEquals(bannerUrl, bannerView.getTag())) {
             mImageLoader.displayProfileBanner(mAccountProfileBannerView, bannerUrl, this);
+        } else {
+            mImageLoader.cancelDisplayTask(mAccountProfileBannerView);
         }
     }
 

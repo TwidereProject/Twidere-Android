@@ -28,8 +28,8 @@ import android.view.KeyEvent;
 import android.view.View;
 
 /**
-* Created by mariotaku on 15/4/21.
-*/
+ * Created by mariotaku on 15/4/21.
+ */
 public class RecyclerViewNavigationHelper {
 
     private int positionBackup;
@@ -49,32 +49,41 @@ public class RecyclerViewNavigationHelper {
     public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
         final String action = handler.getKeyAction("navigation", keyCode, event);
         if (action == null) return false;
+        final int direction;
+        switch (action) {
+            case "navigation.previous": {
+                direction = -1;
+                break;
+            }
+            case "navigation.next": {
+                direction = 1;
+                break;
+            }
+            default: {
+                return false;
+            }
+        }
         final LinearLayoutManager layoutManager = this.manager;
         final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(view, layoutManager.getFocusedChild());
         final int position;
+        final int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+        final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        final int itemCount = adapter.getItemCount();
         if (focusedChild != null) {
             position = view.getChildLayoutPosition(focusedChild);
-        } else if (layoutManager.findFirstVisibleItemPosition() == 0) {
+        } else if (firstVisibleItemPosition == 0) {
             position = -1;
+        } else if (lastVisibleItemPosition == itemCount - 1) {
+            position = itemCount;
+        } else if (direction > 0 && positionBackup < firstVisibleItemPosition) {
+            position = firstVisibleItemPosition;
+        } else if (direction < 0 && positionBackup > lastVisibleItemPosition) {
+            position = lastVisibleItemPosition;
         } else {
-            final int itemCount = adapter.getItemCount();
-            if (layoutManager.findLastVisibleItemPosition() == itemCount - 1) {
-                position = itemCount;
-            } else {
-                position = positionBackup;
-            }
+            position = positionBackup;
         }
         positionBackup = position;
-        switch (action) {
-            case "navigation.previous": {
-                RecyclerViewUtils.focusNavigate(view, layoutManager, position, -1);
-                return true;
-            }
-            case "navigation.next": {
-                RecyclerViewUtils.focusNavigate(view, layoutManager, position, 1);
-                return true;
-            }
-        }
+        RecyclerViewUtils.focusNavigate(view, layoutManager, position, direction);
         return false;
     }
 }

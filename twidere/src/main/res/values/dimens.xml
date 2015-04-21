@@ -31,7 +31,7 @@
     <dimen name="default_sliding_menu_margin_threshold">16dp</dimen>
     <dimen name="button_bar_height">52dp</dimen>
     <dimen name="minimum_element_size">48dp</dimen>
-    <dimen name="drawer_width_home">280dp</dimen>
+    <dimen name="drawer_width_home">288dp</dimen>
     <dimen name="drawer_offset_home">72dp</dimen>
     <dimen name="accounts_drawer_name_size">16sp</dimen>
     <dimen name="accounts_drawer_screen_name_size">14sp</dimen>

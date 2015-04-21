@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Twidere - Twitter client for Android
   ~
@@ -17,7 +18,24 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
-<resources>
-    <dimen name="drawer_offset_home">128dp</dimen>
-</resources>
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:matProg_barColor="@color/branding_color"/>
+
+</FrameLayout>

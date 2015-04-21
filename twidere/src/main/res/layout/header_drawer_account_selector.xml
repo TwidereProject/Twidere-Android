@@ -24,6 +24,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     tools:layout_height="160dp"
     tools:layout_width="280dp">
 
@@ -35,6 +36,7 @@
         android:layout_alignTop="@id/profile_container"
         android:alpha="0.5"
         android:contentDescription="@string/profile_banner"
+        android:focusable="false"
         android:scaleType="centerCrop"
         tools:src="@drawable/nyan_stars_background"/>
 
@@ -42,11 +44,13 @@
         android:id="@+id/profile_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:foreground="?android:selectableItemBackground">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:paddingBottom="@dimen/element_spacing_normal"
             android:paddingLeft="@dimen/element_spacing_large"
             android:paddingRight="@dimen/element_spacing_large"
@@ -59,6 +63,7 @@
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_marginBottom="@dimen/element_spacing_mlarge"
                 android:layout_marginTop="@dimen/element_spacing_mlarge"
+                android:focusable="false"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
                 tools:src="@mipmap/ic_launcher"/>
@@ -71,27 +76,31 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@id/profile_image"
                 android:layout_marginBottom="@dimen/element_spacing_large"
-                android:layout_toRightOf="@id/profile_image"/>
+                android:layout_toRightOf="@id/profile_image"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@id/profile_image"
+                android:baselineAligned="false"
+                android:focusable="false"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="false"
                     android:orientation="vertical">
 
                     <org.mariotaku.twidere.view.themed.ThemedTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:focusable="false"
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorPrimary"
@@ -102,20 +111,25 @@
                         android:id="@+id/screen_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:focusable="false"
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorSecondary"
                         tools:text="\@username"/>
 
                 </LinearLayout>
 
                 <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/element_size_normal">
+                    android:layout_height="@dimen/element_size_normal"
+                    android:focusable="false">
 
                     <org.mariotaku.twidere.view.TwidereActionMenuView
                         android:id="@+id/toggle_menu"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"/>
                 </FrameLayout>
 
 
@@ -126,6 +140,7 @@
             android:id="@+id/floating_profile_image_snapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             tools:ignore="ContentDescription"/>

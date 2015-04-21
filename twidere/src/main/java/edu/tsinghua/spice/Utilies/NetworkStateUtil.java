@@ -29,6 +29,8 @@ import android.net.NetworkInfo;
 
 public class NetworkStateUtil {
 
+    public static final int TYPE_NO_NETWORK = -1;
+
     private static int getConnectedTypeValue(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context
@@ -41,33 +43,22 @@ public class NetworkStateUtil {
         return -1;
     }
 
-    public static String getConnectedType (Context context) {
-        int type = -1;
-        type = getConnectedTypeValue(context);
-        String network = "unknown";
-        switch (type) {
-            case 0:
-                network = "cellular";
-                break;
-            case 1:
-                network = "wifi";
-                break;
-            case 2:
-                network = "wimax";
-                break;
-            case 3:
-                network = "ethernet";
-                break;
-            case 4:
-                network = "bluetooth";
-                break;
-            case -1:
-                network = "ERROR";
-                break;
+    public static String getConnectedType(Context context) {
+        switch (getConnectedTypeValue(context)) {
+            case ConnectivityManager.TYPE_MOBILE:
+                return "cellular";
+            case ConnectivityManager.TYPE_WIFI:
+                return "wifi";
+            case ConnectivityManager.TYPE_WIMAX:
+                return "wimax";
+            case ConnectivityManager.TYPE_ETHERNET:
+                return "ethernet";
+            case ConnectivityManager.TYPE_BLUETOOTH:
+                return "bluetooth";
+            case TYPE_NO_NETWORK:
+                return "ERROR";
             default:
-                network = "unknown";
-                break;
+                return "unknown";
         }
-        return network;
     }
 }

@@ -28,6 +28,7 @@ import android.view.ViewParent;
  * Created by mariotaku on 15/4/13.
  */
 public class RecyclerViewUtils {
+
     public static View findRecyclerViewChild(RecyclerView recyclerView, View view) {
         if (view == null) return null;
         final ViewParent parent = view.getParent();

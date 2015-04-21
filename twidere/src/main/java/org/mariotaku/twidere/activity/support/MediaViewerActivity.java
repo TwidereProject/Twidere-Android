@@ -81,6 +81,7 @@ import org.mariotaku.twidere.view.LinePageIndicator;
 
 import java.io.File;
 
+import pl.droidsonroids.gif.GifSupportChecker;
 import pl.droidsonroids.gif.GifTextureView;
 import pl.droidsonroids.gif.InputSource.FileSource;
 
@@ -95,6 +96,8 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
     private View mMediaStatusContainer;
     private LinePageIndicator mIndicator;
 
+
+    private static boolean ANIMATED_GIF_SUPPORTED = GifSupportChecker.isSupported();
 
     @Override
     public int getThemeColor() {
@@ -211,11 +214,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         setBarVisibility(!isBarShowing());
     }
 
-    public static final class ImagePageFragment extends BaseSupportFragment
+    public static class BaseImagePageFragment extends BaseSupportFragment
             implements DownloadListener, LoaderCallbacks<Result>, OnClickListener {
 
         private SubsamplingScaleImageView mImageView;
-        private GifTextureView mGifImageView;
         private ProgressWheel mProgressBar;
         private boolean mLoaderInitialized;
         private float mContentLength;
@@ -227,7 +229,6 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
             mImageView = (SubsamplingScaleImageView) view.findViewById(R.id.image_view);
-            mGifImageView = (GifTextureView) view.findViewById(R.id.gif_image_view);
             mProgressBar = (ProgressWheel) view.findViewById(R.id.load_progress);
         }
 
@@ -240,7 +241,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
 
         @Override
         public Loader<Result> onCreateLoader(final int id, final Bundle args) {
-            mProgressBar.setVisibility(View.VISIBLE);
+            setLoadProgressVisibility(View.VISIBLE);
             mProgressBar.spin();
             invalidateOptionsMenu();
             final ParcelableMedia media = getMedia();
@@ -253,43 +254,43 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             if (data.hasData()) {
                 mImageFile = data.file;
                 if (data.useDecoder) {
-                    mGifImageView.setVisibility(View.GONE);
-                    mImageView.setVisibility(View.VISIBLE);
+                    setImageViewVisibility(View.VISIBLE);
                     mImageView.setImage(ImageSource.uri(Uri.fromFile(data.file)));
-                } else if ("image/gif".equals(data.options.outMimeType)) {
-                    mGifImageView.setVisibility(View.VISIBLE);
-                    mImageView.setVisibility(View.GONE);
-                    mGifImageView.setInputSource(new FileSource(data.file));
-                    updateScaleLimit();
                 } else {
-                    mGifImageView.setVisibility(View.GONE);
-                    mImageView.setVisibility(View.VISIBLE);
+                    setImageViewVisibility(View.VISIBLE);
                     mImageView.setImage(ImageSource.bitmap(data.bitmap));
-                    updateScaleLimit();
                 }
             } else {
                 mImageView.recycle();
                 mImageFile = null;
-                mImageView.setVisibility(View.GONE);
-                mGifImageView.setVisibility(View.GONE);
+                setImageViewVisibility(View.GONE);
                 Utils.showErrorMessage(getActivity(), null, data.exception, true);
             }
-            mProgressBar.setVisibility(View.GONE);
-            mProgressBar.setProgress(0);
+            setLoadProgressVisibility(View.GONE);
+            setLoadProgress(0);
             invalidateOptionsMenu();
+        }
+
+        protected void setImageViewVisibility(int visible) {
+            mImageView.setVisibility(visible);
+
+        }
+
+        protected void setLoadProgress(float progress) {
+            mProgressBar.setProgress(progress);
+        }
+
+        protected void setLoadProgressVisibility(int visibility) {
+            mProgressBar.setVisibility(visibility);
         }
 
         @Override
         public void onLoaderReset(final Loader<TileImageLoader.Result> loader) {
-//            final Drawable drawable = mImageView.getDrawable();
-//            if (drawable instanceof GifDrawable) {
-//                ((GifDrawable) drawable).recycle();
-//            }
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_media_page_image, container, false);
+            return inflater.inflate(R.layout.fragment_media_page_image_compat, container, false);
         }
 
         @Override
@@ -316,17 +317,7 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                 }
                 return;
             }
-            mProgressBar.setProgress(downloaded / mContentLength);
-        }
-
-        public void onZoomIn() {
-            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
-            activity.setBarVisibility(false);
-        }
-
-        public void onZoomOut() {
-            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
-            activity.setBarVisibility(true);
+            setLoadProgress(downloaded / mContentLength);
         }
 
         @Override
@@ -395,19 +386,6 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
             mSaveFileTask.execute();
         }
 
-        private void updateScaleLimit() {
-//            final int viewWidth = mImageView.getWidth(), viewHeight = mImageView.getHeight();
-//            final Drawable drawable = mImageView.getDrawable();
-//            if (drawable == null || viewWidth <= 0 || viewHeight <= 0) return;
-//            final int drawableWidth = drawable.getIntrinsicWidth();
-//            final int drawableHeight = drawable.getIntrinsicHeight();
-//            if (drawableWidth <= 0 || drawableHeight <= 0) return;
-//            final float widthRatio = viewWidth / (float) drawableWidth;
-//            final float heightRatio = viewHeight / (float) drawableHeight;
-//            mImageView.setMaxScale(Math.max(1, Math.max(heightRatio, widthRatio)));
-//            mImageView.resetScale();
-        }
-
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
@@ -444,15 +422,42 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
         }
 
 
+    }
+
+    public static final class ImagePageFragment extends BaseImagePageFragment
+            implements DownloadListener, LoaderCallbacks<Result>, OnClickListener {
+
+        private GifTextureView mGifImageView;
+
         @Override
-        public void onStart() {
-            super.onStart();
+        public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onBaseViewCreated(view, savedInstanceState);
+            mGifImageView = (GifTextureView) view.findViewById(R.id.gif_image_view);
         }
 
 
         @Override
-        public void onStop() {
-            super.onStop();
+        public void onLoadFinished(final Loader<TileImageLoader.Result> loader, final TileImageLoader.Result data) {
+            if (data.hasData() && "image/gif".equals(data.options.outMimeType)) {
+                mGifImageView.setVisibility(View.VISIBLE);
+                setImageViewVisibility(View.GONE);
+                mGifImageView.setInputSource(new FileSource(data.file));
+                setLoadProgressVisibility(View.GONE);
+                setLoadProgress(0);
+                invalidateOptionsMenu();
+                return;
+            }
+            super.onLoadFinished(loader, data);
+        }
+
+
+        @Override
+        public void onLoaderReset(final Loader<TileImageLoader.Result> loader) {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_media_page_image, container, false);
         }
 
 
@@ -491,7 +496,10 @@ public final class MediaViewerActivity extends ThemedActionBarActivity implement
                     return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
                 }
                 default: {
-                    return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
+                    if (ANIMATED_GIF_SUPPORTED) {
+                        return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
+                    }
+                    return Fragment.instantiate(mActivity, BaseImagePageFragment.class.getName(), args);
                 }
             }
         }

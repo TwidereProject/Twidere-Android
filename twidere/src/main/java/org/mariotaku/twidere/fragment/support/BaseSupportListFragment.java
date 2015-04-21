@@ -48,7 +48,6 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
-import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ListScrollDistanceCalculator;
 import org.mariotaku.twidere.util.ListScrollDistanceCalculator.ScrollDistanceListener;
@@ -288,19 +287,6 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
         super.onDestroy();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        final Fragment fragment = getParentFragment();
-        if (fragment instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) fragment).onDetachFragment(this);
-        }
-        final Activity activity = getActivity();
-        if (activity instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) activity).onDetachFragment(this);
-        }
-    }
-
     public void onPostStart() {
     }
 
@@ -389,19 +375,6 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     public void setSelection(final int position) {
         if (getView() == null) return;
         Utils.scrollListToPosition(getListView(), position);
-    }
-
-    @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        final Fragment fragment = getParentFragment();
-        if (fragment instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) fragment).onSetUserVisibleHint(this, isVisibleToUser);
-        }
-        final Activity activity = getActivity();
-        if (activity instanceof SupportFragmentCallback) {
-            ((SupportFragmentCallback) activity).onSetUserVisibleHint(this, isVisibleToUser);
-        }
     }
 
     @Override
