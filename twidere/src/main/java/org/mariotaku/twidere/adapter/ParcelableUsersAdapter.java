@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.view.View;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.view.holder.UserViewHolder;

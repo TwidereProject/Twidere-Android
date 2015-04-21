@@ -91,6 +91,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     public abstract D getData();
 
+    @Override
     public abstract void setData(D data);
 
     @Override

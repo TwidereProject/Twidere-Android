@@ -46,8 +46,8 @@ public class LongSparseArrayUtils {
 	 */
 	public static <E> void setValues(final LongSparseArray<E> array, final long[] keys, final E uniqueValue) {
 		final int length = keys.length;
-		for (int i = 0; i < length; i++) {
-			array.put(keys[i], uniqueValue);
-		}
+        for (long key : keys) {
+            array.put(key, uniqueValue);
+        }
 	}
 }

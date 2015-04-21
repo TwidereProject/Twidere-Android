@@ -58,7 +58,6 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;

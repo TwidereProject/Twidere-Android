@@ -35,7 +35,6 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
 
     private UserHashtagAutoCompleteAdapter mAdapter;
     private long mAccountId;
-    private boolean mInputSingleLine;
 
     public StatusComposeEditText(final Context context) {
         this(context, null);
@@ -49,20 +48,13 @@ public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView imple
         super(context, attrs, defStyle);
         setTokenizer(new ScreenNameTokenizer());
         setMovementMethod(ArrowKeyMovementMethod.getInstance());
-        updateComposeInputType();
+        setupComposeInputType();
     }
 
-    private void updateComposeInputType() {
+    private void setupComposeInputType() {
         int rawInputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
-        if (!mInputSingleLine) {
-            rawInputType |= InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-        }
+        rawInputType |= InputType.TYPE_TEXT_FLAG_MULTI_LINE;
         setRawInputType(rawInputType);
-    }
-
-    public void setComposeInputSingleLine(boolean singleLine) {
-        mInputSingleLine = singleLine;
-        updateComposeInputType();
     }
 
     @Override

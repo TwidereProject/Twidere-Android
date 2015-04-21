@@ -68,18 +68,22 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
     private A mAdapter;
     private ContentListScrollListener mScrollListener;
 
+    @Override
     public boolean canScroll(float dy) {
         return mDrawerCallback.canScroll(dy);
     }
 
+    @Override
     public void cancelTouch() {
         mDrawerCallback.cancelTouch();
     }
 
+    @Override
     public void fling(float velocity) {
         mDrawerCallback.fling(velocity);
     }
 
+    @Override
     public boolean isScrollContent(float x, float y) {
         return mDrawerCallback.isScrollContent(x, y);
     }
@@ -95,6 +99,7 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         triggerRefresh();
     }
 
+    @Override
     public void scrollBy(float dy) {
         mDrawerCallback.scrollBy(dy);
     }
@@ -107,6 +112,7 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         return true;
     }
 
+    @Override
     public void setControlVisible(boolean visible) {
         final FragmentActivity activity = getActivity();
         if (activity instanceof BaseActionBarActivity) {
@@ -114,18 +120,22 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         }
     }
 
+    @Override
     public boolean shouldLayoutHeaderBottom() {
         return mDrawerCallback.shouldLayoutHeaderBottom();
     }
 
+    @Override
     public void topChanged(int offset) {
         mDrawerCallback.topChanged(offset);
     }
 
+    @Override
     public A getAdapter() {
         return mAdapter;
     }
 
+    @Override
     public abstract boolean isRefreshing();
 
     public LinearLayoutManager getLayoutManager() {
@@ -138,6 +148,7 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
     }
 
+    @Override
     public void onLoadMoreContents() {
         setLoadMoreIndicatorVisible(true);
         setRefreshEnabled(false);

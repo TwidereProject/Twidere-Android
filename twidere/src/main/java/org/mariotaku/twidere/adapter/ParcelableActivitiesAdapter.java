@@ -72,6 +72,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
     }
 
+    @Override
     public void setData(List<ParcelableActivity> data) {
         mData = data;
         notifyDataSetChanged();

@@ -100,14 +100,16 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
      * @return an Iterator over the elements in this set.
      * @see ConcurrentModificationException
      */
+    @Override
     @NonNull
     public Iterator<E> iterator() {
-        return new CompactHashIterator<E>();
+        return new CompactHashIterator<>();
     }
 
     /**
      * Returns the number of elements in this set (its cardinality).
      */
+    @Override
     public int size() {
         return elements;
     }
@@ -115,6 +117,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
     /**
      * Returns <tt>true</tt> if this set contains no elements.
      */
+    @Override
     public boolean isEmpty() {
         return elements == 0;
     }
@@ -125,6 +128,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
      * @param o element whose presence in this set is to be tested.
      * @return <tt>true</tt> if this set contains the specified element.
      */
+    @Override
     public boolean contains(Object o) {
         if (o == null) o = nullObject;
 
@@ -154,6 +158,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
      * @return <tt>true</tt> if the set did not already contain the specified
      * element.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public boolean add(Object o) {
         if (o == null) o = nullObject;
@@ -208,6 +213,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
     /**
      * Removes the specified element from the set.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public boolean remove(Object o) {
         if (o == null) o = nullObject;
@@ -244,6 +250,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
     /**
      * Removes all of the elements from this set.
      */
+    @Override
     public void clear() {
         elements = 0;
         for (int ix = 0; ix < objects.length; ix++)
@@ -252,23 +259,25 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
         modCount++;
     }
 
+    @Override
     @NonNull
     public Object[] toArray() {
         Object[] result = new Object[elements];
         Object[] objects = this.objects;
         int pos = 0;
-        for (int i = 0; i < objects.length; i++)
-            if (objects[i] != null && objects[i] != deletedObject) {
-                if (objects[i] == nullObject)
+        for (Object object : objects)
+            if (object != null && object != deletedObject) {
+                if (object == nullObject)
                     result[pos++] = null;
                 else
-                    result[pos++] = objects[i];
+                    result[pos++] = object;
             }
         // unchecked because it should only contain E
         return result;
     }
 
     // not sure if this needs to have generics
+    @Override
     @NonNull
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(@NonNull T[] a) {
@@ -278,12 +287,12 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
                     a.getClass().getComponentType(), size);
         E[] objects = this.objects;
         int pos = 0;
-        for (int i = 0; i < objects.length; i++)
-            if (objects[i] != null && objects[i] != deletedObject) {
-                if (objects[i] == nullObject)
+        for (E object : objects)
+            if (object != null && object != deletedObject) {
+                if (object == nullObject)
                     a[pos++] = null;
                 else
-                    a[pos++] = (T) objects[i];
+                    a[pos++] = (T) object;
             }
         return a;
     }
@@ -330,8 +339,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
         @SuppressWarnings("unchecked")
         E[] newObjects = (E[]) new Object[newCapacity];
 
-        for (int ix = 0; ix < oldCapacity; ix++) {
-            Object o = objects[ix];
+        for (E o : objects) {
             if (o == null || o == deletedObject)
                 continue;
 
@@ -377,10 +385,12 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
             expectedModCount = modCount;
         }
 
+        @Override
         public boolean hasNext() {
             return index < objects.length;
         }
 
+        @Override
         @SuppressWarnings({"empty-statement", "unchecked"})
         public T next() {
             if (modCount != expectedModCount)
@@ -402,6 +412,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
                 return (T) objects[lastReturned];
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public void remove() {
             if (modCount != expectedModCount)

@@ -99,6 +99,7 @@ class DrawableWrapper extends Drawable implements Drawable.Callback {
         return mDrawable.getState();
     }
 
+    @Override
     public void jumpToCurrentState() {
         DrawableCompat.jumpToCurrentState(mDrawable);
     }
@@ -151,6 +152,7 @@ class DrawableWrapper extends Drawable implements Drawable.Callback {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void invalidateDrawable(Drawable who) {
         invalidateSelf();
     }
@@ -158,6 +160,7 @@ class DrawableWrapper extends Drawable implements Drawable.Callback {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void scheduleDrawable(Drawable who, Runnable what, long when) {
         scheduleSelf(what, when);
     }
@@ -165,6 +168,7 @@ class DrawableWrapper extends Drawable implements Drawable.Callback {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void unscheduleDrawable(Drawable who, Runnable what) {
         unscheduleSelf(what);
     }

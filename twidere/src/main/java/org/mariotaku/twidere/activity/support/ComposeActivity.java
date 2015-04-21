@@ -61,6 +61,7 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -74,6 +75,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -135,8 +137,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
-public class ComposeActivity extends ThemedFragmentActivity implements TextWatcher, LocationListener,
-        OnMenuItemClickListener, OnClickListener, OnEditorActionListener, OnLongClickListener, Callback {
+public class ComposeActivity extends ThemedFragmentActivity implements LocationListener, OnMenuItemClickListener,
+        OnClickListener, OnLongClickListener, Callback {
 
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
     private static final String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
@@ -178,10 +180,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
     private TextView mLocationText;
     private SupportMenuInflater mMenuInflater;
 
-    @Override
-    public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-
-    }
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -214,17 +212,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         final View contentView = window.findViewById(android.R.id.content);
         contentView.setPadding(contentView.getPaddingLeft(), 0,
                 contentView.getPaddingRight(), contentView.getPaddingBottom());
-    }
-
-    @Override
-    public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-        setMenu();
-        updateTextCount();
-    }
-
-    @Override
-    public void afterTextChanged(final Editable s) {
-
     }
 
     @Override
@@ -370,13 +357,24 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
         mAccountSelectorContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_SEND) {
-            updateStatus();
-            return true;
+
+    public static boolean isFinishedComposing(CharSequence text) {
+        if (!(text instanceof Spanned)) return true;
+        final Spanned spanned = (Spanned) text;
+        try {
+            final Class<?> cls = Class.forName("android.text.style.SpellCheckSpan");
+            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
+        } catch (Exception ignored) {
+
         }
-        return false;
+        try {
+            final Class<?> cls = Class.forName("android.view.inputmethod.ComposingText");
+            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
+        } catch (Exception ignored) {
+
+        }
+//        if (spanned.getSpans(0, spanned.length(), SpanWatcher.class).length > 0) return false;
+        return true;
     }
 
     @Override
@@ -600,18 +598,53 @@ public class ComposeActivity extends ThemedFragmentActivity implements TextWatch
             finish();
             return;
         }
-//        mMenuBar.setIsBottomBar(true);
         mMenuBar.setOnMenuItemClickListener(this);
-        boolean quickSend = mPreferences.getBoolean(KEY_QUICK_SEND);
-        if (quickSend) {
-            mEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
-            mEditText.setComposeInputSingleLine(true);
-        } else {
-            mEditText.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
-            mEditText.setComposeInputSingleLine(false);
-        }
-        mEditText.setOnEditorActionListener(this);
-        mEditText.addTextChangedListener(this);
+        final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
+        mEditText.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && sendByEnter && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    updateStatus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        mEditText.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
+                if (sendByEnter) {
+                    if (event != null && actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        updateStatus();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        mEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+                setMenu();
+                updateTextCount();
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                final int length = s.length();
+                if (sendByEnter && length > 0 && s.charAt(length - 1) == '\n') {
+                    s.delete(length - 1, length);
+                    updateStatus();
+                }
+            }
+        });
         mEditText.setCustomSelectionActionModeCallback(this);
         mAccountSelectorContainer.setOnClickListener(this);
         mAccountSelectorButton.setOnClickListener(this);

@@ -181,7 +181,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(BackgroundOperationService.this, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+                Toast.makeText(BackgroundOperationService.this, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
             }
         });
     }

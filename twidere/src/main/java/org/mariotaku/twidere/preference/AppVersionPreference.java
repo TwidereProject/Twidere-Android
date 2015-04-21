@@ -31,49 +31,49 @@ import org.mariotaku.twidere.activity.NyanActivity;
 
 public class AppVersionPreference extends Preference {
 
-	public Handler mHandler = new Handler();
-	protected int mClickCount;
+    public Handler mHandler = new Handler();
+    protected int mClickCount;
 
-	private final Runnable mResetCounterRunnable = new Runnable() {
+    private final Runnable mResetCounterRunnable = new Runnable() {
 
-		@Override
-		public void run() {
-			mClickCount = 0;
-		}
-	};
+        @Override
+        public void run() {
+            mClickCount = 0;
+        }
+    };
 
-	public AppVersionPreference(final Context context) {
-		this(context, null);
-	}
+    public AppVersionPreference(final Context context) {
+        this(context, null);
+    }
 
-	public AppVersionPreference(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.preferenceStyle);
-	}
+    public AppVersionPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, android.R.attr.preferenceStyle);
+    }
 
-	public AppVersionPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-		final PackageManager pm = context.getPackageManager();
-		try {
-			final PackageInfo info = pm.getPackageInfo(context.getPackageName(), 0);
-			setTitle(info.applicationInfo.loadLabel(pm));
-			setSummary(info.versionName);
-		} catch (final PackageManager.NameNotFoundException e) {
+    public AppVersionPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+        final PackageManager pm = context.getPackageManager();
+        try {
+            final PackageInfo info = pm.getPackageInfo(context.getPackageName(), 0);
+            setTitle(info.applicationInfo.loadLabel(pm));
+            setSummary(info.versionName);
+        } catch (final PackageManager.NameNotFoundException e) {
+            throw new AssertionError(e);
+        }
+    }
 
-		}
-	}
-
-	@Override
-	protected void onClick() {
-		mHandler.removeCallbacks(mResetCounterRunnable);
-		mClickCount++;
-		if (mClickCount >= 7) {
-			final Context context = getContext();
-			if (context != null) {
-				mClickCount = 0;
-				context.startActivity(new Intent(context, NyanActivity.class));
-			}
-		}
-		mHandler.postDelayed(mResetCounterRunnable, 3000);
-	}
+    @Override
+    protected void onClick() {
+        mHandler.removeCallbacks(mResetCounterRunnable);
+        mClickCount++;
+        if (mClickCount >= 7) {
+            final Context context = getContext();
+            if (context != null) {
+                mClickCount = 0;
+                context.startActivity(new Intent(context, NyanActivity.class));
+            }
+        }
+        mHandler.postDelayed(mResetCounterRunnable, 3000);
+    }
 
 }

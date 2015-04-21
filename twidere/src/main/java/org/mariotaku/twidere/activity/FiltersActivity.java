@@ -20,13 +20,10 @@
 package org.mariotaku.twidere.activity;
 
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.WindowCompat;
 import android.view.MenuItem;
-import android.view.WindowManager.LayoutParams;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseDialogWhenLargeActivity;

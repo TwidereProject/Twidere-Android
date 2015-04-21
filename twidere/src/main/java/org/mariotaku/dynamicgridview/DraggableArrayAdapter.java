@@ -70,6 +70,7 @@ public class DraggableArrayAdapter<T> extends ArrayAdapter<T> implements Draggab
         return true;
     }
 
+    @Override
     public void removeAt(final int position) {
         super.removeAt(position);
         rebuildIdMap();

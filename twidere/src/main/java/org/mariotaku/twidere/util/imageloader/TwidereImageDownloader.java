@@ -117,8 +117,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             if (statusCode != -1 && isTwitterProfileImage(uriString) && !uriString.contains("_normal.")) {
                 try {
                     return getStreamFromNetworkInternal(getNormalTwitterProfileImage(uriString), extras);
-                } catch (final TwitterException e2) {
-
+                } catch (final TwitterException ignored) {
                 }
             }
             throw new IOException(String.format(Locale.US, "Error downloading image %s, error code: %d", uriString,

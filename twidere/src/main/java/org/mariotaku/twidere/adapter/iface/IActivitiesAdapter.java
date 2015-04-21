@@ -38,6 +38,7 @@ public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSuppo
     @PreviewStyle
     int getMediaPreviewStyle();
 
+    @Override
     MediaLoaderWrapper getMediaLoader();
 
     MediaLoadingHandler getMediaLoadingHandler();

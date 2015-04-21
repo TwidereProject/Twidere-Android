@@ -352,6 +352,7 @@ public class StatusClusterRenderer implements ClusterRenderer<ClusterStatus> {
             this.mSphericalMercatorProjection = new SphericalMercatorProjection(256 * Math.pow(2, Math.min(zoom, mZoom)));
         }
 
+        @Override
         @SuppressLint("NewApi")
         public void run() {
             if (clusters.equals(StatusClusterRenderer.this.mClusters)) {

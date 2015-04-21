@@ -54,11 +54,13 @@ public class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<Parcelabl
         return mData.get(position).id;
     }
 
+    @Override
     public void setData(List<ParcelableStatus> data) {
         mData = data;
         notifyDataSetChanged();
     }
 
+    @Override
     public List<ParcelableStatus> getData() {
         return mData;
     }

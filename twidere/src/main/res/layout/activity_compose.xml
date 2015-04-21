@@ -19,10 +19,10 @@
   -->
 
 <LinearLayout
+    android:id="@+id/compose_activity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:id="@+id/compose_activity"
     android:layout_height="wrap_content"
     android:minWidth="@dimen/compose_min_width"
     android:orientation="vertical">
@@ -62,7 +62,6 @@
                 android:completionThreshold="1"
                 android:gravity="top"
                 android:hint="@string/status_hint"
-                android:imeOptions="actionDone"
                 android:minLines="6"
                 android:padding="@dimen/element_spacing_normal"
                 android:scrollbars="vertical"/>
@@ -79,8 +78,8 @@
                 android:padding="@dimen/element_spacing_normal">
 
                 <org.mariotaku.twidere.view.ActionIconView
-                    android:layout_width="@dimen/element_size_small"
                     android:id="@+id/location_icon"
+                    android:layout_width="@dimen/element_size_small"
                     android:layout_height="@dimen/element_size_small"
                     android:layout_marginLeft="@dimen/element_spacing_normal"
                     android:layout_marginRight="@dimen/element_spacing_normal"
@@ -88,8 +87,8 @@
                     android:src="@drawable/ic_action_location"/>
 
                 <org.mariotaku.twidere.view.themed.ThemedTextView
-                    android:layout_width="match_parent"
                     android:id="@+id/location_text"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/element_spacing_normal"/>
 

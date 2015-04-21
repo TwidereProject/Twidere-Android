@@ -149,10 +149,12 @@ public class ActivityAccessor {
 
         public static final Creator<TaskDescriptionCompat> CREATOR
                 = new Creator<TaskDescriptionCompat>() {
+            @Override
             public TaskDescriptionCompat createFromParcel(Parcel source) {
                 return new TaskDescriptionCompat(source);
             }
 
+            @Override
             public TaskDescriptionCompat[] newArray(int size) {
                 return new TaskDescriptionCompat[size];
             }

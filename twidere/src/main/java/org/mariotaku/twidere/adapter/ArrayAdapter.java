@@ -302,6 +302,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getCount() {
         return mObjects.size();
     }
@@ -309,6 +310,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public T getItem(int position) {
         return mObjects.get(position);
     }
@@ -326,6 +328,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public long getItemId(int position) {
         return position;
     }
@@ -333,6 +336,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return createViewFromResource(position, convertView, parent, mResource);
     }
@@ -387,6 +391,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Filter getFilter() {
         if (mFilter == null) {
             mFilter = new ArrayFilter();

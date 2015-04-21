@@ -107,12 +107,15 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mStatusAdapterDelegate = new DummyStatusHolderAdapter(context);
     }
 
+    @Override
     public abstract ParcelableActivity getActivity(int position);
 
+    @Override
     public abstract int getActivityCount();
 
     public abstract Data getData();
 
+    @Override
     public abstract void setData(Data data);
 
     @Override
@@ -189,6 +192,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         return mNameFirst;
     }
 
+    @Override
     public boolean isProfileImageEnabled() {
         return mDisplayProfileImage;
     }
@@ -334,6 +338,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         return ITEM_VIEW_TYPE_STUB;
     }
 
+    @Override
     public final int getItemCount() {
         return getActivityCount() + (mLoadMoreIndicatorVisible ? 1 : 0);
     }

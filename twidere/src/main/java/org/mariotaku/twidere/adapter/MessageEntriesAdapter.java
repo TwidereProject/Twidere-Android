@@ -93,6 +93,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         };
     }
 
+    @Override
     public Context getContext() {
         return mContext;
     }
@@ -124,6 +125,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
         return new DirectMessageEntry(c);
     }
 
+    @Override
     public MediaLoaderWrapper getMediaLoader() {
         return mImageLoader;
     }

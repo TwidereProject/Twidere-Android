@@ -82,14 +82,17 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
     }
 
+    @Override
     public void setIcon(final Bitmap bm) {
         mIconView.setImageBitmap(bm);
     }
 
+    @Override
     public void setIcon(final Drawable drawable) {
         mIconView.setImageDrawable(drawable);
     }
 
+    @Override
     public void setIcon(final int resId) {
         mIconView.setImageResource(resId);
     }
@@ -99,15 +102,18 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
         mIconView.setColorFilter(color, mode);
     }
 
+    @Override
     public void setShowProgress(final boolean showProgress) {
         mProgressBar.setVisibility(showProgress ? View.VISIBLE : View.GONE);
         mIconView.setVisibility(showProgress ? View.GONE : View.VISIBLE);
     }
 
+    @Override
     public void setTitle(final CharSequence title) {
         setContentDescription(title);
     }
 
+    @Override
     public void setTitle(final int title) {
         setTitle(getResources().getText(title));
     }

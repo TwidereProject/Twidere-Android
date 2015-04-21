@@ -344,6 +344,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
     }
 
+    @Override
     public boolean isRefreshing() {
         if (mSwipeRefreshLayout == null || mAdapter == null) return false;
         return mSwipeRefreshLayout.isRefreshing() || mAdapter.isLoadMoreIndicatorVisible();
@@ -394,6 +395,7 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         });
     }
 
+    @Override
     public MessageEntriesAdapter getAdapter() {
         return mAdapter;
     }

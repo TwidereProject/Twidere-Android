@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="compose">Compose</string>
     <string name="add_account">Add account</string>
@@ -90,8 +90,8 @@
     <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweeted</string>
     <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> and another retweeted</string>
     <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others retweeted</string>
-    <string name="N_retweeted_quantity_one"><xliff:g id="retweet_count">%d</xliff:g> retweet</string>
-    <string name="N_retweeted_quantity_other"><xliff:g id="retweet_count">%d</xliff:g> retweets</string>
+    <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweet</string>
+    <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweets</string>
     <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g></string>
     <string name="retweeted_by_name_with_count">Retweeted by <xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
     <string name="retweeted_by_count">Retweeted by <xliff:g id="retweet_count">%d</xliff:g> users</string>
@@ -255,8 +255,8 @@
     <string name="quick_send">Hit \"Enter\" to Send</string>
     <string name="quick_send_summary">Send tweet when hit \"Enter\".</string>
     <string name="discard">Discard</string>
-    <string name="Nitems_selected_quantity_one">1 item selected</string>
-    <string name="Nitems_selected_quantity_other"><xliff:g id="items">%d</xliff:g> items selected</string>
+    <string name="Nitems_selected_quantity_one" tools:ignore="PluralsCandidate">1 item selected</string>
+    <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> items selected</string>
     <string name="custom_host_mapping">Custom host mapping</string>
     <string name="custom_host_mapping_summary">Host mapping like /etc/hosts, but does not require any additional permissions.</string>
     <string name="host_mapping_host">Host</string>
@@ -420,15 +420,15 @@
     <string name="updated_list_details">Updated list \"<xliff:g id="list">%s</xliff:g>\"\'s details.</string>
     <string name="subscribed_to_list">Subscribed to list \"<xliff:g id="list">%s</xliff:g>\".</string>
     <string name="unsubscribed_from_list">Unsubscribed from list \"<xliff:g id="list">%s</xliff:g>\".</string>
-    <string name="added_N_users_to_list_quantity_one">Added <xliff:g id="items">%1$d</xliff:g> user to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
-    <string name="added_N_users_to_list_quantity_other">Added <xliff:g id="items">%1$d</xliff:g> users to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+    <string name="added_N_users_to_list_quantity_one" tools:ignore="PluralsCandidate">Added <xliff:g id="items">%1$d</xliff:g> user to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+    <string name="added_N_users_to_list_quantity_other" tools:ignore="PluralsCandidate">Added <xliff:g id="items">%1$d</xliff:g> users to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
     <string name="added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
     <string name="deleted_user_from_list">Deleted <xliff:g id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
-    <string name="deleted_N_users_from_list_quantity_one">Deleted <xliff:g id="items">%1$d</xliff:g> user from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
-    <string name="deleted_N_users_from_list_quantity_other">Deleted <xliff:g id="items">%1$d</xliff:g> users from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+    <string name="deleted_N_users_from_list_quantity_one" tools:ignore="PluralsCandidate">Deleted <xliff:g id="items">%1$d</xliff:g> user from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+    <string name="deleted_N_users_from_list_quantity_other" tools:ignore="PluralsCandidate">Deleted <xliff:g id="items">%1$d</xliff:g> users from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
     <string name="delete_user_from_list_confirm">Delete <xliff:g id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
-    <string name="delete_N_users_from_list_confirm_quantity_one">Delete <xliff:g id="items">%1$d</xliff:g> user from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
-    <string name="delete_N_users_from_list_confirm_quantity_other">Delete <xliff:g id="items">%1$d</xliff:g> users from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
+    <string name="delete_N_users_from_list_confirm_quantity_one" tools:ignore="PluralsCandidate">Delete <xliff:g id="items">%1$d</xliff:g> user from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
+    <string name="delete_N_users_from_list_confirm_quantity_other" tools:ignore="PluralsCandidate">Delete <xliff:g id="items">%1$d</xliff:g> users from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
     <string name="subscribe">Subscribe</string>
     <string name="unsubscribe">Unsubscribe</string>
     <string name="background_toast_notification">Background Toast notification</string>
@@ -439,8 +439,8 @@
     <string name="no_close_after_status_updated_summary">A little gift for chatterbox</string>
     <string name="status_saved_to_draft">Tweet saved to draft.</string>
     <string name="default_account">Default account</string>
-    <string name="created_at_with_N_tweets_per_day_quantity_one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet per day)</string>
-    <string name="created_at_with_N_tweets_per_day_quantity_other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweets per day)</string>
+    <string name="created_at_with_N_tweets_per_day_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet per day)</string>
+    <string name="created_at_with_N_tweets_per_day_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweets per day)</string>
     <string name="empty_content">Empty content</string>
     <string name="fast_image_loading">Fast image loading</string>
     <string name="fast_image_loading_summary">Enable to make images load faster, disable this if some image can\'t be displayed.</string>
@@ -540,12 +540,12 @@
     <string name="view_replies">View Replies</string>
     <string name="compact_cards">Compact cards</string>
     <string name="compact_cards_summary">Display more cards on screen</string>
-    <string name="N_new_statuses_quantity_one"><xliff:g id="items">%d</xliff:g> new tweet</string>
-    <string name="N_new_statuses_quantity_other"><xliff:g id="items">%d</xliff:g> new tweets</string>
-    <string name="N_new_mentions_quantity_one"><xliff:g id="items">%d</xliff:g> new mention</string>
-    <string name="N_new_mentions_quantity_other"><xliff:g id="items">%d</xliff:g> new mentions</string>
-    <string name="N_new_messages_quantity_one"><xliff:g id="items">%d</xliff:g> new conversation</string>
-    <string name="N_new_messages_quantity_other"><xliff:g id="items">%d</xliff:g> new conversations</string>
+    <string name="N_new_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new tweet</string>
+    <string name="N_new_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new tweets</string>
+    <string name="N_new_mentions_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new mention</string>
+    <string name="N_new_mentions_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new mentions</string>
+    <string name="N_new_messages_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new conversation</string>
+    <string name="N_new_messages_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new conversations</string>
     <string name="status_share_subject_format_with_time">Tweet from <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), at <xliff:g id="time">%3$s</xliff:g></string>
     <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
     <string name="rate_limit">Rate limit</string>
@@ -606,8 +606,8 @@
     <string name="want_old_icon_back">Want old icon back?</string>
     <string name="icon_restored_message">Icon restored!</string>
     <string name="add">Add</string>
-    <string name="N_media_quantity_one"><xliff:g id="items">%d</xliff:g> media</string>
-    <string name="N_media_quantity_other"><xliff:g id="items">%d</xliff:g> media</string>
+    <string name="N_media_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
+    <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
     <string name="delete_drafts_confirm">Delete selcted drafts?</string>
     <string name="extra_configurations">Extra configurations</string>
     <string name="click_item_to_config">Click an item to config</string>
@@ -662,8 +662,8 @@
     <string name="media_preview_style">Media preview style</string>
     <string name="draft_saved">Draft saved</string>
     <string name="open_twitter_links">Open Twitter links</string>
-    <string name="N_others_quantity_one">another</string>
-    <string name="N_others_quantity_other"><xliff:g id="count">%d</xliff:g> others</string>
+    <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">another</string>
+    <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> others</string>
     <string name="type_name_to_search">Type name to search</string>
     <string name="no_user_found">No user found</string>
     <string name="members">Members</string>
@@ -718,10 +718,10 @@
     <string name="server_address">Server address</string>
     <string name="security_key">Security key</string>
     <string name="hide_card_actions">Hide card actions</string>
-    <string name="N_statuses_quantity_one"><xliff:g id="count">%d</xliff:g> tweet</string>
-    <string name="N_statuses_quantity_other"><xliff:g id="count">%d</xliff:g> tweets</string>
-    <string name="N_favorites_quantity_one"><xliff:g id="count">%d</xliff:g> favorites</string>
-    <string name="N_favorites_quantity_other"><xliff:g id="count">%d</xliff:g> favorites</string>
+    <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
+    <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweets</string>
+    <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorites</string>
+    <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorites</string>
     <string name="drafts_hint_messages">Your unsent tweets will save here</string>
     <string name="keyboard_shortcuts">Keyboard shortcuts</string>
     <string name="keyboard_shortcut_hint">Press keys</string>

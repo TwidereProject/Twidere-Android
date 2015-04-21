@@ -1874,12 +1874,15 @@ public final class Utils implements Constants, TwitterConstants {
 
     @HighlightStyle
     public static int getLinkHighlightingStyleInt(final String option) {
-        if (VALUE_LINK_HIGHLIGHT_OPTION_BOTH.equals(option))
-            return VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH;
-        else if (VALUE_LINK_HIGHLIGHT_OPTION_HIGHLIGHT.equals(option))
-            return VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT;
-        else if (VALUE_LINK_HIGHLIGHT_OPTION_UNDERLINE.equals(option))
-            return VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE;
+        if (option == null) return VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE;
+        switch (option) {
+            case VALUE_LINK_HIGHLIGHT_OPTION_BOTH:
+                return VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH;
+            case VALUE_LINK_HIGHLIGHT_OPTION_HIGHLIGHT:
+                return VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT;
+            case VALUE_LINK_HIGHLIGHT_OPTION_UNDERLINE:
+                return VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE;
+        }
         return VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE;
     }
 
@@ -2800,6 +2803,7 @@ public final class Utils implements Constants, TwitterConstants {
         final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
         final String selection = Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
         final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             if (c.moveToPosition(0))
                 return TwitterContentUtils.isOfficialKey(context, c.getString(0), c.getString(1));
@@ -4106,6 +4110,7 @@ public final class Utils implements Constants, TwitterConstants {
         final ContentResolver cr = context.getContentResolver();
         final Expression where = Expression.equals(Users.USER_ID, userId);
         final Cursor c = cr.query(Users.CONTENT_URI, new String[0], where.getSQL(), null, null);
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             return c.getCount() > 0;
         } finally {
@@ -4119,6 +4124,7 @@ public final class Utils implements Constants, TwitterConstants {
         final Expression where = Expression.and(Expression.equals(ConversationEntries.ACCOUNT_ID, accountId),
                 Expression.equals(ConversationEntries.CONVERSATION_ID, conversationId));
         final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             if (c.moveToFirst()) return ParcelableUser.fromDirectMessageConversationEntry(c);
         } finally {

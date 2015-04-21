@@ -38,6 +38,7 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter, UserClickListe
 
     boolean shouldShowAccountsColor();
 
+    @Override
     MediaLoaderWrapper getMediaLoader();
 
 }

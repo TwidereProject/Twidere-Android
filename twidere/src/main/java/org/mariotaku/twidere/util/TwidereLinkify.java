@@ -73,10 +73,10 @@ public final class TwidereLinkify implements Constants {
     public static final int[] ALL_LINK_TYPES = new int[]{LINK_TYPE_LINK, LINK_TYPE_MENTION, LINK_TYPE_HASHTAG,
             LINK_TYPE_STATUS, LINK_TYPE_CASHTAG};
 
-    public static final String AVAILABLE_URL_SCHEME_PREFIX = "(https?:\\/\\/)?";
+    public static final String AVAILABLE_URL_SCHEME_PREFIX = "(https?://)?";
 
     public static final String TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES = "(bigger|normal|mini|reasonably_small)";
-    private static final String STRING_PATTERN_TWITTER_PROFILE_IMAGES_NO_SCHEME = "(twimg[\\d\\w\\-]+\\.akamaihd\\.net|[\\w\\d]+\\.twimg\\.com)\\/profile_images\\/([\\d\\w\\-_]+)\\/([\\d\\w\\-_]+)_"
+    private static final String STRING_PATTERN_TWITTER_PROFILE_IMAGES_NO_SCHEME = "(twimg[\\d\\w\\-]+\\.akamaihd\\.net|[\\w\\d]+\\.twimg\\.com)/profile_images/([\\d\\w\\-_]+)/([\\d\\w\\-_]+)_"
             + TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES + "(\\.?" + AVAILABLE_IMAGE_SHUFFIX + ")?";
     private static final String STRING_PATTERN_TWITTER_PROFILE_IMAGES = AVAILABLE_URL_SCHEME_PREFIX
             + STRING_PATTERN_TWITTER_PROFILE_IMAGES_NO_SCHEME;
@@ -87,12 +87,12 @@ public final class TwidereLinkify implements Constants {
     public static final int GROUP_ID_TWITTER_STATUS_STATUS_ID = 6;
     public static final int GROUP_ID_TWITTER_LIST_SCREEN_NAME = 4;
     public static final int GROUP_ID_TWITTER_LIST_LIST_NAME = 5;
-    private static final String STRING_PATTERN_TWITTER_STATUS_NO_SCHEME = "((mobile|www)\\.)?twitter\\.com\\/(?:#!\\/)?(\\w+)\\/status(es)?\\/(\\d+)(\\/photo\\/\\d)?\\/?";
+    private static final String STRING_PATTERN_TWITTER_STATUS_NO_SCHEME = "((mobile|www)\\.)?twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)(/photo/\\d)?/?";
     private static final String STRING_PATTERN_TWITTER_STATUS = AVAILABLE_URL_SCHEME_PREFIX
             + STRING_PATTERN_TWITTER_STATUS_NO_SCHEME;
     public static final Pattern PATTERN_TWITTER_STATUS = Pattern.compile(STRING_PATTERN_TWITTER_STATUS,
             Pattern.CASE_INSENSITIVE);
-    private static final String STRING_PATTERN_TWITTER_LIST_NO_SCHEME = "((mobile|www)\\.)?twitter\\.com\\/(?:#!\\/)?(\\w+)\\/lists\\/(.+)\\/?";
+    private static final String STRING_PATTERN_TWITTER_LIST_NO_SCHEME = "((mobile|www)\\.)?twitter\\.com/(?:#!/)?(\\w+)/lists/(.+)/?";
     private static final String STRING_PATTERN_TWITTER_LIST = AVAILABLE_URL_SCHEME_PREFIX
             + STRING_PATTERN_TWITTER_LIST_NO_SCHEME;
     public static final Pattern PATTERN_TWITTER_LIST = Pattern.compile(STRING_PATTERN_TWITTER_LIST,
