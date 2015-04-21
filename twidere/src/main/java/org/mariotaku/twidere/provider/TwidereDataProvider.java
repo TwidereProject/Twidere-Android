@@ -1174,7 +1174,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             builder.setContentIntent(getContentIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId));
-            builder.setContentIntent(getDeleteIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId, positions));
+            builder.setDeleteIntent(getDeleteIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId, positions));
             builder.setNumber(messagesCount);
             builder.setWhen(when);
             builder.setStyle(style);

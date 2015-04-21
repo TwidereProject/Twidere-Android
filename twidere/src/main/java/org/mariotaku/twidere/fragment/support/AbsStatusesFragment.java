@@ -360,8 +360,11 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
 
     @Override
     public final boolean scrollToStart() {
-        saveReadPosition();
-        return super.scrollToStart();
+        final boolean result = super.scrollToStart();
+        if (result) {
+            saveReadPosition();
+        }
+        return result;
     }
 
     @Override
