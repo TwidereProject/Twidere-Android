@@ -29,6 +29,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -40,6 +41,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +72,10 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -85,7 +90,7 @@ import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
 public class DirectMessagesFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         RefreshScrollTopInterface, OnRefreshListener, MessageEntriesAdapterListener,
-        ControlBarOffsetListener, ContentListSupport {
+        ControlBarOffsetListener, ContentListSupport, KeyboardShortcutCallback {
 
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
@@ -100,9 +105,52 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View mProgressContainer;
     private LinearLayoutManager mLayoutManager;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
+    private Rect mSystemWindowsInsets = new Rect();
+    private int mControlBarOffsetPixels;
+
+    @Override
+    public MessageEntriesAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        if (mSwipeRefreshLayout == null || mAdapter == null) return false;
+        return mSwipeRefreshLayout.isRefreshing() || mAdapter.isLoadMoreIndicatorVisible();
+    }
+
+    public void setRefreshing(boolean refreshing) {
+        if (mAdapter == null || refreshing == mSwipeRefreshLayout.isRefreshing()) return;
+        mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
+    }
+
+    @Override
+    public void onLoadMoreContents() {
+        loadMoreMessages();
+    }
+
+    @Override
+    public void setControlVisible(boolean visible) {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof BaseActionBarActivity) {
+            ((BaseActionBarActivity) activity).setControlBarVisibleAnimate(visible);
+        }
+    }
 
     public final LongSparseArray<Set<Long>> getUnreadCountsToRemove() {
         return mUnreadCountsToRemove;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
     }
 
     @Override
@@ -113,9 +161,98 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         }
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_recycler_view, container, false);
+    }
 
-    private Rect mSystemWindowsInsets = new Rect();
-    private int mControlBarOffsetPixels;
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final View view = getView();
+        if (view == null) throw new AssertionError();
+        final TwidereApplication application = TwidereApplication.getInstance(getActivity());
+        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
+        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final Context viewContext = view.getContext();
+        mMultiSelectManager = getMultiSelectManager();
+        mAdapter = new MessageEntriesAdapter(viewContext);
+        mAdapter.setListener(this);
+        mLayoutManager = new FixedLinearLayoutManager(viewContext);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(viewContext));
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler, mRecyclerView, mLayoutManager, mAdapter);
+
+        final ContentListScrollListener scrollListener = new ContentListScrollListener(this);
+        scrollListener.setTouchSlop(ViewConfiguration.get(viewContext).getScaledTouchSlop());
+        mRecyclerView.setOnScrollListener(scrollListener);
+
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, mLayoutManager.getOrientation());
+        final Resources res = viewContext.getResources();
+        final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
+                + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+        itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
+        itemDecoration.setDecorationEndOffset(1);
+        mRecyclerView.addItemDecoration(itemDecoration);
+        getLoaderManager().initLoader(0, null, this);
+        setListShown(false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        final ContentResolver resolver = getContentResolver();
+        resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
+        mAdapter.updateReadState();
+        updateRefreshState();
+    }
+
+    @Override
+    public void onStop() {
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
+        final ContentResolver resolver = getContentResolver();
+        resolver.unregisterContentObserver(mReloadContentObserver);
+        super.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_COMPOSE: {
+                openMessageConversation(getActivity(), -1, -1);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+    }
+
+    @Override
+    public void onDetach() {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof IControlBarActivity) {
+            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
+        }
+        super.onDetach();
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
 
     @Override
     protected void fitSystemWindows(Rect insets) {
@@ -129,54 +266,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
         mControlBarOffsetPixels = Math.round(activity.getControlBarHeight() * (1 - offset));
         updateRefreshProgressOffset();
-    }
-
-
-    private void updateRefreshProgressOffset() {
-        if (mSystemWindowsInsets.top == 0 || mSwipeRefreshLayout == null || isRefreshing()) return;
-        final float density = getResources().getDisplayMetrics().density;
-        final int progressCircleDiameter = mSwipeRefreshLayout.getProgressCircleDiameter();
-        final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - progressCircleDiameter;
-        // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
-        final int swipeDistance = Math.round(64 * density);
-        mSwipeRefreshLayout.setProgressViewOffset(true, swipeStart, swipeStart + swipeDistance);
-    }
-
-    @Override
-    public void onDetach() {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
-        }
-        super.onDetach();
-    }
-
-    @Override
-    public void onEntryClick(int position, DirectMessageEntry entry) {
-        Utils.openMessageConversation(getActivity(), entry.account_id, entry.conversation_id);
-    }
-
-    @Override
-    public void onUserClick(int position, DirectMessageEntry entry) {
-        Utils.openUserProfile(getActivity(), entry.account_id, entry.conversation_id, entry.screen_name, null);
-    }
-
-    @Override
-    public void onRefresh() {
-        triggerRefresh();
-    }
-
-    private void setListShown(boolean shown) {
-        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
-        mSwipeRefreshLayout.setVisibility(shown ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
-        mProgressContainer = view.findViewById(R.id.progress_container);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     }
 
     @Override
@@ -211,53 +300,14 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false);
+    public void onEntryClick(int position, DirectMessageEntry entry) {
+        Utils.openMessageConversation(getActivity(), entry.account_id, entry.conversation_id);
     }
 
     @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final View view = getView();
-        if (view == null) throw new AssertionError();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final Context viewContext = view.getContext();
-        mMultiSelectManager = getMultiSelectManager();
-        mAdapter = new MessageEntriesAdapter(viewContext);
-        mAdapter.setListener(this);
-        mLayoutManager = new FixedLinearLayoutManager(viewContext);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(viewContext));
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
-        final ContentListScrollListener scrollListener = new ContentListScrollListener(this);
-        scrollListener.setTouchSlop(ViewConfiguration.get(viewContext).getScaledTouchSlop());
-        mRecyclerView.setOnScrollListener(scrollListener);
-
-        final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, mLayoutManager.getOrientation());
-        final Resources res = viewContext.getResources();
-        final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
-                + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
-        itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
-        itemDecoration.setDecorationEndOffset(1);
-        mRecyclerView.addItemDecoration(itemDecoration);
-        getLoaderManager().initLoader(0, null, this);
-        setListShown(false);
+    public void onUserClick(int position, DirectMessageEntry entry) {
+        Utils.openUserProfile(getActivity(), entry.account_id, entry.conversation_id, entry.screen_name, null);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        final ContentResolver resolver = getContentResolver();
-        resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.register(this);
-        mAdapter.updateReadState();
-        updateRefreshState();
-    }
-
 
     @Subscribe
     public void onGetMessagesTaskChanged(GetMessagesTaskEvent event) {
@@ -269,23 +319,8 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     }
 
     @Override
-    public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.unregister(this);
-        final ContentResolver resolver = getContentResolver();
-        resolver.unregisterContentObserver(mReloadContentObserver);
-        super.onStop();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_COMPOSE: {
-                openMessageConversation(getActivity(), -1, -1);
-                break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
+    public void onRefresh() {
+        triggerRefresh();
     }
 
     @Override
@@ -323,12 +358,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         return true;
     }
 
-    @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
-
     protected long getAccountId() {
         final Bundle args = getArguments();
         return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
@@ -337,17 +366,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     protected void updateRefreshState() {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         setRefreshing(twitter != null && (twitter.isReceivedDirectMessagesRefreshing() || twitter.isSentDirectMessagesRefreshing()));
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        if (mAdapter == null || refreshing == mSwipeRefreshLayout.isRefreshing()) return;
-        mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
-    }
-
-    @Override
-    public boolean isRefreshing() {
-        if (mSwipeRefreshLayout == null || mAdapter == null) return false;
-        return mSwipeRefreshLayout.isRefreshing() || mAdapter.isLoadMoreIndicatorVisible();
     }
 
     private void addReadPosition(final int firstVisibleItem) {
@@ -395,29 +413,26 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         });
     }
 
-    @Override
-    public MessageEntriesAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    @Override
-    public void setControlVisible(boolean visible) {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof BaseActionBarActivity) {
-            ((BaseActionBarActivity) activity).setControlBarVisibleAnimate(visible);
-        }
-    }
-
-    @Override
-    public void onLoadMoreContents() {
-        loadMoreMessages();
-    }
-
     private void removeUnreadCounts() {
         if (mRemoveUnreadCountsTask != null && mRemoveUnreadCountsTask.getStatus() == AsyncTask.Status.RUNNING)
             return;
         mRemoveUnreadCountsTask = new RemoveUnreadCountsTask(mReadPositions, this);
         AsyncTaskUtils.executeTask(mRemoveUnreadCountsTask);
+    }
+
+    private void setListShown(boolean shown) {
+        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
+        mSwipeRefreshLayout.setVisibility(shown ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateRefreshProgressOffset() {
+        if (mSystemWindowsInsets.top == 0 || mSwipeRefreshLayout == null || isRefreshing()) return;
+        final float density = getResources().getDisplayMetrics().density;
+        final int progressCircleDiameter = mSwipeRefreshLayout.getProgressCircleDiameter();
+        final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - progressCircleDiameter;
+        // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
+        final int swipeDistance = Math.round(64 * density);
+        mSwipeRefreshLayout.setProgressViewOffset(true, swipeStart, swipeStart + swipeDistance);
     }
 
     static class RemoveUnreadCountsTask extends AsyncTask<Object, Object, Object> {

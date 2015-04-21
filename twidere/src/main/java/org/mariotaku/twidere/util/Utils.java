@@ -3576,9 +3576,9 @@ public final class Utils implements Constants, TwitterConstants {
             final PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             final String version_name = pi.versionName;
             cb.setClientVersion(pi.versionName);
-            cb.setClientName(APP_NAME);
-            cb.setClientURL(APP_PROJECT_URL);
-            cb.setHttpUserAgent(APP_NAME + " " + APP_PROJECT_URL + " / " + version_name
+            cb.setClientName(TWIDERE_APP_NAME);
+            cb.setClientURL(TWIDERE_PROJECT_URL);
+            cb.setHttpUserAgent(TWIDERE_APP_NAME + " " + TWIDERE_PROJECT_URL + " / " + version_name
                     + (gzipCompressing ? " (gzip)" : ""));
         } catch (final PackageManager.NameNotFoundException e) {
             throw new AssertionError(e);

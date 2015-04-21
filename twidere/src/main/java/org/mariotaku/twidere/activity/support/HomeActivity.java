@@ -91,7 +91,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -287,6 +287,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
                         mSlidingMenu.showContent(true);
                     } else {
                         mSlidingMenu.showMenu(true);
+                        setControlBarVisibleAnimate(true);
                     }
                     return true;
                 }
@@ -684,16 +685,16 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
 
     private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof ShortcutCallback) {
-            return ((ShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+        if (fragment instanceof KeyboardShortcutCallback) {
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
         }
         return false;
     }
 
     private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof ShortcutCallback) {
-            return ((ShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+        if (fragment instanceof KeyboardShortcutCallback) {
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
         }
         return false;
     }

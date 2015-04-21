@@ -32,7 +32,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
@@ -41,7 +41,7 @@ import java.util.ArrayList;
 @SuppressLint("Registered")
 public class BaseActionBarActivity extends ThemedActionBarActivity implements Constants,
         OnFitSystemWindowsListener, SystemWindowsInsetsCallback, IControlBarActivity,
-        ShortcutCallback {
+        KeyboardShortcutCallback {
 
     private boolean mInstanceStateSaved;
     private boolean mIsVisible;

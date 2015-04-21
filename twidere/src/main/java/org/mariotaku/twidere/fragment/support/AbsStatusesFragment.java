@@ -32,8 +32,9 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler.ShortcutCallback;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
@@ -49,7 +50,7 @@ import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
  * Created by mariotaku on 14/11/5.
  */
 public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<AbsStatusesAdapter<Data>>
-        implements LoaderCallbacks<Data>, StatusAdapterListener, ShortcutCallback {
+        implements LoaderCallbacks<Data>, StatusAdapterListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
     private SharedPreferences mPreferences;
@@ -71,7 +72,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
                     getFragmentManager(), getTwitterWrapper(), status, item);
         }
     };
-    private int mPositionBackup;
+    private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
@@ -133,39 +134,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
-        String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
-        final LinearLayoutManager layoutManager = getLayoutManager();
-        final RecyclerView recyclerView = getRecyclerView();
-        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.getFocusedChild());
-        final int position;
-        if (focusedChild != null) {
-            position = recyclerView.getChildLayoutPosition(focusedChild);
-        } else if (layoutManager.findFirstVisibleItemPosition() == 0) {
-            position = -1;
-        } else {
-            final int itemCount = getAdapter().getItemCount();
-            if (layoutManager.findLastVisibleItemPosition() == itemCount - 1) {
-                position = itemCount;
-            } else {
-                position = mPositionBackup;
-            }
-        }
-        mPositionBackup = position;
-        if (action != null) {
-            switch (action) {
-                case "navigation.previous": {
-                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, -1);
-                    return true;
-                }
-                case "navigation.next": {
-                    RecyclerViewUtils.focusNavigate(recyclerView, layoutManager, position, 1);
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean handleKeyboardShortcutRepeat(final int keyCode, final int repeatCount,
+                                                @NonNull final KeyEvent event) {
+        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
     }
 
     @Override
@@ -374,7 +345,10 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = TwidereApplication.getInstance(activity);
         mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
-        getAdapter().setListener(this);
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final RecyclerView recyclerView = getRecyclerView();
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        adapter.setListener(this);
         getScrollListener().setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -383,6 +357,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
                 }
             }
         });
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler, recyclerView, layoutManager, adapter);
 
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);

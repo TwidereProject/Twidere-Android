@@ -249,7 +249,7 @@ public class KeyboardShortcutsHandler implements Constants {
         editor.apply();
     }
 
-    public static interface ShortcutCallback {
+    public static interface KeyboardShortcutCallback {
         boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event);
 
         boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event);

@@ -69,6 +69,10 @@ public class VideoLoader {
         return null;
     }
 
+    public boolean isLoading(String url) {
+        return mTaskManager.hasRunningTasksForTag(url);
+    }
+
 
     public int loadVideo(String uri, VideoLoadingListener listener) {
         if (mTaskManager.hasRunningTasksForTag(uri)) {

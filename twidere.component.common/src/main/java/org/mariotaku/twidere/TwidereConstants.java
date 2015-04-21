@@ -29,12 +29,12 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
  */
 public interface TwidereConstants extends SharedPreferenceConstants, IntentConstants {
 
-    public static final String APP_NAME = "Twidere";
-    public static final String APP_PACKAGE_NAME = "org.mariotaku.twidere";
-    public static final String APP_PROJECT_URL = "https://github.com/mariotaku/twidere";
-    public static final String APP_PROJECT_EMAIL = "twidere.project@gmail.com";
+    public static final String TWIDERE_APP_NAME = "Twidere";
+    public static final String TWIDERE_PACKAGE_NAME = "org.mariotaku.twidere";
+    public static final String TWIDERE_PROJECT_URL = "https://github.com/mariotaku/twidere";
+    public static final String TWIDERE_PROJECT_EMAIL = "twidere.project@gmail.com";
 
-    public static final String LOGTAG = APP_NAME;
+    public static final String LOGTAG = TWIDERE_APP_NAME;
 
     public static final String USER_NICKNAME_PREFERENCES_NAME = "user_nicknames";
     public static final String USER_COLOR_PREFERENCES_NAME = "user_colors";
