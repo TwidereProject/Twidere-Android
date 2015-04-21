@@ -1060,6 +1060,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private StatusAdapterListener mStatusAdapterListener;
 
         private RecyclerView mRecyclerView;
+        private DetailStatusViewHolder mStatusViewHolder;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
             setHasStableIds(true);
@@ -1253,6 +1254,22 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
+        public void onViewDetachedFromWindow(ViewHolder holder) {
+            if (holder instanceof DetailStatusViewHolder) {
+                mStatusViewHolder = (DetailStatusViewHolder) holder;
+            }
+            super.onViewDetachedFromWindow(holder);
+        }
+
+        @Override
+        public void onViewAttachedToWindow(ViewHolder holder) {
+            if (holder == mStatusViewHolder) {
+                mStatusViewHolder = null;
+            }
+            super.onViewAttachedToWindow(holder);
+        }
+
+        @Override
         public boolean isLoadMoreIndicatorVisible() {
             return mLoadMoreIndicatorVisible;
         }
@@ -1283,6 +1300,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case VIEW_TYPE_DETAIL_STATUS: {
+                    if (mStatusViewHolder != null) {
+                        return mStatusViewHolder;
+                    }
                     final View view;
                     if (mIsCompact) {
                         view = mInflater.inflate(R.layout.header_status_compact, parent, false);
