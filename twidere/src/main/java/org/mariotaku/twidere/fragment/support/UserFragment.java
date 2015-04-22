@@ -59,7 +59,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -415,7 +415,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     private void updateSubtitle() {
-        final ActionBarActivity activity = (ActionBarActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity == null) return;
         final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) return;
@@ -1328,7 +1328,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
-        final ActionBarActivity activity = (ActionBarActivity) getActivity();
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         final IThemedActivity themed = (IThemedActivity) activity;
         final int themeRes = themed.getCurrentThemeResourceId();
         if (ThemeUtils.isDarkTheme(themeRes)) {

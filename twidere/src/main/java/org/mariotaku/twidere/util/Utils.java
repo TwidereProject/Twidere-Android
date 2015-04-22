@@ -79,7 +79,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -3398,8 +3398,8 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static int getInsetsTopWithoutActionBarHeight(Context context, int top) {
         final int actionBarHeight;
-        if (context instanceof ActionBarActivity) {
-            actionBarHeight = getActionBarHeight(((ActionBarActivity) context).getSupportActionBar());
+        if (context instanceof AppCompatActivity) {
+            actionBarHeight = getActionBarHeight(((AppCompatActivity) context).getSupportActionBar());
         } else if (context instanceof Activity) {
             actionBarHeight = getActionBarHeight(((Activity) context).getActionBar());
         } else {
@@ -4086,7 +4086,7 @@ public final class Utils implements Constants, TwitterConstants {
     public static int getActionBarHeight(Context context) {
         final TypedValue tv = new TypedValue();
         final Theme theme = context.getTheme();
-        final int attr = context instanceof ActionBarActivity ? R.attr.actionBarSize : android.R.attr.actionBarSize;
+        final int attr = context instanceof AppCompatActivity ? R.attr.actionBarSize : android.R.attr.actionBarSize;
         if (theme.resolveAttribute(attr, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
