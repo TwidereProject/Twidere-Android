@@ -69,7 +69,7 @@
                 android:orientation="horizontal"
                 android:padding="8dp">
 
-                <android.support.v7.internal.widget.TintButton
+                <Button
                     android:id="@+id/sign_up"
                     style="?android:buttonStyleSmall"
                     android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                     android:onClick="onClick"
                     android:text="@string/register"/>
 
-                <android.support.v7.internal.widget.TintButton
+                <Button
                     android:id="@+id/sign_in"
                     style="?android:buttonStyleSmall"
                     android:layout_width="match_parent"

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.graphic;
 
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
+import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -35,7 +36,7 @@ public class ActionIconDrawable extends DrawableWrapper {
 
     public ActionIconDrawable(Drawable drawable, int defaultColor) {
         super(drawable);
-        mDefaultColor = defaultColor;
+        setDefaultColor(defaultColor);
         setHighlightColor(0);
     }
 
@@ -62,7 +63,9 @@ public class ActionIconDrawable extends DrawableWrapper {
     }
 
     private void updateColorFilter() {
-        setColorFilter(mHighlightColor == 0 ? mDefaultColor : mHighlightColor, Mode.SRC_ATOP);
+        final int color = mHighlightColor == 0 ? mDefaultColor : mHighlightColor;
+        setColorFilter(color, Mode.SRC_ATOP);
+        invalidateSelf();
     }
 
 }

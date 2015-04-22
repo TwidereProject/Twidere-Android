@@ -87,8 +87,8 @@ public class FiltersActivity extends BaseDialogWhenLargeActivity {
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) findViewById(R.id.view_pager_tabs);
     }

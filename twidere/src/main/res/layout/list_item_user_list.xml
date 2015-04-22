@@ -35,7 +35,7 @@
         android:orientation="vertical"
         android:paddingRight="@dimen/element_spacing_normal">
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:textStyle="bold"
             tools:text="Sample list"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/created_by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

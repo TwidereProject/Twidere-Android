@@ -140,8 +140,8 @@ public final class MediaViewerActivity extends ThemedAppCompatActivity implement
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mIndicator = (LinePageIndicator) findViewById(R.id.pager_indicator);
         mMediaStatusContainer = findViewById(R.id.media_status_container);

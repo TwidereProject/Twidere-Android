@@ -242,8 +242,8 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mListView = (ListView) findViewById(android.R.id.list);
         mEmptyView = findViewById(android.R.id.empty);
         mEmptyText = (TextView) findViewById(R.id.empty_text);

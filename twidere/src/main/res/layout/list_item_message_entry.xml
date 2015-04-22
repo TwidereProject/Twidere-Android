@@ -99,7 +99,7 @@
             android:textColor="?android:attr/textColorSecondary"
             tools:text="12:00"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

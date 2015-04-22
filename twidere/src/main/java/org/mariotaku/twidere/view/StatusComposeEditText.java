@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -28,10 +29,8 @@ import android.text.method.ArrowKeyMovementMethod;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
-import org.mariotaku.twidere.view.iface.IThemedView;
-import org.mariotaku.twidere.view.themed.ThemedMultiAutoCompleteTextView;
 
-public class StatusComposeEditText extends ThemedMultiAutoCompleteTextView implements IThemedView {
+public class StatusComposeEditText extends AppCompatMultiAutoCompleteTextView {
 
     private UserHashtagAutoCompleteAdapter mAdapter;
     private long mAccountId;

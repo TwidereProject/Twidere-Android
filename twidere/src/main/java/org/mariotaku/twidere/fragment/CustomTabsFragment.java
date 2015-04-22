@@ -34,6 +34,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -59,13 +60,16 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
@@ -307,7 +311,16 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
                 subItem.setIntent(intent);
             }
         }
-        ThemeUtils.applyColorFilterToMenuIcon(getActivity(), menu);
+
+        final Activity activity = getActivity();
+        if (activity instanceof BasePreferenceActivity) {
+            final ActionBar actionBar = ((BasePreferenceActivity) activity).getSupportActionBar();
+            final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
+            final int itemColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
+            final int popupTheme = ThemeUtils.getActionBarPopupThemeRes(actionBar.getThemedContext());
+            final int popupColor = ThemeUtils.getThemeForegroundColor(activity, popupTheme);
+            ThemeUtils.applyColorFilterToMenuIcon(menu, itemColor, popupColor, 0, Mode.SRC_ATOP);
+        }
     }
 
     @Override

@@ -660,8 +660,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mActionBar = (Toolbar) findViewById(R.id.actionbar);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);

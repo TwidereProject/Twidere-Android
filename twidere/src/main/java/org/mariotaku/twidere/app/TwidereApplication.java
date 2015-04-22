@@ -292,7 +292,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             reloadConnectivitySettings();
         } else if (KEY_USAGE_STATISTICS.equals(key)) {
             stopService(new Intent(this, UCDService.class));
-            startUsageStatisticsServiceIfNeeded(this);
             //spice
             stopService(new Intent(this, SpiceService.class));
             startUsageStatisticsServiceIfNeeded(this);

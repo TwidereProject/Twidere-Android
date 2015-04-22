@@ -70,8 +70,8 @@ public class BaseDialogWhenLargeActivity extends BaseAppCompatActivity {
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
         setupTintStatusBar();
     }

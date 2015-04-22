@@ -51,7 +51,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
@@ -61,9 +60,8 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -74,12 +72,10 @@ import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-import org.mariotaku.twidere.view.iface.IThemedView;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 public class ThemeUtils implements Constants {
 
@@ -87,8 +83,6 @@ public class ThemeUtils implements Constants {
             android.R.attr.activityOpenExitAnimation};
     private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
             android.R.attr.activityCloseExitAnimation};
-
-    private static final String[] sClassPrefixList = {"android.widget.", "android.webkit.", "org.mariotaku.twidere.view"};
 
     private ThemeUtils() {
         throw new AssertionError();
@@ -189,7 +183,7 @@ public class ThemeUtils implements Constants {
         textView.setText(builder);
     }
 
-    public static void applySupportActionModeColor(ActionMode mode, FragmentActivity activity,
+    public static void applySupportActionModeColor(final ActionMode mode, final Activity activity,
                                                    int themeRes, int accentColor,
                                                    String backgroundOption, boolean outlineEnabled) {
         // Very dirty implementation
@@ -199,8 +193,8 @@ public class ThemeUtils implements Constants {
         applySupportActionModeColor(modeCompat, activity, themeRes, accentColor, backgroundOption, outlineEnabled);
     }
 
-    public static void applySupportActionModeColor(android.support.v7.view.ActionMode modeCompat,
-                                                   FragmentActivity activity, int themeRes,
+    public static void applySupportActionModeColor(final android.support.v7.view.ActionMode modeCompat,
+                                                   Activity activity, int themeRes,
                                                    int accentColor, String backgroundOption,
                                                    boolean outlineEnabled) {
         // Very dirty implementation
@@ -226,8 +220,6 @@ public class ThemeUtils implements Constants {
             final TextView actionBarSubtitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_subtitle);
             final ImageView actionModeCloseButton = (ImageView) contextView.findViewById(android.support.v7.appcompat.R.id.action_mode_close_button);
             final ActionMenuView menuView = ViewUtils.findViewByType(contextView, ActionMenuView.class);
-            if (actionBarTitleView == null || actionBarSubtitleView == null || actionModeCloseButton == null || menuView == null)
-                return;
             final int actionBarColor;
             if (isDarkTheme(themeRes)) {
                 actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
@@ -236,11 +228,19 @@ public class ThemeUtils implements Constants {
             }
             final int titleColor = getContrastActionBarTitleColor(context, themeRes, actionBarColor);
             final int itemColor = getContrastActionBarItemColor(context, themeRes, actionBarColor);
-            actionBarTitleView.setTextColor(titleColor);
-            actionBarSubtitleView.setTextColor(titleColor);
-            actionModeCloseButton.setColorFilter(itemColor, Mode.SRC_ATOP);
-            setActionBarOverflowColor(menuView, itemColor);
-            ThemeUtils.wrapToolbarMenuIcon(menuView, itemColor, itemColor);
+            if (actionBarTitleView != null) {
+                actionBarTitleView.setTextColor(titleColor);
+            }
+            if (actionBarSubtitleView != null) {
+                actionBarSubtitleView.setTextColor(titleColor);
+            }
+            if (actionModeCloseButton != null) {
+                actionModeCloseButton.setColorFilter(itemColor, Mode.SRC_ATOP);
+            }
+            if (menuView != null) {
+                setActionBarOverflowColor(menuView, itemColor);
+                ThemeUtils.wrapToolbarMenuIcon(menuView, itemColor, itemColor);
+            }
             ViewUtils.setBackground(contextView, getActionBarBackground(activity, themeRes, accentColor, backgroundOption, outlineEnabled));
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,45 +268,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static View createView(final String name, final Context context,
-                                  final AttributeSet attrs) {
-        return createView(name, context, attrs, 0);
-    }
-
-    public static View createView(final String name, final Context context,
-                                  final AttributeSet attrs, final int tintColor) {
-        View view = null;
-        try {
-            view = newViewInstance(name, context, attrs);
-        } catch (final Exception e) {
-            // In this case we want to let the base class take a crack
-            // at it.
-        }
-        for (final String prefix : sClassPrefixList) {
-            try {
-                view = newViewInstance(prefix + name, context, attrs);
-            } catch (final Exception e) {
-                // In this case we want to let the base class take a crack
-                // at it.
-            }
-        }
-        if (view != null) {
-            applyColorTintForView(view, tintColor);
-        }
-        return view;
-    }
-
-    @Deprecated
-    public static Drawable getActionBarBackground(final Context context, final int themeRes) {
-        @SuppressWarnings("ConstantConditions")
-        final TypedArray array = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
-                android.R.attr.actionBarStyle, themeRes);
-        try {
-            return array.getDrawable(0);
-        } finally {
-            array.recycle();
-        }
-    }
 
     @NonNull
     public static Drawable getActionBarBackground(final Context context, final int themeRes,
@@ -802,12 +763,13 @@ public class ThemeUtils implements Constants {
         indicator.updateAppearance();
     }
 
-    public static void initTextView(TextView view) {
-        if (view.isInEditMode()) return;
-        final Context context = view.getContext();
-//        view.setLinkTextColor(ThemeUtils.getUserLinkTextColor(context));
-//        view.setHighlightColor(ThemeUtils.getUserHighlightColor(context));
-        view.setTypeface(ThemeUtils.getUserTypeface(context, view.getTypeface()));
+    public static void initView(View view, int themeColor, int profileImageStyle) {
+        if (view == null) return;
+        if (view instanceof ShapedImageView) {
+            final ShapedImageView shapedImageView = (ShapedImageView) view;
+            shapedImageView.setStyle(profileImageStyle);
+        } else if (view instanceof TextView) {
+        }
     }
 
     public static boolean isColoredActionBar(int themeRes) {
@@ -1038,7 +1000,7 @@ public class ThemeUtils implements Constants {
             final MenuItem item = menu.getItem(i);
             wrapMenuItemIcon(item, itemColor, excludeGroups);
             if (item.hasSubMenu()) {
-                wrapMenuIcon(menu, popupItemColor, popupItemColor, excludeGroups);
+                wrapMenuIcon(item.getSubMenu(), popupItemColor, popupItemColor, excludeGroups);
             }
             if (item.isVisible()) {
                 k++;
@@ -1094,31 +1056,11 @@ public class ThemeUtils implements Constants {
             final MenuItem item = menu.getItem(i);
             wrapMenuItemIcon(item, itemColor, excludeGroups);
             if (item.hasSubMenu()) {
-                wrapMenuIcon(menu, popupItemColor, popupItemColor, excludeGroups);
+                wrapMenuIcon(item.getSubMenu(), popupItemColor, popupItemColor, excludeGroups);
             }
             if (item.isVisible()) {
                 k++;
             }
-        }
-    }
-
-    private static void applyColorTintForView(View view, int tintColor) {
-        if (view instanceof IThemedView) {
-            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
-            ((IThemedView) view).setThemeTintColor(tintList);
-        } else if (view instanceof ProgressBar) {
-            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
-            final ProgressBar progressBar = (ProgressBar) view;
-            ViewUtils.setProgressTintList(progressBar, tintList);
-            ViewUtils.setProgressBackgroundTintList(progressBar, tintList);
-            ViewUtils.setIndeterminateTintList(progressBar, tintList);
-        } else if (view instanceof CompoundButton) {
-            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
-            final CompoundButton compoundButton = (CompoundButton) view;
-            ViewUtils.setButtonTintList(compoundButton, tintList);
-        } else {
-//            final ColorStateList tintList = ColorStateList.valueOf(tintColor);
-//            ViewCompat.setBackgroundTintList(view, tintList);
         }
     }
 
@@ -1129,11 +1071,4 @@ public class ThemeUtils implements Constants {
                 Context.MODE_PRIVATE);
     }
 
-    private static View newViewInstance(final String className, final Context context, final AttributeSet attrs)
-            throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException,
-            InvocationTargetException {
-        final Class<?> viewCls = Class.forName(className);
-        final Constructor<?> constructor = viewCls.getConstructor(Context.class, AttributeSet.class);
-        return (View) constructor.newInstance(context, attrs);
-    }
 }

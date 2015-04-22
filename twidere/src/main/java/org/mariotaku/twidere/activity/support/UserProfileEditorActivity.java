@@ -278,8 +278,8 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mProgressContainer = findViewById(R.id.progress_container);
         mEditProfileContent = findViewById(R.id.edit_profile_content);
         mProfileBannerView = (ImageView) findViewById(R.id.profile_banner);

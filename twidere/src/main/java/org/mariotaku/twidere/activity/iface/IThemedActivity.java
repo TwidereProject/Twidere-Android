@@ -39,6 +39,8 @@ public interface IThemedActivity {
 
     int getThemeResourceId();
 
+    int getCurrentProfileImageStyle();
+
     void restart();
 
 }

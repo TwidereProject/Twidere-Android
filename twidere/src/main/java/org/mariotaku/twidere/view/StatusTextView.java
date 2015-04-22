@@ -1,17 +1,14 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 
-import org.mariotaku.twidere.view.themed.ThemedTextView;
-
-public class StatusTextView extends ThemedTextView {
-
-    private OnSelectionChangeListener mOnSelectionChangeListener;
+public class StatusTextView extends AppCompatTextView {
 
     public StatusTextView(final Context context) {
         this(context, null);
@@ -26,22 +23,6 @@ public class StatusTextView extends ThemedTextView {
         super(context, attrs, defStyle);
         setEditableFactory(new SafeEditableFactory());
         setSpannableFactory(new SafeSpannableFactory());
-    }
-
-    public void setOnSelectionChangeListener(final OnSelectionChangeListener l) {
-        mOnSelectionChangeListener = l;
-    }
-
-    @Override
-    protected void onSelectionChanged(final int selStart, final int selEnd) {
-        super.onSelectionChanged(selStart, selEnd);
-        if (mOnSelectionChangeListener != null) {
-            mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
-        }
-    }
-
-    public interface OnSelectionChangeListener {
-        void onSelectionChanged(int selStart, int selEnd);
     }
 
     private static class SafeSpannableString extends SpannableString {

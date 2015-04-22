@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_profile_image_detail_page"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/retweeted_by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <org.mariotaku.twidere.view.themed.ThemedTextView
+                <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                     android:textColor="?android:textColorPrimary"
                     tools:text="Name"/>
 
-                <org.mariotaku.twidere.view.themed.ThemedTextView
+                <TextView
                     android:id="@+id/screen_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                     tools:text="\@username"/>
             </LinearLayout>
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/time_source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/quoted_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
             android:textColor="?android:textColorPrimary"
             tools:text="Name"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/quoted_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -334,7 +334,7 @@
             android:orientation="horizontal"
             android:padding="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/replies_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -344,7 +344,7 @@
                 android:textColor="?android:textColorPrimary"
                 tools:text="255"/>
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -364,7 +364,7 @@
             android:orientation="horizontal"
             android:padding="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/retweets_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -374,7 +374,7 @@
                 android:textColor="?android:textColorPrimary"
                 tools:text="255"/>
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -394,7 +394,7 @@
             android:orientation="horizontal"
             android:padding="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/favorites_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -404,7 +404,7 @@
                 android:textColor="?android:textColorPrimary"
                 tools:text="255"/>
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -415,7 +415,7 @@
 
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.TwidereActionMenuView
+    <android.support.v7.widget.ActionMenuView
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"

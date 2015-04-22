@@ -59,7 +59,7 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                 android:textColor="?android:attr/textColorPrimary"
                 android:textStyle="bold"/>
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/created_by"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
         android:layout_height="0.2dp"
         android:background="#40808080"/>
 
-    <org.mariotaku.twidere.view.themed.ThemedTextView
+    <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
         android:orientation="horizontal"
         android:padding="@dimen/element_spacing_normal">
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/members_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/subscribers_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -22,7 +22,9 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.View;
@@ -35,11 +37,35 @@ import android.view.ViewGroup;
  * This technique can be used with an {@link android.app.Activity} class, not just
  * {@link android.preference.PreferenceActivity}.
  */
-public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
+public abstract class AppCompatPreferenceActivity extends PreferenceActivity implements AppCompatCallback {
     private AppCompatDelegate mDelegate;
 
     public ActionBar getSupportActionBar() {
         return getDelegate().getSupportActionBar();
+    }
+
+    /**
+     * Notifies the Activity that a support action mode has been started.
+     * Activity subclasses overriding this method should call the superclass implementation.
+     *
+     * @param mode The new action mode.
+     */
+    @Override
+    public void onSupportActionModeStarted(ActionMode mode) {
+    }
+
+    /**
+     * Notifies the activity that a support action mode has finished.
+     * Activity subclasses overriding this method should call the superclass implementation.
+     *
+     * @param mode The action mode that just finished.
+     */
+    @Override
+    public void onSupportActionModeFinished(ActionMode mode) {
+    }
+
+    public ActionMode startSupportActionMode(ActionMode.Callback callback) {
+        return getDelegate().startSupportActionMode(callback);
     }
 
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
@@ -126,7 +152,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate getDelegate() {
         if (mDelegate == null) {
-            mDelegate = AppCompatDelegate.create(this, null);
+            mDelegate = AppCompatDelegate.create(this, this);
         }
         return mDelegate;
     }

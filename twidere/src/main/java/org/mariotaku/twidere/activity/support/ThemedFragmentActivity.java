@@ -34,7 +34,6 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 public abstract class ThemedFragmentActivity extends FragmentActivity implements Constants, IThemedActivity {
@@ -43,16 +42,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     @ShapeStyle
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
-
-    @Override
-    public final int getCurrentThemeResourceId() {
-        return mCurrentThemeResource;
-    }
-
-    @Override
-    public int getThemeBackgroundAlpha() {
-        return ThemeUtils.getUserThemeBackgroundAlpha(this);
-    }
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
@@ -65,18 +54,33 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    public String getThemeBackgroundOption() {
-        return ThemeUtils.getThemeBackgroundOption(this);
-    }
-
-    @Override
     public int getCurrentThemeColor() {
         return mCurrentThemeColor;
     }
 
     @Override
+    public final int getCurrentThemeResourceId() {
+        return mCurrentThemeResource;
+    }
+
+    @Override
+    public int getThemeBackgroundAlpha() {
+        return ThemeUtils.getUserThemeBackgroundAlpha(this);
+    }
+
+    @Override
+    public String getThemeBackgroundOption() {
+        return ThemeUtils.getThemeBackgroundOption(this);
+    }
+
+    @Override
     public String getThemeFontFamily() {
         return ThemeUtils.getThemeFontFamily(this);
+    }
+
+    @Override
+    public int getCurrentProfileImageStyle() {
+        return mProfileImageStyle;
     }
 
     @Override
@@ -96,23 +100,9 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
 
     @Override
     public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-        final View view = ThemeUtils.createView(name, context, attrs, mCurrentThemeColor);
-        if (view instanceof ShapedImageView) {
-            final ShapedImageView shapedImageView = (ShapedImageView) view;
-            shapedImageView.setStyle(mProfileImageStyle);
-        }
-        if (view != null) return view;
-        return super.onCreateView(name, context, attrs);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        final View view = super.onCreateView(name, context, attrs);
+        ThemeUtils.initView(view, getCurrentThemeColor(), mProfileImageStyle);
+        return view;
     }
 
     @Override

@@ -87,8 +87,8 @@ public class OpenStreetMapViewerActivity extends ThemedAppCompatActivity impleme
     }
 
     @Override
-    public void onSupportContentChanged() {
-        super.onSupportContentChanged();
+    public void onContentChanged() {
+        super.onContentChanged();
         mMapView = (MapView) findViewById(R.id.map_view);
     }
 

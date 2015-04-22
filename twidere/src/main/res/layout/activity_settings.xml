@@ -2,7 +2,7 @@
 <!--
   ~ Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -18,18 +18,10 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-
-    <style name="Theme.Base" parent="android:Theme.Material"/>
-
-    <style name="Theme.Base.NoActionBar" parent="android:Theme.Material.NoActionBar"/>
-
-    <style name="Theme.Base.Dialog" parent="android:Theme.Material.Dialog"/>
-
-    <style name="Theme.Base.Light" parent="android:Theme.Material.Light"/>
-
-    <style name="Theme.Base.Light.DarkActionBar" parent="android:Theme.Material.Light.DarkActionBar"/>
-
-    <style name="Theme.Base.Light.Dialog" parent="android:Theme.Material.Light.Dialog"/>
-
-</resources>
+<org.mariotaku.twidere.view.TintedStatusFrameLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:setPadding="true"/>

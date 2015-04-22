@@ -24,15 +24,15 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 /**
  * Created by mariotaku on 14/11/20.
  */
-public class ActionIconThemedTextView extends ThemedTextView {
+public class ActionIconThemedTextView extends AppCompatTextView {
 
     private final int mIconWidth, mIconHeight;
     private int mColor, mDisabledColor, mActivatedColor;
