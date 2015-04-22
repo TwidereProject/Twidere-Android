@@ -36,7 +36,6 @@
     </style>
 
     <style name="Theme.Compat.Base.Dialog" parent="Theme.AppCompat.Dialog">
-
         <item name="android:textColorTertiary">@color/tertiary_text_mtrl_dark</item>
         <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_light</item>
     </style>
@@ -47,11 +46,6 @@
     </style>
 
     <style name="Theme.Compat.Base.Light.DialogWhenLarge" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="android:textColorTertiary">@color/tertiary_text_mtrl_light</item>
-        <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_dark</item>
-    </style>
-
-    <style name="Theme.Compat.Base.Light.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColorTertiary">@color/tertiary_text_mtrl_light</item>
         <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_dark</item>
     </style>

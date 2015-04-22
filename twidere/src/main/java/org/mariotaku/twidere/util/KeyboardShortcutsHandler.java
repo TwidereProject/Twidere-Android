@@ -51,6 +51,7 @@ public class KeyboardShortcutsHandler implements Constants {
         sActionLabelMap.put("navigation.refresh", R.string.refresh);
         sActionLabelMap.put("navigation.previous_tab", R.string.previous_tab);
         sActionLabelMap.put("navigation.next_tab", R.string.next_tab);
+        sActionLabelMap.put("navigation.back", R.string.keyboard_shortcut_back);
 
         sMetaNameMap.put(KeyEvent.META_FUNCTION_ON, "fn");
         sMetaNameMap.put(KeyEvent.META_META_ON, "meta");
@@ -250,9 +251,9 @@ public class KeyboardShortcutsHandler implements Constants {
     }
 
     public static interface KeyboardShortcutCallback {
-        boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event);
+        boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
 
-        boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event);
+        boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event);
     }
 
     /**
@@ -331,6 +332,8 @@ public class KeyboardShortcutsHandler implements Constants {
             final String upperName = keyName.toUpperCase(Locale.US);
             final int keyCode = KeyEvent.keyCodeFromString(KEYCODE_STRING_PREFIX + upperName);
             if (keyCode == KeyEvent.KEYCODE_UNKNOWN) return upperName;
+            if (keyCode == KeyEvent.KEYCODE_DEL) return "Backspace";
+            if (keyCode == KeyEvent.KEYCODE_FORWARD_DEL) return "Delete";
             return String.valueOf(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode).getDisplayLabel());
         }
 

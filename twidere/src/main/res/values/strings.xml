@@ -734,4 +734,6 @@
     <string name="open_accounts_dashboard">Open accounts dashboard</string>
     <string name="previous_tab">Previous tab</string>
     <string name="next_tab">Next tab</string>
+    <string name="keyboard_shortcut_back">Back</string>
+    <string name="press_again_to_close">Press again to close</string>
 </resources>

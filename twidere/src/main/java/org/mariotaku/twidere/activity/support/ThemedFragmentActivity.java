@@ -27,17 +27,26 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
-public abstract class ThemedFragmentActivity extends FragmentActivity implements Constants, IThemedActivity {
+public abstract class ThemedFragmentActivity extends FragmentActivity implements Constants,
+        IThemedActivity, KeyboardShortcutCallback {
 
+    // Utility classes
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+
+    // Data fields
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
     @ShapeStyle
     private int mProfileImageStyle;
@@ -96,6 +105,7 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         }
         setTheme();
         super.onCreate(savedInstanceState);
+        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 
     @Override
@@ -125,5 +135,28 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         setTheme(mCurrentThemeResource);
         ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event)) return true;
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
+            return true;
+        return super.onKeyDown(keyCode, event);
     }
 }

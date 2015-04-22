@@ -86,7 +86,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -95,6 +94,7 @@ import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.accessor.ActivityAccessor;
@@ -146,7 +146,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     private MultiSelectEventHandler mMultiSelectHandler;
     private ReadStateManager mReadStateManager;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
 
     private SupportTabsAdapter mPagerAdapter;
 
@@ -262,9 +261,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
-        String action = mKeyboardShortcutsHandler.getKeyAction("home", keyCode, event);
+    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
+        String action = handler.getKeyAction("home", keyCode, event);
         if (action != null) {
             switch (action) {
                 case "home.accounts_dashboard": {
@@ -278,7 +277,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
             }
         }
-        action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+        action = handler.getKeyAction("navigation", keyCode, event);
         if (action != null) {
             switch (action) {
                 case "navigation.previous_tab": {
@@ -311,7 +310,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
             }
         }
-        return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
+        return handler.handleKey(this, null, keyCode, event);
     }
 
     @Override
@@ -327,9 +326,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutRepeat(keyCode, repeatCount, event)) return true;
-        return super.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     /**
@@ -353,7 +352,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mReadStateManager = app.getReadStateManager();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
-        mKeyboardShortcutsHandler = app.getKeyboardShortcutsHandler();
         mMultiSelectHandler.dispatchOnCreate();
         final long[] accountIds = getAccountIds(this);
         if (accountIds.length == 0) {
@@ -689,18 +687,21 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         return mTabIndicator.getHeight() - mTabIndicator.getStripHeight();
     }
 
-    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutRepeat(final KeyboardShortcutsHandler handler,
+                                                         final int keyCode, final int repeatCount,
+                                                         @NonNull final KeyEvent event) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
         }
         return false;
     }
 
-    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutSingle(final KeyboardShortcutsHandler handler,
+                                                         final int keyCode, @NonNull final KeyEvent event) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
         }
         return false;
     }

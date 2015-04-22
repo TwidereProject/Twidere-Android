@@ -144,7 +144,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     private Context mThemedContext;
     private MediaLoaderWrapper mImageLoader;
     private SupportAccountActionProvider mAccountActionProvider;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
 
     private boolean mSwitchAccountAnimationPlaying;
 
@@ -156,13 +155,16 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, @NonNull final KeyEvent event) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        final String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+    public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, final int repeatCount,
+                                                @NonNull final KeyEvent event) {
+        final String action = handler.getKeyAction("navigation", keyCode, event);
         if (action == null) return false;
         final int offset;
         switch (action) {
@@ -403,7 +405,6 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
         final Context context = view.getContext();
         final TwidereApplication application = TwidereApplication.getInstance(context);
         mImageLoader = application.getMediaLoaderWrapper();
-        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
         final LayoutInflater inflater = LayoutInflater.from(context);
         final ListView listView = getListView();
         listView.setItemsCanFocus(true);

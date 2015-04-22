@@ -22,13 +22,9 @@
 
     <style name="Theme.Base" parent="android:Theme.Holo"/>
 
-    <style name="Theme.Base.NoActionBar" parent="android:Theme.Holo.NoActionBar"/>
-
     <style name="Theme.Base.Dialog" parent="android:Theme.Holo.Dialog"/>
 
     <style name="Theme.Base.Light" parent="android:Theme.Holo.Light"/>
-
-    <style name="Theme.Base.Light.DarkActionBar" parent="android:Theme.Holo.Light.DarkActionBar"/>
 
     <style name="Theme.Base.Light.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
 

@@ -56,7 +56,6 @@ public class RecyclerViewUtils {
             final View viewToFocus;
             if (firstVisibleView != null) {
                 viewToFocus = firstVisibleView;
-                firstVisibleView.requestFocus();
             } else if (view != null) {
                 viewToFocus = findRecyclerViewChild(recyclerView, view);
             } else {

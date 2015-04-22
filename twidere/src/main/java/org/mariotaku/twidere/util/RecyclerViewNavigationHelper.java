@@ -33,20 +33,24 @@ import android.view.View;
 public class RecyclerViewNavigationHelper {
 
     private int positionBackup;
-    private final KeyboardShortcutsHandler handler;
+    @NonNull
     private final RecyclerView view;
+    @NonNull
     private final LinearLayoutManager manager;
+    @NonNull
     private final Adapter<ViewHolder> adapter;
 
-    public RecyclerViewNavigationHelper(KeyboardShortcutsHandler handler, RecyclerView view,
-                                        LinearLayoutManager manager, Adapter<ViewHolder> adapter) {
-        this.handler = handler;
+    public RecyclerViewNavigationHelper(@NonNull final RecyclerView view,
+                                        @NonNull final LinearLayoutManager manager,
+                                        @NonNull final Adapter<ViewHolder> adapter) {
         this.view = view;
         this.manager = manager;
         this.adapter = adapter;
     }
 
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, final int repeatCount,
+                                                @NonNull final KeyEvent event) {
         final String action = handler.getKeyAction("navigation", keyCode, event);
         if (action == null) return false;
         final int direction;

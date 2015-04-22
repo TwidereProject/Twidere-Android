@@ -32,6 +32,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
@@ -43,11 +44,16 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
         OnFitSystemWindowsListener, SystemWindowsInsetsCallback, IControlBarActivity,
         KeyboardShortcutCallback {
 
+    // Utility classes
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+
+    // Registered listeners
+    private ArrayList<ControlBarOffsetListener> mControlBarOffsetListeners = new ArrayList<>();
+
     private boolean mInstanceStateSaved;
     private boolean mIsVisible;
 
     private Rect mSystemWindowsInsets;
-    private ArrayList<ControlBarOffsetListener> mControlBarOffsetListeners = new ArrayList<>();
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
@@ -86,19 +92,15 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        if (handleKeyboardShortcutSingle(keyCode, event)) return true;
+        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event)) return true;
         return super.onKeyUp(keyCode, event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (handleKeyboardShortcutRepeat(keyCode, event.getRepeatCount(), event)) return true;
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
+            return true;
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
-        return super.onKeyMultiple(keyCode, repeatCount, event);
     }
 
     @Override
@@ -118,12 +120,12 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         return false;
     }
 
@@ -134,6 +136,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 
 

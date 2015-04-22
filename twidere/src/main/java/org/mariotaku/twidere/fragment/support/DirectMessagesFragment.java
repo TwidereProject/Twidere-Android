@@ -105,7 +105,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View mProgressContainer;
     private LinearLayoutManager mLayoutManager;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
     private Rect mSystemWindowsInsets = new Rect();
     private int mControlBarOffsetPixels;
@@ -144,13 +143,16 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, @NonNull final KeyEvent event) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, final int repeatCount,
+                                                @NonNull final KeyEvent event) {
+        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     @Override
@@ -172,7 +174,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         final View view = getView();
         if (view == null) throw new AssertionError();
         final TwidereApplication application = TwidereApplication.getInstance(getActivity());
-        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final Context viewContext = view.getContext();
         mMultiSelectManager = getMultiSelectManager();
@@ -184,11 +185,12 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(viewContext));
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler, mRecyclerView, mLayoutManager, mAdapter);
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mRecyclerView, mLayoutManager, mAdapter);
 
         final ContentListScrollListener scrollListener = new ContentListScrollListener(this);
         scrollListener.setTouchSlop(ViewConfiguration.get(viewContext).getScaledTouchSlop());
-        mRecyclerView.setOnScrollListener(scrollListener);
+        // TODO remove scroll listener
+        mRecyclerView.addOnScrollListener(scrollListener);
 
         final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, mLayoutManager.getOrientation());
         final Resources res = viewContext.getResources();

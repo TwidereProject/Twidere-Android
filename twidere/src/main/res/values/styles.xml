@@ -1,67 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Widget.Twidere.ActionBar.Colored" parent="Widget.Base.Light.ActionBar.Solid">
-        <!--<item name="android:background">@drawable/ab_twidere_solid_color_holo</item>-->
-        <!--<item name="android:background">@android:color/transparent</item>-->
-    </style>
-
-    <style name="Widget.Twidere.ActionBar.Colored.Inverse" parent="Widget.Base.Light.ActionBar.Solid.Inverse">
-        <!--<item name="android:background">@drawable/ab_twidere_solid_color_holo</item>-->
-        <!--<item name="android:background">@android:color/transparent</item>-->
-    </style>
-
-    <style name="Widget.Twidere.ActionBar.Dark" parent="Widget.Base.ActionBar.Solid">
-        <!--<item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>-->
-        <!--<item name="android:background">@android:color/transparent</item>-->
-    </style>
-
-    <style name="Widget.Twidere.ActionBar.Light" parent="Widget.Base.Light.ActionBar.Solid">
-        <!--<item name="android:background">@drawable/ab_twidere_solid_light_holo</item>-->
-        <!--<item name="android:background">@android:color/transparent</item>-->
-    </style>
-
-    <style name="Widget.Twidere.ActionBar.Light.DarkActionBar" parent="Widget.Base.Light.ActionBar.Solid.Inverse">
-        <!--<item name="android:background">@drawable/ab_twidere_solid_dark_holo</item>-->
-        <!--<item name="android:background">@android:color/transparent</item>-->
-    </style>
 
     <style name="Widget.Twidere.Viewer.ActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="background">@drawable/bg_viewer_actionbar</item>
         <item name="backgroundSplit">@drawable/bg_viewer_actionbar</item>
     </style>
 
-    <style name="Widget.Twidere.ImageButton.Borderless" parent="Widget.Base.ImageButton">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.Light.ImageButton.Borderless" parent="Widget.Base.Light.ImageButton">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.SelectableView" parent="Widget.Base">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.Light.SelectableView" parent="Widget.Base.Light">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.ActionButton.Colored" parent="Widget.Base.Light.ActionButton">
-        <item name="android:background">?android:actionBarItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.ActionButton.Overflow.Colored" parent="Widget.Base.Light.ActionButton.Overflow">
-        <item name="android:background">?android:actionBarItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.ActionButton.Colored.DarkActionBar" parent="Widget.Base.ActionButton">
-        <item name="android:background">?android:actionBarItemBackground</item>
-    </style>
-
-    <style name="Widget.Twidere.ActionButton.Overflow.Colored.DarkActionBar" parent="Widget.Base.ActionButton.Overflow">
-        <item name="android:background">?android:actionBarItemBackground</item>
-    </style>
 
     <style name="Animation.Twidere.Activity" parent="android:Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
@@ -69,40 +14,6 @@
         <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
         <item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
     </style>
-
-    <style name="Widget.TabPageIndicator.TabItem.Content" parent="@android:style/Widget">
-        <item name="android:gravity">center</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingTop">6dp</item>
-        <item name="android:paddingBottom">6dp</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <style name="Widget.TabPageIndicator.TabItem.TextView" parent="@android:style/Widget.DeviceDefault.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.TabPageIndicator</item>
-        <item name="android:textColor">#fff3f3f3</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="Widget.TabPageIndicator.TabItem.TextView.Dark">
-        <item name="android:textColor">#fff3f3f3</item>
-    </style>
-
-    <style name="Widget.TabPageIndicator.TabItem.TextView.Light">
-        <item name="android:textColor">#ff000000</item>
-    </style>
-
-    <style name="Widget.TabPageIndicator.TabItem.TextView.Light.DarkActionBar">
-        <item name="android:textColor">#fff3f3f3</item>
-    </style>
-
-    <style name="TextAppearance.TabPageIndicator" parent="android:TextAppearance.Small"/>
 
     <style name="Widget.CardActionButton" parent="Widget.Base.ImageButton">
         <item name="android:background">?android:selectableItemBackground</item>

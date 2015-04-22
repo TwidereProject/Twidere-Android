@@ -57,7 +57,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     private SharedPreferences mPreferences;
     private PopupMenu mPopupMenu;
     private ReadStateManager mReadStateManager;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
 
     private ParcelableStatus mSelectedStatus;
@@ -89,9 +88,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
-        String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+        String action = handler.getKeyAction("navigation", keyCode, event);
         if ("navigation.refresh".equals(action)) {
             triggerRefresh();
             return true;
@@ -109,7 +108,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final ParcelableStatus status = getAdapter().getStatus(position);
         if (status == null) return false;
         if (action == null) {
-            action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
+            action = handler.getKeyAction("status", keyCode, event);
         }
         if (action == null) return false;
         switch (action) {
@@ -137,9 +136,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(final int keyCode, final int repeatCount,
+    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
-        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     @Override
@@ -351,9 +350,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
         final ContentListScrollListener scrollListener = getScrollListener();
-        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
-        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler,
-                recyclerView, layoutManager, adapter);
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager,
+                adapter);
 
         adapter.setListener(this);
         scrollListener.setOnScrollListener(new OnScrollListener() {

@@ -61,13 +61,13 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,6 +83,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.SuperToast.Duration;
+import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
@@ -108,6 +111,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -136,24 +140,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
-public class ComposeActivity extends ThemedFragmentActivity implements LocationListener, OnMenuItemClickListener,
-        OnClickListener, OnLongClickListener, Callback {
+public class ComposeActivity extends ThemedFragmentActivity implements LocationListener,
+        OnMenuItemClickListener, OnClickListener, OnLongClickListener, Callback {
 
+    // Constants
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
     private static final String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
     private static final String EXTRA_SHOULD_SAVE_ACCOUNTS = "should_save_accounts";
     private static final String EXTRA_ORIGINAL_TEXT = "original_text";
     private static final String EXTRA_SHARE_SCREENSHOT = "share_screenshot";
 
+    // Utility classes
     private final Extractor mExtractor = new Extractor();
-    private final Rect mWindowDecorHitRect = new Rect();
     private TwidereValidator mValidator;
     private AsyncTwitterWrapper mTwitterWrapper;
     private LocationManager mLocationManager;
     private SharedPreferencesWrapper mPreferences;
-    private ParcelableLocation mRecentLocation;
     private ContentResolver mResolver;
     private AsyncTask<Object, Object, ?> mTask;
+    private SupportMenuInflater mMenuInflater;
+
+    // Views
     private GridView mMediaPreviewGrid;
     private ActionMenuView mMenuBar;
     private StatusComposeEditText mEditText;
@@ -161,15 +168,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private StatusTextCountView mSendTextCountView;
     private RecyclerView mAccountSelector;
     private View mAccountSelectorContainer;
-    private MediaPreviewAdapter mMediaPreviewAdapter;
-    private boolean mIsPossiblySensitive, mShouldSaveAccounts;
-    private boolean mImageUploaderUsed, mStatusShortenerUsed;
-    private ParcelableStatus mInReplyToStatus;
-    private ParcelableUser mMentionUser;
     private DraftItem mDraftItem;
-    private long mInReplyToStatusId;
-    private String mOriginalText;
-    private AccountIconsAdapter mAccountsAdapter;
     private ShapedImageView mProfileImageView;
     private BadgeView mCountView;
     private View mAccountSelectorButton;
@@ -177,41 +176,20 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private View mLocationContainer;
     private ActionIconView mLocationIcon;
     private TextView mLocationText;
-    private SupportMenuInflater mMenuInflater;
 
+    // Adapters
+    private MediaPreviewAdapter mMediaPreviewAdapter;
+    private AccountIconsAdapter mAccountsAdapter;
 
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        final Window window = getWindow();
-        final Rect rect = new Rect();
-        window.getDecorView().getWindowVisibleDisplayFrame(rect);
-        final View contentView = window.findViewById(android.R.id.content);
-        final int statusBarHeight = rect.top;
-        contentView.getWindowVisibleDisplayFrame(rect);
-        final int paddingTop = statusBarHeight + Utils.getActionBarHeight(this) - rect.top;
-        contentView.setPadding(contentView.getPaddingLeft(), paddingTop,
-                contentView.getPaddingRight(), contentView.getPaddingBottom());
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        ThemeUtils.wrapMenuIcon(this, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        final Window window = getWindow();
-        final View contentView = window.findViewById(android.R.id.content);
-        contentView.setPadding(contentView.getPaddingLeft(), 0,
-                contentView.getPaddingRight(), contentView.getPaddingBottom());
-    }
+    // Data fields
+    private ParcelableLocation mRecentLocation;
+    private ParcelableStatus mInReplyToStatus;
+    private ParcelableUser mMentionUser;
+    private String mOriginalText;
+    private long mInReplyToStatusId;
+    private boolean mIsPossiblySensitive, mShouldSaveAccounts;
+    private boolean mImageUploaderUsed, mStatusShortenerUsed;
+    private boolean mNavigateBackPressed;
 
     @Override
     public int getThemeColor() {
@@ -223,38 +201,23 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         return ThemeUtils.getComposeThemeResource(this);
     }
 
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        outState.putLongArray(EXTRA_ACCOUNT_IDS, mAccountsAdapter.getSelectedAccountIds());
-        outState.putParcelableArrayList(EXTRA_MEDIA, new ArrayList<Parcelable>(getMediaList()));
-        outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, mIsPossiblySensitive);
-        outState.putParcelable(EXTRA_STATUS, mInReplyToStatus);
-        outState.putLong(EXTRA_STATUS_ID, mInReplyToStatusId);
-        outState.putParcelable(EXTRA_USER, mMentionUser);
-        outState.putParcelable(EXTRA_DRAFT, mDraftItem);
-        outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, mShouldSaveAccounts);
-        outState.putString(EXTRA_ORIGINAL_TEXT, mOriginalText);
-        super.onSaveInstanceState(outState);
-    }
+    public static boolean isFinishedComposing(CharSequence text) {
+        if (!(text instanceof Spanned)) return true;
+        final Spanned spanned = (Spanned) text;
+        try {
+            final Class<?> cls = Class.forName("android.text.style.SpellCheckSpan");
+            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
+        } catch (Exception ignored) {
 
-
-    private void toggleLocation() {
-        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, !attachLocation).apply();
-        startLocationUpdateIfEnabled();
-        updateLocationState();
-        setMenu();
-        updateTextCount();
-    }
-
-    private void updateLocationState() {
-        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        if (attachLocation) {
-            mLocationIcon.setColorFilter(getCurrentThemeColor(), Mode.SRC_ATOP);
-        } else {
-            mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
-            mLocationText.setText(R.string.no_location);
         }
+        try {
+            final Class<?> cls = Class.forName("android.view.inputmethod.ComposingText");
+            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
+        } catch (Exception ignored) {
+
+        }
+//        if (spanned.getSpans(0, spanned.length(), SpanWatcher.class).length > 0) return false;
+        return true;
     }
 
     @Override
@@ -318,6 +281,32 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     }
 
     @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        outState.putLongArray(EXTRA_ACCOUNT_IDS, mAccountsAdapter.getSelectedAccountIds());
+        outState.putParcelableArrayList(EXTRA_MEDIA, new ArrayList<Parcelable>(getMediaList()));
+        outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, mIsPossiblySensitive);
+        outState.putParcelable(EXTRA_STATUS, mInReplyToStatus);
+        outState.putLong(EXTRA_STATUS_ID, mInReplyToStatusId);
+        outState.putParcelable(EXTRA_USER, mMentionUser);
+        outState.putParcelable(EXTRA_DRAFT, mDraftItem);
+        outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, mShouldSaveAccounts);
+        outState.putString(EXTRA_ORIGINAL_TEXT, mOriginalText);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mImageUploaderUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_MEDIA_UPLOADER, null));
+        mStatusShortenerUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_STATUS_SHORTENER, null));
+        startLocationUpdateIfEnabled();
+        setMenu();
+        updateTextCount();
+        final int textSize = mPreferences.getInt(KEY_TEXT_SIZE, Utils.getDefaultTextSize(this));
+        mEditText.setTextSize(textSize * 1.25f);
+    }
+
+    @Override
     protected void onStop() {
         saveAccountSelection();
         mLocationManager.removeUpdates(this);
@@ -352,42 +341,42 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         }
     }
 
-    private void setAccountSelectorVisible(boolean visible) {
-        mAccountSelectorContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        final Window window = getWindow();
+        final Rect rect = new Rect();
+        window.getDecorView().getWindowVisibleDisplayFrame(rect);
+        final View contentView = window.findViewById(android.R.id.content);
+        final int statusBarHeight = rect.top;
+        contentView.getWindowVisibleDisplayFrame(rect);
+        final int paddingTop = statusBarHeight + Utils.getActionBarHeight(this) - rect.top;
+        contentView.setPadding(contentView.getPaddingLeft(), paddingTop,
+                contentView.getPaddingRight(), contentView.getPaddingBottom());
+        return true;
     }
 
-
-    public static boolean isFinishedComposing(CharSequence text) {
-        if (!(text instanceof Spanned)) return true;
-        final Spanned spanned = (Spanned) text;
-        try {
-            final Class<?> cls = Class.forName("android.text.style.SpellCheckSpan");
-            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
-        } catch (Exception ignored) {
-
-        }
-        try {
-            final Class<?> cls = Class.forName("android.view.inputmethod.ComposingText");
-            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
-        } catch (Exception ignored) {
-
-        }
-//        if (spanned.getSpans(0, spanned.length(), SpanWatcher.class).length > 0) return false;
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        ThemeUtils.wrapMenuIcon(this, menu);
         return true;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        return false;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        final Window window = getWindow();
+        final View contentView = window.findViewById(android.R.id.content);
+        contentView.setPadding(contentView.getPaddingLeft(), 0,
+                contentView.getPaddingRight(), contentView.getPaddingBottom());
     }
 
     @Override
     public void onLocationChanged(final Location location) {
         setRecentLocation(ParcelableLocation.fromLocation(location));
-    }
-
-    private void setRecentLocation(ParcelableLocation location) {
-        if (location != null) {
-            mLocationText.setText(location.getHumanReadableString(3));
-        } else {
-            mLocationText.setText(R.string.unknown_location);
-        }
-        mRecentLocation = location;
     }
 
     @Override
@@ -397,15 +386,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     @Override
     public void onProviderEnabled(final String provider) {
-    }
-
-    @NonNull
-    @Override
-    public MenuInflater getMenuInflater() {
-        if (mMenuInflater == null) {
-            mMenuInflater = new SupportMenuInflater(this);
-        }
-        return mMenuInflater;
     }
 
     @Override
@@ -523,8 +503,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     public boolean onTouchEvent(final MotionEvent event) {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
-                getWindow().getDecorView().getHitRect(mWindowDecorHitRect);
-                if (!mWindowDecorHitRect.contains(Math.round(event.getX()), Math.round(event.getY()))) {
+                final Rect rect = new Rect();
+                getWindow().getDecorView().getHitRect(rect);
+                if (!rect.contains(Math.round(event.getX()), Math.round(event.getY()))) {
                     onBackPressed();
                     return true;
                 }
@@ -552,6 +533,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         mLocationText = (TextView) findViewById(R.id.location_text);
     }
 
+    @NonNull
+    @Override
+    public MenuInflater getMenuInflater() {
+        if (mMenuInflater == null) {
+            mMenuInflater = new SupportMenuInflater(this);
+        }
+        return mMenuInflater;
+    }
+
     public void removeAllMedia(final List<ParcelableMediaUpdate> list) {
         mMediaPreviewAdapter.removeAll(list);
         updateMediaPreview();
@@ -573,9 +563,22 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         displayNewDraftNotification(text, draftUri);
     }
 
+    public void setSelectedAccounts(ParcelableAccount... accounts) {
+        if (accounts.length == 1) {
+            mCountView.setText(null);
+            final ParcelableAccount account = accounts[0];
+            mImageLoader.displayProfileImage(mProfileImageView, account.profile_image_url);
+            mProfileImageView.setBorderColor(account.color);
+        } else {
+            mCountView.setText(String.valueOf(accounts.length));
+            mImageLoader.cancelDisplayTask(mProfileImageView);
+            mProfileImageView.setImageDrawable(null);
+            mProfileImageView.setBorderColors(Utils.getAccountColors(accounts));
+        }
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mPreferences = SharedPreferencesWrapper.getInstance(this, SHARED_PREFERENCES_NAME,
@@ -587,7 +590,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         mValidator = new TwidereValidator(this);
         mImageLoader = app.getMediaLoaderWrapper();
         setContentView(R.layout.activity_compose);
-//        setSupportProgressBarIndeterminateVisibility(false);
         setFinishOnTouchOutside(false);
         final long[] defaultAccountIds = Utils.getAccountIds(this);
         if (defaultAccountIds.length <= 0) {
@@ -698,35 +700,38 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         notifyAccountSelectionChanged();
     }
 
-    public void setSelectedAccounts(ParcelableAccount... accounts) {
-        if (accounts.length == 1) {
-            mCountView.setText(null);
-            final ParcelableAccount account = accounts[0];
-            mImageLoader.displayProfileImage(mProfileImageView, account.profile_image_url);
-            mProfileImageView.setBorderColor(account.color);
-        } else {
-            mCountView.setText(String.valueOf(accounts.length));
-            mImageLoader.cancelDisplayTask(mProfileImageView);
-            mProfileImageView.setImageDrawable(null);
-            mProfileImageView.setBorderColors(Utils.getAccountColors(accounts));
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mImageUploaderUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_MEDIA_UPLOADER, null));
-        mStatusShortenerUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_STATUS_SHORTENER, null));
-        startLocationUpdateIfEnabled();
-        setMenu();
-        updateTextCount();
-        final int textSize = mPreferences.getInt(KEY_TEXT_SIZE, Utils.getDefaultTextSize(this));
-        mEditText.setTextSize(textSize * 1.25f);
-    }
-
     @Override
     protected void onTitleChanged(final CharSequence title, final int color) {
         super.onTitleChanged(title, color);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction("navigation", keyCode, event);
+        if ("navigation.back".equals(action)) {
+            if (mEditText.length() == 0) {
+                if (!mNavigateBackPressed) {
+                    final SuperToast toast = SuperToast.create(this, getString(R.string.press_again_to_close), Duration.SHORT);
+                    toast.setOnDismissListener(new OnDismissListener() {
+                        @Override
+                        public void onDismiss(View view) {
+                            mNavigateBackPressed = false;
+                        }
+                    });
+                    toast.show();
+                    mNavigateBackPressed = true;
+                } else {
+                    onBackPressed();
+                }
+            }
+            return true;
+        }
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     private void addMedia(final ParcelableMediaUpdate media) {
@@ -749,7 +754,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         return Uri.fromFile(file);
     }
 
-
     private void displayNewDraftNotification(String text, Uri draftUri) {
         final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -771,39 +775,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 PendingIntent.getService(this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.addAction(actionBuilder.build());
         nm.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS, builder.build());
-    }
-
-    /**
-     * The Location Manager manages location providers. This code searches for
-     * the best provider of data (GPS, WiFi/cell phone tower lookup, some other
-     * mechanism) and finds the last known location.
-     */
-    private boolean startLocationUpdateIfEnabled() {
-        final LocationManager lm = mLocationManager;
-        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
-        if (!attachLocation) {
-            lm.removeUpdates(this);
-            return false;
-        }
-        final Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        final String provider = lm.getBestProvider(criteria, true);
-        if (provider != null) {
-            mLocationText.setText(R.string.getting_location);
-            lm.requestLocationUpdates(provider, 0, 0, this);
-            final Location location;
-            if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                location = lm.getLastKnownLocation(provider);
-            }
-            if (location != null) {
-                onLocationChanged(location);
-            }
-        } else {
-            Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
-        }
-        return provider != null;
     }
 
     private ParcelableMediaUpdate[] getMedia() {
@@ -975,6 +946,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         return !mMediaPreviewAdapter.isEmpty();
     }
 
+    private boolean isQuote() {
+        return INTENT_ACTION_QUOTE.equals(getIntent().getAction());
+    }
+
     private boolean isQuotingProtectedStatus() {
         if (!isQuote() || mInReplyToStatus == null) return false;
         return mInReplyToStatus.user_is_protected && mInReplyToStatus.account_id != mInReplyToStatus.user_id;
@@ -985,6 +960,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         final String action = getIntent().getAction();
         final boolean is_reply = INTENT_ACTION_REPLY.equals(action) || INTENT_ACTION_REPLY_MULTIPLE.equals(action);
         return is_reply && text.equals(mOriginalText);
+    }
+
+    private void notifyAccountSelectionChanged() {
+        final ParcelableAccount[] accounts = mAccountsAdapter.getSelectedAccounts();
+        setSelectedAccounts(accounts);
+        mEditText.setAccountId(accounts.length > 0 ? accounts[0].account_id : Utils.getDefaultAccountId(this));
+//        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -1015,6 +997,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mAccountsAdapter.getSelectedAccountIds(), ',', false));
         editor.apply();
+    }
+
+    private void setAccountSelectorVisible(boolean visible) {
+        mAccountSelectorContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private boolean setComposeTitle(final Intent intent) {
@@ -1080,11 +1066,72 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 //        mProgress.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    private void setRecentLocation(ParcelableLocation location) {
+        if (location != null) {
+            mLocationText.setText(location.getHumanReadableString(3));
+        } else {
+            mLocationText.setText(R.string.unknown_location);
+        }
+        mRecentLocation = location;
+    }
+
+    /**
+     * The Location Manager manages location providers. This code searches for
+     * the best provider of data (GPS, WiFi/cell phone tower lookup, some other
+     * mechanism) and finds the last known location.
+     */
+    private boolean startLocationUpdateIfEnabled() {
+        final LocationManager lm = mLocationManager;
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
+        if (!attachLocation) {
+            lm.removeUpdates(this);
+            return false;
+        }
+        final Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        final String provider = lm.getBestProvider(criteria, true);
+        if (provider != null) {
+            mLocationText.setText(R.string.getting_location);
+            lm.requestLocationUpdates(provider, 0, 0, this);
+            final Location location;
+            if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            } else {
+                location = lm.getLastKnownLocation(provider);
+            }
+            if (location != null) {
+                onLocationChanged(location);
+            }
+        } else {
+            Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
+        }
+        return provider != null;
+    }
+
     private boolean takePhoto() {
         final Intent intent = new Intent(this, ImagePickerActivity.class);
         intent.setAction(INTENT_ACTION_TAKE_PHOTO);
         startActivityForResult(intent, REQUEST_TAKE_PHOTO);
         return true;
+    }
+
+    private void toggleLocation() {
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, !attachLocation).apply();
+        startLocationUpdateIfEnabled();
+        updateLocationState();
+        setMenu();
+        updateTextCount();
+    }
+
+    private void updateLocationState() {
+        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        if (attachLocation) {
+            mLocationIcon.setColorFilter(getCurrentThemeColor(), Mode.SRC_ATOP);
+        } else {
+            mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
+            mLocationText.setText(R.string.no_location);
+        }
     }
 
     private void updateMediaPreview() {
@@ -1153,10 +1200,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             setResult(Activity.RESULT_OK);
             finish();
         }
-    }
-
-    private boolean isQuote() {
-        return INTENT_ACTION_QUOTE.equals(getIntent().getAction());
     }
 
     private void updateTextCount() {
@@ -1230,6 +1273,16 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             return result;
         }
 
+        public void setSelectedAccountIds(long... accountIds) {
+            mSelection.clear();
+            if (accountIds != null) {
+                for (long accountId : accountIds) {
+                    mSelection.put(accountId, true);
+                }
+            }
+            notifyDataSetChanged();
+        }
+
         @NonNull
         public ParcelableAccount[] getSelectedAccounts() {
             if (mAccounts == null) return new ParcelableAccount[0];
@@ -1247,16 +1300,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
         public boolean isSelectionEmpty() {
             return getSelectedAccountIds().length == 0;
-        }
-
-        public void setSelectedAccountIds(long... accountIds) {
-            mSelection.clear();
-            if (accountIds != null) {
-                for (long accountId : accountIds) {
-                    mSelection.put(accountId, true);
-                }
-            }
-            notifyDataSetChanged();
         }
 
         @Override
@@ -1289,13 +1332,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             mActivity.notifyAccountSelectionChanged();
             notifyDataSetChanged();
         }
-    }
-
-    private void notifyAccountSelectionChanged() {
-        final ParcelableAccount[] accounts = mAccountsAdapter.getSelectedAccounts();
-        setSelectedAccounts(accounts);
-        mEditText.setAccountId(accounts.length > 0 ? accounts[0].account_id : Utils.getDefaultAccountId(this));
-//        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
     }
 
     private static class AddBitmapTask extends AddMediaTask {

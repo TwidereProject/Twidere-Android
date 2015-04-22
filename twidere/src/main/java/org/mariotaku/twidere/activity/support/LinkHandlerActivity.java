@@ -43,7 +43,6 @@ import android.view.WindowManager.LayoutParams;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -68,7 +67,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
 
     private MultiSelectEventHandler mMultiSelectHandler;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
 
     private TintedStatusFrameLayout mMainContent;
 
@@ -115,15 +113,15 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
-        return mKeyboardShortcutsHandler.handleKey(this, null, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
+        return handler.handleKey(this, null, keyCode, event);
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutRepeat(keyCode, repeatCount, event)) return true;
-        return super.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     @Override
@@ -135,7 +133,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final int linkId = matchLinkId(data);
         requestWindowFeatures(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
-        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -209,18 +206,21 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         return !(getCurrentVisibleFragment() instanceof UserFragment);
     }
 
-    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode,
+                                                         int repeatCount, @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode,
+                    repeatCount, event);
         }
         return false;
     }
 
-    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode,
+                                                         @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
         }
         return false;
     }

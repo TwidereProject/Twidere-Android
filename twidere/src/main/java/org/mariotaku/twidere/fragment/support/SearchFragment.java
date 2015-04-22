@@ -70,8 +70,6 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     private SupportTabsAdapter mPagerAdapter;
     private TabPagerIndicator mPagerIndicator;
 
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
-
     private int mControlBarOffsetPixels;
     private int mControlBarHeight;
 
@@ -108,9 +106,9 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutSingle(keyCode, event)) return true;
-        final String action = mKeyboardShortcutsHandler.getKeyAction("navigation", keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
+        final String action = handler.getKeyAction("navigation", keyCode, event);
         if (action != null) {
             switch (action) {
                 case "navigation.previous_tab": {
@@ -129,12 +127,12 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
                 }
             }
         }
-        return mKeyboardShortcutsHandler.handleKey(getActivity(), null, keyCode, event);
+        return handler.handleKey(getActivity(), null, keyCode, event);
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        return handleFragmentKeyboardShortcutRepeat(keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     public void hideIndicator() {
@@ -160,7 +158,6 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         final Bundle args = getArguments();
         final FragmentActivity activity = getActivity();
         final TwidereApplication app = TwidereApplication.getInstance(activity);
-        mKeyboardShortcutsHandler = app.getKeyboardShortcutsHandler();
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
         mPagerAdapter.addTab(StatusesSearchFragment.class, args, getString(R.string.statuses), R.drawable.ic_action_twitter, 0, null);
         mPagerAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1, null);
@@ -311,18 +308,18 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         return getCurrentVisibleFragment();
     }
 
-    private boolean handleFragmentKeyboardShortcutRepeat(int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
         }
         return false;
     }
 
-    private boolean handleFragmentKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
         }
         return false;
     }

@@ -151,27 +151,33 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 public class StatusFragment extends BaseSupportFragment implements LoaderCallbacks<SingleResponse<ParcelableStatus>>,
         OnMediaClickListener, StatusAdapterListener, KeyboardShortcutCallback {
 
+    // Constants
     private static final int LOADER_ID_DETAIL_STATUS = 1;
     private static final int LOADER_ID_STATUS_REPLIES = 2;
     private static final int STATE_LOADED = 1;
     private static final int STATE_LOADING = 2;
     private static final int STATE_ERROR = 3;
 
+    // Views
     private View mStatusContent;
     private View mProgressContainer;
     private View mErrorContainer;
+    private RecyclerView mRecyclerView;
 
     private DividerItemDecoration mItemDecoration;
-    private RecyclerView mRecyclerView;
+    private PopupMenu mPopupMenu;
+
     private StatusAdapter mStatusAdapter;
     private LinearLayoutManager mLayoutManager;
 
     private LoadConversationTask mLoadConversationTask;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
 
+    // Data fields
     private boolean mRepliesLoaderInitialized;
+    private ParcelableStatus mSelectedStatus;
 
+    // Listeners
     private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
         @Override
         public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
@@ -200,8 +206,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         }
     };
-    private PopupMenu mPopupMenu;
-    private ParcelableStatus mSelectedStatus;
     private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -277,9 +281,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = TwidereApplication.getInstance(activity);
-        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
-        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler,
-                mRecyclerView, mLayoutManager, mStatusAdapter);
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mRecyclerView, mLayoutManager,
+                mStatusAdapter);
 
         setState(STATE_LOADING);
 
@@ -412,7 +415,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
         final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, mLayoutManager.getFocusedChild());
         final int position;
@@ -424,7 +427,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (position == -1) return false;
         final ParcelableStatus status = getAdapter().getStatus(position);
         if (status == null) return false;
-        String action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
+        String action = handler.getKeyAction("status", keyCode, event);
         if (action == null) return false;
         switch (action) {
             case "status.reply": {
@@ -451,9 +454,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(final int keyCode, final int repeatCount,
+    public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
-        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode,
+                repeatCount, event);
     }
 
 

@@ -109,6 +109,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
         navigation.addPreference(makePreferences("navigation", "navigation.previous_tab"));
         navigation.addPreference(makePreferences("navigation", "navigation.next_tab"));
         navigation.addPreference(makePreferences("navigation", "navigation.refresh"));
+        navigation.addPreference(makePreferences("navigation", "navigation.back"));
         final PreferenceCategory statuses = makeAndAddCategory(getString(R.string.statuses));
         statuses.addPreference(makePreferences("status", "status.reply"));
         statuses.addPreference(makePreferences("status", "status.retweet"));

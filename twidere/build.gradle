@@ -81,6 +81,7 @@ dependencies {
     compile 'com.pnikosis:materialish-progress:1.5'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.5'
+    compile 'com.github.johnpersano:supertoasts:1.3.4@aar'
     compile 'com.github.mariotaku:MessageBubbleView:1.0'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.mariotaku:SlidingMenu:1.3'
