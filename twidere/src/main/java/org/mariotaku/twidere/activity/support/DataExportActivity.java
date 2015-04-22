@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DataExportActivity extends BaseActionBarActivity implements FileSelectorDialogFragment.Callback,
+public class DataExportActivity extends BaseAppCompatActivity implements FileSelectorDialogFragment.Callback,
 		DataExportImportTypeSelectorDialogFragment.Callback {
 
 	private ExportSettingsTask mTask;

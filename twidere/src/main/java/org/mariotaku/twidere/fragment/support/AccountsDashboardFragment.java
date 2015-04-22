@@ -97,6 +97,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+import org.mariotaku.twidere.util.ListViewUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
@@ -178,7 +179,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             }
         }
         final ListView listView = getListView();
-        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        final int firstVisiblePosition = ListViewUtils.getFirstFullyVisiblePosition(listView);
         final int selectedItem = listView.getSelectedItemPosition();
         final int count = listView.getCount();
         int resultPosition;
@@ -206,7 +207,7 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             case REQUEST_SETTINGS: {
                 if (data == null) return;
                 final FragmentActivity activity = getActivity();
-                if (data.getBooleanExtra(EXTRA_RESTART_ACTIVITY, false) && activity instanceof IThemedActivity) {
+                if (data.getBooleanExtra(EXTRA_CHANGED, false) && activity instanceof IThemedActivity) {
                     ((IThemedActivity) activity).restart();
                 }
                 return;

@@ -70,7 +70,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.ImagePickerActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
@@ -195,7 +195,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final BaseActionBarActivity activity = (BaseActionBarActivity) getActivity();
+        final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mImageLoader = TwidereApplication.getInstance(activity).getMediaLoaderWrapper();
@@ -681,7 +681,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     }
 
     private void updateActionBar() {
-        final BaseActionBarActivity activity = (BaseActionBarActivity) getActivity();
+        final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
         final ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar == null) return;
         actionBar.setDisplayOptions(mRecipient != null ? ActionBar.DISPLAY_SHOW_TITLE : ActionBar.DISPLAY_SHOW_CUSTOM,

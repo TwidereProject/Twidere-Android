@@ -37,7 +37,7 @@ import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 /**
  * Created by mariotaku on 15/4/17.
  */
-public class BaseDialogWhenLargeActivity extends BaseActionBarActivity {
+public class BaseDialogWhenLargeActivity extends BaseAppCompatActivity {
 
     private TintedStatusFrameLayout mMainContent;
 

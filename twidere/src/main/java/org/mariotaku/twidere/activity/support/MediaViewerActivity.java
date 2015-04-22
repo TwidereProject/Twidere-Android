@@ -86,7 +86,7 @@ import pl.droidsonroids.gif.GifTextureView;
 import pl.droidsonroids.gif.InputSource.FileSource;
 
 
-public final class MediaViewerActivity extends ThemedActionBarActivity implements Constants, OnPageChangeListener {
+public final class MediaViewerActivity extends ThemedAppCompatActivity implements Constants, OnPageChangeListener {
 
     private static final String EXTRA_LOOP = "loop";
 

@@ -32,7 +32,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -102,7 +102,7 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
 
     public void setProgressBarIndeterminateVisibility(final boolean visible) {
         final Activity activity = getActivity();
-        if (activity instanceof BaseActionBarActivity) {
+        if (activity instanceof BaseAppCompatActivity) {
             activity.setProgressBarIndeterminateVisibility(visible);
         }
     }

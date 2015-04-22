@@ -217,7 +217,7 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/settings"
-            android:theme="@style/Theme.Blank"
+            android:theme="@style/Theme.Twidere.Dark"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
@@ -458,10 +458,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.CustomTabsActivity"
-            android:label="@string/tabs"
-            android:theme="@style/Theme.Blank"/>
         <activity
             android:name=".activity.support.CustomTabEditorActivity"
             android:exported="false"

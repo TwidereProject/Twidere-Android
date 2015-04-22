@@ -35,12 +35,11 @@ public class UserAgentUtils {
     // You may uncomment next line if using Android Annotations library, otherwise just be sure to run it in on the UI thread
     public static String getDefaultUserAgentString(Context context) {
         if (Looper.myLooper() != Looper.getMainLooper()) throw new IllegalStateException();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return NewApiWrapper.getDefaultUserAgent(context);
-        }
-
         try {
-            Constructor<WebSettings> constructor = WebSettings.class.getDeclaredConstructor(Context.class, WebView.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                return NewApiWrapper.getDefaultUserAgent(context);
+            }
+            final Constructor<WebSettings> constructor = WebSettings.class.getDeclaredConstructor(Context.class, WebView.class);
             constructor.setAccessible(true);
             try {
                 WebSettings settings = constructor.newInstance(context, null);

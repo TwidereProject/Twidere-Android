@@ -57,7 +57,7 @@ import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.DirectMessageEntry;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.MessageEntriesAdapterListener;
@@ -134,8 +134,8 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     @Override
     public void setControlVisible(boolean visible) {
         final FragmentActivity activity = getActivity();
-        if (activity instanceof BaseActionBarActivity) {
-            ((BaseActionBarActivity) activity).setControlBarVisibleAnimate(visible);
+        if (activity instanceof BaseAppCompatActivity) {
+            ((BaseAppCompatActivity) activity).setControlBarVisibleAnimate(visible);
         }
     }
 

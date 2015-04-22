@@ -52,11 +52,6 @@ public final class ViewUtils {
         }
     }
 
-    public static void setBackgroundTintList(final View view, final ColorStateList list) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ViewAccessorL.setBackgroundTintList(view, list);
-    }
-
     public static void setButtonTintList(CompoundButton view, ColorStateList list) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         ViewAccessorL.setButtonTintList(view, list);
@@ -140,10 +135,6 @@ public final class ViewUtils {
             view.setOutlineProvider(new ViewOutlineProviderL(outlineProvider));
         }
 
-        static void setBackgroundTintList(final View view, final ColorStateList list) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-            view.setBackgroundTintList(list);
-        }
 
         static void setButtonTintList(final CompoundButton view, final ColorStateList list) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;

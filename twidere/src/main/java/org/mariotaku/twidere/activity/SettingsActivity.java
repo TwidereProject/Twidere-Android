@@ -19,18 +19,18 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.WindowCompat;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +52,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.DataExportActivity;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.holder.ViewListHolder;
 
@@ -63,37 +62,77 @@ public class SettingsActivity extends BasePreferenceActivity {
 
     private static long HEADER_ID_RESTORE_ICON = 1001;
 
-    private SharedPreferences mPreferences;
-    private PackageManager mPackageManager;
-
     private HeaderAdapter mAdapter;
-
-    private int mCurrentThemeColor, mThemeBackgroundAlpha;
-    private boolean mCompactCards;
-
-    private String mTheme;
-    private String mThemeFontFamily;
-    private String mThemeBackground;
 
     private boolean mShouldNotifyChange;
 
-    public static void setShouldNotifyChange(Activity activity) {
-        if (!(activity instanceof SettingsActivity)) return;
-        ((SettingsActivity) activity).setShouldNotifyChange(true);
-    }
-
-    private void setShouldNotifyChange(boolean notify) {
-        mShouldNotifyChange = notify;
+    public HeaderAdapter getHeaderAdapter() {
+        if (mAdapter != null) return mAdapter;
+        return mAdapter = new HeaderAdapter(this);
     }
 
     @Override
-    public void finish() {
-        if (shouldNotifyThemeChange()) {
-            final Intent data = new Intent();
-            data.putExtra(EXTRA_RESTART_ACTIVITY, true);
-            setResult(RESULT_OK, data);
+    public int getThemeColor() {
+        return ThemeUtils.getUserAccentColor(this);
+    }
+
+    @Override
+    public int getThemeResourceId() {
+        return ThemeUtils.getThemeResource(this);
+    }
+
+    @Override
+    public void onBuildHeaders(final List<Header> target) {
+        loadHeadersFromResource(R.xml.settings_headers, target);
+        final HeaderAdapter adapter = getHeaderAdapter();
+        adapter.clear();
+        adapter.addAll(target);
+        final ComponentName main = new ComponentName(this, MainActivity.class);
+        final PackageManager pm = getPackageManager();
+        if (pm.getComponentEnabledSetting(main) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            final Header restoreIconHeader = new Header();
+            restoreIconHeader.titleRes = R.string.want_old_icon_back;
+            restoreIconHeader.title = getString(restoreIconHeader.titleRes);
+            restoreIconHeader.id = HEADER_ID_RESTORE_ICON;
+            restoreIconHeader.intent = getIntent();
+            adapter.add(restoreIconHeader);
         }
-        super.finish();
+    }
+
+    @Override
+    protected boolean isValidFragment(final String fragmentName) {
+        final Class<?> cls;
+        try {
+            cls = Class.forName(fragmentName);
+        } catch (final ClassNotFoundException e) {
+            return false;
+        }
+        return Fragment.class.isAssignableFrom(cls);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null && data.getBooleanExtra(EXTRA_CHANGED, false)) {
+            setShouldNotifyChange(true);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onHeaderClick(@NonNull final Header header, final int position) {
+        if (header.id == HEADER_ID_RESTORE_ICON) {
+            final ComponentName main = new ComponentName(this, MainActivity.class);
+            final ComponentName main2 = new ComponentName(this, MainHondaJOJOActivity.class);
+            final PackageManager pm = getPackageManager();
+            pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+            pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            Toast.makeText(this, R.string.icon_restored_message, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        super.onHeaderClick(header, position);
     }
 
     /**
@@ -110,34 +149,16 @@ public class SettingsActivity extends BasePreferenceActivity {
         }
     }
 
-    public HeaderAdapter getHeaderAdapter() {
-        if (mAdapter != null) return mAdapter;
-        return mAdapter = new HeaderAdapter(this);
+    @Override
+    public void switchToHeader(final String fragmentName, final Bundle args) {
+        if (fragmentName == null) return;
+        super.switchToHeader(fragmentName, args);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && data != null && data.getBooleanExtra(EXTRA_RESTART_ACTIVITY, false)) {
-            setShouldNotifyChange(true);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onBuildHeaders(final List<Header> target) {
-        loadHeadersFromResource(R.xml.settings_headers, target);
-        final HeaderAdapter adapter = getHeaderAdapter();
-        adapter.clear();
-        adapter.addAll(target);
-        final ComponentName main = new ComponentName(this, MainActivity.class);
-        if (mPackageManager.getComponentEnabledSetting(main) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            final Header restoreIconHeader = new Header();
-            restoreIconHeader.titleRes = R.string.want_old_icon_back;
-            restoreIconHeader.title = getString(restoreIconHeader.titleRes);
-            restoreIconHeader.id = HEADER_ID_RESTORE_ICON;
-            restoreIconHeader.intent = getIntent();
-            adapter.add(restoreIconHeader);
-        }
+    public void switchToHeader(@NonNull final Header header) {
+        if (header.fragment == null && header.intent == null) return;
+        super.switchToHeader(header);
     }
 
     @Override
@@ -145,22 +166,6 @@ public class SettingsActivity extends BasePreferenceActivity {
         if (getIntent().getStringExtra(EXTRA_SHOW_FRAGMENT) != null) return false;
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
-    }
-
-    @Override
-    public void onHeaderClick(@NonNull final Header header, final int position) {
-        if (header.id == HEADER_ID_RESTORE_ICON) {
-            final ComponentName main = new ComponentName(this, MainActivity.class);
-            final ComponentName main2 = new ComponentName(this, MainHondaJOJOActivity.class);
-            mPackageManager.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-            mPackageManager.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
-            Toast.makeText(this, R.string.icon_restored_message, Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-        super.onHeaderClick(header, position);
     }
 
     @Override
@@ -185,6 +190,16 @@ public class SettingsActivity extends BasePreferenceActivity {
     }
 
     @Override
+    public void finish() {
+        if (shouldNotifyChange()) {
+            final Intent data = new Intent();
+            data.putExtra(EXTRA_CHANGED, true);
+            setResult(RESULT_OK, data);
+        }
+        super.finish();
+    }
+
+    @Override
     public void setListAdapter(final ListAdapter adapter) {
         if (adapter == null) {
             super.setListAdapter(null);
@@ -193,42 +208,17 @@ public class SettingsActivity extends BasePreferenceActivity {
         }
     }
 
-    @Override
-    public void switchToHeader(@NonNull final Header header) {
-        if (header.fragment == null && header.intent == null) return;
-        super.switchToHeader(header);
-    }
-
-    @Override
-    public void switchToHeader(final String fragmentName, final Bundle args) {
-        if (fragmentName == null) return;
-        super.switchToHeader(fragmentName, args);
-    }
-
-    @Override
-    protected boolean isValidFragment(final String fragmentName) {
-        final Class<?> cls;
-        try {
-            cls = Class.forName(fragmentName);
-        } catch (final ClassNotFoundException e) {
-            return false;
-        }
-        return Fragment.class.isAssignableFrom(cls);
+    public static void setShouldNotifyChange(Activity activity) {
+        if (!(activity instanceof SettingsActivity)) return;
+        ((SettingsActivity) activity).setShouldNotifyChange(true);
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        mPackageManager = getPackageManager();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        mCompactCards = mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
-        mTheme = mPreferences.getString(KEY_THEME, DEFAULT_THEME);
-        mThemeBackground = mPreferences.getString(KEY_THEME_BACKGROUND, DEFAULT_THEME_BACKGROUND);
-        mThemeBackgroundAlpha = mPreferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA);
-        mThemeFontFamily = mPreferences.getString(KEY_THEME_FONT_FAMILY, DEFAULT_THEME_FONT_FAMILY);
-        mCurrentThemeColor = ThemeUtils.getUserAccentColor(this);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setIntent(getIntent().addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -255,14 +245,12 @@ public class SettingsActivity extends BasePreferenceActivity {
         }
     }
 
-    private boolean shouldNotifyThemeChange() {
-        if (mShouldNotifyChange) return true;
-        return !CompareUtils.objectEquals(mTheme, mPreferences.getString(KEY_THEME, DEFAULT_THEME))
-                || !CompareUtils.objectEquals(mThemeFontFamily, mPreferences.getString(KEY_THEME_FONT_FAMILY, DEFAULT_THEME_FONT_FAMILY))
-                || !CompareUtils.objectEquals(mThemeBackground, mPreferences.getString(KEY_THEME_BACKGROUND, DEFAULT_THEME_BACKGROUND))
-                || mCurrentThemeColor != ThemeUtils.getUserAccentColor(this)
-                || mThemeBackgroundAlpha != mPreferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA)
-                || mCompactCards != mPreferences.getBoolean(KEY_COMPACT_CARDS, false);
+    private void setShouldNotifyChange(boolean notify) {
+        mShouldNotifyChange = notify;
+    }
+
+    private boolean shouldNotifyChange() {
+        return mShouldNotifyChange;
     }
 
     private static class HeaderAdapter extends BaseAdapter {
@@ -295,47 +283,9 @@ public class SettingsActivity extends BasePreferenceActivity {
             notifyDataSetChanged();
         }
 
-        @Override
-        public boolean areAllItemsEnabled() {
-            return false;
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            updateCategoriesInfo();
-            super.notifyDataSetChanged();
-        }
-
-        private void updateCategoriesInfo() {
-            mFirstItemIsCategory = !mHeaders.isEmpty()
-                    && getHeaderType(mHeaders.get(0)) == HEADER_TYPE_CATEGORY;
-            mCategoriesCount = getCategoriesCount(0, mHeaders.size());
-        }
-
-        private int getCategoriesCount(final int start, final int end) {
-            int categoriesCount = 0;
-            for (int i = start; i < end; i++) {
-                if (getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
-                    categoriesCount++;
-                }
-            }
-            return categoriesCount;
-        }
-
         public void clear() {
             mHeaders.clear();
             notifyDataSetChanged();
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 3;
-        }
-
-        @Override
-        public int getItemViewType(final int position) {
-            final Header header = getItem(position);
-            return getHeaderType(header);
         }
 
         @Override
@@ -386,6 +336,33 @@ public class SettingsActivity extends BasePreferenceActivity {
             return view;
         }
 
+        @Override
+        public void notifyDataSetChanged() {
+            updateCategoriesInfo();
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(final int position) {
+            return getItemViewType(position) == HEADER_TYPE_NORMAL;
+        }
+
+        @Override
+        public int getItemViewType(final int position) {
+            final Header header = getItem(position);
+            return getHeaderType(header);
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 3;
+        }
+
         private void bindCategoryHeader(View view, int position, Header header) {
             final TextView title = (TextView) view.findViewById(android.R.id.title);
             if (!TextUtils.isEmpty(header.title)) {
@@ -428,6 +405,26 @@ public class SettingsActivity extends BasePreferenceActivity {
             }
         }
 
+        private int getCategoriesCount(final int start, final int end) {
+            int categoriesCount = 0;
+            for (int i = start; i < end; i++) {
+                if (getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
+                    categoriesCount++;
+                }
+            }
+            return categoriesCount;
+        }
+
+        private static int getHeaderType(final Header header) {
+            if (header.fragment != null || header.intent != null)
+                return HEADER_TYPE_NORMAL;
+            else if (header.title != null || header.titleRes != 0)
+                return HEADER_TYPE_CATEGORY;
+            else
+                return HEADER_TYPE_SPACE;
+
+        }
+
         private View inflateItemView(int viewType, ViewGroup parent) {
             final int layoutRes;
             switch (viewType) {
@@ -447,19 +444,10 @@ public class SettingsActivity extends BasePreferenceActivity {
             return mInflater.inflate(layoutRes, parent, false);
         }
 
-        @Override
-        public boolean isEnabled(final int position) {
-            return getItemViewType(position) == HEADER_TYPE_NORMAL;
-        }
-
-        private static int getHeaderType(final Header header) {
-            if (header.fragment != null || header.intent != null)
-                return HEADER_TYPE_NORMAL;
-            else if (header.title != null || header.titleRes != 0)
-                return HEADER_TYPE_CATEGORY;
-            else
-                return HEADER_TYPE_SPACE;
-
+        private void updateCategoriesInfo() {
+            mFirstItemIsCategory = !mHeaders.isEmpty()
+                    && getHeaderType(mHeaders.get(0)) == HEADER_TYPE_CATEGORY;
+            mCategoriesCount = getCategoriesCount(0, mHeaders.size());
         }
 
         private static class HeaderViewHolder extends ViewListHolder {

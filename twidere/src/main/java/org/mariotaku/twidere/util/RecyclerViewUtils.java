@@ -42,11 +42,7 @@ public class RecyclerViewUtils {
     public static void focusNavigate(RecyclerView recyclerView, LinearLayoutManager layoutManager, int currentFocus, int direction) {
         if (direction == 0) return;
         if (currentFocus < 0) {
-            final int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-            final View firstVisibleView = layoutManager.findViewByPosition(firstVisibleItemPosition);
-            if (firstVisibleView != null) {
-                firstVisibleView.requestFocus();
-            }
+            focusFallback(layoutManager);
         } else {
             final View view;
             if (direction > 0 && currentFocus == layoutManager.findLastVisibleItemPosition()) {
@@ -68,8 +64,19 @@ public class RecyclerViewUtils {
             }
             if (viewToFocus == null) return;
             final int nextPos = layoutManager.getPosition(viewToFocus);
-            if (nextPos < 0 || (nextPos - currentFocus) * direction < 0) return;
+            if (nextPos < 0 || (nextPos - currentFocus) * direction < 0) {
+                focusFallback(layoutManager);
+                return;
+            }
             viewToFocus.requestFocus();
+        }
+    }
+
+    private static void focusFallback(LinearLayoutManager layoutManager) {
+        final int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+        final View firstVisibleView = layoutManager.findViewByPosition(firstVisibleItemPosition);
+        if (firstVisibleView != null) {
+            firstVisibleView.requestFocus();
         }
     }
 }

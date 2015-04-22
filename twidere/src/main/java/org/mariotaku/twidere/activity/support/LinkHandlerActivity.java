@@ -62,7 +62,7 @@ import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
 
-public class LinkHandlerActivity extends BaseActionBarActivity implements SystemWindowsInsetsCallback,
+public class LinkHandlerActivity extends BaseAppCompatActivity implements SystemWindowsInsetsCallback,
         IControlBarActivity, SupportFragmentCallback {
 
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);

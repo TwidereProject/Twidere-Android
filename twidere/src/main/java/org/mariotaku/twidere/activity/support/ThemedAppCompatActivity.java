@@ -22,7 +22,7 @@ package org.mariotaku.twidere.activity.support;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -34,9 +34,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
-import static org.mariotaku.twidere.util.Utils.restartActivity;
-
-public abstract class ThemedActionBarActivity extends ActionBarActivity implements Constants, IThemedActivity {
+public abstract class ThemedAppCompatActivity extends AppCompatActivity implements Constants, IThemedActivity {
 
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
     @ShapeStyle
@@ -80,7 +78,7 @@ public abstract class ThemedActionBarActivity extends ActionBarActivity implemen
 
     @Override
     public final void restart() {
-        restartActivity(this);
+        Utils.restartActivity(this);
     }
 
     @Override

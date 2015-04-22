@@ -33,7 +33,7 @@ import com.twitter.Extractor;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.menu.AccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -64,13 +64,13 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
 
     private ActionMode mActionMode;
 
-    private final BaseActionBarActivity mActivity;
+    private final BaseAppCompatActivity mActivity;
 
     private AccountActionProvider mAccountActionProvider;
 
     public static final int MENU_GROUP = 201;
 
-    public MultiSelectEventHandler(final BaseActionBarActivity activity) {
+    public MultiSelectEventHandler(final BaseAppCompatActivity activity) {
         mActivity = activity;
     }
 

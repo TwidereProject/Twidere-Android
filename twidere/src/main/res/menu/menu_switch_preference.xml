@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:ignore="AppCompatResource">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/toggle"
-        android:actionLayout="@layout/action_item_switch"
-        android:showAsAction="always"
+        app:actionLayout="@layout/action_item_switch"
+        app:showAsAction="always"
         android:title="@string/toggle"/>
 
 </menu>

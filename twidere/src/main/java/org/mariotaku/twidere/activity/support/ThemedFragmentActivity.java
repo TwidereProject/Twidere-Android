@@ -37,8 +37,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
-import static org.mariotaku.twidere.util.Utils.restartActivity;
-
 public abstract class ThemedFragmentActivity extends FragmentActivity implements Constants, IThemedActivity {
 
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
@@ -83,7 +81,7 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
 
     @Override
     public final void restart() {
-        restartActivity(this);
+        Utils.restartActivity(this);
     }
 
     @Override

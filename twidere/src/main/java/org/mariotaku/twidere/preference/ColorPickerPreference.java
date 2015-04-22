@@ -35,7 +35,7 @@ import android.widget.ImageView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ColorUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 
 import me.uucky.colorpicker.ColorPickerDialog;
 
@@ -64,7 +64,7 @@ public class ColorPickerPreference extends DialogPreference implements DialogInt
     protected void onBindView(@NonNull final View view) {
         super.onBindView(view);
         final ImageView imageView = (ImageView) view.findViewById(R.id.color);
-        imageView.setImageBitmap(ColorUtils.getColorPreviewBitmap(getContext(), getValue(), false));
+        imageView.setImageBitmap(TwidereColorUtils.getColorPreviewBitmap(getContext(), getValue(), false));
     }
 
     @Override

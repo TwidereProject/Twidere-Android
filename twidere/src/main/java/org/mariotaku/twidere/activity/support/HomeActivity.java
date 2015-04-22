@@ -86,7 +86,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ColorUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -129,7 +129,7 @@ import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 import static org.mariotaku.twidere.util.Utils.openSearch;
 import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
-public class HomeActivity extends BaseActionBarActivity implements OnClickListener, OnPageChangeListener,
+public class HomeActivity extends BaseAppCompatActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, OnOpenedListener, OnClosedListener, OnLongClickListener {
 
     private final Handler mHandler = new Handler();
@@ -818,7 +818,7 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
             mColorStatusFrameLayout.setColor(getResources().getColor(R.color.background_color_action_bar_dark), actionBarAlpha);
             mColorStatusFrameLayout.setFactor(1);
         } else {
-            final int contrastColor = ColorUtils.getContrastYIQ(themeColor, 192);
+            final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
             homeActionButton.setButtonColor(themeColor);
             homeActionButton.setIconColor(contrastColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(contrastColor);

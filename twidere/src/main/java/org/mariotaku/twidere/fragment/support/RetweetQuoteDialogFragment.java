@@ -92,6 +92,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
+        view.findViewById(R.id.item_content).setFocusable(false);
 
         return builder.create();
     }

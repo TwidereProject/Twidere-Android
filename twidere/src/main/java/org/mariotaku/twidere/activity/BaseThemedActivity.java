@@ -28,8 +28,6 @@ import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 
-import static org.mariotaku.twidere.util.Utils.restartActivity;
-
 public abstract class BaseThemedActivity extends Activity implements IThemedActivity {
 
     private int mCurrentThemeResource;
@@ -76,7 +74,7 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
 
     @Override
     public final void restart() {
-        restartActivity(this);
+        Utils.restartActivity(this);
     }
 
     protected final boolean isThemeChanged() {

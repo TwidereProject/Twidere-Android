@@ -30,7 +30,7 @@ import android.graphics.Rect;
 /**
  * Created by mariotaku on 15/1/8.
  */
-public class ColorUtils {
+public class TwidereColorUtils {
 
     public static Bitmap getColorPreviewBitmap(final Context context, final int color, final boolean border) {
         if (context == null) return null;

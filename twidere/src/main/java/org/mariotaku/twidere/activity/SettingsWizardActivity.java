@@ -34,6 +34,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ import org.mariotaku.twidere.adapter.TabsAdapter;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
+import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
@@ -370,7 +372,10 @@ public class SettingsWizardActivity extends Activity implements Constants {
         public boolean onPreferenceClick(final Preference preference) {
             final String key = preference.getKey();
             if (WIZARD_PREFERENCE_KEY_EDIT_CUSTOM_TABS.equals(key)) {
-                startActivityForResult(new Intent(getActivity(), CustomTabsActivity.class), REQUEST_CUSTOM_TABS);
+                final Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                intent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
+                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs);
+                startActivityForResult(intent, REQUEST_CUSTOM_TABS);
             } else if (WIZARD_PREFERENCE_KEY_USE_DEFAULTS.equals(key)) {
                 applyInitialTabSettings();
             }

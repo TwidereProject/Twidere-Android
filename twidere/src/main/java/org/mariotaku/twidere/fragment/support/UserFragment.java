@@ -89,7 +89,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
-import org.mariotaku.twidere.activity.support.ThemedActionBarActivity;
+import org.mariotaku.twidere.activity.support.ThemedAppCompatActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
@@ -109,7 +109,7 @@ import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ColorUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -167,7 +167,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private static final String TAB_TYPE_MEDIA = "media";
     private static final String TAB_TYPE_FAVORITES = "favorites";
 
-    private MediaLoaderWrapper mProfileImageLoader;
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
@@ -193,12 +192,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private TextView mPagesErrorText;
     private View mProfileNameBackground;
     private View mProfileDetailsContainer;
-    private Relationship mRelationship;
 
+    private MediaLoaderWrapper mProfileImageLoader;
     private SupportTabsAdapter mPagerAdapter;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
 
-    private ParcelableUser mUser = null;
+    private ParcelableUser mUser;
+    private Relationship mRelationship;
     private Locale mLocale;
     private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
     private int mBannerWidth;
@@ -1454,7 +1454,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             mActionBarBackground.setOutlineAlphaFactor(tabOutlineAlphaFactor);
 
-            final ThemedActionBarActivity activity = (ThemedActionBarActivity) getActivity();
+            final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);
@@ -1465,7 +1465,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final int themeId = activity.getCurrentThemeResourceId();
             if (ThemeUtils.isDarkTheme(themeId)) {
                 stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
-                final int contrastColor = ColorUtils.getContrastYIQ(stackedTabColor, 192);
+                final int contrastColor = TwidereColorUtils.getContrastYIQ(stackedTabColor, 192);
                 mPagerIndicator.setIconColor(contrastColor);
                 mPagerIndicator.setLabelColor(contrastColor);
                 mPagerIndicator.setStripColor(mUserUiColor);
@@ -1473,7 +1473,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 stackedTabColor = mUserUiColor;
                 final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
                 ((ColorDrawable) drawable).setColor(tabColor);
-                final int contrastColor = ColorUtils.getContrastYIQ(tabColor, 192);
+                final int contrastColor = TwidereColorUtils.getContrastYIQ(tabColor, 192);
                 mPagerIndicator.setIconColor(contrastColor);
                 mPagerIndicator.setLabelColor(contrastColor);
                 mPagerIndicator.setStripColor(contrastColor);

@@ -38,6 +38,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -68,7 +69,6 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassExcept
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 
@@ -92,7 +92,7 @@ import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.trim;
 
-public class SignInActivity extends BaseActionBarActivity implements TwitterConstants, OnClickListener,
+public class SignInActivity extends BaseAppCompatActivity implements TwitterConstants, OnClickListener,
         TextWatcher {
 
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
@@ -148,7 +148,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
                 break;
             }
             case REQUEST_BROWSER_SIGN_IN: {
-                if (resultCode == BaseActionBarActivity.RESULT_OK && data != null) {
+                if (resultCode == BaseAppCompatActivity.RESULT_OK && data != null) {
                     doLogin(data);
                 }
                 break;
@@ -329,7 +329,7 @@ public class SignInActivity extends BaseActionBarActivity implements TwitterCons
         mEditPassword.addTextChangedListener(this);
         final Resources resources = getResources();
         final ColorStateList color = ColorStateList.valueOf(resources.getColor(R.color.material_light_green));
-        ViewUtils.setBackgroundTintList(mSignInButton, color);
+        ViewCompat.setBackgroundTintList(mSignInButton, color);
         setSignInButton();
     }
 

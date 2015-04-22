@@ -34,7 +34,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.ColorUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -98,7 +98,7 @@ public class MessageConversationViewHolder extends ViewHolder implements OnMedia
     public void setMessageColor(int color) {
         final ColorStateList colorStateList = ColorStateList.valueOf(color);
         messageContent.setBubbleColor(colorStateList);
-        final int textLuminancePrimary = ColorUtils.getYIQLuminance(textColorPrimary);
+        final int textLuminancePrimary = TwidereColorUtils.getYIQLuminance(textColorPrimary);
         final int textPrimaryDark, textPrimaryLight, textSecondaryDark, textSecondaryLight;
         if (textLuminancePrimary < 128) {
             textPrimaryDark = textColorPrimary;
@@ -111,8 +111,8 @@ public class MessageConversationViewHolder extends ViewHolder implements OnMedia
             textSecondaryDark = textColorSecondaryInverse;
             textSecondaryLight = textColorSecondary;
         }
-        final int textContrastPrimary = ColorUtils.getContrastYIQ(color, 192, textPrimaryDark, textPrimaryLight);
-        final int textContrastSecondary = ColorUtils.getContrastYIQ(color, 192, textSecondaryDark, textSecondaryLight);
+        final int textContrastPrimary = TwidereColorUtils.getContrastYIQ(color, 192, textPrimaryDark, textPrimaryLight);
+        final int textContrastSecondary = TwidereColorUtils.getContrastYIQ(color, 192, textSecondaryDark, textSecondaryLight);
         text.setTextColor(textContrastPrimary);
         text.setLinkTextColor(textContrastSecondary);
         time.setTextColor(textContrastSecondary);

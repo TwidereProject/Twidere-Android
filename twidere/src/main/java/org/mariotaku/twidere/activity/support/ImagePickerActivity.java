@@ -36,7 +36,7 @@ import java.io.OutputStream;
 
 import static android.os.Environment.getExternalStorageState;
 
-public class ImagePickerActivity extends ThemedActionBarActivity {
+public class ImagePickerActivity extends ThemedAppCompatActivity {
 
     public static final int REQUEST_PICK_IMAGE = 101;
     public static final int REQUEST_TAKE_PHOTO = 102;

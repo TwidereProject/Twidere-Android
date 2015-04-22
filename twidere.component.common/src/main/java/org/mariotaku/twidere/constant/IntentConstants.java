@@ -213,7 +213,7 @@ public interface IntentConstants {
     public static final String EXTRA_CURRENT_MEDIA = "current_media";
     public static final String EXTRA_EXTRAS = "extras";
     public static final String EXTRA_MY_FOLLOWING_ONLY = "my_following_only";
-    public static final String EXTRA_RESTART_ACTIVITY = "restart_activity";
+    public static final String EXTRA_CHANGED = "changed";
     public static final String EXTRA_FROM_USER = "from_user";
     public static final String EXTRA_SHOW_MEDIA_PREVIEW = "show_media_preview";
     public static final String EXTRA_SHOW_EXTRA_TYPE = "show_extra_type";

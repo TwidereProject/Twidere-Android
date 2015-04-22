@@ -39,11 +39,11 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.support.BaseActionBarActivity;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
-import org.mariotaku.twidere.util.ColorUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
@@ -115,8 +115,8 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
     @Override
     public void setControlVisible(boolean visible) {
         final FragmentActivity activity = getActivity();
-        if (activity instanceof BaseActionBarActivity) {
-            ((BaseActionBarActivity) activity).setControlBarVisibleAnimate(visible);
+        if (activity instanceof BaseAppCompatActivity) {
+            ((BaseAppCompatActivity) activity).setControlBarVisibleAnimate(visible);
         }
     }
 
@@ -185,7 +185,7 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
         final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
-        final int colorRes = ColorUtils.getContrastYIQ(backgroundColor,
+        final int colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));

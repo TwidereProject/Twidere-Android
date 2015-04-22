@@ -31,6 +31,7 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -346,12 +347,16 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         mReadStateManager = getReadStateManager();
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = TwidereApplication.getInstance(activity);
-        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
+        final ContentListScrollListener scrollListener = getScrollListener();
+        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler,
+                recyclerView, layoutManager, adapter);
+
         adapter.setListener(this);
-        getScrollListener().setOnScrollListener(new OnScrollListener() {
+        scrollListener.setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -359,7 +364,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
                 }
             }
         });
-        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler, recyclerView, layoutManager, adapter);
 
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);

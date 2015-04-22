@@ -63,6 +63,7 @@ import android.text.style.URLSpan;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,10 +97,14 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MenuUtils;
+import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
+import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
@@ -144,22 +149,28 @@ import static org.mariotaku.twidere.util.Utils.showErrorMessage;
  * Created by mariotaku on 14/12/5.
  */
 public class StatusFragment extends BaseSupportFragment implements LoaderCallbacks<SingleResponse<ParcelableStatus>>,
-        OnMediaClickListener, StatusAdapterListener {
+        OnMediaClickListener, StatusAdapterListener, KeyboardShortcutCallback {
 
     private static final int LOADER_ID_DETAIL_STATUS = 1;
     private static final int LOADER_ID_STATUS_REPLIES = 2;
     private static final int STATE_LOADED = 1;
     private static final int STATE_LOADING = 2;
     private static final int STATE_ERROR = 3;
-    private RecyclerView mRecyclerView;
-    private StatusAdapter mStatusAdapter;
-    private boolean mRepliesLoaderInitialized;
-    private LoadConversationTask mLoadConversationTask;
-    private LinearLayoutManager mLayoutManager;
+
     private View mStatusContent;
     private View mProgressContainer;
     private View mErrorContainer;
+
     private DividerItemDecoration mItemDecoration;
+    private RecyclerView mRecyclerView;
+    private StatusAdapter mStatusAdapter;
+    private LinearLayoutManager mLayoutManager;
+
+    private LoadConversationTask mLoadConversationTask;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
+
+    private boolean mRepliesLoaderInitialized;
 
     private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
         @Override
@@ -263,6 +274,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mStatusAdapter = new StatusAdapter(this, compact);
         mStatusAdapter.setEventListener(this);
         mRecyclerView.setAdapter(mStatusAdapter);
+
+        final FragmentActivity activity = getActivity();
+        final TwidereApplication application = TwidereApplication.getInstance(activity);
+        mKeyboardShortcutsHandler = application.getKeyboardShortcutsHandler();
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mKeyboardShortcutsHandler,
+                mRecyclerView, mLayoutManager, mStatusAdapter);
 
         setState(STATE_LOADING);
 
@@ -393,6 +410,52 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
         //end
     }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(int keyCode, @NonNull KeyEvent event) {
+        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, mLayoutManager.getFocusedChild());
+        final int position;
+        if (focusedChild != null && focusedChild.getParent() == mRecyclerView) {
+            position = mRecyclerView.getChildLayoutPosition(focusedChild);
+        } else {
+            return false;
+        }
+        if (position == -1) return false;
+        final ParcelableStatus status = getAdapter().getStatus(position);
+        if (status == null) return false;
+        String action = mKeyboardShortcutsHandler.getKeyAction("status", keyCode, event);
+        if (action == null) return false;
+        switch (action) {
+            case "status.reply": {
+                final Intent intent = new Intent(INTENT_ACTION_REPLY);
+                intent.putExtra(EXTRA_STATUS, status);
+                startActivity(intent);
+                return true;
+            }
+            case "status.retweet": {
+                RetweetQuoteDialogFragment.show(getFragmentManager(), status);
+                return true;
+            }
+            case "status.favorite": {
+                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                if (status.is_favorite) {
+                    twitter.destroyFavoriteAsync(status.account_id, status.id);
+                } else {
+                    twitter.createFavoriteAsync(status.account_id, status.id);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(final int keyCode, final int repeatCount,
+                                                @NonNull final KeyEvent event) {
+        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(keyCode, repeatCount, event);
+    }
+
 
     private void addConversation(ParcelableStatus status, int position) {
         mStatusAdapter.addConversation(status, position);
@@ -720,7 +783,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
 
             textView.setText(Html.fromHtml(status.text_html));
-            linkify.applyAllLinks(textView, status.account_id, getAdapterPosition(), status.is_possibly_sensitive);
+            linkify.applyAllLinks(textView, status.account_id, getLayoutPosition(), status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 
             if (!TextUtils.isEmpty(status.place_full_name)) {
@@ -794,7 +857,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public void onClick(View v) {
-            final ParcelableStatus status = adapter.getStatus(getAdapterPosition());
+            final ParcelableStatus status = adapter.getStatus(getLayoutPosition());
             final StatusFragment fragment = adapter.getFragment();
             switch (v.getId()) {
                 case R.id.media_preview_load: {
