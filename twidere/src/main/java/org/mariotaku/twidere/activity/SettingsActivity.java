@@ -228,6 +228,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         final ListView listView = getListView();
         if (listView != null) {
             listView.setDivider(new EmptyDrawable());
+            listView.setChoiceMode(isMultiPane() ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
             listView.setDividerHeight(0);
             final LayoutParams lp = listView.getLayoutParams();
             if (lp instanceof MarginLayoutParams) {

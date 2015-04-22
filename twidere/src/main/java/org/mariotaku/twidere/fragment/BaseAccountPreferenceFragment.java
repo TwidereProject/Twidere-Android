@@ -33,7 +33,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Switch;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -41,73 +40,73 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.UserColorNameUtils;
 
 public abstract class BaseAccountPreferenceFragment extends PreferenceFragment implements Constants,
-		OnCheckedChangeListener, OnSharedPreferenceChangeListener {
+        OnCheckedChangeListener, OnSharedPreferenceChangeListener {
 
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setHasOptionsMenu(true);
-		final PreferenceManager pm = getPreferenceManager();
-		final ParcelableAccount account = getArguments().getParcelable(EXTRA_ACCOUNT);
-		final String preferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX
-				+ (account != null ? account.account_id : "unknown");
-		pm.setSharedPreferencesName(preferenceName);
-		addPreferencesFromResource(getPreferencesResource());
-		final SharedPreferences prefs = pm.getSharedPreferences();
-		prefs.registerOnSharedPreferenceChangeListener(this);
-		final Activity activity = getActivity();
-		final Intent intent = activity.getIntent();
-		if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
-			final String name = UserColorNameUtils.getDisplayName(getActivity(), account.account_id, account.name, account.screen_name);
-			activity.setTitle(name);
-		}
-		updatePreferenceScreen();
-	}
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        final PreferenceManager pm = getPreferenceManager();
+        final ParcelableAccount account = getArguments().getParcelable(EXTRA_ACCOUNT);
+        final String preferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX
+                + (account != null ? account.account_id : "unknown");
+        pm.setSharedPreferencesName(preferenceName);
+        addPreferencesFromResource(getPreferencesResource());
+        final SharedPreferences prefs = pm.getSharedPreferences();
+        prefs.registerOnSharedPreferenceChangeListener(this);
+        final Activity activity = getActivity();
+        final Intent intent = activity.getIntent();
+        if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
+            final String name = UserColorNameUtils.getDisplayName(getActivity(), account.account_id, account.name, account.screen_name);
+            activity.setTitle(name);
+        }
+        updatePreferenceScreen();
+    }
 
-	@Override
-	public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-		final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		final SharedPreferences.Editor editor = prefs.edit();
-		if (prefs.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()) != isChecked) {
-			editor.putBoolean(getSwitchPreferenceKey(), isChecked);
-			editor.apply();
-		}
-	}
+    @Override
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+        final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        final SharedPreferences.Editor editor = prefs.edit();
+        if (prefs.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()) != isChecked) {
+            editor.putBoolean(getSwitchPreferenceKey(), isChecked);
+            editor.apply();
+        }
+    }
 
-	@Override
-	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_switch_preference, menu);
-		final View actionView = menu.findItem(MENU_TOGGLE).getActionView();
-		final Switch toggle = (Switch) actionView.findViewById(android.R.id.toggle);
-		final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-		toggle.setOnCheckedChangeListener(this);
-		toggle.setChecked(prefs.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()));
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_switch_preference, menu);
+        final View actionView = menu.findItem(MENU_TOGGLE).getActionView();
+        final CompoundButton toggle = (CompoundButton) actionView.findViewById(android.R.id.toggle);
+        final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        toggle.setOnCheckedChangeListener(this);
+        toggle.setChecked(prefs.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()));
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-	@Override
-	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-		if (key.equals(getSwitchPreferenceKey())) {
-			updatePreferenceScreen();
-		}
-	}
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        if (key.equals(getSwitchPreferenceKey())) {
+            updatePreferenceScreen();
+        }
+    }
 
-	protected ParcelableAccount getAccount() {
-		final Bundle args = getArguments();
-		if (args == null) return null;
-		return args.getParcelable(EXTRA_ACCOUNT);
-	}
+    protected ParcelableAccount getAccount() {
+        final Bundle args = getArguments();
+        if (args == null) return null;
+        return args.getParcelable(EXTRA_ACCOUNT);
+    }
 
-	protected abstract int getPreferencesResource();
+    protected abstract int getPreferencesResource();
 
-	protected abstract boolean getSwitchPreferenceDefault();
+    protected abstract boolean getSwitchPreferenceDefault();
 
-	protected abstract String getSwitchPreferenceKey();
+    protected abstract String getSwitchPreferenceKey();
 
-	private void updatePreferenceScreen() {
-		final PreferenceScreen screen = getPreferenceScreen();
-		final SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-		if (screen == null || sharedPreferences == null) return;
-		screen.setEnabled(sharedPreferences.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()));
-	}
+    private void updatePreferenceScreen() {
+        final PreferenceScreen screen = getPreferenceScreen();
+        final SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+        if (screen == null || sharedPreferences == null) return;
+        screen.setEnabled(sharedPreferences.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()));
+    }
 }

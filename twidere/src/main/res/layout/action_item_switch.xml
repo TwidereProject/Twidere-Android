@@ -25,7 +25,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
-    <Switch
+    <android.support.v7.widget.SwitchCompat
         android:id="@android:id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

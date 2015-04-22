@@ -70,11 +70,12 @@ public class OAuthPasswordAuthenticator implements Constants {
             if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException();
         }
+        HttpResponse authorizePage = null, authorizeResult = null;
         try {
             final String oauthToken = requestToken.getToken();
             final String authorizationUrl = requestToken.getAuthorizationURL();
             final HashMap<String, String> inputMap = new HashMap<>();
-            final HttpResponse authorizePage = client.get(authorizationUrl, authorizationUrl, null, null, null);
+            authorizePage = client.get(authorizationUrl, authorizationUrl, null, null, null);
             final List<String> cookieHeaders = authorizePage.getResponseHeaders("Set-Cookie");
             readInputFromHtml(authorizePage.asReader(),
                     inputMap, INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
@@ -104,12 +105,26 @@ public class OAuthPasswordAuthenticator implements Constants {
                 }
             }
             requestHeaders.put("Cookie", modifiedCookieHeaders);
-            final String oauthPin = readOAuthPINFromHtml(client.post(oAuthAuthorizationUrl, oAuthAuthorizationUrl,
-                    params.toArray(new HttpParameter[params.size()]), requestHeaders).asReader());
+            authorizeResult = client.post(oAuthAuthorizationUrl, oAuthAuthorizationUrl,
+                    params.toArray(new HttpParameter[params.size()]), requestHeaders);
+            final String oauthPin = readOAuthPINFromHtml(authorizeResult.asReader());
             if (isEmpty(oauthPin)) throw new WrongUserPassException();
             return twitter.getOAuthAccessToken(requestToken, oauthPin);
         } catch (final IOException | TwitterException | NullPointerException | XmlPullParserException e) {
             throw new AuthenticationException(e);
+        } finally {
+            if (authorizePage != null) {
+                try {
+                    authorizePage.disconnect();
+                } catch (IOException ignore) {
+                }
+            }
+            if (authorizeResult != null) {
+                try {
+                    authorizeResult.disconnect();
+                } catch (IOException ignore) {
+                }
+            }
         }
     }
 

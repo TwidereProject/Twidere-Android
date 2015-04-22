@@ -48,7 +48,7 @@
                 android:layout_height="@dimen/element_size_normal"
                 android:orientation="horizontal">
 
-                <Spinner
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/account_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
