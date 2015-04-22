@@ -47,8 +47,7 @@
         android:completionThreshold="1"
         android:gravity="left|bottom"
         android:hint="@string/type_to_compose"
-        android:imeOptions="actionDone"
-        android:inputType="textMultiLine"
+        android:inputType="textShortMessage|textMultiLine"
         android:maxHeight="140dp"
         android:minHeight="?android:actionBarSize"
         android:singleLine="false"/>

@@ -61,13 +61,13 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,15 +75,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.utils.IoUtils;
@@ -109,6 +106,8 @@ import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.EditTextEnterHandler;
+import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -600,29 +599,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         }
         mMenuBar.setOnMenuItemClickListener(this);
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
-        mEditText.setOnKeyListener(new OnKeyListener() {
+        EditTextEnterHandler.attach(mEditText, new EnterListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER && sendByEnter && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    updateStatus();
-                    return true;
-                }
-                return false;
+            public void onHitEnter() {
+                updateStatus();
             }
-        });
-        mEditText.setOnEditorActionListener(new OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-                if (sendByEnter) {
-                    if (event != null && actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        updateStatus();
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        }, sendByEnter);
         mEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -638,11 +620,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
             @Override
             public void afterTextChanged(final Editable s) {
-                final int length = s.length();
-                if (sendByEnter && length > 0 && s.charAt(length - 1) == '\n') {
-                    s.delete(length - 1, length);
-                    updateStatus();
-                }
             }
         });
         mEditText.setCustomSelectionActionModeCallback(this);
@@ -743,8 +720,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         startLocationUpdateIfEnabled();
         setMenu();
         updateTextCount();
-        final int text_size = mPreferences.getInt(KEY_TEXT_SIZE, Utils.getDefaultTextSize(this));
-        mEditText.setTextSize(text_size * 1.25f);
+        final int textSize = mPreferences.getInt(KEY_TEXT_SIZE, Utils.getDefaultTextSize(this));
+        mEditText.setTextSize(textSize * 1.25f);
     }
 
     @Override
@@ -874,16 +851,16 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             }
         }
         mEditText.setText(Utils.getShareStatus(this, extraSubject, extraText));
-        final int selection_end = mEditText.length();
-        mEditText.setSelection(selection_end);
+        final int selectionEnd = mEditText.length();
+        mEditText.setSelection(selectionEnd);
         return true;
     }
 
     private boolean handleEditDraftIntent(final DraftItem draft) {
         if (draft == null) return false;
         mEditText.setText(draft.text);
-        final int selection_end = mEditText.length();
-        mEditText.setSelection(selection_end);
+        final int selectionEnd = mEditText.length();
+        mEditText.setSelection(selectionEnd);
         mAccountsAdapter.setSelectedAccountIds(draft.account_ids);
         if (draft.media != null) {
             addMedia(Arrays.asList(draft.media));

@@ -785,10 +785,10 @@ public class HomeActivity extends BaseActionBarActivity implements OnClickListen
         return true;
     }
 
-    private void setTabPosition(final int initial_tab) {
+    private void setTabPosition(final int initialTab) {
         final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, true);
-        if (initial_tab >= 0) {
-            mViewPager.setCurrentItem(MathUtils.clamp(initial_tab, mPagerAdapter.getCount(), 0));
+        if (initialTab >= 0) {
+            mViewPager.setCurrentItem(MathUtils.clamp(initialTab, mPagerAdapter.getCount(), 0));
         } else if (rememberPosition) {
             final int position = mPreferences.getInt(KEY_SAVED_TAB_POSITION, 0);
             mViewPager.setCurrentItem(MathUtils.clamp(position, mPagerAdapter.getCount(), 0));

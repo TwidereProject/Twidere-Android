@@ -63,10 +63,7 @@
                     android:background="@android:color/transparent"
                     android:focusable="true"
                     android:hint="@string/search_hint"
-                    android:imeActionLabel="@android:string/search_go"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:singleLine="true">
+                    android:inputType="text|textMultiLine">
 
                     <requestFocus/>
                 </EditText>

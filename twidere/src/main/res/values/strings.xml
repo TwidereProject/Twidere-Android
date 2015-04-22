@@ -244,6 +244,7 @@
     <string name="status_shortener">Tweet shortener</string>
     <string name="status_shortener_default">None (Abort sending)</string>
     <string name="error_message_status_too_long">Tweet too long.</string>
+    <string name="error_message_message_too_long">Message too long.</string>
     <string name="error_message_no_content">No content</string>
     <string name="error_message_tweet_shorten_failed">Tweet shorten failed.</string>
     <string name="error_message_tweet_shortener_not_found">Tweet shortener not found, maybe it was uninstalled.</string>

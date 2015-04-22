@@ -45,7 +45,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,7 +61,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -91,6 +89,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversati
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
+import org.mariotaku.twidere.util.EditTextEnterHandler;
+import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -112,8 +112,8 @@ import static org.mariotaku.twidere.util.Utils.buildDirectMessageConversationUri
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 public class MessagesConversationFragment extends BaseSupportFragment implements
-        LoaderCallbacks<Cursor>, TextWatcher, OnClickListener, OnItemSelectedListener,
-        OnEditorActionListener, MenuButtonClickListener, PopupMenu.OnMenuItemClickListener {
+        LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener, MenuButtonClickListener,
+        PopupMenu.OnMenuItemClickListener {
 
     private static final int LOADER_ID_SEARCH_USERS = 1;
 
@@ -160,6 +160,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         @Override
         public Loader<List<ParcelableUser>> onCreateLoader(int id, Bundle args) {
             mUsersSearchList.setVisibility(View.GONE);
+            mUsersSearchEmpty.setVisibility(View.GONE);
             mUsersSearchProgress.setVisibility(View.VISIBLE);
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID);
             final String query = args.getString(EXTRA_QUERY);
@@ -172,6 +173,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         public void onLoadFinished(Loader<List<ParcelableUser>> loader, List<ParcelableUser> data) {
             mUsersSearchList.setVisibility(View.VISIBLE);
             mUsersSearchProgress.setVisibility(View.GONE);
+            mUsersSearchEmpty.setVisibility(data == null || data.isEmpty() ? View.GONE : View.VISIBLE);
             mUsersSearchAdapter.setData(data, true);
             updateEmptyText();
         }
@@ -188,15 +190,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         updateRefreshState();
     }
 
-    @Override
-    public void afterTextChanged(final Editable s) {
-
-    }
-
-    @Override
-    public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-
-    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -230,24 +223,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         accountsSpinnerAdapter.addAll(accounts);
         mAccountSpinner.setAdapter(accountsSpinnerAdapter);
         mAccountSpinner.setOnItemSelectedListener(this);
-        mUserQuery.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
-                mEditText.setAccountId(account.account_id);
-                searchUsers(account.account_id, ParseUtils.parseString(s), true);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         mQueryButton.setOnClickListener(this);
         mAdapter = new MessageConversationAdapter(activity);
         final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(viewContext);
@@ -268,11 +243,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             }
         });
 
-        if (mPreferences.getBoolean(KEY_QUICK_SEND, false)) {
-            mEditText.setOnEditorActionListener(this);
-        }
-        mEditText.addTextChangedListener(this);
-
+        setupEditQuery();
+        setupEditText();
 
         mSendButton.setOnClickListener(this);
         mAddImageButton.setOnClickListener(this);
@@ -317,6 +289,80 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mUsersSearchList.setVisibility(View.GONE);
         mUsersSearchProgress.setVisibility(View.GONE);
 
+    }
+
+    private void setupEditQuery() {
+        final EditTextEnterHandler queryEnterHandler = EditTextEnterHandler.attach(mUserQuery, new EnterListener() {
+            @Override
+            public void onHitEnter() {
+                final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
+                if (account == null) return;
+                mEditText.setAccountId(account.account_id);
+                searchUsers(account.account_id, ParseUtils.parseString(mUserQuery.getText()), false);
+            }
+        }, true);
+        queryEnterHandler.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
+                if (account == null) return;
+                mEditText.setAccountId(account.account_id);
+                searchUsers(account.account_id, ParseUtils.parseString(s), true);
+            }
+        });
+        mUserQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Utils.removeLineBreaks(s);
+            }
+        });
+    }
+
+    private void setupEditText() {
+        EditTextEnterHandler.attach(mEditText, new EnterListener() {
+            @Override
+            public void onHitEnter() {
+                sendDirectMessage();
+            }
+        }, mPreferences.getBoolean(KEY_QUICK_SEND, false));
+        mEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                Utils.removeLineBreaks(s);
+            }
+
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+                updateTextCount();
+                if (mSendButton == null || s == null) return;
+                mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));
+            }
+        });
     }
 
     private String getDraftsTextKey(long accountId, long userId) {
@@ -442,17 +488,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final View view = getView();
         if (view == null) return;
         view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-    }
-
-    @Override
-    public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_ENTER: {
-                sendDirectMessage();
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -585,12 +620,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         super.onStop();
     }
 
-    @Override
-    public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-        updateTextCount();
-        if (mSendButton == null || s == null) return;
-        mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));
-    }
 
     private void updateEmptyText() {
         final boolean noQuery = mUserQuery.length() <= 0;
@@ -703,7 +732,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final ParcelableUser recipient = mRecipient;
         if (mAccount == null || mRecipient == null) return;
         final String message = mEditText.getText().toString();
-        if (mValidator.isValidTweet(message)) {
+        if (TextUtils.isEmpty(message)) {
+            mEditText.setError(getString(R.string.error_message_no_content));
+        } else if (mValidator.getTweetLength(message) > mValidator.getMaxTweetLength()) {
+            mEditText.setError(getString(R.string.error_message_message_too_long));
+        } else {
             mTwitterWrapper.sendDirectMessageAsync(account.account_id, recipient.id, message, mImageUri);
             mEditText.setText(null);
             mImageUri = null;

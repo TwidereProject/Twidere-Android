@@ -47,7 +47,10 @@
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:gravity="bottom"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName|textMultiLine">
+
+            <requestFocus/>
+        </EditText>
 
         <org.mariotaku.twidere.view.ActionIconButton
             android:id="@+id/query_button"
@@ -55,6 +58,7 @@
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_gravity="right"
+            android:color="?android:textColorPrimary"
             android:padding="@dimen/element_spacing_normal"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_search"/>
