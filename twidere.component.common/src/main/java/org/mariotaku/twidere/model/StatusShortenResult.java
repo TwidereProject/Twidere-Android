@@ -22,7 +22,6 @@ public class StatusShortenResult implements Parcelable {
         }
     };
 
-
     @JsonField(name = "shortened")
     public String shortened;
 
@@ -31,6 +30,9 @@ public class StatusShortenResult implements Parcelable {
 
     @JsonField(name = "error_message")
     public String error_message;
+
+    public StatusShortenResult() {
+    }
 
     public StatusShortenResult(final int errorCode, final String errorMessage) {
         if (errorCode == 0) throw new IllegalArgumentException("Error code must not be 0");

@@ -120,6 +120,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @JsonField(name = "is_basic")
     public boolean is_basic;
 
+    public ParcelableUser() {
+    }
+
     public ParcelableUser(final long account_id, final long id, final String name,
                           final String screen_name, final String profile_image_url) {
         this.account_id = account_id;

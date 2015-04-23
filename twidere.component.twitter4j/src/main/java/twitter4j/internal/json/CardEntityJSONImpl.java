@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.mariotaku.twidere.library.twitter4j.BuildConfig;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class CardEntityJSONImpl implements CardEntity {
     public CardEntityJSONImpl(JSONObject json) throws JSONException, TwitterException {
         this.name = json.getString("name");
         this.url = json.optString("url");
-        this.bindingValues = BindingValueImpl.valuesOf(json.getJSONObject("binding_values"));
+        this.bindingValues = Collections.unmodifiableMap(BindingValueImpl.valuesOf(json.getJSONObject("binding_values")));
         if (!json.isNull("users")) {
             final JSONObject usersJSON = json.getJSONObject("users");
             final Iterator<String> keys = usersJSON.keys();
@@ -82,8 +83,8 @@ public class CardEntityJSONImpl implements CardEntity {
     }
 
     @Override
-    public BindingValue[] getBindingValues() {
-        return bindingValues.values().toArray(new BindingValue[bindingValues.size()]);
+    public Map<String, BindingValue> getBindingValues() {
+        return bindingValues;
     }
 
 

@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableValueItem;
+import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -57,8 +57,8 @@ public class TwitterCardUtils {
 
 
     public static Point getCardSize(ParcelableCardEntity card) {
-        final ParcelableValueItem player_width = ParcelableCardEntity.getValue(card, "player_width");
-        final ParcelableValueItem player_height = ParcelableCardEntity.getValue(card, "player_height");
+        final ParcelableBindingValue player_width = ParcelableCardEntity.getValue(card, "player_width");
+        final ParcelableBindingValue player_height = ParcelableCardEntity.getValue(card, "player_height");
         if (player_width != null && player_height != null) {
             final int width = ParseUtils.parseInt(String.valueOf(player_width.value));
             final int height = ParseUtils.parseInt(String.valueOf(player_height.value));

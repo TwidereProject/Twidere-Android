@@ -56,6 +56,9 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "boolean")
     public boolean is_possibly_sensitive;
 
+    public ParcelableStatusUpdate() {
+    }
+
     /**
      * @deprecated It has too much arguments to call, use
      * <b>ParcelableStatusUpdate.Builder</b> instead.

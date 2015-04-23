@@ -106,6 +106,9 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     @JsonField(name = "media")
     public ParcelableMedia[] media;
 
+    public ParcelableDirectMessage() {
+    }
+
     public ParcelableDirectMessage(final ContentValues values) {
         text_plain = values.getAsString(DirectMessages.TEXT_PLAIN);
         text_html = values.getAsString(DirectMessages.TEXT_HTML);

@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.ImageLoader;

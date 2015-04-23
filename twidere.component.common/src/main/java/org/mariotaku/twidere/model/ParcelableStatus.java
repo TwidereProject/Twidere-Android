@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.model;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -38,6 +39,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import twitter4j.CardEntity;
 import twitter4j.CardEntity.BindingValue;
@@ -64,17 +68,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return new ParcelableStatus[size];
         }
     };
-
-    public static final Comparator<ParcelableStatus> TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
-
-        @Override
-        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
-            final long diff = object2.timestamp - object1.timestamp;
-            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-            return (int) diff;
-        }
-    };
+    @JsonField(name = "id")
+    public long id;
     public static final Comparator<ParcelableStatus> REVERSE_ID_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
@@ -85,120 +80,127 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return (int) diff;
         }
     };
-
-    @JsonField(name = "id")
-	public long id;
     @JsonField(name = "account_id")
-	public long account_id;
+    public long account_id;
     @JsonField(name = "timestamp")
-	public long timestamp;
+    public long timestamp;
+    public static final Comparator<ParcelableStatus> TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
+
+        @Override
+        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
+            final long diff = object2.timestamp - object1.timestamp;
+            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+            return (int) diff;
+        }
+    };
     @JsonField(name = "user_id")
-	public long user_id;
+    public long user_id;
     @JsonField(name = "retweet_id")
-	public long retweet_id;
+    public long retweet_id;
     @JsonField(name = "retweeted_by_id")
-	public long retweeted_by_id;
+    public long retweeted_by_id;
     @JsonField(name = "retweet_timestamp")
-	public long retweet_timestamp;
+    public long retweet_timestamp;
     @JsonField(name = "retweet_count")
-	public long retweet_count;
+    public long retweet_count;
     @JsonField(name = "favorite_count")
-	public long favorite_count;
+    public long favorite_count;
     @JsonField(name = "reply_count")
-	public long reply_count;
+    public long reply_count;
     @JsonField(name = "descendent_reply_count")
-	public long descendent_reply_count;
+    public long descendent_reply_count;
     @JsonField(name = "in_reply_to_status_id")
-	public long in_reply_to_status_id;
+    public long in_reply_to_status_id;
     @JsonField(name = "in_reply_to_user_id")
-	public long in_reply_to_user_id;
+    public long in_reply_to_user_id;
     @JsonField(name = "my_retweet_id")
-	public long my_retweet_id;
+    public long my_retweet_id;
     @JsonField(name = "quote_id")
-	public long quote_id;
+    public long quote_id;
     @JsonField(name = "quote_timestamp")
-	public long quote_timestamp;
+    public long quote_timestamp;
     @JsonField(name = "quoted_by_user_id")
-	public long quoted_by_user_id;
+    public long quoted_by_user_id;
 
     @JsonField(name = "is_gap")
-	public boolean is_gap;
+    public boolean is_gap;
     @JsonField(name = "is_retweet")
-	public boolean is_retweet;
+    public boolean is_retweet;
     @JsonField(name = "is_favorite")
-	public boolean is_favorite;
+    public boolean is_favorite;
     @JsonField(name = "is_possibly_sensitive")
-	public boolean is_possibly_sensitive;
+    public boolean is_possibly_sensitive;
     @JsonField(name = "user_is_following")
-	public boolean user_is_following;
+    public boolean user_is_following;
     @JsonField(name = "user_is_protected")
-	public boolean user_is_protected;
+    public boolean user_is_protected;
     @JsonField(name = "user_is_verified")
-	public boolean user_is_verified;
+    public boolean user_is_verified;
     @JsonField(name = "is_quote")
-	public boolean is_quote;
+    public boolean is_quote;
     @JsonField(name = "quoted_by_user_is_protected")
-	public boolean quoted_by_user_is_protected;
+    public boolean quoted_by_user_is_protected;
     @JsonField(name = "quoted_by_user_is_verified")
-	public boolean quoted_by_user_is_verified;
+    public boolean quoted_by_user_is_verified;
 
     @JsonField(name = "retweeted_by_name")
-	public String retweeted_by_name;
+    public String retweeted_by_name;
     @JsonField(name = "retweeted_by_screen_name")
-	public String retweeted_by_screen_name;
+    public String retweeted_by_screen_name;
     @JsonField(name = "retweeted_by_profile_image")
-	public String retweeted_by_profile_image;
+    public String retweeted_by_profile_image;
     @JsonField(name = "text_html")
-	public String text_html;
+    public String text_html;
     @JsonField(name = "text_plain")
-	public String text_plain;
+    public String text_plain;
     @JsonField(name = "user_name")
-	public String user_name;
+    public String user_name;
     @JsonField(name = "user_screen_name")
-	public String user_screen_name;
+    public String user_screen_name;
     @JsonField(name = "in_reply_to_name")
-	public String in_reply_to_name;
+    public String in_reply_to_name;
     @JsonField(name = "in_reply_to_screen_name")
-	public String in_reply_to_screen_name;
+    public String in_reply_to_screen_name;
     @JsonField(name = "source")
-	public String source;
+    public String source;
     @JsonField(name = "user_profile_image_url")
-	public String user_profile_image_url;
+    public String user_profile_image_url;
     @JsonField(name = "text_unescaped")
-	public String text_unescaped;
+    public String text_unescaped;
     @JsonField(name = "card_name")
-	public String card_name;
+    public String card_name;
     @JsonField(name = "quote_text_html")
-	public String quote_text_html;
+    public String quote_text_html;
     @JsonField(name = "quote_text_plain")
-	public String quote_text_plain;
+    public String quote_text_plain;
     @JsonField(name = "quote_text_unescaped")
-	public String quote_text_unescaped;
+    public String quote_text_unescaped;
     @JsonField(name = "quote_source")
-	public String quote_source;
+    public String quote_source;
     @JsonField(name = "quoted_by_user_name")
-	public String quoted_by_user_name;
+    public String quoted_by_user_name;
     @JsonField(name = "quoted_by_user_screen_name")
-	public String quoted_by_user_screen_name;
+    public String quoted_by_user_screen_name;
     @JsonField(name = "quoted_by_user_profile_image")
-	public String quoted_by_user_profile_image;
+    public String quoted_by_user_profile_image;
 
     @JsonField(name = "location")
-	public ParcelableLocation location;
+    public ParcelableLocation location;
 
     @JsonField(name = "place_full_name")
-	public String place_full_name;
+    public String place_full_name;
 
     @JsonField(name = "mentions")
-	public ParcelableUserMention[] mentions;
+    public ParcelableUserMention[] mentions;
 
     @JsonField(name = "media")
-	public ParcelableMedia[] media;
+    public ParcelableMedia[] media;
     @JsonField(name = "quote_media")
-	public ParcelableMedia[] quote_media;
+    public ParcelableMedia[] quote_media;
 
     @JsonField(name = "card")
-	public ParcelableCardEntity card;
+    public ParcelableCardEntity card;
 
     public ParcelableStatus(final Cursor c, final CursorIndices idx) {
         id = idx.status_id != -1 ? c.getLong(idx.status_id) : -1;
@@ -703,12 +705,19 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         public ParcelableUser[] users;
 
         @JsonField(name = "values")
-        public ParcelableValueItem[] values;
+        public Map<String, ParcelableBindingValue> values;
 
         public ParcelableCardEntity(Parcel src) {
             name = src.readString();
-            values = src.createTypedArray(ParcelableValueItem.CREATOR);
             users = src.createTypedArray(ParcelableUser.CREATOR);
+            final Bundle bundle = src.readBundle(ParcelableBindingValue.class.getClassLoader());
+            for (String key : bundle.keySet()) {
+                if (values == null) {
+                    values = new HashMap<>();
+                }
+                final ParcelableBindingValue value = bundle.getParcelable(key);
+                values.put(key, value);
+            }
         }
 
         public ParcelableCardEntity() {
@@ -718,15 +727,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         public ParcelableCardEntity(CardEntity card, long account_id) {
             name = card.getName();
             users = ParcelableUser.fromUsersArray(card.getUsers(), account_id);
-            final BindingValue[] bindingValues = card.getBindingValues();
-            if (bindingValues != null) {
-                values = new ParcelableValueItem[bindingValues.length];
-                for (int i = 0, j = bindingValues.length; i < j; i++) {
-                    values[i] = new ParcelableValueItem(bindingValues[i]);
-                }
-            } else {
-                values = null;
-            }
+            values = ParcelableBindingValue.from(card.getBindingValues());
         }
 
         @Override
@@ -734,8 +735,26 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return "ParcelableCardEntity{" +
                     "name='" + name + '\'' +
                     ", users=" + Arrays.toString(users) +
-                    ", values=" + Arrays.toString(values) +
+                    ", values=" + values +
                     '}';
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeTypedArray(users, flags);
+            final Bundle bundle = new Bundle();
+            if (values != null) {
+                for (Entry<String, ParcelableBindingValue> entry : values.entrySet()) {
+                    bundle.putParcelable(entry.getKey(), entry.getValue());
+                }
+            }
+            dest.writeBundle(bundle);
         }
 
         public static ParcelableCardEntity fromCardEntity(CardEntity card, long account_id) {
@@ -752,173 +771,49 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             }
         }
 
-        public static ParcelableValueItem getValue(ParcelableCardEntity entity, String key) {
-            for (ParcelableValueItem item : entity.values) {
-                if (item.name.equals(key)) return item;
-            }
-            return null;
+        public static ParcelableBindingValue getValue(@Nullable ParcelableCardEntity entity, @Nullable String key) {
+            if (entity == null || entity.values == null || key == null) return null;
+            return entity.values.get(key);
         }
 
         @JsonObject
-        public static final class ParcelableImageValue implements Parcelable {
+        public static final class ParcelableBindingValue implements Parcelable {
 
-            public static final Parcelable.Creator<ParcelableImageValue> CREATOR = new Parcelable.Creator<ParcelableImageValue>() {
+            public static final Parcelable.Creator<ParcelableBindingValue> CREATOR = new Parcelable.Creator<ParcelableBindingValue>() {
                 @Override
-                public ParcelableImageValue createFromParcel(final Parcel in) {
-                    return new ParcelableImageValue(in);
+                public ParcelableBindingValue createFromParcel(final Parcel in) {
+                    return new ParcelableBindingValue(in);
                 }
 
                 @Override
-                public ParcelableImageValue[] newArray(final int size) {
-                    return new ParcelableImageValue[size];
-                }
-            };
-
-            @JsonField(name = "width")
-            public int width;
-            @JsonField(name = "height")
-            public int height;
-            @JsonField(name = "url")
-            public String url;
-
-            public ParcelableImageValue() {
-            }
-
-            public ParcelableImageValue(Parcel in) {
-                this.width = in.readInt();
-                this.height = in.readInt();
-                this.url = in.readString();
-            }
-
-            public ParcelableImageValue(ImageValue value) {
-                this.width = value.getWidth();
-                this.height = value.getHeight();
-                this.url = value.getUrl();
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeInt(width);
-                dest.writeInt(height);
-                dest.writeString(url);
-            }
-
-
-        }
-
-        @JsonObject
-        public static final class ParcelableUserValue implements Parcelable {
-
-            public static final Parcelable.Creator<ParcelableUserValue> CREATOR = new Parcelable.Creator<ParcelableUserValue>() {
-                @Override
-                public ParcelableUserValue createFromParcel(final Parcel in) {
-                    return new ParcelableUserValue(in);
-                }
-
-                @Override
-                public ParcelableUserValue[] newArray(final int size) {
-                    return new ParcelableUserValue[size];
+                public ParcelableBindingValue[] newArray(final int size) {
+                    return new ParcelableBindingValue[size];
                 }
             };
 
-            @JsonField(name = "id")
-            public long id;
-
-            public ParcelableUserValue() {
-
-            }
-
-            public ParcelableUserValue(Parcel in) {
-                this.id = in.readLong();
-            }
-
-            public ParcelableUserValue(UserValue value) {
-                this.id = value.getUserId();
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeLong(id);
-            }
-
-        }
-
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(name);
-            dest.writeTypedArray(values, flags);
-            dest.writeTypedArray(users, flags);
-        }
-
-
-        @JsonObject
-        public static final class ParcelableValueItem implements Parcelable {
-
-            public static final Creator<ParcelableValueItem> CREATOR = new Creator<ParcelableValueItem>() {
-                @Override
-                public ParcelableValueItem createFromParcel(final Parcel in) {
-                    return new ParcelableValueItem(in);
-                }
-
-                @Override
-                public ParcelableValueItem[] newArray(final int size) {
-                    return new ParcelableValueItem[size];
-                }
-            };
-
-
-            @JsonField(name = "name")
-            public String name;
             @JsonField(name = "type")
             public String type;
             @JsonField(name = "value")
-            public Object value;
+            public String value;
 
-            public ParcelableValueItem() {
+            public ParcelableBindingValue() {
             }
 
-            public ParcelableValueItem(Parcel in) {
-                this.name = in.readString();
+            public ParcelableBindingValue(Parcel in) {
                 this.type = in.readString();
-                this.value = in.readValue(ParcelableValueItem.class.getClassLoader());
+                this.value = in.readString();
             }
 
-            public ParcelableValueItem(BindingValue bindingValue) {
-                name = bindingValue.getName();
-                type = bindingValue.getType();
-                switch (type) {
-                    case BindingValue.TYPE_STRING:
-                        value = ((StringValue) bindingValue).getValue();
-                        break;
-                    case BindingValue.TYPE_BOOLEAN:
-                        value = ((BooleanValue) bindingValue).getValue();
-                        break;
-                    case BindingValue.TYPE_IMAGE:
-                        value = new ParcelableImageValue((ImageValue) bindingValue);
-                        break;
-                    case BindingValue.TYPE_USER:
-                        value = new ParcelableUserValue((UserValue) bindingValue);
-                        break;
-                    default:
-                        value = null;
-                        break;
+            public ParcelableBindingValue(BindingValue value) {
+                this.type = value.getType();
+                if (BindingValue.TYPE_IMAGE.equals(type)) {
+                    this.value = ((ImageValue) value).getUrl();
+                } else if (BindingValue.TYPE_STRING.equals(type)) {
+                    this.value = ((StringValue) value).getValue();
+                } else if (BindingValue.TYPE_BOOLEAN.equals(type)) {
+                    this.value = String.valueOf(((BooleanValue) value).getValue());
+                } else if (BindingValue.TYPE_USER.equals(type)) {
+                    this.value = String.valueOf(((UserValue) value).getUserId());
                 }
             }
 
@@ -927,23 +822,24 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 return 0;
             }
 
-            @Override
-            public String toString() {
-                return "ParcelableValueItem{" +
-                        "name='" + name + '\'' +
-                        ", type='" + type + '\'' +
-                        ", value=" + value +
-                        '}';
+            public static Map<String, ParcelableBindingValue> from(Map<String, BindingValue> bindingValues) {
+                if (bindingValues == null) return null;
+                final Map<String, ParcelableBindingValue> map = new HashMap<>();
+                for (Entry<String, BindingValue> entry : bindingValues.entrySet()) {
+                    map.put(entry.getKey(), new ParcelableBindingValue(entry.getValue()));
+                }
+                return map;
             }
 
             @Override
             public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(name);
                 dest.writeString(type);
-                dest.writeValue(value);
+                dest.writeString(value);
             }
 
+
         }
+
     }
 
     @Override

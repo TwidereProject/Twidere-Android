@@ -82,6 +82,7 @@ public class ParcelableAccount implements Parcelable {
     @JsonField(name = "is_dummy")
     public boolean is_dummy;
 
+
     public ParcelableAccount(final Cursor cursor, final Indices indices) {
         is_dummy = false;
         screen_name = indices.screen_name != -1 ? cursor.getString(indices.screen_name) : null;
@@ -104,15 +105,7 @@ public class ParcelableAccount implements Parcelable {
         color = source.readInt();
     }
 
-    private ParcelableAccount() {
-        is_dummy = true;
-        screen_name = null;
-        name = null;
-        account_id = -1;
-        profile_image_url = null;
-        profile_banner_url = null;
-        color = 0;
-        is_activated = false;
+    public ParcelableAccount() {
     }
 
     @Override
@@ -333,6 +326,9 @@ public class ParcelableAccount implements Parcelable {
 
         @JsonField(name = "no_version_suffix")
         public boolean no_version_suffix;
+
+        public ParcelableCredentials() {
+        }
 
         public ParcelableCredentials(final Cursor cursor, final Indices indices) {
             super(cursor, indices);

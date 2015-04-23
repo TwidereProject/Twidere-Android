@@ -23,7 +23,9 @@ import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.fragment.support.CardBrowserFragment;
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableValueItem;
+import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
+
+import twitter4j.CardEntity.BindingValue;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -41,8 +43,8 @@ public abstract class TwitterCardFragmentFactory {
     }
 
     public static Fragment createGenericPlayerFragment(ParcelableCardEntity card) {
-        final ParcelableValueItem player_url = ParcelableCardEntity.getValue(card, "player_url");
-        if (player_url == null) return null;
-        return CardBrowserFragment.show((String) player_url.value);
+        final ParcelableBindingValue player_url = ParcelableCardEntity.getValue(card, "player_url");
+        if (player_url == null || !BindingValue.TYPE_STRING.equals(player_url.type)) return null;
+        return CardBrowserFragment.show(player_url.value);
     }
 }

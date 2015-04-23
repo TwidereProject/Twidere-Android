@@ -34,7 +34,7 @@ public interface CardEntity extends Serializable {
 
     BindingValue getBindingValue(String key);
 
-    BindingValue[] getBindingValues();
+    java.util.Map<String, BindingValue> getBindingValues();
 
     public interface BindingValue extends Serializable {
 
