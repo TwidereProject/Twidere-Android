@@ -79,6 +79,8 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="read_from_bottom"
+            android:summaryOff="@string/read_from_bottom_summary_off"
+            android:summaryOn="@string/read_from_bottom_summary_on"
             android:title="@string/read_from_bottom"/>
         <CheckBoxPreference
             android:defaultValue="false"

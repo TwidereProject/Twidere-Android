@@ -76,15 +76,16 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
         final int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
         final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
         final int itemCount = adapter.getItemCount();
+        final boolean backupOutsideRange = positionBackup > lastVisibleItemPosition || positionBackup < firstVisibleItemPosition;
         if (focusedChild != null) {
             position = view.getChildLayoutPosition(focusedChild);
         } else if (firstVisibleItemPosition == 0) {
             position = -1;
         } else if (lastVisibleItemPosition == itemCount - 1) {
             position = itemCount;
-        } else if (direction > 0 && positionBackup < firstVisibleItemPosition) {
+        } else if (direction > 0 && backupOutsideRange) {
             position = firstVisibleItemPosition;
-        } else if (direction < 0 && positionBackup > lastVisibleItemPosition) {
+        } else if (direction < 0 && backupOutsideRange) {
             position = lastVisibleItemPosition;
         } else {
             position = positionBackup;

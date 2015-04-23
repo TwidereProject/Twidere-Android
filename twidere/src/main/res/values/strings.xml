@@ -670,6 +670,8 @@
     <string name="members">Members</string>
     <string name="subscribers">Subscriber</string>
     <string name="read_from_bottom">Read from bottom</string>
+    <string name="read_from_bottom_summary_off">Jump to latest tweet after refreshing</string>
+    <string name="read_from_bottom_summary_on">Keep read position after refreshing</string>
     <string name="register">Register</string>
     <string name="follows">Follows</string>
     <string name="belongs_to">Belongs to</string>
