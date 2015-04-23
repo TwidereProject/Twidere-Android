@@ -28,12 +28,13 @@ public class UploaderMediaItem implements Parcelable {
         }
     };
 
-    @JsonField(name = "String")
-	public String path;
-    @JsonField(name = "ParcelFileDescriptor")
-	public ParcelFileDescriptor fd;
-    @JsonField(name = "long")
-	public long size;
+
+    @JsonField(name = "path")
+    public String path;
+    @JsonField(name = "fd")
+    public ParcelFileDescriptor fd;
+    @JsonField(name = "size")
+    public long size;
 
     public UploaderMediaItem(final Context context, final ParcelableMediaUpdate media) throws FileNotFoundException {
         path = Uri.parse(media.uri).getPath();

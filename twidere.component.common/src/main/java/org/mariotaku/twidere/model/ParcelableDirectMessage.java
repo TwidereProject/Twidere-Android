@@ -66,43 +66,44 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
         }
     };
 
-    @JsonField(name = "long")
+
+    @JsonField(name = "account_id")
     public long account_id;
-    @JsonField(name = "long")
+    @JsonField(name = "id")
     public long id;
-    @JsonField(name = "long")
+    @JsonField(name = "timestamp")
     public long timestamp;
 
-    @JsonField(name = "long")
+    @JsonField(name = "sender_id")
     public long sender_id;
-    @JsonField(name = "long")
+    @JsonField(name = "recipient_id")
     public long recipient_id;
 
-    @JsonField(name = "boolean")
+    @JsonField(name = "is_outgoing")
     public boolean is_outgoing;
 
-    @JsonField(name = "String")
+    @JsonField(name = "text_html")
     public String text_html;
-    @JsonField(name = "String")
+    @JsonField(name = "text_plain")
     public String text_plain;
-    @JsonField(name = "String")
+    @JsonField(name = "text_unescaped")
     public String text_unescaped;
 
-    @JsonField(name = "String")
+    @JsonField(name = "sender_name")
     public String sender_name;
-    @JsonField(name = "String")
+    @JsonField(name = "recipient_name")
     public String recipient_name;
-    @JsonField(name = "String")
+    @JsonField(name = "sender_screen_name")
     public String sender_screen_name;
-    @JsonField(name = "String")
+    @JsonField(name = "recipient_screen_name")
     public String recipient_screen_name;
 
-    @JsonField(name = "String")
+    @JsonField(name = "sender_profile_image_url")
     public String sender_profile_image_url;
-    @JsonField(name = "String")
+    @JsonField(name = "recipient_profile_image_url")
     public String recipient_profile_image_url;
 
-    @JsonField(name = "ParcelableMedia[]")
+    @JsonField(name = "media")
     public ParcelableMedia[] media;
 
     public ParcelableDirectMessage(final ContentValues values) {

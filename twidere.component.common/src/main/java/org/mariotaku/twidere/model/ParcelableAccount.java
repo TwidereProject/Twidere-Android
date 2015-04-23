@@ -27,6 +27,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
@@ -38,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@JsonObject
 public class ParcelableAccount implements Parcelable {
 
     public static final Parcelable.Creator<ParcelableAccount> CREATOR = new Parcelable.Creator<ParcelableAccount>() {
@@ -53,11 +57,30 @@ public class ParcelableAccount implements Parcelable {
         }
     };
 
-    public final String screen_name, name, profile_image_url, profile_banner_url;
-    public final long account_id;
-    public final int color;
-    public final boolean is_activated;
-    public final boolean is_dummy;
+
+    @JsonField(name = "screen_name")
+    public String screen_name;
+
+    @JsonField(name = "name")
+    public String name;
+
+    @JsonField(name = "profile_image_url")
+    public String profile_image_url;
+
+    @JsonField(name = "profile_banner_url")
+    public String profile_banner_url;
+
+    @JsonField(name = "account_id")
+    public long account_id;
+
+    @JsonField(name = "color")
+    public int color;
+
+    @JsonField(name = "is_activated")
+    public boolean is_activated;
+
+    @JsonField(name = "is_dummy")
+    public boolean is_dummy;
 
     public ParcelableAccount(final Cursor cursor, final Indices indices) {
         is_dummy = false;
@@ -164,7 +187,7 @@ public class ParcelableAccount implements Parcelable {
     }
 
     @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final Cursor cursor,@Nullable  final Indices indices) {
+    public static ParcelableAccount[] getAccounts(@Nullable final Cursor cursor, @Nullable final Indices indices) {
         if (cursor == null || indices == null) return new ParcelableAccount[0];
         try {
             cursor.moveToFirst();
@@ -264,6 +287,7 @@ public class ParcelableAccount implements Parcelable {
                 + ", is_activated=" + is_activated + ", is_dummy=" + is_dummy + "}";
     }
 
+    @JsonObject
     public static class ParcelableCredentials extends ParcelableAccount {
 
         public static final Parcelable.Creator<ParcelableCredentials> CREATOR = new Parcelable.Creator<ParcelableCredentials>() {
@@ -279,12 +303,36 @@ public class ParcelableAccount implements Parcelable {
             }
         };
 
-        public final int auth_type;
-        public final String consumer_key, consumer_secret;
-        public final String basic_auth_username, basic_auth_password;
-        public final String oauth_token, oauth_token_secret;
-        public final String api_url_format;
-        public final boolean same_oauth_signing_url, no_version_suffix;
+
+        @JsonField(name = "auth_type")
+        public int auth_type;
+
+        @JsonField(name = "consumer_key")
+        public String consumer_key;
+
+        @JsonField(name = "consumer_secret")
+        public String consumer_secret;
+
+        @JsonField(name = "basic_auth_username")
+        public String basic_auth_username;
+
+        @JsonField(name = "basic_auth_password")
+        public String basic_auth_password;
+
+        @JsonField(name = "oauth_token")
+        public String oauth_token;
+
+        @JsonField(name = "oauth_token_secret")
+        public String oauth_token_secret;
+
+        @JsonField(name = "api_url_format")
+        public String api_url_format;
+
+        @JsonField(name = "same_oauth_signing_url")
+        public boolean same_oauth_signing_url;
+
+        @JsonField(name = "no_version_suffix")
+        public boolean no_version_suffix;
 
         public ParcelableCredentials(final Cursor cursor, final Indices indices) {
             super(cursor, indices);
