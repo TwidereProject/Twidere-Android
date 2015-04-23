@@ -28,7 +28,6 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameUtils;
@@ -345,10 +344,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         final boolean sensitive = cursor.getShort(indices.is_possibly_sensitive) == 1;
 
-        final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(
-                cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
-        final ParcelableLocation location = ParcelableLocation.fromString(
-                cursor.getString(indices.location));
+        final ParcelableMedia[] media = ParcelableMedia.fromSerializedJson(cursor.getString(indices.media));
+        final ParcelableLocation location = ParcelableLocation.fromString(cursor.getString(indices.location));
 
         if (retweet_id > 0) {
             final long retweeted_by_id = cursor.getLong(indices.retweeted_by_user_id);

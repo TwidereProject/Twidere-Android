@@ -209,7 +209,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
         final ParcelableMedia[] mediaArray = ParcelableMedia.fromEntities(message);
         if (mediaArray != null) {
-            values.put(DirectMessages.MEDIA_LIST, SimpleValueSerializer.toSerializedString(mediaArray));
+            values.put(DirectMessages.MEDIA_JSON, JSONSerializer.toJSONArrayString(mediaArray));
         }
         return values;
     }
@@ -232,7 +232,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, message.sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, message.recipient_profile_image_url);
         if (message.media != null) {
-            values.put(DirectMessages.MEDIA_LIST, SimpleValueSerializer.toSerializedString(message.media));
+            values.put(DirectMessages.MEDIA_JSON, JSONSerializer.toJSONArrayString(message.media));
         }
         return values;
     }
@@ -339,7 +339,10 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.QUOTE_TEXT_UNESCAPED, toPlainText(textHtml));
             values.put(Statuses.QUOTE_TIMESTAMP, orig.getCreatedAt().getTime());
             values.put(Statuses.QUOTE_SOURCE, orig.getSource());
-
+            final ParcelableMedia[] quoteMedia = ParcelableMedia.fromStatus(orig);
+            if (quoteMedia != null) {
+                values.put(Statuses.QUOTE_MEDIA_JSON, JSONSerializer.toJSONArrayString(quoteMedia));
+            }
             values.put(Statuses.QUOTED_BY_USER_ID, quotedById);
             values.put(Statuses.QUOTED_BY_USER_NAME, quoteUser.getName());
             values.put(Statuses.QUOTED_BY_USER_SCREEN_NAME, quoteUser.getScreenName());
@@ -395,11 +398,11 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.IS_FAVORITE, status.isFavorited());
         final ParcelableMedia[] media = ParcelableMedia.fromStatus(status);
         if (media != null) {
-            values.put(Statuses.MEDIA_LIST, SimpleValueSerializer.toSerializedString(media));
+            values.put(Statuses.MEDIA_JSON, JSONSerializer.toJSONArrayString(media));
         }
         final ParcelableUserMention[] mentions = ParcelableUserMention.fromStatus(status);
         if (mentions != null) {
-            values.put(Statuses.MENTIONS_LIST, SimpleValueSerializer.toSerializedString(mentions));
+            values.put(Statuses.MENTIONS_JSON, JSONSerializer.toJSONArrayString(mentions));
         }
         final ParcelableCardEntity card = ParcelableCardEntity.fromCardEntity(status.getCard(), accountId);
         if (card != null) {

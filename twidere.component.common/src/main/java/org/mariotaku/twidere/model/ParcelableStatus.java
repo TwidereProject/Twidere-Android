@@ -33,7 +33,6 @@ import org.mariotaku.jsonserializer.JSONParcelable;
 import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
-import org.mariotaku.twidere.util.SimpleValueSerializer;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.util.Arrays;
@@ -117,7 +116,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
 
     public final ParcelableUserMention[] mentions;
 
-    public final ParcelableMedia[] media;
+    public final ParcelableMedia[] media, quote_media;
 
     public final ParcelableCardEntity card;
 
@@ -146,7 +145,8 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         retweeted_by_profile_image = idx.retweeted_by_user_profile_image != -1 ? c
                 .getString(idx.retweeted_by_user_profile_image) : null;
         text_html = idx.text_html != -1 ? c.getString(idx.text_html) : null;
-        media = SimpleValueSerializer.fromSerializedString(idx.media != -1 ? c.getString(idx.media) : null, ParcelableMedia.SIMPLE_CREATOR);
+        media = idx.media != -1 ? ParcelableMedia.fromSerializedJson(c.getString(idx.media)) : null;
+        quote_media = idx.quote_media != -1 ? ParcelableMedia.fromSerializedJson(c.getString(idx.quote_media)) : null;
         text_plain = idx.text_plain != -1 ? c.getString(idx.text_plain) : null;
         user_name = idx.user_name != -1 ? c.getString(idx.user_name) : null;
         user_screen_name = idx.user_screen_name != -1 ? c.getString(idx.user_screen_name) : null;
@@ -160,7 +160,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         my_retweet_id = idx.my_retweet_id != -1 ? c.getLong(idx.my_retweet_id) : -1;
         is_possibly_sensitive = idx.is_possibly_sensitive != -1 && c.getInt(idx.is_possibly_sensitive) == 1;
         user_is_following = idx.is_following != -1 && c.getInt(idx.is_following) == 1;
-        mentions = idx.mentions != -1 ? ParcelableUserMention.fromJSONString(c.getString(idx.mentions)) : null;
+        mentions = idx.mentions != -1 ? ParcelableUserMention.fromSerializedJson(c.getString(idx.mentions)) : null;
         card = idx.card != -1 ? ParcelableCardEntity.fromJSONString(c.getString(idx.card)) : null;
         place_full_name = idx.place_full_name != -1 ? c.getString(idx.place_full_name) : null;
         is_quote = idx.is_quote != -1 && c.getShort(idx.is_quote) == 1;
@@ -210,6 +210,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         source = in.readString("source");
         user_profile_image_url = in.readString("profile_image_url");
         media = in.readParcelableArray("media", ParcelableMedia.JSON_CREATOR);
+        quote_media = in.readParcelableArray("quote_media", ParcelableMedia.JSON_CREATOR);
         location = in.readParcelable("location", ParcelableLocation.JSON_CREATOR);
         my_retweet_id = in.readLong("my_retweet_id");
         is_possibly_sensitive = in.readBoolean("is_possibly_sensitive");
@@ -263,6 +264,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         source = in.readString();
         user_profile_image_url = in.readString();
         media = in.createTypedArray(ParcelableMedia.CREATOR);
+        quote_media = in.createTypedArray(ParcelableMedia.CREATOR);
         location = in.readParcelable(ParcelableLocation.class.getClassLoader());
         my_retweet_id = in.readLong();
         is_possibly_sensitive = in.readByte() == 1;
@@ -319,6 +321,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         source = orig.source;
         user_profile_image_url = orig.user_profile_image_url;
         media = orig.media;
+        quote_media = orig.quote_media;
         location = orig.location;
         my_retweet_id = override_my_retweet_id;
         is_possibly_sensitive = orig.is_possibly_sensitive;
@@ -396,6 +399,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         user_is_following = user.isFollowing();
         text_html = TwitterContentUtils.formatStatusText(status);
         media = ParcelableMedia.fromStatus(status);
+        quote_media = quoted != null ? ParcelableMedia.fromStatus(orig) : null;
         text_plain = status.getText();
         retweet_count = status.getRetweetCount();
         favorite_count = status.getFavoriteCount();
@@ -539,6 +543,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeString("source", source);
         out.writeString("profile_image_url", user_profile_image_url);
         out.writeParcelableArray("media", media);
+        out.writeParcelableArray("quote_media", quote_media);
         out.writeParcelable("location", location);
         out.writeLong("my_retweet_id", my_retweet_id);
         out.writeBoolean("is_possibly_sensitive", is_possibly_sensitive);
@@ -579,10 +584,11 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                 in_reply_to_user_name, in_reply_to_user_screen_name, my_retweet_id, retweeted_by_user_name,
                 retweeted_by_user_screen_name, retweeted_by_user_profile_image, retweet_id, retweet_timestamp,
                 retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
-                descendent_reply_count, is_possibly_sensitive, is_following, media, mentions, card_name,
-                card, place_full_name, is_quote, quote_id, quote_text_html, quote_text_plain, quote_text_unescaped,
-                quote_timestamp, quote_source, quoted_by_user_id, quoted_by_user_name, quoted_by_user_screen_name,
-                quoted_by_user_profile_image, quoted_by_user_is_protected, quoted_by_user_is_verified;
+                descendent_reply_count, is_possibly_sensitive, is_following, media, mentions, quote_media,
+                card_name, card, place_full_name, is_quote, quote_id, quote_text_html, quote_text_plain,
+                quote_text_unescaped, quote_timestamp, quote_source, quoted_by_user_id, quoted_by_user_name,
+                quoted_by_user_screen_name, quoted_by_user_profile_image, quoted_by_user_is_protected,
+                quoted_by_user_is_verified;
 
         public CursorIndices(final Cursor cursor) {
             _id = cursor.getColumnIndex(Statuses._ID);
@@ -633,8 +639,9 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
             descendent_reply_count = cursor.getColumnIndex(Statuses.DESCENDENT_REPLY_COUNT);
             is_possibly_sensitive = cursor.getColumnIndex(Statuses.IS_POSSIBLY_SENSITIVE);
             is_following = cursor.getColumnIndex(Statuses.IS_FOLLOWING);
-            media = cursor.getColumnIndex(Statuses.MEDIA_LIST);
-            mentions = cursor.getColumnIndex(Statuses.MENTIONS_LIST);
+            media = cursor.getColumnIndex(Statuses.MEDIA_JSON);
+            mentions = cursor.getColumnIndex(Statuses.MENTIONS_JSON);
+            quote_media = cursor.getColumnIndex(Statuses.QUOTE_MEDIA_JSON);
             card = cursor.getColumnIndex(Statuses.CARD);
             card_name = cursor.getColumnIndex(Statuses.CARD_NAME);
             place_full_name = cursor.getColumnIndex(Statuses.PLACE_FULL_NAME);
@@ -680,9 +687,23 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
                     ", is_following=" + is_following +
                     ", media=" + media +
                     ", mentions=" + mentions +
+                    ", quote_media=" + quote_media +
                     ", card_name=" + card_name +
                     ", card=" + card +
                     ", place_full_name=" + place_full_name +
+                    ", is_quote=" + is_quote +
+                    ", quote_id=" + quote_id +
+                    ", quote_text_html=" + quote_text_html +
+                    ", quote_text_plain=" + quote_text_plain +
+                    ", quote_text_unescaped=" + quote_text_unescaped +
+                    ", quote_timestamp=" + quote_timestamp +
+                    ", quote_source=" + quote_source +
+                    ", quoted_by_user_id=" + quoted_by_user_id +
+                    ", quoted_by_user_name=" + quoted_by_user_name +
+                    ", quoted_by_user_screen_name=" + quoted_by_user_screen_name +
+                    ", quoted_by_user_profile_image=" + quoted_by_user_profile_image +
+                    ", quoted_by_user_is_protected=" + quoted_by_user_is_protected +
+                    ", quoted_by_user_is_verified=" + quoted_by_user_is_verified +
                     '}';
         }
 
@@ -1054,6 +1075,7 @@ public class ParcelableStatus implements TwidereParcelable, Comparable<Parcelabl
         out.writeString(source);
         out.writeString(user_profile_image_url);
         out.writeTypedArray(media, flags);
+        out.writeTypedArray(quote_media, flags);
         out.writeParcelable(location, flags);
         out.writeLong(my_retweet_id);
         out.writeByte((byte) (is_possibly_sensitive ? 1 : 0));

@@ -33,7 +33,7 @@ import static org.mariotaku.twidere.annotation.Preference.Type.STRING;
 public interface Constants extends TwidereConstants {
 
     String DATABASES_NAME = "twidere.sqlite";
-    int DATABASES_VERSION = 97;
+    int DATABASES_VERSION = 98;
 
     int MENU_GROUP_STATUS_EXTENSION = 10;
     int MENU_GROUP_COMPOSE_EXTENSION = 11;

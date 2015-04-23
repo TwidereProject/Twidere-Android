@@ -34,13 +34,12 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.SimpleValueSerializer;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer;
+import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 
 public class MessageConversationViewHolder extends ViewHolder implements OnMediaClickListener {
 
@@ -79,7 +78,7 @@ public class MessageConversationViewHolder extends ViewHolder implements OnMedia
 
         final long accountId = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.message_timestamp);
-        final ParcelableMedia[] media = SimpleValueSerializer.fromSerializedString(cursor.getString(indices.media), ParcelableMedia.SIMPLE_CREATOR);
+        final ParcelableMedia[] media = ParcelableMedia.fromSerializedJson(cursor.getString(indices.media));
         text.setText(Html.fromHtml(cursor.getString(indices.text)));
         linkify.applyAllLinks(text, accountId, false);
         text.setMovementMethod(null);

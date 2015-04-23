@@ -22,22 +22,23 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.JsonReader;
+import android.util.JsonWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.mariotaku.jsonserializer.JSONParcel;
 import org.mariotaku.jsonserializer.JSONParcelable;
 import org.mariotaku.jsonserializer.JSONSerializer;
-import org.mariotaku.twidere.util.SimpleValueSerializer;
-import org.mariotaku.twidere.util.SimpleValueSerializer.Reader;
-import org.mariotaku.twidere.util.SimpleValueSerializer.SerializationException;
-import org.mariotaku.twidere.util.SimpleValueSerializer.SimpleValueSerializable;
-import org.mariotaku.twidere.util.SimpleValueSerializer.Writer;
+import org.mariotaku.twidere.model.iface.JsonReadable;
+import org.mariotaku.twidere.model.iface.JsonWritable;
+
+import java.io.IOException;
 
 import twitter4j.Status;
 import twitter4j.UserMentionEntity;
 
-public class ParcelableUserMention implements Parcelable, JSONParcelable, SimpleValueSerializable {
+public class ParcelableUserMention implements Parcelable, JSONParcelable, JsonReadable, JsonWritable {
 
     public static final Parcelable.Creator<ParcelableUserMention> CREATOR = new Parcelable.Creator<ParcelableUserMention>() {
         @Override
@@ -61,20 +62,13 @@ public class ParcelableUserMention implements Parcelable, JSONParcelable, Simple
             return new ParcelableUserMention[size];
         }
     };
-    public static final SimpleValueSerializer.Creator<ParcelableUserMention> SIMPLE_CREATOR = new SimpleValueSerializer.Creator<ParcelableUserMention>() {
-        @Override
-        public ParcelableUserMention create(final SimpleValueSerializer.Reader reader) throws SerializationException {
-            return new ParcelableUserMention(reader);
-        }
-
-        @Override
-        public ParcelableUserMention[] newArray(final int size) {
-            return new ParcelableUserMention[size];
-        }
-    };
     public long id;
 
     public String name, screen_name;
+
+    public ParcelableUserMention() {
+
+    }
 
     public ParcelableUserMention(final JSONParcel in) {
         id = in.readLong("id");
@@ -94,9 +88,39 @@ public class ParcelableUserMention implements Parcelable, JSONParcelable, Simple
         screen_name = entity.getScreenName();
     }
 
-    public ParcelableUserMention(Reader reader) throws SerializationException {
-        while (reader.hasKeyValue()) {
-            switch (reader.nextKey()) {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof ParcelableUserMention)) return false;
+        final ParcelableUserMention other = (ParcelableUserMention) obj;
+        if (id != other.id) return false;
+        return true;
+    }
+
+    public static ParcelableUserMention[] fromSerializedJson(String string) {
+
+        return new ParcelableUserMention[0];
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ id >>> 32);
+        return result;
+    }
+
+    @Override
+    public void read(JsonReader reader) throws IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            switch (reader.nextName()) {
                 case "id": {
                     id = reader.nextLong();
                     break;
@@ -115,29 +139,7 @@ public class ParcelableUserMention implements Parcelable, JSONParcelable, Simple
                 }
             }
         }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ParcelableUserMention)) return false;
-        final ParcelableUserMention other = (ParcelableUserMention) obj;
-        if (id != other.id) return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ id >>> 32);
-        return result;
+        reader.endObject();
     }
 
     @Override
@@ -146,10 +148,10 @@ public class ParcelableUserMention implements Parcelable, JSONParcelable, Simple
     }
 
     @Override
-    public void write(Writer writer) {
-        writer.write("id", id);
-        writer.write("name", name);
-        writer.write("screen_name", screen_name);
+    public void write(JsonWriter writer) throws IOException {
+        writer.name("id").value(id);
+        writer.name("name").value(name);
+        writer.name("screen_name").value(screen_name);
     }
 
     @Override
