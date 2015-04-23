@@ -121,7 +121,6 @@ import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.Utils.cleanDatabasesByItemLimit;
-import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getTabDisplayOptionInt;
 import static org.mariotaku.twidere.util.Utils.isDatabaseReady;
@@ -353,8 +352,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
-        final long[] accountIds = getAccountIds(this);
-        if (accountIds.length == 0) {
+        if (!Utils.hasAccount(this)) {
             final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
             signInIntent.setClass(this, SignInActivity.class);
             startActivity(signInIntent);
@@ -481,13 +479,13 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     public void notifyAccountsChanged() {
         if (mPreferences == null) return;
-        final long[] account_ids = getAccountIds(this);
-        final long default_id = mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
-        if (account_ids == null || account_ids.length == 0) {
-            finish();
-        } else if (account_ids.length > 0 && !ArrayUtils.contains(account_ids, default_id)) {
-            mPreferences.edit().putLong(KEY_DEFAULT_ACCOUNT_ID, account_ids[0]).apply();
-        }
+//        final long[] accountIds = getAccountIds(this);
+//        final long default_id = mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
+//        if (accountIds == null || accountIds.length == 0) {
+//            finish();
+//        } else if (accountIds.length > 0 && !ArrayUtils.contains(accountIds, default_id)) {
+//            mPreferences.edit().putLong(KEY_DEFAULT_ACCOUNT_ID, accountIds[0]).apply();
+//        }
     }
 
     @Subscribe

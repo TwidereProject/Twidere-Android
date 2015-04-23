@@ -216,6 +216,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     public boolean triggerRefresh() {
+        super.triggerRefresh();
         AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
 
             @Override

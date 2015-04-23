@@ -34,7 +34,6 @@
     <string name="error_occurred">An error occurred, please try again.</string>
     <string name="error_already_logged_in">You have already logged in.</string>
     <string name="no_account_selected">No account selected.</string>
-    <string name="empty_account_selection_disallowed">Please select at least one account.</string>
     <string name="error_unknown_error">Error: Unknown error, this is probably a bug.</string>
     <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
     <string name="error_message_with_action">Error while <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
@@ -223,7 +222,6 @@
     <string name="tabs">Tabs</string>
     <string name="add_tab">Add tab</string>
     <string name="edit_tab">Edit tab</string>
-    <string name="invalid_settings">Found invalid settings.</string>
     <string name="icon">Icon</string>
     <string name="pick_file">Pick file</string>
     <string name="user_timeline">User timeline</string>
@@ -738,4 +736,5 @@
     <string name="next_tab">Next tab</string>
     <string name="keyboard_shortcut_back">Back</string>
     <string name="press_again_to_close">Press again to close</string>
+    <string name="name_not_set"><xliff:g id="name">%s</xliff:g> not set</string>
 </resources>

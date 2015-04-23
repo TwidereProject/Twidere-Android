@@ -143,6 +143,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
     @Override
     public boolean triggerRefresh() {
+        super.triggerRefresh();
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final long[] accountIds = getAccountIds();
         if (adapter.getStatusesCount() > 0) {

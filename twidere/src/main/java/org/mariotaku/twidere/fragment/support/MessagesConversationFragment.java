@@ -318,6 +318,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mUsersSearchList.setVisibility(View.GONE);
         mUsersSearchProgress.setVisibility(View.GONE);
 
+        mQueryTextChanged = false;
+        mTextChanged = false;
     }
 
     @Override
@@ -646,7 +648,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mQueryTextChanged = true;
             }
 
             @Override
@@ -671,6 +672,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             @Override
             public void afterTextChanged(Editable s) {
                 Utils.removeLineBreaks(s);
+                mQueryTextChanged = s.length() == 0;
             }
         });
     }
@@ -687,6 +689,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             @Override
             public void afterTextChanged(final Editable s) {
                 Utils.removeLineBreaks(s);
+                mTextChanged = s.length() == 0;
             }
 
             @Override
@@ -696,7 +699,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-                mTextChanged = true;
                 updateTextCount();
                 if (mSendButton == null || s == null) return;
                 mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));

@@ -147,13 +147,16 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
             case R.id.save: {
                 if (!isEditMode()) {
                     if (conf == null) return;
-                    final boolean account_id_required = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
+                    final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
                     final boolean no_account_id = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
                     final boolean secondaryFieldRequired = conf.getSecondaryFieldType() != CustomTabConfiguration.FIELD_TYPE_NONE;
-                    final boolean account_id_invalid = getAccountId() <= 0;
-                    final boolean secondary_field_invalid = mSecondaryFieldValue == null;
-                    if (account_id_required && account_id_invalid || secondaryFieldRequired && secondary_field_invalid) {
-                        Toast.makeText(this, R.string.invalid_settings, Toast.LENGTH_SHORT).show();
+                    final boolean accountIdInvalid = getAccountId() <= 0;
+                    final boolean secondaryFieldInvalid = mSecondaryFieldValue == null;
+                    if (accountIdRequired && accountIdInvalid) {
+                        Toast.makeText(this, R.string.no_account_selected, Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (secondaryFieldRequired && secondaryFieldInvalid) {
+                        Toast.makeText(this, getString(R.string.name_not_set, mSecondaryFieldLabel.getText()), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     final Intent data = new Intent();

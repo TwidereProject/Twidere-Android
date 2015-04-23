@@ -44,12 +44,6 @@ public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<Parc
         return new ParcelableUsersAdapter(context, compact);
     }
 
-
-    @Override
-    public boolean triggerRefresh() {
-        return false;
-    }
-
     protected long getAccountId() {
         final Bundle args = getArguments();
         return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;

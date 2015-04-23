@@ -601,32 +601,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             return;
         }
         mMenuBar.setOnMenuItemClickListener(this);
-        final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
-        EditTextEnterHandler.attach(mEditText, new EnterListener() {
-            @Override
-            public void onHitEnter() {
-                updateStatus();
-            }
-        }, sendByEnter);
-        mEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-                mTextChanged = true;
-                setMenu();
-                updateTextCount();
-            }
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-            }
-        });
-        mEditText.setCustomSelectionActionModeCallback(this);
+        setupEditText();
         mAccountSelectorContainer.setOnClickListener(this);
         mAccountSelectorButton.setOnClickListener(this);
         mLocationContainer.setOnClickListener(this);
@@ -700,6 +675,37 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         updateLocationState();
         updateMediaPreview();
         notifyAccountSelectionChanged();
+
+        mTextChanged = false;
+    }
+
+    private void setupEditText() {
+        final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
+        EditTextEnterHandler.attach(mEditText, new EnterListener() {
+            @Override
+            public void onHitEnter() {
+                updateStatus();
+            }
+        }, sendByEnter);
+        mEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+                setMenu();
+                updateTextCount();
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                mTextChanged = s.length() == 0;
+            }
+        });
+        mEditText.setCustomSelectionActionModeCallback(this);
     }
 
     @Override
@@ -721,10 +727,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                         }
                     });
                     toast.show();
-                    mNavigateBackPressed = true;
                 } else {
                     onBackPressed();
                 }
+                mNavigateBackPressed = true;
             } else {
                 mTextChanged = false;
             }

@@ -1302,6 +1302,18 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
+    public static boolean hasAccount(final Context context) {
+        if (context == null) return false;
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                new String[]{SQLFunctions.COUNT()}, null, null, null);
+        try {
+            cur.moveToFirst();
+            return cur.getInt(0) > 0;
+        } finally {
+            cur.close();
+        }
+    }
+
     public static String getAccountName(final Context context, final long accountId) {
         if (context == null) return null;
         final String cached = sAccountNames.get(accountId);
