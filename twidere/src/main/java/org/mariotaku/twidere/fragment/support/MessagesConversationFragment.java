@@ -29,6 +29,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -44,7 +45,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,6 +63,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.SuperToast.Duration;
+import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -87,10 +91,13 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversation;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -103,7 +110,6 @@ import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -113,49 +119,14 @@ import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 public class MessagesConversationFragment extends BaseSupportFragment implements
         LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener, MenuButtonClickListener,
-        PopupMenu.OnMenuItemClickListener {
+        PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback {
 
+    // Constants
     private static final int LOADER_ID_SEARCH_USERS = 1;
-
     private static final String EXTRA_FROM_CACHE = "from_cache";
 
-    private TwidereValidator mValidator;
-    private AsyncTwitterWrapper mTwitterWrapper;
-    private SharedPreferences mPreferences;
-    private SharedPreferences mMessageDrafts;
-    private ReadStateManager mReadStateManager;
 
-    private RecyclerView mMessagesListView;
-    private ListView mUsersSearchList;
-    private StatusComposeEditText mEditText;
-    private StatusTextCountView mTextCountView;
-    private View mSendButton;
-    private ImageView mAddImageButton;
-    private View mConversationContainer, mRecipientSelectorContainer;
-    private Spinner mAccountSpinner;
-    private ImageView mRecipientProfileImageView;
-    private EditText mUserQuery;
-    private View mUsersSearchProgress;
-    private View mQueryButton;
-    private View mUsersSearchEmpty;
-    private TextView mUsersSearchEmptyText;
-
-    private PopupMenu mPopupMenu;
-
-    private ParcelableDirectMessage mSelectedDirectMessage;
-    private boolean mLoaderInitialized;
-    private String mImageUri;
-
-
-    private MessageConversationAdapter mAdapter;
-    private SimpleParcelableUsersAdapter mUsersSearchAdapter;
-
-    private ParcelableAccount mAccount;
-    private ParcelableUser mRecipient;
-
-    private MediaLoaderWrapper mImageLoader;
-    private IColorLabelView mProfileImageContainer;
-
+    // Callbacks
     private LoaderCallbacks<List<ParcelableUser>> mSearchLoadersCallback = new LoaderCallbacks<List<ParcelableUser>>() {
         @Override
         public Loader<List<ParcelableUser>> onCreateLoader(int id, Bundle args) {
@@ -184,12 +155,70 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
     };
 
+    // Utility classes
+    private TwidereValidator mValidator;
+    private AsyncTwitterWrapper mTwitterWrapper;
+    private SharedPreferences mPreferences;
+    private SharedPreferences mMessageDrafts;
+    private ReadStateManager mReadStateManager;
+    private MediaLoaderWrapper mImageLoader;
+
+    // Views
+    private RecyclerView mMessagesListView;
+    private ListView mUsersSearchList;
+    private StatusComposeEditText mEditText;
+    private StatusTextCountView mTextCountView;
+    private View mSendButton;
+    private ImageView mAddImageButton;
+    private View mConversationContainer, mRecipientSelectorContainer;
+    private Spinner mAccountSpinner;
+    private ImageView mRecipientProfileImageView;
+    private EditText mEditUserQuery;
+    private View mUsersSearchProgress;
+    private View mQueryButton;
+    private View mUsersSearchEmpty;
+    private TextView mUsersSearchEmptyText;
+    private PopupMenu mPopupMenu;
+    private IColorLabelView mProfileImageContainer;
+
+    // Adapters
+    private MessageConversationAdapter mAdapter;
+    private SimpleParcelableUsersAdapter mUsersSearchAdapter;
+
+    // Data fields
+    private boolean mSearchUsersLoaderInitialized;
+    private boolean mNavigateBackPressed;
+    private ParcelableDirectMessage mSelectedDirectMessage;
+    private boolean mLoaderInitialized;
+    private String mImageUri;
+    private ParcelableAccount mAccount;
+    private ParcelableUser mRecipient;
+    private boolean mTextChanged, mQueryTextChanged;
 
     @Subscribe
     public void notifyTaskStateChanged(TaskStateChangedEvent event) {
         updateRefreshState();
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case REQUEST_PICK_IMAGE: {
+                if (resultCode != Activity.RESULT_OK || data.getDataString() == null) {
+                    break;
+                }
+                mImageUri = data.getDataString();
+                updateAddImageButton();
+                break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_messages_conversation, container, false);
+    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -214,7 +243,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         actionBar.setCustomView(R.layout.actionbar_custom_view_message_user_picker);
         final View actionBarView = actionBar.getCustomView();
         mAccountSpinner = (Spinner) actionBarView.findViewById(R.id.account_spinner);
-        mUserQuery = (EditText) actionBarView.findViewById(R.id.user_query);
+        mEditUserQuery = (EditText) actionBarView.findViewById(R.id.user_query);
         mQueryButton = actionBarView.findViewById(R.id.query_button);
         final List<ParcelableAccount> accounts = ParcelableAccount.getAccountsList(activity, false);
         final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(
@@ -291,14 +320,322 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.register(this);
+        updateTextCount();
+        updateEmptyText();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final String previewScaleType = Utils.getNonEmptyString(mPreferences, KEY_MEDIA_PREVIEW_STYLE,
+                ScaleType.CENTER_CROP.name());
+        mAdapter.setImagePreviewScaleType(previewScaleType);
+        mAdapter.notifyDataSetChanged();
+        updateAddImageButton();
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mEditText != null) {
+            outState.putCharSequence(EXTRA_TEXT, mEditText.getText());
+        }
+        outState.putParcelable(EXTRA_ACCOUNT, mAccount);
+        outState.putParcelable(EXTRA_USER, mRecipient);
+        outState.putString(EXTRA_IMAGE_URI, mImageUri);
+    }
+
+    @Override
+    public void onStop() {
+        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        bus.unregister(this);
+        if (mPopupMenu != null) {
+            mPopupMenu.dismiss();
+        }
+
+        final ParcelableAccount account = mAccount;
+        final ParcelableUser recipient = mRecipient;
+        if (account != null && recipient != null) {
+            final String key = getDraftsTextKey(account.account_id, recipient.id);
+            final SharedPreferences.Editor editor = mMessageDrafts.edit();
+            editor.putString(key, ParseUtils.parseString(mEditText.getText()));
+            editor.apply();
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_direct_messages_conversation, menu);
+        final View profileImageItemView = MenuItemCompat.getActionView(menu.findItem(R.id.item_profile_image));
+        profileImageItemView.setOnClickListener(this);
+        mProfileImageContainer = (IColorLabelView) profileImageItemView;
+        mRecipientProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.recipient_profile_image);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        updateProfileImage();
+    }
+
+    @Override
+    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
+        mUsersSearchProgress = view.findViewById(R.id.users_search_progress);
+        mUsersSearchList = (ListView) view.findViewById(R.id.users_search_list);
+        mUsersSearchEmpty = view.findViewById(R.id.users_search_empty);
+        mUsersSearchEmptyText = (TextView) view.findViewById(R.id.users_search_empty_text);
+        mMessagesListView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        final View inputSendContainer = view.findViewById(R.id.input_send_container);
+        mConversationContainer = view.findViewById(R.id.conversation_container);
+        mRecipientSelectorContainer = view.findViewById(R.id.recipient_selector_container);
+        mEditText = (StatusComposeEditText) inputSendContainer.findViewById(R.id.edit_text);
+        mTextCountView = (StatusTextCountView) inputSendContainer.findViewById(R.id.text_count);
+        mSendButton = inputSendContainer.findViewById(R.id.send);
+        mAddImageButton = (ImageView) inputSendContainer.findViewById(R.id.add_image);
+        mUsersSearchList = (ListView) view.findViewById(R.id.users_search_list);
+    }
+
+    @Override
+    protected void fitSystemWindows(Rect insets) {
+        final View view = getView();
+        if (view == null) return;
+        view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+        final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
+        final long recipientId = args != null ? args.getLong(EXTRA_RECIPIENT_ID, -1) : -1;
+        final String[] cols = DirectMessages.COLUMNS;
+        final boolean isValid = accountId > 0 && recipientId > 0;
+        mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
+        mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
+        if (!isValid)
+            return new CursorLoader(getActivity(), TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null);
+        final Uri uri = buildDirectMessageConversationUri(accountId, recipientId, null);
+        return new CursorLoader(getActivity(), uri, cols, null, null, Conversation.DEFAULT_SORT_ORDER);
+    }
+
+    @Override
+    public void onClick(final View view) {
+        switch (view.getId()) {
+            case R.id.send: {
+                sendDirectMessage();
+                break;
+            }
+            case R.id.add_image: {
+                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+                startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                break;
+            }
+            case R.id.item_profile_image: {
+                final ParcelableUser recipient = mRecipient;
+                if (recipient == null) return;
+                final Bundle options = Utils.makeSceneTransitionOption(getActivity(),
+                        new Pair<View, String>(mRecipientProfileImageView,
+                                UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
+                Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
+                        recipient.screen_name, options);
+                break;
+            }
+            case R.id.query_button: {
+                final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
+                searchUsers(account.account_id, ParseUtils.parseString(mEditUserQuery.getText()), false);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onItemSelected(final AdapterView<?> parent, final View view, final int pos, final long id) {
+        final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
+        if (account != null) {
+            mAccount = account;
+            updateProfileImage();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(final AdapterView<?> view) {
+
+    }
+
+    @Override
+    public void onMenuButtonClick(final View button, final int position, final long id) {
+        mSelectedDirectMessage = mAdapter.findItem(id);
+        showMenu(button, mSelectedDirectMessage);
+    }
+
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        mAdapter.setCursor(null);
+    }
+
+    @Override
+    public boolean onMenuItemClick(final MenuItem item) {
+        if (mSelectedDirectMessage != null) {
+            final long message_id = mSelectedDirectMessage.id;
+            final long account_id = mSelectedDirectMessage.account_id;
+            switch (item.getItemId()) {
+                case MENU_DELETE: {
+                    mTwitterWrapper.destroyDirectMessageAsync(account_id, message_id);
+                    break;
+                }
+                case MENU_COPY: {
+                    if (ClipboardUtils.setText(getActivity(), mSelectedDirectMessage.text_plain)) {
+                        showOkMessage(getActivity(), R.string.text_copied, false);
+                    }
+                    break;
+                }
+                default:
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+        mAdapter.setCursor(cursor);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_BACK.equals(action)) {
+            final boolean showingConversation = isShowingConversation();
+            final EditText editText = showingConversation ? mEditText : mEditUserQuery;
+            final boolean textChanged = showingConversation ? mTextChanged : mQueryTextChanged;
+            if (editText.length() == 0 && !textChanged) {
+                final FragmentActivity activity = getActivity();
+                if (!mNavigateBackPressed) {
+                    final SuperToast toast = SuperToast.create(activity, getString(R.string.press_again_to_close), Duration.SHORT);
+                    toast.setOnDismissListener(new OnDismissListener() {
+                        @Override
+                        public void onDismiss(View view) {
+                            mNavigateBackPressed = false;
+                        }
+                    });
+                    toast.show();
+                    mNavigateBackPressed = true;
+                } else {
+                    activity.onBackPressed();
+                }
+            } else {
+                mQueryTextChanged = false;
+                mTextChanged = false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    public void showConversation(final ParcelableAccount account, final ParcelableUser recipient) {
+        mAccount = account;
+        mRecipient = recipient;
+        if (account == null || recipient == null) return;
+        final LoaderManager lm = getLoaderManager();
+        final Bundle args = new Bundle();
+        args.putLong(EXTRA_ACCOUNT_ID, account.account_id);
+        args.putLong(EXTRA_RECIPIENT_ID, recipient.id);
+        if (mLoaderInitialized) {
+            lm.restartLoader(0, args, this);
+        } else {
+            mLoaderInitialized = true;
+            lm.initLoader(0, args, this);
+        }
+        AsyncTaskUtils.executeTask(new SetReadStateTask(getActivity(), account, recipient));
+        updateActionBar();
+        updateProfileImage();
+    }
+
+    public boolean isShowingConversation() {
+        return mConversationContainer.getVisibility() == View.VISIBLE;
+    }
+
+    private String getDraftsTextKey(long accountId, long userId) {
+        return String.format(Locale.ROOT, "text_%d_to_%d", accountId, userId);
+    }
+
+    private void searchUsers(long accountId, String query, boolean fromCache) {
+        final Bundle args = new Bundle();
+        args.putLong(EXTRA_ACCOUNT_ID, accountId);
+        args.putString(EXTRA_QUERY, query);
+        args.putBoolean(EXTRA_FROM_CACHE, fromCache);
+        final LoaderManager lm = getLoaderManager();
+        if (mSearchUsersLoaderInitialized) {
+            lm.restartLoader(LOADER_ID_SEARCH_USERS, args, mSearchLoadersCallback);
+        } else {
+            mSearchUsersLoaderInitialized = true;
+            lm.initLoader(LOADER_ID_SEARCH_USERS, args, mSearchLoadersCallback);
+        }
+    }
+
+//    @Override
+//    public void onRefreshFromEnd() {
+//        new TwidereAsyncTask<Object, Object, long[][]>() {
+//
+//            @Override
+//            protected long[][] doInBackground(final Object... params) {
+//                final long[][] result = new long[2][];
+//                result[0] = getActivatedAccountIds(getActivity());
+//                result[1] = getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
+//                return result;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(final long[][] result) {
+//                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+//                if (twitter == null) return;
+//                twitter.getReceivedDirectMessagesAsync(result[0], null, result[1]);
+//                twitter.getSentDirectMessagesAsync(result[0], null, null);
+//            }
+//
+//        }.executeTask();
+//    }
+//
+//    @Override
+//    public void onRefresh() {
+//        loadMoreMessages();
+//    }
+
+    private void sendDirectMessage() {
+        final ParcelableAccount account = mAccount;
+        final ParcelableUser recipient = mRecipient;
+        if (mAccount == null || mRecipient == null) return;
+        final String message = mEditText.getText().toString();
+        if (TextUtils.isEmpty(message)) {
+            mEditText.setError(getString(R.string.error_message_no_content));
+        } else if (mValidator.getTweetLength(message) > mValidator.getMaxTweetLength()) {
+            mEditText.setError(getString(R.string.error_message_message_too_long));
+        } else {
+            mTwitterWrapper.sendDirectMessageAsync(account.account_id, recipient.id, message, mImageUri);
+            mEditText.setText(null);
+            mImageUri = null;
+            updateAddImageButton();
+        }
+    }
+
     private void setupEditQuery() {
-        final EditTextEnterHandler queryEnterHandler = EditTextEnterHandler.attach(mUserQuery, new EnterListener() {
+        final EditTextEnterHandler queryEnterHandler = EditTextEnterHandler.attach(mEditUserQuery, new EnterListener() {
             @Override
             public void onHitEnter() {
                 final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
                 if (account == null) return;
                 mEditText.setAccountId(account.account_id);
-                searchUsers(account.account_id, ParseUtils.parseString(mUserQuery.getText()), false);
+                searchUsers(account.account_id, ParseUtils.parseString(mEditUserQuery.getText()), false);
             }
         }, true);
         queryEnterHandler.addTextChangedListener(new TextWatcher() {
@@ -309,6 +646,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mQueryTextChanged = true;
             }
 
             @Override
@@ -319,7 +657,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 searchUsers(account.account_id, ParseUtils.parseString(s), true);
             }
         });
-        mUserQuery.addTextChangedListener(new TextWatcher() {
+        mEditUserQuery.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -358,6 +696,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+                mTextChanged = true;
                 updateTextCount();
                 if (mSendButton == null || s == null) return;
                 mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));
@@ -365,29 +704,48 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         });
     }
 
-    private String getDraftsTextKey(long accountId, long userId) {
-        return String.format(Locale.ROOT, "text_%d_to_%d", accountId, userId);
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (requestCode) {
-            case REQUEST_PICK_IMAGE: {
-                if (resultCode != Activity.RESULT_OK || data.getDataString() == null) {
-                    break;
-                }
-                mImageUri = data.getDataString();
-                updateAddImageButton();
-                break;
-            }
+    private void showMenu(final View view, final ParcelableDirectMessage dm) {
+        if (mPopupMenu != null) {
+            mPopupMenu.dismiss();
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        final Context context = getActivity();
+        mPopupMenu = new PopupMenu(context, view);
+        mPopupMenu.inflate(R.menu.action_direct_message);
+        final Menu menu = mPopupMenu.getMenu();
+        final MenuItem view_profile_item = menu.findItem(MENU_VIEW_PROFILE);
+        if (view_profile_item != null && dm != null) {
+            view_profile_item.setVisible(dm.account_id != dm.sender_id);
+        }
+        mPopupMenu.setOnMenuItemClickListener(this);
+        mPopupMenu.show();
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        updateProfileImage();
+    private void updateActionBar() {
+        final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
+        final ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar == null) return;
+        actionBar.setDisplayOptions(mRecipient != null ? ActionBar.DISPLAY_SHOW_TITLE : ActionBar.DISPLAY_SHOW_CUSTOM,
+                ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+    }
+
+    private void updateAddImageButton() {
+        mAddImageButton.setActivated(mImageUri != null);
+    }
+
+//    @Override
+//    public boolean scrollToStart() {
+//        if (mAdapter == null || mAdapter.isEmpty()) return false;
+//        setSelection(mAdapter.getCount() - 1);
+//        return true;
+//    }
+
+    private void updateEmptyText() {
+        final boolean noQuery = mEditUserQuery.length() <= 0;
+        if (noQuery) {
+            mUsersSearchEmptyText.setText(R.string.type_name_to_search);
+        } else {
+            mUsersSearchEmptyText.setText(R.string.no_user_found);
+        }
     }
 
     private void updateProfileImage() {
@@ -407,285 +765,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         } else {
             activity.setTitle(R.string.direct_messages);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_direct_messages_conversation, menu);
-        final View profileImageItemView = MenuItemCompat.getActionView(menu.findItem(R.id.item_profile_image));
-        profileImageItemView.setOnClickListener(this);
-        mProfileImageContainer = (IColorLabelView) profileImageItemView;
-        mRecipientProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.recipient_profile_image);
-    }
-
-    @Override
-    public void onClick(final View view) {
-        switch (view.getId()) {
-            case R.id.send: {
-                sendDirectMessage();
-                break;
-            }
-            case R.id.add_image: {
-                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                startActivityForResult(intent, REQUEST_PICK_IMAGE);
-                break;
-            }
-            case R.id.item_profile_image: {
-                final ParcelableUser recipient = mRecipient;
-                if (recipient == null) return;
-                final Bundle options = Utils.makeSceneTransitionOption(getActivity(),
-                        new Pair<View, String>(mRecipientProfileImageView,
-                                UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
-                Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
-                        recipient.screen_name, options);
-                break;
-            }
-            case R.id.query_button: {
-                final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
-                searchUsers(account.account_id, ParseUtils.parseString(mUserQuery.getText()), false);
-                break;
-            }
-        }
-    }
-
-    private boolean mSearchUsersLoaderInitialized;
-
-    private void searchUsers(long accountId, String query, boolean fromCache) {
-        final Bundle args = new Bundle();
-        args.putLong(EXTRA_ACCOUNT_ID, accountId);
-        args.putString(EXTRA_QUERY, query);
-        args.putBoolean(EXTRA_FROM_CACHE, fromCache);
-        final LoaderManager lm = getLoaderManager();
-        if (mSearchUsersLoaderInitialized) {
-            lm.restartLoader(LOADER_ID_SEARCH_USERS, args, mSearchLoadersCallback);
-        } else {
-            mSearchUsersLoaderInitialized = true;
-            lm.initLoader(LOADER_ID_SEARCH_USERS, args, mSearchLoadersCallback);
-        }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
-        final long recipientId = args != null ? args.getLong(EXTRA_RECIPIENT_ID, -1) : -1;
-        final String[] cols = DirectMessages.COLUMNS;
-        final boolean isValid = accountId > 0 && recipientId > 0;
-        mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
-        mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
-        if (!isValid)
-            return new CursorLoader(getActivity(), TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null);
-        final Uri uri = buildDirectMessageConversationUri(accountId, recipientId, null);
-        return new CursorLoader(getActivity(), uri, cols, null, null, Conversation.DEFAULT_SORT_ORDER);
-    }
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_messages_conversation, container, false);
-    }
-
-    @Override
-    protected void fitSystemWindows(Rect insets) {
-        final View view = getView();
-        if (view == null) return;
-        view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-    }
-
-    @Override
-    public void onItemSelected(final AdapterView<?> parent, final View view, final int pos, final long id) {
-        final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
-        if (account != null) {
-            mAccount = account;
-            updateProfileImage();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(final Loader<Cursor> loader) {
-        mAdapter.setCursor(null);
-    }
-
-    @Override
-    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mAdapter.setCursor(cursor);
-    }
-
-    @Override
-    public void onMenuButtonClick(final View button, final int position, final long id) {
-        mSelectedDirectMessage = mAdapter.findItem(id);
-        showMenu(button, mSelectedDirectMessage);
-    }
-
-    @Override
-    public boolean onMenuItemClick(final MenuItem item) {
-        if (mSelectedDirectMessage != null) {
-            final long message_id = mSelectedDirectMessage.id;
-            final long account_id = mSelectedDirectMessage.account_id;
-            switch (item.getItemId()) {
-                case MENU_DELETE: {
-                    mTwitterWrapper.destroyDirectMessageAsync(account_id, message_id);
-                    break;
-                }
-                case MENU_COPY: {
-                    if (ClipboardUtils.setText(getActivity(), mSelectedDirectMessage.text_plain)) {
-                        showOkMessage(getActivity(), R.string.text_copied, false);
-                    }
-                    break;
-                }
-                default:
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onNothingSelected(final AdapterView<?> view) {
-
-    }
-
-//    @Override
-//    public void onRefreshFromEnd() {
-//        new TwidereAsyncTask<Object, Object, long[][]>() {
-//
-//            @Override
-//            protected long[][] doInBackground(final Object... params) {
-//                final long[][] result = new long[2][];
-//                result[0] = getActivatedAccountIds(getActivity());
-//                result[1] = getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
-//                return result;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(final long[][] result) {
-//                final AsyncTwitterWrapper twitter = getTwitterWrapper();
-//                if (twitter == null) return;
-//                twitter.getReceivedDirectMessagesAsync(result[0], null, result[1]);
-//                twitter.getSentDirectMessagesAsync(result[0], null, null);
-//            }
-//
-//        }.executeTask();
-//    }
-//
-//    @Override
-//    public void onRefresh() {
-//        loadMoreMessages();
-//    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        final String previewScaleType = Utils.getNonEmptyString(mPreferences, KEY_MEDIA_PREVIEW_STYLE,
-                ScaleType.CENTER_CROP.name());
-        mAdapter.setImagePreviewScaleType(previewScaleType);
-        mAdapter.notifyDataSetChanged();
-        updateAddImageButton();
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mEditText != null) {
-            outState.putCharSequence(EXTRA_TEXT, mEditText.getText());
-        }
-        outState.putParcelable(EXTRA_ACCOUNT, mAccount);
-        outState.putParcelable(EXTRA_USER, mRecipient);
-        outState.putString(EXTRA_IMAGE_URI, mImageUri);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.register(this);
-        updateTextCount();
-        updateEmptyText();
-    }
-
-    @Override
-    public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.unregister(this);
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
-        }
-
-        final ParcelableAccount account = mAccount;
-        final ParcelableUser recipient = mRecipient;
-        if (account != null && recipient != null) {
-            final String key = getDraftsTextKey(account.account_id, recipient.id);
-            final SharedPreferences.Editor editor = mMessageDrafts.edit();
-            editor.putString(key, ParseUtils.parseString(mEditText.getText()));
-            editor.apply();
-        }
-        super.onStop();
-    }
-
-
-    private void updateEmptyText() {
-        final boolean noQuery = mUserQuery.length() <= 0;
-        if (noQuery) {
-            mUsersSearchEmptyText.setText(R.string.type_name_to_search);
-        } else {
-            mUsersSearchEmptyText.setText(R.string.no_user_found);
-        }
-    }
-
-    @Override
-    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
-        mUsersSearchProgress = view.findViewById(R.id.users_search_progress);
-        mUsersSearchList = (ListView) view.findViewById(R.id.users_search_list);
-        mUsersSearchEmpty = view.findViewById(R.id.users_search_empty);
-        mUsersSearchEmptyText = (TextView) view.findViewById(R.id.users_search_empty_text);
-        mMessagesListView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        final View inputSendContainer = view.findViewById(R.id.input_send_container);
-        mConversationContainer = view.findViewById(R.id.conversation_container);
-        mRecipientSelectorContainer = view.findViewById(R.id.recipient_selector_container);
-        mEditText = (StatusComposeEditText) inputSendContainer.findViewById(R.id.edit_text);
-        mTextCountView = (StatusTextCountView) inputSendContainer.findViewById(R.id.text_count);
-        mSendButton = inputSendContainer.findViewById(R.id.send);
-        mAddImageButton = (ImageView) inputSendContainer.findViewById(R.id.add_image);
-        mUsersSearchList = (ListView) view.findViewById(R.id.users_search_list);
-    }
-
-//    @Override
-//    public boolean scrollToStart() {
-//        if (mAdapter == null || mAdapter.isEmpty()) return false;
-//        setSelection(mAdapter.getCount() - 1);
-//        return true;
-//    }
-
-    public void showConversation(final ParcelableAccount account, final ParcelableUser recipient) {
-        mAccount = account;
-        mRecipient = recipient;
-        if (account == null || recipient == null) return;
-        final LoaderManager lm = getLoaderManager();
-        final Bundle args = new Bundle();
-        args.putLong(EXTRA_ACCOUNT_ID, account.account_id);
-        args.putLong(EXTRA_RECIPIENT_ID, recipient.id);
-        if (mLoaderInitialized) {
-            lm.restartLoader(0, args, this);
-        } else {
-            mLoaderInitialized = true;
-            lm.initLoader(0, args, this);
-        }
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-        new SetReadStateTask(getActivity(), account, recipient).execute();
-        updateActionBar();
-        updateProfileImage();
-    }
-
-    private void updateActionBar() {
-        final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
-        final ActionBar actionBar = activity.getSupportActionBar();
-        if (actionBar == null) return;
-        actionBar.setDisplayOptions(mRecipient != null ? ActionBar.DISPLAY_SHOW_TITLE : ActionBar.DISPLAY_SHOW_CUSTOM,
-                ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
     }
 
 //    @Override
@@ -726,43 +805,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 //
 //        }.executeTask();
 //    }
-
-    private void sendDirectMessage() {
-        final ParcelableAccount account = mAccount;
-        final ParcelableUser recipient = mRecipient;
-        if (mAccount == null || mRecipient == null) return;
-        final String message = mEditText.getText().toString();
-        if (TextUtils.isEmpty(message)) {
-            mEditText.setError(getString(R.string.error_message_no_content));
-        } else if (mValidator.getTweetLength(message) > mValidator.getMaxTweetLength()) {
-            mEditText.setError(getString(R.string.error_message_message_too_long));
-        } else {
-            mTwitterWrapper.sendDirectMessageAsync(account.account_id, recipient.id, message, mImageUri);
-            mEditText.setText(null);
-            mImageUri = null;
-            updateAddImageButton();
-        }
-    }
-
-    private void showMenu(final View view, final ParcelableDirectMessage dm) {
-        if (mPopupMenu != null) {
-            mPopupMenu.dismiss();
-        }
-        final Context context = getActivity();
-        mPopupMenu = new PopupMenu(context, view);
-        mPopupMenu.inflate(R.menu.action_direct_message);
-        final Menu menu = mPopupMenu.getMenu();
-        final MenuItem view_profile_item = menu.findItem(MENU_VIEW_PROFILE);
-        if (view_profile_item != null && dm != null) {
-            view_profile_item.setVisible(dm.account_id != dm.sender_id);
-        }
-        mPopupMenu.setOnMenuItemClickListener(this);
-        mPopupMenu.show();
-    }
-
-    private void updateAddImageButton() {
-        mAddImageButton.setActivated(mImageUri != null);
-    }
 
     private void updateTextCount() {
         if (mTextCountView == null || mEditText == null) return;
@@ -832,17 +874,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
 
         @Override
-        protected void onPostExecute(Cursor cursor) {
-            if (cursor.moveToFirst()) {
-                final int messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID);
-                final String key = mAccount.account_id + "-" + mRecipient.id;
-                mReadStateManager.setPosition(TAB_TYPE_DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false);
-            }
-            Log.d(LOGTAG, Arrays.toString(mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES)));
-            cursor.close();
-        }
-
-        @Override
         protected Cursor doInBackground(Object... params) {
             final ContentResolver resolver = mContext.getContentResolver();
             final String[] projection = {ConversationEntries.MESSAGE_ID};
@@ -853,5 +884,17 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             final String orderBy = new OrderBy(ConversationEntries.MESSAGE_ID, false).getSQL();
             return resolver.query(ConversationEntries.CONTENT_URI, projection, selection, null, orderBy);
         }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor.moveToFirst()) {
+                final int messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID);
+                final String key = mAccount.account_id + "-" + mRecipient.id;
+                mReadStateManager.setPosition(TAB_TYPE_DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false);
+            }
+            cursor.close();
+        }
     }
+
+
 }

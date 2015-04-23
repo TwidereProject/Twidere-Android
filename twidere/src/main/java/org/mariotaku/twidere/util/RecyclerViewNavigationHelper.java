@@ -27,10 +27,12 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.KeyEvent;
 import android.view.View;
 
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+
 /**
  * Created by mariotaku on 15/4/21.
  */
-public class RecyclerViewNavigationHelper {
+public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
 
     private int positionBackup;
     @NonNull
@@ -48,18 +50,19 @@ public class RecyclerViewNavigationHelper {
         this.adapter = adapter;
     }
 
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
-        final String action = handler.getKeyAction("navigation", keyCode, event);
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (action == null) return false;
         final int direction;
         switch (action) {
-            case "navigation.previous": {
+            case ACTION_NAVIGATION_PREVIOUS: {
                 direction = -1;
                 break;
             }
-            case "navigation.next": {
+            case ACTION_NAVIGATION_NEXT: {
                 direction = 1;
                 break;
             }
@@ -88,6 +91,11 @@ public class RecyclerViewNavigationHelper {
         }
         positionBackup = position;
         RecyclerViewUtils.focusNavigate(view, layoutManager, position, direction);
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         return false;
     }
 }

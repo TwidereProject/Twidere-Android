@@ -261,12 +261,12 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
-        String action = handler.getKeyAction("home", keyCode, event);
+        String action = handler.getKeyAction(CONTEXT_TAG_HOME, keyCode, event);
         if (action != null) {
             switch (action) {
-                case "home.accounts_dashboard": {
+                case ACTION_HOME_ACCOUNTS_DASHBOARD: {
                     if (mSlidingMenu.isMenuShowing()) {
                         mSlidingMenu.showContent(true);
                     } else {
@@ -277,10 +277,10 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
             }
         }
-        action = handler.getKeyAction("navigation", keyCode, event);
+        action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (action != null) {
             switch (action) {
-                case "navigation.previous_tab": {
+                case ACTION_NAVIGATION_PREVIOUS_TAB: {
                     final int previous = mViewPager.getCurrentItem() - 1;
                     if (previous < 0) {
                         mSlidingMenu.showMenu(true);
@@ -294,7 +294,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                     }
                     return true;
                 }
-                case "navigation.next_tab": {
+                case ACTION_NAVIGATION_NEXT_TAB: {
                     final int next = mViewPager.getCurrentItem() + 1;
                     if (next >= mPagerAdapter.getCount()) {
                         mSlidingMenu.showSecondaryMenu(true);
@@ -326,7 +326,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }

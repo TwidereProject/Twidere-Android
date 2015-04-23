@@ -108,17 +108,17 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
-        final String action = handler.getKeyAction("navigation", keyCode, event);
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (action != null) {
             switch (action) {
-                case "navigation.previous_tab": {
+                case ACTION_NAVIGATION_PREVIOUS_TAB: {
                     final int previous = mViewPager.getCurrentItem() - 1;
                     if (previous >= 0 && previous < mPagerAdapter.getCount()) {
                         mViewPager.setCurrentItem(previous, true);
                     }
                     return true;
                 }
-                case "navigation.next_tab": {
+                case ACTION_NAVIGATION_NEXT_TAB: {
                     final int next = mViewPager.getCurrentItem() + 1;
                     if (next >= 0 && next < mPagerAdapter.getCount()) {
                         mViewPager.setCurrentItem(next, true);

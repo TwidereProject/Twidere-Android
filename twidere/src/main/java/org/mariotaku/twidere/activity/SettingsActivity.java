@@ -172,7 +172,9 @@ public class SettingsActivity extends BasePreferenceActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case MENU_HOME: {
-                onBackPressed();
+                if (!isFinishing()) {
+                    onBackPressed();
+                }
                 return true;
             }
             case MENU_IMPORT_SETTINGS: {

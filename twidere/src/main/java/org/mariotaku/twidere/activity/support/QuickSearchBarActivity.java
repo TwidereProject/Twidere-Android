@@ -28,6 +28,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -35,6 +36,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,6 +70,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener;
@@ -97,6 +100,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
     private SuggestionsAdapter mUsersSearchAdapter;
     private ExtendedRelativeLayout mMainContent;
     private Rect mSystemWindowsInsets = new Rect();
+    private boolean mTextChanged;
 
     @Override
     public boolean canDismiss(int position) {
@@ -187,6 +191,20 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
     }
 
     @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_BACK.equals(action) && mSearchQuery.length() == 0) {
+            if (!mTextChanged) {
+                onBackPressed();
+            } else {
+                mTextChanged = false;
+            }
+            return true;
+        }
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_search_bar);
@@ -227,6 +245,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mTextChanged = true;
             }
 
             @Override
@@ -305,6 +324,15 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         }
 
         @Override
+        public void bindView(SuggestionsAdapter adapter, View view, int position) {
+            final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
+            final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+            text1.setText(mQuery);
+            icon.setImageResource(R.drawable.ic_action_save);
+            icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
+        }
+
+        @Override
         public final int getItemLayoutResource() {
             return R.layout.list_item_suggestion_search;
         }
@@ -312,15 +340,6 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         @Override
         public int getItemViewType() {
             return ITEM_VIEW_TYPE;
-        }
-
-        @Override
-        public void bindView(SuggestionsAdapter adapter, View view, int position) {
-            final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
-            final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-            text1.setText(mQuery);
-            icon.setImageResource(R.drawable.ic_action_save);
-            icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
         }
 
 
@@ -342,6 +361,10 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             mQuery = query;
         }
 
+        public long getCursorId() {
+            return mCursorId;
+        }
+
         @Override
         public void bindView(SuggestionsAdapter adapter, View view, int position) {
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
@@ -349,10 +372,6 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             text1.setText(mQuery);
             icon.setImageResource(R.drawable.ic_action_history);
             icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
-        }
-
-        public long getCursorId() {
-            return mCursorId;
         }
 
         @Override
@@ -370,7 +389,6 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             Utils.openSearch(activity, activity.getAccountId(), mQuery);
             activity.finish();
         }
-
 
     }
 

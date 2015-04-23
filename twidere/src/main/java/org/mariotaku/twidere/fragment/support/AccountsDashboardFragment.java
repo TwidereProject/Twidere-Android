@@ -164,15 +164,15 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
-        final String action = handler.getKeyAction("navigation", keyCode, event);
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (action == null) return false;
         final int offset;
         switch (action) {
-            case "navigation.previous": {
+            case ACTION_NAVIGATION_PREVIOUS: {
                 offset = -1;
                 break;
             }
-            case "navigation.next": {
+            case ACTION_NAVIGATION_NEXT: {
                 offset = 1;
                 break;
             }

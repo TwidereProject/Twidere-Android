@@ -88,10 +88,10 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
 
     @Override
-    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
-        String action = handler.getKeyAction("navigation", keyCode, event);
-        if ("navigation.refresh".equals(action)) {
+        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_REFRESH.equals(action)) {
             triggerRefresh();
             return true;
         }
@@ -108,21 +108,21 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         final ParcelableStatus status = getAdapter().getStatus(position);
         if (status == null) return false;
         if (action == null) {
-            action = handler.getKeyAction("status", keyCode, event);
+            action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
         }
         if (action == null) return false;
         switch (action) {
-            case "status.reply": {
+            case ACTION_STATUS_REPLY: {
                 final Intent intent = new Intent(INTENT_ACTION_REPLY);
                 intent.putExtra(EXTRA_STATUS, status);
                 startActivity(intent);
                 return true;
             }
-            case "status.retweet": {
+            case ACTION_STATUS_RETWEET: {
                 RetweetQuoteDialogFragment.show(getFragmentManager(), status);
                 return true;
             }
-            case "status.favorite": {
+            case ACTION_STATUS_FAVORITE: {
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
@@ -136,7 +136,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
         return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }

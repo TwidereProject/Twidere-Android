@@ -34,7 +34,6 @@ import android.view.View;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
 import org.mariotaku.twidere.adapter.AbsUsersAdapter.UserAdapterListener;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -53,12 +52,12 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
@@ -67,7 +66,6 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
         super.onActivityCreated(savedInstanceState);
 
         final FragmentActivity activity = getActivity();
-        final TwidereApplication application = TwidereApplication.getInstance(activity);
         final AbsUsersAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();

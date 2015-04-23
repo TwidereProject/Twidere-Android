@@ -31,6 +31,7 @@
         android:id="@+id/account_spinner"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/element_spacing_small"
         android:layout_weight="0"
         tools:listitem="@layout/spinner_item_account_icon"/>
 

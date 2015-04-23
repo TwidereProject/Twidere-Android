@@ -113,13 +113,13 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
         return handler.handleKey(this, null, keyCode, event);
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
@@ -220,7 +220,14 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                                                          @NonNull KeyEvent event) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
+            if (((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event)) {
+                return true;
+            }
+        }
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_BACK.equals(action)) {
+            onBackPressed();
+            return true;
         }
         return false;
     }

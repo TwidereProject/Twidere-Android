@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import java.util.Locale;
 
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 
-public class StatusTextCountView extends TextView {
+public class StatusTextCountView extends AppCompatTextView {
 
     private final int mTextColor;
     private final Locale mLocale;

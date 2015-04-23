@@ -51,13 +51,14 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.KeyboardShortcutPreferenceCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
 
 /**
  * Created by mariotaku on 15/4/10.
  */
-public class KeyboardShortcutsFragment extends BasePreferenceFragment {
+public class KeyboardShortcutsFragment extends BasePreferenceFragment implements KeyboardShortcutConstants {
 
     private KeyboardShortcutsHandler mKeyboardShortcutHandler;
 
@@ -102,18 +103,18 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
         general.addPreference(makePreferences(null, "search"));
         general.addPreference(makePreferences(null, "message"));
         final PreferenceCategory home = makeAndAddCategory(getString(R.string.home));
-        home.addPreference(makePreferences("home", "home.accounts_dashboard"));
+        home.addPreference(makePreferences("home", ACTION_HOME_ACCOUNTS_DASHBOARD));
         final PreferenceCategory navigation = makeAndAddCategory(getString(R.string.navigation));
-        navigation.addPreference(makePreferences("navigation", "navigation.previous"));
-        navigation.addPreference(makePreferences("navigation", "navigation.next"));
-        navigation.addPreference(makePreferences("navigation", "navigation.previous_tab"));
-        navigation.addPreference(makePreferences("navigation", "navigation.next_tab"));
-        navigation.addPreference(makePreferences("navigation", "navigation.refresh"));
-        navigation.addPreference(makePreferences("navigation", "navigation.back"));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_PREVIOUS));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_NEXT));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_PREVIOUS_TAB));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_NEXT_TAB));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_REFRESH));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_BACK));
         final PreferenceCategory statuses = makeAndAddCategory(getString(R.string.statuses));
-        statuses.addPreference(makePreferences("status", "status.reply"));
-        statuses.addPreference(makePreferences("status", "status.retweet"));
-        statuses.addPreference(makePreferences("status", "status.favorite"));
+        statuses.addPreference(makePreferences(CONTEXT_TAG_STATUS, ACTION_STATUS_REPLY));
+        statuses.addPreference(makePreferences(CONTEXT_TAG_STATUS, ACTION_STATUS_RETWEET));
+        statuses.addPreference(makePreferences(CONTEXT_TAG_STATUS, ACTION_STATUS_FAVORITE));
     }
 
     private PreferenceCategory makeAndAddCategory(String title) {
@@ -198,7 +199,9 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
             builder.setNegativeButton(getContext().getString(android.R.string.cancel), this);
             builder.setNeutralButton(getContext().getString(R.string.clear), this);
             builder.setOnKeyListener(this);
-        }        @Override
+        }
+
+        @Override
         protected void onAttachedToActivity() {
             super.onAttachedToActivity();
             mKeyboardShortcutHandler.registerOnSharedPreferenceChangeListener(mPreferencesChangeListener);
@@ -226,7 +229,9 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
                     break;
                 }
             }
-        }        @Override
+        }
+
+        @Override
         protected void onPrepareForRemoval() {
             mKeyboardShortcutHandler.unregisterOnSharedPreferenceChangeListener(mPreferencesChangeListener);
             super.onPrepareForRemoval();
@@ -236,9 +241,6 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
             final KeyboardShortcutSpec spec = mKeyboardShortcutHandler.findKey(mAction);
             setSummary(spec != null ? spec.toKeyString() : null);
         }
-
-
-
 
 
     }
@@ -279,7 +281,9 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
         private void updateSummary() {
             final KeyboardShortcutSpec spec = mKeyboardShortcutHandler.findKey(mAction);
             setSummary(spec != null ? spec.toKeyString() : null);
-        }        @Override
+        }
+
+        @Override
         protected void onAttachedToActivity() {
             super.onAttachedToActivity();
             mKeyboardShortcutHandler.registerOnSharedPreferenceChangeListener(mPreferencesChangeListener);
@@ -290,8 +294,6 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment {
             mKeyboardShortcutHandler.unregisterOnSharedPreferenceChangeListener(mPreferencesChangeListener);
             super.onPrepareForRemoval();
         }
-
-
 
 
     }
