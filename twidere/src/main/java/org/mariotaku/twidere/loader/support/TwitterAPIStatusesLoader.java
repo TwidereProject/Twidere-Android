@@ -26,12 +26,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -173,7 +177,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     private List<ParcelableStatus> getCachedData(final File file) {
         if (file == null) return null;
         try {
-            return JSONFileIO.readArrayList(file);
+            return LoganSquare.parseList(new FileInputStream(file), ParcelableStatus.class);
         } catch (final IOException e) {
             e.printStackTrace();
         }
@@ -195,8 +199,8 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         final SharedPreferences prefs = mContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int databaseItemLimit = prefs.getInt(KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
         try {
-            final List<ParcelableStatus> activities = data.subList(0, Math.min(databaseItemLimit, data.size()));
-            JSONFileIO.writeArray(file, activities.toArray(new ParcelableStatus[activities.size()]));
+            final List<ParcelableStatus> statuses = data.subList(0, Math.min(databaseItemLimit, data.size()));
+            LoganSquare.serialize(statuses, new FileOutputStream(file), ParcelableStatus.class);
         } catch (final IOException e) {
             e.printStackTrace();
         }

@@ -23,8 +23,12 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import java.util.Arrays;
 
+@JsonObject
 public class ParcelableStatusUpdate implements Parcelable {
 
     public static final Parcelable.Creator<ParcelableStatusUpdate> CREATOR = new Parcelable.Creator<ParcelableStatusUpdate>() {
@@ -39,11 +43,16 @@ public class ParcelableStatusUpdate implements Parcelable {
         }
     };
 
-    public final ParcelableAccount[] accounts;
-    public final ParcelableMediaUpdate[] media;
-    public final String text;
-    public final ParcelableLocation location;
-    public final long in_reply_to_status_id;
+    @JsonField(name = "ParcelableAccount[]")
+	public ParcelableAccount[] accounts;
+    @JsonField(name = "ParcelableMediaUpdate[]")
+	public ParcelableMediaUpdate[] media;
+    @JsonField(name = "String")
+	public String text;
+    @JsonField(name = "ParcelableLocation")
+	public ParcelableLocation location;
+    @JsonField(name = "long")
+	public long in_reply_to_status_id;
     public final boolean is_possibly_sensitive;
 
     /**

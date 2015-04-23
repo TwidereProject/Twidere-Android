@@ -22,22 +22,26 @@ package org.mariotaku.twidere.model;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.jsonserializer.JSONParcel;
-import org.mariotaku.jsonserializer.JSONParcelable;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import org.mariotaku.twidere.util.ParseUtils;
 
 import java.io.Serializable;
 
 import twitter4j.GeoLocation;
 
-public class ParcelableLocation implements Serializable, Parcelable, JSONParcelable {
+@JsonObject
+public class ParcelableLocation implements Serializable, Parcelable {
 
     private static final long serialVersionUID = -1690848439775407442L;
 
-    public final double latitude, longitude;
+    @JsonField(name = "latitude")
+    public double latitude;
+    @JsonField(name = "longitude")
+    public double longitude;
 
     public static final Parcelable.Creator<ParcelableLocation> CREATOR = new Parcelable.Creator<ParcelableLocation>() {
         @Override
@@ -51,17 +55,8 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
         }
     };
 
-    public static final JSONParcelable.Creator<ParcelableLocation> JSON_CREATOR = new JSONParcelable.Creator<ParcelableLocation>() {
-        @Override
-        public ParcelableLocation createFromParcel(final JSONParcel in) {
-            return new ParcelableLocation(in);
-        }
-
-        @Override
-        public ParcelableLocation[] newArray(final int size) {
-            return new ParcelableLocation[size];
-        }
-    };
+    public ParcelableLocation() {
+    }
 
     public ParcelableLocation(final double latitude, final double longitude) {
         this.latitude = latitude;
@@ -71,11 +66,6 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
     public ParcelableLocation(@Nullable final GeoLocation location) {
         latitude = location != null ? location.getLatitude() : Double.NaN;
         longitude = location != null ? location.getLongitude() : Double.NaN;
-    }
-
-    public ParcelableLocation(@NonNull final JSONParcel in) {
-        latitude = in.readDouble("latitude", Double.NaN);
-        longitude = in.readDouble("longitude", Double.NaN);
     }
 
     public ParcelableLocation(@Nullable final Location location) {
@@ -167,12 +157,6 @@ public class ParcelableLocation implements Serializable, Parcelable, JSONParcela
     @Override
     public String toString() {
         return "ParcelableLocation{latitude=" + latitude + ", longitude=" + longitude + "}";
-    }
-
-    @Override
-    public void writeToParcel(final JSONParcel out) {
-        out.writeDouble("latitude", latitude);
-        out.writeDouble("longitude", longitude);
     }
 
     @Override

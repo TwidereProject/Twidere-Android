@@ -111,12 +111,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.querybuilder.AllColumns;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
@@ -182,7 +183,6 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.model.TwidereParcelable;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
@@ -443,7 +443,7 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static void addIntentToMenuForExtension(final Context context, final Menu menu, final int groupId,
                                                    final String action, final String parelableKey, final String parelableJSONKey,
-                                                   final TwidereParcelable parcelable) {
+                                                   final Parcelable parcelable) {
         if (context == null || menu == null || action == null || parelableKey == null || parcelable == null)
             return;
         final PackageManager pm = context.getPackageManager();
@@ -453,10 +453,16 @@ public final class Utils implements Constants, TwitterConstants {
         final Intent queryIntent = new Intent(action);
         queryIntent.setExtrasClassLoader(context.getClassLoader());
         final List<ResolveInfo> activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA);
+        String parcelableJson = null;
+        try {
+            parcelableJson = LoganSquare.serialize(parcelable);
+        } catch (IOException ignored) {
+
+        }
         for (final ResolveInfo info : activities) {
             final Intent intent = new Intent(queryIntent);
-            if (isExtensionUseJSON(info)) {
-                intent.putExtra(parelableJSONKey, JSONSerializer.toJSONObjectString(parcelable));
+            if (isExtensionUseJSON(info) && parcelableJson != null) {
+                intent.putExtra(parelableJSONKey, parcelableJson);
             } else {
                 intent.putExtra(parelableKey, parcelable);
             }

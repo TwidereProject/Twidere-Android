@@ -20,17 +20,11 @@
 package org.mariotaku.twidere.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
-import org.json.JSONObject;
-import org.mariotaku.jsonserializer.JSONFileIO;
-import org.mariotaku.jsonserializer.JSONSerializer;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
-import org.mariotaku.twidere.model.RawSharedPreferencesData;
-import org.mariotaku.twidere.model.SharedPreferencesData;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -40,7 +34,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -148,58 +141,48 @@ public class DataImportExportUtils implements Constants {
         zipFile.close();
     }
 
-    private static byte[] getSerializedRawSharedPreferencesData(final Context context, final String name) {
-        final SharedPreferences prefs = context.getSharedPreferences(name, Context.MODE_PRIVATE);
-        return JSONSerializer.getByteArray(new RawSharedPreferencesData(prefs));
-    }
-
-    private static byte[] getSerializedSharedPreferencesData(final Context context, final String name) {
-        final SharedPreferences prefs = context.getSharedPreferences(name, Context.MODE_PRIVATE);
-        return JSONSerializer.getByteArray(new SharedPreferencesData(prefs));
-    }
-
     private static boolean hasFlag(final int flags, final int flag) {
         return (flags & flag) != 0;
     }
 
     private static void readRawSharedPreferencesData(final ZipFile zipFile, final Context context,
                                                      final String preferencesName, final String entryName) throws IOException {
-        final ZipEntry entry = zipFile.getEntry(entryName);
-        if (entry == null) return;
-        final JSONObject json = JSONFileIO.convertJSONObject(zipFile.getInputStream(entry));
-        final RawSharedPreferencesData data = JSONSerializer.createObject(RawSharedPreferencesData.JSON_CREATOR, json);
-        if (data != null) {
-            data.writeToSharedPreferences(context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE));
-        }
+//        final ZipEntry entry = zipFile.getEntry(entryName);
+//        if (entry == null) return;
+//        final JSONObject json = JSONFileIO.convertJSONObject(zipFile.getInputStream(entry));
+//        final RawSharedPreferencesData data = JSONSerializer.createObject(RawSharedPreferencesData.JSON_CREATOR, json);
+//        if (data != null) {
+//            data.writeToSharedPreferences(context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE));
+//        }
     }
 
     private static void readSharedPreferencesData(final ZipFile zipFile, final Context context,
                                                   final String preferencesName, final String entryName) throws IOException {
-        final ZipEntry entry = zipFile.getEntry(entryName);
-        if (entry == null) return;
-        final JSONObject json = JSONFileIO.convertJSONObject(zipFile.getInputStream(entry));
-        final SharedPreferencesData data = JSONSerializer.createObject(SharedPreferencesData.JSON_CREATOR, json);
-        if (data != null) {
-            data.writeToSharedPreferences(context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE));
-        }
+//        final ZipEntry entry = zipFile.getEntry(entryName);
+//        if (entry == null) return;
+//        final JSONObject json = JSONFileIO.convertJSONObject(zipFile.getInputStream(entry));
+//        final SharedPreferencesData data = JSONSerializer.createObject(SharedPreferencesData.JSON_CREATOR, json);
+//        if (data != null) {
+//            data.writeToSharedPreferences(context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE));
+//        }
     }
 
     private static void writeRawSharedPreferencesData(final ZipOutputStream zos, final Context context,
                                                       final String preferencesName, final String entryName) throws IOException {
-        final byte[] data = getSerializedRawSharedPreferencesData(context, preferencesName);
-        if (data == null) return;
-        zos.putNextEntry(new ZipEntry(entryName));
-        zos.write(data);
-        zos.closeEntry();
+//        final byte[] data = getSerializedRawSharedPreferencesData(context, preferencesName);
+//        if (data == null) return;
+//        zos.putNextEntry(new ZipEntry(entryName));
+//        zos.write(data);
+//        zos.closeEntry();
     }
 
     private static void writeSharedPreferencesData(final ZipOutputStream zos, final Context context,
                                                    final String preferencesName, final String entryName) throws IOException {
-        final byte[] data = getSerializedSharedPreferencesData(context, preferencesName);
-        if (data == null) return;
-        zos.putNextEntry(new ZipEntry(entryName));
-        zos.write(data);
-        zos.closeEntry();
+//        final byte[] data = getSerializedSharedPreferencesData(context, preferencesName);
+//        if (data == null) return;
+//        zos.putNextEntry(new ZipEntry(entryName));
+//        zos.write(data);
+//        zos.closeEntry();
     }
 
 }

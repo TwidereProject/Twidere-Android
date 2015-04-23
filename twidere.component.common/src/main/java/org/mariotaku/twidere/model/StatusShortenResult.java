@@ -3,6 +3,10 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+@JsonObject
 public class StatusShortenResult implements Parcelable {
 
 	public static final Parcelable.Creator<StatusShortenResult> CREATOR = new Parcelable.Creator<StatusShortenResult>() {
@@ -18,9 +22,12 @@ public class StatusShortenResult implements Parcelable {
 		}
 	};
 
-	public final String shortened;
-	public final int error_code;
-	public final String error_message;
+	@JsonField(name = "String")
+	public String shortened;
+	@JsonField(name = "int")
+	public int error_code;
+	@JsonField(name = "String")
+	public String error_message;
 
 	public StatusShortenResult(final int errorCode, final String errorMessage) {
 		if (errorCode == 0) throw new IllegalArgumentException("Error code must not be 0");

@@ -23,13 +23,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.jsonserializer.JSONParcel;
-import org.mariotaku.jsonserializer.JSONParcelable;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import twitter4j.User;
 import twitter4j.UserList;
 
-public class ParcelableUserList implements Parcelable, JSONParcelable, Comparable<ParcelableUserList> {
+@JsonObject
+public class ParcelableUserList implements Parcelable, Comparable<ParcelableUserList> {
 
     public static final Parcelable.Creator<ParcelableUserList> CREATOR = new Parcelable.Creator<ParcelableUserList>() {
         @Override
@@ -43,41 +44,36 @@ public class ParcelableUserList implements Parcelable, JSONParcelable, Comparabl
         }
     };
 
-    public static final JSONParcelable.Creator<ParcelableUserList> JSON_CREATOR = new JSONParcelable.Creator<ParcelableUserList>() {
-        @Override
-        public ParcelableUserList createFromParcel(final JSONParcel in) {
-            return new ParcelableUserList(in);
-        }
+    @JsonField(name = "members_count")
+	public int members_count;
+    @JsonField(name = "subscribers_count")
+	public int subscribers_count;
 
-        @Override
-        public ParcelableUserList[] newArray(final int size) {
-            return new ParcelableUserList[size];
-        }
-    };
+    @JsonField(name = "account_id")
+	public long account_id;
+    @JsonField(name = "id")
+	public long id;
+    @JsonField(name = "user_id")
+	public long user_id;
+    @JsonField(name = "position")
+	public long position;
 
-    public final int members_count, subscribers_count;
+    @JsonField(name = "is_public")
+	public boolean is_public;
+    @JsonField(name = "is_following")
+	public boolean is_following;
 
-    public final long account_id, id, user_id, position;
+    @JsonField(name = "description")
+	public String description;
+    @JsonField(name = "name")
+	public String name;
+    @JsonField(name = "user_screen_name")
+	public String user_screen_name;
+    @JsonField(name = "user_name")
+	public String user_name;
+    @JsonField(name = "user_profile_image_url")
+	public String user_profile_image_url;
 
-    public final boolean is_public, is_following;
-
-    public final String description, name, user_screen_name, user_name, user_profile_image_url;
-
-    public ParcelableUserList(final JSONParcel in) {
-        position = in.readLong("position");
-        account_id = in.readLong("account_id");
-        id = in.readLong("list_id");
-        is_public = in.readBoolean("is_public");
-        is_following = in.readBoolean("is_following");
-        name = in.readString("name");
-        description = in.readString("description");
-        user_id = in.readLong("user_id");
-        user_name = in.readString("user_name");
-        user_screen_name = in.readString("user_screen_name");
-        user_profile_image_url = in.readString("user_profile_image_url");
-        members_count = in.readInt("members_count");
-        subscribers_count = in.readInt("subscribers_count");
-    }
 
     public ParcelableUserList(final Parcel in) {
         position = in.readLong();
@@ -161,23 +157,6 @@ public class ParcelableUserList implements Parcelable, JSONParcelable, Comparabl
                 + ", is_public=" + is_public + ", is_following=" + is_following + ", description=" + description
                 + ", name=" + name + ", user_screen_name=" + user_screen_name + ", user_name=" + user_name
                 + ", user_profile_image_url=" + user_profile_image_url + "}";
-    }
-
-    @Override
-    public void writeToParcel(final JSONParcel out) {
-        out.writeLong("position", position);
-        out.writeLong("account_id", account_id);
-        out.writeLong("list_id", id);
-        out.writeBoolean("is_public", is_public);
-        out.writeBoolean("is_following", is_following);
-        out.writeString("name", name);
-        out.writeString("description", description);
-        out.writeLong("user_id", user_id);
-        out.writeString("user_name", user_name);
-        out.writeString("user_screen_name", user_screen_name);
-        out.writeString("user_profile_image_url", user_profile_image_url);
-        out.writeInt("members_count", members_count);
-        out.writeInt("subscribers_count", subscribers_count);
     }
 
     @Override

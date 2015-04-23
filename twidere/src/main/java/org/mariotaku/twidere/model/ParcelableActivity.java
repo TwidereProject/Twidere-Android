@@ -21,8 +21,8 @@ package org.mariotaku.twidere.model;
 
 import android.support.annotation.NonNull;
 
-import org.mariotaku.jsonserializer.JSONParcel;
-import org.mariotaku.jsonserializer.JSONParcelable;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.util.Arrays;
 
@@ -31,19 +31,8 @@ import twitter4j.Status;
 import twitter4j.User;
 import twitter4j.UserList;
 
-public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONParcelable {
-
-    public static final JSONParcelable.Creator<ParcelableActivity> JSON_CREATOR = new JSONParcelable.Creator<ParcelableActivity>() {
-        @Override
-        public ParcelableActivity createFromParcel(final JSONParcel in) {
-            return new ParcelableActivity(in);
-        }
-
-        @Override
-        public ParcelableActivity[] newArray(final int size) {
-            return new ParcelableActivity[size];
-        }
-    };
+@JsonObject
+public class ParcelableActivity implements Comparable<ParcelableActivity> {
 
     public final static int ACTION_FAVORITE = Activity.Action.ACTION_FAVORITE;
     public final static int ACTION_FOLLOW = Activity.Action.ACTION_FOLLOW;
@@ -55,17 +44,35 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
     public final static int ACTION_FAVORITED_RETWEET = Activity.Action.ACTION_FAVORITED_RETWEET;
     public final static int ACTION_RETWEETED_RETWEET = Activity.Action.ACTION_RETWEETED_RETWEET;
 
-    public final long account_id, timestamp, max_position, min_position;
-    public final int action;
+    @JsonField(name = "account_id")
+    public long account_id;
+    @JsonField(name = "timestamp")
+    public long timestamp;
+    @JsonField(name = "max_position")
+    public long max_position;
+    @JsonField(name = "min_position")
+    public long min_position;
+    @JsonField(name = "action")
+    public int action;
 
-    public final ParcelableUser[] sources;
-    public final ParcelableUser[] target_users;
-    public final ParcelableStatus[] target_statuses;
-    public final ParcelableUserList[] target_user_lists;
+    @JsonField(name = "sources")
+    public ParcelableUser[] sources;
+    @JsonField(name = "target_users")
+    public ParcelableUser[] target_users;
+    @JsonField(name = "target_statuses")
+    public ParcelableStatus[] target_statuses;
+    @JsonField(name = "target_user_lists")
+    public ParcelableUserList[] target_user_lists;
 
-    public final ParcelableUserList[] target_object_user_lists;
-    public final ParcelableStatus[] target_object_statuses;
-    public final boolean is_gap;
+    @JsonField(name = "target_object_user_lists")
+    public ParcelableUserList[] target_object_user_lists;
+    @JsonField(name = "target_object_statuses")
+    public ParcelableStatus[] target_object_statuses;
+    @JsonField(name = "is_gap")
+    public boolean is_gap;
+
+    public ParcelableActivity() {
+    }
 
     public ParcelableActivity(final Activity activity, final long account_id, boolean is_gap) {
         this.account_id = account_id;
@@ -128,20 +135,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
         this.is_gap = is_gap;
     }
 
-    public ParcelableActivity(final JSONParcel in) {
-        account_id = in.readLong("account_id");
-        timestamp = in.readLong("timestamp");
-        max_position = in.readLong("max_position");
-        min_position = in.readLong("min_position");
-        action = in.readInt("action");
-        sources = in.readParcelableArray("sources", ParcelableUser.JSON_CREATOR);
-        target_users = in.readParcelableArray("target_users", ParcelableUser.JSON_CREATOR);
-        target_statuses = in.readParcelableArray("target_statuses", ParcelableStatus.JSON_CREATOR);
-        target_user_lists = in.readParcelableArray("target_user_lists", ParcelableUserList.JSON_CREATOR);
-        target_object_user_lists = in.readParcelableArray("target_object_user_lists", ParcelableUserList.JSON_CREATOR);
-        target_object_statuses = in.readParcelableArray("target_object_statuses", ParcelableStatus.JSON_CREATOR);
-        is_gap = in.readBoolean("is_gap", false);
-    }
 
     @Override
     public int compareTo(@NonNull final ParcelableActivity another) {
@@ -167,22 +160,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, JSONP
                 + Arrays.toString(target_user_lists) + ", target_object_user_lists="
                 + Arrays.toString(target_object_user_lists) + ", target_object_statuses="
                 + Arrays.toString(target_object_statuses) + "}";
-    }
-
-    @Override
-    public void writeToParcel(final JSONParcel out) {
-        out.writeLong("account_id", account_id);
-        out.writeLong("timestamp", timestamp);
-        out.writeLong("max_position", max_position);
-        out.writeLong("min_position", min_position);
-        out.writeInt("action", action);
-        out.writeParcelableArray("sources", sources);
-        out.writeParcelableArray("target_users", target_users);
-        out.writeParcelableArray("target_statuses", target_statuses);
-        out.writeParcelableArray("target_user_lists", target_user_lists);
-        out.writeParcelableArray("target_object_user_lists", target_object_user_lists);
-        out.writeParcelableArray("target_object_statuses", target_object_statuses);
-        out.writeBoolean("is_gap", is_gap);
     }
 
 

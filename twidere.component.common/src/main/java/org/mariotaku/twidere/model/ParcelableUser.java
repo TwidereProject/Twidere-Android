@@ -26,8 +26,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.jsonserializer.JSONParcel;
-import org.mariotaku.jsonserializer.JSONParcelable;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -37,7 +38,8 @@ import org.mariotaku.twidere.util.TwitterContentUtils;
 import twitter4j.URLEntity;
 import twitter4j.User;
 
-public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableUser> {
+@JsonObject
+public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
     public static final Parcelable.Creator<ParcelableUser> CREATOR = new Parcelable.Creator<ParcelableUser>() {
         @Override
@@ -51,30 +53,72 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         }
     };
 
-    public static final JSONParcelable.Creator<ParcelableUser> JSON_CREATOR = new JSONParcelable.Creator<ParcelableUser>() {
-        @Override
-        public ParcelableUser createFromParcel(final JSONParcel in) {
-            return new ParcelableUser(in);
-        }
 
-        @Override
-        public ParcelableUser[] newArray(final int size) {
-            return new ParcelableUser[size];
-        }
-    };
+    @JsonField(name = "account_id")
+    public long account_id;
+    @JsonField(name = "id")
+    public long id;
+    @JsonField(name = "created_at")
+    public long created_at;
+    @JsonField(name = "position")
+    public long position;
 
-    public final long account_id, id, created_at, position;
+    @JsonField(name = "is_protected")
+    public boolean is_protected;
+    @JsonField(name = "is_verified")
+    public boolean is_verified;
+    @JsonField(name = "is_follow_request_sent")
+    public boolean is_follow_request_sent;
+    @JsonField(name = "is_following")
+    public boolean is_following;
 
-    public final boolean is_protected, is_verified, is_follow_request_sent, is_following;
+    @JsonField(name = "description_plain")
+    public String description_plain;
+    @JsonField(name = "name")
+    public String name;
+    @JsonField(name = "screen_name")
+    public String screen_name;
+    @JsonField(name = "location")
+    public String location;
+    @JsonField(name = "profile_image_url")
+    public String profile_image_url;
+    @JsonField(name = "profile_banner_url")
+    public String profile_banner_url;
+    @JsonField(name = "url")
+    public String url;
+    @JsonField(name = "url_expanded")
+    public String url_expanded;
+    @JsonField(name = "description_html")
+    public String description_html;
+    @JsonField(name = "description_unescaped")
+    public String description_unescaped;
+    @JsonField(name = "description_expanded")
+    public String description_expanded;
 
-    public final String description_plain, name, screen_name, location, profile_image_url, profile_banner_url, url,
-            url_expanded, description_html, description_unescaped, description_expanded;
+    @JsonField(name = "followers_count")
+    public int followers_count;
+    @JsonField(name = "friends_count")
+    public int friends_count;
+    @JsonField(name = "statuses_count")
+    public int statuses_count;
+    @JsonField(name = "favorites_count")
+    public int favorites_count;
+    @JsonField(name = "listed_count")
+    public int listed_count;
+    @JsonField(name = "media_count")
+    public int media_count;
 
-    public final int followers_count, friends_count, statuses_count, favorites_count, listed_count, media_count;
+    @JsonField(name = "background_color")
+    public int background_color;
+    @JsonField(name = "link_color")
+    public int link_color;
+    @JsonField(name = "text_color")
+    public int text_color;
 
-    public final int background_color, link_color, text_color;
-
-    public final boolean is_cache, is_basic;
+    @JsonField(name = "is_cache")
+    public boolean is_cache;
+    @JsonField(name = "is_basic")
+    public boolean is_basic;
 
     public ParcelableUser(final long account_id, final long id, final String name,
                           final String screen_name, final String profile_image_url) {
@@ -143,38 +187,6 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         is_basic = indices.description_plain == -1 || indices.url == -1 || indices.location == -1;
     }
 
-    public ParcelableUser(final JSONParcel in) {
-        position = in.readLong("position");
-        account_id = in.readLong("account_id");
-        id = in.readLong("user_id");
-        created_at = in.readLong("created_at");
-        is_protected = in.readBoolean("is_protected");
-        is_verified = in.readBoolean("is_verified");
-        name = in.readString("name");
-        screen_name = in.readString("screen_name");
-        description_plain = in.readString("description_plain");
-        description_html = in.readString("description_html");
-        description_expanded = in.readString("description_expanded");
-        description_unescaped = in.readString("description_unescaped");
-        location = in.readString("location");
-        profile_image_url = in.readString("profile_image_url");
-        profile_banner_url = in.readString("profile_banner_url");
-        url = in.readString("url");
-        is_follow_request_sent = in.readBoolean("is_follow_request_sent");
-        followers_count = in.readInt("followers_count");
-        friends_count = in.readInt("friends_count");
-        statuses_count = in.readInt("statuses_count");
-        favorites_count = in.readInt("favorites_count");
-        listed_count = in.readInt("listed_count");
-        media_count = in.readInt("media_count");
-        url_expanded = in.readString("url_expanded");
-        is_following = in.readBoolean("is_following");
-        background_color = in.readInt("background_color");
-        link_color = in.readInt("link_color");
-        text_color = in.readInt("text_color");
-        is_cache = in.readBoolean("is_cache");
-        is_basic = in.readBoolean("is_basic");
-    }
 
     public ParcelableUser(final Parcel in) {
         position = in.readLong();
@@ -373,40 +385,6 @@ public class ParcelableUser implements TwidereParcelable, Comparable<ParcelableU
         values.put(CachedUsers.LINK_COLOR, user.link_color);
         values.put(CachedUsers.TEXT_COLOR, user.text_color);
         return values;
-    }
-
-    @Override
-    public void writeToParcel(final JSONParcel out) {
-        out.writeLong("position", position);
-        out.writeLong("account_id", account_id);
-        out.writeLong("user_id", id);
-        out.writeLong("created_at", created_at);
-        out.writeBoolean("is_protected", is_protected);
-        out.writeBoolean("is_verified", is_verified);
-        out.writeString("name", name);
-        out.writeString("screen_name", screen_name);
-        out.writeString("description_plain", description_plain);
-        out.writeString("description_html", description_html);
-        out.writeString("description_expanded", description_expanded);
-        out.writeString("description_unescaped", description_unescaped);
-        out.writeString("location", location);
-        out.writeString("profile_image_url", profile_image_url);
-        out.writeString("profile_banner_url", profile_banner_url);
-        out.writeString("url", url);
-        out.writeBoolean("is_follow_request_sent", is_follow_request_sent);
-        out.writeInt("followers_count", followers_count);
-        out.writeInt("friends_count", friends_count);
-        out.writeInt("statuses_count", statuses_count);
-        out.writeInt("favorites_count", favorites_count);
-        out.writeInt("listed_count", listed_count);
-        out.writeInt("media_count", media_count);
-        out.writeString("url_expanded", url_expanded);
-        out.writeBoolean("is_following", is_following);
-        out.writeInt("background_color", background_color);
-        out.writeInt("link_color", link_color);
-        out.writeInt("text_color", text_color);
-        out.writeBoolean("is_cache", is_cache);
-        out.writeBoolean("is_basic", is_basic);
     }
 
     public static final class CachedIndices {

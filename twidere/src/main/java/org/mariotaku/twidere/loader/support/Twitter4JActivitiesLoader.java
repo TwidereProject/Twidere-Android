@@ -25,11 +25,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Pair;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -153,7 +157,7 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
     private List<ParcelableActivity> getCachedData(final File file) {
         if (file == null) return null;
         try {
-            return JSONFileIO.readArrayList(file);
+            return LoganSquare.parseList(new FileInputStream(file), ParcelableActivity.class);
         } catch (final IOException e) {
             e.printStackTrace();
         }
@@ -176,7 +180,7 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
         final int databaseItemLimit = prefs.getInt(KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
         try {
             final List<ParcelableActivity> activities = data.subList(0, Math.min(databaseItemLimit, data.size()));
-            JSONFileIO.writeArray(file, activities.toArray(new ParcelableActivity[activities.size()]));
+            LoganSquare.serialize(activities, new FileOutputStream(file), ParcelableActivity.class);
         } catch (final IOException e) {
             e.printStackTrace();
         }

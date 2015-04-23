@@ -6,9 +6,13 @@ import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
+@JsonObject
 public class UploaderMediaItem implements Parcelable {
 
     public static final Parcelable.Creator<UploaderMediaItem> CREATOR = new Parcelable.Creator<UploaderMediaItem>() {
@@ -24,9 +28,12 @@ public class UploaderMediaItem implements Parcelable {
         }
     };
 
-    public final String path;
-    public final ParcelFileDescriptor fd;
-    public final long size;
+    @JsonField(name = "String")
+	public String path;
+    @JsonField(name = "ParcelFileDescriptor")
+	public ParcelFileDescriptor fd;
+    @JsonField(name = "long")
+	public long size;
 
     public UploaderMediaItem(final Context context, final ParcelableMediaUpdate media) throws FileNotFoundException {
         path = Uri.parse(media.uri).getPath();
