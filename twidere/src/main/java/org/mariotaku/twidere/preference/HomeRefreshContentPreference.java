@@ -27,10 +27,6 @@ import org.mariotaku.twidere.R;
 
 public class HomeRefreshContentPreference extends MultiSelectListPreference implements Constants {
 
-	public static final boolean DEFAULT_ENABLE_MENTIONS = true;
-	public static final boolean DEFAULT_ENABLE_DIRECT_MESSAGES = true;
-	public static final boolean DEFAULT_ENABLE_TRENDS = true;
-
 	public HomeRefreshContentPreference(final Context context) {
 		this(context, null);
 	}
@@ -45,7 +41,7 @@ public class HomeRefreshContentPreference extends MultiSelectListPreference impl
 
 	@Override
 	protected boolean[] getDefaults() {
-		return new boolean[] { DEFAULT_ENABLE_MENTIONS, DEFAULT_ENABLE_DIRECT_MESSAGES, DEFAULT_ENABLE_TRENDS };
+		return new boolean[] { true, true, true };
 	}
 
 	@Override

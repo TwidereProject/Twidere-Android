@@ -33,13 +33,12 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class MessageEntryViewHolder extends ViewHolder implements OnClickListener {
 
@@ -68,6 +67,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
     public void displayMessage(Cursor cursor, boolean isUnread) {
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
+        final UserColorNameManager manager = adapter.getUserColorNameManager();
 
         final long accountId = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
         final long conversationId = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
@@ -77,7 +77,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         final String name = cursor.getString(ConversationEntries.IDX_NAME);
         final String screenName = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
 
-        nameView.setText(getUserNickname(context, conversationId, name));
+        nameView.setText(manager.getUserNickname(conversationId, name, false));
         screenNameView.setText("@" + screenName);
         textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT)));
         timeView.setTime(timestamp);
@@ -92,7 +92,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         if (account_color_enabled) {
             content.drawEnd(Utils.getAccountColor(context, accountId));
         }
-        content.drawStart(UserColorNameUtils.getUserColor(context, conversationId));
+        content.drawStart(manager.getUserColor(conversationId, false));
 
         final String profileImage = cursor.getString(ConversationEntries.IDX_PROFILE_IMAGE_URL);
         loader.displayProfileImage(profileImageView, profileImage);

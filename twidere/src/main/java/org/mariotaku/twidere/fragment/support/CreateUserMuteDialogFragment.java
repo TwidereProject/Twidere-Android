@@ -25,13 +25,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 
 public class CreateUserMuteDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
 
@@ -54,11 +57,17 @@ public class CreateUserMuteDialogFragment extends BaseSupportDialogFragment impl
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
+        final FragmentActivity activity = getActivity();
+        final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         final ParcelableUser user = getUser();
         if (user != null) {
-            final String displayName = UserColorNameUtils.getDisplayName(wrapped, user.id, user.name, user.screen_name);
+            final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
+            final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(activity,
+                    SharedPreferencesWrapper.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE,
+                    SharedPreferenceConstants.class);
+            final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST);
+            final String displayName = manager.getDisplayName(user, nameFirst, false);
             builder.setTitle(getString(R.string.mute_user, displayName));
             builder.setMessage(getString(R.string.mute_user_confirm_message, displayName));
         }

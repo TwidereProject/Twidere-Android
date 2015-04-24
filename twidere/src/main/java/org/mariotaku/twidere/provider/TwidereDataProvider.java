@@ -93,7 +93,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.CachedUsersQueryBuilder;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
@@ -857,19 +857,20 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     statusesCount, statusesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = UserColorNameUtils.getUserNickname(context, userCursor.getLong(idxUserId),
+            final UserColorNameManager manager = UserColorNameManager.getInstance(context);
+            final String displayName = manager.getUserNickname(userCursor.getLong(idxUserId),
                     mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName);
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1);
-                final String othersName = UserColorNameUtils.getUserNickname(context, userCursor.getLong(idxUserId),
+                final String othersName = manager.getUserNickname(userCursor.getLong(idxUserId),
                         mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
                 notificationContent = resources.getQuantityString(R.plurals.from_name_and_N_others,
                         usersCount - 1, othersName, usersCount - 1);
             } else {
                 userCursor.moveToPosition(1);
-                final String othersName = UserColorNameUtils.getUserNickname(context, userCursor.getLong(idxUserId),
+                final String othersName = manager.getUserNickname(userCursor.getLong(idxUserId),
                         mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
                 notificationContent = resources.getString(R.string.from_name_and_N_others, othersName, usersCount - 1);
             }
@@ -938,7 +939,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     statusesCount, statusesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = UserColorNameUtils.getUserNickname(context, userCursor.getLong(idxUserId),
+            final UserColorNameManager manager = UserColorNameManager.getInstance(context);
+            final String displayName = manager.getUserNickname(userCursor.getLong(idxUserId),
                     mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.notification_mention, displayName);
@@ -958,7 +960,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     statusId = statusCursor.getLong(idxStatusId);
                 }
                 final SpannableStringBuilder sb = new SpannableStringBuilder();
-                sb.append(UserColorNameUtils.getUserNickname(context, statusCursor.getLong(idxUserId),
+                sb.append(manager.getUserNickname(statusCursor.getLong(idxUserId),
                         mNameFirst ? statusCursor.getString(idxStatusUserName) : statusCursor.getString(idxStatusUserScreenName)));
                 sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 sb.append(' ');
@@ -1120,7 +1122,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     messagesCount, messagesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = UserColorNameUtils.getUserNickname(context, userCursor.getLong(idxUserId),
+            final UserColorNameManager manager = UserColorNameManager.getInstance(context);
+            final String displayName = manager.getUserNickname(userCursor.getLong(idxUserId),
                     mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 if (messagesCount == 1) {
@@ -1144,7 +1147,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
                 if (i < 5) {
                     final SpannableStringBuilder sb = new SpannableStringBuilder();
-                    sb.append(UserColorNameUtils.getUserNickname(context, messageCursor.getLong(idxUserId),
+                    sb.append(manager.getUserNickname(messageCursor.getLong(idxUserId),
                             mNameFirst ? messageCursor.getString(idxMessageUserName) : messageCursor.getString(idxMessageUserScreenName)));
                     sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     sb.append(' ');

@@ -21,7 +21,6 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff.Mode;
@@ -46,10 +45,10 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedValues;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView;
 
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
 
@@ -65,7 +64,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     @NonNull
     private final SharedPreferencesWrapper mPreferences;
     @NonNull
-    private final SharedPreferences mUserNicknamePreferences;
+    private final UserColorNameManager mUserColorNameManager;
 
     private final EditText mEditText;
 
@@ -83,10 +82,10 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     public UserHashtagAutoCompleteAdapter(final Context context, final EditText view) {
         super(context, R.layout.list_item_auto_complete, null, FROM, TO, 0);
         mEditText = view;
-        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mUserNicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mResolver = context.getContentResolver();
         final TwidereApplication app = TwidereApplication.getInstance(context);
+        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mUserColorNameManager = app.getUserColorNameManager();
+        mResolver = context.getContentResolver();
         mProfileImageLoader = app.getMediaLoaderWrapper();
         mDatabase = app.getSQLiteDatabase();
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
@@ -108,7 +107,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         icon.setImageDrawable(null);
 
         if (mScreenNameIdx != -1 && mNameIdx != -1 && mUserIdIdx != -1) {
-            text1.setText(getUserNickname(context, cursor.getLong(mUserIdIdx), cursor.getString(mNameIdx)));
+            text1.setText(mUserColorNameManager.getUserNickname(cursor.getLong(mUserIdIdx), cursor.getString(mNameIdx)));
             text2.setText("@" + cursor.getString(mScreenNameIdx));
         } else {
             text1.setText("#" + cursor.getString(mNameIdx));
@@ -168,7 +167,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             final Expression selection;
             final String[] selectionArgs;
             if (constraintEscaped != null) {
-                final long[] nicknameIds = Utils.getMatchedNicknameIds(ParseUtils.parseString(constraint), mUserNicknamePreferences);
+                final long[] nicknameIds = Utils.getMatchedNicknameIds(ParseUtils.parseString(constraint), mUserColorNameManager);
                 selection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                         Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                         Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));

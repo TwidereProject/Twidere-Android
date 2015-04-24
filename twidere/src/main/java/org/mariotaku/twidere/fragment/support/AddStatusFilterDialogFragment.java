@@ -29,19 +29,22 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.twitter.Extractor;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -167,12 +170,20 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
     }
 
     private String getName(final Object value) {
+        final FragmentActivity activity = getActivity();
+        final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
+        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(activity,
+                SharedPreferencesWrapper.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE,
+                SharedPreferenceConstants.class);
+        final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST);
         if (value instanceof ParcelableUserMention) {
             final ParcelableUserMention mention = (ParcelableUserMention) value;
-            return UserColorNameUtils.getDisplayName(getActivity(), mention.id, mention.name, mention.screen_name);
+            return manager.getDisplayName(mention.id, mention.name, mention.screen_name, nameFirst,
+                    true);
         } else if (value instanceof ParcelableStatus) {
             final ParcelableStatus status = (ParcelableStatus) value;
-            return UserColorNameUtils.getDisplayName(getActivity(), status.user_id, status.user_name, status.user_screen_name);
+            return manager.getDisplayName(status.user_id, status.user_name, status.user_screen_name,
+                    nameFirst, true);
         } else
             return ParseUtils.parseString(value);
     }

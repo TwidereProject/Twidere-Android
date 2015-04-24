@@ -32,7 +32,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserListViewListHolder;
 
@@ -50,6 +50,7 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
     private final MediaLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final Locale mLocale;
+    private final UserColorNameManager mUserColorNameManager;
 
     public ParcelableUserListsListAdapter(final Context context) {
         this(context, Utils.isCompactCards(context));
@@ -62,6 +63,7 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mImageLoader = app.getMediaLoaderWrapper();
         mMultiSelectManager = app.getMultiSelectManager();
+        mUserColorNameManager = app.getUserColorNameManager();
         configBaseCardAdapter(context, this);
     }
 
@@ -91,8 +93,7 @@ public class ParcelableUserListsListAdapter extends BaseArrayAdapter<ParcelableU
         holder.position = position;
 
         final ParcelableUserList userList = getItem(position);
-        final String displayName = UserColorNameUtils.getDisplayName(mContext, userList.user_id, userList.user_name,
-                userList.user_screen_name, isDisplayNameFirst(), false);
+        final String displayName = mUserColorNameManager.getDisplayName(userList, isDisplayNameFirst(), false);
         holder.setTextSize(getTextSize());
         holder.name.setText(userList.name);
         holder.created_by.setText(mContext.getString(R.string.created_by, displayName));

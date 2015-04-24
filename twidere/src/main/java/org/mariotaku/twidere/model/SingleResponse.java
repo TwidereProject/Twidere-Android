@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.model;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 public class SingleResponse<Data> {
 	private final Exception exception;
@@ -48,9 +49,7 @@ public class SingleResponse<Data> {
 		if (exception == null) {
 			if (other.exception != null) return false;
 		} else if (!exception.equals(other.exception)) return false;
-		if (getExtras() == null) {
-			if (other.getExtras() != null) return false;
-		} else if (!getExtras().equals(other.getExtras())) return false;
+        if (!getExtras().equals(other.getExtras())) return false;
 		return true;
 	}
 
@@ -62,6 +61,7 @@ public class SingleResponse<Data> {
 		return exception;
 	}
 
+    @NonNull
 	public Bundle getExtras() {
 		return extras;
 	}
@@ -80,7 +80,7 @@ public class SingleResponse<Data> {
 		int result = 1;
 		result = prime * result + (getData() == null ? 0 : getData().hashCode());
 		result = prime * result + (exception == null ? 0 : exception.hashCode());
-		result = prime * result + (getExtras() == null ? 0 : getExtras().hashCode());
+		result = prime * result + (getExtras().hashCode());
 		return result;
 	}
 

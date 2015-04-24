@@ -37,7 +37,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 
 public abstract class BaseAccountPreferenceFragment extends PreferenceFragment implements Constants,
         OnCheckedChangeListener, OnSharedPreferenceChangeListener {
@@ -57,7 +57,10 @@ public abstract class BaseAccountPreferenceFragment extends PreferenceFragment i
         final Activity activity = getActivity();
         final Intent intent = activity.getIntent();
         if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
-            final String name = UserColorNameUtils.getDisplayName(getActivity(), account.account_id, account.name, account.screen_name);
+            final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
+            final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
+            final String name = manager.getDisplayName(account.account_id, account.name,
+                    account.screen_name, nameFirst, false);
             activity.setTitle(name);
         }
         updatePreferenceScreen();

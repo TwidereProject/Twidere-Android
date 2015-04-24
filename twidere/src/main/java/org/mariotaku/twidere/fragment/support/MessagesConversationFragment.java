@@ -81,6 +81,7 @@ import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -101,8 +102,9 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.StatusComposeEditText;
@@ -158,10 +160,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     // Utility classes
     private TwidereValidator mValidator;
     private AsyncTwitterWrapper mTwitterWrapper;
-    private SharedPreferences mPreferences;
+    private SharedPreferencesWrapper mPreferences;
     private SharedPreferences mMessageDrafts;
     private ReadStateManager mReadStateManager;
     private MediaLoaderWrapper mImageLoader;
+    private UserColorNameManager mUserColorNameManager;
 
     // Views
     private RecyclerView mMessagesListView;
@@ -225,7 +228,9 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         super.onActivityCreated(savedInstanceState);
 
         final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+        mUserColorNameManager = UserColorNameManager.getInstance(activity);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mImageLoader = TwidereApplication.getInstance(activity).getMediaLoaderWrapper();
         mReadStateManager = getReadStateManager();
@@ -763,7 +768,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
         final FragmentActivity activity = getActivity();
         if (mRecipient != null) {
-            activity.setTitle(UserColorNameUtils.getDisplayName(activity, mRecipient));
+            activity.setTitle(mUserColorNameManager.getDisplayName(mRecipient, mPreferences.getBoolean(KEY_NAME_FIRST), true));
         } else {
             activity.setTitle(R.string.direct_messages);
         }
@@ -833,7 +838,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 final Expression selection;
                 final String[] selectionArgs;
                 if (queryEscaped != null) {
-                    final SharedPreferences nicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                    final UserColorNameManager nicknamePrefs = UserColorNameManager.getInstance(context);
                     final long[] nicknameIds = Utils.getMatchedNicknameIds(query, nicknamePrefs);
                     selection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                             Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),

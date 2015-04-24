@@ -217,8 +217,9 @@
                     android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="10sp"
-                    tools:text="\@user"/>
+                    tools:ignore="SmallSp"
+                    tools:text="\@user"
+                    tools:textSize="10sp"/>
             </LinearLayout>
 
             <org.mariotaku.twidere.view.CardMediaContainer
@@ -229,10 +230,9 @@
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:layout_toRightOf="@+id/quote_indicator"
                 android:horizontalSpacing="@dimen/element_spacing_xsmall"
-                android:verticalSpacing="@dimen/element_spacing_xsmall"
-                tools:ignore="DuplicateIncludedIds">
+                android:verticalSpacing="@dimen/element_spacing_xsmall">
 
-                <include layout="@layout/layout_card_media_preview"/>
+                <!-- Child views will be inflated if media preview enabled in ViewHolder -->
 
             </org.mariotaku.twidere.view.CardMediaContainer>
 

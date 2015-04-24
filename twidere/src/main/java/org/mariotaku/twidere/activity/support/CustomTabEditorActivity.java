@@ -57,6 +57,7 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 
 import java.text.Collator;
 import java.util.Comparator;
@@ -68,7 +69,6 @@ import static org.mariotaku.twidere.util.CustomTabUtils.findTabIconKey;
 import static org.mariotaku.twidere.util.CustomTabUtils.getIconMap;
 import static org.mariotaku.twidere.util.CustomTabUtils.getTabConfiguration;
 import static org.mariotaku.twidere.util.CustomTabUtils.getTabTypeName;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 public class CustomTabEditorActivity extends BaseSupportDialogActivity implements OnClickListener {
 
@@ -219,28 +219,24 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
         final boolean displayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         final boolean displayName = mPreferences.getBoolean(KEY_NAME_FIRST, true);
+        final UserColorNameManager manager = UserColorNameManager.getInstance(this);
         text1.setVisibility(View.VISIBLE);
         text2.setVisibility(View.VISIBLE);
         icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            text1.setText(getUserNickname(this, user.id, user.name));
+            text1.setText(manager.getUserNickname(user.id, user.name, false));
             text2.setText("@" + user.screen_name);
             if (displayProfileImage) {
                 mImageLoader.displayProfileImage(icon, user.profile_image_url);
             }
         } else if (value instanceof ParcelableUserList) {
-            final ParcelableUserList user_list = (ParcelableUserList) value;
-            final String created_by;
-            if (displayName) {
-                created_by = "@" + user_list.user_screen_name;
-            } else {
-                created_by = getUserNickname(this, user_list.user_id, user_list.user_name);
-            }
-            text1.setText(user_list.name);
-            text2.setText(getString(R.string.created_by, created_by));
+            final ParcelableUserList userList = (ParcelableUserList) value;
+            final String createdBy = manager.getDisplayName(userList, displayName, false);
+            text1.setText(userList.name);
+            text2.setText(getString(R.string.created_by, createdBy));
             if (displayProfileImage) {
-                mImageLoader.displayProfileImage(icon, user_list.user_profile_image_url);
+                mImageLoader.displayProfileImage(icon, userList.user_profile_image_url);
             }
         } else if (value instanceof CharSequence) {
             text2.setVisibility(View.GONE);

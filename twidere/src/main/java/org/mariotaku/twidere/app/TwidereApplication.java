@@ -33,7 +33,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -56,6 +55,7 @@ import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
@@ -69,7 +69,6 @@ import edu.tsinghua.spice.SpiceService;
 import edu.ucdavis.earlybird.UCDService;
 import twitter4j.http.HostAddressResolver;
 
-import static org.mariotaku.twidere.util.UserColorNameUtils.initUserColor;
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
@@ -99,8 +98,14 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private VideoLoader mVideoLoader;
     private ReadStateManager mReadStateManager;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    private UserColorNameManager mUserColorNameManager;
 
     private String mDefaultUserAgent;
+
+    @NonNull
+    public static TwidereApplication getInstance(@NonNull final Context context) {
+        return (TwidereApplication) context.getApplicationContext();
+    }
 
     public AsyncTaskManager getAsyncTaskManager() {
         if (mAsyncTaskManager != null) return mAsyncTaskManager;
@@ -119,6 +124,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public DiskCache getFullDiskCache() {
         if (mFullDiskCache != null) return mFullDiskCache;
         return mFullDiskCache = createDiskCache(DIR_NAME_FULL_IMAGE_CACHE);
+    }
+
+    public UserColorNameManager getUserColorNameManager() {
+        if (mUserColorNameManager != null) return mUserColorNameManager;
+        return mUserColorNameManager = new UserColorNameManager(this);
     }
 
     public ImageDownloader getFullImageDownloader() {
@@ -144,8 +154,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         if (mKeyboardShortcutsHandler != null) return mKeyboardShortcutsHandler;
         mKeyboardShortcutsHandler = new KeyboardShortcutsHandler(this);
         final SharedPreferences preferences = getSharedPreferences();
-        if (mKeyboardShortcutsHandler.isEmpty()
-                && !preferences.getBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, false)) {
+        if (!preferences.getBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, false)) {
             mKeyboardShortcutsHandler.reset();
             preferences.edit().putBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, true).apply();
         }
@@ -183,11 +192,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mMediaLoaderWrapper = new MediaLoaderWrapper(getImageLoader(), getVideoLoader());
     }
 
-    @NonNull
-    public static TwidereApplication getInstance(@NonNull final Context context) {
-        return (TwidereApplication) context.getApplicationContext();
-    }
-
     public Bus getMessageBus() {
         return mMessageBus;
     }
@@ -211,7 +215,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     public AsyncTwitterWrapper getTwitterWrapper() {
         if (mTwitterWrapper != null) return mTwitterWrapper;
-        return mTwitterWrapper = AsyncTwitterWrapper.getInstance(this);
+        return mTwitterWrapper = new AsyncTwitterWrapper(this);
     }
 
     @Override
@@ -225,7 +229,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         mMessageBus = new Bus();
         initializeAsyncTask();
         initAccountColor(this);
-        initUserColor(this);
 
         final PackageManager pm = getPackageManager();
         final ComponentName main = new ComponentName(this, MainActivity.class);

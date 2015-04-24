@@ -61,6 +61,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportListFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -68,7 +69,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
@@ -115,6 +116,7 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View view = super.onCreateView(inflater, container, savedInstanceState);
+        assert view != null;
         final View lv = view.findViewById(android.R.id.list);
         final Resources res = getResources();
         final float density = res.getDisplayMetrics().density;
@@ -391,6 +393,8 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
 
         private static final class FilterUsersListAdapter extends SimpleCursorAdapter {
 
+            private final UserColorNameManager mUserColorNameManager;
+
             private final boolean mNameFirst;
             private int mUserIdIdx, mNameIdx, mScreenNameIdx;
 
@@ -399,6 +403,7 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
                 mNameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
+                mUserColorNameManager = TwidereApplication.getInstance(context).getUserColorNameManager();
             }
 
             @Override
@@ -408,7 +413,8 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
                 final long userId = cursor.getLong(mUserIdIdx);
                 final String name = cursor.getString(mNameIdx);
                 final String screenName = cursor.getString(mScreenNameIdx);
-                final String displayName = UserColorNameUtils.getDisplayName(context, userId, name, screenName, mNameFirst);
+                final String displayName = mUserColorNameManager.getDisplayName(userId, name, screenName,
+                        mNameFirst, false);
                 text1.setText(displayName);
             }
 

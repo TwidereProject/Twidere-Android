@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 /**
@@ -31,6 +32,8 @@ import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
  */
 public interface IContentCardAdapter extends ILoadMoreSupportAdapter {
     Context getContext();
+
+    UserColorNameManager getUserColorNameManager();
 
     int getItemCount();
 

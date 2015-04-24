@@ -24,16 +24,18 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.constant.IntentConstants;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 
 import twitter4j.TwitterException;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 
 /**
-* Created by mariotaku on 14/12/5.
-*/
+ * Created by mariotaku on 14/12/5.
+ */
 public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<ParcelableStatus>> {
 
     private final boolean mOmitIntentExtra;
@@ -56,7 +58,12 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             if (cache != null) return SingleResponse.getInstance(cache);
         }
         try {
-            return SingleResponse.getInstance(findStatus(getContext(), mAccountId, mStatusId));
+            final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
+            final ParcelableAccount.ParcelableCredentials credentials = ParcelableAccount.getCredentials(getContext(), mAccountId);
+            final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
+            final Bundle extras = response.getExtras();
+            extras.putParcelable(EXTRA_ACCOUNT, credentials);
+            return response;
         } catch (final TwitterException e) {
             return SingleResponse.getInstance(e);
         }

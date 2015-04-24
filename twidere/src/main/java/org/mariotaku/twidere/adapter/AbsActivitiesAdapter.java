@@ -47,6 +47,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
@@ -81,6 +82,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final boolean mDisplayProfileImage;
     private final TwidereLinkify mLinkify;
     private final DummyStatusHolderAdapter mStatusAdapterDelegate;
+    private final UserColorNameManager mUserColorNameManager;
     private boolean mLoadMoreSupported;
     private boolean mLoadMoreIndicatorVisible;
     private ActivityAdapterListener mActivityAdapterListener;
@@ -93,6 +95,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         mImageLoader = app.getMediaLoaderWrapper();
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mTwitterWrapper = app.getTwitterWrapper();
+        mUserColorNameManager = app.getUserColorNameManager();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
@@ -363,6 +366,11 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     @Override
     public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
 
+    }
+
+    @Override
+    public UserColorNameManager getUserColorNameManager() {
+        return mUserColorNameManager;
     }
 
     public void setListener(ActivityAdapterListener listener) {

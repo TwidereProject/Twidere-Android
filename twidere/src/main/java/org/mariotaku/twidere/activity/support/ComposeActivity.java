@@ -120,7 +120,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
@@ -1015,26 +1015,26 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean setComposeTitle(final Intent intent) {
         final String action = intent.getAction();
+        final UserColorNameManager manager = UserColorNameManager.getInstance(this);
+        final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         if (INTENT_ACTION_REPLY.equals(action)) {
             if (mInReplyToStatus == null) return false;
-            final String display_name = UserColorNameUtils.getDisplayName(this, mInReplyToStatus.user_id, mInReplyToStatus.user_name,
-                    mInReplyToStatus.user_screen_name);
-            setTitle(getString(R.string.reply_to, display_name));
+            final String displayName = manager.getDisplayName(mInReplyToStatus.user_id, mInReplyToStatus.user_name,
+                    mInReplyToStatus.user_screen_name, nameFirst, false);
+            setTitle(getString(R.string.reply_to, displayName));
         } else if (INTENT_ACTION_QUOTE.equals(action)) {
             if (mInReplyToStatus == null) return false;
-            final String display_name = UserColorNameUtils.getDisplayName(this, mInReplyToStatus.user_id, mInReplyToStatus.user_name,
-                    mInReplyToStatus.user_screen_name);
-            setTitle(getString(R.string.quote_user, display_name));
-//            mSubtitleView.setVisibility(mInReplyToStatus.user_is_protected
-//                    && mInReplyToStatus.account_id != mInReplyToStatus.user_id ? View.VISIBLE : View.GONE);
+            final String displayName = manager.getDisplayName(mInReplyToStatus.user_id, mInReplyToStatus.user_name,
+                    mInReplyToStatus.user_screen_name, nameFirst, false);
+            setTitle(getString(R.string.quote_user, displayName));
         } else if (INTENT_ACTION_EDIT_DRAFT.equals(action)) {
             if (mDraftItem == null) return false;
             setTitle(R.string.edit_draft);
         } else if (INTENT_ACTION_MENTION.equals(action)) {
             if (mMentionUser == null) return false;
-            final String display_name = UserColorNameUtils.getDisplayName(this, mMentionUser.id, mMentionUser.name,
-                    mMentionUser.screen_name);
-            setTitle(getString(R.string.mention_user, display_name));
+            final String displayName = manager.getDisplayName(mMentionUser.id, mMentionUser.name,
+                    mMentionUser.screen_name, nameFirst, false);
+            setTitle(getString(R.string.mention_user, displayName));
         } else if (INTENT_ACTION_REPLY_MULTIPLE.equals(action)) {
             setTitle(R.string.reply);
         } else if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {

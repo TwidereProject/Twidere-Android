@@ -69,9 +69,9 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
     }
 
     @Override
-    public int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds) {
+    public boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds) {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        if (twitter == null) return -1;
+        if (twitter == null) return false;
         return twitter.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
     }
 

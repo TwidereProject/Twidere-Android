@@ -65,7 +65,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
-    public int getStatuses(long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+    public boolean getStatuses(long[] accountIds, final long[] maxIds, final long[] sinceIds) {
         final Bundle args = new Bundle(getArguments());
         if (maxIds != null) {
             args.putLong(EXTRA_MAX_ID, maxIds[0]);
@@ -75,7 +75,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         }
         args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
-        return -1;
+        return true;
     }
 
     @Override

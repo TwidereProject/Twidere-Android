@@ -254,7 +254,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.User;
 import twitter4j.UserMentionEntity;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.Authorization;
@@ -275,9 +274,6 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_UR
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 import static org.mariotaku.twidere.util.TwidereLinkify.TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES;
-import static org.mariotaku.twidere.util.UserColorNameUtils.clearUserNickname;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 @SuppressWarnings("unused")
 public final class Utils implements Constants, TwitterConstants {
@@ -1936,10 +1932,10 @@ public final class Utils implements Constants, TwitterConstants {
                 .getConfiguration().locale);
     }
 
-    public static long[] getMatchedNicknameIds(final String str, SharedPreferences nicknamePrefs) {
+    public static long[] getMatchedNicknameIds(final String str, UserColorNameManager manager) {
         if (isEmpty(str)) return new long[0];
         final List<Long> list = new ArrayList<>();
-        for (final Entry<String, ?> entry : nicknamePrefs.getAll().entrySet()) {
+        for (final Entry<String, ?> entry : manager.getNameEntries()) {
             final String value = ParseUtils.parseString(entry.getValue());
             final long key = ParseUtils.parseLong(entry.getKey(), -1);
             if (key == -1 || isEmpty(value)) {
@@ -2011,6 +2007,12 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static String getNonEmptyString(final SharedPreferences pref, final String key, final String def) {
+        if (pref == null) return def;
+        final String val = pref.getString(key, def);
+        return isEmpty(val) ? def : val;
+    }
+
+    public static String getNonEmptyString(final SharedPreferencesWrapper pref, final String key, final String def) {
         if (pref == null) return def;
         final String val = pref.getString(key, def);
         return isEmpty(val) ? def : val;
@@ -2596,21 +2598,6 @@ public final class Utils implements Constants, TwitterConstants {
     public static String getUnescapedStatusString(final String string) {
         if (string == null) return null;
         return string.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">");
-    }
-
-    public static String getUserName(final Context context, final ParcelableStatus status) {
-        if (context == null || status == null) return null;
-        return UserColorNameUtils.getDisplayName(context, status.user_id, status.user_name, status.user_screen_name);
-    }
-
-    public static String getUserName(final Context context, final ParcelableUser user) {
-        if (context == null || user == null) return null;
-        return UserColorNameUtils.getDisplayName(context, user.id, user.name, user.screen_name);
-    }
-
-    public static String getUserName(final Context context, final User user) {
-        if (context == null || user == null) return null;
-        return UserColorNameUtils.getDisplayName(context, user.getId(), user.getName(), user.getScreenName());
     }
 
     @DrawableRes
@@ -3945,6 +3932,7 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static boolean handleMenuItemClick(Context context, Fragment fragment, FragmentManager fm, AsyncTwitterWrapper twitter, ParcelableStatus status, MenuItem item) {
+        final UserColorNameManager colorNameManager = UserColorNameManager.getInstance(context);
         switch (item.getItemId()) {
             case MENU_COPY: {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
@@ -3990,7 +3978,7 @@ public final class Utils implements Constants, TwitterConstants {
             }
             case MENU_SET_COLOR: {
                 final Intent intent = new Intent(context, ColorPickerDialogActivity.class);
-                final int color = getUserColor(context, status.user_id, true);
+                final int color = colorNameManager.getUserColor(status.user_id, true);
                 if (color != 0) {
                     intent.putExtra(EXTRA_COLOR, color);
                 }
@@ -4004,11 +3992,11 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case MENU_CLEAR_NICKNAME: {
-                clearUserNickname(context, status.user_id);
+                colorNameManager.clearUserNickname(status.user_id);
                 break;
             }
             case MENU_SET_NICKNAME: {
-                final String nick = getUserNickname(context, status.user_id, true);
+                final String nick = colorNameManager.getUserNickname(status.user_id, true);
                 SetUserNicknameDialogFragment.show(fm, status.user_id, nick);
                 break;
             }

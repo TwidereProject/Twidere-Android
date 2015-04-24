@@ -64,6 +64,8 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -74,9 +76,10 @@ import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ColorLabelLinearLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
@@ -113,6 +116,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     private CardView mCardView;
 
     private SupportTabsAdapter mPagerAdapter;
+    private boolean mUserListLoaderInitialized;
+    private UserColorNameManager mUserColorNameManager;
+    private SharedPreferencesWrapper mPreferences;
 
     private ParcelableUserList mUserList;
     private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
@@ -135,7 +141,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             }
         }
     };
-    private boolean mUserListLoaderInitialized;
 
     @Override
     public boolean canScroll(float dy) {
@@ -197,8 +202,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mUserList = userList;
         mUserListDetails.drawEnd(getAccountColor(getActivity(), userList.account_id));
         mListNameView.setText(userList.name);
-        final String displayName = UserColorNameUtils.getDisplayName(getActivity(), userList.user_id,
-                userList.user_name, userList.user_screen_name, false);
+
+        final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
+        final String displayName = mUserColorNameManager.getDisplayName(userList, nameFirst, false);
         mCreatedByView.setText(getString(R.string.created_by, displayName));
         final String description = userList.description;
         mDescriptionView.setVisibility(isEmpty(description) ? View.GONE : View.VISIBLE);
@@ -282,9 +288,16 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final FragmentActivity activity = getActivity();
+        final TwidereApplication application = TwidereApplication.getInstance(activity);
+        mTwitterWrapper = application.getTwitterWrapper();
+        mProfileImageLoader = application.getMediaLoaderWrapper();
+        mUserColorNameManager = application.getUserColorNameManager();
+        mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+
         setHasOptionsMenu(true);
 
-        final FragmentActivity activity = getActivity();
 
         Utils.setNdefPushMessageCallback(activity, new CreateNdefMessageCallback() {
 
@@ -311,8 +324,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         }
 
-        mTwitterWrapper = getApplication().getTwitterWrapper();
-        mProfileImageLoader = getApplication().getMediaLoaderWrapper();
         mProfileImageView.setOnClickListener(this);
         mUserListDetails.setOnClickListener(this);
         mRetryButton.setOnClickListener(this);

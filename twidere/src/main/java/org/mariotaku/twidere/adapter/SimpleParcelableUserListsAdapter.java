@@ -28,7 +28,7 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
@@ -39,12 +39,14 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
 
     private final Context mContext;
     private final MediaLoaderWrapper mImageLoader;
+    private UserColorNameManager mUserColorNameManager;
 
     public SimpleParcelableUserListsAdapter(final Context context) {
         super(context, R.layout.list_item_two_line);
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mImageLoader = app.getMediaLoaderWrapper();
+        mUserColorNameManager = app.getUserColorNameManager();
         configBaseAdapter(context, this);
     }
 
@@ -73,8 +75,8 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
         holder.icon.setImageDrawable(null);
 
         final ParcelableUserList user_list = getItem(position);
-        final String display_name = UserColorNameUtils.getDisplayName(mContext, user_list.user_id, user_list.user_name,
-                user_list.user_screen_name, isDisplayNameFirst(), false);
+        final String display_name = mUserColorNameManager.getDisplayName(user_list, isDisplayNameFirst(),
+                false);
         holder.text1.setText(user_list.name);
         holder.text2.setText(mContext.getString(R.string.created_by, display_name));
         holder.icon.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);

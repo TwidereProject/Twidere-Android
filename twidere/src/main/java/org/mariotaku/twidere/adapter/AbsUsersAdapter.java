@@ -35,6 +35,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
@@ -55,12 +56,15 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     private final AsyncTwitterWrapper mTwitterWrapper;
     private final boolean mDisplayProfileImage;
 
+    private final UserColorNameManager mUserColorNameManager;
+
     public AbsUsersAdapter(final Context context, final boolean compact) {
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mContext = context;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mMediaLoader = app.getMediaLoaderWrapper();
+        mUserColorNameManager = app.getUserColorNameManager();
         mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -89,6 +93,11 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     @Override
     public AsyncTwitterWrapper getTwitterWrapper() {
         return mTwitterWrapper;
+    }
+
+    @Override
+    public UserColorNameManager getUserColorNameManager() {
+        return mUserColorNameManager;
     }
 
     @Override

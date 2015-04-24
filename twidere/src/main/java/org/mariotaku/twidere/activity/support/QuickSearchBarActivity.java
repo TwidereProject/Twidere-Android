@@ -22,7 +22,6 @@ package org.mariotaku.twidere.activity.support;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
@@ -76,6 +75,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener;
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener.DismissCallbacks;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.view.ExtendedRelativeLayout;
@@ -83,8 +83,6 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 
 /**
  * Created by mariotaku on 15/1/6.
@@ -397,12 +395,15 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         private final Context mContext;
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
+        private final UserColorNameManager mUserColorNameManager;
         private List<SuggestionItem> mData;
 
         SuggestionsAdapter(Context context) {
             mContext = context;
             mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
+            final TwidereApplication application = TwidereApplication.getInstance(context);
+            mImageLoader = application.getMediaLoaderWrapper();
+            mUserColorNameManager = application.getUserColorNameManager();
         }
 
         public boolean canDismiss(int position) {
@@ -473,6 +474,10 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             mData = data;
             notifyDataSetChanged();
         }
+
+        public UserColorNameManager getUserColorNameManager() {
+            return mUserColorNameManager;
+        }
     }
 
     public static class SuggestionsLoader extends AsyncTaskLoader<List<SuggestionItem>> {
@@ -502,8 +507,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             historyCursor.close();
             if (!emptyQuery) {
                 final String queryEscaped = mQuery.replace("_", "^_");
-                final SharedPreferences nicknamePrefs = context.getSharedPreferences(
-                        USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                final UserColorNameManager nicknamePrefs = UserColorNameManager.getInstance(context);
                 final long[] nicknameIds = Utils.getMatchedNicknameIds(mQuery, nicknamePrefs);
                 final Expression selection = Expression.or(
                         Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
@@ -629,13 +633,13 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         @Override
         public void bindView(SuggestionsAdapter adapter, View view, int position) {
             final ParcelableUser user = mUser;
-            final Context context = adapter.getContext();
             final MediaLoaderWrapper loader = adapter.getImageLoader();
+            final UserColorNameManager manager = adapter.getUserColorNameManager();
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
-            text1.setText(getUserNickname(context, user.id, user.name));
+            text1.setText(manager.getUserNickname(user.id, user.name, false));
             text2.setVisibility(View.VISIBLE);
             text2.setText("@" + user.screen_name);
             icon.clearColorFilter();

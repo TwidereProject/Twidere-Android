@@ -91,6 +91,7 @@ import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.activity.support.UserProfileEditorActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.menu.SupportAccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -99,9 +100,10 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ListViewUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -628,10 +630,15 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
 
     private static final class AccountOptionsAdapter extends OptionItemsAdapter {
 
+        private final boolean mNameFirst;
+        private final UserColorNameManager mUserColorNameManager;
         private ParcelableAccount mSelectedAccount;
 
         public AccountOptionsAdapter(final Context context) {
             super(context);
+            mUserColorNameManager = UserColorNameManager.getInstance(context);
+            mNameFirst = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
+                    Context.MODE_PRIVATE, SharedPreferenceConstants.class).getBoolean(KEY_NAME_FIRST);
         }
 
         public void setSelectedAccount(ParcelableAccount account) {
@@ -644,8 +651,9 @@ public class AccountsDashboardFragment extends BaseSupportListFragment implement
             final ParcelableAccount account = mSelectedAccount;
             if (account != null && option.id == MENU_COMPOSE) {
                 final Context context = getContext();
-                return context.getString(R.string.tweet_from_name,
-                        UserColorNameUtils.getDisplayName(context, -1, account.name, account.screen_name));
+                final String displayName = mUserColorNameManager.getDisplayName(-1, account.name,
+                        account.screen_name, mNameFirst, false);
+                return context.getString(R.string.tweet_from_name, displayName);
             }
             return super.getTitle(position, option);
         }

@@ -38,7 +38,7 @@ import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.UserColorNameUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
 
@@ -130,8 +130,9 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
                 if (activity.sources.length == 1 && activity.target_object_user_lists != null
                         && activity.target_object_user_lists.length == 1) {
-                    final SpannableString firstDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                            activity.sources[0]));
+                    final UserColorNameManager manager = adapter.getUserColorNameManager();
+                    final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(
+                            activity.sources[0], adapter.isNameFirst(), false));
                     final SpannableString listName = new SpannableString(activity.target_object_user_lists[0].name);
                     firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     listName.setSpan(new StyleSpan(Typeface.BOLD), 0, listName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -192,17 +193,20 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
     private Spanned getTitleStringAboutMe(int stringRes, int stringResMulti, ParcelableUser[] sources) {
         if (sources == null || sources.length == 0) return null;
         final Context context = adapter.getContext();
+        final boolean nameFirst = adapter.isNameFirst();
+        final UserColorNameManager manager = adapter.getUserColorNameManager();
         final Resources resources = context.getResources();
         final Configuration configuration = resources.getConfiguration();
-        final SpannableString firstDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                sources[0]));
+        final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(sources[0],
+                nameFirst, false));
         firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (sources.length == 1) {
             final String format = context.getString(stringRes);
             return SpanFormatter.format(configuration.locale, format, firstDisplayName);
         } else if (sources.length == 2) {
             final String format = context.getString(stringResMulti);
-            final SpannableString secondDisplayName = new SpannableString(UserColorNameUtils.getDisplayName(context, sources[1]));
+            final SpannableString secondDisplayName = new SpannableString(manager.getDisplayName(sources[1],
+                    nameFirst, false));
             secondDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return SpanFormatter.format(configuration.locale, format, firstDisplayName,
                     secondDisplayName);
@@ -220,18 +224,21 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
         final Context context = adapter.getContext();
         final Resources resources = context.getResources();
         final Configuration configuration = resources.getConfiguration();
-        final SpannableString firstSourceName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                sources[0]));
+        final UserColorNameManager manager = adapter.getUserColorNameManager();
+        final boolean nameFirst = adapter.isNameFirst();
+        final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(
+                sources[0], nameFirst, false));
         firstSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        final SpannableString firstTargetName = new SpannableString(UserColorNameUtils.getDisplayName(context,
-                targets[0]));
+        final SpannableString firstTargetName = new SpannableString(manager.getDisplayName(
+                targets[0], nameFirst, false));
         firstTargetName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstTargetName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (sources.length == 1) {
             final String format = context.getString(stringRes);
             return SpanFormatter.format(configuration.locale, format, firstSourceName, firstTargetName);
         } else if (sources.length == 2) {
             final String format = context.getString(stringResMulti);
-            final SpannableString secondSourceName = new SpannableString(UserColorNameUtils.getDisplayName(context, sources[1]));
+            final SpannableString secondSourceName = new SpannableString(manager.getDisplayName(sources[1],
+                    nameFirst, false));
             secondSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return SpanFormatter.format(configuration.locale, format, firstSourceName,
                     secondSourceName, firstTargetName);

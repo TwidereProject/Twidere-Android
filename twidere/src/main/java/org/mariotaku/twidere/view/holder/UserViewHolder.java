@@ -33,13 +33,12 @@ import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.Locale;
 
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserColor;
-import static org.mariotaku.twidere.util.UserColorNameUtils.getUserNickname;
 import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
@@ -75,9 +74,10 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
+        final UserColorNameManager manager = adapter.getUserColorNameManager();
 
 
-        setUserColor(getUserColor(context, user.id));
+        setUserColor(manager.getUserColor(user.id, false));
 
         final int userTypeRes = getUserTypeIconRes(user.is_verified, user.is_protected);
         if (userTypeRes != 0) {
@@ -85,7 +85,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         } else {
             profileTypeView.setImageDrawable(null);
         }
-        nameView.setText(getUserNickname(context, user.id, user.name));
+        nameView.setText(manager.getUserNickname(user.id, user.name, false));
         screenNameView.setText("@" + user.screen_name);
         descriptionView.setVisibility(TextUtils.isEmpty(user.description_unescaped) ? View.GONE : View.VISIBLE);
         descriptionView.setText(user.description_unescaped);

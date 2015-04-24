@@ -85,7 +85,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         return mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public abstract int getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
+    public abstract boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {

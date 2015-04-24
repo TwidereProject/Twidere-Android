@@ -165,7 +165,7 @@ public class RefreshService extends Service implements Constants {
         return isNetworkAvailable(this) && (isBatteryOkay(this) || !shouldStopAutoRefreshOnBatteryLow(this));
     }
 
-    private int getHomeTimeline(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+    private boolean getHomeTimeline(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
         return mTwitterWrapper.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
     }
 
@@ -175,7 +175,7 @@ public class RefreshService extends Service implements Constants {
         return mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
     }
 
-    private int getMentions(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+    private boolean getMentions(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
         return mTwitterWrapper.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
     }
 
