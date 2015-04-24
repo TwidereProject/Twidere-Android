@@ -31,7 +31,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
+        android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/element_spacing_normal">
@@ -67,7 +67,7 @@
             android:layout_height="@dimen/icon_size_card_details"
             android:layout_weight="0"
             android:contentDescription="@string/profile_image"
-            android:foreground="?android:selectableItemBackground"
+            android:foreground="?selectableItemBackground"
             android:scaleType="fitCenter"/>
     </LinearLayout>
 

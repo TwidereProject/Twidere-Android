@@ -37,7 +37,7 @@
         android:id="@+id/settings"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
-        android:background="?android:selectableItemBackground"
+        android:background="?selectableItemBackground"
         android:src="@drawable/ic_action_settings"/>
 
 

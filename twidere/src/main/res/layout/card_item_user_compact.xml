@@ -25,7 +25,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/element_spacing_small"
-    android:background="?android:selectableItemBackground"
+    android:background="?selectableItemBackground"
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
     android:paddingTop="@dimen/element_spacing_small"

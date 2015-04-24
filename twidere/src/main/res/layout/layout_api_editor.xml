@@ -50,7 +50,7 @@
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
                 android:layout_weight="0"
-                android:background="?android:selectableItemBackground"
+                android:background="?selectableItemBackground"
                 android:src="@drawable/ic_action_info"/>
         </LinearLayout>
 

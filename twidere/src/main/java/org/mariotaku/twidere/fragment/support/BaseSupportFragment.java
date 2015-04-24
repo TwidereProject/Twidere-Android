@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -29,15 +30,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManagerTrojan;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.LayoutInflaterFactory;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 
 public class BaseSupportFragment extends Fragment implements IBaseFragment, Constants {
 
@@ -147,7 +154,24 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
 
     }
 
-    protected void fitSystemWindows(Rect insets) {
+    @Override
+    public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
+        final FragmentActivity activity = getActivity();
+        if (!(activity instanceof IThemedActivity)) {
+            return super.getLayoutInflater(savedInstanceState);
+        }
+        final LayoutInflater inflater = activity.getLayoutInflater().cloneInContext(getThemedContext());
+        getChildFragmentManager(); // Init if needed; use raw implementation below.
+        final LayoutInflaterFactory delegate = FragmentManagerTrojan.getLayoutInflaterFactory(getChildFragmentManager());
+        LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory((IThemedActivity) activity, delegate));
+        return inflater;
     }
 
+    public Context getThemedContext() {
+        return getActivity();
+    }
+
+
+    protected void fitSystemWindows(Rect insets) {
+    }
 }

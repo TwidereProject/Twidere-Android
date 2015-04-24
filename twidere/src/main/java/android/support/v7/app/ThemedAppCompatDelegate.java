@@ -24,9 +24,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.LayoutInflaterFactory;
 import android.util.AttributeSet;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -34,11 +32,7 @@ import android.view.Window;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 
 /**
  * Created by mariotaku on 15/4/22.
@@ -63,7 +57,6 @@ public class ThemedAppCompatDelegate implements Constants {
     private static class ThemedAppCompatDelegateImplV11 extends AppCompatDelegateImplV11 {
 
         private final IThemedActivity themed;
-        private static final Map<String, Constructor> sConstructorCache = new HashMap<>();
 
         private ThemedAppCompatDelegateImplV11(IThemedActivity themed, Context context, Window window, AppCompatCallback callback) {
             super(context, window, callback);
@@ -81,42 +74,11 @@ public class ThemedAppCompatDelegate implements Constants {
         @Override
         public View createView(View parent, String name, @NonNull Context context, @NonNull AttributeSet attrs) {
             View view = super.createView(parent, name, context, attrs);
-            if (view == null && name.contains(".")) {
-                try {
-                    Constructor<?> constructor = sConstructorCache.get(name);
-                    if (constructor == null) {
-                        final Class<?> viewCls = Class.forName(name);
-                        constructor = viewCls.getConstructor(Context.class, AttributeSet.class);
-                        sConstructorCache.put(name, constructor);
-                    }
-                    view = (View) constructor.newInstance(context, attrs);
-                } catch (ClassNotFoundException ignore) {
-                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                    throw new InflateException(e);
-                }
+            if (view == null) {
+//                view = ThemeUtils.createCustomView(parent, name, context, attrs);
             }
             return view;
         }
     }
 
-    /**
-     * Created by mariotaku on 15/4/22.
-     */
-    private static class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
-
-        private final IThemedActivity activity;
-        private final ThemedAppCompatDelegateImplV11 delegate;
-
-        public ThemedLayoutInflaterFactory(IThemedActivity activity, ThemedAppCompatDelegateImplV11 delegate) {
-            this.activity = activity;
-            this.delegate = delegate;
-        }
-
-        @Override
-        public View onCreateView(View view, String s, Context context, AttributeSet attributeSet) {
-            final View createdView = delegate.onCreateView(view, s, context, attributeSet);
-            ThemeUtils.initView(createdView, activity);
-            return createdView;
-        }
-    }
 }

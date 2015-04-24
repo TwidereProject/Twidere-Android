@@ -2912,6 +2912,7 @@ public final class Utils implements Constants, TwitterConstants {
             builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
         context.startActivity(intent);
     }
 

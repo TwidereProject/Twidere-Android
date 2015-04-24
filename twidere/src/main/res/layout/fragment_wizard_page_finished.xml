@@ -62,7 +62,7 @@
             android:id="@+id/exit_wizard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
+            android:background="?selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/element_spacing_large">
 

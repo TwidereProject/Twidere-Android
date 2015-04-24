@@ -23,6 +23,8 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -35,7 +37,9 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.TintableBackgroundView;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.app.WindowDecorActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
 import android.support.v7.internal.view.SupportActionModeWrapper;
@@ -59,12 +63,14 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.AppCompatPreferenceActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
@@ -72,6 +78,7 @@ import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
+import org.mariotaku.twidere.view.iface.IThemedView;
 
 import java.lang.reflect.Field;
 
@@ -768,19 +775,6 @@ public class ThemeUtils implements Constants {
             indicator.setStripColor(contrastColor);
         }
         indicator.updateAppearance();
-    }
-
-    public static void initView(View view, IThemedActivity activity) {
-        if (view == null) return;
-        if (view instanceof ShapedImageView) {
-            final ShapedImageView shapedImageView = (ShapedImageView) view;
-            shapedImageView.setStyle(activity.getCurrentProfileImageStyle());
-        } else if (view instanceof TextView) {
-            final String fontFamily = activity.getCurrentThemeFontFamily();
-            final TextView textView = (TextView) view;
-            final Typeface defTypeface = textView.getTypeface();
-            textView.setTypeface(getUserTypeface((Context) activity, fontFamily, defTypeface));
-        }
     }
 
     public static boolean isColoredActionBar(int themeRes) {

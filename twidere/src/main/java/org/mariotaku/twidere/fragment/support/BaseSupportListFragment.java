@@ -28,7 +28,11 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManagerTrojan;
 import android.support.v4.app.ListFragment;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.LayoutInflaterFactory;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,6 +49,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
@@ -53,6 +58,7 @@ import org.mariotaku.twidere.util.ListScrollDistanceCalculator;
 import org.mariotaku.twidere.util.ListScrollDistanceCalculator.ScrollDistanceListener;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.TouchInterceptor;
@@ -380,6 +386,23 @@ public class BaseSupportListFragment extends ListFragment implements IBaseFragme
     @Override
     public boolean triggerRefresh() {
         return false;
+    }
+
+    @Override
+    public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
+        final FragmentActivity activity = getActivity();
+        if (!(activity instanceof IThemedActivity)) {
+            return super.getLayoutInflater(savedInstanceState);
+        }
+        final LayoutInflater inflater = activity.getLayoutInflater().cloneInContext(getThemedContext());
+        getChildFragmentManager(); // Init if needed; use raw implementation below.
+        final LayoutInflaterFactory delegate = FragmentManagerTrojan.getLayoutInflaterFactory(getChildFragmentManager());
+        LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory((IThemedActivity) activity, delegate));
+        return inflater;
+    }
+
+    public Context getThemedContext() {
+        return getActivity();
     }
 
     public void unregisterReceiver(final BroadcastReceiver receiver) {

@@ -19,9 +19,9 @@
   -->
 
 <FrameLayout
-    android:id="@+id/fragment_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.DirectMessagesConversationFragment">
@@ -53,16 +53,17 @@
             android:id="@+id/input_send_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:layout_weight="0">
+            android:orientation="horizontal">
 
             <org.mariotaku.twidere.view.ActionIconView
                 android:id="@+id/add_image"
-                style="?android:borderlessButtonStyle"
                 android:layout_width="?android:actionBarSize"
                 android:layout_height="?android:actionBarSize"
                 android:layout_weight="0"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:color="?android:textColorSecondary"
                 android:contentDescription="@string/add_image"
                 android:padding="0dp"
@@ -88,10 +89,11 @@
 
             <FrameLayout
                 android:id="@+id/send"
-                style="?android:borderlessButtonStyle"
                 android:layout_width="?android:actionBarSize"
                 android:layout_height="?android:actionBarSize"
                 android:layout_weight="0"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:padding="0dp">
 
                 <org.mariotaku.twidere.view.ActionIconView

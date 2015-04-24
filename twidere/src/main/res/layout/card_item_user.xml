@@ -37,7 +37,7 @@
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
+        android:background="?selectableItemBackground"
         android:focusable="true"
         android:focusableInTouchMode="false"
         android:orientation="vertical"

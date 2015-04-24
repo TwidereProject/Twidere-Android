@@ -146,7 +146,8 @@ public class QuickMenuFragment extends BaseSupportFragment implements OnFitSyste
         return -1;
     }
 
-    private Context getThemedContext() {
+    @Override
+    public Context getThemedContext() {
         if (mThemedContext != null) return mThemedContext;
         final Context context = getActivity();
         final int currentThemeResource = ThemeUtils.getThemeResource(context);
