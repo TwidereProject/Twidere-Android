@@ -116,6 +116,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
     @Override
     protected void onLoadingFinished() {
+        showContent();
         setRefreshEnabled(true);
         setRefreshing(false);
         setLoadMoreIndicatorVisible(false);

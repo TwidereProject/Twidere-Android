@@ -24,7 +24,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -164,7 +163,6 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
 
     @Override
     public void onPageSelected(final int position) {
-        Log.d(LOGTAG, "onPageSelected " + position);
         if (mIndicator == null || position < 0 || position >= getCount()) return;
         announceForAccessibilityCompat(mContext, (View) mIndicator, getPageTitle(position), getClass());
     }

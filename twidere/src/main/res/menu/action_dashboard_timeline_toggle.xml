@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,14 +18,14 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/select_account"
         android:icon="@drawable/ic_action_more_vertical"
         android:title="@string/select_account"
-        app:actionProviderClass="org.mariotaku.twidere.menu.SupportAccountActionProvider"
-        app:showAsAction="always"/>
+        app:actionProviderClass="org.mariotaku.twidere.menu.support.AccountToggleProvider"
+        app:showAsAction="always" />
 
 
 </menu>

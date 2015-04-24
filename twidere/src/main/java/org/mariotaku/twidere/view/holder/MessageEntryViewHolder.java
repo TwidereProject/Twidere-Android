@@ -21,7 +21,6 @@ package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
@@ -47,7 +46,6 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
     public final ShortTimeView timeView;
     private final MessageEntriesAdapter adapter;
     private final IColorLabelView content;
-    private boolean account_color_enabled;
 
     public MessageEntryViewHolder(final MessageEntriesAdapter adapter, final View itemView) {
         super(itemView);
@@ -89,8 +87,10 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         nameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         screenNameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         textView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
-        if (account_color_enabled) {
+        if (adapter.shouldShowAccountsColor()) {
             content.drawEnd(Utils.getAccountColor(context, accountId));
+        } else {
+            content.drawEnd();
         }
         content.drawStart(manager.getUserColor(conversationId, false));
 
@@ -114,14 +114,6 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         }
     }
 
-    public void setAccountColorEnabled(final boolean enabled) {
-        if (account_color_enabled == enabled) return;
-        account_color_enabled = enabled;
-        if (!account_color_enabled) {
-            content.drawEnd(Color.TRANSPARENT);
-        }
-    }
-
     public void setTextSize(final float textSize) {
         nameView.setTextSize(textSize * 1.1f);
         screenNameView.setTextSize(textSize);
@@ -129,7 +121,4 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         timeView.setTextSize(textSize * 0.85f);
     }
 
-    public void setUserColor(final int color) {
-//        content.drawStart(color);
-    }
 }

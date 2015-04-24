@@ -31,7 +31,6 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -57,7 +56,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     private SharedPreferences mPreferences;
     private PopupMenu mPopupMenu;
     private ReadStateManager mReadStateManager;
-    private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
+    private RecyclerViewNavigationHelper mNavigationHelper;
 
     private ParcelableStatus mSelectedStatus;
 
@@ -73,6 +72,14 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
             }
             return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
                     getFragmentManager(), getTwitterWrapper(), status, item);
+        }
+    };
+    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                saveReadPosition();
+            }
         }
     };
 
@@ -138,7 +145,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
-        return mRecyclerViewNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     @Override
@@ -192,7 +199,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
-        setListShown(true);
         onLoadingFinished();
     }
 
@@ -312,6 +318,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     @Override
     public void onStart() {
         super.onStart();
+        final RecyclerView recyclerView = getRecyclerView();
+        recyclerView.addOnScrollListener(mOnScrollListener);
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.register(mStatusesBusCallback);
     }
@@ -320,6 +328,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
     public void onStop() {
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.unregister(mStatusesBusCallback);
+        final RecyclerView recyclerView = getRecyclerView();
+        recyclerView.removeOnScrollListener(mOnScrollListener);
         super.onStop();
     }
 
@@ -345,28 +355,17 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
         super.onActivityCreated(savedInstanceState);
         mReadStateManager = getReadStateManager();
         final FragmentActivity activity = getActivity();
-        final TwidereApplication application = TwidereApplication.getInstance(activity);
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        final ContentListScrollListener scrollListener = getScrollListener();
-        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager,
-                adapter);
+        mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter);
 
         adapter.setListener(this);
-        scrollListener.setOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    saveReadPosition();
-                }
-            }
-        });
 
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
-        setListShown(false);
+        showProgress();
     }
 
     protected Object createMessageBusCallback() {

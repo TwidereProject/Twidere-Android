@@ -19,34 +19,24 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.util.LongSparseArray;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -55,8 +45,6 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
@@ -64,20 +52,16 @@ import org.mariotaku.twidere.adapter.MessageEntriesAdapter.DirectMessageEntry;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.MessageEntriesAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ContentListScrollListener;
-import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
 import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
@@ -88,9 +72,8 @@ import java.util.Set;
 
 import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
-public class DirectMessagesFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
-        RefreshScrollTopInterface, OnRefreshListener, MessageEntriesAdapterListener,
-        ControlBarOffsetListener, ContentListSupport, KeyboardShortcutCallback {
+public class DirectMessagesFragment extends AbsContentListFragment<MessageEntriesAdapter>
+        implements LoaderCallbacks<Cursor>, MessageEntriesAdapterListener, KeyboardShortcutCallback {
 
     // Listeners
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
@@ -98,38 +81,18 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 
     // Utility classes
     private MultiSelectManager mMultiSelectManager;
-    private SharedPreferences mPreferences;
     private RemoveUnreadCountsTask mRemoveUnreadCountsTask;
-    private LinearLayoutManager mLayoutManager;
     private RecyclerViewNavigationHelper mRecyclerViewNavigationHelper;
-
-    // Views
-    private RecyclerView mRecyclerView;
-    private MessageEntriesAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private View mProgressContainer;
 
     // Data fields
     private final LongSparseArray<Set<Long>> mUnreadCountsToRemove = new LongSparseArray<>();
     private final Set<Integer> mReadPositions = Collections.synchronizedSet(new HashSet<Integer>());
-    private Rect mSystemWindowsInsets = new Rect();
-    private int mControlBarOffsetPixels;
     private int mFirstVisibleItem;
 
+    @NonNull
     @Override
-    public MessageEntriesAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    @Override
-    public boolean isRefreshing() {
-        if (mSwipeRefreshLayout == null || mAdapter == null) return false;
-        return mSwipeRefreshLayout.isRefreshing() || mAdapter.isLoadMoreIndicatorVisible();
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        if (mAdapter == null || refreshing == mSwipeRefreshLayout.isRefreshing()) return;
-        mSwipeRefreshLayout.setRefreshing(refreshing && !mAdapter.isLoadMoreIndicatorVisible());
+    protected MessageEntriesAdapter onCreateAdapter(Context context, boolean compact) {
+        return new MessageEntriesAdapter(context);
     }
 
     @Override
@@ -143,6 +106,12 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         if (activity instanceof BaseAppCompatActivity) {
             ((BaseAppCompatActivity) activity).setControlBarVisibleAnimate(visible);
         }
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        return twitter != null && (twitter.isReceivedDirectMessagesRefreshing() || twitter.isSentDirectMessagesRefreshing());
     }
 
     public final LongSparseArray<Set<Long>> getUnreadCountsToRemove() {
@@ -162,37 +131,11 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         return false;
     }
 
-    @Override
-    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
-        mProgressContainer = view.findViewById(R.id.progress_container);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-    }
-
-    @Override
-    protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        mSystemWindowsInsets.set(insets);
-        updateRefreshProgressOffset();
-    }
-
-    @Override
-    public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
-        mControlBarOffsetPixels = Math.round(activity.getControlBarHeight() * (1 - offset));
-        updateRefreshProgressOffset();
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         final Uri uri = DirectMessages.ConversationEntries.CONTENT_URI;
         final long[] accountIds = getAccountIds();
-        final boolean no_account_selected = accountIds.length == 0;
-//        setEmptyText(no_account_selected ? getString(R.string.no_account_selected) : null);
-//        if (!no_account_selected) {
-//            getListView().setEmptyView(null);
-//        }
         final Expression account_where = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
         return new CursorLoader(getActivity(), uri, null, account_where.getSQL(), null, null);
     }
@@ -201,17 +144,29 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (getActivity() == null) return;
         mFirstVisibleItem = -1;
-        mAdapter.setCursor(cursor);
-        mAdapter.setLoadMoreIndicatorVisible(false);
-        mAdapter.setLoadMoreSupported(cursor != null && cursor.getCount() > 0);
-        mSwipeRefreshLayout.setEnabled(true);
-//        mAdapter.setShowAccountColor(getActivatedAccountIds(getActivity()).length > 1);
-        setListShown(true);
+        final MessageEntriesAdapter adapter = getAdapter();
+        adapter.setCursor(cursor);
+        adapter.setLoadMoreIndicatorVisible(false);
+        adapter.setLoadMoreSupported(cursor != null && cursor.getCount() > 0);
+        adapter.setLoadMoreSupported(hasMoreData(cursor));
+        final long[] accountIds = getAccountIds();
+        adapter.setShowAccountsColor(accountIds.length > 1);
+        setRefreshEnabled(true);
+        if (accountIds.length > 0) {
+            showContent();
+        } else {
+            showError(R.drawable.ic_info_account, getString(R.string.no_account_selected));
+        }
+    }
+
+    protected boolean hasMoreData(final Cursor cursor) {
+        return cursor != null && cursor.getCount() != 0;
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mAdapter.setCursor(null);
+        final MessageEntriesAdapter adapter = getAdapter();
+        adapter.setCursor(null);
     }
 
     @Override
@@ -228,8 +183,8 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
     public void onGetMessagesTaskChanged(GetMessagesTaskEvent event) {
         if (event.uri.equals(Inbox.CONTENT_URI) && !event.running) {
             setRefreshing(false);
-            mAdapter.setLoadMoreIndicatorVisible(false);
-            mSwipeRefreshLayout.setEnabled(true);
+            setLoadMoreIndicatorVisible(false);
+            setRefreshEnabled(true);
         }
     }
 
@@ -240,13 +195,15 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 
     @Override
     public boolean scrollToStart() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
-        final int tabPosition = getTabPosition();
-        if (twitter != null && tabPosition >= 0) {
-            twitter.clearUnreadCountAsync(tabPosition);
+        final boolean result = super.scrollToStart();
+        if (result) {
+            final AsyncTwitterWrapper twitter = getTwitterWrapper();
+            final int tabPosition = getTabPosition();
+            if (twitter != null && tabPosition >= 0) {
+                twitter.clearUnreadCountAsync(tabPosition);
+            }
         }
-        mRecyclerView.smoothScrollToPosition(0);
-        return true;
+        return result;
     }
 
     @Override
@@ -273,57 +230,30 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         return true;
     }
 
-    @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).registerControlBarOffsetListener(this);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false);
-    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
         if (view == null) throw new AssertionError();
-        final TwidereApplication application = TwidereApplication.getInstance(getActivity());
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final Context viewContext = view.getContext();
         mMultiSelectManager = getMultiSelectManager();
-        mAdapter = new MessageEntriesAdapter(viewContext);
-        mAdapter.setListener(this);
-        mLayoutManager = new FixedLinearLayoutManager(viewContext);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(viewContext));
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(mRecyclerView, mLayoutManager, mAdapter);
+        final MessageEntriesAdapter adapter = getAdapter();
+        final RecyclerView recyclerView = getRecyclerView();
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        mRecyclerViewNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter);
 
-        final ContentListScrollListener scrollListener = new ContentListScrollListener(this);
-        scrollListener.setTouchSlop(ViewConfiguration.get(viewContext).getScaledTouchSlop());
-        // TODO remove scroll listener
-        mRecyclerView.addOnScrollListener(scrollListener);
+        adapter.setListener(this);
 
-        final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, mLayoutManager.getOrientation());
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, layoutManager.getOrientation());
         final Resources res = viewContext.getResources();
         final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
                 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
         itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
         itemDecoration.setDecorationEndOffset(1);
-        mRecyclerView.addItemDecoration(itemDecoration);
+        recyclerView.addItemDecoration(itemDecoration);
         getLoaderManager().initLoader(0, null, this);
-        setListShown(false);
+        showProgress();
     }
 
     @Override
@@ -333,7 +263,8 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.register(this);
-        mAdapter.updateReadState();
+        final MessageEntriesAdapter adapter = getAdapter();
+        adapter.updateReadState();
         updateRefreshState();
     }
 
@@ -346,14 +277,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
         super.onStop();
     }
 
-    @Override
-    public void onDetach() {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
-        }
-        super.onDetach();
-    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -408,8 +331,8 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
 
     private void loadMoreMessages() {
         if (isRefreshing()) return;
-        mAdapter.setLoadMoreIndicatorVisible(true);
-        mSwipeRefreshLayout.setEnabled(false);
+        setLoadMoreIndicatorVisible(true);
+        setRefreshEnabled(false);
         AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
 
             @Override
@@ -437,21 +360,6 @@ public class DirectMessagesFragment extends BaseSupportFragment implements Loade
             return;
         mRemoveUnreadCountsTask = new RemoveUnreadCountsTask(mReadPositions, this);
         AsyncTaskUtils.executeTask(mRemoveUnreadCountsTask);
-    }
-
-    private void setListShown(boolean shown) {
-        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
-        mSwipeRefreshLayout.setVisibility(shown ? View.VISIBLE : View.GONE);
-    }
-
-    private void updateRefreshProgressOffset() {
-        if (mSystemWindowsInsets.top == 0 || mSwipeRefreshLayout == null || isRefreshing()) return;
-        final float density = getResources().getDisplayMetrics().density;
-        final int progressCircleDiameter = mSwipeRefreshLayout.getProgressCircleDiameter();
-        final int swipeStart = (mSystemWindowsInsets.top - mControlBarOffsetPixels) - progressCircleDiameter;
-        // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
-        final int swipeDistance = Math.round(64 * density);
-        mSwipeRefreshLayout.setProgressViewOffset(true, swipeStart, swipeStart + swipeDistance);
     }
 
     static class RemoveUnreadCountsTask extends AsyncTask<Object, Object, Object> {

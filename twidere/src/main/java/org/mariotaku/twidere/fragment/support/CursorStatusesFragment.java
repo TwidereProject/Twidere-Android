@@ -37,6 +37,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
@@ -45,6 +46,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.message.AccountChangedEvent;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.GetStatusesTaskEvent;
@@ -64,7 +66,12 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
     @Override
     protected void onLoadingFinished() {
-
+        final long[] accountIds = getAccountIds();
+        if (accountIds.length > 0) {
+            showContent();
+        } else {
+            showError(R.drawable.ic_info_account, getString(R.string.no_account_selected));
+        }
     }
 
     private ContentObserver mContentObserver;
@@ -130,6 +137,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
 
         @Subscribe
         public void notifyStatusRetweeted(StatusRetweetedEvent event) {
+        }
+
+        @Subscribe
+        public void notifyAccountChanged(AccountChangedEvent event) {
+
         }
 
     }

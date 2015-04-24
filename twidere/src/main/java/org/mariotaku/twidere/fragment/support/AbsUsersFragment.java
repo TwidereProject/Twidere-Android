@@ -95,7 +95,7 @@ abstract class AbsUsersFragment<Data> extends AbsContentListFragment<AbsUsersAda
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
-        setListShown(true);
+        showContent();
     }
 
     @Override

@@ -36,7 +36,6 @@ public class ContentListScrollListener extends OnScrollListener {
     private int mTouchSlop;
 
     private ContentListSupport mContentListSupport;
-    private OnScrollListener mOnScrollListener;
 
     public ContentListScrollListener(@NonNull ContentListSupport contentListSupport) {
         mContentListSupport = contentListSupport;
@@ -44,9 +43,6 @@ public class ContentListScrollListener extends OnScrollListener {
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        if (mOnScrollListener != null) {
-            mOnScrollListener.onScrollStateChanged(recyclerView, newState);
-        }
         if (mScrollState != RecyclerView.SCROLL_STATE_IDLE) {
             notifyScrollStateChanged(recyclerView);
         }
@@ -55,9 +51,6 @@ public class ContentListScrollListener extends OnScrollListener {
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        if (mOnScrollListener != null) {
-            mOnScrollListener.onScrolled(recyclerView, dx, dy);
-        }
         //Reset mScrollSum when scrolling in reverse direction
         if (dy * mScrollSum < 0) {
             mScrollSum = 0;
@@ -70,10 +63,6 @@ public class ContentListScrollListener extends OnScrollListener {
         if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
             notifyScrollStateChanged(recyclerView);
         }
-    }
-
-    public void setOnScrollListener(OnScrollListener listener) {
-        mOnScrollListener = listener;
     }
 
     public void setTouchSlop(int touchSlop) {

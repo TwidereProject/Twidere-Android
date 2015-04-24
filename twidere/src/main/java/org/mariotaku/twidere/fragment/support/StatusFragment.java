@@ -292,7 +292,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mStatusContent = view.findViewById(R.id.status_content);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressContainer = view.findViewById(R.id.progress_container);
-        mErrorContainer = view.findViewById(R.id.error_retry_container);
+        mErrorContainer = view.findViewById(R.id.error_container);
     }
 
     @Override

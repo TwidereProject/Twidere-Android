@@ -106,10 +106,10 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     private AsyncTwitterWrapper mTwitterWrapper;
 
     private ImageView mProfileImageView;
-    private TextView mListNameView, mCreatedByView, mDescriptionView, mErrorMessageView;
-    private View mErrorRetryContainer, mProgressContainer;
+    private TextView mListNameView, mCreatedByView, mDescriptionView, mErrorTextView;
+    private View mErrorContainer, mProgressContainer;
     private ColorLabelLinearLayout mUserListDetails;
-    private Button mRetryButton;
+    private Button mErrorIconView;
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
@@ -197,7 +197,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     public void displayUserList(final ParcelableUserList userList) {
         if (userList == null || getActivity() == null) return;
         getLoaderManager().destroyLoader(0);
-        mErrorRetryContainer.setVisibility(View.GONE);
+        mErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUserList = userList;
         mUserListDetails.drawEnd(getAccountColor(getActivity(), userList.account_id));
@@ -326,7 +326,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         mProfileImageView.setOnClickListener(this);
         mUserListDetails.setOnClickListener(this);
-        mRetryButton.setOnClickListener(this);
+        mErrorIconView.setOnClickListener(this);
         getUserListInfo(false);
 
         setupUserPages();
@@ -461,7 +461,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     public void onClick(final View view) {
         switch (view.getId()) {
-            case R.id.retry: {
+            case R.id.error_container: {
                 getUserListInfo(true);
                 break;
             }
@@ -477,9 +477,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
-        mErrorMessageView.setText(null);
-        mErrorMessageView.setVisibility(View.GONE);
-        mErrorRetryContainer.setVisibility(View.GONE);
+        mErrorTextView.setText(null);
+        mErrorTextView.setVisibility(View.GONE);
+        mErrorContainer.setVisibility(View.GONE);
         mHeaderDrawerLayout.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.VISIBLE);
         setProgressBarIndeterminateVisibility(true);
@@ -502,15 +502,15 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             final ParcelableUserList list = data.getData();
             displayUserList(list);
             mHeaderDrawerLayout.setVisibility(View.VISIBLE);
-            mErrorRetryContainer.setVisibility(View.GONE);
+            mErrorContainer.setVisibility(View.GONE);
             mProgressContainer.setVisibility(View.GONE);
         } else {
             if (data.hasException()) {
-                mErrorMessageView.setText(data.getException().getMessage());
-                mErrorMessageView.setVisibility(View.VISIBLE);
+                mErrorTextView.setText(data.getException().getMessage());
+                mErrorTextView.setVisibility(View.VISIBLE);
             }
             mHeaderDrawerLayout.setVisibility(View.GONE);
-            mErrorRetryContainer.setVisibility(View.VISIBLE);
+            mErrorContainer.setVisibility(View.VISIBLE);
             mProgressContainer.setVisibility(View.GONE);
         }
         setProgressBarIndeterminateVisibility(false);
@@ -525,7 +525,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
         super.onBaseViewCreated(view, savedInstanceState);
         mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.details_container);
-        mErrorRetryContainer = view.findViewById(R.id.error_retry_container);
+        mErrorContainer = view.findViewById(R.id.error_container);
         mProgressContainer = view.findViewById(R.id.progress_container);
 
         final View headerView = mHeaderDrawerLayout.getHeader();
@@ -536,8 +536,8 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mCreatedByView = (TextView) headerView.findViewById(R.id.created_by);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);
         mProfileImageView = (ImageView) headerView.findViewById(R.id.profile_image);
-        mRetryButton = (Button) mErrorRetryContainer.findViewById(R.id.retry);
-        mErrorMessageView = (TextView) mErrorRetryContainer.findViewById(R.id.error_message);
+        mErrorIconView = (Button) mErrorContainer.findViewById(R.id.error_icon);
+        mErrorTextView = (TextView) mErrorContainer.findViewById(R.id.error_text);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
     }
@@ -545,7 +545,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-        final View progress = mProgressContainer, error = mErrorRetryContainer;
+        final View progress = mProgressContainer, error = mErrorContainer;
         final HeaderDrawerLayout content = mHeaderDrawerLayout;
         if (progress == null || error == null || content == null) {
             return;

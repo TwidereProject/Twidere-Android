@@ -69,6 +69,7 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
     private final boolean mDisplayProfileImage;
     private boolean mLoadMoreSupported;
     private boolean mLoadMoreIndicatorVisible;
+    private boolean mShowAccountsColor;
     private Cursor mCursor;
     private MessageEntriesAdapterListener mListener;
     private StringLongPair[] mPositionPairs;
@@ -273,6 +274,16 @@ public class MessageEntriesAdapter extends Adapter<ViewHolder> implements Consta
             if (key.equals(pair.getKey())) return messageId > pair.getValue();
         }
         return true;
+    }
+
+    public void setShowAccountsColor(boolean showAccountsColor) {
+        if (mShowAccountsColor == showAccountsColor) return;
+        mShowAccountsColor = showAccountsColor;
+        notifyDataSetChanged();
+    }
+
+    public boolean shouldShowAccountsColor() {
+        return mShowAccountsColor;
     }
 
     public interface MessageEntriesAdapterListener {

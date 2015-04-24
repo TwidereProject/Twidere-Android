@@ -177,12 +177,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
-            mListedCount, mFollowersCount, mFriendsCount, mErrorMessageView;
+            mListedCount, mFollowersCount, mFriendsCount, mHeaderErrorTextView;
     private View mDescriptionContainer, mLocationContainer, mURLContainer, mListedContainer, mFollowersContainer,
             mFriendsContainer;
-    private Button mRetryButton;
+    private ImageView mHeaderErrorIcon;
     private ColorLabelRelativeLayout mProfileNameContainer;
-    private View mProgressContainer, mErrorRetryContainer;
+    private View mProgressContainer, mHeaderErrorContainer;
     private View mCardContent;
     private View mProfileBannerSpace;
     private TintedStatusFrameLayout mTintedStatusContent;
@@ -322,10 +322,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
                 mCardContent.setVisibility(View.GONE);
-                mErrorRetryContainer.setVisibility(View.GONE);
+                mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.VISIBLE);
-                mErrorMessageView.setText(null);
-                mErrorMessageView.setVisibility(View.GONE);
+                mHeaderErrorTextView.setText(null);
+                mHeaderErrorTextView.setVisibility(View.GONE);
                 setListShown(false);
             }
             setProgressBarIndeterminateVisibility(true);
@@ -346,7 +346,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             if (data.hasData()) {
                 final ParcelableUser user = data.getData();
                 mCardContent.setVisibility(View.VISIBLE);
-                mErrorRetryContainer.setVisibility(View.GONE);
+                mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
                 setListShown(true);
                 displayUser(user);
@@ -360,17 +360,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 }
             } else if (mUser != null && mUser.is_cache) {
                 mCardContent.setVisibility(View.VISIBLE);
-                mErrorRetryContainer.setVisibility(View.GONE);
+                mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
                 setListShown(true);
                 displayUser(mUser);
             } else {
                 if (data.hasException()) {
-                    mErrorMessageView.setText(Utils.getErrorMessage(getActivity(), data.getException()));
-                    mErrorMessageView.setVisibility(View.VISIBLE);
+                    mHeaderErrorTextView.setText(Utils.getErrorMessage(getActivity(), data.getException()));
+                    mHeaderErrorTextView.setVisibility(View.VISIBLE);
                 }
                 mCardContent.setVisibility(View.GONE);
-                mErrorRetryContainer.setVisibility(View.VISIBLE);
+                mHeaderErrorContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
             }
             setProgressBarIndeterminateVisibility(false);
@@ -496,7 +496,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final boolean userIsMe = user.account_id == user.id;
         mCardContent.setVisibility(View.VISIBLE);
-        mErrorRetryContainer.setVisibility(View.GONE);
+        mHeaderErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
         final int userColor = manager.getUserColor(user.id, true);
@@ -592,7 +592,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         if (accountId == -1 || userId == -1 && screenName == null) {
             mCardContent.setVisibility(View.GONE);
-            mErrorRetryContainer.setVisibility(View.GONE);
+            mHeaderErrorContainer.setVisibility(View.GONE);
         }
     }
 
@@ -766,7 +766,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mListedContainer.setOnClickListener(this);
         mFollowersContainer.setOnClickListener(this);
         mFriendsContainer.setOnClickListener(this);
-        mRetryButton.setOnClickListener(this);
+        mHeaderErrorIcon.setOnClickListener(this);
         mProfileBannerView.setOnSizeChangedListener(this);
         mProfileBannerSpace.setOnTouchListener(this);
 
@@ -1040,10 +1040,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final View headerView = mHeaderDrawerLayout.getHeader();
         final View contentView = mHeaderDrawerLayout.getContent();
         mCardContent = headerView.findViewById(R.id.card_content);
-        mErrorRetryContainer = headerView.findViewById(R.id.error_retry_container);
+        mHeaderErrorContainer = headerView.findViewById(R.id.error_container);
+        mHeaderErrorTextView = (TextView) headerView.findViewById(R.id.error_text);
+        mHeaderErrorIcon = (ImageView) headerView.findViewById(R.id.error_icon);
         mProgressContainer = headerView.findViewById(R.id.progress_container);
-        mRetryButton = (Button) headerView.findViewById(R.id.retry);
-        mErrorMessageView = (TextView) headerView.findViewById(R.id.error_message);
         mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
         mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
         mNameView = (TextView) headerView.findViewById(R.id.name);
@@ -1151,7 +1151,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = getUser();
         if (activity == null || user == null) return;
         switch (view.getId()) {
-            case R.id.retry: {
+            case R.id.error_container: {
                 getUserInfo(true);
                 break;
             }
