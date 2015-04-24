@@ -21,26 +21,30 @@ package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 
+import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.util.Utils;
 
-public class SettingsDetailsFragment extends BasePreferenceFragment {
+public class SettingsDetailsFragment extends BasePreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final PreferenceManager preferenceManager = getPreferenceManager();
         final PreferenceScreen defaultScreen = getPreferenceScreen();
         final PreferenceScreen preferenceScreen;
         if (defaultScreen != null) {
             defaultScreen.removeAll();
             preferenceScreen = defaultScreen;
         } else {
-            preferenceScreen = getPreferenceManager().createPreferenceScreen(getActivity());
+            preferenceScreen = preferenceManager.createPreferenceScreen(getActivity());
         }
         setPreferenceScreen(preferenceScreen);
         final Bundle args = getArguments();
@@ -72,4 +76,27 @@ public class SettingsDetailsFragment extends BasePreferenceFragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        final SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
+        preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        final SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        final Preference preference = findPreference(key);
+        if (preference == null) return;
+        final Bundle extras = preference.getExtras();
+        if (extras != null && extras.containsKey(EXTRA_NOTIFY_CHANGE)) {
+            SettingsActivity.setShouldNotifyChange(getActivity());
+        }
+    }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/theme">
 
@@ -8,8 +7,7 @@
         android:key="cat_theme_preview"
         android:order="11"
         android:title="@string/preview">
-        <org.mariotaku.twidere.preference.ThemePreviewPreference
-            android:key="theme_preview"/>
+        <org.mariotaku.twidere.preference.ThemePreviewPreference android:key="theme_preview" />
     </PreferenceCategory>
 
     <org.mariotaku.twidere.preference.SummaryListPreference
@@ -18,18 +16,30 @@
         android:entryValues="@array/values_theme"
         android:key="theme"
         android:order="21"
-        android:title="@string/style"/>
+        android:title="@string/style">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.SummaryListPreference>
 
     <org.mariotaku.twidere.preference.ThemeBackgroundPreference
         android:defaultValue="default"
         android:order="22"
-        android:title="@string/background"/>
+        android:title="@string/background">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.ThemeBackgroundPreference>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
         android:key="theme_color"
         android:order="25"
         android:title="@string/color"
-        app:defaultColor="@color/branding_color"/>
+        app:defaultColor="@color/branding_color">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.ColorPickerPreference>
 
 
 </PreferenceScreen>

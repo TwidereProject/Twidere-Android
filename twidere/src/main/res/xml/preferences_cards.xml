@@ -1,88 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/cards">
 
     <PreferenceCategory
         android:key="cat_card_preview"
         android:order="11"
         android:title="@string/preview">
-        <org.mariotaku.twidere.preference.CardPreviewPreference android:key="card_preview"/>
+        <org.mariotaku.twidere.preference.CardPreviewPreference android:key="card_preview" />
     </PreferenceCategory>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
         android:key="name_first"
         android:order="22"
-        android:title="@string/name_first"/>
+        android:title="@string/name_first">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
         android:key="display_profile_image"
         android:order="23"
-        android:title="@string/profile_image"/>
+        android:title="@string/profile_image">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
         android:entryValues="@array/values_profile_image_style"
         android:key="profile_image_style"
         android:order="24"
-        android:title="@string/profile_image_style"/>
+        android:title="@string/profile_image_style">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.SummaryListPreference>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="media_preview"
         android:order="25"
-        android:title="@string/media_preview"/>
+        android:title="@string/media_preview">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="crop"
         android:entries="@array/entries_media_preview_style"
         android:entryValues="@array/values_media_preview_style"
         android:key="media_preview_style"
         android:order="26"
-        android:title="@string/media_preview_style"/>
+        android:title="@string/media_preview_style">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.SummaryListPreference>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"
         android:key="link_highlight_option"
         android:order="27"
-        android:title="@string/link_highlight_option"/>
-
-    <!--<org.mariotaku.twidere.preference.AutoInvalidateListPreference-->
-    <!--android:defaultValue="background"-->
-    <!--android:entries="@array/entries_card_highlight_option"-->
-    <!--android:entryValues="@array/values_card_highlight_option"-->
-    <!--android:key="card_highlight_option"-->
-    <!--android:order="28"-->
-    <!--android:summary="%s"-->
-    <!--android:title="@string/card_highlight_option"/>-->
+        android:title="@string/link_highlight_option">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
         android:key="indicate_my_status"
         android:order="29"
-        android:title="@string/indicate_your_status"/>
+        android:title="@string/indicate_your_status" />
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="show_absolute_time"
         android:order="30"
         android:summary="@string/show_absolute_time_summary"
-        android:title="@string/show_absolute_time"/>
+        android:title="@string/show_absolute_time">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="true"
         android:key="card_animation"
         android:order="31"
-        android:title="@string/card_animation"/>
+        android:title="@string/card_animation">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="compact_cards"
         android:order="32"
         android:summary="@string/compact_cards_summary"
-        android:title="@string/compact_cards"/>
+        android:title="@string/compact_cards">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="hide_card_actions"
         android:order="33"
-        android:title="@string/hide_card_actions"/>
+        android:title="@string/hide_card_actions">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
 
 </PreferenceScreen>
