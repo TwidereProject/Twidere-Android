@@ -20,12 +20,19 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.view.ShapedImageView;
 
 public interface IDirectMessagesAdapter {
 
     public ParcelableDirectMessage findItem(long id);
 
-    public void setDisplayImagePreview(boolean display);
+    @ShapedImageView.ShapeStyle
+    int getProfileImageStyle();
 
-    public void setImagePreviewScaleType(String scaleType);
+    boolean isProfileImageEnabled();
+
+    int getMediaPreviewStyle();
+
+    MediaLoaderWrapper getMediaLoader();
 }

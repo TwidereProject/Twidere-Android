@@ -48,11 +48,16 @@ public class UserAgentUtils {
                 constructor.setAccessible(false);
             }
         } catch (Exception e) {
-            final WebView webView = new WebView(context);
+            WebView webView = null;
             try {
+                webView = new WebView(context);
                 return webView.getSettings().getUserAgentString();
+            } catch (Exception e2) {
+                return System.getProperty("http.agent");
             } finally {
-                webView.destroy();
+                if (webView != null) {
+                    webView.destroy();
+                }
             }
         }
     }

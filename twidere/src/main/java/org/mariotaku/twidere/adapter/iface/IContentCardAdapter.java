@@ -40,12 +40,12 @@ public interface IContentCardAdapter extends ILoadMoreSupportAdapter {
     @ShapeStyle
     int getProfileImageStyle();
 
+    boolean isProfileImageEnabled();
+
     float getTextSize();
 
     @NonNull
     AsyncTwitterWrapper getTwitterWrapper();
-
-    boolean isProfileImageEnabled();
 
     MediaLoaderWrapper getMediaLoader();
 }
