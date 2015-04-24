@@ -114,6 +114,9 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (shouldFragmentTakeAllKeyboardShortcuts()) {
+            return handleFragmentKeyboardShortcutSingle(handler, keyCode, event);
+        }
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
         final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (ACTION_NAVIGATION_BACK.equals(action)) {
@@ -123,8 +126,16 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         return handler.handleKey(this, null, keyCode, event);
     }
 
+    private boolean shouldFragmentTakeAllKeyboardShortcuts() {
+        final Fragment fragment = getCurrentVisibleFragment();
+        return fragment instanceof KeyboardShortcutsHandler.TakeAllKeyboardShortcut;
+    }
+
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        if (shouldFragmentTakeAllKeyboardShortcuts()) {
+            handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+        }
         if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }

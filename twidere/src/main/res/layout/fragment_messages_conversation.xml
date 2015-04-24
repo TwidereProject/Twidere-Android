@@ -25,34 +25,38 @@
     android:layout_height="match_parent"
     tools:context=".fragment.DirectMessagesConversationFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/conversation_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="?dividerVertical"
-        android:orientation="vertical"
-        android:showDividers="middle"
         android:visibility="gone"
         tools:visibility="visible">
 
         <FrameLayout
             android:id="@+id/list_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/input_send_container">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
 
         </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/element_spacing_small"
+            android:layout_above="@+id/input_send_container"
+            android:background="@drawable/shadow_top" />
 
         <RelativeLayout
             android:id="@+id/input_send_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:layout_alignParentBottom="true"
             android:background="?android:colorBackground"
             android:gravity="bottom"
             android:orientation="horizontal"
@@ -89,7 +93,6 @@
                 android:layout_gravity="right"
                 android:layout_toLeftOf="@+id/send"
                 android:layout_toRightOf="@+id/add_image"
-                android:clickable="true"
                 app:bubbleColor="?messageBubbleColor"
                 app:caretHeight="8dp"
                 app:caretPosition="topRight"
@@ -99,16 +102,17 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="@dimen/element_size_normal"
                     android:padding="@dimen/element_spacing_normal">
 
                     <org.mariotaku.twidere.view.StatusComposeEditText
                         android:id="@+id/edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:background="@null"
                         android:completionThreshold="1"
                         android:focusable="true"
-                        android:layout_gravity="center"
                         android:gravity="left|center_vertical"
                         android:hint="@string/type_to_compose"
                         android:inputType="textShortMessage|textMultiLine"
@@ -136,7 +140,7 @@
             </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
         </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/recipient_selector_container"

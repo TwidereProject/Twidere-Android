@@ -248,6 +248,10 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
     }
 
+    public static interface TakeAllKeyboardShortcut {
+
+    }
+
     /**
      * Created by mariotaku on 15/4/11.
      */

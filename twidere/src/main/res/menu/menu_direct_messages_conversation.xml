@@ -20,9 +20,5 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/item_profile_image"
-        android:title="@string/user"
-        app:actionLayout="@layout/action_item_messages_conversation_profile_image"
-        app:showAsAction="always"/>
+
 </menu>

@@ -35,8 +35,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -98,6 +96,7 @@ import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.TakeAllKeyboardShortcut;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -108,7 +107,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.StatusComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
-import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,7 +118,7 @@ import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 public class MessagesConversationFragment extends BaseSupportFragment implements
         LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener, MenuButtonClickListener,
-        PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback {
+        PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback, TakeAllKeyboardShortcut {
 
     // Constants
     private static final int LOADER_ID_SEARCH_USERS = 1;
@@ -174,14 +172,12 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private ImageView mAddImageButton;
     private View mConversationContainer, mRecipientSelectorContainer;
     private Spinner mAccountSpinner;
-    private ImageView mRecipientProfileImageView;
     private EditText mEditUserQuery;
     private View mUsersSearchProgress;
     private View mQueryButton;
     private View mUsersSearchEmpty;
     private TextView mUsersSearchEmptyText;
     private PopupMenu mPopupMenu;
-    private IColorLabelView mProfileImageContainer;
 
     // Adapters
     private MessageConversationAdapter mAdapter;
@@ -272,7 +268,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
                 showConversation(account, mUsersSearchAdapter.getItem(position));
-                updateProfileImage();
+                updateRecipientInfo();
             }
         });
 
@@ -374,16 +370,12 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_direct_messages_conversation, menu);
-        final View profileImageItemView = MenuItemCompat.getActionView(menu.findItem(R.id.item_profile_image));
-        profileImageItemView.setOnClickListener(this);
-        mProfileImageContainer = (IColorLabelView) profileImageItemView;
-        mRecipientProfileImageView = (ImageView) profileImageItemView.findViewById(R.id.recipient_profile_image);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        updateProfileImage();
+        updateRecipientInfo();
     }
 
     @Override
@@ -419,8 +411,9 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final boolean isValid = accountId > 0 && recipientId > 0;
         mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
         mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
-        if (!isValid)
+        if (!isValid) {
             return new CursorLoader(getActivity(), TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null);
+        }
         final Uri uri = buildDirectMessageConversationUri(accountId, recipientId, null);
         return new CursorLoader(getActivity(), uri, cols, null, null, Conversation.DEFAULT_SORT_ORDER);
     }
@@ -437,16 +430,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 startActivityForResult(intent, REQUEST_PICK_IMAGE);
                 break;
             }
-            case R.id.item_profile_image: {
-                final ParcelableUser recipient = mRecipient;
-                if (recipient == null) return;
-                final Bundle options = Utils.makeSceneTransitionOption(getActivity(),
-                        new Pair<View, String>(mRecipientProfileImageView,
-                                UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
-                Utils.openUserProfile(getActivity(), recipient.account_id, recipient.id,
-                        recipient.screen_name, options);
-                break;
-            }
             case R.id.query_button: {
                 final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
                 searchUsers(account.account_id, ParseUtils.parseString(mEditUserQuery.getText()), false);
@@ -460,7 +443,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
         if (account != null) {
             mAccount = account;
-            updateProfileImage();
+            updateRecipientInfo();
         }
     }
 
@@ -560,7 +543,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
         AsyncTaskUtils.executeTask(new SetReadStateTask(getActivity(), account, recipient));
         updateActionBar();
-        updateProfileImage();
+        updateRecipientInfo();
+        mEditText.requestFocus();
     }
 
     public boolean isShowingConversation() {
@@ -750,20 +734,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
     }
 
-    private void updateProfileImage() {
-        if (mProfileImageContainer == null || mRecipientProfileImageView == null) {
-            return;
-        }
-        mProfileImageContainer.setVisibility(mRecipient != null ? View.VISIBLE : View.GONE);
-        if (mAccount != null && mRecipient != null) {
-            mImageLoader.displayProfileImage(mRecipientProfileImageView, mRecipient.profile_image_url);
-            mProfileImageContainer.drawEnd(mAccount.color);
-        } else {
-            mImageLoader.cancelDisplayTask(mRecipientProfileImageView);
-        }
+    private void updateRecipientInfo() {
         final FragmentActivity activity = getActivity();
         if (mRecipient != null) {
-            activity.setTitle(mUserColorNameManager.getDisplayName(mRecipient, mPreferences.getBoolean(KEY_NAME_FIRST), true));
+            activity.setTitle(mUserColorNameManager.getDisplayName(mRecipient,
+                    mPreferences.getBoolean(KEY_NAME_FIRST), true));
         } else {
             activity.setTitle(R.string.direct_messages);
         }
