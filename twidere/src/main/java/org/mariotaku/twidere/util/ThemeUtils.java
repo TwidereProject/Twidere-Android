@@ -23,7 +23,6 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -60,7 +59,6 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -700,6 +698,15 @@ public class ThemeUtils implements Constants {
         return Typeface.create(Typeface.DEFAULT, fontStyle);
     }
 
+    public static Typeface getUserTypeface(final Context context, final String fontFamily, final Typeface defTypeface) {
+        if (context == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+            return Typeface.DEFAULT;
+        final int fontStyle = defTypeface != null ? defTypeface.getStyle() : Typeface.NORMAL;
+        final Typeface tf = Typeface.create(fontFamily, fontStyle);
+        if (tf != null) return tf;
+        return Typeface.create(Typeface.DEFAULT, fontStyle);
+    }
+
     public static int getViewerThemeResource(final Context context) {
         return R.style.Theme_Twidere_Viewer;
     }
@@ -763,12 +770,16 @@ public class ThemeUtils implements Constants {
         indicator.updateAppearance();
     }
 
-    public static void initView(View view, int themeColor, int profileImageStyle) {
+    public static void initView(View view, IThemedActivity activity) {
         if (view == null) return;
         if (view instanceof ShapedImageView) {
             final ShapedImageView shapedImageView = (ShapedImageView) view;
-            shapedImageView.setStyle(profileImageStyle);
+            shapedImageView.setStyle(activity.getCurrentProfileImageStyle());
         } else if (view instanceof TextView) {
+            final String fontFamily = activity.getCurrentThemeFontFamily();
+            final TextView textView = (TextView) view;
+            final Typeface defTypeface = textView.getTypeface();
+            textView.setTypeface(getUserTypeface((Context) activity, fontFamily, defTypeface));
         }
     }
 

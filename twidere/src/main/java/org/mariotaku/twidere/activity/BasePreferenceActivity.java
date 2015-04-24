@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -32,7 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,8 @@ import android.widget.FrameLayout;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -50,7 +51,7 @@ import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
 public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity implements Constants,
-        IThemedActivity {
+        IThemedActivity, KeyboardShortcutsHandler.KeyboardShortcutCallback {
 
     private TintedStatusFrameLayout mMainContent;
 
@@ -58,6 +59,13 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     @ShapeStyle
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
+    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    private String mCurrentThemeFontFamily;
+
+    @Override
+    public String getCurrentThemeFontFamily() {
+        return mCurrentThemeFontFamily;
+    }
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
@@ -95,6 +103,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
+    @ShapeStyle
     public int getCurrentProfileImageStyle() {
         return mProfileImageStyle;
     }
@@ -119,6 +128,16 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (Utils.isDebugBuild()) {
             StrictModeUtils.detectAllVmPolicy();
@@ -128,6 +147,20 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         setupWindow();
         super.onCreate(savedInstanceState);
         setupActionBar();
+        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event)) return true;
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
+            return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -208,13 +241,6 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         return result;
     }
 
-    @Override
-    public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-        final View view = super.onCreateView(name, context, attrs);
-        ThemeUtils.initView(view, getCurrentThemeColor(), mProfileImageStyle);
-        return view;
-    }
-
     protected boolean shouldSetActionItemColor() {
         return true;
     }
@@ -235,6 +261,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
+        mCurrentThemeFontFamily = getThemeFontFamily();
         setTheme(mCurrentThemeResource);
         ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
     }

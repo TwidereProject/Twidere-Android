@@ -115,6 +115,11 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_BACK.equals(action)) {
+            onBackPressed();
+            return true;
+        }
         return handler.handleKey(this, null, keyCode, event);
     }
 
@@ -142,7 +147,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         mMainContent.setOnFitSystemWindowsListener(this);
         setStatusBarColor(linkId, data);
         setTaskInfo(linkId, data);
-        setSupportProgressBarIndeterminateVisibility(false);
         if (!showFragment(linkId, data)) {
             finish();
         }
@@ -223,11 +227,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             if (((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event)) {
                 return true;
             }
-        }
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
-        if (ACTION_NAVIGATION_BACK.equals(action)) {
-            onBackPressed();
-            return true;
         }
         return false;
     }

@@ -23,12 +23,11 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 @SuppressLint("Registered")
-public class BaseSupportDialogActivity extends ThemedFragmentActivity implements Constants, IThemedActivity {
+public class BaseSupportDialogActivity extends ThemedFragmentActivity implements Constants {
 
     private boolean mInstanceStateSaved;
 

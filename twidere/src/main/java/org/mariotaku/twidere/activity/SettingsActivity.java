@@ -32,6 +32,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +53,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.DataExportActivity;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.holder.ViewListHolder;
 
@@ -208,6 +210,21 @@ public class SettingsActivity extends BasePreferenceActivity {
         } else {
             super.setListAdapter(getHeaderAdapter());
         }
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_BACK.equals(action)) {
+            onBackPressed();
+            return true;
+        }
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
     public static void setShouldNotifyChange(Activity activity) {

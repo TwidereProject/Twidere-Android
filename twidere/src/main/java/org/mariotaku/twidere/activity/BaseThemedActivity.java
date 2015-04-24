@@ -27,6 +27,7 @@ import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.ShapedImageView;
 
 public abstract class BaseThemedActivity extends Activity implements IThemedActivity {
 
@@ -36,6 +37,11 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     private String mCurrentThemeFontFamily;
     private String mCurrentThemeBackgroundOption;
     private int mProfileImageStyle;
+
+    @Override
+    public String getCurrentThemeFontFamily() {
+        return mCurrentThemeFontFamily;
+    }
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
@@ -74,6 +80,7 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     public abstract int getThemeResourceId();
 
     @Override
+    @ShapedImageView.ShapeStyle
     public int getCurrentProfileImageStyle() {
         return mProfileImageStyle;
     }

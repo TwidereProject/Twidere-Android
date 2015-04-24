@@ -96,7 +96,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
         String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (ACTION_NAVIGATION_REFRESH.equals(action)) {
             triggerRefresh();
