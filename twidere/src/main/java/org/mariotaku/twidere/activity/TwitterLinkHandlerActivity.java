@@ -133,6 +133,12 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_STATUS);
+                // TODO: Must have an account_id but getDefaultAccountId() seems to return -1 always.
+                long default_account_id = getDefaultAccountId(this);
+                if (default_account_id == -1) {
+                    default_account_id = Utils.getAccountIds(this)[0];
+                }
+                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(default_account_id));
                 builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, pathSegments.get(2));
                 return new Intent(Intent.ACTION_VIEW, builder.build());
             }
