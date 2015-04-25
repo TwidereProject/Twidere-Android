@@ -917,14 +917,14 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         }
         mEditText.append("@" + status.user_screen_name + " ");
         final int selectionStart = mEditText.length();
-        if (!TextUtils.isEmpty(status.retweeted_by_screen_name)) {
-            mEditText.append("@" + status.retweeted_by_screen_name + " ");
+        if (!TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
+            mEditText.append("@" + status.retweeted_by_user_screen_name + " ");
         }
         final Collection<String> mentions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         mentions.addAll(mExtractor.extractMentionedScreennames(status.text_plain));
         for (final String mention : mentions) {
             if (mention.equalsIgnoreCase(status.user_screen_name) || mention.equalsIgnoreCase(myScreenName)
-                    || mention.equalsIgnoreCase(status.retweeted_by_screen_name)) {
+                    || mention.equalsIgnoreCase(status.retweeted_by_user_screen_name)) {
                 continue;
             }
             mEditText.append("@" + mention + " ");

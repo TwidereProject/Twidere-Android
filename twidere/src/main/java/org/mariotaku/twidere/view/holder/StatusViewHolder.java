@@ -149,8 +149,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final long favorite_count;
 
         if (status.retweet_id > 0) {
-            final String retweetedBy = manager.getDisplayName(status.retweeted_by_id,
-                    status.retweeted_by_name, status.retweeted_by_screen_name, nameFirst, false);
+            final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
+                    status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst, false);
             replyRetweetView.setText(context.getString(R.string.name_retweeted, retweetedBy));
             replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_retweet);
             replyRetweetView.setVisibility(View.VISIBLE);
@@ -292,7 +292,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_id, status.id);
             retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status.account_id,
-                    status.retweeted_by_id, status.my_retweet_id));
+                    status.retweeted_by_user_id, status.my_retweet_id));
             retweet_count = status.retweet_count + (creatingRetweet ? 1 : 0);
         }
         if (retweet_count > 0) {

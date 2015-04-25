@@ -1700,9 +1700,13 @@ public final class Utils implements Constants, TwitterConstants {
     public static long getDefaultAccountId(final Context context) {
         if (context == null) return -1;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        long account_id = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
-        if (account_id == -1) account_id = Utils.getAccountIds(context)[0]; /* TODO: this is just a quick fix */
-        return account_id;
+        final long accountId = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
+        final long[] accountIds;
+        if (accountId == -1 && (accountIds = Utils.getAccountIds(context)).length > 0) {
+             /* TODO: this is just a quick fix */
+            return accountIds[0];
+        }
+        return accountId;
     }
 
     public static String getDefaultAccountScreenName(final Context context) {
@@ -2763,7 +2767,7 @@ public final class Utils implements Constants, TwitterConstants {
                                      final boolean filter_rts) {
         if (database == null || status == null) return false;
         return isFiltered(database, status.user_id, status.text_plain, status.text_html, status.source,
-                status.retweeted_by_id, filter_rts);
+                status.retweeted_by_user_id, filter_rts);
     }
 
     public static boolean isMyAccount(final Context context, final long account_id) {
@@ -2796,7 +2800,7 @@ public final class Utils implements Constants, TwitterConstants {
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {
-        return status != null && isMyRetweet(status.account_id, status.retweeted_by_id, status.my_retweet_id);
+        return status != null && isMyRetweet(status.account_id, status.retweeted_by_user_id, status.my_retweet_id);
     }
 
     public static boolean isMyRetweet(final long account_id, final long retweeted_by_id, final long my_retweet_id) {

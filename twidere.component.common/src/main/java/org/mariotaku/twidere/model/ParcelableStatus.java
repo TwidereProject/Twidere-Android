@@ -98,8 +98,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public long user_id;
     @JsonField(name = "retweet_id")
     public long retweet_id;
-    @JsonField(name = "retweeted_by_id")
-    public long retweeted_by_id;
+    @JsonField(name = "retweeted_by_user_id")
+    public long retweeted_by_user_id;
     @JsonField(name = "retweet_timestamp")
     public long retweet_timestamp;
     @JsonField(name = "retweet_count")
@@ -144,12 +144,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "quoted_by_user_is_verified")
     public boolean quoted_by_user_is_verified;
 
-    @JsonField(name = "retweeted_by_name")
-    public String retweeted_by_name;
-    @JsonField(name = "retweeted_by_screen_name")
-    public String retweeted_by_screen_name;
-    @JsonField(name = "retweeted_by_profile_image")
-    public String retweeted_by_profile_image;
+    @JsonField(name = "retweeted_by_user_name")
+    public String retweeted_by_user_name;
+    @JsonField(name = "retweeted_by_user_screen_name")
+    public String retweeted_by_user_screen_name;
+    @JsonField(name = "retweeted_by_user_profile_image")
+    public String retweeted_by_user_profile_image;
     @JsonField(name = "text_html")
     public String text_html;
     @JsonField(name = "text_plain")
@@ -209,7 +209,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         user_id = idx.user_id != -1 ? c.getLong(idx.user_id) : -1;
         retweet_id = idx.retweet_id != -1 ? c.getLong(idx.retweet_id) : -1;
         retweet_timestamp = idx.retweet_timestamp != -1 ? c.getLong(idx.retweet_timestamp) : -1;
-        retweeted_by_id = idx.retweeted_by_user_id != -1 ? c.getLong(idx.retweeted_by_user_id) : -1;
+        retweeted_by_user_id = idx.retweeted_by_user_id != -1 ? c.getLong(idx.retweeted_by_user_id) : -1;
         retweet_count = idx.retweet_count != -1 ? c.getLong(idx.retweet_count) : -1;
         favorite_count = idx.favorite_count != -1 ? c.getLong(idx.favorite_count) : -1;
         reply_count = idx.reply_count != -1 ? c.getLong(idx.reply_count) : -1;
@@ -221,10 +221,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         is_favorite = idx.is_favorite != -1 && c.getInt(idx.is_favorite) == 1;
         user_is_protected = idx.is_protected != -1 && c.getInt(idx.is_protected) == 1;
         user_is_verified = idx.is_verified != -1 && c.getInt(idx.is_verified) == 1;
-        retweeted_by_name = idx.retweeted_by_user_name != -1 ? c.getString(idx.retweeted_by_user_name) : null;
-        retweeted_by_screen_name = idx.retweeted_by_user_screen_name != -1 ? c
+        retweeted_by_user_name = idx.retweeted_by_user_name != -1 ? c.getString(idx.retweeted_by_user_name) : null;
+        retweeted_by_user_screen_name = idx.retweeted_by_user_screen_name != -1 ? c
                 .getString(idx.retweeted_by_user_screen_name) : null;
-        retweeted_by_profile_image = idx.retweeted_by_user_profile_image != -1 ? c
+        retweeted_by_user_profile_image = idx.retweeted_by_user_profile_image != -1 ? c
                 .getString(idx.retweeted_by_user_profile_image) : null;
         text_html = idx.text_html != -1 ? c.getString(idx.text_html) : null;
         media = idx.media != -1 ? ParcelableMedia.fromSerializedJson(c.getString(idx.media)) : null;
@@ -271,7 +271,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         user_id = in.readLong();
         retweet_id = in.readLong();
         retweet_timestamp = in.readLong();
-        retweeted_by_id = in.readLong();
+        retweeted_by_user_id = in.readLong();
         retweet_count = in.readLong();
         favorite_count = in.readLong();
         reply_count = in.readLong();
@@ -282,9 +282,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         is_favorite = in.readByte() == 1;
         user_is_protected = in.readByte() == 1;
         user_is_verified = in.readByte() == 1;
-        retweeted_by_name = in.readString();
-        retweeted_by_screen_name = in.readString();
-        retweeted_by_profile_image = in.readString();
+        retweeted_by_user_name = in.readString();
+        retweeted_by_user_screen_name = in.readString();
+        retweeted_by_user_profile_image = in.readString();
         text_html = in.readString();
         text_plain = in.readString();
         user_name = in.readString();
@@ -328,7 +328,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         user_id = orig.user_id;
         retweet_id = orig.retweet_id;
         retweet_timestamp = orig.retweet_timestamp;
-        retweeted_by_id = orig.retweeted_by_id;
+        retweeted_by_user_id = orig.retweeted_by_user_id;
         retweet_count = override_retweet_count;
         favorite_count = orig.favorite_count;
         reply_count = orig.reply_count;
@@ -339,9 +339,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         is_favorite = orig.is_favorite;
         user_is_protected = orig.user_is_protected;
         user_is_verified = orig.user_is_verified;
-        retweeted_by_name = orig.retweeted_by_name;
-        retweeted_by_screen_name = orig.retweeted_by_screen_name;
-        retweeted_by_profile_image = orig.retweeted_by_profile_image;
+        retweeted_by_user_name = orig.retweeted_by_user_name;
+        retweeted_by_user_screen_name = orig.retweeted_by_user_screen_name;
+        retweeted_by_user_profile_image = orig.retweeted_by_user_profile_image;
         text_html = orig.text_html;
         text_plain = orig.text_plain;
         user_name = orig.user_name;
@@ -388,10 +388,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         is_retweet = orig.isRetweet();
         retweet_id = retweeted != null ? retweeted.getId() : -1;
         retweet_timestamp = retweeted != null ? getTime(retweeted.getCreatedAt()) : -1;
-        retweeted_by_id = retweet_user != null ? retweet_user.getId() : -1;
-        retweeted_by_name = retweet_user != null ? retweet_user.getName() : null;
-        retweeted_by_screen_name = retweet_user != null ? retweet_user.getScreenName() : null;
-        retweeted_by_profile_image = retweet_user != null ? retweet_user.getProfileImageUrlHttps() : null;
+        retweeted_by_user_id = retweet_user != null ? retweet_user.getId() : -1;
+        retweeted_by_user_name = retweet_user != null ? retweet_user.getName() : null;
+        retweeted_by_user_screen_name = retweet_user != null ? retweet_user.getScreenName() : null;
+        retweeted_by_user_profile_image = retweet_user != null ? retweet_user.getProfileImageUrlHttps() : null;
 
         final Status quoted = orig.getQuotedStatus();
         final User quote_user = quoted != null ? orig.getUser() : null;
@@ -442,7 +442,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
         is_favorite = status.isFavorited();
         text_unescaped = HtmlEscapeHelper.toPlainText(text_html);
-        my_retweet_id = retweeted_by_id == account_id ? id : status.getCurrentUserRetweet();
+        my_retweet_id = retweeted_by_user_id == account_id ? id : status.getCurrentUserRetweet();
         is_possibly_sensitive = status.isPossiblySensitive();
         mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
         card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
@@ -489,7 +489,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", timestamp=" + timestamp +
                 ", user_id=" + user_id +
                 ", retweet_id=" + retweet_id +
-                ", retweeted_by_id=" + retweeted_by_id +
+                ", retweeted_by_user_id=" + retweeted_by_user_id +
                 ", retweet_timestamp=" + retweet_timestamp +
                 ", retweet_count=" + retweet_count +
                 ", favorite_count=" + favorite_count +
@@ -511,9 +511,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", is_quote=" + is_quote +
                 ", quoted_by_user_is_protected=" + quoted_by_user_is_protected +
                 ", quoted_by_user_is_verified=" + quoted_by_user_is_verified +
-                ", retweeted_by_name='" + retweeted_by_name + '\'' +
-                ", retweeted_by_screen_name='" + retweeted_by_screen_name + '\'' +
-                ", retweeted_by_profile_image='" + retweeted_by_profile_image + '\'' +
+                ", retweeted_by_user_name='" + retweeted_by_user_name + '\'' +
+                ", retweeted_by_user_screen_name='" + retweeted_by_user_screen_name + '\'' +
+                ", retweeted_by_user_profile_image='" + retweeted_by_user_profile_image + '\'' +
                 ", text_html='" + text_html + '\'' +
                 ", text_plain='" + text_plain + '\'' +
                 ", user_name='" + user_name + '\'' +
@@ -850,7 +850,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         out.writeLong(user_id);
         out.writeLong(retweet_id);
         out.writeLong(retweet_timestamp);
-        out.writeLong(retweeted_by_id);
+        out.writeLong(retweeted_by_user_id);
         out.writeLong(retweet_count);
         out.writeLong(favorite_count);
         out.writeLong(reply_count);
@@ -861,9 +861,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         out.writeByte((byte) (is_favorite ? 1 : 0));
         out.writeByte((byte) (user_is_protected ? 1 : 0));
         out.writeByte((byte) (user_is_verified ? 1 : 0));
-        out.writeString(retweeted_by_name);
-        out.writeString(retweeted_by_screen_name);
-        out.writeString(retweeted_by_profile_image);
+        out.writeString(retweeted_by_user_name);
+        out.writeString(retweeted_by_user_screen_name);
+        out.writeString(retweeted_by_user_profile_image);
         out.writeString(text_html);
         out.writeString(text_plain);
         out.writeString(user_name);
