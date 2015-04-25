@@ -541,22 +541,28 @@
             <intent-filter>
                 <data
                     android:host="twitter.com"
-                    android:scheme="http"/>
+                    android:scheme="http"
+                    android:pathPrefix="/"/>
                 <data
                     android:host="twitter.com"
-                    android:scheme="https"/>
+                    android:scheme="https"
+                    android:pathPrefix="/"/>
                 <data
                     android:host="www.twitter.com"
-                    android:scheme="http"/>
+                    android:scheme="http"
+                    android:pathPrefix="/"/>
                 <data
                     android:host="www.twitter.com"
-                    android:scheme="https"/>
+                    android:scheme="https"
+                    android:pathPrefix="/"/>
                 <data
                     android:host="mobile.twitter.com"
-                    android:scheme="http"/>
+                    android:scheme="http"
+                    android:pathPrefix="/"/>
                 <data
                     android:host="mobile.twitter.com"
-                    android:scheme="https"/>
+                    android:scheme="https"
+                    android:pathPrefix="/"/>
 
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>

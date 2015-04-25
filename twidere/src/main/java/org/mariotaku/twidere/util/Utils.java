@@ -1700,7 +1700,9 @@ public final class Utils implements Constants, TwitterConstants {
     public static long getDefaultAccountId(final Context context) {
         if (context == null) return -1;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
+        long account_id = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
+        if (account_id == -1) account_id = Utils.getAccountIds(context)[0]; /* TODO: this is just a quick fix */
+        return account_id;
     }
 
     public static String getDefaultAccountScreenName(final Context context) {
