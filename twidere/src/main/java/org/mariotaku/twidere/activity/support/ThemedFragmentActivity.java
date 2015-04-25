@@ -19,13 +19,19 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.LayoutInflaterFactory;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -34,6 +40,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
@@ -49,6 +56,21 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
     private String mCurrentThemeFontFamily;
+
+    @NonNull
+    @Override
+    public LayoutInflater getLayoutInflater() {
+        final LayoutInflater inflater = super.getLayoutInflater();
+        if (inflater.getFactory() == null) {
+            LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory(this, new LayoutInflaterFactory() {
+                @Override
+                public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+                    return ThemedFragmentActivity.this.onCreateView(parent, name, context, attrs);
+                }
+            }));
+        }
+        return inflater;
+    }
 
     @Override
     public String getCurrentThemeFontFamily() {

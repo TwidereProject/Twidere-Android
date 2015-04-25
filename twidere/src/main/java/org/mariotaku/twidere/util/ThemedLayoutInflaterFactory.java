@@ -33,6 +33,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -60,6 +61,16 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
     public ThemedLayoutInflaterFactory(IThemedActivity activity, LayoutInflaterFactory delegate) {
         this.activity = activity;
         this.delegate = delegate;
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        View view = delegate.onCreateView(parent, name, context, attrs);
+        if (view == null) {
+            view = createCustomView(name, context, attrs);
+        }
+        initView(view, activity);
+        return view;
     }
 
     public static View createCustomView(String name, Context context, AttributeSet attrs) {
@@ -104,21 +115,43 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
     }
 
     private static void initViewTint(View view, IThemedActivity activity) {
-        final ColorStateList tintList;
+        final int noTintColor, tintColor;
+        final boolean isColorTint;
+        // View context is not derived from ActionBar, apply color tint directly
         if (!isActionBarContext(view.getContext(), getActionBarContext((Activity) activity))) {
-            tintList = ColorStateList.valueOf(activity.getCurrentThemeColor());
+            tintColor = activity.getCurrentThemeColor();
+            noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, 192);
+            isColorTint = true;
         } else if (ThemeUtils.isDarkTheme(activity.getCurrentThemeResourceId())) {
-            tintList = ColorStateList.valueOf(Color.WHITE);
+            // View context is derived from ActionBar but is currently dark theme, so we should show
+            // light
+            noTintColor = Color.WHITE;
+            tintColor = activity.getCurrentThemeColor();
+            isColorTint = true;
         } else {
+            // View context is derived from ActionBar and it's light theme, so we use contrast color
             final int themeColor = activity.getCurrentThemeColor();
-            tintList = ColorStateList.valueOf(TwidereColorUtils.getContrastYIQ(themeColor, 192));
+            tintColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
+            noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, 192);
+            isColorTint = false;
         }
         if (view instanceof IThemedView) {
-            ((IThemedView) view).setThemeTintColor(tintList);
+            ((IThemedView) view).setThemeTintColor(ColorStateList.valueOf(tintColor));
         } else if (view instanceof TintableBackgroundView) {
-            ((TintableBackgroundView) view).setSupportBackgroundTintList(tintList);
+            final TintableBackgroundView tintable = (TintableBackgroundView) view;
+            if (view instanceof Button) {
+            } else {
+                if (isColorTint) {
+                    final int[][] states = {{android.R.attr.state_selected}, {android.R.attr.state_focused},
+                            {android.R.attr.state_pressed}, {0}};
+                    final int[] colors = {tintColor, tintColor, tintColor, noTintColor};
+                    tintable.setSupportBackgroundTintList(new ColorStateList(states, colors));
+                } else {
+                    tintable.setSupportBackgroundTintList(ColorStateList.valueOf(tintColor));
+                }
+            }
         } else if (view instanceof EditText) {
-            ViewCompat.setBackgroundTintList(view, tintList);
+            ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(tintColor));
         }
     }
 
@@ -145,15 +178,4 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         if (actionBar != null) return actionBar.getThemedContext();
         return null;
     }
-
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        View view = delegate.onCreateView(parent, name, context, attrs);
-        if (view == null) {
-            view = createCustomView(name, context, attrs);
-        }
-        initView(view, activity);
-        return view;
-    }
-
 }

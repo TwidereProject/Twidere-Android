@@ -22,16 +22,12 @@ package android.support.v7.app;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Window;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 
 /**
@@ -69,15 +65,6 @@ public class ThemedAppCompatDelegate implements Constants {
             if (inflater.getFactory() == null) {
                 LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory(themed, this));
             }
-        }
-
-        @Override
-        public View createView(View parent, String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-            View view = super.createView(parent, name, context, attrs);
-            if (view == null) {
-//                view = ThemeUtils.createCustomView(parent, name, context, attrs);
-            }
-            return view;
         }
     }
 
