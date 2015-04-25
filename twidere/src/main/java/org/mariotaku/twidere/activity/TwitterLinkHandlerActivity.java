@@ -105,7 +105,7 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
             finish();
             return;
         }
-        final Uri uri = data.buildUpon().authority(AUTHORITY_TWITTER_COM).build();
+        final Uri uri = regulateTwitterUri(data);
         final Intent handledIntent = getHandledIntent(uri);
         if (handledIntent != null) {
             startActivity(handledIntent);
@@ -124,6 +124,16 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
             }
         }
         finish();
+    }
+
+    private static Uri regulateTwitterUri(Uri data) {
+        final String encodedFragment = data.getEncodedFragment();
+        if (encodedFragment != null && encodedFragment.startsWith("!/")) {
+            return regulateTwitterUri(Uri.parse("https://twitter.com" + encodedFragment.substring(1)));
+        }
+        final Uri.Builder builder = data.buildUpon();
+        builder.authority(AUTHORITY_TWITTER_COM);
+        return builder.build();
     }
 
     private Intent getHandledIntent(final Uri uri) {
