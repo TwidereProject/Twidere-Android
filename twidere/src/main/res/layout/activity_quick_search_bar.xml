@@ -19,10 +19,10 @@
   -->
 
 <org.mariotaku.twidere.view.ExtendedRelativeLayout
-    android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/element_spacing_normal">
@@ -88,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:listSelector="?selectableItemBackground"
                 tools:listitem="@layout/list_item_user"/>
         </LinearLayout>
 
