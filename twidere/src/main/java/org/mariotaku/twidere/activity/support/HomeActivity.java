@@ -392,6 +392,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mActionsButton.setOnLongClickListener(this);
         mEmptyTabHint.setOnClickListener(this);
 
+        ThemeUtils.setCompatToolbarOverlay(this, new EmptyDrawable());
         setupSlidingMenu();
         setupBars();
         showDataProfilingRequest();
@@ -401,7 +402,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
-                mTwitterWrapper.refreshAll();
+                mTwitterWrapper.refreshAll(getActivatedAccountIds());
             }
             if (intent.getBooleanExtra(EXTRA_OPEN_ACCOUNTS_DRAWER, false)) {
                 openAccountsDrawer();

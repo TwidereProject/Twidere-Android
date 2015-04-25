@@ -21,7 +21,6 @@ package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -277,10 +276,10 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final String option = getThemeBackgroundOption();
         int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
         switch (linkId) {
-            case LINK_ID_USER: {
-                actionBarItemsColor = Color.WHITE;
-                break;
-            }
+//            case LINK_ID_USER: {
+//                actionBarItemsColor = Color.WHITE;
+//                break;
+//            }
             case LINK_ID_SEARCH:
             case LINK_ID_USER_LISTS: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, false);
@@ -303,9 +302,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         switch (linkId) {
             case LINK_ID_USER: {
                 mMainContent.setShadowColor(0xA0000000);
-                mMainContent.setDrawShadow(false);
-                mMainContent.setDrawColor(true);
-                break;
+                // Fall through
             }
             default: {
                 mMainContent.setDrawShadow(false);
@@ -325,9 +322,9 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     private void setTaskInfo(int linkId, Uri uri) {
         switch (linkId) {
-            case LINK_ID_USER: {
-                break;
-            }
+//            case LINK_ID_USER: {
+//                break;
+//            }
             default: {
                 if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
                     ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null,

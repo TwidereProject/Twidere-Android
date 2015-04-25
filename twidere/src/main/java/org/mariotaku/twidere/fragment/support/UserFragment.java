@@ -211,7 +211,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private int mBannerWidth;
     private int mCardBackgroundColor;
     private int mActionBarShadowColor;
-    private int mUserUiColor;
+    private int mUiColor;
     private boolean mNameFirst;
 
 
@@ -534,9 +534,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         mProfileImageLoader.displayProfileImage(mProfileImageView, Utils.getOriginalTwitterProfileImage(user.profile_image_url));
         if (userColor != 0) {
-            setUserUiColor(userColor);
+            setUiColor(userColor);
         } else {
-            setUserUiColor(user.link_color);
+            setUiColor(user.link_color);
         }
         final int defWidth = resources.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
@@ -776,14 +776,16 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mPagerIndicator.setBackgroundColor(mCardBackgroundColor);
         mUuckyFooter.setBackgroundColor(mCardBackgroundColor);
 
-        getUserInfo(accountId, userId, screenName, false);
-
         final float actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity);
         ViewCompat.setElevation(mPagerIndicator, actionBarElevation);
 
         setupBaseActionBar();
-
         setupUserPages();
+        if (activity instanceof IThemedActivity) {
+            setUiColor(((IThemedActivity) activity).getCurrentThemeColor());
+        }
+
+        getUserInfo(accountId, userId, screenName, false);
     }
 
     @Override
@@ -1334,8 +1336,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         drawable.setAlpha(Math.round(alpha * 255));
     }
 
-    private void setUserUiColor(int color) {
-        mUserUiColor = color;
+    private void setUiColor(int color) {
+        mUiColor = color;
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
@@ -1479,9 +1481,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final int contrastColor = TwidereColorUtils.getContrastYIQ(stackedTabColor, 192);
                 mPagerIndicator.setIconColor(contrastColor);
                 mPagerIndicator.setLabelColor(contrastColor);
-                mPagerIndicator.setStripColor(mUserUiColor);
+                mPagerIndicator.setStripColor(mUiColor);
             } else if (drawable instanceof ColorDrawable) {
-                stackedTabColor = mUserUiColor;
+                stackedTabColor = mUiColor;
                 final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
                 ((ColorDrawable) drawable).setColor(tabColor);
                 final int contrastColor = TwidereColorUtils.getContrastYIQ(tabColor, 192);
