@@ -36,7 +36,7 @@
             android:id="@+id/list_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/input_send_container">
+            android:layout_above="@+id/input_panel">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -47,20 +47,23 @@
         </FrameLayout>
 
         <View
+            android:id="@+id/input_panel_shadow_compat"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_spacing_small"
-            android:layout_above="@+id/input_send_container"
+            android:layout_above="@+id/input_panel"
             android:background="@drawable/shadow_top" />
 
         <RelativeLayout
-            android:id="@+id/input_send_container"
+            android:id="@+id/input_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="?android:colorBackground"
             android:gravity="bottom"
             android:orientation="horizontal"
-            android:padding="@dimen/element_spacing_normal">
+            android:outlineProvider="bounds"
+            android:padding="@dimen/element_spacing_normal"
+            tools:ignore="UnusedAttribute">
 
             <org.mariotaku.twidere.view.ActionIconView
                 android:id="@+id/add_image"
@@ -117,7 +120,9 @@
                         android:hint="@string/type_to_compose"
                         android:inputType="textShortMessage|textMultiLine"
                         android:maxHeight="140dp"
-                        android:singleLine="false">
+                        android:singleLine="false"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="?android:textColorPrimary">
 
                         <requestFocus />
                     </org.mariotaku.twidere.view.StatusComposeEditText>
