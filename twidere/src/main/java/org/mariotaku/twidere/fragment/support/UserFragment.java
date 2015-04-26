@@ -1344,16 +1344,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
         final IThemedActivity themed = (IThemedActivity) activity;
         final int themeRes = themed.getCurrentThemeResourceId();
+        final int actionBarColor;
         if (ThemeUtils.isDarkTheme(themeRes)) {
-            final int actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
-            mTintedStatusContent.setColor(actionBarColor, themed.getCurrentThemeBackgroundAlpha());
-            mActionBarBackground.setColor(actionBarColor);
-            ActivityAccessor.setTaskDescription(activity, new TaskDescriptionCompat(null, null, actionBarColor));
+            actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
         } else {
-            mTintedStatusContent.setColor(color, themed.getCurrentThemeBackgroundAlpha());
-            mActionBarBackground.setColor(color);
-            ActivityAccessor.setTaskDescription(activity, new TaskDescriptionCompat(null, null, color));
+            actionBarColor = color;
         }
+        if (mTintedStatusContent != null) {
+            mTintedStatusContent.setColor(actionBarColor, themed.getCurrentThemeBackgroundAlpha());
+        }
+        if (mActionBarBackground != null) {
+            mActionBarBackground.setColor(actionBarColor);
+        }
+        ActivityAccessor.setTaskDescription(activity, new TaskDescriptionCompat(null, null, actionBarColor));
         mDescriptionView.setLinkTextColor(color);
         mProfileBannerView.setBackgroundColor(color);
         mLocationView.setLinkTextColor(color);

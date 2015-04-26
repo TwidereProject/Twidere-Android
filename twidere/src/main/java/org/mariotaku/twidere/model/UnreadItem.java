@@ -19,12 +19,19 @@
 
 package org.mariotaku.twidere.model;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 @JsonObject
 public class UnreadItem {
 
-    public final long id, account_id;
+    @JsonField(name = "id")
+    public long id;
+    @JsonField(name = "account_id")
+    public long account_id;
+
+    public UnreadItem() {
+    }
 
     public UnreadItem(final long id, final long account_id) {
         this.id = id;

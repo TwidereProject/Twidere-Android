@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -30,6 +31,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -159,7 +161,14 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
         try {
             return LoganSquare.parseList(new FileInputStream(file), ParcelableActivity.class);
         } catch (final IOException e) {
-            e.printStackTrace();
+            if (Utils.isDebugBuild()) {
+                Log.w(LOGTAG, e);
+            }
+        } catch (RuntimeException e) {
+            if (Utils.isDebugBuild()) {
+                throw e;
+            }
+            Log.e(LOGTAG, "Error unserializing data", e);
         }
         return null;
     }

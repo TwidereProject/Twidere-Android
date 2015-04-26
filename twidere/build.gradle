@@ -1,6 +1,7 @@
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 apply from: rootProject.file('global.gradle')
 apply from: rootProject.file('signing.gradle')
 
@@ -10,7 +11,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 108
+        versionCode 110
         versionName "0.3.0"
         multiDexEnabled true
     }
@@ -65,11 +66,12 @@ configurations.all {
 
 dependencies {
 //    wearApp project(':twidere.wear')
+    apt 'com.bluelinelabs:logansquare-compiler:1.0.6'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:22.1.0'
-    compile 'com.android.support:appcompat-v7:22.1.0'
-    compile 'com.android.support:cardview-v7:22.1.0'
-    compile 'com.android.support:recyclerview-v7:22.1.0'
+    compile 'com.android.support:support-v13:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:cardview-v7:22.1.1'
+    compile 'com.android.support:recyclerview-v7:22.1.1'
     compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'com.twitter:twitter-text:1.11.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
@@ -89,6 +91,7 @@ dependencies {
     compile 'com.sprylab.android.texturevideoview:texturevideoview:1.0.0'
     compile 'com.squareup:pollexor:2.0.2'
     compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.bluelinelabs:logansquare:1.0.6'
     googleCompile 'com.google.android.gms:play-services-maps:7.0.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
