@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,7 +18,7 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/progress_container"
@@ -28,11 +27,7 @@
         android:padding="@dimen/element_spacing_large"
         tools:visibility="gone">
 
-        <ProgressBar
-            style="?android:progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+        <include layout="@layout/layout_progress_wheel_medium" />
     </FrameLayout>
 
     <LinearLayout
@@ -49,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:color="?android:textColorSecondary"
-            android:src="@drawable/ic_info_error_generic"/>
+            android:src="@drawable/ic_info_error_generic" />
 
         <TextView
             android:id="@+id/error_text"
@@ -57,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/element_spacing_normal"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:textAppearance="?android:textAppearanceMedium" />
     </LinearLayout>
 
 </merge>

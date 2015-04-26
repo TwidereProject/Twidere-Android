@@ -135,6 +135,10 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, 192);
             isColorTint = false;
         }
+        if (view instanceof TextView) {
+            final TextView textView = (TextView) view;
+            textView.setLinkTextColor(tintColor);
+        }
         if (view instanceof IThemedView) {
             ((IThemedView) view).setThemeTintColor(ColorStateList.valueOf(tintColor));
         } else if (view instanceof TintableBackgroundView) {

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,16 +16,17 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/layout_progress_wheel_medium" />
+    <org.mariotaku.twidere.view.themed.TintThemedProgressWheel
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_gravity="center"
+        android:padding="@dimen/element_spacing_xsmall"
+        app:matProg_barColor="?colorAccent"
+        app:matProg_progressIndeterminate="true" />
 
-</FrameLayout>
+</merge>

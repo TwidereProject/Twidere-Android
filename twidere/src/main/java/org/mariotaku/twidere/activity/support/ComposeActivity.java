@@ -347,10 +347,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         final Window window = getWindow();
         final Rect rect = new Rect();
         window.getDecorView().getWindowVisibleDisplayFrame(rect);
+        final int actionBarHeight = Utils.getActionBarHeight(this);
         final View contentView = window.findViewById(android.R.id.content);
+        final int[] location = new int[2];
+        contentView.getLocationOnScreen(location);
+        if (location[1] > actionBarHeight) {
+            contentView.setPadding(contentView.getPaddingLeft(), 0,
+                    contentView.getPaddingRight(), contentView.getPaddingBottom());
+            return true;
+        }
         final int statusBarHeight = rect.top;
         contentView.getWindowVisibleDisplayFrame(rect);
-        final int paddingTop = statusBarHeight + Utils.getActionBarHeight(this) - rect.top;
+        final int paddingTop = statusBarHeight + actionBarHeight - rect.top;
         contentView.setPadding(contentView.getPaddingLeft(), paddingTop,
                 contentView.getPaddingRight(), contentView.getPaddingBottom());
         return true;

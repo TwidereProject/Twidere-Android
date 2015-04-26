@@ -57,6 +57,11 @@ public final class ViewUtils {
         ViewAccessorL.setButtonTintList(view, list);
     }
 
+    public static ColorStateList getButtonTintList(CompoundButton view) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
+        return ViewAccessorL.getButtonTintList(view);
+    }
+
     public static void setClipToOutline(View view, boolean clipToOutline) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         ViewAccessorL.setClipToOutline(view, clipToOutline);
@@ -154,6 +159,11 @@ public final class ViewUtils {
         static void setProgressTintList(final ProgressBar view, final ColorStateList list) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
             view.setProgressTintList(list);
+        }
+
+        public static ColorStateList getButtonTintList(CompoundButton view) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
+            return view.getButtonTintList();
         }
     }
 

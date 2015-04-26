@@ -50,13 +50,6 @@
 
     </RelativeLayout>
 
-
-    <org.mariotaku.twidere.view.themed.TintThemedProgressWheel
-        android:id="@+id/load_progress"
-        android:layout_width="@dimen/element_size_normal"
-        android:layout_height="@dimen/element_size_normal"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:matProg_barColor="@color/branding_color"/>
+    <include layout="@layout/layout_progress_wheel_medium" />
 
 </FrameLayout>

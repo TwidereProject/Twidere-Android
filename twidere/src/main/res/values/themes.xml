@@ -150,6 +150,7 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
+        <item name="android:actionBarSize">?actionBarSize</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="android:panelColorBackground">#3c3c3c</item>
@@ -176,6 +177,7 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
+        <item name="android:actionBarSize">?actionBarSize</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="android:panelColorBackground">#e5e5e5</item>
