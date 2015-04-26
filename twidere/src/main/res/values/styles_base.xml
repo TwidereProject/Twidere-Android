@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,5 +18,13 @@
   -->
 
 <resources>
+
+    <style name="Widget.Base.ActionMode.Light" parent="android:Widget.DeviceDefault.Light.ActionMode">
+        <item name="android:height">?actionBarSize</item>
+    </style>
+
+    <style name="Widget.Base.ActionMode.Dark" parent="android:Widget.DeviceDefault.ActionMode">
+        <item name="android:height">?actionBarSize</item>
+    </style>
 
 </resources>

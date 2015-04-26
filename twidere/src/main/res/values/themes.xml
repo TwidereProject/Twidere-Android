@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme"/>
+    <style name="Theme" />
 
     <style name="Theme.Launcher" parent="android:Theme.NoDisplay">
         <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
@@ -14,7 +14,7 @@
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
-    <style name="Theme.Blank.Dialog" parent="Theme.Compat.Base.Dialog"/>
+    <style name="Theme.Blank.Dialog" parent="Theme.Compat.Base.Dialog" />
 
     <style name="Theme.Twidere.Dark" parent="Theme.Compat.Base">
 
@@ -150,7 +150,8 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
-        <item name="android:actionBarSize">?actionBarSize</item>
+
+        <item name="android:actionModeStyle">@style/Widget.Twidere.ActionMode.Dark</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="android:panelColorBackground">#3c3c3c</item>
@@ -177,7 +178,8 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
-        <item name="android:actionBarSize">?actionBarSize</item>
+
+        <item name="android:actionModeStyle">@style/Widget.Twidere.ActionMode.Light</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="android:panelColorBackground">#e5e5e5</item>
@@ -264,8 +266,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Test" parent="Theme.Compat.Base">
-    </style>
+    <style name="Theme.Test" parent="Theme.Compat.Base"></style>
 
     <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>

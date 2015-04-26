@@ -30,4 +30,5 @@
         <item name="android:elevation">@dimen/elevation_card</item>
         <item name="android:outlineProvider">none</item>
     </style>
+
 </resources>

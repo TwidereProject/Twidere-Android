@@ -63,4 +63,14 @@
     <style name="Widget.ProfileType" parent="Widget.Base">
         <item name="android:scaleType">centerInside</item>
     </style>
+
+    <style name="Widget.Twidere.ActionMode.Light" parent="Widget.Base.ActionMode.Light">
+        <!--<item name="android:background"></item>-->
+        <!--<item name="android:backgroundSplit"></item>-->
+    </style>
+
+    <style name="Widget.Twidere.ActionMode.Dark" parent="Widget.Base.ActionMode.Dark">
+        <!--<item name="android:background"></item>-->
+        <!--<item name="android:backgroundSplit"></item>-->
+    </style>
 </resources>
