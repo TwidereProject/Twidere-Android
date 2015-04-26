@@ -139,6 +139,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         final ParcelableMedia currentMedia = intent.getParcelableExtra(EXTRA_CURRENT_MEDIA);
         mPagerAdapter.setMedia(accountId, media);
         mIndicator.notifyDataSetChanged();
+        mIndicator.setVisibility(mPagerAdapter.getCount() > 1 ? View.VISIBLE : View.GONE);
         final int currentIndex = ArrayUtils.indexOf(media, currentMedia);
         if (currentIndex != -1) {
             mViewPager.setCurrentItem(currentIndex, false);
@@ -239,7 +240,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             actionBar.hide();
         }
 
-        mIndicator.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mIndicator.setVisibility(visible && mPagerAdapter.getCount() > 1 ? View.VISIBLE : View.GONE);
         mMediaStatusContainer.setVisibility(isMediaStatusEnabled() && visible ? View.VISIBLE : View.GONE);
     }
 
