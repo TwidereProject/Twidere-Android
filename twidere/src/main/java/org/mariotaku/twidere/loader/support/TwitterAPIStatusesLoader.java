@@ -140,7 +140,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 && !noItemsBefore && statuses.size() > 1;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            data.add(new ParcelableStatus(status, mAccountId, insertGap && minIdx == i));
+            data.add(new ParcelableStatus(status, mAccountId, insertGap && isGapEnabled() && minIdx == i));
         }
 
         final ParcelableStatus[] array = data.toArray(new ParcelableStatus[data.size()]);
@@ -173,6 +173,10 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     }
 
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);
+
+    protected boolean isGapEnabled() {
+        return true;
+    }
 
     private List<ParcelableStatus> getCachedData(final File file) {
         if (file == null) return null;

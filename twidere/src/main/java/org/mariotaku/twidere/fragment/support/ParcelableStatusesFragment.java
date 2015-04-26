@@ -69,6 +69,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         final Bundle args = new Bundle(getArguments());
         if (maxIds != null) {
             args.putLong(EXTRA_MAX_ID, maxIds[0]);
+            args.putBoolean(EXTRA_MAKE_GAP, false);
         }
         if (sinceIds != null) {
             args.putLong(EXTRA_SINCE_ID, sinceIds[0]);

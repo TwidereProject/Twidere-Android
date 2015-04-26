@@ -36,16 +36,17 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                 final Bundle args,
-                                                                 final boolean fromUser) {
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         setRefreshing(true);
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final String query = args.getString(EXTRA_QUERY);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        final boolean makeGap = args.getBoolean(EXTRA_MAKE_GAP, true);
         return new TweetSearchLoader(getActivity(), accountId, query, sinceId, maxId, getAdapterData(),
-                getSavedStatusesFileArgs(), tabPosition, fromUser);
+                getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap);
     }
 
     @Override

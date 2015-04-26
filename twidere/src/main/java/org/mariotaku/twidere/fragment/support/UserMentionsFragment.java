@@ -40,8 +40,9 @@ public class UserMentionsFragment extends StatusesSearchFragment {
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        final boolean makeGap = args.getBoolean(EXTRA_MAKE_GAP, true);
         return new UserMentionsLoader(getActivity(), accountId, screenName, maxId, sinceId,
-                getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser);
+                getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap);
     }
 
     @Override
