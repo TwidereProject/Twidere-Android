@@ -94,7 +94,7 @@ public class CustomTabUtils implements Constants {
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7));
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_ABOUT_ME, new CustomTabConfiguration(
                 ActivitiesAboutMeFragment.class, R.string.activities_about_me, R.drawable.ic_action_user,
-                CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 8));
+                CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 8));
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
                 ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
                 R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
@@ -102,8 +102,6 @@ public class CustomTabUtils implements Constants {
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_RETWEETS_OF_ME, new CustomTabConfiguration(
                 RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_action_retweet,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 10));
-        if (Utils.hasStaggeredTimeline()) {
-        }
 
         CUSTOM_TABS_ICON_NAME_MAP.put("accounts", R.drawable.ic_action_accounts);
         CUSTOM_TABS_ICON_NAME_MAP.put("hashtag", R.drawable.ic_action_hashtag);

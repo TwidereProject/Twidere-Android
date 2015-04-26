@@ -106,6 +106,7 @@ public class ParcelableAccount implements Parcelable {
     }
 
     public ParcelableAccount() {
+        is_dummy = true;
     }
 
     @Override

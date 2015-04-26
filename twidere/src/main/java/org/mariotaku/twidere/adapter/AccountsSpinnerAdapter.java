@@ -80,20 +80,17 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
         final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
-        if (text2 != null) {
-            text2.setVisibility(item.is_dummy ? View.GONE : View.VISIBLE);
-        }
-        if (icon != null) {
-            icon.setVisibility(item.is_dummy ? View.GONE : View.VISIBLE);
-        }
         if (!item.is_dummy) {
             if (text1 != null) {
+                text1.setVisibility(View.VISIBLE);
                 text1.setText(item.name);
             }
             if (text2 != null) {
+                text2.setVisibility(View.VISIBLE);
                 text2.setText(String.format("@%s", item.screen_name));
             }
             if (icon != null) {
+                icon.setVisibility(View.VISIBLE);
                 if (mDisplayProfileImage) {
                     mImageLoader.displayProfileImage(icon, item.profile_image_url);
                 } else {
@@ -101,8 +98,17 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableAccount> {
 //                    icon.setImageResource(R.drawable.ic_profile_image_default);
                 }
             }
-        } else if (text1 != null) {
-            text1.setText(mDummyItemText);
+        } else {
+            if (text1 != null) {
+                text1.setVisibility(View.VISIBLE);
+                text1.setText(mDummyItemText);
+            }
+            if (text2 != null) {
+                text2.setVisibility(View.GONE);
+            }
+            if (icon != null) {
+                icon.setVisibility(View.GONE);
+            }
         }
     }
 
