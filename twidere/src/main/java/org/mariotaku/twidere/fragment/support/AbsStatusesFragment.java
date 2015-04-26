@@ -181,9 +181,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListFragment<A
             lastVisibleTop = 0;
         }
         adapter.setData(data);
+        setRefreshEnabled(true);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             adapter.setLoadMoreSupported(hasMoreData(data));
-            setRefreshEnabled(true);
             int pos = -1;
             for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
                 if (lastReadId != -1 && lastReadId == adapter.getStatusId(i)) {

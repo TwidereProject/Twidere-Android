@@ -255,6 +255,7 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
     public void setListShown(boolean listShown) {
         mListContainer.setVisibility(listShown ? View.VISIBLE : View.GONE);
         mProgressContainer.setVisibility(listShown ? View.GONE : View.VISIBLE);
+        mEmptyView.setVisibility(listShown && mAdapter.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void editDraft(final DraftItem draft) {

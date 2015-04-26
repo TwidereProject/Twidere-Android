@@ -737,4 +737,5 @@
     <string name="keyboard_shortcut_back">Back</string>
     <string name="press_again_to_close">Press again to close</string>
     <string name="name_not_set"><xliff:g id="name">%s</xliff:g> not set</string>
+    <string name="swipe_down_to_refresh">Swipe down to refresh</string>
 </resources>
