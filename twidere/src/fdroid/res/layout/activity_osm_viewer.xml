@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,13 +17,15 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+<org.mariotaku.twidere.view.TintedStatusFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    app:setPadding="true"
+    android:layout_height="match_parent">
 
     <org.osmdroid.views.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tilesource="Mapnik"/>
-</merge>
+        tilesource="Mapnik" />
+</org.mariotaku.twidere.view.TintedStatusFrameLayout>

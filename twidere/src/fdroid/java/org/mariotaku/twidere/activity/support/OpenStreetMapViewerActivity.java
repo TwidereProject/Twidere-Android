@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.api.IMapView;
@@ -44,20 +43,10 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenStreetMapViewerActivity extends ThemedAppCompatActivity implements Constants {
+public class OpenStreetMapViewerActivity extends BaseDialogWhenLargeActivity implements Constants {
 
     private MapView mMapView;
     private double mLatitude, mLongitude;
-
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getUserAccentColor(this);
-    }
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getViewerThemeResource(this);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -95,6 +84,7 @@ public class OpenStreetMapViewerActivity extends ThemedAppCompatActivity impleme
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_osm_viewer);
         final Uri uri = getIntent().getData();
         if (uri == null || !AUTHORITY_MAP.equals(uri.getAuthority())) {
             finish();
@@ -112,7 +102,6 @@ public class OpenStreetMapViewerActivity extends ThemedAppCompatActivity impleme
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.activity_osm_viewer);
         mMapView.setMultiTouchControls(true);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setTilesScaledToDpi(true);

@@ -25,7 +25,7 @@
             android:name=".activity.support.OpenStreetMapViewerActivity"
             android:exported="false"
             android:label="@string/view_map"
-            android:theme="@style/Theme.Blank">
+            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
