@@ -39,8 +39,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.ViewUtils;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
@@ -76,7 +76,12 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
         if (child instanceof FrameLayout) {
             final Drawable foreground = ((FrameLayout) child).getForeground();
             if (foreground != null) {
-                foreground.setColorFilter(TwidereColorUtils.getContrastYIQ(color, 192), Mode.MULTIPLY);
+                final Resources resources = getResources();
+                final int colorDark = resources.getColor(R.color.action_icon_dark);
+                final int colorLight = resources.getColor(R.color.action_icon_light);
+                final int contrastColor = TwidereColorUtils.getContrastYIQ(color,
+                        ThemeUtils.ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
+                foreground.setColorFilter(contrastColor, Mode.MULTIPLY);
             }
         }
 

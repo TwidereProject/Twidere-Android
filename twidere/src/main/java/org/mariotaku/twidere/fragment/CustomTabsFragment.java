@@ -316,7 +316,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         if (activity instanceof BasePreferenceActivity) {
             final ActionBar actionBar = ((BasePreferenceActivity) activity).getSupportActionBar();
             final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
-            final int itemColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
+            final int itemColor = TwidereColorUtils.getContrastYIQ(themeColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             final int popupTheme = ThemeUtils.getActionBarPopupThemeRes(actionBar.getThemedContext());
             final int popupColor = ThemeUtils.getThemeForegroundColor(activity, popupTheme);
             ThemeUtils.applyColorFilterToMenuIcon(menu, itemColor, popupColor, 0, Mode.SRC_ATOP);

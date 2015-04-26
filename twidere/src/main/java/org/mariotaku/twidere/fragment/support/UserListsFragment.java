@@ -69,6 +69,7 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
         ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator);
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
+        ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
     }
 
 

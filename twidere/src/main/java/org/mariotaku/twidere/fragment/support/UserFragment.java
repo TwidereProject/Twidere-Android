@@ -1478,7 +1478,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final int themeId = activity.getCurrentThemeResourceId();
             if (ThemeUtils.isDarkTheme(themeId)) {
                 stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
-                final int contrastColor = TwidereColorUtils.getContrastYIQ(stackedTabColor, 192);
+                final int contrastColor = TwidereColorUtils.getContrastYIQ(stackedTabColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
                 mPagerIndicator.setIconColor(contrastColor);
                 mPagerIndicator.setLabelColor(contrastColor);
                 mPagerIndicator.setStripColor(mUiColor);
@@ -1486,7 +1486,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 stackedTabColor = mUiColor;
                 final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
                 ((ColorDrawable) drawable).setColor(tabColor);
-                final int contrastColor = TwidereColorUtils.getContrastYIQ(tabColor, 192);
+                final int contrastColor = TwidereColorUtils.getContrastYIQ(tabColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
                 mPagerIndicator.setIconColor(contrastColor);
                 mPagerIndicator.setLabelColor(contrastColor);
                 mPagerIndicator.setStripColor(contrastColor);

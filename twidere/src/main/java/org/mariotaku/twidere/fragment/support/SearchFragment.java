@@ -46,7 +46,6 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffset
 import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -157,7 +156,6 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         setHasOptionsMenu(true);
         final Bundle args = getArguments();
         final FragmentActivity activity = getActivity();
-        final TwidereApplication app = TwidereApplication.getInstance(activity);
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
         mPagerAdapter.addTab(StatusesSearchFragment.class, args, getString(R.string.statuses), R.drawable.ic_action_twitter, 0, null);
         mPagerAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1, null);
@@ -168,6 +166,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         mPagerIndicator.setOnPageChangeListener(this);
         ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator);
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
+        ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
         if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
             final String query = args.getString(EXTRA_QUERY);
             final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),

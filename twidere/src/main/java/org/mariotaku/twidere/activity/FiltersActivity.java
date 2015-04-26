@@ -78,6 +78,7 @@ public class FiltersActivity extends BaseDialogWhenLargeActivity {
 
         ThemeUtils.initPagerIndicatorAsActionBarTab(this, mPagerIndicator);
         ThemeUtils.setCompatToolbarOverlay(this, new EmptyDrawable());
+        ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
 
     }
 

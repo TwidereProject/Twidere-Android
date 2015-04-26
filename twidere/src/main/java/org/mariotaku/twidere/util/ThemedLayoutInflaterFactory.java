@@ -120,7 +120,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         // View context is not derived from ActionBar, apply color tint directly
         if (!isActionBarContext(view.getContext(), getActionBarContext((Activity) activity))) {
             tintColor = activity.getCurrentThemeColor();
-            noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, 192);
+            noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             isColorTint = true;
         } else if (ThemeUtils.isDarkTheme(activity.getCurrentThemeResourceId())) {
             // View context is derived from ActionBar but is currently dark theme, so we should show
@@ -131,8 +131,8 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         } else {
             // View context is derived from ActionBar and it's light theme, so we use contrast color
             final int themeColor = activity.getCurrentThemeColor();
-            tintColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
-            noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, 192);
+            tintColor = TwidereColorUtils.getContrastYIQ(themeColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
+            noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             isColorTint = false;
         }
         if (view instanceof TextView) {

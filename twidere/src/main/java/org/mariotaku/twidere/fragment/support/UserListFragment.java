@@ -53,7 +53,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -109,7 +108,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     private TextView mListNameView, mCreatedByView, mDescriptionView, mErrorTextView;
     private View mErrorContainer, mProgressContainer;
     private ColorLabelLinearLayout mUserListDetails;
-    private Button mErrorIconView;
+    private ImageView mErrorIconView;
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
@@ -536,7 +535,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mCreatedByView = (TextView) headerView.findViewById(R.id.created_by);
         mDescriptionView = (TextView) headerView.findViewById(R.id.description);
         mProfileImageView = (ImageView) headerView.findViewById(R.id.profile_image);
-        mErrorIconView = (Button) mErrorContainer.findViewById(R.id.error_icon);
+        mErrorIconView = (ImageView) mErrorContainer.findViewById(R.id.error_icon);
         mErrorTextView = (TextView) mErrorContainer.findViewById(R.id.error_text);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);

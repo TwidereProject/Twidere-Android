@@ -196,7 +196,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         if (data != null && data.getCount() > 0) {
             showContent();
         } else {
-            showError(R.drawable.ic_info_error_generic, getString(R.string.no_rule));
+            showEmpty(R.drawable.ic_info_volume_off, getString(R.string.no_rule));
         }
     }
 

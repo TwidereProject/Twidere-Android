@@ -393,6 +393,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mEmptyTabHint.setOnClickListener(this);
 
         ThemeUtils.setCompatToolbarOverlay(this, new EmptyDrawable());
+        ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
         setupSlidingMenu();
         setupBars();
         showDataProfilingRequest();
@@ -805,31 +806,36 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
         ViewUtils.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
                 backgroundOption, true));
+        final int statusBarColor;
+        final Resources resources = getResources();
+        final int[] foregroundColors = new int[2];
+        ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
         if (ThemeUtils.isDarkTheme(themeResId)) {
-            final int backgroundColor = ThemeUtils.getThemeBackgroundColor(mTabIndicator.getItemContext());
-            final int foregroundColor = ThemeUtils.getThemeForegroundColor(mTabIndicator.getItemContext());
-            homeActionButton.setButtonColor(backgroundColor);
-            homeActionButton.setIconColor(foregroundColor, Mode.SRC_ATOP);
+            statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
+            homeActionButton.setButtonColor(statusBarColor);
+            homeActionButton.setIconColor(resources.getColor(R.color.action_icon_light), Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);
-            mTabIndicator.setIconColor(foregroundColor);
-            mTabIndicator.setLabelColor(foregroundColor);
-            mColorStatusFrameLayout.setDrawColor(true);
-            mColorStatusFrameLayout.setDrawShadow(false);
-            mColorStatusFrameLayout.setColor(getResources().getColor(R.color.background_color_action_bar_dark), actionBarAlpha);
-            mColorStatusFrameLayout.setFactor(1);
+            mTabIndicator.setIconColor(foregroundColors[0]);
+            mTabIndicator.setLabelColor(foregroundColors[0]);
         } else {
-            final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
+            statusBarColor = themeColor;
+            final int colorDark = resources.getColor(R.color.action_icon_dark);
+            final int colorLight = resources.getColor(R.color.action_icon_light);
+            final int actionItemColor = TwidereColorUtils.getContrastYIQ(themeColor,
+                    ThemeUtils.ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
+            final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor,
+                    ThemeUtils.ACCENT_COLOR_THRESHOLD, foregroundColors[0], foregroundColors[1]);
             homeActionButton.setButtonColor(themeColor);
-            homeActionButton.setIconColor(contrastColor, Mode.SRC_ATOP);
+            homeActionButton.setIconColor(actionItemColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
             mTabIndicator.setLabelColor(contrastColor);
             ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null, themeColor));
-            mColorStatusFrameLayout.setDrawColor(true);
-            mColorStatusFrameLayout.setDrawShadow(false);
-            mColorStatusFrameLayout.setColor(themeColor, actionBarAlpha);
-            mColorStatusFrameLayout.setFactor(1);
         }
+        mColorStatusFrameLayout.setDrawColor(true);
+        mColorStatusFrameLayout.setDrawShadow(false);
+        mColorStatusFrameLayout.setColor(statusBarColor, actionBarAlpha);
+        mColorStatusFrameLayout.setFactor(1);
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);
         ViewUtils.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));

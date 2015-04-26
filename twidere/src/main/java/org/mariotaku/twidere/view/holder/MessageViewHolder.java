@@ -35,6 +35,7 @@ import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
@@ -109,8 +110,10 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
             textSecondaryDark = textColorSecondaryInverse;
             textSecondaryLight = textColorSecondary;
         }
-        final int textContrastPrimary = TwidereColorUtils.getContrastYIQ(color, 192, textPrimaryDark, textPrimaryLight);
-        final int textContrastSecondary = TwidereColorUtils.getContrastYIQ(color, 192, textSecondaryDark, textSecondaryLight);
+        final int textContrastPrimary = TwidereColorUtils.getContrastYIQ(color,
+                ThemeUtils.ACCENT_COLOR_THRESHOLD, textPrimaryDark, textPrimaryLight);
+        final int textContrastSecondary = TwidereColorUtils.getContrastYIQ(color,
+                ThemeUtils.ACCENT_COLOR_THRESHOLD, textSecondaryDark, textSecondaryLight);
         text.setTextColor(textContrastPrimary);
         text.setLinkTextColor(textContrastSecondary);
         time.setTextColor(textContrastSecondary);

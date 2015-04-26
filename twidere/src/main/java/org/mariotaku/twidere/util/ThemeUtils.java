@@ -76,12 +76,18 @@ import java.lang.reflect.Field;
 
 public class ThemeUtils implements Constants {
 
+    public static final int ACCENT_COLOR_THRESHOLD = 192;
+
     private static final int[] ANIM_OPEN_STYLE_ATTRS = {android.R.attr.activityOpenEnterAnimation,
             android.R.attr.activityOpenExitAnimation};
     private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
             android.R.attr.activityCloseExitAnimation};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY_INVERSE = {android.R.attr.textColorPrimaryInverse};
+    public static final int[] ATTRS_TEXT_COLOR_PRIMARY_AND_INVERSE = {android.R.attr.textColorPrimary,
+            android.R.attr.textColorPrimaryInverse};
+    public static final int[] ATTRS_COLOR_FOREGROUND_AND_INVERSE = {android.R.attr.colorForeground,
+            android.R.attr.colorForegroundInverse};
 
     private ThemeUtils() {
         throw new AssertionError();
@@ -399,7 +405,7 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getContrastActionBarItemColor(Context context, int theme, int color) {
-        if (isDarkTheme(theme) || TwidereColorUtils.getYIQLuminance(color) < 192) {
+        if (isDarkTheme(theme) || TwidereColorUtils.getYIQLuminance(color) < ACCENT_COLOR_THRESHOLD) {
             //return light text color
             return context.getResources().getColor(R.color.action_icon_light);
         }
@@ -411,7 +417,7 @@ public class ThemeUtils implements Constants {
         if (isDarkTheme(theme)) {
             //return light text color
             return getTextColorPrimary(context);
-        } else if (TwidereColorUtils.getYIQLuminance(color) < 192) {
+        } else if (TwidereColorUtils.getYIQLuminance(color) < ACCENT_COLOR_THRESHOLD) {
             //return light text color
             return getTextColorPrimaryInverse(context);
         } else {
@@ -473,9 +479,9 @@ public class ThemeUtils implements Constants {
         TwidereColorUtils.colorToYIQ(color, yiq);
         final int y = yiq[0];
         TwidereColorUtils.colorToYIQ(linkColor, yiq);
-        if (y < 32 && yiq[0] < 192) {
+        if (y < 32 && yiq[0] < ACCENT_COLOR_THRESHOLD) {
             return linkColor;
-        } else if (y > 192 && yiq[0] > 32) {
+        } else if (y > ACCENT_COLOR_THRESHOLD && yiq[0] > 32) {
             return linkColor;
         }
         yiq[0] = yiq[0] + (y - yiq[0]) / 2;
@@ -538,6 +544,41 @@ public class ThemeUtils implements Constants {
         final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY);
         try {
             return a.getColor(0, Color.TRANSPARENT);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static void getTextColorPrimaryAndInverse(final Context context, int[] colors) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY_AND_INVERSE);
+        try {
+            colors[0] = a.getColor(0, Color.TRANSPARENT);
+            colors[1] = a.getColor(1, Color.TRANSPARENT);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static void getDarkLightForegroundColors(final Context context, int themeRes, int[] colors) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_COLOR_FOREGROUND_AND_INVERSE);
+        try {
+            if (isDarkTheme(themeRes)) {
+                colors[0] = a.getColor(1, Color.WHITE);
+                colors[1] = a.getColor(0, Color.BLACK);
+            } else {
+                colors[0] = a.getColor(0, Color.WHITE);
+                colors[1] = a.getColor(1, Color.BLACK);
+            }
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static void getColorForegroundAndInverse(final Context context, int[] colors) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_COLOR_FOREGROUND_AND_INVERSE);
+        try {
+            colors[0] = a.getColor(0, Color.WHITE);
+            colors[1] = a.getColor(1, Color.BLACK);
         } finally {
             a.recycle();
         }
@@ -770,7 +811,18 @@ public class ThemeUtils implements Constants {
         if (!(activity instanceof IThemedActivity)) return;
         final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
         final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
-        final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor, 192);
+        final int colorDark, colorLight;
+        final int[] textColors = new int[2];
+        getTextColorPrimaryAndInverse(activity, textColors);
+        if (isDarkTheme(themeRes)) {
+            colorDark = textColors[1];
+            colorLight = textColors[0];
+        } else {
+            colorDark = textColors[0];
+            colorLight = textColors[1];
+        }
+        final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor,
+                ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
         ViewUtils.setBackground(indicator, getActionBarStackedBackground(activity, themeRes, themeColor, true));
         if (isDarkTheme(themeRes)) {
             final int foregroundColor = getThemeForegroundColor(activity);
@@ -955,21 +1007,24 @@ public class ThemeUtils implements Constants {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
         final Window window = activity.getWindow();
         final View view = window.findViewById(android.support.v7.appcompat.R.id.decor_content_parent);
-        if (!(view instanceof ActionBarOverlayLayout)) {
-            View contentLayout = window.findViewById(android.support.v7.appcompat.R.id.action_bar_activity_content);
-            if (contentLayout == null) {
-                contentLayout = window.findViewById(android.R.id.content);
-            }
-            if (contentLayout instanceof ContentFrameLayout) {
-                ((ContentFrameLayout) contentLayout).setForeground(overlay);
-            }
-            return;
-        }
+        if (!(view instanceof ActionBarOverlayLayout)) return;
         try {
             final Field field = ActionBarOverlayLayout.class.getDeclaredField("mWindowContentOverlay");
             field.setAccessible(true);
             field.set(view, overlay);
         } catch (Exception ignore) {
+        }
+    }
+
+    public static void setCompatContentViewOverlay(Activity activity, Drawable overlay) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
+        final Window window = activity.getWindow();
+        View contentLayout = window.findViewById(android.support.v7.appcompat.R.id.action_bar_activity_content);
+        if (contentLayout == null) {
+            contentLayout = window.findViewById(android.R.id.content);
+        }
+        if (contentLayout instanceof ContentFrameLayout) {
+            ((ContentFrameLayout) contentLayout).setForeground(overlay);
         }
     }
 

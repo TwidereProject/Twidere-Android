@@ -101,10 +101,12 @@ public class TwidereColorUtils {
         return getContrastYIQ(color, 128, colorDark, colorLight);
     }
 
+    @Deprecated
     public static int getContrastYIQ(int color) {
         return getContrastYIQ(color, 128);
     }
 
+    @Deprecated
     public static int getContrastYIQ(int color, int threshold) {
         return getContrastYIQ(color, threshold, Color.BLACK, Color.WHITE);
     }
