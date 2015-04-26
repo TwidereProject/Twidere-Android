@@ -43,7 +43,7 @@
   <string name="select_account">Sélectionner un compte</string>
   <string name="username">Nom d\'utilisateur</string>
   <string name="password">Mot de passe</string>
-  <string name="label_tweetstore_provider">Fournisseur de base de données de Twidere</string>
+  <string name="label_data_provider">Fournisseur de base de données de Twidere</string>
   <string name="label_refresh_service">Refraîcher le service</string>
   <string name="label_background_operation_service">Service en arrière-plan</string>
   <string name="open_in_browser">Ouvrir dans un navigateur</string>

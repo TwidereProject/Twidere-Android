@@ -37,7 +37,7 @@
   <string name="select_account">खाता चुने</string>
   <string name="username">यूज़रनेम</string>
   <string name="password">पासवर्ड</string>
-  <string name="label_tweetstore_provider">ट्विदेर डेटाबेस प्रदाता</string>
+  <string name="label_data_provider">ट्विदेर डेटाबेस प्रदाता</string>
   <string name="open_in_browser">ब्राउज़र में खोलें</string>
   <string name="tap_to_load_more">छुए अधिक लोड करने के लिए।</string>
   <string name="delete">मिटायें</string>

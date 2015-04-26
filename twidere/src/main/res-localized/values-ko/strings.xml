@@ -42,7 +42,7 @@
   <string name="select_account">계정 선택</string>
   <string name="username">사용자명</string>
   <string name="password">패스워드</string>
-  <string name="label_tweetstore_provider">Twidere 데이터베이스 공급자</string>
+  <string name="label_data_provider">Twidere 데이터베이스 공급자</string>
   <string name="label_refresh_service">서비스 새로고침</string>
   <string name="label_background_operation_service">백그라운드 동작 서비스</string>
   <string name="open_in_browser">브라우저에서 열기</string>

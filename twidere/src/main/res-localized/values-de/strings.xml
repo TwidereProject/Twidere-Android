@@ -43,7 +43,7 @@
   <string name="select_account">Account auswählen</string>
   <string name="username">Benutzername</string>
   <string name="password">Passwort</string>
-  <string name="label_tweetstore_provider">Twidere Datenbank Anbieter</string>
+  <string name="label_data_provider">Twidere Datenbank Anbieter</string>
   <string name="label_refresh_service">Dienst aktualisieren</string>
   <string name="label_background_operation_service">Hintergrunddienste</string>
   <string name="open_in_browser">Im Browser öffnen</string>

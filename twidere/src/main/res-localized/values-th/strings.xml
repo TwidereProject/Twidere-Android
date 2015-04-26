@@ -40,7 +40,7 @@
   <string name="select_account">เลือกบัญชี</string>
   <string name="username">ชื่อผู้ใช้</string>
   <string name="password">รหัสผ่าน</string>
-  <string name="label_tweetstore_provider">ผู้ให้บริการญานข้อมูล Twidere</string>
+  <string name="label_data_provider">ผู้ให้บริการญานข้อมูล Twidere</string>
   <string name="label_refresh_service">เรียกบริการอีกครั้ง</string>
   <string name="label_background_operation_service">เซอร์วิสที่ทำงานเบื้องหลัง</string>
   <string name="open_in_browser">เปิดในเบราเซอร์</string>

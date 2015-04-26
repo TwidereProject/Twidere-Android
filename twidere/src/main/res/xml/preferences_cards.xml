@@ -72,11 +72,6 @@
     </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="true"
-        android:key="indicate_my_status"
-        android:order="29"
-        android:title="@string/indicate_your_status" />
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="show_absolute_time"
         android:order="30"

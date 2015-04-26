@@ -293,7 +293,8 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             }
         }
         if (actionBarItemsColor != 0) {
-            ThemeUtils.setActionBarItemsColor(getWindow(), actionBar, actionBarItemsColor);
+            final int titleColor = ThemeUtils.getContrastActionBarTitleColor(this, themeId, themeColor);
+            ThemeUtils.setActionBarColor(getWindow(), actionBar, titleColor, actionBarItemsColor);
         }
         mActionBarItemsColor = actionBarItemsColor;
     }

@@ -80,6 +80,8 @@ public class ThemeUtils implements Constants {
             android.R.attr.activityOpenExitAnimation};
     private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
             android.R.attr.activityCloseExitAnimation};
+    public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
+    public static final int[] ATTRS_TEXT_COLOR_PRIMARY_INVERSE = {android.R.attr.textColorPrimaryInverse};
 
     private ThemeUtils() {
         throw new AssertionError();
@@ -196,6 +198,8 @@ public class ThemeUtils implements Constants {
                                                    boolean outlineEnabled) {
         // Very dirty implementation
         if (!(modeCompat instanceof ActionModeImpl)) return;
+        // This call ensures TitleView created
+        modeCompat.setTitle(null);
         try {
             WindowDecorActionBar actionBar = null;
             final Field[] fields = ActionModeImpl.class.getDeclaredFields();
@@ -212,7 +216,6 @@ public class ThemeUtils implements Constants {
             contextViewField.setAccessible(true);
             final View contextView = (View) contextViewField.get(actionBar);
             if (!(contextView instanceof ActionBarContextView)) return;
-            final ActionBarContextView actionBarContextView = (ActionBarContextView) contextView;
             final TextView actionBarTitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_title);
             final TextView actionBarSubtitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_subtitle);
             final ImageView actionModeCloseButton = (ImageView) contextView.findViewById(android.support.v7.appcompat.R.id.action_mode_close_button);
@@ -398,19 +401,23 @@ public class ThemeUtils implements Constants {
     public static int getContrastActionBarItemColor(Context context, int theme, int color) {
         if (isDarkTheme(theme) || TwidereColorUtils.getYIQLuminance(color) < 192) {
             //return light text color
-            return Color.WHITE;
+            return context.getResources().getColor(R.color.action_icon_light);
         }
         //return dark text color
-        return Color.BLACK;
+        return context.getResources().getColor(R.color.action_icon_dark);
     }
 
     public static int getContrastActionBarTitleColor(Context context, int theme, int color) {
-        if (isDarkTheme(theme) || TwidereColorUtils.getYIQLuminance(color) < 192) {
+        if (isDarkTheme(theme)) {
             //return light text color
-            return Color.WHITE;
+            return getTextColorPrimary(context);
+        } else if (TwidereColorUtils.getYIQLuminance(color) < 192) {
+            //return light text color
+            return getTextColorPrimaryInverse(context);
+        } else {
+            //return dark text color
+            return getTextColorPrimary(context);
         }
-        //return dark text color
-        return Color.BLACK;
     }
 
     public static int getDialogThemeResource(final Context context) {
@@ -528,7 +535,16 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getTextColorPrimary(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary});
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY);
+        try {
+            return a.getColor(0, Color.TRANSPARENT);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static int getTextColorPrimaryInverse(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY_INVERSE);
         try {
             return a.getColor(0, Color.TRANSPARENT);
         } finally {
@@ -874,14 +890,15 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void setActionBarItemsColor(Window window, android.support.v7.app.ActionBar actionBar, int itemColor) {
+    public static void setActionBarColor(Window window, android.support.v7.app.ActionBar actionBar,
+                                         int titleColor, int itemColor) {
         final Drawable drawable = getActionBarHomeAsUpIndicator(actionBar);
         if (drawable != null) {
             drawable.setColorFilter(itemColor, Mode.SRC_ATOP);
         }
         actionBar.setHomeAsUpIndicator(drawable);
-        setActionBarTitleTextColor(window, itemColor);
-        setActionBarSubtitleTextColor(window, itemColor);
+        setActionBarTitleTextColor(window, titleColor);
+        setActionBarSubtitleTextColor(window, titleColor);
     }
 
     public static void setActionBarOverflowColor(Toolbar toolbar, int itemColor) {

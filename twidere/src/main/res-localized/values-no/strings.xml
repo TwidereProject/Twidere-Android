@@ -34,7 +34,7 @@
   <string name="select_account">Velg konto</string>
   <string name="username">Brukernavn</string>
   <string name="password">Passord</string>
-  <string name="label_tweetstore_provider">Twidere database leverandør</string>
+  <string name="label_data_provider">Twidere database leverandør</string>
   <string name="label_refresh_service">Oppdaterings service</string>
   <string name="open_in_browser">Åpne i nettleser</string>
   <string name="tap_to_load_more">Trykk for å laste inn mer</string>

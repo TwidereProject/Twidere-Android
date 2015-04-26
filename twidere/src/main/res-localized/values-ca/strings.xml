@@ -43,7 +43,7 @@
   <string name="select_account">Tria un compte</string>
   <string name="username">Nom d\'usuari</string>
   <string name="password">Contrasenya</string>
-  <string name="label_tweetstore_provider">Proveïdor de la base de dades de Twidere</string>
+  <string name="label_data_provider">Proveïdor de la base de dades de Twidere</string>
   <string name="label_refresh_service">Actualitza el servei</string>
   <string name="label_background_operation_service">Servei d\'execució en rerefons</string>
   <string name="open_in_browser">Obrir al navegador</string>

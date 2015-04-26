@@ -43,7 +43,7 @@
   <string name="select_account">选择帐号</string>
   <string name="username">用户名</string>
   <string name="password">密码</string>
-  <string name="label_tweetstore_provider">Twidere 数据库存储</string>
+  <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_refresh_service">刷新服务</string>
   <string name="label_background_operation_service">后台操作服务</string>
   <string name="open_in_browser">在浏览器中打开</string>

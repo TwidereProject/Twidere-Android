@@ -43,7 +43,7 @@
   <string name="select_account">アカウントを選択</string>
   <string name="username">ユーザー名かメールアドレス</string>
   <string name="password">パスワード</string>
-  <string name="label_tweetstore_provider">Twidereのデータベースストレージ</string>
+  <string name="label_data_provider">Twidereのデータベースストレージ</string>
   <string name="label_refresh_service">サービスをリフレッシュ</string>
   <string name="label_background_operation_service">バックグラウンド操作サービス</string>
   <string name="open_in_browser">ブラウザで開く</string>

@@ -43,7 +43,7 @@
   <string name="select_account">Válasszon fiókot</string>
   <string name="username">Felhasználónév</string>
   <string name="password">Jelszó</string>
-  <string name="label_tweetstore_provider">Twidere adatbázis szolgáltató</string>
+  <string name="label_data_provider">Twidere adatbázis szolgáltató</string>
   <string name="label_refresh_service">Frissítő szolgáltatás</string>
   <string name="label_background_operation_service">Háttér szolgáltatás</string>
   <string name="open_in_browser">Megnyitás böngészőben</string>

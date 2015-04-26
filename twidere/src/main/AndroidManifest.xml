@@ -652,7 +652,7 @@
             android:authorities="twidere"
             android:exported="true"
             android:grantUriPermissions="true"
-            android:label="@string/label_tweetstore_provider"
+            android:label="@string/label_data_provider"
             tools:ignore="ExportedContentProvider"/>
         <provider
             android:name=".provider.TwidereCommandProvider"

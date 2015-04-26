@@ -30,7 +30,7 @@
   <string name="select_account">בחר חשבון</string>
   <string name="username">שם משתמש</string>
   <string name="password">סיסמה</string>
-  <string name="label_tweetstore_provider">ספק מסד הנתונים של Twidere</string>
+  <string name="label_data_provider">ספק מסד הנתונים של Twidere</string>
   <string name="label_refresh_service">רענן שירות</string>
   <string name="label_background_operation_service">שירות פעולה ברקע</string>
   <string name="open_in_browser">פתח בדפדפן</string>

@@ -40,7 +40,7 @@
   <string name="select_account">Виберіть обліковий запис</string>
   <string name="username">Ім\'я користувача</string>
   <string name="password">Пароль</string>
-  <string name="label_tweetstore_provider">Постачальник бази даних Твіттера</string>
+  <string name="label_data_provider">Постачальник бази даних Твіттера</string>
   <string name="label_refresh_service">Оновити послугу</string>
   <string name="label_background_operation_service">Послуга фонових операцій</string>
   <string name="open_in_browser">Відкрити у браузері</string>

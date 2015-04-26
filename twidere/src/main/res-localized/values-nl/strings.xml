@@ -40,7 +40,7 @@
   <string name="select_account">Selecteer account</string>
   <string name="username">Gebruikersnaam</string>
   <string name="password">Wachtwoord</string>
-  <string name="label_tweetstore_provider">Citeer</string>
+  <string name="label_data_provider">Citeer</string>
   <string name="label_refresh_service">Vernieuw dienst</string>
   <string name="label_background_operation_service">Achtergrond activiteiten service.</string>
   <string name="open_in_browser">In browser openen</string>

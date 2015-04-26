@@ -40,7 +40,7 @@
   <string name="select_account">Vyberte účet</string>
   <string name="username">Uživatelské jméno</string>
   <string name="password">Heslo</string>
-  <string name="label_tweetstore_provider">Poskytovatel databáze pro twidere</string>
+  <string name="label_data_provider">Poskytovatel databáze pro twidere</string>
   <string name="label_refresh_service">Obnovit službu</string>
   <string name="label_background_operation_service">Služba na pozadí</string>
   <string name="open_in_browser">Otevřít v prohlížeči</string>

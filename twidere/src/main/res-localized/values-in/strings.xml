@@ -43,7 +43,7 @@
   <string name="select_account">Pilih akun</string>
   <string name="username">Nama pengguna</string>
   <string name="password">Kata Sandi</string>
-  <string name="label_tweetstore_provider">Penyedia database Twidere</string>
+  <string name="label_data_provider">Penyedia database Twidere</string>
   <string name="label_refresh_service">Segarkan layanan</string>
   <string name="label_background_operation_service">Latar Belakang layanan operasi</string>
   <string name="open_in_browser">Buka di Browser</string>

@@ -43,7 +43,7 @@
   <string name="select_account">Выберите учетную запись</string>
   <string name="username">Имя пользователя</string>
   <string name="password">Пароль</string>
-  <string name="label_tweetstore_provider">Провайдер базы данных Twitter</string>
+  <string name="label_data_provider">Провайдер базы данных Twitter</string>
   <string name="label_refresh_service">Обновить сервис</string>
   <string name="label_background_operation_service">Справочная служба</string>
   <string name="open_in_browser">Открыть в браузере</string>

@@ -42,7 +42,7 @@
     <string name="select_account">Select account</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="label_tweetstore_provider">Twidere database provider</string>
+    <string name="label_data_provider">Twidere database provider</string>
     <string name="label_refresh_service">Refresh service</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="open_in_browser">Open in browser</string>
@@ -377,7 +377,6 @@
     <string name="profile_images">Profile images</string>
     <string name="preview_images">Preview images</string>
     <string name="preload_wifi_only">Preload using Wi-Fi only</string>
-    <string name="disable_tab_swipe">Disable tab swipe</string>
     <string name="sign_in_method_introduction_title">How does it work?</string>
     <string name="sign_in_method_introduction">Most clients like twicca open a browser asking you to type username and password, and then take you back to the clients. Sometimes this can become very inconvenient.\n\nTwidere uses simpler steps to sign in, without opening the browser. Don\'t worry about your password, Twidere will never store it, it\'s totally safe!</string>
     <string name="quote_protected_status_notice">It\'s not recommended to quote protected tweets.</string>
@@ -738,4 +737,6 @@
     <string name="press_again_to_close">Press again to close</string>
     <string name="name_not_set"><xliff:g id="name">%s</xliff:g> not set</string>
     <string name="swipe_down_to_refresh">Swipe down to refresh</string>
+    <string name="app_restart_confirm">Twidere will restart to apply settings.</string>
+    <string name="dont_restart">Don\'t restart</string>
 </resources>

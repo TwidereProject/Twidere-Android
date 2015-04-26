@@ -273,9 +273,10 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         final int themeColor = getCurrentThemeColor();
         final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
+        final int titleColor = ThemeUtils.getContrastActionBarTitleColor(this, themeId, themeColor);
         final int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
         ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, isActionBarOutlineEnabled());
-        ThemeUtils.setActionBarItemsColor(getWindow(), actionBar, actionBarItemsColor);
+        ThemeUtils.setActionBarColor(getWindow(), actionBar, titleColor, actionBarItemsColor);
     }
 
     private void setupTintStatusBar() {

@@ -24,7 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 
-import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter;
 
 /**
  * Created by mariotaku on 15/3/15.
@@ -70,17 +70,20 @@ public class ContentListScrollListener extends OnScrollListener {
     }
 
     private void notifyScrollStateChanged(RecyclerView recyclerView) {
-        final IContentCardAdapter adapter = mContentListSupport.getAdapter();
+        final Object adapter = mContentListSupport.getAdapter();
+        if (!(adapter instanceof ILoadMoreSupportAdapter)) return;
+        final ILoadMoreSupportAdapter loadMoreAdapter = (ILoadMoreSupportAdapter) adapter;
         final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (!mContentListSupport.isRefreshing() && adapter.isLoadMoreSupported() && !adapter.isLoadMoreIndicatorVisible()
-                && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
+        if (!mContentListSupport.isRefreshing() && loadMoreAdapter.isLoadMoreSupported()
+                && !loadMoreAdapter.isLoadMoreIndicatorVisible()
+                && layoutManager.findLastVisibleItemPosition() == layoutManager.getItemCount() - 1) {
             mContentListSupport.onLoadMoreContents();
         }
     }
 
     public static interface ContentListSupport {
 
-        IContentCardAdapter getAdapter();
+        Object getAdapter();
 
         boolean isRefreshing();
 

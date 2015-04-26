@@ -62,8 +62,8 @@ import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.fragment.support.AbsContentListViewFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.BaseSupportListFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -74,7 +74,7 @@ import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 
-public abstract class BaseFiltersFragment extends BaseSupportListFragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public abstract class BaseFiltersFragment extends AbsContentListViewFragment<SimpleCursorAdapter> implements LoaderManager.LoaderCallbacks<Cursor>,
         MultiChoiceModeListener {
 
     private static final String EXTRA_AUTO_COMPLETE_TYPE = "auto_complete_type";
@@ -91,8 +91,6 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
         }
 
     };
-    private ListView mListView;
-    private SimpleCursorAdapter mAdapter;
     private ContentResolver mResolver;
     private ActionMode mActionMode;
 
@@ -103,26 +101,23 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         mResolver = getContentResolver();
-        mAdapter = createListAdapter();
-        setListAdapter(mAdapter);
-        mListView = getListView();
-        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setMultiChoiceModeListener(this);
-        setEmptyText(getString(R.string.no_rule));
+        final ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(this);
         getLoaderManager().initLoader(0, null, this);
-        setListShown(false);
+        setRefreshEnabled(false);
+        showProgress();
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View view = super.onCreateView(inflater, container, savedInstanceState);
         assert view != null;
-        final View lv = view.findViewById(android.R.id.list);
+        final ListView listView = (ListView) view.findViewById(R.id.list_view);
         final Resources res = getResources();
         final float density = res.getDisplayMetrics().density;
         final int padding = (int) density * 16;
-        lv.setId(android.R.id.list);
-        lv.setPadding(padding, 0, padding, 0);
+        listView.setPadding(padding, 0, padding, 0);
         return view;
     }
 
@@ -162,16 +157,17 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
 
     @Override
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+        final ListView listView = getListView();
         switch (item.getItemId()) {
             case MENU_DELETE: {
-                final Expression where = Expression.in(new Column(Filters._ID), new RawItemArray(mListView.getCheckedItemIds()));
+                final Expression where = Expression.in(new Column(Filters._ID), new RawItemArray(listView.getCheckedItemIds()));
                 mResolver.delete(getContentUri(), where.getSQL(), null);
                 break;
             }
             case MENU_INVERSE_SELECTION: {
-                final SparseBooleanArray positions = mListView.getCheckedItemPositions();
-                for (int i = 0, j = mListView.getCount(); i < j; i++) {
-                    mListView.setItemChecked(i, !positions.get(i));
+                final SparseBooleanArray positions = listView.getCheckedItemPositions();
+                for (int i = 0, j = listView.getCount(); i < j; i++) {
+                    listView.setItemChecked(i, !positions.get(i));
                 }
                 return true;
             }
@@ -195,13 +191,19 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
-        mAdapter.swapCursor(data);
-        setListShown(true);
+        final SimpleCursorAdapter adapter = getAdapter();
+        adapter.swapCursor(data);
+        if (data != null && data.getCount() > 0) {
+            showContent();
+        } else {
+            showError(R.drawable.ic_info_error_generic, getString(R.string.no_rule));
+        }
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        final SimpleCursorAdapter adapter = getAdapter();
+        adapter.swapCursor(null);
     }
 
     @Override
@@ -230,15 +232,23 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
         updateTitle(mode);
     }
 
-    protected SimpleCursorAdapter createListAdapter() {
-        return new FilterListAdapter(getActivity());
+    @Override
+    public boolean isRefreshing() {
+        return false;
+    }
+
+    @NonNull
+    @Override
+    protected SimpleCursorAdapter onCreateAdapter(Context context, boolean compact) {
+        return new FilterListAdapter(context);
     }
 
     protected abstract String[] getContentColumns();
 
     private void updateTitle(final ActionMode mode) {
-        if (mListView == null || mode == null || getActivity() == null) return;
-        final int count = mListView.getCheckedItemCount();
+        final ListView listView = getListView();
+        if (listView == null || mode == null || getActivity() == null) return;
+        final int count = listView.getCheckedItemCount();
         mode.setTitle(getResources().getQuantityString(R.plurals.Nitems_selected, count, count));
     }
 
@@ -442,11 +452,6 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
         }
 
         @Override
-        protected SimpleCursorAdapter createListAdapter() {
-            return new FilterUsersListAdapter(getActivity());
-        }
-
-        @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
                 case MENU_ADD: {
@@ -460,6 +465,11 @@ public abstract class BaseFiltersFragment extends BaseSupportListFragment implem
             return super.onOptionsItemSelected(item);
         }
 
+        @NonNull
+        @Override
+        protected SimpleCursorAdapter onCreateAdapter(Context context, boolean isCompact) {
+            return new FilterUsersListAdapter(getActivity());
+        }
 
     }
 }

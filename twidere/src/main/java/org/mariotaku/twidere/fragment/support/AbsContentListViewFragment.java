@@ -28,75 +28,43 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.FixedLinearLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
-import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
-import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
-import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 
 /**
  * Created by mariotaku on 15/4/16.
  */
-public abstract class AbsContentListFragment<A extends IContentCardAdapter> extends BaseSupportFragment
-        implements OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, ControlBarOffsetListener,
+public abstract class AbsContentListViewFragment<A extends ListAdapter> extends BaseSupportFragment
+        implements OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener,
         ContentListSupport {
 
     private View mProgressContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
+    private ListView mListView;
     private View mErrorContainer;
     private ImageView mErrorIconView;
     private TextView mErrorTextView;
 
-    private LinearLayoutManager mLayoutManager;
     private A mAdapter;
-
-    // Callbacks and listeners
-    private SimpleDrawerCallback mDrawerCallback;
-    private ContentListScrollListener mScrollListener;
 
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
-
-    @Override
-    public boolean canScroll(float dy) {
-        return mDrawerCallback.canScroll(dy);
-    }
-
-    @Override
-    public void cancelTouch() {
-        mDrawerCallback.cancelTouch();
-    }
-
-    @Override
-    public void fling(float velocity) {
-        mDrawerCallback.fling(velocity);
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        return mDrawerCallback.isScrollContent(x, y);
-    }
 
     @Override
     public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
@@ -115,14 +83,9 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
     }
 
     @Override
-    public void scrollBy(float dy) {
-        mDrawerCallback.scrollBy(dy);
-    }
-
-    @Override
     public boolean scrollToStart() {
-        mLayoutManager.scrollToPositionWithOffset(0, 0);
-        mRecyclerView.stopScroll();
+        mListView.setSelectionFromTop(0, 0);
+//        mListView.stopScroll();
         setControlVisible(true);
         return true;
     }
@@ -136,16 +99,6 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
     }
 
     @Override
-    public boolean shouldLayoutHeaderBottom() {
-        return mDrawerCallback.shouldLayoutHeaderBottom();
-    }
-
-    @Override
-    public void topChanged(int offset) {
-        mDrawerCallback.topChanged(offset);
-    }
-
-    @Override
     public A getAdapter() {
         return mAdapter;
     }
@@ -153,28 +106,22 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
     @Override
     public abstract boolean isRefreshing();
 
-    public LinearLayoutManager getLayoutManager() {
-        return mLayoutManager;
-    }
-
     public void setRefreshing(final boolean refreshing) {
         final boolean currentRefreshing = mSwipeRefreshLayout.isRefreshing();
         if (!currentRefreshing) {
             updateRefreshProgressOffset();
         }
         if (refreshing == currentRefreshing) return;
-        final boolean layoutRefreshing = refreshing && !mAdapter.isLoadMoreIndicatorVisible();
-        mSwipeRefreshLayout.setRefreshing(layoutRefreshing);
+        mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
     @Override
     public void onLoadMoreContents() {
-        setLoadMoreIndicatorVisible(true);
         setRefreshEnabled(false);
     }
 
-    public final RecyclerView getRecyclerView() {
-        return mRecyclerView;
+    public final ListView getListView() {
+        return mListView;
     }
 
     @Override
@@ -187,13 +134,12 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        return inflater.inflate(R.layout.fragment_content_listview, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDrawerCallback = new SimpleDrawerCallback(mRecyclerView);
 
         final View view = getView();
         if (view == null) throw new AssertionError();
@@ -206,11 +152,7 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
         mAdapter = onCreateAdapter(context, compact);
-        mLayoutManager = new FixedLinearLayoutManager(context);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+        mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
@@ -219,25 +161,8 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
                 return false;
             }
         });
-        if (compact) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, mLayoutManager.getOrientation()));
-        }
-        mRecyclerView.setAdapter((RecyclerView.Adapter) mAdapter);
+        mListView.setAdapter((ListAdapter) mAdapter);
 
-        mScrollListener = new ContentListScrollListener(this);
-        mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mRecyclerView.addOnScrollListener(mScrollListener);
-    }
-
-    @Override
-    public void onStop() {
-        mRecyclerView.removeOnScrollListener(mScrollListener);
-        super.onStop();
     }
 
     @Override
@@ -245,7 +170,7 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
         super.onBaseViewCreated(view, savedInstanceState);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mListView = (ListView) view.findViewById(R.id.list_view);
         mErrorContainer = view.findViewById(R.id.error_container);
         mErrorIconView = (ImageView) view.findViewById(R.id.error_icon);
         mErrorTextView = (TextView) view.findViewById(R.id.error_text);
@@ -263,15 +188,11 @@ public abstract class AbsContentListFragment<A extends IContentCardAdapter> exte
     @Override
     protected void fitSystemWindows(Rect insets) {
         super.fitSystemWindows(insets);
-        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        mListView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mErrorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mProgressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mSystemWindowsInsets.set(insets);
         updateRefreshProgressOffset();
-    }
-
-    public void setLoadMoreIndicatorVisible(boolean visible) {
-        mAdapter.setLoadMoreIndicatorVisible(visible);
     }
 
     public void setRefreshEnabled(boolean enabled) {

@@ -42,7 +42,7 @@
   <string name="select_account">Valitse tili</string>
   <string name="username">Käyttäjätunnus</string>
   <string name="password">Salasana</string>
-  <string name="label_tweetstore_provider">Twideren tietokannan tarjoaja</string>
+  <string name="label_data_provider">Twideren tietokannan tarjoaja</string>
   <string name="label_refresh_service">Päivitä palvelu</string>
   <string name="label_background_operation_service">Taustatoimintojen palvelu</string>
   <string name="open_in_browser">Avaa selaimessa</string>
