@@ -88,11 +88,11 @@ I started a crowdin project, so anyone can do something for Twidere. Visit this 
 
 **Donation methods**
 
-PayPal & AliPay: String.format("%s@%s", "mariotaku.lee", "gmail.com");
+PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com")`;
 
-PayPal & AliPay: String.format("%s@%s", "pay", "uucky.me");
+PayPal & AliPay: `String.format("%s@%s", "pay", "uucky.me")`;
 
-Bitcoin: 1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW
+Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
 **Donators**
 
