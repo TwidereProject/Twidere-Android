@@ -167,6 +167,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator);
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
         ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
+        ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
         if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
             final String query = args.getString(EXTRA_QUERY);
             final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),
@@ -298,7 +299,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
             controlBarHeight = mControlBarHeight;
         }
         if (controlBarHeight == 0) {
-            return Utils.getActionBarHeight(activity);
+            return ThemeUtils.getActionBarHeight(activity);
         }
         return controlBarHeight;
     }

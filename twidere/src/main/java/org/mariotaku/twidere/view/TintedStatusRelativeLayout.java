@@ -36,7 +36,7 @@ import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 /**
  * Created by mariotaku on 14/11/26.
  */
-public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout {
+public class TintedStatusRelativeLayout extends ExtendedRelativeLayout implements TintedStatusLayout {
 
     private final Paint mBlackPaint, mShadowPaint, mColorPaint;
     private boolean mSetPadding;
@@ -47,15 +47,15 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
     private boolean mDrawShadow, mDrawColor;
     private Rect mSystemWindowsInsets;
 
-    public TintedStatusFrameLayout(Context context) {
+    public TintedStatusRelativeLayout(Context context) {
         this(context, null);
     }
 
-    public TintedStatusFrameLayout(Context context, AttributeSet attrs) {
+    public TintedStatusRelativeLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TintedStatusFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TintedStatusRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TintedStatusLayout);
         setSetPaddingEnabled(a.getBoolean(R.styleable.TintedStatusLayout_setPadding, false));

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.squareup.otto.Bus;
 
@@ -61,17 +62,7 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
     }
 
     @Override
-    protected long[] getAccountIds() {
-        return new long[]{getAccountId()};
-    }
-
-    @Override
-    protected ParcelableActivitiesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableActivitiesAdapter(context,compact);
-    }
-
-    @Override
-    protected void onLoadMoreStatuses() {
+    public void onLoadMoreContents() {
         final IActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
         final long[] maxIds = new long[]{adapter.getActivity(adapter.getActivityCount() - 1).min_position};
         getActivities(getAccountIds(), maxIds, null);
@@ -89,6 +80,22 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
 //        }
         getActivities(accountIds, null, null);
         return true;
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        return getLoaderManager().hasRunningLoaders();
+    }
+
+    @Override
+    protected long[] getAccountIds() {
+        return new long[]{getAccountId()};
+    }
+
+    @NonNull
+    @Override
+    protected ParcelableActivitiesAdapter onCreateAdapter(final Context context, final boolean compact) {
+        return new ParcelableActivitiesAdapter(context, compact);
     }
 
     protected long getAccountId() {

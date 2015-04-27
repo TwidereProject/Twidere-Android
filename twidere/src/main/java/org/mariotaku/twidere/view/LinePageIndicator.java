@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ViewUtils;
+import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.iface.PagerIndicator;
 
 /**
@@ -85,7 +85,7 @@ public class LinePageIndicator extends View implements PagerIndicator {
 
         final Drawable background = a.getDrawable(R.styleable.LinePageIndicator_android_background);
         if (background != null) {
-            ViewUtils.setBackground(this, background);
+            ViewSupport.setBackground(this, background);
         }
 
         a.recycle();

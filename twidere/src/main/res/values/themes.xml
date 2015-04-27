@@ -7,30 +7,43 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
-    <style name="Theme.Blank" parent="Theme.Compat.Base.NoActionBar">
+    <style name="Theme.Twidere.Dark.NoActionBar" parent="Theme.Compat.Base.NoActionBar">
 
         <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
-        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowBackground">@color/background_color_window_dark</item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
+        <item name="menuIconColorActionBar">?menuIconColor</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Blank.Dialog" parent="Theme.Compat.Base.Dialog" />
+    <style name="Theme.Twidere.Light.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
+
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/background_color_window_light</item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">#f8f8f8</item>
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+    </style>
 
     <style name="Theme.Twidere.Dark" parent="Theme.Compat.Base">
 
-        <item name="windowActionBar">false</item>
-        <!-- Colors -->
-        <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_dark</item>-->
-
         <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@color/background_color_window_dark</item>
-
-        <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@android:style/Widget.DeviceDefault.ActionBar.Solid
-        </item>
-
-        <!-- Custom view styles -->
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -46,21 +59,9 @@
 
     <style name="Theme.Twidere.Light" parent="Theme.Compat.Base.Light">
 
-        <item name="windowActionBar">false</item>
-
-        <!-- Colors -->
-        <!--<item name="android:colorBackgroundCacheHint">@color/bg_color_light</item>-->
-
         <!-- Window attributes -->
-        <!--<item name="android:windowAnimationStyle">@style/Animation.Twidere.Activity</item>-->
         <item name="android:windowBackground">@color/background_color_window_light</item>
 
-        <!-- ActionBar styles -->
-        <!--<item name="android:actionBarStyle">@style/Widget.Twidere.ActionBar.Light.DarkActionBar</item>-->
-        <!--<item name="android:actionBarWidgetTheme">@style/Theme.Twidere.Dark</item>-->
-
-        <!-- Custom view styles -->
-
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
@@ -69,21 +70,14 @@
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
-        <item name="menuIconColorActionBar">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.DialogWhenLarge" parent="Theme.Compat.Base.DialogWhenLarge">
+    <style name="Theme.Twidere.Dark.DialogWhenLarge.NoActionBar" parent="Theme.Compat.Base.DialogWhenLarge">
 
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowBackground">@color/background_color_window_dark</item>
-
-        <!-- ActionBar styles -->
-        <item name="android:actionBarStyle">@android:style/Widget.DeviceDefault.ActionBar.Solid
-        </item>
-
-        <!-- Custom view styles -->
-
+        <item name="windowActionModeOverlay">false</item>
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.ProfileImage</item>
@@ -96,23 +90,24 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light.DialogWhenLarge" parent="Theme.Compat.Base.Light.DialogWhenLarge">
+    <style name="Theme.Twidere.Light.DialogWhenLarge.NoActionBar" parent="Theme.Compat.Base.Light.DialogWhenLarge">
 
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-
+        <item name="windowActionModeOverlay">false</item>
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
+
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="menuIconColorDisabled">@color/action_icon_dark_disabled</item>
-        <item name="menuIconColorActionBar">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Base.Dialog">
+    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Compat.Base.Dialog">
 
         <!-- Custom view styles -->
 
@@ -129,7 +124,7 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Base.Light.Dialog">
+    <style name="Theme.Twidere.Light.Dialog" parent="Theme.Compat.Base.Light.Dialog">
 
         <!-- Custom view styles -->
 
@@ -243,12 +238,12 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Drawer.Dark" parent="Theme.Twidere.Dark">
+    <style name="Theme.Twidere.Drawer.Dark" parent="Theme.Twidere.Dark.NoActionBar">
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/bg_color_drawer_dark</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.NoDisplay">
+    <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Twidere.Dark.NoActionBar">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -257,7 +252,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Twidere.Light.NoDisplay">
+    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Twidere.Light.NoActionBar">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -272,7 +267,7 @@
         <item name="android:windowBackground">@color/nyan_background</item>
     </style>
 
-    <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Light">
+    <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@color/background_color_window_settings_wizard</item>
         <item name="android:colorActivatedHighlight">@color/branding_color</item>

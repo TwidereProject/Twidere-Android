@@ -55,7 +55,12 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
     public SingleResponse<ParcelableStatus> loadInBackground() {
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableStatus cache = mExtras.getParcelable(IntentConstants.EXTRA_STATUS);
-            if (cache != null) return SingleResponse.getInstance(cache);
+            if (cache != null) {
+                final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(cache);
+                final Bundle extras = response.getExtras();
+                extras.putParcelable(EXTRA_ACCOUNT, ParcelableAccount.getCredentials(getContext(), mAccountId));
+                return response;
+            }
         }
         try {
             final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);

@@ -41,7 +41,7 @@ import android.widget.ProgressBar;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
-import org.mariotaku.twidere.util.ViewUtils;
+import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 
 public class HomeActionButtonCompat extends FrameLayout implements IHomeActionButton {
@@ -66,7 +66,7 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
         final Resources resources = getResources();
         final int radius = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
         mBackground = new FloatingActionDrawable(this, radius);
-        ViewUtils.setBackground(this, mBackground);
+        ViewSupport.setBackground(this, mBackground);
     }
 
     @Override

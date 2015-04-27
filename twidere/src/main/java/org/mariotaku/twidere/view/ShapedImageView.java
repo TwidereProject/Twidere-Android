@@ -49,9 +49,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ViewUtils;
-import org.mariotaku.twidere.util.ViewUtils.OutlineCompat;
-import org.mariotaku.twidere.util.ViewUtils.ViewOutlineProviderCompat;
+import org.mariotaku.twidere.util.support.ViewSupport;
+import org.mariotaku.twidere.util.support.graphics.OutlineCompat;
+import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -426,8 +426,8 @@ public class ShapedImageView extends ImageView {
     }
 
     private void initOutlineProvider() {
-        ViewUtils.setClipToOutline(this, true);
-        ViewUtils.setOutlineProvider(this, new CircularOutlineProvider());
+        ViewSupport.setClipToOutline(this, true);
+        ViewSupport.setOutlineProvider(this, new CircularOutlineProvider());
     }
 
     private void setBorderColorsInternal(int alpha, int... colors) {

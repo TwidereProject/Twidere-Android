@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.util.accessor;
+package org.mariotaku.twidere.util.support;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.os.Parcelable;
 /**
  * Created by mariotaku on 14/11/4.
  */
-public class ActivityAccessor {
+public class ActivitySupport {
 
     public static void setTaskDescription(Activity activity, TaskDescriptionCompat taskDescription) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;

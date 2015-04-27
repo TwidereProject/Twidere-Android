@@ -24,7 +24,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.graphic.AlphaPatternDrawable;
-import org.mariotaku.twidere.util.ViewUtils;
+import org.mariotaku.twidere.util.support.ViewSupport;
 
 /**
  * Created by mariotaku on 14/11/8.
@@ -165,7 +165,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             mAlphaSlider.setOnSeekBarChangeListener(mAlphaSliderChangedListener);
             mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA));
             final int patternSize = res.getDimensionPixelSize(R.dimen.element_spacing_msmall);
-            ViewUtils.setBackground(mAlphaPreview, new AlphaPatternDrawable(patternSize));
+            ViewSupport.setBackground(mAlphaPreview, new AlphaPatternDrawable(patternSize));
             updateAlphaVisibility();
             updateAlphaPreview();
 

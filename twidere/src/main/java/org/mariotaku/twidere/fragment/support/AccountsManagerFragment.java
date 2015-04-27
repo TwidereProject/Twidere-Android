@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -75,6 +76,13 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
     }
 
+    @Override
+    protected void fitSystemWindows(Rect insets) {
+        final View view = getView();
+        if (view != null) {
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

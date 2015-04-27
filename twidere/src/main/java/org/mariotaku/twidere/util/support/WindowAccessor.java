@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.util.accessor;
+package org.mariotaku.twidere.util.support;
 
 import android.annotation.TargetApi;
 import android.os.Build;

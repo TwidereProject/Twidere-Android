@@ -37,7 +37,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.content.res.Resources.Theme;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -140,8 +139,11 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
+import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
 import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
+import org.mariotaku.twidere.fragment.support.DraftsFragment;
+import org.mariotaku.twidere.fragment.support.FiltersFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
@@ -168,6 +170,7 @@ import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserListsFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
+import org.mariotaku.twidere.fragment.support.UserProfileEditorFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
@@ -392,6 +395,11 @@ public final class Utils implements Constants, TwitterConstants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS_REPLIES, null, LINK_ID_STATUS_REPLIES);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_SEARCH, null, LINK_ID_SEARCH);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_MUTES_USERS, null, LINK_ID_MUTES_USERS);
+
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_ACCOUNTS, null, LINK_ID_ACCOUNTS);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_DRAFTS, null, LINK_ID_DRAFTS);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_FILTERS, null, LINK_ID_FILTERS);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_PROFILE_EDITOR, null, LINK_ID_PROFILE_EDITOR);
 
         HOME_TABS_URI_MATCHER.addURI(AUTHORITY_HOME, null, CustomTabUtils.TAB_CODE_HOME_TIMELINE);
         HOME_TABS_URI_MATCHER.addURI(AUTHORITY_MENTIONS, null, CustomTabUtils.TAB_CODE_MENTIONS_TIMELINE);
@@ -753,6 +761,25 @@ public final class Utils implements Constants, TwitterConstants {
             args.putAll(extras);
         }
         switch (linkId) {
+            case LINK_ID_ACCOUNTS: {
+                fragment = new AccountsManagerFragment();
+                break;
+            }
+            case LINK_ID_DRAFTS: {
+                fragment = new DraftsFragment();
+                break;
+            }
+            case LINK_ID_FILTERS: {
+                fragment = new FiltersFragment();
+                break;
+            }
+            case LINK_ID_PROFILE_EDITOR: {
+                fragment = new UserProfileEditorFragment();
+                if (!args.containsKey(EXTRA_ACCOUNT_ID) && uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID) == null) {
+                    return null;
+                }
+                break;
+            }
             case LINK_ID_STATUS: {
                 fragment = new StatusFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
@@ -1026,7 +1053,7 @@ public final class Utils implements Constants, TwitterConstants {
         return fragment;
     }
 
-    public static Intent createStatusShareIntent(final Context context, final ParcelableStatus status) {
+    public static Intent createStatusShareIntent(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, getStatusShareSubject(context, status));
@@ -1072,13 +1099,13 @@ public final class Utils implements Constants, TwitterConstants {
         return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
     }
 
-    public static String getStatusShareText(final Context context, final ParcelableStatus status) {
+    public static String getStatusShareText(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final Uri link = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
         return context.getString(R.string.status_share_text_format_with_link,
                 status.text_plain, link.toString());
     }
 
-    public static String getStatusShareSubject(final Context context, ParcelableStatus status) {
+    public static String getStatusShareSubject(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final String timeString = formatToLongTimeString(context, status.timestamp);
         return context.getString(R.string.status_share_subject_format_with_time,
                 status.user_name, status.user_screen_name, timeString);
@@ -3423,6 +3450,13 @@ public final class Utils implements Constants, TwitterConstants {
         return top - actionBarHeight;
     }
 
+    public static int getInsetsTopWithoutActionBarHeight(Context context, int top, int actionBarHeight) {
+        if (actionBarHeight > top) {
+            return top;
+        }
+        return top - actionBarHeight;
+    }
+
     public static void openUserProfile(final Context context, final ParcelableUser user,
                                        final Bundle activityOptions) {
         if (context == null || user == null) return;
@@ -4096,16 +4130,6 @@ public final class Utils implements Constants, TwitterConstants {
         return 0;
     }
 
-    public static int getActionBarHeight(Context context) {
-        final TypedValue tv = new TypedValue();
-        final Theme theme = context.getTheme();
-        final int attr = context instanceof AppCompatActivity ? R.attr.actionBarSize : android.R.attr.actionBarSize;
-        if (theme.resolveAttribute(attr, tv, true)) {
-            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-        }
-        return 0;
-    }
-
     public static void makeListFragmentFitsSystemWindows(ListFragment fragment) {
         final FragmentActivity activity = fragment.getActivity();
         if (!(activity instanceof SystemWindowsInsetsCallback)) return;
@@ -4169,6 +4193,47 @@ public final class Utils implements Constants, TwitterConstants {
     public static void setSharedElementTransition(Context context, Window window, int transitionRes) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         UtilsL.setSharedElementTransition(context, window, transitionRes);
+    }
+
+    public static void openAccountsManager(Context context) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_ACCOUNTS);
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openDrafts(Context context) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_DRAFTS);
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openProfileEditor(Context context, long accountId) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_PROFILE_EDITOR);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, ParseUtils.parseString(accountId));
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openFilters(Context context) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_FILTERS);
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
     }
 
     static class UtilsL {

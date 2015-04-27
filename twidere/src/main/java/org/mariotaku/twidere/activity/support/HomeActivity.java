@@ -96,9 +96,9 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.ViewUtils;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
+import org.mariotaku.twidere.util.support.ActivitySupport;
+import org.mariotaku.twidere.util.support.ViewSupport;
+import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.view.ExtendedViewPager;
@@ -208,7 +208,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
         final int height = mTabIndicator != null ? mTabIndicator.getHeight() : 0;
-        insets.top = height != 0 ? height : Utils.getActionBarHeight(this);
+        insets.top = height != 0 ? height : ThemeUtils.getActionBarHeight(this);
         return true;
     }
 
@@ -804,7 +804,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
-        ViewUtils.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
+        ViewSupport.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
                 backgroundOption, true));
         final int statusBarColor;
         final Resources resources = getResources();
@@ -830,7 +830,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
             mTabIndicator.setLabelColor(contrastColor);
-            ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null, themeColor));
+            ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null, themeColor));
         }
         mColorStatusFrameLayout.setDrawColor(true);
         mColorStatusFrameLayout.setDrawShadow(false);
@@ -838,7 +838,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mColorStatusFrameLayout.setFactor(1);
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);
-        ViewUtils.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
+        ViewSupport.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
     }
 
     private void setupHomeTabs() {

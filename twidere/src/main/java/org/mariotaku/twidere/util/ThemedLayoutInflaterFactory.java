@@ -19,17 +19,22 @@
 
 package org.mariotaku.twidere.util;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.TintableBackgroundView;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.app.AppCompatDelegateTrojan;
+import android.support.v7.internal.app.WindowDecorActionBar;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
@@ -118,7 +123,8 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         final int noTintColor, tintColor;
         final boolean isColorTint;
         // View context is not derived from ActionBar, apply color tint directly
-        if (!isActionBarContext(view.getContext(), getActionBarContext((Activity) activity))) {
+        final boolean isActionBarContext = isActionBarContext(view.getContext(), getActionBarContext((Activity) activity));
+        if (!isActionBarContext) {
             tintColor = activity.getCurrentThemeColor();
             noTintColor = TwidereColorUtils.getContrastYIQ(tintColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             isColorTint = true;
@@ -162,26 +168,31 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
     }
 
     private static boolean isActionBarContext(Context context, Context actionBarContext) {
+        if (actionBarContext == null) return false;
         if (context == actionBarContext) return true;
         Context base = context;
         while (base instanceof ContextWrapper && (base = ((ContextWrapper) base).getBaseContext()) != null) {
             if (base == actionBarContext) return true;
         }
-        return base == actionBarContext;
+        return false;
     }
 
-    private static Context getActionBarContext(Activity activity) {
+    @Nullable
+    private static Context getActionBarContext(@NonNull Activity activity) {
         if (activity instanceof AppCompatActivity) {
-            final android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-            if (actionBar != null)
+            final AppCompatDelegate delegate = ((AppCompatActivity) activity).getDelegate();
+            final ActionBar actionBar = AppCompatDelegateTrojan.peekActionBar(delegate);
+            if (actionBar instanceof WindowDecorActionBar)
                 return actionBar.getThemedContext();
         } else if (activity instanceof AppCompatPreferenceActivity) {
-            final android.support.v7.app.ActionBar actionBar = ((AppCompatPreferenceActivity) activity).getSupportActionBar();
-            if (actionBar != null)
+            final AppCompatDelegate delegate = ((AppCompatPreferenceActivity) activity).getDelegate();
+            final ActionBar actionBar = AppCompatDelegateTrojan.peekActionBar(delegate);
+            if (actionBar instanceof WindowDecorActionBar)
                 return actionBar.getThemedContext();
+        } else {
+            final android.app.ActionBar actionBar = activity.getActionBar();
+            if (actionBar != null) return actionBar.getThemedContext();
         }
-        final ActionBar actionBar = activity.getActionBar();
-        if (actionBar != null) return actionBar.getThemedContext();
         return null;
     }
 }

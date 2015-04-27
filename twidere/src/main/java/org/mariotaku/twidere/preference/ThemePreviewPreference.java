@@ -41,7 +41,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.ViewUtils;
+import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 import org.mariotaku.twidere.view.iface.IExtendedView.TouchInterceptor;
 
@@ -77,7 +77,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
     @Override
     protected View onCreateView(final ViewGroup parent) {
         final Context context = getContext();
-        final int themeResource = ThemeUtils.getThemeResource(context);
+        final int themeResource = ThemeUtils.getNoActionBarThemeResource(context);
         final Context theme = new ContextThemeWrapper(context, themeResource);
         final LayoutInflater inflater = LayoutInflater.from(theme);
         try {
@@ -108,13 +108,13 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final int cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         final int accentColor = ThemeUtils.getUserAccentColor(context);
 
-        final int themeId = ThemeUtils.getThemeResource(context);
+        final int themeId = ThemeUtils.getNoActionBarThemeResource(context);
         final String backgroundOption = ThemeUtils.getThemeBackgroundOption(context);
         ThemeUtils.applyWindowBackground(context, windowBackgroundView, themeId, backgroundOption,
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
-        ViewUtils.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes,
+        ViewSupport.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes,
                 accentColor, backgroundOption, true));
-        ViewUtils.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
+        ViewSupport.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
         cardView.setCardBackgroundColor(cardBackgroundColor);
 
         actionBarView.setTitle(R.string.app_name);

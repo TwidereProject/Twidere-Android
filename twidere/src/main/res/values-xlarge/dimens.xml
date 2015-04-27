@@ -4,7 +4,6 @@
     <dimen name="pane_spacing_left">270dp</dimen>
     <dimen name="pane_spacing_right">270dp</dimen>
     <dimen name="icon_size_wizard_large">480dp</dimen>
-    <dimen name="drawer_width_home">480dp</dimen>
     <dimen name="accounts_drawer_name_size">18sp</dimen>
     <dimen name="accounts_drawer_screen_name_size">16sp</dimen>
     <dimen name="accounts_drawer_default_indicator_size">14sp</dimen>

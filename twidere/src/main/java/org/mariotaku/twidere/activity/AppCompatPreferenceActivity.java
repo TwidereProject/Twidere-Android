@@ -150,7 +150,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity imp
         getDelegate().setTitle(title);
     }
 
-    private AppCompatDelegate getDelegate() {
+    public AppCompatDelegate getDelegate() {
         if (mDelegate == null) {
             mDelegate = AppCompatDelegate.create(this, this);
         }

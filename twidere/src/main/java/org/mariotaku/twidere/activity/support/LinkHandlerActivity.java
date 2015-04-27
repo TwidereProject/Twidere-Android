@@ -29,7 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.WindowCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +37,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 
@@ -47,14 +48,16 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
 import org.mariotaku.twidere.fragment.support.UserFragment;
+import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.ViewUtils;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor;
-import org.mariotaku.twidere.util.accessor.ActivityAccessor.TaskDescriptionCompat;
+import org.mariotaku.twidere.util.support.ActivitySupport;
+import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
+import org.mariotaku.twidere.util.support.ViewSupport;
+import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
@@ -74,7 +77,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public Fragment getCurrentVisibleFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.main_content);
+        return getSupportFragmentManager().findFragmentById(R.id.content_fragment);
     }
 
     @Override
@@ -89,11 +92,25 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public void onFitSystemWindows(Rect insets) {
+        final Toolbar toolbar = peekActionBarToolbar();
+        if (toolbar != null) {
+            final ViewGroup.LayoutParams toolBarParams = toolbar.getLayoutParams();
+            if (toolBarParams instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) toolBarParams).topMargin = insets.top;
+            }
+            toolbar.setLayoutParams(toolBarParams);
+        }
+        insets.top += ThemeUtils.getActionBarHeight(this);
         super.onFitSystemWindows(insets);
-        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
+        final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof IBaseFragment) {
             ((IBaseFragment) fragment).requestFitSystemWindows();
         }
+    }
+
+    @Override
+    public boolean getSystemWindowsInsets(Rect insets) {
+        return super.getSystemWindowsInsets(insets);
     }
 
     @Override
@@ -148,12 +165,17 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final int linkId = matchLinkId(data);
         requestWindowFeatures(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_content_fragment);
+        setSupportActionBar((Toolbar) findViewById(R.id.tool_bar));
+        ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+        final Toolbar toolbar = peekActionBarToolbar();
+        ViewCompat.setElevation(toolbar, ThemeUtils.getSupportActionBarElevation(this));
+        ViewSupport.setOutlineProvider(toolbar, ViewOutlineProviderCompat.BACKGROUND);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             setActionBarTheme(actionBar, linkId, data);
         }
-        setContentView(R.layout.activity_content_fragment);
         mMainContent.setOnFitSystemWindowsListener(this);
         setStatusBarColor(linkId, data);
         setTaskInfo(linkId, data);
@@ -162,14 +184,29 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         }
     }
 
+    private final View.OnLayoutChangeListener mLayoutChangeListener = new View.OnLayoutChangeListener() {
+
+        private final Rect tempInsets = new Rect();
+
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            if (left != oldLeft && top != oldTop && right != oldRight && bottom != oldBottom) {
+                mMainContent.getSystemWindowsInsets(tempInsets);
+                onFitSystemWindows(tempInsets);
+            }
+        }
+    };
+
     @Override
     protected void onStart() {
         super.onStart();
         mMultiSelectHandler.dispatchOnStart();
+        mMainContent.addOnLayoutChangeListener(mLayoutChangeListener);
     }
 
     @Override
     protected void onStop() {
+        mMainContent.removeOnLayoutChangeListener(mLayoutChangeListener);
         mMultiSelectHandler.dispatchOnStop();
         super.onStop();
     }
@@ -178,14 +215,13 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     public boolean onPrepareOptionsMenu(Menu menu) {
         final boolean result = super.onPrepareOptionsMenu(menu);
         if (!shouldSetActionItemColor()) return result;
-        final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-        if (actionBarView instanceof Toolbar) {
+        final Toolbar toolbar = peekActionBarToolbar();
+        if (toolbar != null) {
             final int themeColor = getCurrentThemeColor();
             final int themeId = getCurrentThemeResourceId();
             final int itemColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
-            final Toolbar toolbar = (Toolbar) actionBarView;
             ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
-            ThemeUtils.wrapToolbarMenuIcon(ViewUtils.findViewByType(actionBarView, ActionMenuView.class), itemColor, itemColor);
+            ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
         }
         return result;
     }
@@ -198,14 +234,12 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        final Toolbar toolbar = peekActionBarToolbar();
         final boolean result = super.onPrepareOptionsPanel(view, menu);
-        if (mActionBarItemsColor != 0) {
-            final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-            if (actionBarView instanceof Toolbar) {
-                ((Toolbar) actionBarView).setTitleTextColor(mActionBarItemsColor);
-                ((Toolbar) actionBarView).setSubtitleTextColor(mActionBarItemsColor);
-                ThemeUtils.setActionBarOverflowColor((Toolbar) actionBarView, mActionBarItemsColor);
-            }
+        if (mActionBarItemsColor != 0 && toolbar != null) {
+            toolbar.setTitleTextColor(mActionBarItemsColor);
+            toolbar.setSubtitleTextColor(mActionBarItemsColor);
+            ThemeUtils.setActionBarOverflowColor(toolbar, mActionBarItemsColor);
         }
         return result;
     }
@@ -245,9 +279,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         final int transitionRes;
         switch (linkId) {
             case LINK_ID_USER: {
@@ -276,12 +307,9 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final String option = getThemeBackgroundOption();
         int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
         switch (linkId) {
-//            case LINK_ID_USER: {
-//                actionBarItemsColor = Color.WHITE;
-//                break;
-//            }
             case LINK_ID_SEARCH:
-            case LINK_ID_USER_LISTS: {
+            case LINK_ID_USER_LISTS:
+            case LINK_ID_FILTERS: {
                 ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, false);
                 ThemeUtils.applyActionBarBackground(getActionBar(), this, themeId, themeColor, option, true);
                 break;
@@ -328,7 +356,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 //            }
             default: {
                 if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
-                    ActivityAccessor.setTaskDescription(this, new TaskDescriptionCompat(null, null,
+                    ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null,
                             getCurrentThemeColor()));
                 }
                 break;
@@ -443,10 +471,22 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY));
                 break;
             }
+            case LINK_ID_ACCOUNTS: {
+                setTitle(R.string.accounts);
+                break;
+            }
+            case LINK_ID_DRAFTS: {
+                setTitle(R.string.drafts);
+                break;
+            }
+            case LINK_ID_FILTERS: {
+                setTitle(R.string.filters);
+                break;
+            }
         }
         mFinishOnly = Boolean.parseBoolean(uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY));
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.main_content, fragment);
+        ft.replace(R.id.content_fragment, fragment);
         ft.commit();
         return true;
     }
@@ -460,23 +500,22 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public void setControlBarOffset(float offset) {
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) return;
-        actionBar.setHideOffset(Math.round((1 - offset) * getControlBarHeight()));
+        final Toolbar toolbar = peekActionBarToolbar();
+        if (toolbar == null) return;
+        toolbar.setTranslationY(-Math.round((1 - offset) * getControlBarHeight()));
         notifyControlBarOffsetChanged();
     }
 
     @Override
     public float getControlBarOffset() {
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) return 0;
-        return 1f - actionBar.getHideOffset() / (float) getControlBarHeight();
+        final Toolbar toolbar = peekActionBarToolbar();
+        return toolbar != null ? 1 + toolbar.getTranslationY() / (float) getControlBarHeight() : 0;
     }
 
     @Override
     public int getControlBarHeight() {
-        final ActionBar actionBar = getSupportActionBar();
-        return actionBar != null ? actionBar.getHeight() : 0;
+        final Toolbar toolbar = peekActionBarToolbar();
+        return toolbar != null ? toolbar.getHeight() : 0;
     }
 
 }

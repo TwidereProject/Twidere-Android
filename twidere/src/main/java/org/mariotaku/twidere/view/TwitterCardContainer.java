@@ -23,7 +23,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import org.mariotaku.twidere.util.ViewUtils;
+import org.mariotaku.twidere.util.support.ViewSupport;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -47,7 +47,7 @@ public class TwitterCardContainer extends FrameLayout {
     public void setCardSize(int width, int height) {
         mCardWidth = width;
         mCardHeight = height;
-        if (!ViewUtils.isInLayout(this)) {
+        if (!ViewSupport.isInLayout(this)) {
             requestLayout();
         }
     }

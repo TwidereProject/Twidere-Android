@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.support;
+package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,25 +26,30 @@ import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
+import org.mariotaku.twidere.activity.support.ImagePickerActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -55,6 +60,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
@@ -64,10 +70,8 @@ import twitter4j.User;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
-import static org.mariotaku.twidere.util.Utils.isMyAccount;
-import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 
-public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity implements OnSizeChangedListener, TextWatcher,
+public class UserProfileEditorFragment extends BaseSupportFragment implements OnSizeChangedListener, TextWatcher,
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>> {
 
     private static final int LOADER_ID_USER = 1;
@@ -118,19 +122,19 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
                 break;
             }
             case R.id.profile_image_camera: {
-                final Intent intent = new Intent(this, ImagePickerActivity.class);
+                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
                 intent.setAction(INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_image_gallery: {
-                final Intent intent = new Intent(this, ImagePickerActivity.class);
+                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
                 intent.setAction(INTENT_ACTION_TAKE_PHOTO);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_banner_gallery: {
-                final Intent intent = new Intent(this, ImagePickerActivity.class);
+                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
                 intent.setAction(INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
                 break;
@@ -141,14 +145,14 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
                 break;
             }
             case R.id.set_link_color: {
-                final Intent intent = new Intent(this, ColorPickerDialogActivity.class);
+                final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
                 intent.putExtra(EXTRA_COLOR, user.link_color);
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false);
                 startActivityForResult(intent, REQUEST_PICK_LINK_COLOR);
                 break;
             }
             case R.id.set_background_color: {
-                final Intent intent = new Intent(this, ColorPickerDialogActivity.class);
+                final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
                 intent.putExtra(EXTRA_COLOR, user.background_color);
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false);
                 startActivityForResult(intent, REQUEST_PICK_BACKGROUND_COLOR);
@@ -161,8 +165,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
         mProgressContainer.setVisibility(View.VISIBLE);
         mEditProfileContent.setVisibility(View.GONE);
-        return new ParcelableUserLoader(UserProfileEditorActivity.this, mAccountId, mAccountId, null, getIntent()
-                .getExtras(), false, false);
+        return new ParcelableUserLoader(getActivity(), mAccountId, mAccountId, null, getArguments(), false, false);
     }
 
     @Override
@@ -180,18 +183,13 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_profile_editor, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile_editor, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_HOME: {
-                finish();
-                return true;
-            }
             case MENU_SAVE: {
                 final String name = ParseUtils.parseString(mEditName.getText());
                 final String url = ParseUtils.parseString(mEditUrl.getText());
@@ -209,23 +207,18 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mAsyncTaskManager = TwidereApplication.getInstance(this).getAsyncTaskManager();
-        mLazyImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
-        final Intent intent = getIntent();
-        final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final TwidereApplication application = TwidereApplication.getInstance(getActivity());
+        mAsyncTaskManager = application.getAsyncTaskManager();
+        mLazyImageLoader = application.getMediaLoaderWrapper();
+        final Bundle args = getArguments();
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         mAccountId = accountId;
-        if (!isMyAccount(this, accountId)) {
-            finish();
+        if (!Utils.isMyAccount(getActivity(), accountId)) {
+            getActivity().finish();
             return;
         }
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        setContentView(R.layout.activity_user_profile_editor);
 
         // setOverrideExitAniamtion(false);
         mEditName.addTextChangedListener(this);
@@ -254,12 +247,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_USER, mUser);
         outState.putString(EXTRA_NAME, ParseUtils.parseString(mEditName.getText()));
@@ -269,48 +257,49 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onSizeChanged(final View view, final int w, final int h, final int oldw, final int oldh) {
     }
 
+    @Nullable
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        mProgressContainer = findViewById(R.id.progress_container);
-        mEditProfileContent = findViewById(R.id.edit_profile_content);
-        mProfileBannerView = (ImageView) findViewById(R.id.profile_banner);
-        mProfileImageView = (ImageView) findViewById(R.id.profile_image);
-        mEditName = (EditText) findViewById(R.id.name);
-        mEditDescription = (EditText) findViewById(R.id.description);
-        mEditLocation = (EditText) findViewById(R.id.location);
-        mEditUrl = (EditText) findViewById(R.id.url);
-        mProfileImageCamera = findViewById(R.id.profile_image_camera);
-        mProfileImageGallery = findViewById(R.id.profile_image_gallery);
-        mProfileBannerGallery = findViewById(R.id.profile_banner_gallery);
-        mProfileBannerRemove = findViewById(R.id.profile_banner_remove);
-        mLinkColor = (ForegroundColorView) findViewById(R.id.link_color);
-        mBackgroundColor = (ForegroundColorView) findViewById(R.id.background_color);
-        mSetLinkColor = findViewById(R.id.set_link_color);
-        mSetBackgroundColor = findViewById(R.id.set_background_color);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_user_profile_editor, container, false);
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (resultCode == RESULT_CANCELED) return;
+    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mEditProfileContent = view.findViewById(R.id.edit_profile_content);
+        mProfileBannerView = (ImageView) view.findViewById(R.id.profile_banner);
+        mProfileImageView = (ImageView) view.findViewById(R.id.profile_image);
+        mEditName = (EditText) view.findViewById(R.id.name);
+        mEditDescription = (EditText) view.findViewById(R.id.description);
+        mEditLocation = (EditText) view.findViewById(R.id.location);
+        mEditUrl = (EditText) view.findViewById(R.id.url);
+        mProfileImageCamera = view.findViewById(R.id.profile_image_camera);
+        mProfileImageGallery = view.findViewById(R.id.profile_image_gallery);
+        mProfileBannerGallery = view.findViewById(R.id.profile_banner_gallery);
+        mProfileBannerRemove = view.findViewById(R.id.profile_banner_remove);
+        mLinkColor = (ForegroundColorView) view.findViewById(R.id.link_color);
+        mBackgroundColor = (ForegroundColorView) view.findViewById(R.id.background_color);
+        mSetLinkColor = view.findViewById(R.id.set_link_color);
+        mSetBackgroundColor = view.findViewById(R.id.set_background_color);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode == FragmentActivity.RESULT_CANCELED) return;
         switch (requestCode) {
             case REQUEST_UPLOAD_PROFILE_BANNER_IMAGE: {
                 if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
-                mTask = new UpdateProfileBannerImageTaskInternal(this, mAsyncTaskManager, mAccountId, data.getData(), true);
+                mTask = new UpdateProfileBannerImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
                 AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
                 if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
-                mTask = new UpdateProfileImageTaskInternal(this, mAsyncTaskManager, mAccountId, data.getData(), true);
+                mTask = new UpdateProfileImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
                 AsyncTaskUtils.executeTask(mTask);
                 break;
             }
@@ -369,7 +358,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     }
 
     private void getUserInfo() {
-        final LoaderManager lm = getSupportLoaderManager();
+        final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         mGetUserInfoCalled = true;
         if (mUserInfoLoaderInitialized) {
@@ -408,7 +397,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
     static class UpdateProfileTaskInternal extends AsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private static final String DIALOG_FRAGMENT_TAG = "updating_user_profile";
-        private final UserProfileEditorActivity mActivity;
+        private final UserProfileEditorFragment mFragment;
         private final Handler mHandler;
         private final long mAccountId;
         private final ParcelableUser mOriginal;
@@ -418,14 +407,16 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
         private final String mDescription;
         private final int mLinkColor;
         private final int mBackgroundColor;
+        private final FragmentActivity mActivity;
 
-        public UpdateProfileTaskInternal(final UserProfileEditorActivity activity,
+        public UpdateProfileTaskInternal(final UserProfileEditorFragment fragment,
                                          final long accountId, final ParcelableUser original,
                                          final String name, final String url, final String location,
                                          final String description, final int linkColor,
                                          final int backgroundColor) {
-            mActivity = activity;
-            mHandler = new Handler(activity.getMainLooper());
+            mFragment = fragment;
+            mActivity = fragment.getActivity();
+            mHandler = new Handler(mActivity.getMainLooper());
             mAccountId = accountId;
             mOriginal = original;
             mName = name;
@@ -482,7 +473,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
             super.onPostExecute(result);
-            final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
+            final Fragment f = mFragment.getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
             if (f instanceof DialogFragment) {
                 ((DialogFragment) f).dismissAllowingStateLoss();
             }
@@ -493,7 +484,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    final DialogFragment df = SupportProgressDialogFragment.show(mActivity, DIALOG_FRAGMENT_TAG);
+                    final DialogFragment df = SupportProgressDialogFragment.show(mFragment.getActivity(), DIALOG_FRAGMENT_TAG);
                     df.setCancelable(false);
                 }
             });
@@ -512,7 +503,7 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
 
         @Override
         protected SingleResponse<Boolean> doInBackground(final Object... params) {
-            return TwitterWrapper.deleteProfileBannerImage(UserProfileEditorActivity.this, account_id);
+            return TwitterWrapper.deleteProfileBannerImage(getActivity(), account_id);
         }
 
         @Override
@@ -520,10 +511,9 @@ public class UserProfileEditorActivity extends BaseDialogWhenLargeActivity imple
             super.onPostExecute(result);
             if (result.getData() != null && result.getData()) {
                 getUserInfo();
-                Toast.makeText(UserProfileEditorActivity.this, R.string.profile_banner_image_updated,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.profile_banner_image_updated, Toast.LENGTH_SHORT).show();
             } else {
-                showErrorMessage(UserProfileEditorActivity.this, R.string.action_removing_profile_banner_image,
+                Utils.showErrorMessage(getActivity(), R.string.action_removing_profile_banner_image,
                         result.getException(), true);
             }
             setUpdateState(false);

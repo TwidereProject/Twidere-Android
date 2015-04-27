@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.support;
+package org.mariotaku.twidere.fragment.support;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,24 +29,27 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -57,10 +60,9 @@ import android.widget.TextView;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -75,8 +77,8 @@ import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultTextSize;
 
-public class DraftsActivity extends BaseDialogWhenLargeActivity implements LoaderCallbacks<Cursor>, OnItemClickListener,
-        MultiChoiceModeListener {
+public class DraftsFragment extends BaseSupportFragment implements Constants, LoaderCallbacks<Cursor>,
+        OnItemClickListener, MultiChoiceModeListener {
 
     private ContentResolver mResolver;
     private SharedPreferences mPreferences;
@@ -93,7 +95,7 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
 
     @Override
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-        getMenuInflater().inflate(R.menu.action_multi_select_drafts, menu);
+        mode.getMenuInflater().inflate(R.menu.action_multi_select_drafts, menu);
         return true;
     }
 
@@ -111,7 +113,7 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
                 final Bundle args = new Bundle();
                 args.putLongArray(EXTRA_IDS, mListView.getCheckedItemIds());
                 f.setArguments(args);
-                f.show(getSupportFragmentManager(), "delete_drafts_confirm");
+                f.show(getChildFragmentManager(), "delete_drafts_confirm");
                 break;
             }
             case MENU_SEND: {
@@ -150,7 +152,7 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
         final Uri uri = Drafts.CONTENT_URI_UNSENT;
         final String[] cols = Drafts.COLUMNS;
         final String orderBy = Drafts.TIMESTAMP + " DESC";
-        return new CursorLoader(this, uri, cols, null, null, orderBy);
+        return new CursorLoader(getActivity(), uri, cols, null, null, orderBy);
     }
 
     @Override
@@ -180,31 +182,19 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
         }
     }
 
+    @Nullable
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_HOME: {
-                onBackPressed();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_drafts, container, false);
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mResolver = getContentResolver();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
-
-        setContentView(R.layout.activity_drafts);
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        mAdapter = new DraftsAdapter(this);
+        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
+        mAdapter = new DraftsAdapter(getActivity());
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView);
         mListView.setOnItemClickListener(this);
@@ -212,12 +202,12 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
         mListView.setMultiChoiceModeListener(this);
         mEmptyIcon.setImageResource(R.drawable.ic_info_drafts);
         mEmptyText.setText(R.string.drafts_hint_messages);
-        getSupportLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this);
         setListShown(false);
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter != null) {
             twitter.clearNotificationAsync(NOTIFICATION_ID_DRAFTS);
@@ -226,9 +216,9 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        final float text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(this));
+        final float text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
         mAdapter.setTextSize(text_size);
         if (mTextSize != text_size) {
             mTextSize = text_size;
@@ -237,25 +227,33 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        mListView = (ListView) findViewById(android.R.id.list);
-        mEmptyView = findViewById(android.R.id.empty);
-        mEmptyText = (TextView) findViewById(R.id.empty_text);
-        mEmptyIcon = (ImageView) findViewById(R.id.empty_icon);
-        mProgressContainer = findViewById(R.id.progress_container);
-        mListContainer = findViewById(R.id.list_container);
+    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
+        mListView = (ListView) view.findViewById(android.R.id.list);
+        mEmptyView = view.findViewById(android.R.id.empty);
+        mEmptyText = (TextView) view.findViewById(R.id.empty_text);
+        mEmptyIcon = (ImageView) view.findViewById(R.id.empty_icon);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mListContainer = view.findViewById(R.id.list_container);
     }
 
     public void setListShown(boolean listShown) {
         mListContainer.setVisibility(listShown ? View.VISIBLE : View.GONE);
         mProgressContainer.setVisibility(listShown ? View.GONE : View.VISIBLE);
         mEmptyView.setVisibility(listShown && mAdapter.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    protected void fitSystemWindows(Rect insets) {
+        final View view = getView();
+        if (view != null) {
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
     }
 
     private void editDraft(final DraftItem draft) {
@@ -272,7 +270,7 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
         if (twitter == null) return false;
         for (final DraftItem item : list) {
             if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
-                twitter.updateStatusesAsync(new ParcelableStatusUpdate(this, item));
+                twitter.updateStatusesAsync(new ParcelableStatusUpdate(getActivity(), item));
             } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
                 final long recipientId = item.action_extras.optLong(EXTRA_RECIPIENT_ID);
                 if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
@@ -329,7 +327,7 @@ public class DraftsActivity extends BaseDialogWhenLargeActivity implements Loade
 
         private DeleteDraftsTask(final FragmentActivity activity, final long[] ids) {
             mActivity = activity;
-            mNotificationManager = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
             mIds = ids;
             mHandler = new Handler(activity.getMainLooper());
         }

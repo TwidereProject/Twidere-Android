@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -129,7 +130,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }
-        setTheme();
         super.onCreate(savedInstanceState);
         mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
@@ -146,17 +146,22 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         super.onTitleChanged(title, color);
     }
 
-    private void setTheme() {
-        mCurrentThemeResource = getThemeResourceId();
-        mCurrentThemeColor = getThemeColor();
-        mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
-        mProfileImageStyle = Utils.getProfileImageStyle(this);
-        mCurrentThemeBackgroundOption = getThemeBackgroundOption();
-        mCurrentThemeFontFamily = getThemeFontFamily();
-        setTheme(mCurrentThemeResource);
-        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+
+    @Override
+    public void setTheme(int resid) {
+        super.setTheme(mCurrentThemeResource = getThemeResourceId());
     }
 
+    @Override
+    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resid, boolean first) {
+        mCurrentThemeColor = getThemeColor();
+        mCurrentThemeFontFamily = getThemeFontFamily();
+        mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
+        mCurrentThemeBackgroundOption = getThemeBackgroundOption();
+        mProfileImageStyle = Utils.getProfileImageStyle(this);
+        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        super.onApplyThemeResource(theme, resid, first);
+    }
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
         return false;

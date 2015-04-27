@@ -33,7 +33,6 @@ import android.content.res.Resources;
 import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -257,7 +256,7 @@ public class SettingsActivity extends BasePreferenceActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
+//        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setIntent(getIntent().addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
         final ActionBar actionBar = getSupportActionBar();
@@ -270,7 +269,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         final ListView listView = getListView();
         if (listView != null) {
             listView.setDivider(new EmptyDrawable());
-            listView.setChoiceMode(isMultiPane() ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
+//            listView.setChoiceMode(isMultiPane() ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
             listView.setDividerHeight(0);
             final LayoutParams lp = listView.getLayoutParams();
             if (lp instanceof MarginLayoutParams) {

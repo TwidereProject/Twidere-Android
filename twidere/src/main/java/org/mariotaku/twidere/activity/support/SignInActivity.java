@@ -39,8 +39,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.WindowCompat;
-import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -122,6 +121,10 @@ public class SignInActivity extends BaseDialogWhenLargeActivity implements Twitt
     }
 
     @Override
+    public  int getThemeResourceId() {
+        return ThemeUtils.getThemeResource(this);
+    }
+    @Override
     public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
 
     }
@@ -175,6 +178,8 @@ public class SignInActivity extends BaseDialogWhenLargeActivity implements Twitt
             }
         }
     }
+
+
 
     @Override
     public void onContentChanged() {
@@ -277,21 +282,14 @@ public class SignInActivity extends BaseDialogWhenLargeActivity implements Twitt
     }
 
 
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mResolver = getContentResolver();
         mApplication = TwidereApplication.getInstance(this);
         setContentView(R.layout.activity_sign_in);
-        final long[] account_ids = getActivatedAccountIds(this);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(account_ids.length > 0);
-        }
-
+//        setSupportActionBar((Toolbar) findViewById(R.id.tool_bar));
         if (savedInstanceState != null) {
             mAPIUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT);
             mAuthType = savedInstanceState.getInt(Accounts.AUTH_TYPE);

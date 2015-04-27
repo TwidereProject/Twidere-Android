@@ -67,11 +67,11 @@ public class SupportStatusShareProvider extends ActionProvider implements Consta
 
     @Override
     public void onPrepareSubMenu(SubMenu subMenu) {
-        final Intent shareIntent = createStatusShareIntent(mContext, mStatus);
+        final ParcelableStatus status = mStatus;
+        if (status == null) return;
+        final Intent shareIntent = createStatusShareIntent(mContext, status);
         subMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
-        if (mStatus != null) {
-            addIntentToMenu(mContext, subMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
-        }
+        addIntentToMenu(mContext, subMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
     }
 
     public void setStatus(ParcelableStatus status) {

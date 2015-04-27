@@ -43,6 +43,7 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
@@ -382,7 +383,12 @@ public class BackgroundOperationService extends IntentService implements Constan
     private void displayTweetNotSendNotification() {
         final String title = getString(R.string.status_not_updated);
         final String message = getString(R.string.status_not_updated_summary);
-        final Intent intent = new Intent(INTENT_ACTION_DRAFTS);
+        final Intent intent = new Intent();
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_DRAFTS);
+        intent.setData(builder.build());
         final Notification notification = buildNotification(title, message, R.drawable.ic_stat_twitter, intent, null);
         mNotificationManager.notify(NOTIFICATION_ID_DRAFTS, notification);
     }

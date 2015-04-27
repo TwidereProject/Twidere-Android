@@ -567,7 +567,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = data.getData();
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
-            if (mStatusAdapter.setStatus(credentials, status)) {
+            if (mStatusAdapter.setStatus(status, credentials)) {
                 mLayoutManager.scrollToPositionWithOffset(1, 0);
                 mStatusAdapter.setConversation(null);
                 mStatusAdapter.setReplies(null);
@@ -1543,7 +1543,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             updateItemDecoration();
         }
 
-        public boolean setStatus(ParcelableCredentials credentials, ParcelableStatus status) {
+        public boolean setStatus(final ParcelableStatus status, final ParcelableCredentials credentials) {
             final ParcelableStatus old = mStatus;
             mStatus = status;
             mStatusAccount = credentials;
