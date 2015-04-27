@@ -71,6 +71,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
@@ -1070,9 +1071,7 @@ public class ThemeUtils implements Constants {
             }
         }
         if (!(overflowView instanceof ImageView)) return;
-        final Drawable drawable = ((ImageView) overflowView).getDrawable();
-        if (drawable == null) return;
-        drawable.setColorFilter(itemColor, Mode.SRC_ATOP);
+        ((ImageView) overflowView).setColorFilter(itemColor, Mode.SRC_ATOP);
     }
 
     public static void setActionBarOverflowColor(ActionMenuView actionMenuView, int itemColor) {
@@ -1261,5 +1260,12 @@ public class ThemeUtils implements Constants {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
         return 0;
+    }
+
+    @Nullable
+    public static Toolbar getToolbarFromActivity(Activity activity) {
+        if (activity instanceof LinkHandlerActivity)
+            return ((LinkHandlerActivity) activity).peekActionBarToolbar();
+        return null;
     }
 }

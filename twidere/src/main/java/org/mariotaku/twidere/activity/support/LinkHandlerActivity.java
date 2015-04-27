@@ -234,9 +234,21 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        final boolean result = super.onPrepareOptionsMenu(menu);
-        if (!shouldSetActionItemColor()) return result;
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        final boolean result = super.onPreparePanel(featureId, view, menu);
+        if (shouldSetActionItemColor()) {
+            setupToolbarMenuItemColor();
+            mActionBarContainer.post(new Runnable() {
+                @Override
+                public void run() {
+                    setupToolbarMenuItemColor();
+                }
+            });
+        }
+        return result;
+    }
+
+    private void setupToolbarMenuItemColor() {
         final Toolbar toolbar = peekActionBarToolbar();
         if (toolbar != null) {
             final int themeColor = getCurrentThemeColor();
@@ -245,7 +257,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
             ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
         }
-        return result;
     }
 
     public final void setSubtitle(CharSequence subtitle) {

@@ -65,9 +65,9 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
 
     private ViewPager mViewPager;
     private View mPagerWindowOverlay;
+    private TabPagerIndicator mPagerIndicator;
 
     private SupportTabsAdapter mPagerAdapter;
-    private TabPagerIndicator mPagerIndicator;
 
     private int mControlBarOffsetPixels;
     private int mControlBarHeight;
