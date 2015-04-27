@@ -17,20 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.support;
+package org.mariotaku.twidere.fragment.support;
 
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.ActionBar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.api.IMapView;
@@ -43,65 +46,23 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenStreetMapViewerActivity extends BaseDialogWhenLargeActivity implements Constants {
+public class OpenStreetMapViewerFragment extends BaseSupportFragment implements Constants {
 
     private MapView mMapView;
     private double mLatitude, mLongitude;
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_osm_viewer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_HOME: {
-                onBackPressed();
-                break;
-            }
-            case MENU_CENTER: {
-                moveToCenter(mLatitude, mLongitude);
-                break;
-            }
-        }
-        return true;
-    }
-
-    private void moveToCenter(double lat, double lng) {
-        final GeoPoint gp = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
-        final IMapController mc = mMapView.getController();
-        mc.animateTo(gp);
-    }
-
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        mMapView = (MapView) findViewById(R.id.map_view);
-    }
-
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_osm_viewer);
-        final Uri uri = getIntent().getData();
-        if (uri == null || !AUTHORITY_MAP.equals(uri.getAuthority())) {
-            finish();
-            return;
-        }
-        final double latitude = ParseUtils.parseDouble(uri.getQueryParameter(QUERY_PARAM_LAT), Double.NaN);
-        final double longitude = ParseUtils.parseDouble(uri.getQueryParameter(QUERY_PARAM_LNG), Double.NaN);
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final Bundle args = getArguments();
+        final double latitude = args.getDouble(EXTRA_LATITUDE, Double.NaN);
+        final double longitude = args.getDouble(EXTRA_LONGITUDE, Double.NaN);
         if (Double.isNaN(latitude) || Double.isNaN(longitude)) {
-            finish();
+            getActivity().finish();
             return;
         }
         mLatitude = latitude;
         mLongitude = longitude;
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
         mMapView.setMultiTouchControls(true);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setTilesScaledToDpi(true);
@@ -117,6 +78,39 @@ public class OpenStreetMapViewerActivity extends BaseDialogWhenLargeActivity imp
         mc.setCenter(gp);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_osm_viewer, container, false);
+    }
+
+    @Override
+    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
+        mMapView = (MapView) view.findViewById(R.id.map_view);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_osm_viewer, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_CENTER: {
+                moveToCenter(mLatitude, mLongitude);
+                break;
+            }
+        }
+        return true;
+    }
+
+    private void moveToCenter(double lat, double lng) {
+        final GeoPoint gp = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
+        final IMapController mc = mMapView.getController();
+        mc.animateTo(gp);
+    }
 
     static class Itemization extends ItemizedOverlay<OverlayItem> {
 

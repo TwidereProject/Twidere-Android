@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,24 +17,6 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest>
 
-    <application>
-        <activity
-            android:name=".activity.support.OpenStreetMapViewerActivity"
-            android:exported="false"
-            android:label="@string/view_map"
-            android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-
-                <data
-                    android:host="map"
-                    android:scheme="twidere"/>
-            </intent-filter>
-        </activity>
-    </application>
 </manifest>

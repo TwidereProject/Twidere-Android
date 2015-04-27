@@ -424,13 +424,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     }
 
     @Override
-    protected void fitSystemWindows(Rect insets) {
-        final View view = getView();
-        if (view == null) return;
-        view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
         final long recipientId = args != null ? args.getLong(EXTRA_RECIPIENT_ID, -1) : -1;

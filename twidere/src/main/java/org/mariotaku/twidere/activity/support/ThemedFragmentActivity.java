@@ -184,4 +184,9 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
             return true;
         return super.onKeyDown(keyCode, event);
     }
+
+    @Override
+    public int getThemeResourceId() {
+        return 0;
+    }
 }

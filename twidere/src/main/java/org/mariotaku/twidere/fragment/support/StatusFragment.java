@@ -286,15 +286,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        final View view = getView();
-        if (view != null) {
-            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
-    }
-
-    @Override
     public void onGapClick(GapViewHolder holder, int position) {
 
     }

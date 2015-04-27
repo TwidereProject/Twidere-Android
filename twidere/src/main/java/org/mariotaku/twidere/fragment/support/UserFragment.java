@@ -1133,7 +1133,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
         final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
         mHeaderDrawerLayout.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         final String backgroundOption = activity.getCurrentThemeBackgroundOption();

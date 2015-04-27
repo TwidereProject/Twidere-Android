@@ -187,7 +187,6 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
         mListView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mErrorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mProgressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);

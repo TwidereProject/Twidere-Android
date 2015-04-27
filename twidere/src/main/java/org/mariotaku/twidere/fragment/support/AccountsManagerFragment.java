@@ -77,14 +77,6 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     }
 
     @Override
-    protected void fitSystemWindows(Rect insets) {
-        final View view = getView();
-        if (view != null) {
-            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_ADD_ACCOUNT: {

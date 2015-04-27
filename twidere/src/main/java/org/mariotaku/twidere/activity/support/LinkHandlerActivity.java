@@ -369,6 +369,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         intent.setExtrasClassLoader(getClassLoader());
         final Fragment fragment = createFragmentForIntent(this, linkId, intent);
         if (uri == null || fragment == null) return false;
+        setSubtitle(null);
         switch (linkId) {
             case LINK_ID_STATUS: {
                 setTitle(R.string.status);
@@ -481,6 +482,14 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             }
             case LINK_ID_FILTERS: {
                 setTitle(R.string.filters);
+                break;
+            }
+            case LINK_ID_MAP: {
+                setTitle(R.string.view_map);
+                break;
+            }
+            default: {
+                setTitle(getString(R.string.app_name));
                 break;
             }
         }

@@ -248,14 +248,6 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         mEmptyView.setVisibility(listShown && mAdapter.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    protected void fitSystemWindows(Rect insets) {
-        final View view = getView();
-        if (view != null) {
-            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
-    }
-
     private void editDraft(final DraftItem draft) {
         final Intent intent = new Intent(INTENT_ACTION_EDIT_DRAFT);
         final Bundle bundle = new Bundle();

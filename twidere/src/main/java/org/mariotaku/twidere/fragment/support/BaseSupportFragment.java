@@ -171,7 +171,10 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         return getActivity();
     }
 
-
     protected void fitSystemWindows(Rect insets) {
+        final View view = getView();
+        if (view != null) {
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        }
     }
 }

@@ -107,16 +107,6 @@ public class FiltersFragment extends BaseSupportFragment implements RefreshScrol
     }
 
     @Override
-    protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
-        final View view = getView();
-        if (view == null) {
-            return;
-        }
-        view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-    }
-
-    @Override
     public boolean getSystemWindowsInsets(Rect insets) {
         return false;
     }

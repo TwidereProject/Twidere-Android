@@ -240,7 +240,6 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-        super.fitSystemWindows(insets);
         final View view = getView();
         if (view != null) {
             final int top = Utils.getInsetsTopWithoutActionBarHeight(getActivity(), insets.top);

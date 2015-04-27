@@ -99,7 +99,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.Window;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
@@ -395,6 +394,7 @@ public final class Utils implements Constants, TwitterConstants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS_REPLIES, null, LINK_ID_STATUS_REPLIES);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_SEARCH, null, LINK_ID_SEARCH);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_MUTES_USERS, null, LINK_ID_MUTES_USERS);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_MAP, null, LINK_ID_MAP);
 
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_ACCOUNTS, null, LINK_ID_ACCOUNTS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_DRAFTS, null, LINK_ID_DRAFTS);
@@ -410,7 +410,6 @@ public final class Utils implements Constants, TwitterConstants {
     private static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
     private static LongSparseArray<String> sAccountScreenNames = new LongSparseArray<>();
     private static LongSparseArray<String> sAccountNames = new LongSparseArray<>();
-    static final String MAPS_STATIC_IMAGE_URI_TEMPLATE = "https://maps.googleapis.com/maps/api/staticmap?zoom=%d&size=%dx%d&sensor=false&language=%s&center=%f,%f&markers=%f,%f";
 
     private Utils() {
         throw new AssertionError("You are trying to create an instance for this utility class!");
@@ -774,10 +773,21 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_PROFILE_EDITOR: {
-                fragment = new UserProfileEditorFragment();
                 if (!args.containsKey(EXTRA_ACCOUNT_ID) && uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID) == null) {
                     return null;
                 }
+                fragment = new UserProfileEditorFragment();
+                break;
+            }
+            case LINK_ID_MAP: {
+                if (!args.containsKey(EXTRA_LATITUDE) && !args.containsKey(EXTRA_LONGITUDE)) {
+                    final double lat = ParseUtils.parseDouble(uri.getQueryParameter(QUERY_PARAM_LAT), Double.NaN);
+                    final double lng = ParseUtils.parseDouble(uri.getQueryParameter(QUERY_PARAM_LNG), Double.NaN);
+                    if (Double.isNaN(lat) || Double.isNaN(lng)) return null;
+                    args.putDouble(EXTRA_LATITUDE, lat);
+                    args.putDouble(EXTRA_LONGITUDE, lng);
+                }
+                fragment = MapFragmentFactory.SINGLETON.createMapFragment(context);
                 break;
             }
             case LINK_ID_STATUS: {
@@ -1950,21 +1960,6 @@ public final class Utils implements Constants, TwitterConstants {
         return nf.format(number);
     }
 
-    public static String getMapStaticImageUri(final double lat, final double lng, final int zoom, final int w,
-                                              final int h, final Locale locale) {
-        return String.format(Locale.US, MAPS_STATIC_IMAGE_URI_TEMPLATE, zoom, w, h, locale.toString(), lat, lng, lat,
-                lng);
-    }
-
-    public static String getMapStaticImageUri(final double lat, final double lng, final View v) {
-        if (v == null) return null;
-        final int wSpec = MeasureSpec.makeMeasureSpec(v.getWidth(), MeasureSpec.UNSPECIFIED);
-        final int hSpec = MeasureSpec.makeMeasureSpec(v.getHeight(), MeasureSpec.UNSPECIFIED);
-        v.measure(wSpec, hSpec);
-        return getMapStaticImageUri(lat, lng, 12, v.getMeasuredWidth(), v.getMeasuredHeight(), v.getResources()
-                .getConfiguration().locale);
-    }
-
     public static long[] getMatchedNicknameIds(final String str, UserColorNameManager manager) {
         if (isEmpty(str)) return new long[0];
         final List<Long> list = new ArrayList<>();
@@ -3052,7 +3047,7 @@ public final class Utils implements Constants, TwitterConstants {
         builder.appendQueryParameter(QUERY_PARAM_LAT, String.valueOf(latitude));
         builder.appendQueryParameter(QUERY_PARAM_LNG, String.valueOf(longitude));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(context.getPackageName());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
         context.startActivity(Intent.createChooser(intent, null));
     }
 

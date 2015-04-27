@@ -298,12 +298,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                     break;
                 }
                 case MENU_EDIT: {
-                    final Bundle bundle = new Bundle();
-                    bundle.putLong(EXTRA_ACCOUNT_ID, account.account_id);
-                    final Intent intent = new Intent(INTENT_ACTION_EDIT_USER_PROFILE);
-                    intent.setClass(getActivity(), UserProfileEditorFragment.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    Utils.openProfileEditor(getActivity(), account.account_id);
                     break;
                 }
             }
