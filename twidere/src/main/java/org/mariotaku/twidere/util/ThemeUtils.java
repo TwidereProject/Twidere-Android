@@ -40,6 +40,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatDelegateTrojan;
 import android.support.v7.internal.app.WindowDecorActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
+import android.support.v7.internal.view.StandaloneActionMode;
 import android.support.v7.internal.view.SupportActionModeWrapper;
 import android.support.v7.internal.view.SupportActionModeWrapperTrojan;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
@@ -207,54 +208,73 @@ public class ThemeUtils implements Constants {
                                                    int accentColor, String backgroundOption,
                                                    boolean outlineEnabled) {
         // Very dirty implementation
-        if (!(modeCompat instanceof ActionModeImpl)) return;
         // This call ensures TitleView created
         modeCompat.setTitle(null);
         try {
-            WindowDecorActionBar actionBar = null;
-            final Field[] fields = ActionModeImpl.class.getDeclaredFields();
-            for (Field field : fields) {
-                if (WindowDecorActionBar.class.isAssignableFrom(field.getType())) {
-                    field.setAccessible(true);
-                    actionBar = (WindowDecorActionBar) field.get(modeCompat);
-                    break;
+            View contextView = null;
+            Context actionBarContext = null;
+            if (modeCompat instanceof ActionModeImpl) {
+                WindowDecorActionBar actionBar = null;
+                final Field[] fields = ActionModeImpl.class.getDeclaredFields();
+                for (Field field : fields) {
+                    if (WindowDecorActionBar.class.isAssignableFrom(field.getType())) {
+                        field.setAccessible(true);
+                        actionBar = (WindowDecorActionBar) field.get(modeCompat);
+                        break;
+                    }
+                }
+                if (actionBar == null) return;
+                actionBarContext = actionBar.getThemedContext();
+                final Field contextViewField = WindowDecorActionBar.class.getDeclaredField("mContextView");
+                contextViewField.setAccessible(true);
+                contextView = (View) contextViewField.get(actionBar);
+            } else if (modeCompat instanceof StandaloneActionMode) {
+                final Field[] fields = StandaloneActionMode.class.getDeclaredFields();
+                for (Field field : fields) {
+                    if (ActionBarContextView.class.isAssignableFrom(field.getType())) {
+                        field.setAccessible(true);
+                        contextView = (View) field.get(modeCompat);
+                    } else if (Context.class.isAssignableFrom(field.getType())) {
+                        field.setAccessible(true);
+                        actionBarContext = (Context) field.get(modeCompat);
+                    }
+                    if (contextView != null && actionBarContext != null) break;
                 }
             }
-            if (actionBar == null) return;
-            final Context context = actionBar.getThemedContext();
-            final Field contextViewField = WindowDecorActionBar.class.getDeclaredField("mContextView");
-            contextViewField.setAccessible(true);
-            final View contextView = (View) contextViewField.get(actionBar);
-            if (!(contextView instanceof ActionBarContextView)) return;
-            final TextView actionBarTitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_title);
-            final TextView actionBarSubtitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_subtitle);
-            final ImageView actionModeCloseButton = (ImageView) contextView.findViewById(android.support.v7.appcompat.R.id.action_mode_close_button);
-            final ActionMenuView menuView = ViewSupport.findViewByType(contextView, ActionMenuView.class);
-            final int actionBarColor;
-            if (isDarkTheme(themeRes)) {
-                actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
-            } else {
-                actionBarColor = accentColor;
-            }
-            final int titleColor = getContrastActionBarTitleColor(context, themeRes, actionBarColor);
-            final int itemColor = getContrastActionBarItemColor(context, themeRes, actionBarColor);
-            if (actionBarTitleView != null) {
-                actionBarTitleView.setTextColor(titleColor);
-            }
-            if (actionBarSubtitleView != null) {
-                actionBarSubtitleView.setTextColor(titleColor);
-            }
-            if (actionModeCloseButton != null) {
-                actionModeCloseButton.setColorFilter(itemColor, Mode.SRC_ATOP);
-            }
-            if (menuView != null) {
-                setActionBarOverflowColor(menuView, itemColor);
-                ThemeUtils.wrapToolbarMenuIcon(menuView, itemColor, itemColor);
-            }
-            ViewSupport.setBackground(contextView, getActionBarBackground(activity, themeRes, accentColor, backgroundOption, outlineEnabled));
+            if (!(contextView instanceof ActionBarContextView) || actionBarContext == null) return;
+            setActionBarContextViewColor(actionBarContext, contextView, themeRes, accentColor, backgroundOption, outlineEnabled);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void setActionBarContextViewColor(Context context, View contextView, int themeRes, int accentColor, String backgroundOption, boolean outlineEnabled) {
+        final TextView actionBarTitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_title);
+        final TextView actionBarSubtitleView = (TextView) contextView.findViewById(android.support.v7.appcompat.R.id.action_bar_subtitle);
+        final ImageView actionModeCloseButton = (ImageView) contextView.findViewById(android.support.v7.appcompat.R.id.action_mode_close_button);
+        final ActionMenuView menuView = ViewSupport.findViewByType(contextView, ActionMenuView.class);
+        final int actionBarColor;
+        if (isDarkTheme(themeRes)) {
+            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
+        } else {
+            actionBarColor = accentColor;
+        }
+        final int titleColor = getContrastActionBarTitleColor(context, themeRes, actionBarColor);
+        final int itemColor = getContrastActionBarItemColor(context, themeRes, actionBarColor);
+        if (actionBarTitleView != null) {
+            actionBarTitleView.setTextColor(titleColor);
+        }
+        if (actionBarSubtitleView != null) {
+            actionBarSubtitleView.setTextColor(titleColor);
+        }
+        if (actionModeCloseButton != null) {
+            actionModeCloseButton.setColorFilter(itemColor, Mode.SRC_ATOP);
+        }
+        if (menuView != null) {
+            setActionBarOverflowColor(menuView, itemColor);
+            ThemeUtils.wrapToolbarMenuIcon(menuView, itemColor, itemColor);
+        }
+        ViewSupport.setBackground(contextView, getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
     }
 
     public static void applyWindowBackground(Context context, Window window, int theme, String option, int alpha) {

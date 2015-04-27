@@ -17,26 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.accessor;
+package org.mariotaku.twidere.util.support;
 
-import android.support.v4.widget.ViewDragHelper;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.webkit.WebSettings;
 
-import java.lang.reflect.Field;
+public class WebSettingsSupport {
 
-public class ViewDragHelperAccessor {
-
-	private ViewDragHelperAccessor() {
-		throw new AssertionError();
+	public static void setAllowUniversalAccessFromFileURLs(final WebSettings settings, final boolean flag) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
+		WebSettingsAccessorSDK16.setAllowUniversalAccessFromFileURLs(settings, flag);
 	}
 
-	public static boolean setEdgeSize(final ViewDragHelper helper, final int edgeSize) {
-		try {
-			final Field f = helper.getClass().getField("mEdgeSize");
-			f.setAccessible(true);
-			f.setInt(helper, edgeSize);
-			return true;
-		} catch (final Exception e) {
-			return false;
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private static class WebSettingsAccessorSDK16 {
+		private static void setAllowUniversalAccessFromFileURLs(final WebSettings settings, final boolean flag) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
+			settings.setAllowUniversalAccessFromFileURLs(flag);
 		}
 	}
 

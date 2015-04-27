@@ -31,6 +31,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.internal.widget.NativeActionModeAwareLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -53,6 +54,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.ActivitySupport;
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
@@ -67,13 +69,26 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         IControlBarActivity, SupportFragmentCallback {
 
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
-
     private MultiSelectEventHandler mMultiSelectHandler;
+    private TwidereActionModeForChildListener mTwidereActionModeForChildListener;
+    private final View.OnLayoutChangeListener mLayoutChangeListener = new View.OnLayoutChangeListener() {
+
+        private final Rect tempInsets = new Rect();
+
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            if (left != oldLeft && top != oldTop && right != oldRight && bottom != oldBottom) {
+                mMainContent.getSystemWindowsInsets(tempInsets);
+                onFitSystemWindows(tempInsets);
+            }
+        }
+    };
 
     private TintedStatusFrameLayout mMainContent;
 
     private boolean mFinishOnly;
     private int mActionBarItemsColor;
+
 
     @Override
     public Fragment getCurrentVisibleFragment() {
@@ -91,14 +106,22 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
+    public void onBackPressed() {
+        if (mTwidereActionModeForChildListener.finishExisting()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onFitSystemWindows(Rect insets) {
-        final Toolbar toolbar = peekActionBarToolbar();
-        if (toolbar != null) {
-            final ViewGroup.LayoutParams toolBarParams = toolbar.getLayoutParams();
+        final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
+        if (actionBarContainer != null) {
+            final ViewGroup.LayoutParams toolBarParams = actionBarContainer.getLayoutParams();
             if (toolBarParams instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) toolBarParams).topMargin = insets.top;
             }
-            toolbar.setLayoutParams(toolBarParams);
+            actionBarContainer.setLayoutParams(toolBarParams);
         }
         insets.top += ThemeUtils.getActionBarHeight(this);
         super.onFitSystemWindows(insets);
@@ -166,11 +189,16 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         requestWindowFeatures(getWindow(), linkId, data);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content_fragment);
-        setSupportActionBar((Toolbar) findViewById(R.id.tool_bar));
+        setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
+
+        final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
+        mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
+        layout.setActionModeForChildListener(mTwidereActionModeForChildListener);
+
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
-        final Toolbar toolbar = peekActionBarToolbar();
-        ViewCompat.setElevation(toolbar, ThemeUtils.getSupportActionBarElevation(this));
-        ViewSupport.setOutlineProvider(toolbar, ViewOutlineProviderCompat.BACKGROUND);
+        final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
+        ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
+        ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -184,18 +212,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         }
     }
 
-    private final View.OnLayoutChangeListener mLayoutChangeListener = new View.OnLayoutChangeListener() {
-
-        private final Rect tempInsets = new Rect();
-
-        @Override
-        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-            if (left != oldLeft && top != oldTop && right != oldRight && bottom != oldBottom) {
-                mMainContent.getSystemWindowsInsets(tempInsets);
-                onFitSystemWindows(tempInsets);
-            }
-        }
-    };
 
     @Override
     protected void onStart() {
