@@ -164,7 +164,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
         mPagerIndicator.setOnPageChangeListener(this);
-        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator);
+        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator, mPagerWindowOverlay);
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
         ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
         ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());

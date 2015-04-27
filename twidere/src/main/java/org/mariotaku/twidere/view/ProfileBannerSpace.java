@@ -56,7 +56,7 @@ public class ProfileBannerSpace extends View {
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         final int insetsTop = mSystemWindowsInsets.top;
-        final int top = insetsTop < mActionBarHeight ? insetsTop + mActionBarHeight : insetsTop;
+        final int top = insetsTop <= 0 || insetsTop < mActionBarHeight ? insetsTop + mActionBarHeight : insetsTop;
         final int width = MeasureSpec.getSize(widthMeasureSpec), height = width / 2 - top;
         setMeasuredDimension(width, height);
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));

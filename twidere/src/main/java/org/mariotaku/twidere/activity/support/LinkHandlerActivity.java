@@ -31,6 +31,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.internal.widget.ActionBarContainer;
 import android.support.v7.internal.widget.NativeActionModeAwareLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
@@ -77,7 +78,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-            if (left != oldLeft && top != oldTop && right != oldRight && bottom != oldBottom) {
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
                 mMainContent.getSystemWindowsInsets(tempInsets);
                 onFitSystemWindows(tempInsets);
             }
@@ -85,9 +86,12 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     };
 
     private TintedStatusFrameLayout mMainContent;
+    private View mActionBarOverlay;
+    private ActionBarContainer mActionBarContainer;
 
     private boolean mFinishOnly;
     private int mActionBarItemsColor;
+    private int mActionBarHeight;
 
 
     @Override
@@ -191,14 +195,16 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         setContentView(R.layout.activity_content_fragment);
         setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
 
-        final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
         mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
+        final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
         layout.setActionModeForChildListener(mTwidereActionModeForChildListener);
 
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
         final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
         ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
         ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
+        final View windowOverlay = findViewById(R.id.window_overlay);
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -215,16 +221,16 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     protected void onStart() {
+        mMainContent.addOnLayoutChangeListener(mLayoutChangeListener);
         super.onStart();
         mMultiSelectHandler.dispatchOnStart();
-        mMainContent.addOnLayoutChangeListener(mLayoutChangeListener);
     }
 
     @Override
     protected void onStop() {
-        mMainContent.removeOnLayoutChangeListener(mLayoutChangeListener);
         mMultiSelectHandler.dispatchOnStop();
         super.onStop();
+        mMainContent.removeOnLayoutChangeListener(mLayoutChangeListener);
     }
 
     @Override
@@ -264,6 +270,8 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     public void onContentChanged() {
         super.onContentChanged();
         mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
+        mActionBarOverlay = findViewById(R.id.twidere_action_bar_overlay);
+        mActionBarContainer = (ActionBarContainer) findViewById(R.id.twidere_action_bar_container);
     }
 
     protected boolean shouldSetActionItemColor() {
@@ -322,17 +330,16 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
         int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
+        final ActionBarContainer actionBarContainer = (ActionBarContainer) findViewById(R.id.twidere_action_bar_container);
         switch (linkId) {
             case LINK_ID_SEARCH:
             case LINK_ID_USER_LISTS:
             case LINK_ID_FILTERS: {
-                ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, false);
-                ThemeUtils.applyActionBarBackground(getActionBar(), this, themeId, themeColor, option, true);
+                ThemeUtils.applyActionBarBackground(actionBarContainer, this, themeId, themeColor, option, false);
                 break;
             }
             default: {
-                ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, true);
-                ThemeUtils.applyActionBarBackground(getActionBar(), this, themeId, themeColor, option, true);
+                ThemeUtils.applyActionBarBackground(actionBarContainer, this, themeId, themeColor, option, true);
                 break;
             }
         }
@@ -525,22 +532,22 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public void setControlBarOffset(float offset) {
-        final Toolbar toolbar = peekActionBarToolbar();
-        if (toolbar == null) return;
-        toolbar.setTranslationY(-Math.round((1 - offset) * getControlBarHeight()));
+        mActionBarContainer.setTranslationY(-Math.round((1 - offset) * getControlBarHeight()));
         notifyControlBarOffsetChanged();
     }
 
     @Override
     public float getControlBarOffset() {
-        final Toolbar toolbar = peekActionBarToolbar();
-        return toolbar != null ? 1 + toolbar.getTranslationY() / (float) getControlBarHeight() : 0;
+        return 1 + mActionBarContainer.getTranslationY() / (float) getControlBarHeight();
     }
 
     @Override
     public int getControlBarHeight() {
-        final Toolbar toolbar = peekActionBarToolbar();
-        return toolbar != null ? toolbar.getHeight() : 0;
+        if (mActionBarHeight != 0) return mActionBarHeight;
+        return mActionBarHeight = ThemeUtils.getActionBarHeight(this);
     }
 
+    public ActionBarContainer getActionBarContainer() {
+        return mActionBarContainer;
+    }
 }

@@ -41,9 +41,10 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         SupportFragmentCallback, SystemWindowsInsetsCallback {
 
     private ViewPager mViewPager;
+    private TabPagerIndicator mPagerIndicator;
+    private View mPagerOverlay;
 
     private SupportTabsAdapter mPagerAdapter;
-    private TabPagerIndicator mPagerIndicator;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         mPagerAdapter.addTab(UserListsListFragment.class, args, getString(R.string.follows), null, 0, null);
         mPagerAdapter.addTab(UserListMembershipsListFragment.class, args, getString(R.string.belongs_to), 0, 1, null);
 
-        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator);
+        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator, mPagerOverlay);
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
         ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
         ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
@@ -76,6 +77,7 @@ public class UserListsFragment extends BaseSupportFragment implements RefreshScr
         super.onBaseViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
+        mPagerOverlay = view.findViewById(R.id.pager_window_overlay);
     }
 
     @Override

@@ -60,6 +60,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.widget.ActionBarContainer;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -188,6 +189,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
+    private View mPagerOverlay;
     private View mUuckyFooter;
     private View mProfileBannerContainer;
     private Button mFollowButton;
@@ -200,7 +202,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
 
     private ActionBarDrawable mActionBarBackground;
-    private Drawable mActionBarHomeAsUpIndicator;
     private SupportTabsAdapter mPagerAdapter;
 
     private ParcelableUser mUser;
@@ -778,6 +779,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final float actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity);
         ViewCompat.setElevation(mPagerIndicator, actionBarElevation);
 
+        if (activity instanceof IThemedActivity) {
+            ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
+                    ((IThemedActivity) activity).getCurrentThemeResourceId()));
+        }
+
         setupBaseActionBar();
         setupUserPages();
         if (activity instanceof IThemedActivity) {
@@ -1068,6 +1074,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
+        mPagerOverlay = (View) contentView.findViewById(R.id.pager_window_overlay);
         mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
@@ -1367,8 +1374,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final FragmentActivity activity = getActivity();
         if (!(activity instanceof LinkHandlerActivity)) return;
         final LinkHandlerActivity linkHandler = (LinkHandlerActivity) activity;
+        final ActionBarContainer actionBarContainer = linkHandler.getActionBarContainer();
         final ActionBar actionBar = linkHandler.getSupportActionBar();
-        if (actionBar == null) return;
+        if (actionBarContainer == null || actionBar == null) return;
         final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
         mActionBarBackground = new ActionBarDrawable(shadow);
         if (!ThemeUtils.isWindowFloating(linkHandler, linkHandler.getCurrentThemeResourceId())
@@ -1376,9 +1384,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mActionBarBackground.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha());
             mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
         }
-        actionBar.setBackgroundDrawable(mActionBarBackground);
-        mActionBarHomeAsUpIndicator = ThemeUtils.getActionBarHomeAsUpIndicator(actionBar);
-        actionBar.setHomeAsUpIndicator(mActionBarHomeAsUpIndicator);
+        actionBarContainer.setPrimaryBackground(mActionBarBackground);
     }
 
     private void setupUserPages() {
@@ -1492,16 +1498,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
             final int itemColor = ThemeUtils.getContrastActionBarItemColor(activity, themeId, barColor);
-            if (mActionBarHomeAsUpIndicator != null) {
-                mActionBarHomeAsUpIndicator.setColorFilter(itemColor, Mode.SRC_ATOP);
-            }
             final Toolbar actionBarView = activity.getActionBarToolbar();
             if (actionBarView != null) {
-                final Toolbar toolbar = actionBarView;
-                toolbar.setTitleTextColor(itemColor);
-                toolbar.setSubtitleTextColor(itemColor);
-                ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
+                actionBarView.setTitleTextColor(itemColor);
+                actionBarView.setSubtitleTextColor(itemColor);
+                ThemeUtils.setActionBarOverflowColor(actionBarView, itemColor);
                 ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(actionBarView, ActionMenuView.class), itemColor, itemColor);
+                final Drawable navigationIcon = actionBarView.getNavigationIcon();
+                if (navigationIcon != null) {
+                    navigationIcon.setColorFilter(itemColor, Mode.SRC_ATOP);
+                }
+                actionBarView.setNavigationIcon(navigationIcon);
             }
             mPagerIndicator.updateAppearance();
         }
