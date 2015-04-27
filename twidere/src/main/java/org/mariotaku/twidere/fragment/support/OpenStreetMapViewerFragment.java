@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.api.IMapView;
@@ -54,6 +53,7 @@ public class OpenStreetMapViewerFragment extends BaseSupportFragment implements 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         final Bundle args = getArguments();
         final double latitude = args.getDouble(EXTRA_LATITUDE, Double.NaN);
         final double longitude = args.getDouble(EXTRA_LONGITUDE, Double.NaN);

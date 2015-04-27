@@ -209,6 +209,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         final TwidereApplication application = TwidereApplication.getInstance(getActivity());
         mAsyncTaskManager = application.getAsyncTaskManager();
         mLazyImageLoader = application.getMediaLoaderWrapper();
