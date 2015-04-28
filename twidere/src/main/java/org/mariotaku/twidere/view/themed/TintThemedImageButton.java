@@ -26,12 +26,13 @@ import android.graphics.PorterDuff.Mode;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
-import org.mariotaku.twidere.view.iface.IThemedView;
+import org.mariotaku.twidere.view.iface.IThemeAccentView;
+import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
 /**
  * Created by mariotaku on 14/11/5.
  */
-public class TintThemedImageButton extends ImageButton implements IThemedView {
+public class TintThemedImageButton extends ImageButton implements IThemeBackgroundTintView {
 
     private final int mDefaultColor;
 
@@ -62,7 +63,7 @@ public class TintThemedImageButton extends ImageButton implements IThemedView {
 
 
     @Override
-    public void setThemeTintColor(ColorStateList color) {
+    public void setBackgroundTintColor(ColorStateList color) {
         if (color == null) {
             clearColorFilter();
         } else {

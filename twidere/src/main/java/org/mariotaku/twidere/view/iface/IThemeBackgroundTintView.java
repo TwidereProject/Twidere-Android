@@ -24,8 +24,8 @@ import android.content.res.ColorStateList;
 /**
  * Created by mariotaku on 14/12/19.
  */
-public interface IThemedView {
+public interface IThemeBackgroundTintView {
 
-    public void setThemeTintColor(ColorStateList color);
+    public void setBackgroundTintColor(ColorStateList color);
 
 }

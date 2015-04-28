@@ -26,12 +26,12 @@ import android.util.AttributeSet;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 
-import org.mariotaku.twidere.view.iface.IThemedView;
+import org.mariotaku.twidere.view.iface.IThemeAccentView;
 
 /**
  * Created by mariotaku on 15/4/25.
  */
-public class TintThemedProgressWheel extends ProgressWheel implements IThemedView {
+public class TintThemedProgressWheel extends ProgressWheel implements IThemeAccentView {
     public TintThemedProgressWheel(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -41,7 +41,7 @@ public class TintThemedProgressWheel extends ProgressWheel implements IThemedVie
     }
 
     @Override
-    public void setThemeTintColor(ColorStateList color) {
+    public void setAccentTintColor(ColorStateList color) {
         if (color != null) {
             setBarColor(color.getDefaultColor());
         } else {
