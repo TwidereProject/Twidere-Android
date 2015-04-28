@@ -42,9 +42,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.rengwuxian.materialedittext.MaterialEditText;
+import com.twitter.Validator;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
@@ -60,6 +62,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ForegroundColorView;
@@ -82,12 +85,13 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private static final int REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2;
     private static final int REQUEST_PICK_LINK_COLOR = 3;
     private static final int REQUEST_PICK_BACKGROUND_COLOR = 4;
+
     private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private AsyncTask<Object, Object, ?> mTask;
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
-    private EditText mEditName, mEditDescription, mEditLocation, mEditUrl;
+    private MaterialEditText mEditName, mEditDescription, mEditLocation, mEditUrl;
     private View mProgressContainer, mEditProfileContent;
     private View mProfileImageCamera, mProfileImageGallery;
     private View mProfileBannerGallery, mProfileBannerRemove;
@@ -223,11 +227,14 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             return;
         }
 
-        // setOverrideExitAniamtion(false);
+        final TwitterValidatorMETLengthChecker lengthChecker = new TwitterValidatorMETLengthChecker(new Validator());
         mEditName.addTextChangedListener(this);
         mEditDescription.addTextChangedListener(this);
         mEditLocation.addTextChangedListener(this);
         mEditUrl.addTextChangedListener(this);
+
+        mEditDescription.setLengthChecker(lengthChecker);
+
         mProfileImageView.setOnClickListener(this);
         mProfileBannerView.setOnClickListener(this);
         mProfileImageCamera.setOnClickListener(this);
@@ -276,10 +283,10 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         mEditProfileContent = view.findViewById(R.id.edit_profile_content);
         mProfileBannerView = (ImageView) view.findViewById(R.id.profile_banner);
         mProfileImageView = (ImageView) view.findViewById(R.id.profile_image);
-        mEditName = (EditText) view.findViewById(R.id.name);
-        mEditDescription = (EditText) view.findViewById(R.id.description);
-        mEditLocation = (EditText) view.findViewById(R.id.location);
-        mEditUrl = (EditText) view.findViewById(R.id.url);
+        mEditName = (MaterialEditText) view.findViewById(R.id.name);
+        mEditDescription = (MaterialEditText) view.findViewById(R.id.description);
+        mEditLocation = (MaterialEditText) view.findViewById(R.id.location);
+        mEditUrl = (MaterialEditText) view.findViewById(R.id.url);
         mProfileImageCamera = view.findViewById(R.id.profile_image_camera);
         mProfileImageGallery = view.findViewById(R.id.profile_image_gallery);
         mProfileBannerGallery = view.findViewById(R.id.profile_banner_gallery);

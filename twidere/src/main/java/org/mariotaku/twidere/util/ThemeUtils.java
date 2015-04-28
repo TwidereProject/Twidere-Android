@@ -1070,15 +1070,10 @@ public class ThemeUtils implements Constants {
 
     public static void setActionBarOverflowColor(ActionMenuPresenter presenter, int itemColor) {
         if (presenter == null) return;
-        View overflowView = null;
-        View view = (View) Utils.findFieldOfTypes(presenter, ActionMenuPresenter.class, ActionMenuView.ActionMenuChildView.class, View.class);
-        if (view == null) return;
-        final ActionMenuView.LayoutParams lp = (ActionMenuView.LayoutParams) view.getLayoutParams();
-        if (lp.isOverflowButton) {
-            overflowView = view;
-        }
-        if (!(overflowView instanceof ImageView)) return;
-        ((ImageView) overflowView).setColorFilter(itemColor, Mode.SRC_ATOP);
+        final View view = (View) Utils.findFieldOfTypes(presenter, ActionMenuPresenter.class,
+                ActionMenuView.ActionMenuChildView.class, View.class);
+        if (!(view instanceof ImageView)) return;
+        ((ImageView) view).setColorFilter(itemColor, Mode.SRC_ATOP);
     }
 
     public static void setActionBarOverflowColor(ActionMenuView actionMenuView, int itemColor) {

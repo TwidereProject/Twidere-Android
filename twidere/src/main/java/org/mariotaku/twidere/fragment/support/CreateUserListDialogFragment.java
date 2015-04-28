@@ -69,7 +69,7 @@ public class CreateUserListDialogFragment extends BaseSupportDialogFragment impl
 		mAccountId = bundle != null ? bundle.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
 		final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
 		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-		final View view = LayoutInflater.from(wrapped).inflate(R.layout.edit_user_list_detail, null);
+		final View view = LayoutInflater.from(wrapped).inflate(R.layout.dialog_user_list_detail_editor, null);
 		builder.setView(view);
 		mEditName = (EditText) view.findViewById(R.id.name);
 		mEditDescription = (EditText) view.findViewById(R.id.description);
