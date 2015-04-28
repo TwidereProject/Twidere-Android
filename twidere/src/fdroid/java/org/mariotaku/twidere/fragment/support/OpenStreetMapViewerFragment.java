@@ -114,7 +114,7 @@ public class OpenStreetMapViewerFragment extends BaseSupportFragment implements 
 
     static class Itemization extends ItemizedOverlay<OverlayItem> {
 
-        private final ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+        private final ArrayList<OverlayItem> mOverlays = new ArrayList<>();
 
         public Itemization(final Drawable defaultMarker, final ResourceProxy proxy) {
             super(boundCenterBottom(defaultMarker), proxy);
