@@ -353,7 +353,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mReadStateManager = getReadStateManager();
-        final FragmentActivity activity = getActivity();
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();

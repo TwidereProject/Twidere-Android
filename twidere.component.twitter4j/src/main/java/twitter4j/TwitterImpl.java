@@ -1459,7 +1459,8 @@ final class TwitterImpl extends TwitterBaseImpl implements Twitter {
         final String signUrl = conf.getSigningRestBaseURL() + ENDPOINT_TRANSLATIONS_SHOW;
         final HttpParameter paramStatus = new HttpParameter("id", statusId);
         final HttpParameter paramDest = new HttpParameter("dest", dest);
-        return factory.createTranslationResult(get(url, signUrl, paramStatus, paramDest));
+        return factory.createTranslationResult(get(url, signUrl, paramStatus, paramDest, INCLUDE_ENTITIES,
+                INCLUDE_CARDS));
     }
 
     @Override

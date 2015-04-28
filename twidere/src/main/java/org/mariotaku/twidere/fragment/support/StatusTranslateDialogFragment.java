@@ -82,7 +82,13 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         mProgressBar.setVisibility(View.VISIBLE);
         mMessageView.setVisibility(View.VISIBLE);
         mMessageView.setText(R.string.please_wait);
-        return new TranslationResultLoader(getActivity(), status.account_id, status.id);
+        final long statusId;
+        if (status.is_retweet) {
+            statusId = status.retweet_id;
+        } else {
+            statusId = status.id;
+        }
+        return new TranslationResultLoader(getActivity(), status.account_id, statusId);
     }
 
     @Override
@@ -124,7 +130,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
 
     private void displayTranslatedStatus(final ParcelableStatus status, final TranslationResult translated) {
         if (status == null || translated == null) return;
-        mHolder.displayStatus(status, null, false, true);
+        mHolder.displayStatus(status, translated, false, true);
 
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);

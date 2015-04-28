@@ -177,7 +177,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
             final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
-            if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+            if (translation != null) {
+                quoteTextView.setText(translation.getText());
+            } else if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                 final String text = status.quote_text_unescaped;
                 quoteTextView.setText(idx > 0 ? text.substring(0, idx) : text);
             } else {
@@ -269,7 +271,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             mediaPreview.setVisibility(View.GONE);
         }
-        if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+        if (!status.is_quote && translation != null) {
+            textView.setText(translation.getText());
+        } else if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(status.text_unescaped);
         } else {
             textView.setText(Html.fromHtml(status.text_html));
