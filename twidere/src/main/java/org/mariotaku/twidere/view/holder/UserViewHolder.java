@@ -72,12 +72,11 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     public void displayUser(ParcelableUser user) {
 
-        final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
 
 
-        setUserColor(manager.getUserColor(user.id, false));
+        itemContent.drawStart(manager.getUserColor(user.id, false));
 
         final int userTypeRes = getUserTypeIconRes(user.is_verified, user.is_protected);
         if (userTypeRes != 0) {
@@ -155,10 +154,6 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         userClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
         ((View) itemContent).setOnLongClickListener(this);
-    }
-
-    public void setUserColor(final int color) {
-        itemContent.drawStart(color);
     }
 
     public void setupViewOptions() {

@@ -344,6 +344,7 @@
     <string name="hashtag">Hashtag</string>
     <string name="links">Links</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="edit_details">Edit details</string>
     <string name="display_sensitive_contents">Display sensitive contents</string>
     <string name="display_sensitive_contents_summary">Display sensitive contents without notice in timeline</string>
     <string name="sensitive_content_warning">This tweet may have sensitive content, continue?</string>

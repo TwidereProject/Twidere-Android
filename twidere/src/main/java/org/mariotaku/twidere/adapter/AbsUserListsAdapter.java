@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.adapter.iface.IUserListsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -38,12 +38,12 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
-import org.mariotaku.twidere.view.holder.UserViewHolder;
+import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
-public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
-        IUsersAdapter<D> {
+public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
+        IUserListsAdapter<D> {
 
-    public static final int ITEM_VIEW_TYPE_USER = 2;
+    public static final int ITEM_VIEW_TYPE_USER_LIST = 2;
 
     private final Context mContext;
     private final LayoutInflater mInflater;
@@ -57,8 +57,9 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     private final boolean mDisplayProfileImage;
 
     private final UserColorNameManager mUserColorNameManager;
+    private final boolean mNameFirst;
 
-    public AbsUsersAdapter(final Context context, final boolean compact) {
+    public AbsUserListsAdapter(final Context context, final boolean compact) {
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mContext = context;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
@@ -71,6 +72,7 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
         mCompactCards = compact;
     }
 
@@ -105,27 +107,32 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         return mDisplayProfileImage;
     }
 
+    @Override
+    public boolean isNameFirst() {
+        return mNameFirst;
+    }
+
     public abstract D getData();
 
-    public boolean isUser(int position) {
-        return position < getUsersCount();
+    public boolean isUserList(int position) {
+        return position < getUserListsCount();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case ITEM_VIEW_TYPE_USER: {
+            case ITEM_VIEW_TYPE_USER_LIST: {
                 final View view;
                 if (mCompactCards) {
-                    view = mInflater.inflate(R.layout.card_item_user_compact, parent, false);
+                    view = mInflater.inflate(R.layout.card_item_user_list_compact, parent, false);
                     final View itemContent = view.findViewById(R.id.item_content);
                     itemContent.setBackgroundColor(mCardBackgroundColor);
                 } else {
-                    view = mInflater.inflate(R.layout.card_item_user, parent, false);
+                    view = mInflater.inflate(R.layout.card_item_user_list, parent, false);
                     final CardView cardView = (CardView) view.findViewById(R.id.card);
                     cardView.setCardBackgroundColor(mCardBackgroundColor);
                 }
-                final UserViewHolder holder = new UserViewHolder(this, view);
+                final UserListViewHolder holder = new UserListViewHolder(this, view);
                 holder.setOnClickListeners();
                 holder.setupViewOptions();
                 return holder;
@@ -141,8 +148,8 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
-            case ITEM_VIEW_TYPE_USER: {
-                bindUser(((UserViewHolder) holder), position);
+            case ITEM_VIEW_TYPE_USER_LIST: {
+                bindUserList(((UserListViewHolder) holder), position);
                 break;
             }
         }
@@ -150,10 +157,10 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getUsersCount()) {
+        if (position == getUserListsCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
-        return ITEM_VIEW_TYPE_USER;
+        return ITEM_VIEW_TYPE_USER_LIST;
     }
 
     @Override
@@ -167,18 +174,18 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     }
 
     @Override
-    public void onUserClick(UserViewHolder holder, int position) {
-        if (mUserAdapterListener == null) return;
-        mUserAdapterListener.onUserClick(holder, position);
+    public void onUserListClick(UserListViewHolder holder, int position) {
+        if (mUserListAdapterListener == null) return;
+        mUserListAdapterListener.onUserListClick(holder, position);
     }
 
     @Override
-    public boolean onUserLongClick(UserViewHolder holder, int position) {
-        return mUserAdapterListener != null && mUserAdapterListener.onUserLongClick(holder, position);
+    public boolean onUserListLongClick(UserListViewHolder holder, int position) {
+        return mUserListAdapterListener != null && mUserListAdapterListener.onUserListLongClick(holder, position);
     }
 
-    public void setListener(UserAdapterListener userAdapterListener) {
-        mUserAdapterListener = userAdapterListener;
+    public void setListener(UserListAdapterListener userListAdapterListener) {
+        mUserListAdapterListener = userListAdapterListener;
     }
 
     @Override
@@ -191,16 +198,16 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         return mMediaLoader;
     }
 
-    protected abstract void bindUser(UserViewHolder holder, int position);
+    protected abstract void bindUserList(UserListViewHolder holder, int position);
 
 
-    private UserAdapterListener mUserAdapterListener;
+    private UserListAdapterListener mUserListAdapterListener;
 
-    public static interface UserAdapterListener {
+    public static interface UserListAdapterListener {
 
-        void onUserClick(UserViewHolder holder, int position);
+        void onUserListClick(UserListViewHolder holder, int position);
 
-        boolean onUserLongClick(UserViewHolder holder, int position);
+        boolean onUserListLongClick(UserListViewHolder holder, int position);
 
     }
 }

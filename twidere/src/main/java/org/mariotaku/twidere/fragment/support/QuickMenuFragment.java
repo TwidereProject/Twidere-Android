@@ -30,7 +30,7 @@ import org.mariotaku.querybuilder.SQLQueryBuilder;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment.TrendsAdapter;
+import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;

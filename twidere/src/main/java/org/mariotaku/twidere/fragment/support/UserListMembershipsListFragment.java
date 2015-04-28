@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserListMembershipsLoader;
@@ -26,12 +28,16 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
 
-public class UserListMembershipsListFragment extends BaseUserListsListFragment {
+public class UserListMembershipsListFragment extends ParcelableUserListsFragment {
 
     @Override
-    public Loader<List<ParcelableUserList>> newLoaderInstance(final long accountId, final long userId,
-                                                              final String screenName) {
-        return new UserListMembershipsLoader(getActivity(), accountId, userId, screenName, getCursor(), getData());
+    public Loader<List<ParcelableUserList>> onCreateUserListsLoader(final Context context,
+                                                                    final Bundle args, final boolean fromUser) {
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final long cursor = args.getLong(EXTRA_NEXT_CURSOR, -1);
+        return new UserListMembershipsLoader(getActivity(), accountId, userId, screenName, cursor, getData());
     }
 
 }

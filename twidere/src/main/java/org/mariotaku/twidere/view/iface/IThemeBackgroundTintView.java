@@ -20,12 +20,13 @@
 package org.mariotaku.twidere.view.iface;
 
 import android.content.res.ColorStateList;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mariotaku on 14/12/19.
  */
 public interface IThemeBackgroundTintView {
 
-    public void setBackgroundTintColor(ColorStateList color);
+    public void setBackgroundTintColor(@NonNull ColorStateList color);
 
 }

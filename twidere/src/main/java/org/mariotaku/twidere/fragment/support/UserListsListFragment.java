@@ -31,15 +31,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.ParcelableUserListsListAdapter;
+import org.mariotaku.twidere.adapter.AbsUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-
-public class UserListsListFragment extends BaseUserListsListFragment {
+public class UserListsListFragment extends ParcelableUserListsFragment {
 
     private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
 
@@ -57,8 +55,11 @@ public class UserListsListFragment extends BaseUserListsListFragment {
     };
 
     @Override
-    public Loader<List<ParcelableUserList>> newLoaderInstance(final long accountId, final long userId,
-                                                              final String screenName) {
+    public Loader<List<ParcelableUserList>> onCreateUserListsLoader(final Context context,
+                                                                    final Bundle args, final boolean fromUser) {
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
         return new UserListsLoader(getActivity(), accountId, userId, screenName, true, getData());
     }
 
@@ -70,7 +71,7 @@ public class UserListsListFragment extends BaseUserListsListFragment {
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_user_list_created, menu);
+        inflater.inflate(R.menu.menu_user_lists_owned, menu);
     }
 
     @Override
@@ -90,11 +91,11 @@ public class UserListsListFragment extends BaseUserListsListFragment {
 
     @Override
     public void onPrepareOptionsMenu(final Menu menu) {
-        final MenuItem item = menu.findItem(R.id.new_user_list);
-        if (item == null) return;
-        final long account_id = getAccountId(), user_id = getUserId();
-        final String screen_name = getAccountScreenName(getActivity(), account_id);
-        item.setVisible(user_id == account_id || screen_name != null && screen_name.equalsIgnoreCase(getScreenName()));
+//        final MenuItem item = menu.findItem(R.id.new_user_list);
+//        if (item == null) return;
+//        final long account_id = getAccountId(), user_id = getUserId();
+//        final String screen_name = getAccountScreenName(getActivity(), account_id);
+//        item.setVisible(user_id == account_id || screen_name != null && screen_name.equalsIgnoreCase(getScreenName()));
     }
 
     public void onPullUpToRefresh() {
@@ -113,11 +114,11 @@ public class UserListsListFragment extends BaseUserListsListFragment {
     }
 
     private void removeUserList(final long id) {
-        final ParcelableUserListsListAdapter adapter = getListAdapter();
-        final int listsIdx = adapter.findItemPosition(id);
-        if (listsIdx >= 0) {
-            adapter.removeAt(listsIdx);
-        }
+        final AbsUserListsAdapter<List<ParcelableUserList>> adapter = getAdapter();
+//        final int listsIdx = adapter.findItemPosition(id);
+//        if (listsIdx >= 0) {
+//            adapter.removeAt(listsIdx);
+//        }
     }
 
 }

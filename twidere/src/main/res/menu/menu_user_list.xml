@@ -17,7 +17,7 @@
     <item
         android:id="@id/edit"
         android:icon="@drawable/ic_action_edit"
-        android:title="@string/edit_profile"
+        android:title="@string/edit_details"
         android:visible="false" />
     <item
         android:id="@id/add"

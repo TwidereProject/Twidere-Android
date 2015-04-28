@@ -24,16 +24,18 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -44,12 +46,12 @@ import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 
-public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment implements LoaderCallbacks<Cursor> {
+public class TrendsSuggestionsFragment extends AbsContentListViewFragment<TrendsAdapter>
+        implements LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private MultiSelectManager mMultiSelectManager;
     private SharedPreferences mPreferences;
 
-    private TrendsAdapter mTrendsAdapter;
 
     private long mAccountId;
 
@@ -59,9 +61,14 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
         super.onActivityCreated(savedInstanceState);
         mMultiSelectManager = getMultiSelectManager();
         mAccountId = getDefaultAccountId(getActivity());
-        mTrendsAdapter = new TrendsAdapter(getActivity());
-        setListAdapter(mTrendsAdapter);
+        getListView().setOnItemClickListener(this);
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    @NonNull
+    @Override
+    protected TrendsAdapter onCreateAdapter(Context context, boolean compact) {
+        return new TrendsAdapter(getActivity());
     }
 
     @Override
@@ -74,21 +81,27 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
     }
 
     @Override
-    public void onListItemClick(final ListView l, final View v, final int position, final long id) {
+    public void onItemClick(final AdapterView<?> view, final View child, final int position, final long id) {
         if (mMultiSelectManager.isActive()) return;
-        final String trend = mTrendsAdapter.getItem(position - l.getHeaderViewsCount());
+        final String trend;
+        if (view instanceof ListView) {
+            trend = getAdapter().getItem(position - ((ListView) view).getHeaderViewsCount());
+        } else {
+            trend = getAdapter().getItem(position);
+
+        }
         if (trend == null) return;
         openTweetSearch(getActivity(), mAccountId, trend);
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mTrendsAdapter.swapCursor(null);
+        getAdapter().swapCursor(null);
     }
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        mTrendsAdapter.swapCursor(cursor);
+        getAdapter().swapCursor(cursor);
     }
 
     @Override
@@ -97,6 +110,11 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null) return;
         twitter.getLocalTrendsAsync(mAccountId, mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1));
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        return false;
     }
 
     @Override
@@ -123,32 +141,6 @@ public class TrendsSuggectionsFragment extends BasePullToRefreshListFragment imp
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null || !getUserVisibleHint()) return;
         setRefreshing(twitter.isLocalTrendsRefreshing());
-    }
-
-    static class TrendsAdapter extends SimpleCursorAdapter {
-        private int mNameIdx;
-
-        @Override
-        public String getItem(int position) {
-            final Cursor c = getCursor();
-            if (c != null && !c.isClosed() && c.moveToPosition(position))
-                return c.getString(mNameIdx);
-            return null;
-        }
-
-        @Override
-        public Cursor swapCursor(Cursor c) {
-            if (c != null) {
-                mNameIdx = c.getColumnIndex(CachedTrends.NAME);
-            }
-            return super.swapCursor(c);
-        }
-
-        public TrendsAdapter(final Context context) {
-            super(context, android.R.layout.simple_list_item_1, null, new String[]{CachedTrends.NAME},
-                    new int[]{android.R.id.text1}, 0);
-        }
-
     }
 
 }

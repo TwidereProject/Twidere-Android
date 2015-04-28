@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,13 +17,13 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp">
 
-    <EditText
+    <org.mariotaku.twidere.view.themed.ThemedAccentMaterialEditText
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,9 +31,13 @@
         android:hint="@string/name"
         android:inputType="text"
         android:maxLength="20"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        app:met_baseColor="?android:textColorPrimary"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelText="@string/name"
+        app:met_maxCharacters="20" />
 
-    <EditText
+    <org.mariotaku.twidere.view.themed.ThemedAccentMaterialEditText
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,18 +45,22 @@
         android:gravity="top"
         android:hint="@string/description"
         android:inputType="textMultiLine"
-        android:maxLength="160"
         android:minLines="3"
-        android:singleLine="false"/>
+        android:singleLine="false"
+        app:met_baseColor="?android:textColorPrimary"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelText="@string/description"
+        app:met_maxCharacters="160" />
 
     <CheckBox
         android:id="@+id/is_public"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/name"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/name"
         android:checked="true"
         android:singleLine="true"
-        android:text="@string/is_public"/>
+        android:text="@string/is_public" />
 
 </RelativeLayout>

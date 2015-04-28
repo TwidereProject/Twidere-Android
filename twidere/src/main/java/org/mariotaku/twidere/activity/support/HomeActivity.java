@@ -79,7 +79,7 @@ import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
-import org.mariotaku.twidere.fragment.support.TrendsSuggectionsFragment;
+import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
@@ -910,7 +910,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         } else {
             if (classEquals(DirectMessagesFragment.class, tab.cls)) {
                 openMessageConversation(this, -1, -1);
-            } else if (classEquals(TrendsSuggectionsFragment.class, tab.cls)) {
+            } else if (classEquals(TrendsSuggestionsFragment.class, tab.cls)) {
                 openSearchView(null);
             } else {
                 startActivity(new Intent(INTENT_ACTION_COMPOSE));
@@ -930,7 +930,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             if (classEquals(DirectMessagesFragment.class, tab.cls)) {
                 icon = R.drawable.ic_action_add;
                 title = R.string.new_direct_message;
-            } else if (classEquals(TrendsSuggectionsFragment.class, tab.cls)) {
+            } else if (classEquals(TrendsSuggestionsFragment.class, tab.cls)) {
                 icon = R.drawable.ic_action_search;
                 title = android.R.string.search_go;
             } else {

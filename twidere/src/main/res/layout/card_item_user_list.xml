@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,105 +17,124 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ColorLabelLinearLayout
-    android:id="@+id/content"
+<android.support.v7.widget.CardView
+    android:id="@+id/card"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/element_spacing_small"
-    android:paddingLeft="@dimen/element_spacing_normal"
-    android:paddingRight="@dimen/element_spacing_normal"
-    android:paddingTop="@dimen/element_spacing_small"
-    tools:context=".adapter.ParcelableUserListsAdapter">
+    android:layout_marginBottom="@dimen/element_spacing_small"
+    android:layout_marginLeft="@dimen/element_spacing_normal"
+    android:layout_marginRight="@dimen/element_spacing_normal"
+    tools:context=".adapter.ParcelableUserListsAdapter"
+    android:layout_marginTop="@dimen/element_spacing_small"
+    app:cardBackgroundColor="?cardItemBackgroundColor"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
 
-    <LinearLayout
-        android:id="@+id/profile_container"
+    <org.mariotaku.twidere.view.ColorLabelLinearLayout
+        android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/element_spacing_normal"
+        android:background="?selectableItemBackground"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/element_spacing_small"
         android:paddingLeft="@dimen/element_spacing_normal"
-        android:paddingRight="@dimen/element_spacing_xlarge"
-        android:paddingTop="@dimen/element_spacing_normal">
-
-        <org.mariotaku.twidere.view.ShapedImageView
-            android:id="@+id/profile_image"
-            style="?profileImageStyle"
-            android:layout_width="@dimen/icon_size_card_list_item"
-            android:layout_height="@dimen/icon_size_card_list_item"
-            android:layout_weight="0"
-            android:contentDescription="@string/profile_image"
-            android:scaleType="fitCenter"/>
+        android:paddingRight="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_small">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/element_spacing_normal">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_normal"
+            android:paddingRight="@dimen/element_spacing_xlarge"
+            android:paddingTop="@dimen/element_spacing_normal">
 
-            <TextView
-                android:id="@+id/name"
+            <org.mariotaku.twidere.view.ShapedImageView
+                android:id="@+id/profile_image"
+                style="?profileImageStyle"
+                android:layout_width="@dimen/icon_size_card_list_item"
+                android:layout_height="@dimen/icon_size_card_list_item"
+                android:layout_weight="0"
+                android:contentDescription="@string/profile_image"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textStyle="bold"/>
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/element_spacing_normal">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/created_by"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:attr/textColorSecondary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="0.2dp"
+            android:background="#40808080" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/element_spacing_normal"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/element_spacing_normal">
 
             <TextView
-                android:id="@+id/created_by"
-                android:layout_width="match_parent"
+                android:id="@+id/members_count"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_indicator_following"
+                android:drawablePadding="@dimen/element_spacing_small"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorSecondary"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/subscribers_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_indicator_followers"
+                android:drawablePadding="@dimen/element_spacing_small"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
-    </LinearLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="#40808080"/>
-
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/element_spacing_normal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/element_spacing_normal">
-
-        <TextView
-            android:id="@+id/members_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_indicator_following"
-            android:drawablePadding="@dimen/element_spacing_small"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-        <TextView
-            android:id="@+id/subscribers_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_indicator_followers"
-            android:drawablePadding="@dimen/element_spacing_small"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-    </LinearLayout>
-
-</org.mariotaku.twidere.view.ColorLabelLinearLayout>
+    </org.mariotaku.twidere.view.ColorLabelLinearLayout>
+</android.support.v7.widget.CardView>

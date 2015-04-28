@@ -30,6 +30,7 @@
     android:layout_marginRight="@dimen/element_spacing_normal"
     android:layout_marginTop="@dimen/element_spacing_small"
     app:cardBackgroundColor="?cardItemBackgroundColor"
+    tools:context=".adapter.ParcelableUsersAdapter"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp">
 
@@ -44,8 +45,7 @@
         android:paddingBottom="@dimen/element_spacing_small"
         android:paddingLeft="@dimen/element_spacing_normal"
         android:paddingRight="@dimen/element_spacing_normal"
-        android:paddingTop="@dimen/element_spacing_small"
-        tools:context=".adapter.ParcelableUsersAdapter">
+        android:paddingTop="@dimen/element_spacing_small">
 
         <RelativeLayout
             android:id="@+id/profile_container"

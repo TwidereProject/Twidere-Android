@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,15 +18,16 @@
   -->
 
 <org.mariotaku.twidere.view.ColorLabelFrameLayout
-    android:id="@+id/content"
+    android:id="@+id/item_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/element_spacing_small"
-    android:layout_marginLeft="@dimen/element_spacing_normal"
-    android:layout_marginRight="@dimen/element_spacing_normal"
-    android:layout_marginTop="@dimen/element_spacing_small"
+    android:paddingBottom="@dimen/element_spacing_small"
+    android:background="?selectableItemBackground"
+    android:paddingLeft="@dimen/element_spacing_normal"
+    android:paddingRight="@dimen/element_spacing_normal"
+    android:paddingTop="@dimen/element_spacing_small"
     tools:context=".adapter.ParcelableUsersAdapter">
 
     <RelativeLayout
@@ -47,7 +47,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:contentDescription="@string/profile_image"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter" />
 
         <FrameLayout
             android:id="@+id/name_frame"
@@ -73,7 +73,7 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <org.mariotaku.twidere.view.HandleSpanClickTextView
                     android:id="@+id/created_by"
@@ -83,7 +83,7 @@
                     android:paddingRight="4dp"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorSecondary"/>
+                    android:textColor="?android:attr/textColorSecondary" />
             </LinearLayout>
         </FrameLayout>
 
@@ -95,7 +95,7 @@
             android:layout_below="@id/name_frame"
             android:paddingTop="@dimen/element_spacing_small"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary"/>
+            android:textColor="?android:attr/textColorSecondary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                 android:drawableLeft="@drawable/ic_indicator_following"
                 android:drawablePadding="4dp"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/subscribers_count"
@@ -123,7 +123,7 @@
                 android:drawableLeft="@drawable/ic_indicator_followers"
                 android:drawablePadding="4dp"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </RelativeLayout>
 

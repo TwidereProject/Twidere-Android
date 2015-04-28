@@ -128,15 +128,21 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     };
 
     public void displayUserList(final ParcelableUserList userList) {
-        if (userList == null || getActivity() == null) return;
+        final FragmentActivity activity = getActivity();
+        if (activity == null) return;
         getLoaderManager().destroyLoader(0);
         mUserList = userList;
 
-        final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-        final String displayName = mUserColorNameManager.getDisplayName(userList, nameFirst, false);
-        final String description = userList.description;
-        final TwidereLinkify linkify = new TwidereLinkify(new OnLinkClickHandler(getActivity(),
-                getMultiSelectManager()));
+        if (userList != null) {
+            final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
+            final String displayName = mUserColorNameManager.getDisplayName(userList, nameFirst, false);
+            final String description = userList.description;
+            final TwidereLinkify linkify = new TwidereLinkify(new OnLinkClickHandler(activity,
+                    getMultiSelectManager()));
+            activity.setTitle(userList.name);
+        } else {
+            activity.setTitle(R.string.user_list);
+        }
         invalidateOptionsMenu();
     }
 

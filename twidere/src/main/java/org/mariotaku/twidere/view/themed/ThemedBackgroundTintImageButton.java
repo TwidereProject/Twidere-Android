@@ -23,28 +23,28 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
-import org.mariotaku.twidere.view.iface.IThemeAccentView;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
 /**
  * Created by mariotaku on 14/11/5.
  */
-public class TintThemedImageButton extends ImageButton implements IThemeBackgroundTintView {
+public class ThemedBackgroundTintImageButton extends ImageButton implements IThemeBackgroundTintView {
 
     private final int mDefaultColor;
 
-    public TintThemedImageButton(Context context) {
+    public ThemedBackgroundTintImageButton(Context context) {
         this(context, null);
     }
 
-    public TintThemedImageButton(Context context, AttributeSet attrs) {
+    public ThemedBackgroundTintImageButton(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.imageButtonStyle);
     }
 
-    public TintThemedImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ThemedBackgroundTintImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.color,
                 android.R.attr.colorForeground});
@@ -63,11 +63,7 @@ public class TintThemedImageButton extends ImageButton implements IThemeBackgrou
 
 
     @Override
-    public void setBackgroundTintColor(ColorStateList color) {
-        if (color == null) {
-            clearColorFilter();
-        } else {
-            setColorFilter(color.getDefaultColor());
-        }
+    public void setBackgroundTintColor(@NonNull ColorStateList color) {
+        setColorFilter(color.getDefaultColor());
     }
 }

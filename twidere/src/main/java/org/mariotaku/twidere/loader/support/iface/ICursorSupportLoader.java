@@ -1,7 +1,7 @@
 /*
  * Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,16 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.iface;
-
-import android.content.res.ColorStateList;
-import android.support.annotation.NonNull;
+package org.mariotaku.twidere.loader.support.iface;
 
 /**
- * Created by mariotaku on 14/12/19.
+ * Created by mariotaku on 15/4/29.
  */
-public interface IThemeAccentView {
+public interface ICursorSupportLoader {
+    long getCursor();
 
-    public void setAccentTintColor(@NonNull ColorStateList color);
+    long getNextCursor();
 
+    long getPrevCursor();
 }

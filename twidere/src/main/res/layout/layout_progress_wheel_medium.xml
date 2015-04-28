@@ -20,7 +20,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <org.mariotaku.twidere.view.themed.TintThemedProgressWheel
+    <org.mariotaku.twidere.view.themed.ThemedAccentProgressWheel
         android:id="@+id/load_progress"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
