@@ -48,6 +48,7 @@ public interface Constants extends TwidereConstants {
     int MENU_COMPOSE = R.id.compose;
     int MENU_SEND = R.id.send;
     int MENU_EDIT = R.id.edit;
+    int MENU_INFO = R.id.info;
     int MENU_SELECT_ACCOUNT = R.id.select_account;
     int MENU_SETTINGS = R.id.settings;
     int MENU_ADD_LOCATION = R.id.add_location;

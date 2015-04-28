@@ -43,8 +43,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,8 +53,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -67,6 +63,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -80,39 +77,28 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ColorLabelLinearLayout;
-import org.mariotaku.twidere.view.HeaderDrawerLayout;
-import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UserList;
 
-import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.MenuUtils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
-import static org.mariotaku.twidere.util.Utils.getAccountColor;
 import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.openUserListDetails;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 public class UserListFragment extends BaseSupportFragment implements OnClickListener,
-        LoaderCallbacks<SingleResponse<ParcelableUserList>>, DrawerCallback,
-        SystemWindowsInsetsCallback, SupportFragmentCallback {
+        LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback,
+        SupportFragmentCallback {
 
     private MediaLoaderWrapper mProfileImageLoader;
     private AsyncTwitterWrapper mTwitterWrapper;
 
-    private ImageView mProfileImageView;
-    private TextView mListNameView, mCreatedByView, mDescriptionView, mErrorTextView;
-    private View mErrorContainer, mProgressContainer;
-    private ColorLabelLinearLayout mUserListDetails;
-    private ImageView mErrorIconView;
-    private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
-    private CardView mCardView;
+    private View mPagerOverlay;
 
     private SupportTabsAdapter mPagerAdapter;
     private boolean mUserListLoaderInitialized;
@@ -141,78 +127,16 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         }
     };
 
-    @Override
-    public boolean canScroll(float dy) {
-        final Fragment fragment = getCurrentVisibleFragment();
-        return fragment instanceof DrawerCallback && ((DrawerCallback) fragment).canScroll(dy);
-    }
-
-    @Override
-    public void cancelTouch() {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).cancelTouch();
-        }
-    }
-
-    @Override
-    public void fling(float velocity) {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).fling(velocity);
-        }
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        final ViewPager v = mViewPager;
-        final int[] location = new int[2];
-        v.getLocationOnScreen(location);
-        return x >= location[0] && x <= location[0] + v.getWidth()
-                && y >= location[1] && y <= location[1] + v.getHeight();
-    }
-
-    @Override
-    public void scrollBy(float dy) {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (fragment instanceof DrawerCallback) {
-            ((DrawerCallback) fragment).scrollBy(dy);
-        }
-    }
-
-    @Override
-    public boolean shouldLayoutHeaderBottom() {
-        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
-        final CardView card = mCardView;
-        if (drawer == null || card == null) return false;
-        return card.getTop() + drawer.getHeaderTop() - drawer.getPaddingTop() <= 0;
-    }
-
-    @Override
-    public void topChanged(int offset) {
-
-    }
-
     public void displayUserList(final ParcelableUserList userList) {
         if (userList == null || getActivity() == null) return;
         getLoaderManager().destroyLoader(0);
-        mErrorContainer.setVisibility(View.GONE);
-        mProgressContainer.setVisibility(View.GONE);
         mUserList = userList;
-        mUserListDetails.drawEnd(getAccountColor(getActivity(), userList.account_id));
-        mListNameView.setText(userList.name);
 
         final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         final String displayName = mUserColorNameManager.getDisplayName(userList, nameFirst, false);
-        mCreatedByView.setText(getString(R.string.created_by, displayName));
         final String description = userList.description;
-        mDescriptionView.setVisibility(isEmpty(description) ? View.GONE : View.VISIBLE);
-        mDescriptionView.setText(description);
         final TwidereLinkify linkify = new TwidereLinkify(new OnLinkClickHandler(getActivity(),
                 getMultiSelectManager()));
-        linkify.applyAllLinks(mDescriptionView, userList.account_id, false);
-        mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
-        mProfileImageLoader.displayProfileImage(mProfileImageView, userList.user_profile_image_url);
         invalidateOptionsMenu();
     }
 
@@ -273,15 +197,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_user_list, container, false);
-        final ViewGroup listDetailsContainer = (ViewGroup) view.findViewById(R.id.list_details_container);
-        final boolean isCompact = Utils.isCompactCards(getActivity());
-        if (isCompact) {
-            inflater.inflate(R.layout.layout_user_list_details_compact, listDetailsContainer);
-        } else {
-            inflater.inflate(R.layout.layout_user_list_details, listDetailsContainer);
-        }
-        return view;
+        return inflater.inflate(R.layout.fragment_content_pages, container, false);
     }
 
     @Override
@@ -310,8 +226,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             }
         });
 
-        mHeaderDrawerLayout.setDrawerCallback(this);
-
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager());
 
         mViewPager.setAdapter(mPagerAdapter);
@@ -322,12 +236,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         } else {
 
         }
-
-        mProfileImageView.setOnClickListener(this);
-        mUserListDetails.setOnClickListener(this);
-        mErrorIconView.setOnClickListener(this);
         getUserListInfo(false);
-
         setupUserPages();
     }
 
@@ -364,23 +273,17 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
         final ParcelableUserList userList = mUserList;
-        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
-        if (followItem != null) {
-            followItem.setEnabled(userList != null);
-            if (userList == null) {
-                followItem.setIcon(android.R.color.transparent);
-            }
-        }
-        if (twitter == null || userList == null) return;
-        final boolean isMyList = userList.user_id == userList.account_id;
-        setMenuItemAvailability(menu, MENU_EDIT, isMyList);
-        setMenuItemAvailability(menu, MENU_ADD, isMyList);
-        setMenuItemAvailability(menu, MENU_DELETE, isMyList);
-        final boolean isFollowing = userList.is_following;
-        if (followItem != null) {
-            followItem.setVisible(!isMyList);
+        setMenuItemAvailability(menu, MENU_INFO, userList != null);
+        menu.removeGroup(MENU_GROUP_USER_LIST_EXTENSION);
+        if (userList != null) {
+            final boolean isMyList = userList.user_id == userList.account_id;
+            final boolean isFollowing = userList.is_following;
+            setMenuItemAvailability(menu, MENU_EDIT, isMyList);
+            setMenuItemAvailability(menu, MENU_FOLLOW, !isMyList);
+            setMenuItemAvailability(menu, MENU_ADD, isMyList);
+            setMenuItemAvailability(menu, MENU_DELETE, isMyList);
+            final MenuItem followItem = menu.findItem(MENU_FOLLOW);
             if (isFollowing) {
                 followItem.setIcon(R.drawable.ic_action_cancel);
                 followItem.setTitle(R.string.unsubscribe);
@@ -388,12 +291,16 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 followItem.setIcon(R.drawable.ic_action_add);
                 followItem.setTitle(R.string.subscribe);
             }
+            final Intent extensionsIntent = new Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST);
+            extensionsIntent.setExtrasClassLoader(getActivity().getClassLoader());
+            extensionsIntent.putExtra(EXTRA_USER_LIST, userList);
+            addIntentToMenu(getActivity(), menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION);
+        } else {
+            setMenuItemAvailability(menu, MENU_EDIT, false);
+            setMenuItemAvailability(menu, MENU_FOLLOW, false);
+            setMenuItemAvailability(menu, MENU_ADD, false);
+            setMenuItemAvailability(menu, MENU_DELETE, false);
         }
-        menu.removeGroup(MENU_GROUP_USER_LIST_EXTENSION);
-        final Intent extensionsIntent = new Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST);
-        extensionsIntent.setExtrasClassLoader(getActivity().getClassLoader());
-        extensionsIntent.putExtra(EXTRA_USER_LIST, mUserList);
-        addIntentToMenu(getActivity(), menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION);
     }
 
     @Override
@@ -476,11 +383,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
-        mErrorTextView.setText(null);
-        mErrorTextView.setVisibility(View.GONE);
-        mErrorContainer.setVisibility(View.GONE);
-        mHeaderDrawerLayout.setVisibility(View.GONE);
-        mProgressContainer.setVisibility(View.VISIBLE);
         setProgressBarIndeterminateVisibility(true);
         final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
         final long userId = args != null ? args.getLong(EXTRA_USER_ID, -1) : -1;
@@ -497,20 +399,10 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                                final SingleResponse<ParcelableUserList> data) {
         if (data == null) return;
         if (getActivity() == null) return;
-        if (data.getData() != null) {
+        if (data.hasData()) {
             final ParcelableUserList list = data.getData();
             displayUserList(list);
-            mHeaderDrawerLayout.setVisibility(View.VISIBLE);
-            mErrorContainer.setVisibility(View.GONE);
-            mProgressContainer.setVisibility(View.GONE);
-        } else {
-            if (data.hasException()) {
-                mErrorTextView.setText(data.getException().getMessage());
-                mErrorTextView.setVisibility(View.VISIBLE);
-            }
-            mHeaderDrawerLayout.setVisibility(View.GONE);
-            mErrorContainer.setVisibility(View.VISIBLE);
-            mProgressContainer.setVisibility(View.GONE);
+        } else if (data.hasException()) {
         }
         setProgressBarIndeterminateVisibility(false);
     }
@@ -523,39 +415,12 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
         super.onBaseViewCreated(view, savedInstanceState);
-        mHeaderDrawerLayout = (HeaderDrawerLayout) view.findViewById(R.id.details_container);
-        mErrorContainer = view.findViewById(R.id.error_container);
-        mProgressContainer = view.findViewById(R.id.progress_container);
-
-        final View headerView = mHeaderDrawerLayout.getHeader();
-        final View contentView = mHeaderDrawerLayout.getContent();
-        mCardView = (CardView) headerView.findViewById(R.id.card);
-        mUserListDetails = (ColorLabelLinearLayout) headerView.findViewById(R.id.user_list_details);
-        mListNameView = (TextView) headerView.findViewById(R.id.list_name);
-        mCreatedByView = (TextView) headerView.findViewById(R.id.created_by);
-        mDescriptionView = (TextView) headerView.findViewById(R.id.description);
-        mProfileImageView = (ImageView) headerView.findViewById(R.id.profile_image);
-        mErrorIconView = (ImageView) mErrorContainer.findViewById(R.id.error_icon);
-        mErrorTextView = (TextView) mErrorContainer.findViewById(R.id.error_text);
-        mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
-        mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
-    }
-
-    @Override
-    protected void fitSystemWindows(Rect insets) {
-        final View progress = mProgressContainer, error = mErrorContainer;
-        final HeaderDrawerLayout content = mHeaderDrawerLayout;
-        if (progress == null || error == null || content == null) {
-            return;
-        }
-        progress.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        error.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        content.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        content.setClipToPadding(false);
+        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
+        mPagerOverlay = view.findViewById(R.id.pager_window_overlay);
     }
 
     private void setupUserPages() {
-        final Context context = getActivity();
         final Bundle args = getArguments(), tabArgs = new Bundle();
         if (args.containsKey(EXTRA_USER)) {
             final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
@@ -574,7 +439,12 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mPagerAdapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0, null);
         mPagerAdapter.addTab(UserListMembersFragment.class, tabArgs, getString(R.string.members), null, 1, null);
         mPagerAdapter.addTab(UserListSubscribersFragment.class, tabArgs, getString(R.string.subscribers), null, 2, null);
-        mPagerIndicator.notifyDataSetChanged();
+
+        final FragmentActivity activity = getActivity();
+        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator, mPagerOverlay);
+        ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
+        ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
+        ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
     }
 
     public static class EditUserListDialogFragment extends BaseSupportDialogFragment implements

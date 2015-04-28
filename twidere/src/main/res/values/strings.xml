@@ -739,4 +739,5 @@
     <string name="swipe_down_to_refresh">Swipe down to refresh</string>
     <string name="app_restart_confirm">Twidere will restart to apply settings.</string>
     <string name="dont_restart">Don\'t restart</string>
+    <string name="user_list_details">List details</string>
 </resources>

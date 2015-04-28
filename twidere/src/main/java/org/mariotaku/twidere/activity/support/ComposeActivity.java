@@ -1234,11 +1234,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
         private final AccountIconsAdapter adapter;
         private final ShapedImageView iconView;
+        private final TextView nameView;
 
         public AccountIconViewHolder(AccountIconsAdapter adapter, View itemView) {
             super(itemView);
             this.adapter = adapter;
             iconView = (ShapedImageView) itemView.findViewById(android.R.id.icon);
+            nameView = (TextView) itemView.findViewById(android.R.id.text1);
             itemView.setOnClickListener(this);
         }
 
@@ -1247,6 +1249,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             final MediaLoaderWrapper loader = adapter.getImageLoader();
             loader.displayProfileImage(iconView, account.profile_image_url);
             iconView.setBorderColor(account.color);
+            nameView.setText(adapter.isNameFirst() ? account.name : ("@" + account.screen_name));
         }
 
         @Override
@@ -1263,6 +1266,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
         private final LongSparseArray<Boolean> mSelection;
+        private final boolean mNameFirst;
 
         private ParcelableAccount[] mAccounts;
 
@@ -1271,6 +1275,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             mInflater = activity.getLayoutInflater();
             mImageLoader = TwidereApplication.getInstance(activity).getMediaLoaderWrapper();
             mSelection = new LongSparseArray<>();
+            final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
+                    SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+            mNameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         }
 
         public MediaLoaderWrapper getImageLoader() {
@@ -1350,6 +1357,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             mSelection.put(accountId, !mSelection.get(accountId, false));
             mActivity.notifyAccountSelectionChanged();
             notifyDataSetChanged();
+        }
+
+        public boolean isNameFirst() {
+            return mNameFirst;
         }
     }
 
