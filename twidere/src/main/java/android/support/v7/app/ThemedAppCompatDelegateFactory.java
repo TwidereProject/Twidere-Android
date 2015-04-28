@@ -23,23 +23,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v7.widget.ActionMenuView;
-import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Window;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
-import org.mariotaku.twidere.util.support.ViewSupport;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by mariotaku on 15/4/22.
  */
-public class ThemedAppCompatDelegate implements Constants {
+public class ThemedAppCompatDelegateFactory implements Constants {
 
 
     /**
@@ -47,46 +42,24 @@ public class ThemedAppCompatDelegate implements Constants {
      *
      * @param callback An optional callback for AppCompat specific events
      */
-    public static AppCompatDelegate create(IThemedActivity themed, AppCompatCallback callback) {
+    public static ThemedAppCompatDelegate create(IThemedActivity themed, AppCompatCallback callback) {
         final Activity activity = (Activity) themed;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return new ThemedAppCompatDelegateImplV11(themed, activity, activity.getWindow(), callback);
+            return new ThemedAppCompatDelegate(themed, activity, activity.getWindow(), callback);
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
-    private static class ThemedAppCompatDelegateImplV11 extends AppCompatDelegateImplV11 {
+    public static final class ThemedAppCompatDelegate extends AppCompatDelegateImplV11 {
 
         private final IThemedActivity themed;
+        private KeyListener keyListener;
 
-        private ThemedAppCompatDelegateImplV11(final IThemedActivity themed, final Context context,
-                                               Window window, AppCompatCallback callback) {
+        private ThemedAppCompatDelegate(final IThemedActivity themed, final Context context,
+                                        Window window, AppCompatCallback callback) {
             super(context, window, callback);
             this.themed = themed;
-//            try {
-//                final Field field = AppCompatDelegateImplV7.class.getDeclaredField("mInvalidatePanelMenuRunnable");
-//                field.setAccessible(true);
-//                final Runnable old = (Runnable) field.get(this);
-//                field.set(this, new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (old != null) {
-//                            old.run();
-//                        }
-//                        final int themeColor = themed.getCurrentThemeColor();
-//                        final int themeId = themed.getCurrentThemeResourceId();
-//                        final int itemColor = ThemeUtils.getContrastActionBarItemColor(context, themeId, themeColor);
-//                        final Toolbar toolbar = ThemeUtils.getToolbarFromActivity((Activity) themed);
-//                        if (toolbar != null) {
-//                            ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
-//                            ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
-//                        }
-//                    }
-//                });
-//            } catch (Exception ignore) {
-//
-//            }
         }
 
         @Override
@@ -96,6 +69,28 @@ public class ThemedAppCompatDelegate implements Constants {
                 LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory(themed, this));
             }
         }
+
+        @Override
+        boolean onKeyDown(int keyCode, KeyEvent event) {
+            if (keyListener != null && keyListener.onKeyDown(keyCode, event)) return true;
+            return super.onKeyDown(keyCode, event);
+        }
+
+        @Override
+        boolean onKeyUp(int keyCode, KeyEvent event) {
+            if (keyListener != null && keyListener.onKeyUp(keyCode, event)) return true;
+            return super.onKeyUp(keyCode, event);
+        }
+
+        public void setKeyListener(KeyListener listener) {
+            keyListener = listener;
+        }
     }
 
+    public static interface KeyListener {
+
+        boolean onKeyDown(int keyCode, KeyEvent event);
+
+        boolean onKeyUp(int keyCode, KeyEvent event);
+    }
 }

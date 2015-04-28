@@ -75,12 +75,15 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     private final View.OnLayoutChangeListener mLayoutChangeListener = new View.OnLayoutChangeListener() {
 
         private final Rect tempInsets = new Rect();
+        private boolean compatCalled;
 
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+            if (compatCalled) return;
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom && !ViewSupport.isInLayout(v)) {
                 mMainContent.getSystemWindowsInsets(tempInsets);
                 onFitSystemWindows(tempInsets);
+                compatCalled = true;
             }
         }
     };
@@ -122,10 +125,15 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
         if (actionBarContainer != null) {
             final ViewGroup.LayoutParams toolBarParams = actionBarContainer.getLayoutParams();
+            boolean changed = false;
             if (toolBarParams instanceof ViewGroup.MarginLayoutParams) {
+                final int topMargin = ((ViewGroup.MarginLayoutParams) toolBarParams).topMargin;
+                changed = topMargin != insets.top;
                 ((ViewGroup.MarginLayoutParams) toolBarParams).topMargin = insets.top;
             }
-            actionBarContainer.setLayoutParams(toolBarParams);
+            if (changed) {
+                actionBarContainer.setLayoutParams(toolBarParams);
+            }
         }
         insets.top += ThemeUtils.getActionBarHeight(this);
         super.onFitSystemWindows(insets);
@@ -520,6 +528,10 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             }
             case LINK_ID_MAP: {
                 setTitle(R.string.view_map);
+                break;
+            }
+            case LINK_ID_PROFILE_EDITOR: {
+                setTitle(R.string.edit_profile);
                 break;
             }
             default: {

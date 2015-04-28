@@ -24,8 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.app.ThemedAppCompatDelegate;
+import android.support.v7.app.ThemedAppCompatDelegateFactory;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -44,7 +43,7 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     private String mCurrentThemeBackgroundOption;
     private String mCurrentThemeFontFamily;
 
-    private AppCompatDelegate mDelegate;
+    private ThemedAppCompatDelegateFactory.ThemedAppCompatDelegate mDelegate;
     private Toolbar mToolbar;
 
     @Override
@@ -115,9 +114,9 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     }
 
     @Override
-    public AppCompatDelegate getDelegate() {
+    public ThemedAppCompatDelegateFactory.ThemedAppCompatDelegate getDelegate() {
         if (mDelegate != null) return mDelegate;
-        return mDelegate = ThemedAppCompatDelegate.create(this, this);
+        return mDelegate = ThemedAppCompatDelegateFactory.create(this, this);
     }
 
     @Override
