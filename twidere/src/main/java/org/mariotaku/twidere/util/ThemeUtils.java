@@ -1268,4 +1268,22 @@ public class ThemeUtils implements Constants {
             return ((LinkHandlerActivity) activity).peekActionBarToolbar();
         return null;
     }
+
+    public static Context getActionBarThemedContext(Context base) {
+        final TypedValue outValue = new TypedValue();
+        final Resources.Theme baseTheme = base.getTheme();
+        baseTheme.resolveAttribute(android.support.v7.appcompat.R.attr.actionBarTheme, outValue, true);
+
+        if (outValue.resourceId != 0) {
+            final Resources.Theme actionBarTheme = base.getResources().newTheme();
+            actionBarTheme.setTo(baseTheme);
+            actionBarTheme.applyStyle(outValue.resourceId, true);
+
+            final Context actionBarContext = new android.support.v7.internal.view.ContextThemeWrapper(base, 0);
+            actionBarContext.getTheme().setTo(actionBarTheme);
+            return actionBarContext;
+        } else {
+            return base;
+        }
+    }
 }

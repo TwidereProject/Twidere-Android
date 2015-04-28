@@ -35,11 +35,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.internal.widget.ActionBarContainer
+        <org.mariotaku.twidere.view.TwidereActionBarContainer
             android:id="@+id/twidere_action_bar_container"
             style="?attr/actionBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?actionBarSize"
             android:layout_alignParentTop="true"
             android:gravity="top"
             android:touchscreenBlocksFocus="true"
@@ -60,7 +60,7 @@
                 android:theme="?attr/actionBarTheme"
                 android:visibility="gone" />
 
-        </android.support.v7.internal.widget.ActionBarContainer>
+        </org.mariotaku.twidere.view.TwidereActionBarContainer>
 
         <View
             android:id="@+id/window_overlay"

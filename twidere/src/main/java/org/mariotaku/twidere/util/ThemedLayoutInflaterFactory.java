@@ -34,7 +34,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatDelegateTrojan;
-import android.support.v7.internal.app.WindowDecorActionBar;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
@@ -167,7 +166,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         }
     }
 
-    private static boolean isActionBarContext(Context context, Context actionBarContext) {
+    private static boolean isActionBarContext(@NonNull Context context, @Nullable Context actionBarContext) {
         if (actionBarContext == null) return false;
         if (context == actionBarContext) return true;
         Context base = context;
@@ -179,20 +178,21 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
 
     @Nullable
     private static Context getActionBarContext(@NonNull Activity activity) {
+        Context actionBarContext = null;
         if (activity instanceof AppCompatActivity) {
             final AppCompatDelegate delegate = ((AppCompatActivity) activity).getDelegate();
             final ActionBar actionBar = AppCompatDelegateTrojan.peekActionBar(delegate);
-            if (actionBar instanceof WindowDecorActionBar)
-                return actionBar.getThemedContext();
+            if (actionBar != null) {
+                actionBarContext = actionBar.getThemedContext();
+            }
         } else if (activity instanceof AppCompatPreferenceActivity) {
             final AppCompatDelegate delegate = ((AppCompatPreferenceActivity) activity).getDelegate();
             final ActionBar actionBar = AppCompatDelegateTrojan.peekActionBar(delegate);
-            if (actionBar instanceof WindowDecorActionBar)
-                return actionBar.getThemedContext();
-        } else {
-            final android.app.ActionBar actionBar = activity.getActionBar();
-            if (actionBar != null) return actionBar.getThemedContext();
+            if (actionBar != null) {
+                actionBarContext = actionBar.getThemedContext();
+            }
         }
+        if (activity != actionBarContext) return actionBarContext;
         return null;
     }
 }

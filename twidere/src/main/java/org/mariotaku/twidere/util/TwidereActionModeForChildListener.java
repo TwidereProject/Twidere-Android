@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatCallback;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.internal.view.StandaloneActionMode;
 import android.support.v7.internal.view.SupportActionModeWrapper;
 import android.support.v7.internal.widget.ActionBarContextView;
@@ -115,7 +114,7 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
                 final Resources.Theme baseTheme = mActivity.getTheme();
                 baseTheme.resolveAttribute(android.support.v7.appcompat.R.attr.actionBarTheme, outValue, true);
 
-                final Context actionBarContext = getActionBarThemedContext();
+                final Context actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity);
 
                 mActionModeView = new ActionBarContextView(actionBarContext);
                 mActionModePopup = new PopupWindow(actionBarContext, null,
@@ -168,25 +167,6 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
             mAppCompatCallback.onSupportActionModeStarted(mActionMode);
         }
         return mActionMode;
-    }
-
-    private Context getActionBarThemedContext() {
-        final TypedValue outValue = new TypedValue();
-        final Resources.Theme baseTheme = mActivity.getTheme();
-        baseTheme.resolveAttribute(android.support.v7.appcompat.R.attr.actionBarTheme, outValue, true);
-
-        if (outValue.resourceId != 0) {
-            final Resources.Theme actionBarTheme = mActivity.getResources().newTheme();
-            actionBarTheme.setTo(baseTheme);
-            actionBarTheme.applyStyle(outValue.resourceId, true);
-
-            final Context actionBarContext = new ContextThemeWrapper(mActivity, 0);
-            actionBarContext.getTheme().setTo(actionBarTheme);
-            return actionBarContext;
-        } else {
-            return mActivity;
-        }
-
     }
 
     public boolean finishExisting() {
