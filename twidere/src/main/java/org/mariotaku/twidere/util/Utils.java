@@ -226,6 +226,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
@@ -4229,6 +4230,23 @@ public final class Utils implements Constants, TwitterConstants {
         intent.setData(builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
         context.startActivity(intent);
+    }
+
+    public static <T> Object findFieldOfTypes(T obj, Class<? extends T> cls, Class<?>... checkTypes) {
+        labelField:
+        for (Field field : cls.getDeclaredFields()) {
+            final Class<?> type = field.getType();
+            View view = null;
+            for (Class<?> checkType : checkTypes) {
+                if (!checkType.isAssignableFrom(type)) continue labelField;
+            }
+            field.setAccessible(true);
+            try {
+                return field.get(obj);
+            } catch (Exception ignore) {
+            }
+        }
+        return null;
     }
 
     static class UtilsL {

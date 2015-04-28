@@ -48,6 +48,7 @@ import android.support.v7.internal.widget.ActionBarContainer;
 import android.support.v7.internal.widget.ActionBarContextView;
 import android.support.v7.internal.widget.ActionBarOverlayLayout;
 import android.support.v7.internal.widget.ContentFrameLayout;
+import android.support.v7.widget.ActionMenuPresenter;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
@@ -225,15 +226,8 @@ public class ThemeUtils implements Constants {
             View contextView = null;
             Context actionBarContext = null;
             if (modeCompat instanceof ActionModeImpl) {
-                WindowDecorActionBar actionBar = null;
-                final Field[] fields = ActionModeImpl.class.getDeclaredFields();
-                for (Field field : fields) {
-                    if (WindowDecorActionBar.class.isAssignableFrom(field.getType())) {
-                        field.setAccessible(true);
-                        actionBar = (WindowDecorActionBar) field.get(modeCompat);
-                        break;
-                    }
-                }
+                WindowDecorActionBar actionBar = (WindowDecorActionBar) Utils.findFieldOfTypes(modeCompat,
+                        ActionModeImpl.class, WindowDecorActionBar.class);
                 if (actionBar == null) return;
                 actionBarContext = actionBar.getThemedContext();
                 final Field contextViewField = WindowDecorActionBar.class.getDeclaredField("mContextView");
@@ -1069,6 +1063,19 @@ public class ThemeUtils implements Constants {
                 overflowView = child;
                 break;
             }
+        }
+        if (!(overflowView instanceof ImageView)) return;
+        ((ImageView) overflowView).setColorFilter(itemColor, Mode.SRC_ATOP);
+    }
+
+    public static void setActionBarOverflowColor(ActionMenuPresenter presenter, int itemColor) {
+        if (presenter == null) return;
+        View overflowView = null;
+        View view = (View) Utils.findFieldOfTypes(presenter, ActionMenuPresenter.class, ActionMenuView.ActionMenuChildView.class, View.class);
+        if (view == null) return;
+        final ActionMenuView.LayoutParams lp = (ActionMenuView.LayoutParams) view.getLayoutParams();
+        if (lp.isOverflowButton) {
+            overflowView = view;
         }
         if (!(overflowView instanceof ImageView)) return;
         ((ImageView) overflowView).setColorFilter(itemColor, Mode.SRC_ATOP);

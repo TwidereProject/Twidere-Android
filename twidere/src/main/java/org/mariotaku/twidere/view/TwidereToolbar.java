@@ -20,34 +20,51 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.ActionMenuPresenter;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.Menu;
 
-import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
 
 /**
  * Created by mariotaku on 15/1/16.
  */
 public class TwidereToolbar extends Toolbar {
+
+    private int mItemColor;
+
     public TwidereToolbar(Context context) {
-        super(context, null);
+        super(context);
     }
 
     public TwidereToolbar(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.toolbarStyle);
+        super(context, attrs);
     }
 
     public TwidereToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(getThemedContext(context, attrs, defStyleAttr), attrs, defStyleAttr);
-        final TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{R.attr.elevation}, defStyleAttr, 0);
-        ViewCompat.setElevation(this, a.getDimension(0, 0));
-        a.recycle();
+        super(context, attrs, defStyleAttr);
     }
 
-    private static Context getThemedContext(Context context, AttributeSet attrs, int defStyleAttr) {
-        return ThemeUtils.getActionBarContext(context);
+    @Override
+    public Menu getMenu() {
+        final Menu menu = super.getMenu();
+        ThemeUtils.setActionBarOverflowColor(this, mItemColor);
+        final ActionMenuView menuView = (ActionMenuView) Utils.findFieldOfTypes(this, Toolbar.class,
+                ActionMenuView.class);
+        if (menuView != null) {
+            final ActionMenuPresenter presenter = (ActionMenuPresenter) Utils.findFieldOfTypes(menuView,
+                    ActionMenuView.class, ActionMenuPresenter.class);
+            if (presenter != null) {
+                ThemeUtils.setActionBarOverflowColor(presenter, mItemColor);
+            }
+        }
+        return menu;
+    }
+
+    public void setItemColor(int itemColor) {
+        mItemColor = itemColor;
     }
 }

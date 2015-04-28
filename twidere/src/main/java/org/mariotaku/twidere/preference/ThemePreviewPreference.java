@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
@@ -114,6 +115,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
         ViewSupport.setBackground(actionBarView, ThemeUtils.getActionBarBackground(context, themeRes,
                 accentColor, backgroundOption, true));
+        ViewCompat.setElevation(actionBarView, ThemeUtils.getSupportActionBarElevation(context));
         ViewSupport.setBackground(actionBarOverlay, ThemeUtils.getWindowContentOverlay(context));
         cardView.setCardBackgroundColor(cardBackgroundColor);
 
