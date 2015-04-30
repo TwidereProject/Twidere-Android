@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <org.mariotaku.twidere.view.TwidereToolbar
+        android:id="@+id/action_bar"
+        style="?attr/toolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationContentDescription="@string/abc_action_bar_up_description"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp">
+
+        <org.mariotaku.twidere.view.TabPagerIndicator
+            android:id="@+id/main_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:tabExpandEnabled="true"
+            app:tabHorizontalPadding="@dimen/element_spacing_normal" />
+    </org.mariotaku.twidere.view.TwidereToolbar>
+
+    <android.support.v7.internal.widget.ActionBarContextView
+        android:id="@+id/action_context_bar"
+        style="?attr/actionModeStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/actionBarTheme"
+        android:visibility="gone" />
+</merge>

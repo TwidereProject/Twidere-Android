@@ -100,7 +100,7 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         final View windowBackgroundView = view.findViewById(R.id.theme_preview_window_background);
         final View windowContentOverlayView = view.findViewById(R.id.theme_preview_window_content_overlay);
         final View actionBarOverlay = view.findViewById(R.id.actionbar_overlay);
-        final Toolbar actionBarView = (Toolbar) view.findViewById(R.id.actionbar);
+        final Toolbar actionBarView = (Toolbar) view.findViewById(R.id.action_bar);
         final ActionMenuView menuBar = (ActionMenuView) view.findViewById(R.id.menu_bar);
         final View statusContentView = view.findViewById(R.id.theme_preview_status_content);
         final CardView cardView = (CardView) view.findViewById(R.id.card);

@@ -18,8 +18,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -29,10 +29,10 @@
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/status_container"
-        android:layout_alignRight="@+id/status_container"
         android:baselineAligned="false"
         android:orientation="horizontal"
+        android:visibility="visible"
+        tools:visibility="gone"
         android:padding="@dimen/element_spacing_large">
 
         <ProgressBar

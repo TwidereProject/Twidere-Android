@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -60,7 +61,17 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
     public HomeActionButtonCompat(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions_compat, this);
+        if (isInEditMode()) {
+            inflate(context, R.layout.action_item_home_actions_compat, this);
+        } else if (context instanceof IThemedActivity) {
+            int themeResourceId = ((IThemedActivity) context).getCurrentThemeResourceId();
+            int themeColor = ((IThemedActivity) context).getCurrentThemeColor();
+            inflate(ThemeUtils.getActionBarThemedContext(context, themeResourceId, themeColor),
+                    R.layout.action_item_home_actions_compat, this);
+        } else {
+            inflate(ThemeUtils.getActionBarThemedContext(context), R.layout.action_item_home_actions_compat,
+                    this);
+        }
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
         final Resources resources = getResources();
