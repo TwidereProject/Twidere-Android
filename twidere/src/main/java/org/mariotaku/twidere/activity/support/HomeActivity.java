@@ -364,7 +364,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mTabColumns = getResources().getInteger(R.integer.default_tab_columns);
 
         mColorStatusFrameLayout.setOnFitSystemWindowsListener(this);
-        ThemeUtils.applyBackground(mTabIndicator);
         mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, mTabColumns);
         mViewPager.setAdapter(mPagerAdapter);
 //        mViewPager.setOffscreenPageLimit(3);

@@ -157,31 +157,43 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             backgroundColorApprox = Color.WHITE;
             isColorTint = false;
         }
+        final boolean isAccentOptimal = Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, accentColor)) > 64;
         if (view instanceof TextView) {
             final TextView textView = (TextView) view;
-
-            if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, accentColor)) > 64) {
+            if (isAccentOptimal) {
                 textView.setLinkTextColor(accentColor);
             }
         }
         if (view instanceof IThemeAccentView) {
-            if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, accentColor)) > 64) {
+            if (isAccentOptimal) {
                 ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(accentColor));
+            } else {
+                final int defaultAccentColor = ThemeUtils.getColorFromAttribute(view.getContext(),
+                        R.attr.colorAccent, resources.getColor(R.color.branding_color));
+                ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(defaultAccentColor));
             }
         } else if (view instanceof IThemeBackgroundTintView) {
-            ((IThemeBackgroundTintView) view).setBackgroundTintColor(ColorStateList.valueOf(backgroundTintColor));
+            if (isAccentOptimal || !isColorTint) {
+                ((IThemeBackgroundTintView) view).setBackgroundTintColor(ColorStateList.valueOf(backgroundTintColor));
+            }
         } else if (view instanceof TintableBackgroundView) {
             final TintableBackgroundView tintable = (TintableBackgroundView) view;
-            applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
+            if (isAccentOptimal) {
+                applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
+            }
         } else if (view instanceof TwidereToolbar) {
             final int itemColor = ThemeUtils.getContrastActionBarItemColor((Context) activity,
                     themeResourceId, actionBarColor);
             ((TwidereToolbar) view).setItemColor(itemColor);
         } else if (view instanceof EditText) {
-            ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(accentColor));
+            if (isAccentOptimal) {
+                ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(accentColor));
+            }
         } else if (view instanceof ProgressBar) {
-            ViewSupport.setProgressTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
-            ViewSupport.setProgressBackgroundTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
+            if (isAccentOptimal) {
+                ViewSupport.setProgressTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
+                ViewSupport.setProgressBackgroundTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
+            }
         }
     }
 

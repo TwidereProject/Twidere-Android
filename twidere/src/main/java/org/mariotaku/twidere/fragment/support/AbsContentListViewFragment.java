@@ -40,7 +40,6 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -149,7 +148,6 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
         final int colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeColors(ThemeUtils.getUserAccentColor(context));
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
         mAdapter = onCreateAdapter(context, compact);
         mListView.setOnTouchListener(new View.OnTouchListener() {
@@ -161,7 +159,7 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
                 return false;
             }
         });
-        mListView.setAdapter((ListAdapter) mAdapter);
+        mListView.setAdapter(mAdapter);
 
     }
 

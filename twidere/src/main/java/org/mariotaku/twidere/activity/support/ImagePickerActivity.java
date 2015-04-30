@@ -47,7 +47,7 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
 
     @Override
     public int getThemeColor() {
-        return 0;
+        return ThemeUtils.getUserAccentColor(this);
     }
 
     @Override

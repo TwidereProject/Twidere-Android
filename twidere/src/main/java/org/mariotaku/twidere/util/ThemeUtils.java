@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -129,26 +128,6 @@ public class ThemeUtils implements Constants {
         actionBar.setPrimaryBackground(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
         actionBar.setSplitBackground(getActionBarSplitBackground(context, themeRes));
         actionBar.setStackedBackground(getActionBarStackedBackground(context, themeRes, accentColor, outlineEnabled));
-    }
-
-
-    public static void applyBackground(final View view) {
-        if (view == null) return;
-        applyBackground(view, getUserAccentColor(view.getContext()));
-    }
-
-    public static void applyBackground(final View view, final int color) {
-        if (view == null) return;
-        try {
-            final Drawable bg = view.getBackground();
-            if (bg == null) return;
-            final Drawable mutated = bg.mutate();
-            if (mutated == null) return;
-            mutated.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-            view.invalidate();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void applyColorFilterToMenuIcon(Activity activity, Menu menu) {
@@ -791,6 +770,25 @@ public class ThemeUtils implements Constants {
         final Resources res = context.getResources();
         final int def = res.getColor(R.color.branding_color);
         return pref.getInt(KEY_THEME_COLOR, def);
+    }
+
+    public static int getOptimalAccentColor(final Context context, boolean isActionBarContext, int themeResId) {
+        final int userAccentColor = getUserAccentColor(context);
+        final int backgroundColorApprox;
+        final boolean isDarkTheme = isDarkTheme(themeResId);
+        if (!isActionBarContext) {
+            backgroundColorApprox = isDarkTheme ? Color.BLACK : Color.WHITE;
+        } else if (isDarkTheme) {
+            // View context is derived from ActionBar but is currently dark theme, so we should show
+            // light
+            backgroundColorApprox = Color.BLACK;
+        } else {
+            // View context is derived from ActionBar and it's light theme, so we use contrast color
+            backgroundColorApprox = Color.WHITE;
+        }
+        if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, userAccentColor)) > 64)
+            return userAccentColor;
+        return getColorFromAttribute(context, R.attr.colorAccent, context.getResources().getColor(R.color.branding_color));
     }
 
     public static int getUserHighlightColor(final Context context) {
