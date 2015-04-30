@@ -130,8 +130,8 @@ public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapt
     @Override
     public void setControlVisible(boolean visible) {
         final FragmentActivity activity = getActivity();
-        if (activity instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) activity).setControlBarVisibleAnimate(visible);
+        if (activity instanceof IControlBarActivity) {
+            ((IControlBarActivity) activity).setControlBarVisibleAnimate(visible);
         }
     }
 

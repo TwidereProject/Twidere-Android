@@ -67,7 +67,6 @@ public class ShapedImageView extends ImageView {
     @ShapeStyle
     public static final int SHAPE_RECTANGLE = 0x2;
     private static final int SHADOW_START_COLOR = 0x37000000;
-    private static final boolean USE_OUTLINE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     private static final boolean OUTLINE_DRAW = false;
     private final Matrix mMatrix;
     private final RectF mSource;
@@ -128,7 +127,7 @@ public class ShapedImageView extends ImageView {
         setCornerRadius(a.getDimension(R.styleable.ShapedImageView_sivCornerRadius, 0));
         setCornerRadiusRatio(a.getFraction(R.styleable.ShapedImageView_sivCornerRadiusRatio, 1, 1, -1));
 
-        if (USE_OUTLINE) {
+        if (useOutline()) {
             if (a.hasValue(R.styleable.ShapedImageView_sivElevation)) {
                 ViewCompat.setElevation(this,
                         a.getDimensionPixelSize(R.styleable.ShapedImageView_sivElevation, 0));
@@ -139,9 +138,7 @@ public class ShapedImageView extends ImageView {
         setBackgroundColor(a.getColor(R.styleable.ShapedImageView_sivBackgroundColor, 0));
         a.recycle();
 
-        if (USE_OUTLINE) {
-            initOutlineProvider();
-        }
+        initOutlineProvider();
     }
 
     /**
@@ -426,6 +423,7 @@ public class ShapedImageView extends ImageView {
     }
 
     private void initOutlineProvider() {
+        if (!useOutline()) return;
         ViewSupport.setClipToOutline(this, true);
         ViewSupport.setOutlineProvider(this, new CircularOutlineProvider());
     }
@@ -466,7 +464,7 @@ public class ShapedImageView extends ImageView {
     }
 
     private void updateShadowBitmap() {
-        if (USE_OUTLINE) return;
+        if (useOutline()) return;
         final int width = getWidth(), height = getHeight();
         if (width <= 0 || height <= 0) return;
         final int contentLeft = getPaddingLeft(), contentTop = getPaddingTop(),
@@ -497,6 +495,10 @@ public class ShapedImageView extends ImageView {
         invalidate();
     }
 
+    private boolean useOutline() {
+        return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP && !isInEditMode();
+    }
+
     @IntDef({SHAPE_CIRCLE, SHAPE_RECTANGLE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ShapeStyle {
@@ -505,9 +507,10 @@ public class ShapedImageView extends ImageView {
     private static class CircularOutlineProvider extends ViewOutlineProviderCompat {
         @Override
         public void getOutline(View view, OutlineCompat outline) {
+            final int viewWidth = view.getWidth(), viewHeight = view.getHeight();
             final int contentLeft = view.getPaddingLeft(), contentTop = view.getPaddingTop(),
-                    contentRight = view.getWidth() - view.getPaddingRight(),
-                    contentBottom = view.getHeight() - view.getPaddingBottom();
+                    contentRight = viewWidth - view.getPaddingRight(),
+                    contentBottom = viewHeight - view.getPaddingBottom();
             final ShapedImageView imageView = (ShapedImageView) view;
             if (imageView.getStyle() == SHAPE_CIRCLE) {
                 final int contentWidth = contentRight - contentLeft,

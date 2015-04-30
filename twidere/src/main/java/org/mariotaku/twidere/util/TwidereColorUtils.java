@@ -123,4 +123,8 @@ public class TwidereColorUtils {
         final int yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
         return (yiq >= threshold) ? colorDark : colorLight;
     }
+
+    public static int getYIQContrast(int color1, int color2) {
+        return getYIQLuminance(color1) - getYIQLuminance(color2);
+    }
 }

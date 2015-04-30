@@ -64,6 +64,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
+import com.meizu.flyme.reflect.StatusBarProxy;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -340,15 +341,15 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
-        if (!Utils.hasAccount(this)) {
-            final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
-            signInIntent.setClass(this, SignInActivity.class);
-            startActivity(signInIntent);
-            finish();
-            return;
-        } else {
-            notifyAccountsChanged();
-        }
+//        if (!Utils.hasAccount(this)) {
+//            final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
+//            signInIntent.setClass(this, SignInActivity.class);
+//            startActivity(signInIntent);
+//            finish();
+//            return;
+//        } else {
+//            notifyAccountsChanged();
+//        }
         final Intent intent = getIntent();
         if (openSettingsWizard()) {
             finish();
@@ -366,7 +367,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         ThemeUtils.applyBackground(mTabIndicator);
         mPagerAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), mTabIndicator, mTabColumns);
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+//        mViewPager.setOffscreenPageLimit(3);
         mTabIndicator.setViewPager(mViewPager);
         mTabIndicator.setOnPageChangeListener(this);
         mTabIndicator.setColumns(mTabColumns);
@@ -490,14 +491,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     public void notifyAccountsChanged() {
-        if (mPreferences == null) return;
-//        final long[] accountIds = getAccountIds(this);
-//        final long default_id = mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
-//        if (accountIds == null || accountIds.length == 0) {
-//            finish();
-//        } else if (accountIds.length > 0 && !ArrayUtils.contains(accountIds, default_id)) {
-//            mPreferences.edit().putLong(KEY_DEFAULT_ACCOUNT_ID, accountIds[0]).apply();
-//        }
     }
 
     @Subscribe
@@ -834,6 +827,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mColorStatusFrameLayout.setDrawColor(true);
         mColorStatusFrameLayout.setDrawShadow(false);
         mColorStatusFrameLayout.setColor(statusBarColor, actionBarAlpha);
+        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
         mColorStatusFrameLayout.setFactor(1);
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);

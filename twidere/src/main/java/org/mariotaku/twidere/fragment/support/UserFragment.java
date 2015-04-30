@@ -81,6 +81,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.meizu.flyme.reflect.StatusBarProxy;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -213,6 +214,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private int mActionBarShadowColor;
     private int mUiColor;
     private boolean mNameFirst;
+    private int mPreviousTabItemIsDark, mPreviousActionBarItemIsDark;
 
 
     private final LoaderCallbacks<SingleResponse<Relationship>> mFriendshipLoaderCallbacks = new LoaderCallbacks<SingleResponse<Relationship>>() {
@@ -402,7 +404,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public boolean isScrollContent(float x, float y) {
-        final ViewPager v = mViewPager;
+        final View v = mViewPager;
         final int[] location = new int[2];
         v.getLocationInWindow(location);
         return x >= location[0] && x <= location[0] + v.getWidth()
@@ -892,6 +894,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         intent.putExtras(extras);
         menu.removeGroup(MENU_GROUP_USER_EXTENSION);
         Utils.addIntentToMenu(getActivity(), menu, intent, MENU_GROUP_USER_EXTENSION);
+        final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
+        if (drawer != null) {
+            final int offset = drawer.getPaddingTop() - drawer.getHeaderTop();
+            updateScrollOffset(offset);
+        }
     }
 
     @Override
@@ -1480,37 +1487,49 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final int themeId = activity.getCurrentThemeResourceId();
             if (ThemeUtils.isDarkTheme(themeId)) {
                 stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
-                final int contrastColor = TwidereColorUtils.getContrastYIQ(stackedTabColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
-                mPagerIndicator.setIconColor(contrastColor);
-                mPagerIndicator.setLabelColor(contrastColor);
-                mPagerIndicator.setStripColor(mUiColor);
-            } else if (drawable instanceof ColorDrawable) {
-                stackedTabColor = mUiColor;
-                final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
-                ((ColorDrawable) drawable).setColor(tabColor);
-                final int contrastColor = TwidereColorUtils.getContrastYIQ(tabColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
-                mPagerIndicator.setIconColor(contrastColor);
-                mPagerIndicator.setLabelColor(contrastColor);
-                mPagerIndicator.setStripColor(contrastColor);
             } else {
-                // This shouldn't happen, return
-                return;
+                stackedTabColor = mUiColor;
             }
-            final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
-            final int itemColor = ThemeUtils.getContrastActionBarItemColor(activity, themeId, barColor);
-            final Toolbar actionBarView = activity.getActionBarToolbar();
-            if (actionBarView != null) {
-                actionBarView.setTitleTextColor(itemColor);
-                actionBarView.setSubtitleTextColor(itemColor);
-                ThemeUtils.setActionBarOverflowColor(actionBarView, itemColor);
-                ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(actionBarView, ActionMenuView.class), itemColor, itemColor);
-                final Drawable navigationIcon = actionBarView.getNavigationIcon();
-                if (navigationIcon != null) {
-                    navigationIcon.setColorFilter(itemColor, Mode.SRC_ATOP);
+
+            final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
+            ((ColorDrawable) drawable).setColor(tabColor);
+            final boolean tabItemIsDark = TwidereColorUtils.getYIQLuminance(tabColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD;
+
+            if (mPreviousTabItemIsDark == 0 || (tabItemIsDark ? 1 : -1) != mPreviousTabItemIsDark) {
+                final int[] primaryColors = new int[2];
+                ThemeUtils.getDarkLightForegroundColors(activity, themeId, primaryColors);
+                final int tabContrastColor = primaryColors[tabItemIsDark ? 0 : 1];
+                mPagerIndicator.setIconColor(tabContrastColor);
+                mPagerIndicator.setLabelColor(tabContrastColor);
+                if (ThemeUtils.isDarkTheme(themeId)) {
+                    mPagerIndicator.setStripColor(mUiColor);
+                } else {
+                    mPagerIndicator.setStripColor(tabContrastColor);
                 }
-                actionBarView.setNavigationIcon(navigationIcon);
+                mPagerIndicator.updateAppearance();
             }
-            mPagerIndicator.updateAppearance();
+            mPreviousTabItemIsDark = (tabItemIsDark ? 1 : -1);
+
+            final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
+            final boolean actionItemIsDark = TwidereColorUtils.getYIQLuminance(barColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD;
+            if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
+                StatusBarProxy.setStatusBarDarkIcon(activity.getWindow(), actionItemIsDark);
+                final int itemColor = ThemeUtils.getContrastActionBarItemColor(activity, themeId, barColor);
+                final int titleColor = ThemeUtils.getContrastActionBarTitleColor(activity, themeId, barColor);
+                final Toolbar actionBarView = activity.getActionBarToolbar();
+                if (actionBarView != null) {
+                    actionBarView.setTitleTextColor(titleColor);
+                    actionBarView.setSubtitleTextColor(titleColor);
+                    ThemeUtils.setActionBarOverflowColor(actionBarView, itemColor);
+                    ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(actionBarView, ActionMenuView.class), itemColor, itemColor);
+                    final Drawable navigationIcon = actionBarView.getNavigationIcon();
+                    if (navigationIcon != null) {
+                        navigationIcon.setColorFilter(itemColor, Mode.SRC_ATOP);
+                    }
+                    actionBarView.setNavigationIcon(navigationIcon);
+                }
+            }
+            mPreviousActionBarItemIsDark = actionItemIsDark ? 1 : -1;
         }
         updateTitleAlpha();
     }

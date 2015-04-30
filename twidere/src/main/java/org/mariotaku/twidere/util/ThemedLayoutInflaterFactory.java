@@ -40,11 +40,13 @@ import android.view.InflateException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.AppCompatPreferenceActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.TwidereToolbar;
 import org.mariotaku.twidere.view.iface.IThemeAccentView;
@@ -130,10 +132,12 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         final boolean isActionBarContext = isActionBarContext(view.getContext(), getActionBarContext((Activity) activity));
         final int themeResourceId = activity.getCurrentThemeResourceId();
         final boolean isDarkTheme = ThemeUtils.isDarkTheme(themeResourceId);
+        final int backgroundColorApprox;
         if (!isActionBarContext) {
             accentColor = actionBarColor = activity.getCurrentThemeColor();
             noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             backgroundTintColor = accentColor;
+            backgroundColorApprox = isDarkTheme ? Color.BLACK : Color.WHITE;
             isColorTint = true;
         } else if (isDarkTheme) {
             // View context is derived from ActionBar but is currently dark theme, so we should show
@@ -142,6 +146,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             noTintColor = Color.WHITE;
             accentColor = activity.getCurrentThemeColor();
             backgroundTintColor = noTintColor;
+            backgroundColorApprox = Color.BLACK;
             isColorTint = true;
         } else {
             // View context is derived from ActionBar and it's light theme, so we use contrast color
@@ -149,14 +154,20 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             accentColor = TwidereColorUtils.getContrastYIQ(actionBarColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
             backgroundTintColor = accentColor;
+            backgroundColorApprox = Color.WHITE;
             isColorTint = false;
         }
         if (view instanceof TextView) {
             final TextView textView = (TextView) view;
-            textView.setLinkTextColor(accentColor);
+
+            if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, accentColor)) > 64) {
+                textView.setLinkTextColor(accentColor);
+            }
         }
         if (view instanceof IThemeAccentView) {
-            ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(accentColor));
+            if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, accentColor)) > 64) {
+                ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(accentColor));
+            }
         } else if (view instanceof IThemeBackgroundTintView) {
             ((IThemeBackgroundTintView) view).setBackgroundTintColor(ColorStateList.valueOf(backgroundTintColor));
         } else if (view instanceof TintableBackgroundView) {
@@ -168,6 +179,9 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             ((TwidereToolbar) view).setItemColor(itemColor);
         } else if (view instanceof EditText) {
             ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(accentColor));
+        } else if (view instanceof ProgressBar) {
+            ViewSupport.setProgressTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
+            ViewSupport.setProgressBackgroundTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
         }
     }
 

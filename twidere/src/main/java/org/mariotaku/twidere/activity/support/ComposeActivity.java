@@ -61,7 +61,6 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -201,25 +200,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     @Override
     public int getThemeResourceId() {
         return ThemeUtils.getComposeThemeResource(this);
-    }
-
-    public static boolean isFinishedComposing(CharSequence text) {
-        if (!(text instanceof Spanned)) return true;
-        final Spanned spanned = (Spanned) text;
-        try {
-            final Class<?> cls = Class.forName("android.text.style.SpellCheckSpan");
-            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
-        } catch (Exception ignored) {
-
-        }
-        try {
-            final Class<?> cls = Class.forName("android.view.inputmethod.ComposingText");
-            if (spanned.getSpans(0, spanned.length(), cls).length > 0) return false;
-        } catch (Exception ignored) {
-
-        }
-//        if (spanned.getSpans(0, spanned.length(), SpanWatcher.class).length > 0) return false;
-        return true;
     }
 
     @Override
@@ -620,6 +600,49 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         linearLayoutManager.setStackFromEnd(true);
         mAccountSelector.setLayoutManager(linearLayoutManager);
         mAccountSelector.addItemDecoration(new SpacingItemDecoration(this));
+        mAccountSelector.setItemAnimator(new RecyclerView.ItemAnimator() {
+            @Override
+            public void runPendingAnimations() {
+
+            }
+
+            @Override
+            public boolean animateRemove(ViewHolder holder) {
+                return false;
+            }
+
+            @Override
+            public boolean animateAdd(ViewHolder holder) {
+                return false;
+            }
+
+            @Override
+            public boolean animateMove(ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+                Log.d(LOGTAG, String.format("animateMove"));
+                return false;
+            }
+
+            @Override
+            public boolean animateChange(ViewHolder oldHolder, ViewHolder newHolder, int fromLeft, int fromTop, int toLeft, int toTop) {
+                Log.d(LOGTAG, String.format("animateChange"));
+                return false;
+            }
+
+            @Override
+            public void endAnimation(ViewHolder item) {
+                Log.d(LOGTAG, String.format("endAnimation"));
+            }
+
+            @Override
+            public void endAnimations() {
+
+            }
+
+            @Override
+            public boolean isRunning() {
+                return false;
+            }
+        });
         mAccountsAdapter = new AccountIconsAdapter(this);
         mAccountSelector.setAdapter(mAccountsAdapter);
         mAccountsAdapter.setAccounts(ParcelableAccount.getAccounts(this, false, false));
@@ -1271,6 +1294,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         private ParcelableAccount[] mAccounts;
 
         public AccountIconsAdapter(ComposeActivity activity) {
+            setHasStableIds(true);
             mActivity = activity;
             mInflater = activity.getLayoutInflater();
             mImageLoader = TwidereApplication.getInstance(activity).getMediaLoaderWrapper();

@@ -203,7 +203,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     public SQLiteDatabase getSQLiteDatabase() {
         if (mDatabase != null) return mDatabase;
-
         StrictModeUtils.checkDiskIO();
         return mDatabase = getSQLiteOpenHelper().getWritableDatabase();
     }

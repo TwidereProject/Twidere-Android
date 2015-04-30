@@ -56,6 +56,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.meizu.flyme.reflect.StatusBarProxy;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -70,6 +72,7 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
@@ -556,13 +559,15 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     private void setupTintStatusBar() {
         if (mMainContent == null) return;
 
-        final int color = getCurrentThemeColor();
         final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
+        final int statusBarColor;
         if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
-            mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark), alpha);
+            statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
         } else {
-            mMainContent.setColor(color, alpha);
+            statusBarColor = getCurrentThemeColor();
         }
+        mMainContent.setColor(statusBarColor, alpha);
+        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
 
         mMainContent.setDrawShadow(false);
         mMainContent.setDrawColor(true);

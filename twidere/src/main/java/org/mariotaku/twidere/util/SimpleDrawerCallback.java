@@ -20,8 +20,10 @@
 package org.mariotaku.twidere.util;
 
 import android.os.SystemClock;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
+import android.view.View;
 
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 
@@ -54,9 +56,11 @@ public class SimpleDrawerCallback implements DrawerCallback {
 
     @Override
     public boolean isScrollContent(float x, float y) {
+        final View v = mRecyclerView;
         final int[] location = new int[2];
-        mRecyclerView.getLocationOnScreen(location);
-        return x >= location[0] && x <= location[0] && y >= location[1] && y <= location[1];
+        v.getLocationInWindow(location);
+        return x >= location[0] && x <= location[0] + v.getWidth()
+                && y >= location[1] && y <= location[1] + v.getHeight();
     }
 
     @Override

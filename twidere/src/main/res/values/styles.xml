@@ -31,6 +31,7 @@
         <item name="sivBorderWidth">1dp</item>
         <item name="sivCornerRadiusRatio">10%p</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivShape">circle</item>
     </style>
 
     <style name="Widget.Light.ProfileImage" parent="Widget.Base">
@@ -38,6 +39,7 @@
         <item name="sivBorderWidth">1dp</item>
         <item name="sivCornerRadiusRatio">10%p</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivShape">circle</item>
     </style>
 
     <style name="Widget.ProfileImage.Large">
@@ -48,6 +50,7 @@
         <item name="sivElevation">@dimen/elevation_card</item>
         <item name="sivBorderWidth">2dp</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivShape">circle</item>
     </style>
 
     <style name="Widget.Light.ProfileImage.Large">
@@ -58,6 +61,7 @@
         <item name="sivElevation">@dimen/elevation_card</item>
         <item name="sivBorderWidth">2dp</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivShape">circle</item>
     </style>
 
     <style name="Widget.ProfileType" parent="Widget.Base">

@@ -26,26 +26,27 @@ import android.util.AttributeSet;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import org.mariotaku.twidere.view.iface.IThemeAccentView;
+import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
 /**
  * Created by mariotaku on 15/4/29.
  */
-public class ThemedAccentMaterialEditText extends MaterialEditText implements IThemeAccentView {
-    public ThemedAccentMaterialEditText(Context context) {
+public class ThemedBackgroundTintMaterialEditText extends MaterialEditText implements IThemeBackgroundTintView {
+    public ThemedBackgroundTintMaterialEditText(Context context) {
         super(context);
     }
 
-    public ThemedAccentMaterialEditText(Context context, AttributeSet attrs) {
+    public ThemedBackgroundTintMaterialEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ThemedAccentMaterialEditText(Context context, AttributeSet attrs, int style) {
+    public ThemedBackgroundTintMaterialEditText(Context context, AttributeSet attrs, int style) {
         super(context, attrs, style);
     }
 
     @Override
-    public void setAccentTintColor(@NonNull ColorStateList color) {
+    public void setBackgroundTintColor(@NonNull ColorStateList color) {
         setPrimaryColor(color.getDefaultColor());
     }
+
 }

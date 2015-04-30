@@ -273,7 +273,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_user_profile_editor, container, false);
+        return inflater.inflate(R.layout.fragment_user_profile_editor, container, false);
     }
 
     @Override

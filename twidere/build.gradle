@@ -55,7 +55,6 @@ android {
 repositories {
     jcenter()
     maven { url 'https://repo.commonsware.com.s3.amazonaws.com' }
-    maven { url 'https://github.com/suckgamony/RapidDecoder/raw/master/repository' }
     maven { url "https://jitpack.io" }
 }
 

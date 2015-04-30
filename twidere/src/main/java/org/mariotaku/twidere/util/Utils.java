@@ -144,6 +144,7 @@ import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
 import org.mariotaku.twidere.fragment.support.DraftsFragment;
 import org.mariotaku.twidere.fragment.support.FiltersFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
+import org.mariotaku.twidere.fragment.support.ListsFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.support.SavedSearchesListFragment;
@@ -163,10 +164,9 @@ import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.fragment.support.UserFriendsFragment;
 import org.mariotaku.twidere.fragment.support.UserListFragment;
 import org.mariotaku.twidere.fragment.support.UserListMembersFragment;
-import org.mariotaku.twidere.fragment.support.UserListMembershipsListFragment;
+import org.mariotaku.twidere.fragment.support.UserListMembershipsFragment;
 import org.mariotaku.twidere.fragment.support.UserListSubscribersFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
-import org.mariotaku.twidere.fragment.support.UserListsFragment;
 import org.mariotaku.twidere.fragment.support.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserProfileEditorFragment;
@@ -812,7 +812,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_LIST_MEMBERSHIPS: {
-                fragment = new UserListMembershipsListFragment();
+                fragment = new UserListMembershipsFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
@@ -925,7 +925,7 @@ public final class Utils implements Constants, TwitterConstants {
                 break;
             }
             case LINK_ID_USER_LISTS: {
-                fragment = new UserListsFragment();
+                fragment = new ListsFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {

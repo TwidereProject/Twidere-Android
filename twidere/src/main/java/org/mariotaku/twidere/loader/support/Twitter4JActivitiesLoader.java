@@ -22,14 +22,12 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.Utils;
 
@@ -56,8 +54,6 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
     private final Context mContext;
     private final long mAccountIds;
     private final long mMaxId, mSinceId;
-    private final SQLiteDatabase mDatabase;
-    private final Handler mHandler;
     private final Object[] mSavedStatusesFileArgs;
     private Comparator<ParcelableActivity> mComparator;
 
@@ -69,8 +65,6 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
         mAccountIds = accountId;
         mSinceId = sinceId;
         mMaxId = maxId;
-        mDatabase = TwidereApplication.getInstance(context).getSQLiteDatabase();
-        mHandler = new Handler();
         mSavedStatusesFileArgs = savedStatusesArgs;
     }
 

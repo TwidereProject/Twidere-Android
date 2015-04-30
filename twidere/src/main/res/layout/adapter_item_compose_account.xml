@@ -27,20 +27,31 @@
 
     <org.mariotaku.twidere.view.SquareShapedImageView
         android:id="@android:id/icon"
-        style="?profileImageStyle"
+        style="?profileImageStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:sivBorder="true"
-        app:sivBorderWidth="@dimen/line_width_compose_account_profile_image" />
+        app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
+        app:sivElevation="@dimen/elevation_card" />
 
-    <TextView
-        android:id="@android:id/text1"
+    <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/element_spacing_normal"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="?android:textColorPrimary"
-        android:textStyle="bold"
-        tool:text="Name" />
+        android:layout_marginLeft="@dimen/element_spacing_msmall"
+        app:cardBackgroundColor="?android:colorBackgroundCacheHint"
+        app:cardElevation="@dimen/elevation_card"
+        app:contentPadding="@dimen/element_spacing_small">
 
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="?android:textColorPrimary"
+            android:textStyle="bold"
+            tool:text="Name" />
+
+    </android.support.v7.widget.CardView>
 </LinearLayout>

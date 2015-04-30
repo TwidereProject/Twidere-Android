@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -249,7 +248,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (actionBar == null) throw new NullPointerException();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_custom_view_message_user_picker);
+        actionBar.setCustomView(R.layout.layout_actionbar_message_user_picker);
         final View actionBarView = actionBar.getCustomView();
         mAccountSpinner = (Spinner) actionBarView.findViewById(R.id.account_spinner);
         mEditUserQuery = (EditText) actionBarView.findViewById(R.id.user_query);

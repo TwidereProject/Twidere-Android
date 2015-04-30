@@ -38,6 +38,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.FrameLayout;
 
+import com.meizu.flyme.reflect.StatusBarProxy;
+
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -45,6 +47,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
@@ -291,13 +294,15 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     private void setupTintStatusBar() {
         if (mMainContent == null) return;
 
-        final int color = getCurrentThemeColor();
         final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
+        final int statusBarColor;
         if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
-            mMainContent.setColor(getResources().getColor(R.color.background_color_action_bar_dark), alpha);
+            statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
         } else {
-            mMainContent.setColor(color, alpha);
+            statusBarColor = getCurrentThemeColor();
         }
+        mMainContent.setColor(statusBarColor, alpha);
+        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
 
         mMainContent.setDrawShadow(false);
         mMainContent.setDrawColor(true);
