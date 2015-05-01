@@ -42,6 +42,7 @@
   <string name="select_account">Pilih akun</string>
   <string name="username">Nama pengguna</string>
   <string name="password">Kata Sandi</string>
+  <string name="label_data_provider">Penyedia jasa basis data Twidere</string>
   <string name="label_refresh_service">Segarkan layanan</string>
   <string name="label_background_operation_service">Latar Belakang layanan operasi</string>
   <string name="open_in_browser">Buka di Browser</string>
@@ -241,6 +242,7 @@
   <string name="status_shortener">Penyingkat kicauan</string>
   <string name="status_shortener_default">Tidak ada (Batal mengirim)</string>
   <string name="error_message_status_too_long">Kicauan terlalu panjang.</string>
+  <string name="error_message_message_too_long">Pesan terlalu panjang.</string>
   <string name="error_message_no_content">Tidak ada konten</string>
   <string name="error_message_tweet_shorten_failed">Penyingkat kicauan gagal.</string>
   <string name="error_message_tweet_shortener_not_found">Pemendek kicauan tidak ditemukan, mungkin tidak dipasang.</string>
@@ -256,6 +258,8 @@
   <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> item terpilih</string>
   <string name="custom_host_mapping">Kustom host mapping</string>
   <string name="custom_host_mapping_summary">Host pemetaan sperti /etc/hosts, tanpa butuh permisi tambahan.</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Alamat (bisa alamat host lain)</string>
   <string name="add_host_mapping">Tambah pemetaan host</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Gunakan protokol TCP untuk permintaan DNS dan menghindari DNS Cache Posioning.</string>
@@ -265,6 +269,7 @@
   <string name="activities_by_friends">Aktivitas oleh teman-teman</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> Tweet anda difavoritkan.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> mengikuti Anda.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> me-retweet tweet anda.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> menambahkan Anda ke dalam daftar.</string>
