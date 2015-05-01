@@ -165,7 +165,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             }
         }
         if (view instanceof IThemeAccentView) {
-            if (isAccentOptimal) {
+            if (isAccentOptimal || !isColorTint) {
                 ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(accentColor));
             } else {
                 final int defaultAccentColor = ThemeUtils.getColorFromAttribute(view.getContext(),
@@ -187,7 +187,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             ((TwidereToolbar) view).setItemColor(itemColor);
         } else if (view instanceof EditText) {
             if (isAccentOptimal || !isColorTint) {
-                ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(accentColor));
+                ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(backgroundTintColor));
             }
         } else if (view instanceof ProgressBar) {
             if (isAccentOptimal) {

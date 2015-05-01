@@ -1287,12 +1287,11 @@ public class ThemeUtils implements Constants {
     }
 
     public static Context getActionBarThemedContext(Context base, int themeId, int accentColor) {
-        if (isDarkTheme(themeId)) return base;
         final int actionBarThemeId;
-        if (TwidereColorUtils.getYIQLuminance(accentColor) > ACCENT_COLOR_THRESHOLD) {
-            actionBarThemeId = R.style.Theme_Twidere_Light;
-        } else {
+        if (isDarkTheme(themeId) || TwidereColorUtils.getYIQLuminance(accentColor) <= ACCENT_COLOR_THRESHOLD) {
             actionBarThemeId = R.style.Theme_Twidere_Dark;
+        } else {
+            actionBarThemeId = R.style.Theme_Twidere_Light;
         }
         final Resources.Theme baseTheme = base.getTheme();
         final Resources.Theme actionBarTheme = base.getResources().newTheme();
