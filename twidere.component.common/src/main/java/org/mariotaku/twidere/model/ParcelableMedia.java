@@ -16,6 +16,8 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -317,6 +319,7 @@ public class ParcelableMedia implements Parcelable {
     }
 
     @IntDef({TYPE_UNKNOWN, TYPE_IMAGE, TYPE_VIDEO, TYPE_ANIMATED_GIF, TYPE_CARD_ANIMATED_GIF})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface MediaType {
 
     }

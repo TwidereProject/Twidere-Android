@@ -79,7 +79,7 @@ public class SeekBarDialogPreference extends DialogPreference {
         }
 
         // set layout
-        setDialogLayoutResource(R.layout.preference_seek_bar_dialog);
+        setDialogLayoutResource(R.layout.dialog_preference_seek_bar);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
         setDialogIcon(null);

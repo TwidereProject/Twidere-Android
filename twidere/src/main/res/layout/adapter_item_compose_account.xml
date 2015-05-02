@@ -38,9 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/element_spacing_msmall"
-        app:cardBackgroundColor="?android:colorBackgroundCacheHint"
+        app:cardBackgroundColor="?android:colorBackground"
         app:cardElevation="@dimen/elevation_card"
-        app:contentPadding="@dimen/element_spacing_small">
+        app:contentPadding="@dimen/element_spacing_msmall">
 
         <TextView
             android:id="@android:id/text1"

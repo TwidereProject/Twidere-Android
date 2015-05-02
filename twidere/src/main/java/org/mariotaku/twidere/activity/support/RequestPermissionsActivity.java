@@ -81,7 +81,7 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         mPermissionsManager = new PermissionsManager(this);
-        setContentView(R.layout.request_permissions);
+        setContentView(R.layout.activity_request_permissions);
         mAcceptButton.setOnClickListener(this);
         mDenyButton.setOnClickListener(this);
         final String caller = getCallingPackage();

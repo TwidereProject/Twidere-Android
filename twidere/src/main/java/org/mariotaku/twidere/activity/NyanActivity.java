@@ -69,7 +69,7 @@ public class NyanActivity extends Activity implements Constants, OnLongClickList
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
-        setContentView(R.layout.surface_view);
+        setContentView(R.layout.layout_surface_view);
         mSurfaceView.setOnLongClickListener(this);
         final SurfaceHolder holder = mSurfaceView.getHolder();
         mHelper = new NyanSurfaceHelper(this);

@@ -135,19 +135,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onTitleChanged(CharSequence title, int color) {
-        final SpannableStringBuilder builder = new SpannableStringBuilder(title);
-        final int themeResId = getCurrentThemeResourceId();
-        final int themeColor = getThemeColor();
-        final int contrastColor = ThemeUtils.getContrastActionBarTitleColor(this, themeResId, themeColor);
-        if (!ThemeUtils.isDarkTheme(themeResId)) {
-            builder.setSpan(new ForegroundColorSpan(contrastColor), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        super.onTitleChanged(title, color);
-    }
-
-
-    @Override
     public void setTheme(int resid) {
         super.setTheme(mCurrentThemeResource = getThemeResourceId());
     }

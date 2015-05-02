@@ -69,7 +69,6 @@ import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfiguration
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
@@ -315,10 +314,11 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         final Activity activity = getActivity();
         if (activity instanceof BasePreferenceActivity) {
             final ActionBar actionBar = ((BasePreferenceActivity) activity).getSupportActionBar();
+            final int themeResId = ((IThemedActivity) activity).getThemeResourceId();
             final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
-            final int itemColor = TwidereColorUtils.getContrastYIQ(themeColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
+            final int itemColor = ThemeUtils.getContrastActionBarItemColor(actionBar.getThemedContext());
             final int popupTheme = ThemeUtils.getActionBarPopupThemeRes(actionBar.getThemedContext());
-            final int popupColor = ThemeUtils.getThemeForegroundColor(activity, popupTheme);
+            final int popupColor = ThemeUtils.getContrastActionBarItemColor(activity);
             ThemeUtils.applyColorFilterToMenuIcon(menu, itemColor, popupColor, 0, Mode.SRC_ATOP);
         }
     }

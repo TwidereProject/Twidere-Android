@@ -59,7 +59,7 @@ public class PhishingLinkWarningDialogFragment extends BaseSupportDialogFragment
 		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
 		final LayoutInflater inflater = LayoutInflater.from(wrapped);
 		builder.setTitle(android.R.string.dialog_alert_title);
-		builder.setView(inflater.inflate(R.layout.phishing_link_warning, null));
+		builder.setView(inflater.inflate(R.layout.dialog_phishing_link_warning, null));
 		builder.setPositiveButton(android.R.string.ok, this);
 		builder.setNegativeButton(android.R.string.cancel, null);
 		return builder.create();

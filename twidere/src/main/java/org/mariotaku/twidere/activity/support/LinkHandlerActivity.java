@@ -264,7 +264,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             final int themeColor = getCurrentThemeColor();
             final int themeId = getCurrentThemeResourceId();
             final int itemColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
-            ThemeUtils.setActionBarOverflowColor(toolbar, itemColor);
             ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
         }
     }
@@ -354,13 +353,13 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             }
         }
         if (actionBarItemsColor != 0 && shouldSetActionItemColor()) {
-            final int titleColor = ThemeUtils.getContrastActionBarTitleColor(this, themeId, themeColor);
-            final Toolbar toolbar = peekActionBarToolbar();
-            if (toolbar != null) {
-                ThemeUtils.setToolBarColor(toolbar, titleColor, actionBarItemsColor);
-            } else {
-                ThemeUtils.setActionBarColor(getWindow(), getSupportActionBar(), titleColor, actionBarItemsColor);
-            }
+//            final int titleColor = ThemeUtils.getContrastActionBarTitleColor(this, themeId, themeColor);
+//            final Toolbar toolbar = peekActionBarToolbar();
+//            if (toolbar != null) {
+//                ThemeUtils.setToolBarColor(toolbar, titleColor, actionBarItemsColor);
+//            } else {
+//                ThemeUtils.setActionBarColor(getWindow(), getSupportActionBar(), titleColor, actionBarItemsColor);
+//            }
         }
     }
 

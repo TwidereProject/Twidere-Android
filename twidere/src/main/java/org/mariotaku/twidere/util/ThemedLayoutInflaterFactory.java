@@ -190,7 +190,8 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
                 ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(backgroundTintColor));
             }
         } else if (view instanceof ProgressBar) {
-            if (isAccentOptimal) {
+            if (isAccentOptimal || !isColorTint) {
+                ViewSupport.setIndeterminateTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
                 ViewSupport.setProgressTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
                 ViewSupport.setProgressBackgroundTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
             }

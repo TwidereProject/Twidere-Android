@@ -1515,11 +1515,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
                 StatusBarProxy.setStatusBarDarkIcon(activity.getWindow(), actionItemIsDark);
                 final int itemColor = ThemeUtils.getContrastActionBarItemColor(activity, themeId, barColor);
-                final int titleColor = ThemeUtils.getContrastActionBarTitleColor(activity, themeId, barColor);
+//                final int titleColor = ThemeUtils.getContrastActionBarTitleColor(activity, themeId, barColor);
                 final Toolbar actionBarView = activity.getActionBarToolbar();
                 if (actionBarView != null) {
-                    actionBarView.setTitleTextColor(titleColor);
-                    actionBarView.setSubtitleTextColor(titleColor);
+//                    actionBarView.setTitleTextColor(titleColor);
+//                    actionBarView.setSubtitleTextColor(titleColor);
                     ThemeUtils.setActionBarOverflowColor(actionBarView, itemColor);
                     ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(actionBarView, ActionMenuView.class), itemColor, itemColor);
                     final Drawable navigationIcon = actionBarView.getNavigationIcon();

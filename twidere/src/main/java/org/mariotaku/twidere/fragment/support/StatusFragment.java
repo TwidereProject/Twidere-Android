@@ -953,6 +953,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
+                mode.setTitle(android.R.string.selectTextMode);
                 return true;
             }
 

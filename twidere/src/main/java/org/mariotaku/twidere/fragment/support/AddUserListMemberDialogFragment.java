@@ -65,7 +65,7 @@ public class AddUserListMemberDialogFragment extends BaseSupportDialogFragment i
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-        final View view = LayoutInflater.from(wrapped).inflate(R.layout.auto_complete_textview, null);
+        final View view = LayoutInflater.from(wrapped).inflate(R.layout.dialog_auto_complete_textview, null);
         builder.setView(view);
         mEditText = (AutoCompleteTextView) view.findViewById(R.id.edit_text);
         if (savedInstanceState != null) {

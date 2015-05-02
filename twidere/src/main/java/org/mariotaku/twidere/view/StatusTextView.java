@@ -4,9 +4,10 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
+
+import org.mariotaku.twidere.text.SafeSpannableString;
+import org.mariotaku.twidere.text.SafeSpannableStringBuilder;
 
 public class StatusTextView extends AppCompatTextView {
 
@@ -18,43 +19,10 @@ public class StatusTextView extends AppCompatTextView {
         this(context, attrs, 0);
     }
 
-
     public StatusTextView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         setEditableFactory(new SafeEditableFactory());
         setSpannableFactory(new SafeSpannableFactory());
-    }
-
-    private static class SafeSpannableString extends SpannableString {
-
-        public SafeSpannableString(CharSequence source) {
-            super(source);
-        }
-
-        @Override
-        public void setSpan(Object what, int start, int end, int flags) {
-            if (start < 0 || end < 0) {
-                // Silently ignore
-                return;
-            }
-            super.setSpan(what, start, end, flags);
-        }
-    }
-
-    private static class SafeSpannableStringBuilder extends SpannableStringBuilder {
-
-        public SafeSpannableStringBuilder(CharSequence source) {
-            super(source);
-        }
-
-        @Override
-        public void setSpan(Object what, int start, int end, int flags) {
-            if (start < 0 || end < 0) {
-                // Silently ignore
-                return;
-            }
-            super.setSpan(what, start, end, flags);
-        }
     }
 
     private class SafeEditableFactory extends Editable.Factory {

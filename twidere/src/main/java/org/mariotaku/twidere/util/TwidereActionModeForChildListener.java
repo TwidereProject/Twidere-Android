@@ -47,6 +47,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
  */
 public class TwidereActionModeForChildListener implements NativeActionModeAwareLayout.OnActionModeForChildListener {
     private final Activity mActivity;
+    private final IThemedActivity mThemed;
     private final AppCompatCallback mAppCompatCallback;
     private final Window mWindow;
     private final boolean mIsFloating;
@@ -57,16 +58,12 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
     public PopupWindow mActionModePopup;
     public Runnable mShowActionModePopup;
 
-    public TwidereActionModeForChildListener(Activity activity, AppCompatCallback callback, boolean usePopup) {
-        mActivity = activity;
-        mWindow = activity.getWindow();
+    public TwidereActionModeForChildListener(IThemedActivity activity, AppCompatCallback callback, boolean usePopup) {
+        mActivity = (Activity) activity;
+        mThemed = activity;
+        mWindow = mActivity.getWindow();
         mAppCompatCallback = callback;
-        if (activity instanceof IThemedActivity) {
-            mIsFloating = ThemeUtils.isWindowFloating(mActivity,
-                    ((IThemedActivity) activity).getCurrentThemeResourceId());
-        } else {
-            mIsFloating = mWindow.isFloating();
-        }
+        mIsFloating = ThemeUtils.isWindowFloating(mActivity, activity.getCurrentThemeResourceId());
         mUsePopup = usePopup;
     }
 
@@ -111,13 +108,8 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
             if (mIsFloating && mUsePopup) {
                 // Use the action bar theme.
                 final Context actionBarContext;
-                if (mActivity instanceof IThemedActivity) {
-                    actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity,
-                            ((IThemedActivity) mActivity).getCurrentThemeResourceId(),
-                            ((IThemedActivity) mActivity).getCurrentThemeColor());
-                } else {
-                    actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity);
-                }
+                actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity, mThemed.getCurrentThemeResourceId(),
+                        mThemed.getCurrentThemeColor());
 
                 mActionModeView = new ActionBarContextView(actionBarContext);
                 mActionModePopup = new PopupWindow(actionBarContext, null,
@@ -131,6 +123,9 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
                 final int height = TypedValue.complexToDimensionPixelSize(outValue.data,
                         actionBarContext.getResources().getDisplayMetrics());
                 mActionModeView.setContentHeight(height);
+                ThemeUtils.setActionBarContextViewColor(actionBarContext, mActionModeView,
+                        mThemed.getCurrentThemeResourceId(), mThemed.getCurrentThemeColor(),
+                        mThemed.getCurrentThemeBackgroundOption(), false);
                 mActionModePopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                 mShowActionModePopup = new Runnable() {
                     public void run() {

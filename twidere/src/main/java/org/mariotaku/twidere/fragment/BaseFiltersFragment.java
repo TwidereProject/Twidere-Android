@@ -280,7 +280,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
             buildDialog(builder);
-            final View view = LayoutInflater.from(wrapped).inflate(R.layout.auto_complete_textview, null);
+            final View view = LayoutInflater.from(wrapped).inflate(R.layout.dialog_auto_complete_textview, null);
             builder.setView(view);
             mEditText = (AutoCompleteTextView) view.findViewById(R.id.edit_text);
             final Bundle args = getArguments();

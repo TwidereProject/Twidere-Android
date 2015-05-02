@@ -528,6 +528,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final ContentResolver cr = mContext.getContentResolver();
             for (long accountId : params) {
                 final Twitter twitter = Utils.getTwitterInstance(mContext, accountId, true);
+                if (twitter == null) continue;
                 try {
                     final ResponseList<SavedSearch> searches = twitter.getSavedSearches();
                     final ContentValues[] values = ContentValuesCreator.createSavedSearches(searches, accountId);
