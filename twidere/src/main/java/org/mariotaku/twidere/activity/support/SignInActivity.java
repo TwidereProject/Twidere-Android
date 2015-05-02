@@ -275,7 +275,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         if (toolbar != null) {
             final int themeColor = getCurrentThemeColor();
             final int themeId = getCurrentThemeResourceId();
-            final int itemColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
+            final int itemColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
             ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
         }
         return result;
@@ -544,7 +544,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         final int themeColor = getCurrentThemeColor();
         final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
-        final int actionBarItemsColor = ThemeUtils.getContrastActionBarItemColor(this, themeId, themeColor);
+        final int actionBarItemsColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
         ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, isActionBarOutlineEnabled());
         final Toolbar toolbar = peekActionBarToolbar();
         if (toolbar != null) {

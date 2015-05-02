@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.ActionMenuPresenter;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
@@ -64,7 +66,16 @@ public class TwidereToolbar extends Toolbar {
         return menu;
     }
 
+    @Override
+    public void setNavigationIcon(Drawable icon) {
+        if (icon != null && mItemColor != 0) {
+            icon.setColorFilter(mItemColor, PorterDuff.Mode.SRC_ATOP);
+        }
+        super.setNavigationIcon(icon);
+    }
+
     public void setItemColor(int itemColor) {
         mItemColor = itemColor;
+        setNavigationIcon(getNavigationIcon());
     }
 }

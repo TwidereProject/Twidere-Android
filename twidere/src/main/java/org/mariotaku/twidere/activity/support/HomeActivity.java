@@ -806,17 +806,17 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
         if (ThemeUtils.isDarkTheme(themeResId)) {
             statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
+            final int actionItemColor = ThemeUtils.getContrastForegroundColor(this,
+                    getCurrentThemeResourceId(), themeColor);
             homeActionButton.setButtonColor(statusBarColor);
-            homeActionButton.setIconColor(resources.getColor(R.color.action_icon_light), Mode.SRC_ATOP);
+            homeActionButton.setIconColor(actionItemColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);
             mTabIndicator.setIconColor(foregroundColors[0]);
             mTabIndicator.setLabelColor(foregroundColors[0]);
         } else {
             statusBarColor = themeColor;
-            final int colorDark = resources.getColor(R.color.action_icon_dark);
-            final int colorLight = resources.getColor(R.color.action_icon_light);
-            final int actionItemColor = TwidereColorUtils.getContrastYIQ(themeColor,
-                    ThemeUtils.ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
+            final int actionItemColor = ThemeUtils.getContrastForegroundColor(this,
+                    getCurrentThemeResourceId(), themeColor);
             final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor,
                     ThemeUtils.ACCENT_COLOR_THRESHOLD, foregroundColors[0], foregroundColors[1]);
             homeActionButton.setButtonColor(themeColor);

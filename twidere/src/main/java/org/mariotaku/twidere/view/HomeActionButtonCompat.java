@@ -88,11 +88,11 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
             final Drawable foreground = ((FrameLayout) child).getForeground();
             if (foreground != null) {
                 final Resources resources = getResources();
-                final int colorDark = resources.getColor(R.color.action_icon_dark);
-                final int colorLight = resources.getColor(R.color.action_icon_light);
-                final int contrastColor = TwidereColorUtils.getContrastYIQ(color,
-                        ThemeUtils.ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
-                foreground.setColorFilter(contrastColor, Mode.MULTIPLY);
+//                final int colorDark = resources.getColor(R.color.action_icon_dark);
+//                final int colorLight = resources.getColor(R.color.action_icon_light);
+//                final int contrastColor = TwidereColorUtils.getContrastYIQ(color,
+//                        ThemeUtils.ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
+//                foreground.setColorFilter(contrastColor, Mode.MULTIPLY);
             }
         }
 

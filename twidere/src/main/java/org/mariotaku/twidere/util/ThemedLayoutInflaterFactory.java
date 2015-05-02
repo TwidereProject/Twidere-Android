@@ -182,7 +182,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
                 applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
             }
         } else if (view instanceof TwidereToolbar) {
-            final int itemColor = ThemeUtils.getContrastActionBarItemColor((Context) activity,
+            final int itemColor = ThemeUtils.getContrastForegroundColor((Context) activity,
                     themeResourceId, actionBarColor);
             ((TwidereToolbar) view).setItemColor(itemColor);
         } else if (view instanceof EditText) {

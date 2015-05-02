@@ -245,7 +245,7 @@ public class ThemeUtils implements Constants {
         } else {
             actionBarColor = accentColor;
         }
-        final int itemColor = getContrastActionBarItemColor(context, themeRes, actionBarColor);
+        final int itemColor = getContrastForegroundColor(context, themeRes, actionBarColor);
         if (actionModeCloseButton != null) {
             actionModeCloseButton.setColorFilter(itemColor, Mode.SRC_ATOP);
         }
@@ -376,23 +376,19 @@ public class ThemeUtils implements Constants {
         return R.style.Theme_Twidere_Light_Compose;
     }
 
-    public static int getContrastActionBarItemColor(Context context, int theme, int color) {
+    public static int getContrastForegroundColor(Context context, int theme, int color) {
+        final int[] colors = new int[2];
+        getDarkLightForegroundColors(context, theme, colors);
         if (isDarkTheme(theme) || TwidereColorUtils.getYIQLuminance(color) <= ACCENT_COLOR_THRESHOLD) {
             //return light text color
-            return context.getResources().getColor(R.color.action_icon_light);
+            return colors[1];
         }
         //return dark text color
-        return context.getResources().getColor(R.color.action_icon_dark);
+        return colors[0];
     }
 
     public static int getContrastActionBarItemColor(Context context) {
-        final int colorBackground = getColorFromAttribute(context, android.R.attr.colorBackground, 0);
-        if (TwidereColorUtils.getYIQLuminance(colorBackground) <= ACCENT_COLOR_THRESHOLD) {
-            //return light text color
-            return context.getResources().getColor(R.color.action_icon_light);
-        }
-        //return dark text color
-        return context.getResources().getColor(R.color.action_icon_dark);
+        return getColorFromAttribute(context, android.R.attr.colorForeground, 0);
     }
 
     public static int getDialogThemeResource(final Context context) {
@@ -1156,15 +1152,15 @@ public class ThemeUtils implements Constants {
     public static void wrapMenuIcon(Context context, int backgroundColor, int popupBackgroundColor,
                                     Menu menu, int... excludeGroups) {
         final Resources resources = context.getResources();
-        final int colorDark = resources.getColor(R.color.action_icon_dark);
-        final int colorLight = resources.getColor(R.color.action_icon_light);
-        final int itemColor = TwidereColorUtils.getContrastYIQ(backgroundColor, colorDark, colorLight);
-        final int popupItemColor = TwidereColorUtils.getContrastYIQ(popupBackgroundColor, colorDark, colorLight);
+//        final int colorDark = resources.getColor(R.color.action_icon_dark);
+//        final int colorLight = resources.getColor(R.color.action_icon_light);
+//        final int itemColor = TwidereColorUtils.getContrastYIQ(backgroundColor, colorDark, colorLight);
+//        final int popupItemColor = TwidereColorUtils.getContrastYIQ(popupBackgroundColor, colorDark, colorLight);
         for (int i = 0, j = menu.size(), k = 0; i < j; i++) {
             final MenuItem item = menu.getItem(i);
-            wrapMenuItemIcon(item, itemColor, excludeGroups);
+//            wrapMenuItemIcon(item, itemColor, excludeGroups);
             if (item.hasSubMenu()) {
-                wrapMenuIcon(menu, popupItemColor, popupItemColor, excludeGroups);
+//                wrapMenuIcon(menu, popupItemColor, popupItemColor, excludeGroups);
             }
             if (item.isVisible()) {
                 k++;
