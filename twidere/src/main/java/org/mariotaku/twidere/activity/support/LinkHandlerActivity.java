@@ -96,7 +96,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     private ActionBarContainer mActionBarContainer;
 
     private boolean mFinishOnly;
-    private int mActionBarItemsColor;
     private int mActionBarHeight;
 
 
@@ -280,7 +279,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     public void onContentChanged() {
         super.onContentChanged();
         mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
-        mActionBarOverlay = findViewById(R.id.twidere_action_bar_overlay);
+        mActionBarOverlay = findViewById(R.id.twidere_action_bar_with_overlay);
         mActionBarContainer = (ActionBarContainer) findViewById(R.id.twidere_action_bar_container);
     }
 
@@ -363,7 +362,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 ThemeUtils.setActionBarColor(getWindow(), getSupportActionBar(), titleColor, actionBarItemsColor);
             }
         }
-        mActionBarItemsColor = actionBarItemsColor;
     }
 
     private void setStatusBarColor(int linkId, Uri uri) {

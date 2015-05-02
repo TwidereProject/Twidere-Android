@@ -104,6 +104,7 @@ import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.util.support.ActivitySupport;
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.support.ViewSupport;
+import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.ExtendedViewPager;
 import org.mariotaku.twidere.view.HomeSlidingMenu;
 import org.mariotaku.twidere.view.LeftDrawerFrameLayout;
@@ -156,8 +157,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     private HomeSlidingMenu mSlidingMenu;
     private View mEmptyTabHint;
     private View mActionsButton;
-    private View mTabsContainer;
-    private View mActionBarOverlay;
+    private View mActionBarWithOverlay;
     private LeftDrawerFrameLayout mLeftDrawerContainer;
     private RightDrawerFrameLayout mRightDrawerContainer;
     private TintedStatusFrameLayout mColorStatusFrameLayout;
@@ -303,7 +303,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     @Override
     public void setControlBarOffset(float offset) {
-        mTabsContainer.setTranslationY(mTabColumns > 1 ? 0 : getControlBarHeight() * (offset - 1));
+        mActionBarWithOverlay.setTranslationY(mTabColumns > 1 ? 0 : getControlBarHeight() * (offset - 1));
         final ViewGroup.LayoutParams lp = mActionsButton.getLayoutParams();
         if (lp instanceof MarginLayoutParams) {
             mActionsButton.setTranslationY((((MarginLayoutParams) lp).bottomMargin + mActionsButton.getHeight()) * (1 - offset));
@@ -380,9 +380,13 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mActionsButton.setOnLongClickListener(this);
         mEmptyTabHint.setOnClickListener(this);
 
-        ViewCompat.setElevation(mActionBar, ThemeUtils.getSupportActionBarElevation(this));
-        ThemeUtils.setCompatToolbarOverlay(this, new EmptyDrawable());
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+        final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
+        ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
+        ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
+        final View windowOverlay = findViewById(R.id.window_overlay);
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
+
         setupSlidingMenu();
         setupBars();
         showDataProfilingRequest();
@@ -505,7 +509,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.action_buttons: {
+            case R.id.actions_button: {
                 triggerActionsClick();
                 break;
             }
@@ -527,7 +531,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     @Override
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
-            case R.id.action_buttons: {
+            case R.id.actions_button: {
                 showMenuItemToast(v, v.getContentDescription(), true);
                 return true;
             }
@@ -645,21 +649,20 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             return 1 - mActionsButton.getTranslationY() / total;
         }
         final float totalHeight = getControlBarHeight();
-        return 1 + mTabsContainer.getTranslationY() / totalHeight;
+        return 1 + mActionBarWithOverlay.getTranslationY() / totalHeight;
     }
 
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mActionBar = (Toolbar) findViewById(R.id.actionbar);
+        mActionBar = (Toolbar) findViewById(R.id.action_bar);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
-        mActionsButton = findViewById(R.id.action_buttons);
-        mTabsContainer = findViewById(R.id.tabs_container);
+        mActionsButton = findViewById(R.id.actions_button);
+        mActionBarWithOverlay = findViewById(R.id.twidere_action_bar_with_overlay);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
-        mActionBarOverlay = findViewById(R.id.actionbar_overlay);
         mColorStatusFrameLayout = (TintedStatusFrameLayout) findViewById(R.id.home_content);
     }
 
@@ -794,7 +797,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
-        mTabIndicator.setItemContext(ThemeUtils.getActionBarContext(this));
+        mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeResId, themeColor));
         ViewSupport.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
                 backgroundOption, true));
         final int statusBarColor;
@@ -830,7 +833,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mColorStatusFrameLayout.setFactor(1);
         mTabIndicator.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);
-        ViewSupport.setBackground(mActionBarOverlay, ThemeUtils.getWindowContentOverlay(this));
     }
 
     private void setupHomeTabs() {

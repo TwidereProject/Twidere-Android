@@ -110,11 +110,14 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
         if (mActionModeView == null) {
             if (mIsFloating && mUsePopup) {
                 // Use the action bar theme.
-                final TypedValue outValue = new TypedValue();
-                final Resources.Theme baseTheme = mActivity.getTheme();
-                baseTheme.resolveAttribute(android.support.v7.appcompat.R.attr.actionBarTheme, outValue, true);
-
-                final Context actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity);
+                final Context actionBarContext;
+                if (mActivity instanceof IThemedActivity) {
+                    actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity,
+                            ((IThemedActivity) mActivity).getCurrentThemeResourceId(),
+                            ((IThemedActivity) mActivity).getCurrentThemeColor());
+                } else {
+                    actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity);
+                }
 
                 mActionModeView = new ActionBarContextView(actionBarContext);
                 mActionModePopup = new PopupWindow(actionBarContext, null,
@@ -122,6 +125,7 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
                 mActionModePopup.setContentView(mActionModeView);
                 mActionModePopup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 
+                final TypedValue outValue = new TypedValue();
                 actionBarContext.getTheme().resolveAttribute(
                         android.support.v7.appcompat.R.attr.actionBarSize, outValue, true);
                 final int height = TypedValue.complexToDimensionPixelSize(outValue.data,

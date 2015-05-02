@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.graphics.OutlineCompat;
@@ -87,8 +88,14 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
         mHelper = new EffectViewHelper(this, new PressElevationProperty(elevation), 200);
         if (isInEditMode()) {
             inflate(context, R.layout.action_item_home_actions, this);
+        } else if (context instanceof IThemedActivity) {
+            int themeResourceId = ((IThemedActivity) context).getCurrentThemeResourceId();
+            int themeColor = ((IThemedActivity) context).getCurrentThemeColor();
+            inflate(ThemeUtils.getActionBarThemedContext(context, themeResourceId, themeColor),
+                    R.layout.action_item_home_actions, this);
         } else {
-            inflate(ThemeUtils.getActionBarContext(context), R.layout.action_item_home_actions, this);
+            inflate(ThemeUtils.getActionBarThemedContext(context), R.layout.action_item_home_actions,
+                    this);
         }
         mIconView = (ImageView) findViewById(android.R.id.icon);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);

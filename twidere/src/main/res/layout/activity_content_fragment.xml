@@ -30,7 +30,7 @@
         android:layout_height="match_parent" />
 
     <RelativeLayout
-        android:id="@+id/twidere_action_bar_overlay"
+        android:id="@+id/twidere_action_bar_with_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -41,26 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_alignParentTop="true"
-            android:gravity="top"
             android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute">
-
-            <org.mariotaku.twidere.view.TwidereToolbar
-                android:id="@+id/action_bar"
-                style="?attr/toolbarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:navigationContentDescription="@string/abc_action_bar_up_description" />
-
-            <android.support.v7.internal.widget.ActionBarContextView
-                android:id="@+id/action_context_bar"
-                style="?attr/actionModeStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="?attr/actionBarTheme"
-                android:visibility="gone" />
-
-        </org.mariotaku.twidere.view.TwidereActionBarContainer>
+            tools:ignore="UnusedAttribute" />
 
         <View
             android:id="@+id/window_overlay"

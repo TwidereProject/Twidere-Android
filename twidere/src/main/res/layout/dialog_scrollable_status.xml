@@ -24,6 +24,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/element_spacing_normal"
+    android:paddingBottom="@dimen/element_spacing_normal"
     android:paddingLeft="@dimen/element_spacing_large"
     android:paddingRight="@dimen/element_spacing_large">
 

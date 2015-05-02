@@ -11,6 +11,7 @@
   <string name="remove_location">Вилучити місце розташування</string>
   <string name="remove_image">Видалити зображення</string>
   <string name="remove_photo">Видалити світлину</string>
+  <string name="status_hint">Що трапилося?</string>
   <string name="sign_up">Зареєструватися</string>
   <string name="sign_in">Увійти</string>
   <string name="rest_base_url">REST Base URL</string>
@@ -81,9 +82,21 @@
   <string name="look_and_feel">Зовнішній вигляд</string>
   <string name="display_profile_image">Зображення профілю</string>
   <string name="image_load_summary">Відключення цього параметру збільшить швидкість прокрутки списку і зменшить використання даних.</string>
+  <string name="in_reply_to_name">У відповідь на <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> ретвітнув це</string>
+  <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> та інші ретвітнули це</string>
+  <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> та <xliff:g id="retweet_count">%2$d</xliff:g> інших ретвітнули це</string>
+  <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> ретвіт</string>
+  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> ретвіти</string>
+  <string name="retweeted_by_name">Ретвітнув <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="retweeted_by_name_with_count">Ретвітнув <xliff:g id="user_name">%1$s</xliff:g> та <xliff:g id="retweet_count">%2$d</xliff:g> інших</string>
+  <string name="retweeted_by_count">Ретвітнули <xliff:g id="retweet_count">%d</xliff:g> користувачів</string>
   <string name="users_retweeted_this">Користувачі, які ретвітнули це</string>
+  <string name="users_favorited_this">Додали до обраного</string>
   <string name="reply_to">Відповідь на <xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">Цитата <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Фільтри</string>
   <string name="users">Користувачі</string>
   <string name="user">Користувач</string>
@@ -102,9 +115,11 @@
   <string name="load_item_limit">Кількість завантажених елементів</string>
   <string name="load_item_limit_summary">Встановити обмеження кількості елементів для завантаження.</string>
   <string name="load_more_automatically">Завантажувати додатковий матеріал автоматично</string>
+  <string name="load_more_automatically_summary">Завантажити додатковий контент (фото, карти, твіти) автоматично</string>
   <string name="quote">Цитата</string>
   <string name="add_rule">Додати правило</string>
   <string name="text_size">Розмір тексту</string>
+  <string name="text_size_summary">Розмір тексту твітів.</string>
   <string name="cannot_get_location">Не вдається отримати ваше розташування.</string>
   <string name="drafts">Чернетки</string>
   <string name="description">Опис</string>
@@ -133,6 +148,7 @@
   <string name="reported_users_for_spam">Повідомити про спам від цих користувачів.</string>
   <string name="filename_hint">Ім\'я файлу</string>
   <string name="please_wait">Зачекайте.</string>
+  <string name="saved_to_gallery">Збережено до галереї.</string>
   <string name="proxy">Проксі</string>
   <string name="http_proxy">HTTP проксі</string>
   <string name="http_proxy_summary">Використовувати HTTP проксі для всіх мережевих запитів.</string>
@@ -141,6 +157,11 @@
   <string name="block">Блокувати</string>
   <string name="unblock">Розблокувати</string>
   <string name="report_for_spam">Звіт про спам</string>
+  <string name="twitter_mute_user">Ігнорувати користувача</string>
+  <string name="twitter_muted_users">Ігноровані користувачі</string>
+  <string name="message_user_muted">Користувача додано до списку виключених. Його твіти не з\'являться у вашій стрічці та посиланнях.</string>
+  <string name="message_users_muted">Користувачів додано до списку виключених. Їх твіти не з\'являться у вашій стрічці та посиланнях.</string>
+  <string name="message_user_unmuted">Користувача видалено зі списку виключених.</string>
   <string name="inbox">Вхідні</string>
   <string name="load_images">Завантажити зображення</string>
   <string name="other_settings">Інші налаштування</string>
@@ -163,8 +184,10 @@
   <string name="list_members">Список учасників</string>
   <string name="list_subscribers">Список підписувачів</string>
   <string name="type_to_compose">Напишіть повідомлення</string>
+  <string name="lists">Списки</string>
   <string name="users_lists">Списки користувачів</string>
   <string name="lists_following_user">Списки підписаних на цього користувача</string>
+  <string name="lists_following_you">Читачі</string>
   <string name="item_3_minutes">3 хвилини</string>
   <string name="item_5_minutes">5 хвилин</string>
   <string name="item_10_minutes">10 хвилин</string>
@@ -183,6 +206,7 @@
   <string name="accounts">Профілі</string>
   <string name="account">Профіль</string>
   <string name="mention_this_user">Згадати цього користувача</string>
+  <string name="mention_user_name">Згадка <xliff:g id="name">%1$s</xliff:g></string>
   <string name="signing_in_please_wait">Увійдіть, будь ласка, зачекайте та натисніть НАЗАД, щоб вийти.</string>
   <string name="connectivity">З\'єднання</string>
   <string name="add_member">Додати користувача</string>
@@ -205,13 +229,17 @@
   <string name="network">Мережа</string>
   <string name="content_and_storage">Матеріал і збереження</string>
   <string name="image_uploader">Завантажувач зображень</string>
+  <string name="media_uploader">Завантажувач медіа</string>
   <string name="image_uploader_default">Типовий (Твіттер)</string>
   <string name="home_refresh">Оновлення у домашній стрічці</string>
   <string name="error_message_image_upload_failed">Не вдалося завантажити зображення.</string>
   <string name="error_message_image_uploader_not_found">Завантажувач зображень не знайдено, можливо, він видалений.</string>
   <string name="image_upload_format">Формат твіта із зображенням</string>
   <string name="image_upload_format_summary">\"[LINK]\" = посилання зображення\n\"[TEXT]\" = Текст твіту\n(Розширення тільки)</string>
+  <string name="status_shortener">Скорочувач твітів</string>
+  <string name="status_shortener_default">Нічого (Відміна надсилання)</string>
   <string name="error_message_status_too_long">Твіт надто довгий.</string>
+  <string name="error_message_message_too_long">Повідомлення занадто довге.</string>
   <string name="error_message_no_content">Нема вмісту</string>
   <string name="error_message_tweet_shorten_failed">Помилка скорочувача посилань.</string>
   <string name="error_message_tweet_shortener_not_found">Скорочувач посилань не знайдено, можливо, він вилучений.</string>
@@ -235,14 +263,26 @@
   <string name="activities_about_me">Моя діяльність</string>
   <string name="activities_by_friends">Діяльність за друзями</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> додав у обране ваш твіт.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> та ще <xliff:g id="other">%2$s</xliff:g> додали до обраного ваш твіт.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> додав до обраного ваш ретвіт.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> та ще <xliff:g id="other">%2$s</xliff:g> користувачів додали до обраного ваш ретвіт.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> підписаний на вас.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> та ще <xliff:g id="other">%2$s</xliff:g> користувачів читають вас.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> ретвітнув ваш твіт.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> та ще <xliff:g id="other">%2$s</xliff:g> користувачів ретвітнули вас.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> ретвітнув ваш ретвіт.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> та ще <xliff:g id="other">%2$s</xliff:g> користувачів ретвітнули ваш ретвіт.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> додав вас у свій список.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> додав(-ла) вас до списку <xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> та ще <xliff:g id="other">%2$s</xliff:g> користувачів додали вас до списків.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> додав у обране твіт <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> додав(-ла) до обраного  твіти <xliff:g id="target">%2$s</xliff:g> та ще <xliff:g id="other">%3$s</xliff:g> інших.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> слідкує за <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> читають <xliff:g id="target">%2$s</xliff:g> та ще <xliff:g id="other">%3$s</xliff:g> користувачів.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> ретвітнув твіт <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> додав <xliff:g id="target">%2$s</xliff:g> до списку.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> створив список <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> створив список <xliff:g id="target">%2$s</xliff:g> та ще <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">Твіт не надіслано.</string>
   <string name="status_not_updated_summary">Твіт не надіслано і збережено до чернеток.</string>
   <string name="incoming_friendships">Очікування запитів на підписку</string>
@@ -317,10 +357,12 @@
   <string name="permission_description_accounts">Читати інформацію облікового запису</string>
   <string name="permission_description_preferences">Налаштування читання</string>
   <string name="permissions_request">Запит на дозволи</string>
+  <string name="permissions_request_message">Додаток потребує наступних прав</string>
   <string name="accept_permission_request">Прийняти</string>
   <string name="no_thanks">Ні, дякую</string>
   <string name="revoke_permissions">Перерозподілити права</string>
   <string name="fast_scroll_thumb">Швидка прокрутка пальцем</string>
+  <string name="indicate_your_status">Вказати ват твіт</string>
   <string name="default_ringtone">Типова мелодія</string>
   <string name="phishing_link_warning">Попередження про фішингове посилання</string>
   <string name="phishing_link_warning_summary">Попереджати, коли ви намагаєтеся відкрити можливе фішингове посилання у приватному повідомленні.</string>
@@ -335,6 +377,7 @@
   <string name="quote_protected_status_notice">Не рекомендується цитувати захищений твіт. </string>
   <string name="edit_draft">Редагувати чернетку</string>
   <string name="profile_image">Зображення профілю</string>
+  <string name="your_profile_image">Зображення профілю</string>
   <string name="mention_user">Згадка <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Колір теми</string>
   <string name="wrong_url_format">Невірний формат URL.</string>
@@ -389,6 +432,8 @@
   <string name="no_close_after_status_updated_summary">Маленький подарунок для базіки</string>
   <string name="status_saved_to_draft">Твіт збережено у чернетці.</string>
   <string name="default_account">Типовий профіль</string>
+  <string name="created_at_with_N_tweets_per_day_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> твіт на день)</string>
+  <string name="created_at_with_N_tweets_per_day_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> твітів на день)</string>
   <string name="empty_content">Порожній вміст</string>
   <string name="fast_image_loading">Швидке завантаження зображення</string>
   <string name="fast_image_loading_summary">Вмикання робить завантаження зображень швидшим, вимкніть це, якщо деякі малюнки не відображаються.</string>
@@ -416,6 +461,9 @@
   <string name="users_statuses">Твіти користувача</string>
   <string name="card_animation">Анімація картки</string>
   <string name="name_first">Відображати спершу ім\'я</string>
+  <string name="next_step">Далі</string>
+  <string name="previous_item">Попередній</string>
+  <string name="next_item">Далі</string>
   <string name="settings_wizard">Параметри майстра</string>
   <string name="wizard_page_welcome_title">Ласкаво просимо</string>
   <string name="wizard_page_welcome_text">Дякуємо за вибір Twidere.\nВи б хотіли налаштувати його зараз?</string>
@@ -427,6 +475,7 @@
   <string name="wizard_page_tabs_unchanged_message">Ви можете додати вкладки у \"Налаштування\" - \"Вкладки\"</string>
   <string name="wizard_page_cards_text">Елементи налаштування карти.</string>
   <string name="wizard_page_hints_text">Ось декілька корисних порад.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere приймає участь у дослідницькому проєкті, який потребує збору деяких даних о використанні програми.</string>
   <string name="wizard_page_finished_title">Завершено</string>
   <string name="wizard_page_finished_text">Вже Twidere - готовий для використання.</string>
   <string name="invalid_tab">Невірна вкладка</string>
@@ -445,6 +494,8 @@
   <string name="unsubscribe_from_user_list_confirm_message">Відписатися від списку <xliff:g id="name">%s</xliff:g>? Ви зможете пізніше повторно підписатися на цей список.</string>
   <string name="destroy_status">Видалити твіт</string>
   <string name="destroy_status_confirm_message">Видалити цей твіт?</string>
+  <string name="destroy_saved_search">Видалити збережений пошуковий запит \"<xliff:g id="name">%s</xliff:g>\"</string>
+  <string name="destroy_saved_search_confirm_message">Видалити збережений пошуковий запит \"<xliff:g id="name">%s</xliff:g>\"? Збереження цього пошуку можна буде повторити згодом.</string>
   <string name="signing_in_error_browser_sign_in_hint">Помилка при вході, вам потрібно використати вхід через браузер. (Він ігноруватиме ваші налаштування API при вході)</string>
   <string name="report_user">Повідомити про <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Повідомити про <xliff:g id="name">%s</xliff:g> як про спамера? Ви також заблокуєте цього користувача.</string>
@@ -457,6 +508,7 @@
   <string name="translate">Перекласти</string>
   <string name="sponsored_by">Спонсоровано</string>
   <string name="special_thanks_to">Окрема подяка</string>
+  <string name="contributors_list_summary">Якщо не знаходите свого імені, напишіть нам.</string>
   <string name="account_options">Параметри профілю</string>
   <string name="show_in_timeline">Показати у часовій стрічці</string>
   <string name="cards">Картки</string>
@@ -468,6 +520,7 @@
   <string name="general">Загальні</string>
   <string name="hints">Підказки</string>
   <string name="finish">Завершити</string>
+  <string name="background">Фон</string>
   <string name="theme_background_default">Типово</string>
   <string name="theme_background_solid">Суцільно біле/чорне</string>
   <string name="theme_background_transparent">Прозоре</string>
@@ -484,6 +537,8 @@
   <string name="N_new_mentions_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> нові згадки</string>
   <string name="N_new_messages_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> нова розмова</string>
   <string name="N_new_messages_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> нові розмови</string>
+  <string name="status_share_subject_format_with_time">Твіт від <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), о <xliff:g id="time">%3$s</xliff:g></string>
+  <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">Обмеження частоти</string>
   <string name="wizard_hint_rate_limit">Якщо ви зіткнулися з проблемою обмеження частоти, то, будь ласка, не звинувачуйте мене, це політика в Twitter.</string>
   <string name="preparing_database">Підготовка бази даних</string>
@@ -523,5 +578,53 @@
   <string name="status_text_limit">Обмеження довжини твіту</string>
   <string name="load_more_from_top">Завантажувати більше зверху</string>
   <string name="load_more_from_top_summary">Корисно, якщо ви віддаєте перевагу читати знизу вгору</string>
+  <string name="compose_now">Новий твіт</string>
+  <string name="compose_now_summary">Замінює механізм швидкого запуску Google Now на екран Новий твіт</string>
+  <string name="compose_now_action">Дія Новий твіт</string>
+  <string name="open_with_account">Відкрити профілем</string>
+  <string name="card_highlight_option_highlight">Виділення кольором</string>
+  <string name="timeline_sync_service">Сервіс синхронізації стрічки</string>
+  <string name="image_preview_scale_type">Спосіб збільшення зображення для перегляду</string>
+  <string name="image_preview_scale_type_crop">Обрізати</string>
+  <string name="image_preview_scale_type_fit_center">Вмістити центроване</string>
+  <string name="quote_protected_status_warning_message">Цей твіт захищено.\n\nЗахищені користувачі зазвичай не дають згоду на вільне розповсюдження своїх твітів.</string>
+  <string name="send_anyway">Все одно відправити</string>
+  <string name="following_only">Тільки для ваших читачів</string>
+  <string name="following_only_summary">Показувати сповіщення тільки від читачів.</string>
+  <string name="new_direct_message">Нове приватне повідомлення</string>
+  <string name="plain_list_style">Плаский список</string>
+  <string name="want_old_icon_back">Мрієш повернути стару піктограму?</string>
+  <string name="icon_restored_message">Піктограма відновлена!</string>
   <string name="add">Додати</string>
+  <string name="N_media_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> медійних файлів</string>
+  <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g>  медійних файлів</string>
+  <string name="delete_drafts_confirm">Видалити обрані чернетки?</string>
+  <string name="extra_configurations">Додаткові налаштування</string>
+  <string name="click_item_to_config">Оберіть елемент для налаштування</string>
+  <string name="dark_drawer">Темне випадаюче меню</string>
+  <string name="retweets_of_me">Ретвіти мене</string>
+  <string name="from_gallery">З галереї</string>
+  <string name="from_camera">Зробити фото</string>
+  <string name="api_url_format_help">[DOMAIN]: Twitter API домен.\nПриклад: https://[DOMAIN].twitter.com/ буде змінено на https://api.twitter.com/.</string>
+  <string name="no_version_suffix">Без суфіксу версії</string>
+  <string name="inverse_selection">Інвертувати виділення</string>
+  <string name="edit_media">Редагувати медіа</string>
+  <string name="media">Медіа</string>
+  <string name="mute_user">Ігнорувати <xliff:g id="name">%s</xliff:g></string>
+  <string name="muted_user">Ігнорований <xliff:g id="name">%s</xliff:g></string>
+  <string name="unmute_user">Не ігнорувати <xliff:g id="name">%s</xliff:g></string>
+  <string name="unmuted_user"><xliff:g id="name">%s</xliff:g> більше не ігнорується</string>
+  <string name="mute">Ігнорувати</string>
+  <string name="unmute">Вимкнути ігнор</string>
+  <string name="action_muting">ігнорування</string>
+  <string name="action_unmuting">зняття ігнорування</string>
+  <string name="mute_user_confirm_message">Ігнорувати <xliff:g id="name">%s</xliff:g>? Ви більше не побачите твітів користувача, але все одно будете його читачем.</string>
+  <string name="blocked_by_user_summary">Ви заблоковані користувачем <xliff:g id="name">%s</xliff:g></string>
+  <string name="overwrite">Перезаписати</string>
+  <string name="previous_tab">Попередня вкладка</string>
+  <string name="next_tab">Наступна вкладка</string>
+  <string name="keyboard_shortcut_back">Назад</string>
+  <string name="press_again_to_close">Натисни ще раз, щоб закрити</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> не встановлено</string>
+  <string name="swipe_down_to_refresh">Потягни униз для оновлення</string>
 </resources>

@@ -42,6 +42,7 @@
   <string name="select_account">Seleccione la cuenta</string>
   <string name="username">Nombre de usuario</string>
   <string name="password">Contraseña</string>
+  <string name="label_data_provider">Proveedor de base de datos Twidere</string>
   <string name="label_refresh_service">Recargar servicio</string>
   <string name="label_background_operation_service">Servicio en segundo plano</string>
   <string name="open_in_browser">Abrir en el navegador</string>
@@ -199,7 +200,7 @@
   <string name="item_2_hours">2 horas</string>
   <string name="item_4_hours">4 horas</string>
   <string name="display_image_preview">Mostrar imagen previa</string>
-  <string name="following_you">Siguiéndote</string>
+  <string name="following_you">Te sigue</string>
   <string name="user_list">Lista</string>
   <string name="user_lists">Listas</string>
   <string name="trends_location">Ubicación de las tendencias</string>
@@ -479,7 +480,7 @@
   <string name="wizard_page_tabs_unchanged_message">Puedes añadir pestañas en \"Configuración\">\"Pestañas\"</string>
   <string name="wizard_page_cards_text">Configura artículos de la tarjeta.</string>
   <string name="wizard_page_hints_text">Aquí algunos consejos útiles.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere participa de un proyecto de investigación que necesita algunos datos de uso.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere participa en un proyecto de investigación que necesita algunos datos de uso.</string>
   <string name="wizard_page_finished_title">Finalizado</string>
   <string name="wizard_page_finished_text">Ahora Twidere está preparado para usarse.</string>
   <string name="invalid_tab">Pestaña inválida</string>
@@ -664,6 +665,8 @@
   <string name="members">Miembros</string>
   <string name="subscribers">Suscriptor</string>
   <string name="read_from_bottom">Leer desde el final</string>
+  <string name="read_from_bottom_summary_off">Saltar al último tuit después de actualizar</string>
+  <string name="read_from_bottom_summary_on">Mantenga la posición de lectura después de actualizar</string>
   <string name="register">Registrar</string>
   <string name="follows">Sigue</string>
   <string name="belongs_to">Pertenece a</string>
@@ -708,6 +711,7 @@
   <string name="permission_label_shorten_status">Acortar tweet</string>
   <string name="permission_label_upload_media">Subir archivos multimédia</string>
   <string name="permission_label_sync_timeline">Sincronizar cronología</string>
+  <string name="thumbor_integration">Integración con Thumbor</string>
   <string name="server_address">Dirección del servidor</string>
   <string name="security_key">Llave de seguridad</string>
   <string name="hide_card_actions">Ocultar acciones de las tarjetas</string>
@@ -723,4 +727,13 @@
   <string name="navigation">Navegación</string>
   <string name="reset_to_default">Restablecer a los valores por defecto</string>
   <string name="reset_keyboard_shortcuts_confirm">¿Restablecer a valores por defecto los atajos de teclado?</string>
+  <string name="open_accounts_dashboard">Abrir el panel de tus cuentas</string>
+  <string name="previous_tab">Pestaña anterior</string>
+  <string name="next_tab">Pestaña siguiente</string>
+  <string name="keyboard_shortcut_back">Volver</string>
+  <string name="press_again_to_close">Presione de nuevo para cerrar</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> no establecido</string>
+  <string name="swipe_down_to_refresh">Desliza hacia abajo para actualizar</string>
+  <string name="app_restart_confirm">Twidere se reiniciará para aplicar los ajustes.</string>
+  <string name="dont_restart">No reinicie</string>
 </resources>

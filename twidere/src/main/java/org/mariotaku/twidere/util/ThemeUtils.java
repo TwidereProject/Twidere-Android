@@ -296,35 +296,6 @@ public class ThemeUtils implements Constants {
         return ActionBarColorDrawable.create(actionBarColor, outlineEnabled);
     }
 
-    public static Context getActionBarContext(final Context context) {
-        @SuppressLint("InlinedApi")
-        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarTheme,
-                R.attr.actionBarWidgetTheme, android.R.attr.actionBarTheme,
-                android.R.attr.actionBarWidgetTheme});
-        final int resId;
-        if (a.hasValue(0) || a.hasValue(1)) {
-            resId = a.hasValue(0) ? a.getResourceId(0, 0) : a.getResourceId(1, 0);
-        } else {
-            resId = a.hasValue(2) ? a.getResourceId(2, 0) : a.getResourceId(3, 0);
-        }
-        a.recycle();
-        if (resId == 0) return context;
-        return new ContextThemeWrapper(context, resId);
-    }
-
-    public static float getActionBarElevation(final Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return 0;
-        @SuppressLint("InlinedApi")
-        @SuppressWarnings("ConstantConditions")
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.elevation},
-                android.R.attr.actionBarStyle, 0);
-        try {
-            return a.getDimension(0, 0);
-        } finally {
-            a.recycle();
-        }
-    }
-
     public static Drawable getActionBarHomeAsUpIndicator(android.support.v7.app.ActionBar actionBar) {
         final Context context = actionBar.getThemedContext();
         @SuppressWarnings("ConstantConditions")
@@ -337,9 +308,7 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getActionBarPopupThemeRes(final Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return 0;
-        @SuppressLint("InlinedApi")
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.actionBarPopupTheme});
+        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarPopupTheme});
         try {
             return a.getResourceId(0, 0);
         } finally {
@@ -1299,5 +1268,22 @@ public class ThemeUtils implements Constants {
         } else {
             return base;
         }
+    }
+
+    public static Context getActionBarThemedContext(Context base, int themeId, int accentColor) {
+        final int actionBarThemeId;
+        if (isDarkTheme(themeId) || TwidereColorUtils.getYIQLuminance(accentColor) <= ACCENT_COLOR_THRESHOLD) {
+            actionBarThemeId = R.style.Theme_Twidere_Dark;
+        } else {
+            actionBarThemeId = R.style.Theme_Twidere_Light;
+        }
+        final Resources.Theme baseTheme = base.getTheme();
+        final Resources.Theme actionBarTheme = base.getResources().newTheme();
+        actionBarTheme.setTo(baseTheme);
+        actionBarTheme.applyStyle(actionBarThemeId, true);
+
+        final Context actionBarContext = new android.support.v7.internal.view.ContextThemeWrapper(base, 0);
+        actionBarContext.getTheme().setTo(actionBarTheme);
+        return actionBarContext;
     }
 }
