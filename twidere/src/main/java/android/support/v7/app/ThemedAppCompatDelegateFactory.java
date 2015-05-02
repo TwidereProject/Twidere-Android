@@ -22,6 +22,7 @@ package android.support.v7.app;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,7 +43,8 @@ public class ThemedAppCompatDelegateFactory implements Constants {
      *
      * @param callback An optional callback for AppCompat specific events
      */
-    public static ThemedAppCompatDelegate create(IThemedActivity themed, AppCompatCallback callback) {
+    public static ThemedAppCompatDelegate create(@NonNull final IThemedActivity themed,
+                                                 @NonNull final AppCompatCallback callback) {
         final Activity activity = (Activity) themed;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return new ThemedAppCompatDelegate(themed, activity, activity.getWindow(), callback);
@@ -56,8 +58,8 @@ public class ThemedAppCompatDelegateFactory implements Constants {
         private final IThemedActivity themed;
         private KeyListener keyListener;
 
-        private ThemedAppCompatDelegate(final IThemedActivity themed, final Context context,
-                                        Window window, AppCompatCallback callback) {
+        private ThemedAppCompatDelegate(@NonNull final IThemedActivity themed, @NonNull final Context context,
+                                        @NonNull final Window window, @NonNull final AppCompatCallback callback) {
             super(context, window, callback);
             this.themed = themed;
         }
