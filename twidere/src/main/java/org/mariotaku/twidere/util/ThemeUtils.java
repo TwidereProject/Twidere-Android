@@ -34,8 +34,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.app.AppCompatDelegateTrojan;
 import android.support.v7.internal.app.ToolbarActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
@@ -266,20 +264,6 @@ public class ThemeUtils implements Constants {
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
             window.setBackgroundDrawable(new ColorDrawable(isDarkTheme(theme) ? Color.BLACK : Color.WHITE));
         }
-    }
-
-    public static void applyWindowBackground(Context context, Window window, AppCompatDelegate delegate, int theme, String option, int alpha) {
-        if (isWindowFloating(delegate)) return;
-        if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-            window.setBackgroundDrawable(ThemeUtils.getWindowBackgroundApplyAlpha(context, alpha));
-        } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
-            window.setBackgroundDrawable(new ColorDrawable(isDarkTheme(theme) ? Color.BLACK : Color.WHITE));
-        }
-    }
-
-    private static boolean isWindowFloating(AppCompatDelegate delegate) {
-        return AppCompatDelegateTrojan.isFloating(delegate);
     }
 
     public static void applyWindowBackground(Context context, View window, int theme, String option, int alpha) {
