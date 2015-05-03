@@ -248,8 +248,9 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
-        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
         super.onApplyThemeResource(theme, resid, first);
+        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
+                mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
     }
 
     @Override
@@ -271,9 +272,6 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
         ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, isActionBarOutlineEnabled());
-//        final int titleColor = ThemeUtils.getContrastActionBarTitleColor(this, themeId, themeColor);
-//        final int actionBarItemsColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
-//        ThemeUtils.setActionBarColor(getWindow(), actionBar, titleColor, actionBarItemsColor);
     }
 
     private void setupTintStatusBar() {

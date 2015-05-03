@@ -131,9 +131,9 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
+        super.onApplyThemeResource(theme, resid, first);
         ThemeUtils.applyWindowBackground(this, getWindow(), resid,
                 mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
-        super.onApplyThemeResource(theme, resid, first);
     }
 
     @Override

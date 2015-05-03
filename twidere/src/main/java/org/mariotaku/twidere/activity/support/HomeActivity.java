@@ -175,6 +175,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     };
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
     private int mTabColumns;
+    private View mActionBarContainer;
 
     public void closeAccountsDrawer() {
         if (mSlidingMenu == null) return;
@@ -381,9 +382,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mEmptyTabHint.setOnClickListener(this);
 
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
-        final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
-        ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
-        ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
+        ViewCompat.setElevation(mActionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
+        ViewSupport.setOutlineProvider(mActionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
         final View windowOverlay = findViewById(R.id.window_overlay);
         ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
 
@@ -656,6 +656,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     public void onContentChanged() {
         super.onContentChanged();
         mActionBar = (Toolbar) findViewById(R.id.action_bar);
+        mActionBarContainer = findViewById(R.id.twidere_action_bar_container);
         mTabIndicator = (TabPagerIndicator) findViewById(R.id.main_tabs);
         mSlidingMenu = (HomeSlidingMenu) findViewById(R.id.home_menu);
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
@@ -798,10 +799,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final int actionBarAlpha = isTransparent ? ThemeUtils.getUserThemeBackgroundAlpha(this) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeResId, themeColor));
-        ViewSupport.setBackground(mActionBar, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
+        ViewSupport.setBackground(mActionBarContainer, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
                 backgroundOption, true));
         final int statusBarColor;
-        final Resources resources = getResources();
         final int[] foregroundColors = new int[2];
         ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
         if (ThemeUtils.isDarkTheme(themeResId)) {
@@ -831,7 +831,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mColorStatusFrameLayout.setColor(statusBarColor, actionBarAlpha);
         StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
         mColorStatusFrameLayout.setFactor(1);
-        mTabIndicator.setAlpha(actionBarAlpha / 255f);
+        mActionBarWithOverlay.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);
     }
 

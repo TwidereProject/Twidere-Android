@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -34,12 +33,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.internal.app.ToolbarActionBar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
 import android.support.v7.internal.view.StandaloneActionMode;
-import android.support.v7.internal.view.SupportActionModeWrapper;
-import android.support.v7.internal.view.SupportActionModeWrapperTrojan;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.internal.widget.ActionBarContainer;
 import android.support.v7.internal.widget.ActionBarContextView;
@@ -53,7 +50,6 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.ActionMode;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -69,7 +65,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
@@ -101,16 +96,6 @@ public class ThemeUtils implements Constants {
 
 
     public static void applyActionBarBackground(final ActionBar actionBar, final Context context,
-                                                final int themeRes, final int accentColor,
-                                                final String backgroundOption, boolean outlineEnabled) {
-        if (actionBar == null || context == null) return;
-        actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
-        actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
-        actionBar.setStackedBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
-    }
-
-
-    public static void applyActionBarBackground(final android.support.v7.app.ActionBar actionBar, final Context context,
                                                 final int themeRes, final int accentColor, String backgroundOption, boolean outlineEnabled) {
         if (actionBar == null || context == null) return;
         actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
@@ -125,22 +110,6 @@ public class ThemeUtils implements Constants {
         actionBar.setPrimaryBackground(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
         actionBar.setSplitBackground(getActionBarSplitBackground(context, themeRes));
         actionBar.setStackedBackground(getActionBarStackedBackground(context, themeRes, accentColor, outlineEnabled));
-    }
-
-    public static void applyColorFilterToMenuIcon(Activity activity, Menu menu) {
-        final ActionBar actionBar = activity.getActionBar();
-        final Context context = actionBar != null ? actionBar.getThemedContext() : activity;
-        final int color = getThemeForegroundColor(context);
-        final int popupTheme = getActionBarPopupThemeRes(context);
-        final int popupColor = getThemeForegroundColor(context, popupTheme);
-        final int highlightColor = getUserAccentColor(activity);
-        applyColorFilterToMenuIcon(menu, color, popupColor, highlightColor, Mode.SRC_ATOP);
-    }
-
-    public static void applyColorFilterToMenuIcon(final Menu menu, final int color,
-                                                  final int highlightColor, final Mode mode,
-                                                  final int... excludedGroups) {
-        applyColorFilterToMenuIcon(menu, color, color, highlightColor, mode, excludedGroups);
     }
 
     public static void applyColorFilterToMenuIcon(final Menu menu, final int color, final int popupColor,
@@ -183,69 +152,42 @@ public class ThemeUtils implements Constants {
         textView.setText(builder);
     }
 
-    public static void applySupportActionModeColor(final ActionMode mode, final Activity activity,
-                                                   int themeRes, int accentColor,
-                                                   String backgroundOption, boolean outlineEnabled) {
-        // Very dirty implementation
-        if (!(mode instanceof SupportActionModeWrapper) || !(activity instanceof IThemedActivity))
-            return;
-        final android.support.v7.view.ActionMode modeCompat = SupportActionModeWrapperTrojan.getWrappedObject((SupportActionModeWrapper) mode);
-        applySupportActionModeColor(modeCompat, activity, themeRes, accentColor, backgroundOption, outlineEnabled);
-    }
-
     public static void applySupportActionModeColor(final android.support.v7.view.ActionMode modeCompat,
                                                    Activity activity, int themeRes,
                                                    int accentColor, String backgroundOption,
                                                    boolean outlineEnabled) {
         // Very dirty implementation
         // This call ensures TitleView created
-        modeCompat.setTitle(null);
-        try {
-            View contextView = null;
-            Context actionBarContext = null;
-            if (modeCompat instanceof ActionModeImpl) {
-                WindowDecorActionBar actionBar = (WindowDecorActionBar) Utils.findFieldOfTypes(modeCompat,
-                        ActionModeImpl.class, WindowDecorActionBar.class);
-                if (actionBar == null) return;
-                actionBarContext = actionBar.getThemedContext();
-                final Field contextViewField = WindowDecorActionBar.class.getDeclaredField("mContextView");
-                contextViewField.setAccessible(true);
-                contextView = (View) contextViewField.get(actionBar);
-            } else if (modeCompat instanceof StandaloneActionMode) {
-                final Field[] fields = StandaloneActionMode.class.getDeclaredFields();
-                for (Field field : fields) {
-                    if (ActionBarContextView.class.isAssignableFrom(field.getType())) {
-                        field.setAccessible(true);
-                        contextView = (View) field.get(modeCompat);
-                    } else if (Context.class.isAssignableFrom(field.getType())) {
-                        field.setAccessible(true);
-                        actionBarContext = (Context) field.get(modeCompat);
-                    }
-                    if (contextView != null && actionBarContext != null) break;
-                }
-            }
-            if (!(contextView instanceof ActionBarContextView) || actionBarContext == null) return;
-            setActionBarContextViewColor(actionBarContext, (ActionBarContextView) contextView,
-                    themeRes, accentColor, backgroundOption, outlineEnabled);
-        } catch (Exception e) {
-            e.printStackTrace();
+        modeCompat.setTitle(modeCompat.getTitle());
+        View contextView = null;
+        if (modeCompat instanceof ActionModeImpl) {
+            WindowDecorActionBar actionBar = (WindowDecorActionBar) Utils.findFieldOfTypes(modeCompat,
+                    ActionModeImpl.class, WindowDecorActionBar.class);
+            if (actionBar == null) return;
+            contextView = (View) Utils.findFieldOfTypes(actionBar, WindowDecorActionBar.class,
+                    ActionBarContextView.class);
+        } else if (modeCompat instanceof StandaloneActionMode) {
+            contextView = (View) Utils.findFieldOfTypes(modeCompat, StandaloneActionMode.class,
+                    ActionBarContextView.class);
         }
+        if (!(contextView instanceof ActionBarContextView)) return;
+        setActionBarContextViewBackground((ActionBarContextView) contextView, themeRes,
+                accentColor, backgroundOption, outlineEnabled);
     }
 
-    public static void setActionBarContextViewColor(@NonNull Context context,
-                                                    @NonNull ActionBarContextView contextView,
-                                                    int themeRes, int accentColor, String backgroundOption, boolean outlineEnabled) {
+    public static void setActionBarContextViewBackground(@NonNull ActionBarContextView contextView,
+                                                         int themeRes, int accentColor,
+                                                         String backgroundOption, boolean outlineEnabled) {
+        ViewSupport.setBackground(contextView, getActionBarBackground(contextView.getContext(),
+                themeRes, accentColor, backgroundOption, outlineEnabled));
+    }
+
+    public static void setActionBarContextViewColor(@NonNull ActionBarContextView contextView,
+                                                    int itemColor) {
         contextView.setTitle(contextView.getTitle());
         contextView.setSubtitle(contextView.getSubtitle());
         final ImageView actionModeCloseButton = (ImageView) contextView.findViewById(android.support.v7.appcompat.R.id.action_mode_close_button);
         final ActionMenuView menuView = ViewSupport.findViewByType(contextView, ActionMenuView.class);
-        final int actionBarColor;
-        if (isDarkTheme(themeRes)) {
-            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
-        } else {
-            actionBarColor = accentColor;
-        }
-        final int itemColor = getContrastForegroundColor(context, themeRes, actionBarColor);
         if (actionModeCloseButton != null) {
             actionModeCloseButton.setColorFilter(itemColor, Mode.SRC_ATOP);
         }
@@ -253,14 +195,13 @@ public class ThemeUtils implements Constants {
             setActionBarOverflowColor(menuView, itemColor);
             ThemeUtils.wrapToolbarMenuIcon(menuView, itemColor, itemColor);
         }
-        ViewSupport.setBackground(contextView, getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
     }
 
     public static void applyWindowBackground(Context context, Window window, int theme, String option, int alpha) {
         if (isWindowFloating(context, theme)) return;
         if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-            window.setBackgroundDrawable(ThemeUtils.getWindowBackgroundApplyAlpha(context, alpha));
+            window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, theme, alpha));
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
             window.setBackgroundDrawable(new ColorDrawable(isDarkTheme(theme) ? Color.BLACK : Color.WHITE));
         }
@@ -269,11 +210,11 @@ public class ThemeUtils implements Constants {
     public static void applyWindowBackground(Context context, View window, int theme, String option, int alpha) {
         if (isWindowFloating(context, theme)) return;
         if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
-            ViewSupport.setBackground(window, ThemeUtils.getWindowBackgroundApplyAlpha(context, alpha));
+            ViewSupport.setBackground(window, getWindowBackgroundFromThemeApplyAlpha(context, theme, alpha));
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
             ViewSupport.setBackground(window, new ColorDrawable(isDarkTheme(theme) ? Color.BLACK : Color.WHITE));
         } else {
-            ViewSupport.setBackground(window, ThemeUtils.getWindowBackground(context));
+            ViewSupport.setBackground(window, getWindowBackground(context));
         }
     }
 
@@ -289,17 +230,6 @@ public class ThemeUtils implements Constants {
             actionBarColor = accentColor;
         }
         return ActionBarColorDrawable.create(actionBarColor, outlineEnabled);
-    }
-
-    public static Drawable getActionBarHomeAsUpIndicator(android.support.v7.app.ActionBar actionBar) {
-        final Context context = actionBar.getThemedContext();
-        @SuppressWarnings("ConstantConditions")
-        final TypedArray a = context.obtainStyledAttributes(null, R.styleable.ActionBar, R.attr.actionBarStyle, 0);
-        try {
-            return a.getDrawable(R.styleable.ActionBar_homeAsUpIndicator);
-        } finally {
-            a.recycle();
-        }
     }
 
     public static int getActionBarPopupThemeRes(final Context context) {
@@ -475,17 +405,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static Drawable getSupportActionBarBackground(final Context context, final int themeRes) {
-        @SuppressWarnings("ConstantConditions")
-        final TypedArray array = context.obtainStyledAttributes(null, new int[]{android.R.attr.background},
-                R.attr.actionBarStyle, themeRes);
-        try {
-            return array.getDrawable(0);
-        } finally {
-            array.recycle();
-        }
-    }
-
     public static float getSupportActionBarElevation(final Context context) {
         @SuppressWarnings("ConstantConditions")
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{R.attr.elevation}, R.attr.actionBarStyle, 0);
@@ -503,15 +422,6 @@ public class ThemeUtils implements Constants {
         if (outValue.type == TypedValue.TYPE_REFERENCE)
             return context.getResources().getColor(attr);
         return outValue.data;
-    }
-
-    public static int getTextAppearanceLarge(final Context context) {
-        // final Context wrapped = getThemedContext(context,
-        // getResources(context));
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.textAppearanceLarge});
-        final int textAppearance = a.getResourceId(0, android.R.style.TextAppearance_Holo_Large);
-        a.recycle();
-        return textAppearance;
     }
 
     public static int getTextColorPrimary(final Context context) {
@@ -553,25 +463,6 @@ public class ThemeUtils implements Constants {
         try {
             colors[0] = a.getColor(0, Color.WHITE);
             colors[1] = a.getColor(1, Color.BLACK);
-        } finally {
-            a.recycle();
-        }
-    }
-
-    public static int getTextColorPrimaryInverse(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY_INVERSE);
-        try {
-            return a.getColor(0, Color.TRANSPARENT);
-        } finally {
-            a.recycle();
-        }
-    }
-
-    public static int getTextColorSecondary(final Context context) {
-        @SuppressWarnings("ConstantConditions")
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.textColorSecondary});
-        try {
-            return a.getColor(0, Color.TRANSPARENT);
         } finally {
             a.recycle();
         }
@@ -642,8 +533,8 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getThemeForegroundColor(final Context context, int theme) {
-        final Context wrapped = theme != 0 ? new ContextThemeWrapper(context, theme) : context;
-        final TypedArray a = wrapped.obtainStyledAttributes(new int[]{android.R.attr.colorForeground});
+        @SuppressWarnings("ConstantConditions")
+        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.colorForeground}, 0, theme);
         try {
             return a.getColor(0, 0);
         } finally {
@@ -657,25 +548,12 @@ public class ThemeUtils implements Constants {
         return pref.getString(KEY_THEME, VALUE_THEME_NAME_TWIDERE);
     }
 
-    public static int getThemeResource(final Context context) {
-        return getThemeResource(getThemeNameOption(context));
-    }
-
-    public static int getThemeResource(final String name) {
-        if (VALUE_THEME_NAME_DARK.equals(name)) {
-            return R.style.Theme_Twidere_Dark;
-        }
-        return R.style.Theme_Twidere_Light;
-    }
-
-
     public static int getThemeResource(final int otherTheme) {
         if (isDarkTheme(otherTheme)) {
             return R.style.Theme_Twidere_Dark;
         }
         return R.style.Theme_Twidere_Light;
     }
-
 
     public static int getNoActionBarThemeResource(final Context context) {
         return getNoActionBarThemeResource(getThemeNameOption(context));
@@ -686,14 +564,6 @@ public class ThemeUtils implements Constants {
             return R.style.Theme_Twidere_Dark_NoActionBar;
         }
         return R.style.Theme_Twidere_Light_NoActionBar;
-    }
-
-    public static Context getThemedContext(final Context context) {
-        return context;
-    }
-
-    public static Context getThemedContext(final Context context, final Resources res) {
-        return context;
     }
 
     public static int getTitleTextAppearance(final Context context) {
@@ -789,16 +659,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static Drawable getWindowBackgroundApplyAlpha(final Context context, final int alpha) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowBackground});
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
-        if (d != null) {
-            d.setAlpha(alpha);
-        }
-        return d;
-    }
-
     public static Drawable getWindowBackgroundFromTheme(final Context context, int theme) {
         @SuppressWarnings("ConstantConditions")
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.windowBackground}, 0, theme);
@@ -807,6 +667,17 @@ public class ThemeUtils implements Constants {
         } finally {
             a.recycle();
         }
+    }
+
+    public static Drawable getWindowBackgroundFromThemeApplyAlpha(final Context context, final int theme, final int alpha) {
+        @SuppressWarnings("ConstantConditions")
+        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.windowBackground}, 0, theme);
+        final Drawable d = a.getDrawable(0);
+        a.recycle();
+        if (d != null) {
+            d.setAlpha(alpha);
+        }
+        return d;
     }
 
     public static Drawable getWindowContentOverlay(final Context context) {
@@ -974,32 +845,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void setActionBarColor(Window window, android.support.v7.app.ActionBar actionBar,
-                                         int titleColor, int itemColor) {
-//        final Drawable drawable = getActionBarHomeAsUpIndicator(actionBar);
-//        if (drawable != null) {
-//            drawable.setColorFilter(itemColor, Mode.SRC_ATOP);
-//        }
-//        actionBar.setHomeAsUpIndicator(drawable);
-        // Ensure title view created
-        if (actionBar instanceof WindowDecorActionBar) {
-            actionBar.setTitle(actionBar.getTitle());
-            actionBar.setSubtitle(actionBar.getSubtitle());
-        } else if (actionBar instanceof ToolbarActionBar) {
-
-        }
-    }
-
-    public static void setToolBarColor(@NonNull Toolbar toolbar, int titleColor, int itemColor) {
-//        final Drawable drawable = toolbar.getNavigationIcon();
-//        if (drawable != null) {
-//            drawable.setColorFilter(itemColor, Mode.SRC_ATOP);
-//        }
-//        toolbar.setNavigationIcon(drawable);
-        toolbar.setTitleTextColor(titleColor);
-        toolbar.setSubtitleTextColor(titleColor);
-    }
-
     public static void setActionBarOverflowColor(Toolbar toolbar, int itemColor) {
         if (toolbar == null) return;
         if (toolbar instanceof TwidereToolbar) {
@@ -1144,29 +989,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void wrapMenuIcon(Context context, Menu menu, int... excludeGroups) {
-        final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
-        wrapMenuIcon(context, backgroundColor, backgroundColor, menu, excludeGroups);
-    }
-
-    public static void wrapMenuIcon(Context context, int backgroundColor, int popupBackgroundColor,
-                                    Menu menu, int... excludeGroups) {
-        final Resources resources = context.getResources();
-//        final int colorDark = resources.getColor(R.color.action_icon_dark);
-//        final int colorLight = resources.getColor(R.color.action_icon_light);
-//        final int itemColor = TwidereColorUtils.getContrastYIQ(backgroundColor, colorDark, colorLight);
-//        final int popupItemColor = TwidereColorUtils.getContrastYIQ(popupBackgroundColor, colorDark, colorLight);
-        for (int i = 0, j = menu.size(), k = 0; i < j; i++) {
-            final MenuItem item = menu.getItem(i);
-//            wrapMenuItemIcon(item, itemColor, excludeGroups);
-            if (item.hasSubMenu()) {
-//                wrapMenuIcon(menu, popupItemColor, popupItemColor, excludeGroups);
-            }
-            if (item.isVisible()) {
-                k++;
-            }
-        }
-    }
 
     public static void wrapMenuItemIcon(@NonNull MenuItem item, int itemColor, int... excludeGroups) {
         if (ArrayUtils.contains(excludeGroups, item.getGroupId())) return;
@@ -1217,13 +1039,6 @@ public class ThemeUtils implements Constants {
         return 0;
     }
 
-    @Nullable
-    public static Toolbar getToolbarFromActivity(Activity activity) {
-        if (activity instanceof LinkHandlerActivity)
-            return ((LinkHandlerActivity) activity).peekActionBarToolbar();
-        return null;
-    }
-
     public static Context getActionBarThemedContext(Context base) {
         final TypedValue outValue = new TypedValue();
         final Resources.Theme baseTheme = base.getTheme();
@@ -1234,7 +1049,7 @@ public class ThemeUtils implements Constants {
             actionBarTheme.setTo(baseTheme);
             actionBarTheme.applyStyle(outValue.resourceId, true);
 
-            final Context actionBarContext = new android.support.v7.internal.view.ContextThemeWrapper(base, 0);
+            final ActionBarContextThemeWrapper actionBarContext = new ActionBarContextThemeWrapper(base, outValue.resourceId);
             actionBarContext.getTheme().setTo(actionBarTheme);
             return actionBarContext;
         } else {
@@ -1254,8 +1069,23 @@ public class ThemeUtils implements Constants {
         actionBarTheme.setTo(baseTheme);
         actionBarTheme.applyStyle(actionBarThemeId, true);
 
-        final Context actionBarContext = new android.support.v7.internal.view.ContextThemeWrapper(base, 0);
+        final ActionBarContextThemeWrapper actionBarContext = new ActionBarContextThemeWrapper(base, actionBarThemeId);
         actionBarContext.getTheme().setTo(actionBarTheme);
         return actionBarContext;
+    }
+
+    public static final class ActionBarContextThemeWrapper extends android.support.v7.internal.view.ContextThemeWrapper {
+
+        public ActionBarContextThemeWrapper(Context base, int themeres) {
+            super(base, themeres);
+        }
+    }
+
+    public static int getActionBarThemeResource(int themeId, int accentColor) {
+        if (isDarkTheme(themeId) || TwidereColorUtils.getYIQLuminance(accentColor) <= ACCENT_COLOR_THRESHOLD) {
+            return R.style.Theme_Twidere_Dark;
+        } else {
+            return R.style.Theme_Twidere_Light;
+        }
     }
 }

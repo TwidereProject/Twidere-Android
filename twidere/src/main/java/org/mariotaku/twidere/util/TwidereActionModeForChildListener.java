@@ -21,7 +21,6 @@ package org.mariotaku.twidere.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.internal.view.StandaloneActionMode;
@@ -123,7 +122,7 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
                 final int height = TypedValue.complexToDimensionPixelSize(outValue.data,
                         actionBarContext.getResources().getDisplayMetrics());
                 mActionModeView.setContentHeight(height);
-                ThemeUtils.setActionBarContextViewColor(actionBarContext, mActionModeView,
+                ThemeUtils.setActionBarContextViewBackground(mActionModeView,
                         mThemed.getCurrentThemeResourceId(), mThemed.getCurrentThemeColor(),
                         mThemed.getCurrentThemeBackgroundOption(), false);
                 mActionModePopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);

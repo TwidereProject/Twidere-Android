@@ -35,6 +35,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatDelegateTrojan;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
@@ -125,7 +126,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
     }
 
     private static void initViewTint(View view, IThemedActivity activity) {
-        final int noTintColor, accentColor, backgroundTintColor, actionBarColor;
+        final int noTintColor, accentColor, backgroundTintColor;
         final boolean isColorTint;
         // View context is not derived from ActionBar, apply color tint directly
         final Resources resources = ((Activity) activity).getResources();
@@ -134,15 +135,18 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         final boolean isDarkTheme = ThemeUtils.isDarkTheme(themeResourceId);
         final int backgroundColorApprox;
         if (!isActionBarContext) {
-            accentColor = actionBarColor = activity.getCurrentThemeColor();
-            noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
+            accentColor = activity.getCurrentThemeColor();
+            final int[] darkLightColors = new int[2];
+            ThemeUtils.getDarkLightForegroundColors((Context) activity,
+                    activity.getCurrentThemeResourceId(), darkLightColors);
+            noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD,
+                    darkLightColors[0], darkLightColors[1]);
             backgroundTintColor = accentColor;
             backgroundColorApprox = isDarkTheme ? Color.BLACK : Color.WHITE;
             isColorTint = true;
         } else if (isDarkTheme) {
             // View context is derived from ActionBar but is currently dark theme, so we should show
             // light
-            actionBarColor = resources.getColor(R.color.background_color_action_bar_dark);
             noTintColor = Color.WHITE;
             accentColor = activity.getCurrentThemeColor();
             backgroundTintColor = noTintColor;
@@ -150,9 +154,14 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             isColorTint = true;
         } else {
             // View context is derived from ActionBar and it's light theme, so we use contrast color
-            actionBarColor = activity.getCurrentThemeColor();
-            accentColor = TwidereColorUtils.getContrastYIQ(actionBarColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
-            noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD);
+            final int actionBarColor = activity.getCurrentThemeColor();
+            final int actionBarTheme = ThemeUtils.getActionBarThemeResource(activity.getThemeResourceId(), actionBarColor);
+            final int[] darkLightColors = new int[2];
+            ThemeUtils.getDarkLightForegroundColors((Context) activity, actionBarTheme, darkLightColors);
+            accentColor = TwidereColorUtils.getContrastYIQ(actionBarColor, ThemeUtils.ACCENT_COLOR_THRESHOLD,
+                    darkLightColors[0], darkLightColors[1]);
+            noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD,
+                    darkLightColors[0], darkLightColors[1]);
             backgroundTintColor = accentColor;
             backgroundColorApprox = Color.WHITE;
             isColorTint = false;
@@ -182,9 +191,13 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
                 applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
             }
         } else if (view instanceof TwidereToolbar) {
-            final int itemColor = ThemeUtils.getContrastForegroundColor((Context) activity,
-                    themeResourceId, actionBarColor);
-            ((TwidereToolbar) view).setItemColor(itemColor);
+            final Context context = view.getContext();
+            if (context instanceof android.support.v7.internal.view.ContextThemeWrapper) {
+                ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(context,
+                        ((ContextThemeWrapper) context).getThemeResId()));
+            } else {
+                ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(context));
+            }
         } else if (view instanceof EditText) {
             if (isAccentOptimal || !isColorTint) {
                 ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(backgroundTintColor));
@@ -213,6 +226,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
     }
 
     private static boolean isActionBarContext(@NonNull Context context, @Nullable Context actionBarContext) {
+        if (context instanceof ThemeUtils.ActionBarContextThemeWrapper) return true;
         if (actionBarContext == null) return false;
         if (context == actionBarContext) return true;
         Context base = context;

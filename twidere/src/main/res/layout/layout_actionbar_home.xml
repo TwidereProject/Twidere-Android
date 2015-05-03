@@ -20,7 +20,7 @@
             app:tabHorizontalPadding="@dimen/element_spacing_normal" />
     </org.mariotaku.twidere.view.TwidereToolbar>
 
-    <android.support.v7.internal.widget.ActionBarContextView
+    <org.mariotaku.twidere.view.TwidereActionBarContextView
         android:id="@+id/action_context_bar"
         style="?attr/actionModeStyle"
         android:layout_width="match_parent"

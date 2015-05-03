@@ -368,6 +368,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     }
 
     private void getUserInfo() {
+        if (getActivity() == null || isDetached()) return;
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         mGetUserInfoCalled = true;

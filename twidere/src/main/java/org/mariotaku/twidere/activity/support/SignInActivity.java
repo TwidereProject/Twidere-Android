@@ -41,6 +41,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.internal.widget.NativeActionModeAwareLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -63,6 +64,7 @@ import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -72,11 +74,13 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
+import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
 import twitter4j.Twitter;
@@ -124,15 +128,11 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
     private TintedStatusLayout mMainContent;
+    private TwidereActionModeForChildListener mTwidereActionModeForChildListener;
 
     @Override
     public void afterTextChanged(final Editable s) {
 
-    }
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getThemeResource(this);
     }
 
     @Override
@@ -311,7 +311,19 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         mResolver = getContentResolver();
         mApplication = TwidereApplication.getInstance(this);
         setContentView(R.layout.activity_sign_in);
-//        setSupportActionBar((Toolbar) findViewById(R.id.tool_bar));
+        setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
+
+        mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
+        final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
+        layout.setActionModeForChildListener(mTwidereActionModeForChildListener);
+
+        ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+        final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
+        ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
+        ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
+        final View windowOverlay = findViewById(R.id.window_overlay);
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
+
         if (savedInstanceState != null) {
             mAPIUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT);
             mAuthType = savedInstanceState.getInt(Accounts.AUTH_TYPE);
@@ -544,14 +556,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         final int themeColor = getCurrentThemeColor();
         final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
-        final int actionBarItemsColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
         ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, isActionBarOutlineEnabled());
-        final Toolbar toolbar = peekActionBarToolbar();
-        if (toolbar != null) {
-//            ThemeUtils.setToolBarColor(toolbar, titleColor, actionBarItemsColor);
-        } else {
-//            ThemeUtils.setActionBarColor(getWindow(), getSupportActionBar(), titleColor, actionBarItemsColor);
-        }
     }
 
     private void setupTintStatusBar() {

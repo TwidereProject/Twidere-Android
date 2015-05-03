@@ -55,6 +55,7 @@ import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -664,15 +665,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_user, container, false);
-//        final ViewGroup profileDetailsContainer = (ViewGroup) view.findViewById(R.id.profile_details_container);
-//        final boolean isCompact = Utils.isCompactCards(getActivity());
-//        if (isCompact) {
-//            inflater.inflate(R.layout.layout_user_details_compact, profileDetailsContainer);
-//        } else {
-//            inflater.inflate(R.layout.layout_user_details, profileDetailsContainer);
-//        }
-        return view;
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
@@ -1463,8 +1456,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final View profileBannerContainer = mProfileBannerContainer;
         final int spaceHeight = space.getHeight();
         final float factor = MathUtils.clamp(offset / (float) spaceHeight, 0, 1);
-        profileBannerContainer.setTranslationY(Math.max(-offset, -spaceHeight));
-        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
+//        profileBannerContainer.setTranslationY(Math.max(-offset, -spaceHeight));
+//        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
+        profileBannerContainer.setTranslationY(-offset);
+        profileBannerView.setTranslationY(offset / 2);
 
         if (mActionBarBackground != null && mTintedStatusContent != null) {
             mActionBarBackground.setFactor(factor);
@@ -1485,8 +1480,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);
             }
 
-            final Drawable drawable = mPagerIndicator.getBackground();
-            final int stackedTabColor;
+            final Drawable tabBackground = mPagerIndicator.getBackground();
+            int stackedTabColor;
             final int themeId = activity.getCurrentThemeResourceId();
             if (ThemeUtils.isDarkTheme(themeId)) {
                 stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
@@ -1494,8 +1489,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 stackedTabColor = mUiColor;
             }
 
+            if (ThemeUtils.isTransparentBackground(activity.getCurrentThemeBackgroundOption())) {
+                stackedTabColor = ColorUtils.setAlphaComponent(stackedTabColor, activity.getCurrentThemeBackgroundAlpha());
+            }
             final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
-            ((ColorDrawable) drawable).setColor(tabColor);
+            ((ColorDrawable) tabBackground).setColor(tabColor);
             final boolean tabItemIsDark = TwidereColorUtils.getYIQLuminance(tabColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD;
 
             if (mPreviousTabItemIsDark == 0 || (tabItemIsDark ? 1 : -1) != mPreviousTabItemIsDark) {

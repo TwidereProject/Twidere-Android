@@ -352,15 +352,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 break;
             }
         }
-        if (actionBarItemsColor != 0 && shouldSetActionItemColor()) {
-//            final int titleColor = ThemeUtils.getContrastActionBarTitleColor(this, themeId, themeColor);
-//            final Toolbar toolbar = peekActionBarToolbar();
-//            if (toolbar != null) {
-//                ThemeUtils.setToolBarColor(toolbar, titleColor, actionBarItemsColor);
-//            } else {
-//                ThemeUtils.setActionBarColor(getWindow(), getSupportActionBar(), titleColor, actionBarItemsColor);
-//            }
-        }
     }
 
     private void setStatusBarColor(int linkId, Uri uri) {
