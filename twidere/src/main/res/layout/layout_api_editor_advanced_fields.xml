@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,13 +18,16 @@
   -->
 
 <LinearLayout
-    android:id="@+id/advanced_api_config"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/advanced_api_config"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/element_spacing_normal">
+    android:paddingEnd="0dp"
+    android:paddingLeft="@dimen/element_spacing_normal"
+    android:paddingRight="0dp"
+    android:paddingStart="@dimen/element_spacing_normal">
 
     <CheckBox
         android:id="@+id/same_oauth_signing_url"
@@ -34,7 +36,7 @@
         android:paddingBottom="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_normal"
         android:text="@string/same_oauth_signing_url"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <CheckBox
         android:id="@+id/no_version_suffix"
@@ -43,7 +45,7 @@
         android:paddingBottom="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_normal"
         android:text="@string/no_version_suffix"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/consumer_key"
@@ -55,7 +57,7 @@
         android:singleLine="true"
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
-        app:met_floatingLabelText="@string/consumer_key"/>
+        app:met_floatingLabelText="@string/consumer_key" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/consumer_secret"
@@ -67,6 +69,6 @@
         android:singleLine="true"
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
-        app:met_floatingLabelText="@string/consumer_secret"/>
+        app:met_floatingLabelText="@string/consumer_secret" />
 
 </LinearLayout>

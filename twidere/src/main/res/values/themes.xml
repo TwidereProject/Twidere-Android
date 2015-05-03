@@ -19,6 +19,7 @@
         <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
@@ -32,7 +33,9 @@
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
+
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
@@ -48,6 +51,7 @@
         <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
@@ -61,7 +65,9 @@
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">#f8f8f8</item>
+
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
@@ -77,6 +83,7 @@
         <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
@@ -92,6 +99,7 @@
         <item name="cardItemBackgroundColor">#f8f8f8</item>
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
@@ -107,6 +115,7 @@
 
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
@@ -122,6 +131,7 @@
 
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
@@ -148,6 +158,7 @@
 
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
@@ -174,6 +185,7 @@
 
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
     </style>
 
@@ -213,6 +225,7 @@
         <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
 
         <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
     </style>
 
