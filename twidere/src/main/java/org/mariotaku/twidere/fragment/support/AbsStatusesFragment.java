@@ -78,7 +78,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                saveReadPosition();
+                final LinearLayoutManager layoutManager = getLayoutManager();
+                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
             }
         }
     };
@@ -344,7 +345,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     public final boolean scrollToStart() {
         final boolean result = super.scrollToStart();
         if (result) {
-            saveReadPosition();
+            saveReadPosition(0);
         }
         return result;
     }
@@ -393,11 +394,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
 
     protected abstract void onLoadingFinished();
 
-    protected void saveReadPosition() {
+    protected void saveReadPosition(int position) {
         final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
-        final LinearLayoutManager layoutManager = getLayoutManager();
-        final int position = layoutManager.findFirstVisibleItemPosition();
         if (position == RecyclerView.NO_POSITION) return;
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
