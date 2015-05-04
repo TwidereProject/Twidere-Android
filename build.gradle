@@ -7,8 +7,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.9'
-        classpath 'com.android.tools.build:gradle:1.2.1'
+        classpath 'com.android.tools.build:gradle:1.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath('fr.avianey.androidsvgdrawable:gradle-plugin:1.0.1') {
+            // should be excluded to avoid conflict
+            exclude group: 'xerces'
+        }
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

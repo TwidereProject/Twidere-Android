@@ -1,7 +1,10 @@
+import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
+
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: "androidsvgdrawable"
 apply from: rootProject.file('global.gradle')
 apply from: rootProject.file('signing.gradle')
 
@@ -47,7 +50,8 @@ android {
     }
     sourceSets {
         main {
-            res.srcDirs = [project.file("src/$name/res"), project.file("src/$name/res-localized")]
+            res.srcDirs = [project.file("src/$name/res"), project.file("src/$name/res-localized"),
+                           project.file("src/$name/res-svg2png")]
         }
     }
 }
@@ -99,4 +103,21 @@ dependencies {
     compile project(':twidere.component.nyan')
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
 //    googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
+}
+
+task svgToPng(type: SvgDrawableTask) {
+    // specify where to pick SVG from
+    from = file('src/main/svg-png')
+    // specify the android res folder
+    to = file('src/main/res-svg2png')
+    // create qualified directories if missing
+    createMissingDirectories = true
+    // override files only if necessary
+    overrideMode = 'ifModified'
+    // let generate PNG for the following densities only
+    targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
+    // relative path of the file specifying nine patch specs
+    ninePatchConfig = file('src/main/svg-png/9patch.json')
+    // output format of the generated resources
+    outputFormat = 'PNG'
 }

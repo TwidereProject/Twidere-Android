@@ -1171,7 +1171,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             // Setup notification
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setSmallIcon(R.drawable.ic_stat_direct_message);
+            builder.setSmallIcon(R.drawable.ic_stat_message);
             builder.setTicker(notificationTitle);
             builder.setContentTitle(notificationTitle);
             builder.setContentText(notificationContent);

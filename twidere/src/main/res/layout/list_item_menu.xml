@@ -44,7 +44,8 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary" />
 
     <CheckBox
         android:id="@android:id/checkbox"

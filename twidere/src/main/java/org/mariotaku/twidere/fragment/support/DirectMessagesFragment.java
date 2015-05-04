@@ -160,7 +160,7 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
         if (accountIds.length > 0) {
             showContent();
         } else {
-            showError(R.drawable.ic_info_account, getString(R.string.no_account_selected));
+            showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
         }
     }
 

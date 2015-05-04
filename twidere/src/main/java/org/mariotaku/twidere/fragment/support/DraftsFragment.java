@@ -199,7 +199,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         mListView.setOnItemClickListener(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(this);
-        mEmptyIcon.setImageResource(R.drawable.ic_info_drafts);
+        mEmptyIcon.setImageResource(R.drawable.ic_info_draft);
         mEmptyText.setText(R.string.drafts_hint_messages);
         getLoaderManager().initLoader(0, null, this);
         setListShown(false);
