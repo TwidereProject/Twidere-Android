@@ -15,10 +15,27 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-dontwarn sun.net.spi.**
+-dontwarn java.nio.file.**
+-dontwarn org.codehaus.mojo.**
+
+# https://github.com/bluelinelabs/LoganSquare
+-keep class com.bluelinelabs.logansquare.** { *; }
+-keep @com.bluelinelabs.logansquare.annotation.JsonObject class *
+-keep class **$$JsonObjectMapper { *; }
+
+# http://square.github.io/otto/
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
+    @com.squareup.otto.Produce public *;
+}
+
 -keepclassmembers class android.support.v7.internal.app.WindowDecorActionBar {
-    private mContextView;
-    private mDecorToolbar;
+    private android.support.v7.internal.widget.ActionBarContextView mContextView;
+    private android.support.v7.internal.widget.DecorToolbar mDecorToolbar;
 }
 -keepclassmembers class android.support.v7.internal.widget.ActionBarOverlayLayout {
-    private mWindowContentOverlay;
+    private android.graphics.drawable.Drawable mWindowContentOverlay;
 }

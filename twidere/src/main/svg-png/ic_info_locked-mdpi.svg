@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.1 (12005) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Artboard-1" sketch:type="MSArtboardGroup">
+            <g id="ic_info_locked-mdpi" sketch:type="MSLayerGroup">
+                <path d="M0,0 L64,0 L64,64 L0,64 L0,0 Z" id="Shape" sketch:type="MSShapeGroup"></path>
+                <path d="M48,21.3333333 L45.3333333,21.3333333 L45.3333333,16 C45.3333333,8.64 39.36,2.66666667 32,2.66666667 C24.64,2.66666667 18.6666667,8.64 18.6666667,16 L18.6666667,21.3333333 L16,21.3333333 C13.0666667,21.3333333 10.6666667,23.7333333 10.6666667,26.6666667 L10.6666667,53.3333333 C10.6666667,56.2666667 13.0666667,58.6666667 16,58.6666667 L48,58.6666667 C50.9333333,58.6666667 53.3333333,56.2666667 53.3333333,53.3333333 L53.3333333,26.6666667 C53.3333333,23.7333333 50.9333333,21.3333333 48,21.3333333 L48,21.3333333 Z M32,45.3333333 C29.0666667,45.3333333 26.6666667,42.9333333 26.6666667,40 C26.6666667,37.0666667 29.0666667,34.6666667 32,34.6666667 C34.9333333,34.6666667 37.3333333,37.0666667 37.3333333,40 C37.3333333,42.9333333 34.9333333,45.3333333 32,45.3333333 L32,45.3333333 Z M40.2666667,21.3333333 L23.7333333,21.3333333 L23.7333333,16 C23.7333333,11.44 27.44,7.73333333 32,7.73333333 C36.56,7.73333333 40.2666667,11.44 40.2666667,16 L40.2666667,21.3333333 L40.2666667,21.3333333 Z" id="Shape" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+            </g>
+        </g>
+    </g>
+</svg>
