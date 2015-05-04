@@ -103,7 +103,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
         final ShapedImageView icon = (ShapedImageView) view.findViewById(android.R.id.icon);
 
-        // Clear images in prder to prevent images in recycled view shown.
+        // Clear images in order to prevent images in recycled view shown.
         icon.setImageDrawable(null);
 
         if (mScreenNameIdx != -1 && mNameIdx != -1 && mUserIdIdx != -1) {

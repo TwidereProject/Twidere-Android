@@ -302,7 +302,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     @IntDef({VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE, VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP})
     @Retention(RetentionPolicy.SOURCE)
-    public static @interface PreviewStyle {
+    public @interface PreviewStyle {
 
     }
 }

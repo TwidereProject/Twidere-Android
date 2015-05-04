@@ -336,12 +336,12 @@ public final class TwidereLinkify implements Constants {
     @IntDef({VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE, VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT,
             VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE, VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH})
     @Retention(RetentionPolicy.SOURCE)
-    public static @interface HighlightStyle {
+    public @interface HighlightStyle {
 
     }
 
     public interface OnLinkClickListener {
-        public void onLinkClick(String link, String orig, long accountId, long extraId, int type,
-                                boolean sensitive, int start, int end);
+        void onLinkClick(String link, String orig, long accountId, long extraId, int type,
+                         boolean sensitive, int start, int end);
     }
 }

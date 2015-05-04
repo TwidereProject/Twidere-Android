@@ -183,7 +183,7 @@ public class DataImportExportUtils implements Constants {
         zos.closeEntry();
     }
 
-    private static interface ProcessStrategy {
+    private interface ProcessStrategy {
         boolean importValue(JSONObject json, String key, SharedPreferences.Editor editor);
 
         boolean exportValue(JSONObject json, String key, SharedPreferences preferences);

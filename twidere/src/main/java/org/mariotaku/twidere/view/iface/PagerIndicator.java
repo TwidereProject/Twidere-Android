@@ -69,11 +69,11 @@ public interface PagerIndicator extends ViewPager.OnPageChangeListener {
 
     interface TabListener {
 
-        public void onPageReselected(int position);
+        void onPageReselected(int position);
 
-        public void onPageSelected(int position);
+        void onPageSelected(int position);
 
-        public boolean onTabLongClick(int position);
+        boolean onTabLongClick(int position);
     }
 
     /**
@@ -81,7 +81,7 @@ public interface PagerIndicator extends ViewPager.OnPageChangeListener {
      */
     interface TabProvider {
 
-        public int getCount();
+        int getCount();
 
         /**
          * Returns the icon of the view at position
@@ -89,7 +89,7 @@ public interface PagerIndicator extends ViewPager.OnPageChangeListener {
          * @param position
          * @return
          */
-        public Drawable getPageIcon(int position);
+        Drawable getPageIcon(int position);
 
         /**
          * Returns the title of the view at position
@@ -97,8 +97,8 @@ public interface PagerIndicator extends ViewPager.OnPageChangeListener {
          * @param position
          * @return
          */
-        public CharSequence getPageTitle(int position);
+        CharSequence getPageTitle(int position);
 
-        public float getPageWidth(int position);
+        float getPageWidth(int position);
     }
 }

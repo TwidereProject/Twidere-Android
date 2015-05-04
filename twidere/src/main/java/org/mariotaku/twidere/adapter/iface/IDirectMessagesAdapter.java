@@ -25,7 +25,7 @@ import org.mariotaku.twidere.view.ShapedImageView;
 
 public interface IDirectMessagesAdapter {
 
-    public ParcelableDirectMessage findItem(long id);
+    ParcelableDirectMessage findItem(long id);
 
     @ShapedImageView.ShapeStyle
     int getProfileImageStyle();

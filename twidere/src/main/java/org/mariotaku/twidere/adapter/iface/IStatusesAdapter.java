@@ -3,7 +3,6 @@ package org.mariotaku.twidere.adapter.iface;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
 

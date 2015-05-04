@@ -165,7 +165,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         }
     }
 
-    public static interface DownloadListener {
+    public interface DownloadListener {
         void onDownloadError(Throwable t);
 
         void onDownloadFinished();

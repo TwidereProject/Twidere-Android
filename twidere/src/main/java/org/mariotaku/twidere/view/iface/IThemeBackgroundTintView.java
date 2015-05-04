@@ -27,6 +27,6 @@ import android.support.annotation.NonNull;
  */
 public interface IThemeBackgroundTintView {
 
-    public void setBackgroundTintColor(@NonNull ColorStateList color);
+    void setBackgroundTintColor(@NonNull ColorStateList color);
 
 }

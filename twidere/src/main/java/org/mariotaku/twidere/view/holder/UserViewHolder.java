@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.view.holder;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.view.View;
@@ -161,7 +160,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         profileImageView.setStyle(adapter.getProfileImageStyle());
     }
 
-    public static interface UserClickListener extends ContentCardClickListener {
+    public interface UserClickListener extends ContentCardClickListener {
 
         void onUserClick(UserViewHolder holder, int position);
 

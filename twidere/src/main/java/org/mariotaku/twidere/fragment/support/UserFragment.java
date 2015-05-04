@@ -1077,7 +1077,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerSpace = headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
-        mPagerOverlay = (View) contentView.findViewById(R.id.pager_window_overlay);
+        mPagerOverlay = contentView.findViewById(R.id.pager_window_overlay);
         mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);

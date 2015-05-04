@@ -75,13 +75,13 @@ public class ColorLabelFrameLayout extends FrameLayout implements IColorLabelVie
     }
 
     @Override
-    public boolean isPaddingsIgnored() {
-        return mHelper.isPaddingsIgnored();
+    public boolean isPaddingIgnored() {
+        return mHelper.isPaddingIgnored();
     }
 
     @Override
-    public void setIgnorePaddings(final boolean ignorePaddings) {
-        mHelper.setIgnorePaddings(ignorePaddings);
+    public void setIgnorePadding(final boolean ignorePadding) {
+        mHelper.setIgnorePadding(ignorePadding);
     }
 
     @Override

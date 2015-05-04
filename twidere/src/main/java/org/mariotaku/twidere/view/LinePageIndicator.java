@@ -125,6 +125,7 @@ public class LinePageIndicator extends View implements PagerIndicator {
         return mPaintSelected.getStrokeWidth();
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public void setStrokeWidth(final float lineHeight) {
         mPaintSelected.setStrokeWidth(lineHeight);
         mPaintUnselected.setStrokeWidth(lineHeight);

@@ -89,7 +89,7 @@ public class ThemedAppCompatDelegateFactory implements Constants {
         }
     }
 
-    public static interface KeyListener {
+    public interface KeyListener {
 
         boolean onKeyDown(int keyCode, KeyEvent event);
 

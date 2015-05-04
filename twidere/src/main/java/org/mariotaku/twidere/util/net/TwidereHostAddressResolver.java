@@ -27,7 +27,6 @@ import android.util.Log;
 import org.apache.http.conn.util.InetAddressUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.HostsFileParser;
-import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.xbill.DNS.AAAARecord;
 import org.xbill.DNS.ARecord;

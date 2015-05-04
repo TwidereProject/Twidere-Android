@@ -11,25 +11,25 @@ import android.view.animation.DecelerateInterpolator;
  */
 public interface IControlBarActivity {
 
-    public void setControlBarOffset(float offset);
+    void setControlBarOffset(float offset);
 
-    public void setControlBarVisibleAnimate(boolean visible);
+    void setControlBarVisibleAnimate(boolean visible);
 
-    public float getControlBarOffset();
+    float getControlBarOffset();
 
-    public int getControlBarHeight();
+    int getControlBarHeight();
 
-    public void notifyControlBarOffsetChanged();
+    void notifyControlBarOffsetChanged();
 
-    public void registerControlBarOffsetListener(ControlBarOffsetListener listener);
+    void registerControlBarOffsetListener(ControlBarOffsetListener listener);
 
-    public void unregisterControlBarOffsetListener(ControlBarOffsetListener listener);
+    void unregisterControlBarOffsetListener(ControlBarOffsetListener listener);
 
-    public interface ControlBarOffsetListener {
-        public void onControlBarOffsetChanged(IControlBarActivity activity, float offset);
+    interface ControlBarOffsetListener {
+        void onControlBarOffsetChanged(IControlBarActivity activity, float offset);
     }
 
-    public final class ControlBarShowHideHelper {
+    final class ControlBarShowHideHelper {
 
         private static final long DURATION = 200l;
 

@@ -291,7 +291,7 @@ public class HeaderDrawerLayout extends ViewGroup {
     private void updateViewOffset() {
     }
 
-    public static interface DrawerCallback {
+    public interface DrawerCallback {
 
         boolean canScroll(float dy);
 

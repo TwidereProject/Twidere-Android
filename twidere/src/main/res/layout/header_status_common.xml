@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -17,8 +16,7 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_content"
@@ -44,7 +42,7 @@
         <Space
             android:layout_width="@dimen/element_spacing_large"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_profile_image_detail_page"/>
+            android:layout_margin="@dimen/padding_profile_image_detail_page" />
 
         <TextView
             android:id="@+id/retweeted_by"
@@ -55,7 +53,7 @@
             android:padding="@dimen/element_spacing_normal"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="Retweeted by Mariotaku"/>
+            tools:text="Retweeted by Mariotaku" />
     </LinearLayout>
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
@@ -73,23 +71,26 @@
             android:layout_width="@dimen/icon_size_card_details"
             android:layout_height="@dimen/icon_size_card_details"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/padding_profile_image_detail_page"
             android:contentDescription="@string/profile_image"
             android:scaleType="centerCrop"
             app:sivBorder="true"
-            app:sivBorderWidth="1dp"/>
+            app:sivBorderWidth="1dp" />
 
         <ImageView
             android:id="@+id/profile_type"
             android:layout_width="@dimen/icon_size_profile_type_detail"
             android:layout_height="@dimen/icon_size_profile_type_detail"
             android:layout_alignBottom="@id/profile_image"
+            android:layout_alignEnd="@id/profile_image"
             android:layout_alignRight="@id/profile_image"
             android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_marginEnd="@dimen/element_spacing_minus_small"
             android:layout_marginRight="@dimen/element_spacing_minus_small"
             android:scaleType="fitCenter"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -97,12 +98,16 @@
             android:layout_alignBottom="@id/profile_image"
             android:layout_alignTop="@id/profile_image"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/profile_image"
             android:layout_toLeftOf="@+id/follow_indicator"
             android:layout_toRightOf="@id/profile_image"
+            android:layout_toStartOf="@+id/follow_indicator"
             android:gravity="center_vertical"
             android:orientation="vertical"
+            android:paddingEnd="4dp"
             android:paddingLeft="8dp"
-            android:paddingRight="4dp">
+            android:paddingRight="4dp"
+            android:paddingStart="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -116,17 +121,18 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?android:textColorPrimary"
-                    tools:text="Name"/>
+                    tools:text="Name" />
 
                 <TextView
                     android:id="@+id/screen_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/element_spacing_small"
+                    android:layout_marginStart="@dimen/element_spacing_small"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorSecondary"
-                    tools:text="\@username"/>
+                    tools:text="\@username" />
             </LinearLayout>
 
             <TextView
@@ -136,7 +142,7 @@
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:text="Jan 1 2015 0:00, via Twidere"/>
+                tools:text="Jan 1 2015 0:00, via Twidere" />
 
         </LinearLayout>
 
@@ -144,6 +150,7 @@
             android:id="@+id/follow_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:visibility="gone">
@@ -153,7 +160,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/follow"/>
+                android:text="@string/follow" />
 
             <ProgressBar
                 android:id="@+id/follow_info_progress"
@@ -162,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp" />
         </FrameLayout>
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
@@ -172,6 +179,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_container"
+        android:layout_alignStart="@+id/profile_container"
         android:layout_below="@id/profile_container"
         android:layout_marginBottom="@dimen/element_spacing_small"
         android:layout_marginTop="@dimen/element_spacing_normal"
@@ -181,7 +189,7 @@
         android:textColor="?android:textColorPrimary"
         android:visibility="gone"
         tools:text="@string/sample_status_text"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 
     <org.mariotaku.twidere.view.ForegroundColorView
@@ -191,9 +199,10 @@
         android:layout_alignBottom="@+id/counts_container"
         android:layout_alignTop="@+id/quoted_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginStart="@dimen/element_spacing_normal"
         android:background="?android:dividerHorizontal"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 
     <LinearLayout
@@ -201,6 +210,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/quote_text"
+        android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:background="?selectableItemBackground"
         android:clickable="true"
@@ -218,17 +228,18 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
-            tools:text="Name"/>
+            tools:text="Name" />
 
         <TextView
             android:id="@+id/quoted_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginStart="@dimen/element_spacing_small"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="\@username"/>
+            tools:text="\@username" />
     </LinearLayout>
 
     <FrameLayout
@@ -236,6 +247,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/quoted_name_container"
+        android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         tools:visibility="visible">
 
@@ -250,7 +262,7 @@
 
             <include
                 layout="@layout/layout_card_media_preview"
-                tools:ignore="DuplicateIncludedIds"/>
+                tools:ignore="DuplicateIncludedIds" />
 
         </org.mariotaku.twidere.view.CardMediaContainer>
 
@@ -270,10 +282,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/ic_action_gallery"
+                android:drawableStart="@drawable/ic_action_gallery"
                 android:gravity="center_vertical"
                 android:text="@string/load_media"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </FrameLayout>
@@ -284,35 +297,39 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/media_preview_container"
         android:layout_margin="@dimen/element_spacing_normal"
+        android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:singleLine="false"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
-        tools:text="@string/sample_status_text"/>
+        tools:text="@string/sample_status_text" />
 
     <org.mariotaku.twidere.view.TwitterCardContainer
         android:id="@+id/twitter_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text"
+        android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <org.mariotaku.twidere.view.ActionIconThemedTextView
         android:id="@+id/location_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/twitter_card"
+        android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:background="?selectableItemBackground"
         android:drawableLeft="@drawable/ic_indicator_location"
         android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_indicator_location"
         android:gravity="center_vertical"
         android:padding="@dimen/element_spacing_normal"
         android:singleLine="true"
         android:text="@string/view_map"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:textColorSecondary"/>
+        android:textColor="?android:textColorSecondary" />
 
     <LinearLayout
         android:id="@+id/counts_container"
@@ -321,6 +338,7 @@
         android:layout_below="@+id/location_view"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
+        android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:orientation="horizontal"
         android:splitMotionEvents="false">
@@ -340,11 +358,12 @@
                 android:id="@+id/replies_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/element_spacing_small"
                 android:layout_marginRight="@dimen/element_spacing_small"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"
-                tools:text="255"/>
+                tools:text="255" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -352,7 +371,7 @@
                 android:singleLine="true"
                 android:text="@string/replies"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"/>
+                android:textColor="?android:textColorSecondary" />
         </LinearLayout>
 
         <LinearLayout
@@ -370,11 +389,12 @@
                 android:id="@+id/retweets_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/element_spacing_small"
                 android:layout_marginRight="@dimen/element_spacing_small"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"
-                tools:text="255"/>
+                tools:text="255" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -382,7 +402,7 @@
                 android:singleLine="true"
                 android:text="@string/retweets"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"/>
+                android:textColor="?android:textColorSecondary" />
         </LinearLayout>
 
         <LinearLayout
@@ -400,11 +420,12 @@
                 android:id="@+id/favorites_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/element_spacing_small"
                 android:layout_marginRight="@dimen/element_spacing_small"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"
-                tools:text="255"/>
+                tools:text="255" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -412,7 +433,7 @@
                 android:singleLine="true"
                 android:text="@string/favorites"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"/>
+                android:textColor="?android:textColorSecondary" />
         </LinearLayout>
 
     </LinearLayout>
@@ -421,6 +442,6 @@
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
-        android:layout_below="@+id/counts_container"/>
+        android:layout_below="@+id/counts_container" />
 
 </RelativeLayout>

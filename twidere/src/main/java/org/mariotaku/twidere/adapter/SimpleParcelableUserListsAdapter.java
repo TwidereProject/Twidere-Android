@@ -71,7 +71,7 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
             view.setTag(holder);
         }
 
-        // Clear images in prder to prevent images in recycled view shown.
+        // Clear images in order to prevent images in recycled view shown.
         holder.icon.setImageDrawable(null);
 
         final ParcelableUserList user_list = getItem(position);

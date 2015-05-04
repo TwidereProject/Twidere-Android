@@ -173,7 +173,7 @@ public final class CustomTabConfiguration {
 			return new ExtraConfiguration(key, titleRes, Type.BOOLEAN, def);
 		}
 
-		public static enum Type {
+		public enum Type {
 			BOOLEAN
 		}
 	}

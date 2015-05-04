@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,8 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -38,7 +36,7 @@
         android:contentDescription="@string/profile_banner"
         android:focusable="false"
         android:scaleType="centerCrop"
-        tools:src="@drawable/nyan_stars_background"/>
+        tools:src="@drawable/nyan_stars_background" />
 
     <FrameLayout
         android:id="@+id/profile_container"
@@ -66,18 +64,20 @@
                 android:focusable="false"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
-                tools:src="@mipmap/ic_launcher"/>
+                tools:src="@mipmap/ic_launcher" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/other_accounts_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/profile_image"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@id/profile_image"
                 android:layout_marginBottom="@dimen/element_spacing_large"
+                android:layout_toEndOf="@id/profile_image"
                 android:layout_toRightOf="@id/profile_image"
-                android:focusable="false"/>
+                android:focusable="false" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorPrimary"
                         android:textStyle="bold"
-                        tools:text="Name"/>
+                        tools:text="Name" />
 
                     <TextView
                         android:id="@+id/screen_name"
@@ -115,7 +115,7 @@
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorSecondary"
-                        tools:text="\@username"/>
+                        tools:text="\@username" />
 
                 </LinearLayout>
 
@@ -129,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:focusable="true"
-                        android:focusableInTouchMode="false"/>
+                        android:focusableInTouchMode="false" />
                 </FrameLayout>
 
 
@@ -143,7 +143,7 @@
             android:focusable="false"
             android:scaleType="fitCenter"
             android:visibility="invisible"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
     </FrameLayout>
 
 </RelativeLayout>

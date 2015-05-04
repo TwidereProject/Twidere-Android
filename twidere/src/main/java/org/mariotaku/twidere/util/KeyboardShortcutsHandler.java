@@ -241,14 +241,14 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         mPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
-    public static interface KeyboardShortcutCallback extends KeyboardShortcutConstants {
+    public interface KeyboardShortcutCallback extends KeyboardShortcutConstants {
 
         boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event);
 
         boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
     }
 
-    public static interface TakeAllKeyboardShortcut {
+    public interface TakeAllKeyboardShortcut {
 
     }
 

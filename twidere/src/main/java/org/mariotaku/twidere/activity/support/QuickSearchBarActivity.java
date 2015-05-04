@@ -290,7 +290,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         window.setAttributes(attributes);
     }
 
-    static interface SuggestionItem {
+    interface SuggestionItem {
 
         void bindView(SuggestionsAdapter adapter, View view, int position);
 

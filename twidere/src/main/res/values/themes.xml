@@ -252,7 +252,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Test" parent="Theme.Compat.Base"></style>
+    <style name="Theme.Test" parent="Theme.Compat.Base"/>
 
     <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>

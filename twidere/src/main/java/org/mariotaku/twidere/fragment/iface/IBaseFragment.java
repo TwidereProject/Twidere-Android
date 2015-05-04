@@ -32,7 +32,7 @@ public interface IBaseFragment {
 
     void onBaseViewCreated(View view, Bundle savedInstanceState);
 
-    public interface SystemWindowsInsetsCallback {
+    interface SystemWindowsInsetsCallback {
         boolean getSystemWindowsInsets(Rect insets);
     }
 }

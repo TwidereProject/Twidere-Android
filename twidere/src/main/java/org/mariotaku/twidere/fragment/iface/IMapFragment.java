@@ -21,6 +21,6 @@ package org.mariotaku.twidere.fragment.iface;
 
 public interface IMapFragment {
 
-	public void center();
+	void center();
 
 }

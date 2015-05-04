@@ -14,7 +14,7 @@
     <integer name="default_live_wallpaper_scale">1</integer>
     <integer name="max_compose_menu_buttons_bottom">2</integer>
     <integer name="max_compose_menu_buttons_top">1</integer>
-    <integer name="max_compose_menu_buttons_bottom_singleaccount">4</integer>
+    <integer name="max_compose_menu_buttons_bottom_single_account">4</integer>
     <integer name="staggered_grid_columns_port">1</integer>
     <integer name="staggered_grid_columns_land">1</integer>
     <integer name="grid_column_image_preview">2</integer>

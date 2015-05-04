@@ -203,7 +203,7 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
 
     private UserListAdapterListener mUserListAdapterListener;
 
-    public static interface UserListAdapterListener {
+    public interface UserListAdapterListener {
 
         void onUserListClick(UserListViewHolder holder, int position);
 

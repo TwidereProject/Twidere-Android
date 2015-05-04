@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util;
 
 import android.os.SystemClock;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;

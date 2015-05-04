@@ -60,7 +60,9 @@ public class ClearCachePreference extends AsyncTaskPreference {
 
     private static void deleteRecursive(final File f) {
         if (f.isDirectory()) {
-            for (final File c : f.listFiles()) {
+            final File[] files = f.listFiles();
+            if (files == null) return;
+            for (final File c : files) {
                 deleteRecursive(c);
             }
         }

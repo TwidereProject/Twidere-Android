@@ -47,13 +47,13 @@ public interface IColorLabelView {
 
     void drawTop(final int... colors);
 
-    boolean isPaddingsIgnored();
+    boolean isPaddingIgnored();
 
-    void setIgnorePaddings(final boolean ignorePaddings);
+    void setIgnorePadding(final boolean ignorePadding);
 
     void setVisibility(int visibility);
 
-    public static final class Helper {
+    final class Helper {
 
         private final View mView;
 
@@ -88,6 +88,7 @@ public interface IColorLabelView {
             canvas.drawRect(left, top, right, bottom, mPaint);
         }
 
+        @SuppressWarnings("SuspiciousNameCombination")
         public void dispatchDrawLabels(final Canvas canvas) {
             final int left = mIgnorePadding ? 0 : mView.getPaddingLeft();
             final int top = mIgnorePadding ? 0 : mView.getPaddingTop();
@@ -132,12 +133,12 @@ public interface IColorLabelView {
             drawLabel(mStartColors, mEndColors, colors, mBottomColors, mBackgroundColor);
         }
 
-        public boolean isPaddingsIgnored() {
+        public boolean isPaddingIgnored() {
             return mIgnorePadding;
         }
 
-        public void setIgnorePaddings(final boolean ignorePaddings) {
-            mIgnorePadding = ignorePaddings;
+        public void setIgnorePadding(final boolean ignorePadding) {
+            mIgnorePadding = ignorePadding;
             mView.invalidate();
         }
 

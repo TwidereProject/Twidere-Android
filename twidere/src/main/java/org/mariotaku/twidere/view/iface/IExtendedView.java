@@ -25,21 +25,21 @@ import android.view.View;
 
 public interface IExtendedView {
 
-    public void setOnFitSystemWindowsListener(final OnFitSystemWindowsListener listener);
+    void setOnFitSystemWindowsListener(final OnFitSystemWindowsListener listener);
 
-    public void setOnSizeChangedListener(final OnSizeChangedListener listener);
+    void setOnSizeChangedListener(final OnSizeChangedListener listener);
 
-    public void setTouchInterceptor(final TouchInterceptor listener);
+    void setTouchInterceptor(final TouchInterceptor listener);
 
-    public static interface OnFitSystemWindowsListener {
+    interface OnFitSystemWindowsListener {
         void onFitSystemWindows(Rect insets);
     }
 
-    public static interface OnSizeChangedListener {
+    interface OnSizeChangedListener {
         void onSizeChanged(View view, int w, int h, int oldw, int oldh);
     }
 
-    public static interface TouchInterceptor {
+    interface TouchInterceptor {
 
         boolean dispatchTouchEvent(View view, MotionEvent event);
 

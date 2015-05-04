@@ -26,27 +26,27 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
 public interface IBaseAdapter extends Constants, ListAdapter {
 
-    public MediaLoaderWrapper getImageLoader();
+    MediaLoaderWrapper getImageLoader();
 
-    public int getLinkHighlightOption();
+    int getLinkHighlightOption();
 
-    public float getTextSize();
+    float getTextSize();
 
-    public boolean isDisplayNameFirst();
+    boolean isDisplayNameFirst();
 
-    public boolean isProfileImageDisplayed();
+    boolean isProfileImageDisplayed();
 
-    public boolean isShowAccountColor();
+    boolean isShowAccountColor();
 
-    public void notifyDataSetChanged();
+    void notifyDataSetChanged();
 
-    public void setDisplayNameFirst(boolean nameFirst);
+    void setDisplayNameFirst(boolean nameFirst);
 
-    public void setDisplayProfileImage(boolean display);
+    void setDisplayProfileImage(boolean display);
 
-    public void setLinkHighlightOption(String option);
+    void setLinkHighlightOption(String option);
 
-    public void setShowAccountColor(boolean show);
+    void setShowAccountColor(boolean show);
 
-    public void setTextSize(float textSize);
+    void setTextSize(float textSize);
 }

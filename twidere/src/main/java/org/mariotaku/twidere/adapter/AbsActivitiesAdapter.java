@@ -385,7 +385,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
         return mDisplayMediaPreview;
     }
 
-    public static interface ActivityAdapterListener {
+    public interface ActivityAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
     }
 

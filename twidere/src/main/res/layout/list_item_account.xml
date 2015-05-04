@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2006 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,7 @@
      limitations under the License.
 -->
 
-<org.mariotaku.twidere.view.ColorLabelRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.ColorLabelRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -32,9 +30,10 @@
         android:layout_width="24dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_weight="0"
-        android:background="@drawable/list_drag_handle"/>
+        android:background="@drawable/list_drag_handle" />
 
     <org.mariotaku.twidere.view.ShapedImageView
         android:id="@android:id/icon"
@@ -42,17 +41,20 @@
         android:layout_width="@dimen/icon_size_list_item"
         android:layout_height="@dimen/icon_size_list_item"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/drag_handle"
         android:layout_toRightOf="@+id/drag_handle"
         android:contentDescription="@string/your_profile_image"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@android:id/icon"
         android:layout_toLeftOf="@android:id/checkbox"
         android:layout_toRightOf="@android:id/icon"
+        android:layout_toStartOf="@android:id/checkbox"
         android:orientation="vertical"
         android:padding="@dimen/element_spacing_normal">
 
@@ -62,7 +64,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:textColorPrimary"/>
+            android:textColor="?android:textColorPrimary" />
 
         <TextView
             android:id="@android:id/text2"
@@ -70,16 +72,17 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary"/>
+            android:textColor="?android:textColorSecondary" />
     </LinearLayout>
 
     <org.mariotaku.twidere.view.ActivatedCheckBox
         android:id="@android:id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:clickable="false"
-        android:focusable="false"/>
+        android:focusable="false" />
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

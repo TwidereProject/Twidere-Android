@@ -303,7 +303,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     protected abstract void bindStatus(StatusViewHolder holder, int position);
 
-    public static interface StatusAdapterListener {
+    public interface StatusAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
 
         void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position);

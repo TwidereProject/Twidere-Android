@@ -128,14 +128,14 @@ public class CustomTabUtils implements Constants {
     }
 
     public static String findTabType(final Class<? extends Fragment> cls) {
-        for (final Entry<String, CustomTabConfiguration> entry : getConfiguraionMap().entrySet()) {
+        for (final Entry<String, CustomTabConfiguration> entry : getConfigurationMap().entrySet()) {
             if (classEquals(cls, entry.getValue().getFragmentClass())) return entry.getKey();
         }
         return null;
     }
 
 
-    public static HashMap<String, CustomTabConfiguration> getConfiguraionMap() {
+    public static HashMap<String, CustomTabConfiguration> getConfigurationMap() {
         return new HashMap<>(CUSTOM_TABS_CONFIGURATION_MAP);
     }
 

@@ -21,8 +21,8 @@ package org.mariotaku.twidere.fragment.iface;
 
 public interface RefreshScrollTopInterface {
 
-	public boolean scrollToStart();
+	boolean scrollToStart();
 
-	public boolean triggerRefresh();
+	boolean triggerRefresh();
 
 }

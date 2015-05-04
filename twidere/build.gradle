@@ -58,8 +58,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-configurations.all {
-    exclude group: 'org.yaml', module: 'snakeyaml'
+configurations {
+    all*.exclude group: 'org.yaml', module: 'snakeyaml'
 }
 
 dependencies {

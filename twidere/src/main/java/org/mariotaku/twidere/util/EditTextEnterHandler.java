@@ -124,7 +124,7 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
         this.listener = listener;
     }
 
-    public static interface EnterListener {
+    public interface EnterListener {
         void onHitEnter();
     }
 

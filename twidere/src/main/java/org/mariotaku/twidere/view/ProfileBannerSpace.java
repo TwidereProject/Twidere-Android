@@ -47,6 +47,7 @@ public class ProfileBannerSpace extends View {
     public void draw(@NonNull final Canvas canvas) {
     }
 
+    @Deprecated
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         mSystemWindowsInsets.set(insets);

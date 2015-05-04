@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,8 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/element_spacing_normal"
-                    tools:listitem="@layout/spinner_item_custom_tab_icon"/>
+                    tools:listitem="@layout/spinner_item_custom_tab_icon" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -62,9 +60,12 @@
                         android:id="@+id/tab_type_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingEnd="0dp"
                         android:paddingLeft="@dimen/element_spacing_normal"
+                        android:paddingRight="0dp"
+                        android:paddingStart="@dimen/element_spacing_normal"
                         android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall"/>
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <EditText
                         android:id="@+id/tab_name"
@@ -72,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/name"
                         android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -86,14 +87,14 @@
                     style="?android:listSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/account"/>
+                    android:text="@string/account" />
 
                 <Spinner
                     android:id="@+id/account_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/element_spacing_normal"
-                    tools:listitem="@layout/list_item_two_line_small"/>
+                    tools:listitem="@layout/list_item_two_line_small" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +108,7 @@
                     style="?android:listSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/user"/>
+                    android:text="@string/user" />
 
                 <FrameLayout
                     android:id="@+id/secondary_field"
@@ -118,7 +119,7 @@
                     android:onClick="onClick"
                     android:padding="@dimen/element_spacing_normal">
 
-                    <include layout="@layout/list_item_two_line_small"/>
+                    <include layout="@layout/list_item_two_line_small" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -133,7 +134,7 @@
                     style="?android:listSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/extra_configurations"/>
+                    android:text="@string/extra_configurations" />
 
                 <LinearLayout
                     android:id="@+id/extra_configurations_content"
@@ -142,7 +143,7 @@
                     android:divider="@android:color/darker_gray"
                     android:dividerPadding="0.4dp"
                     android:orientation="vertical"
-                    android:padding="@dimen/element_spacing_normal"/>
+                    android:padding="@dimen/element_spacing_normal" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -156,6 +157,6 @@
         android:layout_weight="0"
         android:gravity="center"
         android:onClick="onClick"
-        android:text="@android:string/ok"/>
+        android:text="@android:string/ok" />
 
 </LinearLayout>

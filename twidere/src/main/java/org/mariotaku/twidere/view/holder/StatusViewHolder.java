@@ -657,7 +657,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         return false;
     }
 
-    public static interface StatusClickListener extends ContentCardClickListener {
+    public interface StatusClickListener extends ContentCardClickListener {
 
         void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position);
 

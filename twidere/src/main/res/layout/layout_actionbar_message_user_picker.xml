@@ -35,6 +35,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/account_spinner"
         android:layout_toRightOf="@+id/account_spinner"
         android:padding="@dimen/element_spacing_small">
 
@@ -55,7 +56,7 @@
             style="?cardActionButtonStyle"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:color="?android:textColorPrimary"
             android:padding="@dimen/element_spacing_normal"
             android:scaleType="centerInside"

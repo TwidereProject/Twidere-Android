@@ -22,6 +22,7 @@ import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 
 public class TwitterLinkHandlerActivity extends Activity implements Constants {
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String[] TWITTER_RESERVED_PATHS = {"about", "account", "accounts", "activity", "all",
             "announcements", "anywhere", "api_rules", "api_terms", "apirules", "apps", "auth", "badges", "blog",
             "business", "buttons", "contacts", "devices", "direct_messages", "download", "downloads",

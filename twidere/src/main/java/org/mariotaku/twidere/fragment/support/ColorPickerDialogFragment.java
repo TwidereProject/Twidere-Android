@@ -106,11 +106,11 @@ public final class ColorPickerDialogFragment extends BaseSupportDialogFragment i
         super.onSaveInstanceState(outState);
     }
 
-    public static interface Callback extends IDialogFragmentCallback {
+    public interface Callback extends IDialogFragmentCallback {
 
-        public void onColorCleared();
+        void onColorCleared();
 
-        public void onColorSelected(int color);
+        void onColorSelected(int color);
 
     }
 

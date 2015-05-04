@@ -41,7 +41,6 @@ import android.widget.ProgressBar;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
 

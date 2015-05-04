@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -33,11 +34,11 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by mariotaku on 14/10/21.
  */
-public class TabPagerIndicator extends RecyclerView implements PagerIndicator {
+public class TabPagerIndicator extends RecyclerView implements PagerIndicator, Constants {
 
-    public static final int ICON = 0x1;
-    public static final int LABEL = 0x2;
-    public static final int BOTH = ICON | LABEL;
+    public static final int LABEL = VALUE_TAB_DISPLAY_OPTION_CODE_LABEL;
+    public static final int ICON = VALUE_TAB_DISPLAY_OPTION_CODE_ICON;
+    public static final int BOTH = VALUE_TAB_DISPLAY_OPTION_CODE_BOTH;
 
     private final int mStripHeight;
     private final TabPagerIndicatorAdapter mIndicatorAdapter;

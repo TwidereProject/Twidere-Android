@@ -101,7 +101,7 @@ public class SQLiteDatabaseWrapper {
             throw new IllegalStateException("Callback must not return null instance!");
     }
 
-    public static interface LazyLoadCallback {
+    public interface LazyLoadCallback {
         SQLiteDatabase onCreateSQLiteDatabase();
     }
 

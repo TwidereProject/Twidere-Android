@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,8 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,7 +27,7 @@
         android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:clickable="true"
         app:bubbleColor="?messageBubbleColor"
         app:caretHeight="8dp"
@@ -37,7 +35,7 @@
         app:caretWidth="8dp"
         app:cornerRadius="2dp">
 
-        <include layout="@layout/card_item_message_conversation_common"/>
+        <include layout="@layout/card_item_message_conversation_common" />
     </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
 </FrameLayout>

@@ -196,7 +196,7 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     private UserAdapterListener mUserAdapterListener;
 
-    public static interface UserAdapterListener {
+    public interface UserAdapterListener {
 
         void onUserClick(UserViewHolder holder, int position);
 

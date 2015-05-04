@@ -18,11 +18,14 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:divider="?android:attr/dividerHorizontal"
+    android:dividerPadding="0dip"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
     <LinearLayout
         android:id="@+id/keyboard_shortcut_input"
@@ -38,69 +41,59 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/keyboard_shortcut_hint"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:textAppearance="?android:textAppearanceMedium" />
 
         <TextView
             android:id="@+id/conflict_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/buttonPanel"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
-        android:dividerPadding="0dip"
+        android:measureWithLargestChild="true"
         android:minHeight="@dimen/element_size_normal"
-        android:orientation="vertical"
-        android:showDividers="beginning">
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
-        <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/button_negative"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layoutDirection="locale"
-            android:measureWithLargestChild="true"
-            android:orientation="horizontal">
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:minHeight="@dimen/element_size_normal"
+            android:text="@android:string/cancel"
+            android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/button_negative"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@android:string/cancel"
-                android:textSize="14sp"/>
+        <Button
+            android:id="@+id/button_neutral"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:minHeight="@dimen/element_size_normal"
+            android:text="@string/clear"
+            android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/button_neutral"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@string/clear"
-                android:textSize="14sp"/>
-
-            <Button
-                android:id="@+id/button_positive"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@android:string/ok"
-                android:textSize="14sp"/>
-        </LinearLayout>
+        <Button
+            android:id="@+id/button_positive"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:minHeight="@dimen/element_size_normal"
+            android:text="@android:string/ok"
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

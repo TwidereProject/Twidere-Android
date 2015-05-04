@@ -243,7 +243,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
-        mAccountActionProvider.setExclusive(false);
         final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(data);
         long defaultId = -1;
         for (ParcelableAccount account : accounts) {
@@ -255,7 +254,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mAccountsAdapter.setAccounts(accounts);
         mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
         mAccountOptionsAdapter.setSelectedAccount(mAccountsAdapter.getSelectedAccount());
-        mAccountActionProvider.setAccounts(accounts);
+
+        if (mAccountActionProvider != null) {
+            mAccountActionProvider.setExclusive(false);
+            mAccountActionProvider.setAccounts(accounts);
+        }
 
         initAccountActionsAdapter(accounts);
         updateAccountOptionsSeparatorLabel(null);

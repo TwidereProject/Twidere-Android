@@ -127,6 +127,7 @@ public class TwidereActionModeForChildListener implements NativeActionModeAwareL
                         mThemed.getCurrentThemeBackgroundOption(), false);
                 mActionModePopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                 mShowActionModePopup = new Runnable() {
+                    @Override
                     public void run() {
                         mActionModePopup.showAtLocation(
                                 mWindow.getDecorView(),

@@ -17,11 +17,10 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    android:id="@+id/header_user_profile"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_user_profile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:showIn="@layout/fragment_user">
@@ -34,15 +33,16 @@
     <View
         android:id="@+id/profile_name_background"
         android:layout_width="match_parent"
-        android:layout_alignTop="@+id/profile_name_container"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/profile_name_container"
-        android:layout_height="wrap_content" />
+        android:layout_alignTop="@+id/profile_name_container" />
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profile_name_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_banner_space"
+        android:layout_toEndOf="@id/profile_image"
         android:layout_toRightOf="@id/profile_image"
         android:orientation="vertical"
         android:paddingBottom="@dimen/element_spacing_xsmall"
@@ -55,6 +55,7 @@
             android:id="@+id/follow_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:minWidth="48dp">
@@ -82,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/follow_container"
+            android:layout_toStartOf="@id/follow_container"
             android:gravity="center_vertical"
             android:minHeight="@dimen/element_size_normal"
             android:orientation="vertical">
@@ -357,6 +359,7 @@
         android:layout_height="@dimen/icon_size_user_profile"
         android:layout_alignBottom="@+id/profile_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginStart="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image" />
 
     <org.mariotaku.twidere.view.BoundsImageView
@@ -365,8 +368,10 @@
         android:layout_width="@dimen/icon_size_profile_type_user_profile"
         android:layout_height="@dimen/icon_size_profile_type_user_profile"
         android:layout_alignBottom="@id/profile_image"
+        android:layout_alignEnd="@id/profile_image"
         android:layout_alignRight="@id/profile_image"
         android:layout_marginBottom="@dimen/element_spacing_minus_msmall"
+        android:layout_marginEnd="@dimen/element_spacing_minus_msmall"
         android:layout_marginRight="@dimen/element_spacing_minus_msmall"
         android:scaleType="fitCenter"
         tools:visibility="gone" />

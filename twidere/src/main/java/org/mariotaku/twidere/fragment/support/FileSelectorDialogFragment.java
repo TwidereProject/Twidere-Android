@@ -191,7 +191,7 @@ public class FileSelectorDialogFragment extends BaseSupportDialogFragment implem
         dialog.setTitle(title);
     }
 
-    public static interface Callback extends ISupportDialogFragmentCallback {
+    public interface Callback extends ISupportDialogFragmentCallback {
 
         void onFilePicked(File file);
     }

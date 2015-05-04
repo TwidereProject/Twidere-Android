@@ -72,13 +72,13 @@ public final class DatabaseUpgradeHelper {
         if (strictMode) {
             final String oldCreate = getCreateSQL(db, table);
             final Map<String, String> map = getTypeMapByCreateQuery(oldCreate);
-            boolean differenct = false;
+            boolean different = false;
             for (final NewColumn newCol : newCols) {
                 if (!newCol.getType().equalsIgnoreCase(map.get(newCol.getName()))) {
-                    differenct = true;
+                    different = true;
                 }
             }
-            if (!differenct) return;
+            if (!different) return;
         } else if (oldCols == null || TwidereArrayUtils.contentMatch(newColNames, oldCols)) return;
         if (dropDirectly) {
             db.beginTransaction();

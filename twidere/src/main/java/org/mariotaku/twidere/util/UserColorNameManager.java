@@ -160,11 +160,11 @@ public class UserColorNameManager implements TwidereConstants {
         return mNicknamePreferences.getAll().entrySet();
     }
 
-    public static interface OnUserColorChangedListener {
+    public interface OnUserColorChangedListener {
         void onUserColorChanged(long userId, int color);
     }
 
-    public static interface OnUserNicknameChangedListener {
+    public interface OnUserNicknameChangedListener {
         void onUserNicknameChanged(long userId, String nick);
     }
 

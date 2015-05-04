@@ -296,7 +296,7 @@ public class RefreshService extends Service implements Constants {
         }
     }
 
-    private static interface RefreshableAccountFilter {
+    private interface RefreshableAccountFilter {
         boolean isRefreshable(AccountPreferences pref);
     }
 

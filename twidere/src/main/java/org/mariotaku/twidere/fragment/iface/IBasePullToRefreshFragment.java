@@ -21,9 +21,9 @@ package org.mariotaku.twidere.fragment.iface;
 
 public interface IBasePullToRefreshFragment {
 
-    public void onRefresh();
+    void onRefresh();
 
-    public boolean isRefreshing();
+    boolean isRefreshing();
 
     void setRefreshing(boolean refresh);
 }

@@ -27,6 +27,6 @@ import android.support.annotation.NonNull;
  */
 public interface IThemeAccentView {
 
-    public void setAccentTintColor(@NonNull ColorStateList color);
+    void setAccentTintColor(@NonNull ColorStateList color);
 
 }

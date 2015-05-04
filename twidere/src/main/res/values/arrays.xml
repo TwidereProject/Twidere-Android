@@ -95,16 +95,6 @@
         <item>@string/take_photo</item>
         <item>@string/add_image</item>
     </string-array>
-    <string-array name="values_card_highlight_option">
-        <item>background</item>
-        <item>line</item>
-        <item>none</item>
-    </string-array>
-    <string-array name="entries_card_highlight_option">
-        <item>@string/card_highlight_option_highlight</item>
-        <item>@string/card_highlight_option_line</item>
-        <item>@string/none</item>
-    </string-array>
     <string-array name="values_media_preview_style">
         <item>crop</item>
         <item>scale</item>

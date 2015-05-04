@@ -55,13 +55,12 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
         if (mUserId != -1)
             return twitter.getUserTimeline(mUserId, paging);
         else if (mUserScreenName != null)
             return twitter.getUserTimeline(mUserScreenName, paging);
         else
-            return null;
+            throw new TwitterException("Invalid user");
     }
 
     @Override

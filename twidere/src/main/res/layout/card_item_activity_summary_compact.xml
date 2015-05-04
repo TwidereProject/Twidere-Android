@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,10 +17,9 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    android:id="@+id/item_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -32,16 +30,19 @@
         android:id="@+id/activity_type"
         android:layout_width="@dimen/icon_size_activity_type"
         android:layout_height="@dimen/icon_size_activity_type"
+        android:layout_alignEnd="@+id/profile_image_space"
         android:layout_alignRight="@+id/profile_image_space"
         android:layout_alignTop="@+id/profile_images_container"
         android:scaleType="centerInside"
-        tools:src="@drawable/ic_indicator_retweet"/>
+        tools:src="@drawable/ic_indicator_retweet" />
 
     <LinearLayout
         android:id="@+id/profile_images_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginStart="@dimen/element_spacing_normal"
+        android:layout_toEndOf="@+id/profile_image_space"
         android:layout_toRightOf="@+id/profile_image_space"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -52,7 +53,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"/>
+            android:contentDescription="@string/profile_image" />
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_1"
@@ -60,7 +61,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"/>
+            android:contentDescription="@string/profile_image" />
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_2"
@@ -68,7 +69,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"/>
+            android:contentDescription="@string/profile_image" />
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_3"
@@ -76,7 +77,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"/>
+            android:contentDescription="@string/profile_image" />
 
         <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/activity_profile_image_4"
@@ -84,7 +85,7 @@
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
             android:layout_margin="2dp"
-            android:contentDescription="@string/profile_image"/>
+            android:contentDescription="@string/profile_image" />
 
         <TextView
             android:id="@+id/activity_profile_image_more_number"
@@ -98,7 +99,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
-            tools:text="11"/>
+            tools:text="11" />
     </LinearLayout>
 
     <Space
@@ -106,29 +107,31 @@
         android:layout_width="@dimen/icon_size_status_profile_image"
         android:layout_height="0dp"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@+id/profile_images_container"/>
+        android:layout_below="@+id/profile_images_container" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_images_container"
+        android:layout_alignStart="@+id/profile_images_container"
         android:layout_below="@+id/profile_images_container"
         android:singleLine="false"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        tools:text="Uucky and 15 others favorited your tweet."/>
+        tools:text="Uucky and 15 others favorited your tweet." />
 
     <TextView
         android:id="@+id/summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_images_container"
+        android:layout_alignStart="@+id/profile_images_container"
         android:layout_below="@+id/title"
         android:singleLine="false"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        android:textSize="12dp"
-        tools:text="@string/sample_status_text"/>
+        tools:text="@string/sample_status_text"
+        tools:textSize="@dimen/text_size_extra_small" />
 
 </RelativeLayout>

@@ -121,7 +121,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
     }
 
 
-    public static interface UserListClickListener extends ContentCardClickListener {
+    public interface UserListClickListener extends ContentCardClickListener {
 
         void onUserListClick(UserListViewHolder holder, int position);
 

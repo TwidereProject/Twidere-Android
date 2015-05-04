@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,8 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +27,7 @@
         android:id="@+id/list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/alpha_container"
@@ -39,8 +37,10 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingEnd="@dimen/element_spacing_normal"
         android:paddingLeft="@dimen/element_spacing_large"
         android:paddingRight="@dimen/element_spacing_normal"
+        android:paddingStart="@dimen/element_spacing_large"
         android:paddingTop="@dimen/element_spacing_normal">
 
         <SeekBar
@@ -48,18 +48,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            tools:ignore="NestedWeights"/>
+            tools:ignore="NestedWeights" />
 
         <ImageView
             android:id="@+id/alpha_preview"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginStart="@dimen/element_spacing_normal"
             android:layout_weight="0"
             android:scaleType="centerInside"
             android:src="@mipmap/ic_launcher"
             android:visibility="gone"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
