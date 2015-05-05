@@ -1183,13 +1183,14 @@ public final class Utils implements Constants, TwitterConstants {
         return new ParcelableStatus(status, accountId, false);
     }
 
-    public static ParcelableStatus findStatusInDatabases(final Context context, final long account_id,
-                                                         final long status_id) {
+    @Nullable
+    public static ParcelableStatus findStatusInDatabases(final Context context, final long accountId,
+                                                         final long statusId) {
         if (context == null) return null;
         final ContentResolver resolver = context.getContentResolver();
         ParcelableStatus status = null;
-        final String where = Statuses.ACCOUNT_ID + " = " + account_id + " AND " + Statuses.STATUS_ID + " = "
-                + status_id;
+        final String where = Statuses.ACCOUNT_ID + " = " + accountId + " AND " + Statuses.STATUS_ID + " = "
+                + statusId;
         for (final Uri uri : STATUSES_URIS) {
             final Cursor cur = ContentResolverUtils.query(resolver, uri, Statuses.COLUMNS, where, null, null);
             if (cur == null) {

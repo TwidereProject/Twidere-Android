@@ -199,22 +199,26 @@ public class ThemeUtils implements Constants {
 
     public static void applyWindowBackground(Context context, Window window, int theme, String option, int alpha) {
         if (isWindowFloating(context, theme)) return;
+        final int normalTheme = getThemeResource(theme);
         if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-            window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, theme, alpha));
+            window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, normalTheme, alpha));
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
-            window.setBackgroundDrawable(new ColorDrawable(isDarkTheme(theme) ? Color.BLACK : Color.WHITE));
+            window.setBackgroundDrawable(new ColorDrawable(isDarkTheme(normalTheme) ? Color.BLACK : Color.WHITE));
+        } else {
+            window.setBackgroundDrawable(getWindowBackgroundFromTheme(context, normalTheme));
         }
     }
 
     public static void applyWindowBackground(Context context, View window, int theme, String option, int alpha) {
         if (isWindowFloating(context, theme)) return;
+        final int normalTheme = getThemeResource(theme);
         if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
-            ViewSupport.setBackground(window, getWindowBackgroundFromThemeApplyAlpha(context, theme, alpha));
+            ViewSupport.setBackground(window, getWindowBackgroundFromThemeApplyAlpha(context, normalTheme, alpha));
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
-            ViewSupport.setBackground(window, new ColorDrawable(isDarkTheme(theme) ? Color.BLACK : Color.WHITE));
+            ViewSupport.setBackground(window, new ColorDrawable(isDarkTheme(normalTheme) ? Color.BLACK : Color.WHITE));
         } else {
-            ViewSupport.setBackground(window, getWindowBackground(context));
+            ViewSupport.setBackground(window, getWindowBackgroundFromTheme(context, normalTheme));
         }
     }
 

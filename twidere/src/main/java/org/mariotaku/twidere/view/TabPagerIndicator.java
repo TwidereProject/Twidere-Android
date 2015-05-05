@@ -409,6 +409,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
             final int widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             child.measure(widthMeasureSpec, heightMeasureSpec);
         }
+
+        @Override
+        protected boolean isLayoutRTL() {
+            return false;
+        }
     }
 
     public void updateAppearance() {

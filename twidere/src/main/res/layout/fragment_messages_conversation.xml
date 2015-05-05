@@ -102,7 +102,7 @@
                 android:layout_toStartOf="@+id/send"
                 app:bubbleColor="?messageBubbleColor"
                 app:caretHeight="8dp"
-                app:caretPosition="topRight"
+                app:caretPosition="topEnd"
                 app:caretWidth="8dp"
                 app:cornerRadius="2dp">
 

@@ -284,7 +284,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     if (relationship.isTargetFollowingSource()) {
                         drawableRes = R.drawable.ic_follow_incoming;
                     } else {
-                        drawableRes = R.drawable.ic_follow_requested;
+                        drawableRes = R.drawable.ic_follow_pending;
                     }
                 } else {
                     mFollowButton.setText(R.string.follow);

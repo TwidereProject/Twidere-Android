@@ -44,6 +44,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
@@ -80,9 +82,8 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
 
     private View mAccountContainer, mSecondaryFieldContainer, mExtraConfigurationsContainer;
     private Spinner mTabIconSpinner, mAccountSpinner;
-    private EditText mEditTabName;
+    private MaterialEditText mEditTabName;
     private TextView mSecondaryFieldLabel;
-    private TextView mTabTypeName;
     private LinearLayout mExtraConfigurationsContent;
 
     private long mTabId;
@@ -195,8 +196,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         mAccountContainer = findViewById(R.id.account_container);
         mSecondaryFieldContainer = findViewById(R.id.secondary_field_container);
         mExtraConfigurationsContainer = findViewById(R.id.extra_configurations_container);
-        mTabTypeName = (TextView) findViewById(R.id.tab_type_name);
-        mEditTabName = (EditText) findViewById(R.id.tab_name);
+        mEditTabName = (MaterialEditText) findViewById(R.id.tab_name);
         mSecondaryFieldLabel = (TextView) findViewById(R.id.secondary_field_label);
         mTabIconSpinner = (Spinner) findViewById(R.id.tab_icon_spinner);
         mAccountSpinner = (Spinner) findViewById(R.id.account_spinner);
@@ -280,7 +280,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         mTabId = intent.getLongExtra(EXTRA_ID, -1);
         setTitle(isEditMode() ? R.string.edit_tab : R.string.add_tab);
         setContentView(R.layout.activity_custom_tab_editor);
-        mTabTypeName.setText(getTabTypeName(this, type));
+        mEditTabName.setFloatingLabelText(getTabTypeName(this, type));
         mTabIconsAdapter = new CustomTabIconsAdapter(this);
         mTabIconsAdapter.setData(getIconMap());
         mAccountsAdapter = new AccountsSpinnerAdapter(this);

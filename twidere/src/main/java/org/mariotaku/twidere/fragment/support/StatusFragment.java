@@ -1009,28 +1009,30 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ArrayList<ParcelableStatus> list = new ArrayList<>();
             try {
                 ParcelableStatus status = params[0];
-                final long account_id = status.account_id;
-                if (Utils.isOfficialKeyAccount(context, account_id)) {
-                    final Twitter twitter = Utils.getTwitterInstance(context, account_id, true);
+                final long accountId = status.account_id;
+                if (Utils.isOfficialKeyAccount(context, accountId)) {
+                    final Twitter twitter = Utils.getTwitterInstance(context, accountId, true);
                     while (status.in_reply_to_status_id > 0 && !isCancelled()) {
-                        status = Utils.findStatusInDatabases(context, account_id, status.in_reply_to_status_id);
+                        final ParcelableStatus cached = Utils.findStatusInDatabases(context, accountId, status.in_reply_to_status_id);
+                        if (cached == null) break;
+                        status = cached;
                         publishProgress(status);
                         list.add(0, status);
                     }
                     final Paging paging = new Paging();
                     paging.setMaxId(status.id);
                     final List<ParcelableStatus> conversations = new ArrayList<>();
-                    for (twitter4j.Status conversationItem : twitter.showConversation(status.id, paging)) {
-                        if (conversationItem.getId() < status.id) {
-                            final ParcelableStatus pStatus = new ParcelableStatus(conversationItem, account_id, false);
-                            publishProgress(pStatus);
-                            conversations.add(pStatus);
+                    for (twitter4j.Status item : twitter.showConversation(status.id, paging)) {
+                        if (item.getId() < status.id) {
+                            final ParcelableStatus conversation = new ParcelableStatus(item, accountId, false);
+                            publishProgress(conversation);
+                            conversations.add(conversation);
                         }
                     }
                     list.addAll(0, conversations);
                 } else {
                     while (status.in_reply_to_status_id > 0 && !isCancelled()) {
-                        status = Utils.findStatus(context, account_id, status.in_reply_to_status_id);
+                        status = Utils.findStatus(context, accountId, status.in_reply_to_status_id);
                         publishProgress(status);
                         list.add(0, status);
                     }

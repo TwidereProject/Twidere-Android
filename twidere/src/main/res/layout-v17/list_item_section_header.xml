@@ -16,26 +16,12 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_header_title"
+    style="?android:attr/listSeparatorTextViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
-
-    <org.mariotaku.messagebubbleview.library.MessageBubbleView
-        android:id="@+id/message_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:clickable="true"
-        app:bubbleColor="?messageBubbleColor"
-        app:caretHeight="8dp"
-        app:caretPosition="bottomEnd"
-        app:caretWidth="8dp"
-        app:cornerRadius="2dp">
-
-        <include layout="@layout/card_item_message_conversation_common" />
-    </org.mariotaku.messagebubbleview.library.MessageBubbleView>
-
-</FrameLayout>
+    android:paddingBottom="@dimen/element_spacing_xsmall"
+    android:paddingEnd="0dp"
+    android:paddingStart="@dimen/element_spacing_small"
+    android:paddingTop="@dimen/element_spacing_xsmall" />

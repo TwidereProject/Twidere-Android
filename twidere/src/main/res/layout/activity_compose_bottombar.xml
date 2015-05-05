@@ -17,76 +17,72 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
-    android:baselineAligned="false"
-    android:divider="?android:dividerHorizontal"
-    android:dividerPadding="@dimen/element_spacing_normal"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:showDividers="middle">
+    android:baselineAligned="false">
 
-    <LinearLayout
-        android:layout_width="0dp"
+
+    <RelativeLayout
+        android:id="@+id/account_selector_button"
+        style="?actionButtonStyle"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:clickable="true"
+        android:padding="@dimen/element_spacing_msmall">
 
-        <RelativeLayout
-            android:id="@+id/account_selector_button"
-            style="?actionButtonStyle"
+        <org.mariotaku.twidere.view.SquareShapedImageView
+            android:id="@+id/account_profile_image"
+            style="?profileImageStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:padding="@dimen/element_spacing_msmall">
+            android:layout_gravity="center"
+            app:sivBackgroundColor="?android:colorBackground"
+            app:sivBorder="true"
+            app:sivBorderWidth="@dimen/line_width_compose_account_profile_image" />
 
-            <org.mariotaku.twidere.view.SquareShapedImageView
-                android:id="@+id/account_profile_image"
-                style="?profileImageStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                app:sivBackgroundColor="?android:colorBackground"
-                app:sivBorder="true"
-                app:sivBorderWidth="@dimen/line_width_compose_account_profile_image" />
-
-            <org.mariotaku.twidere.view.BadgeView
-                android:id="@+id/accounts_count"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@id/account_profile_image"
-                android:layout_alignEnd="@id/account_profile_image"
-                android:layout_alignLeft="@id/account_profile_image"
-                android:layout_alignRight="@id/account_profile_image"
-                android:layout_alignStart="@id/account_profile_image"
-                android:layout_alignTop="@id/account_profile_image"
-                android:layout_gravity="center"
-                android:textColor="?android:colorForeground" />
-
-        </RelativeLayout>
-
-        <HorizontalScrollView
+        <org.mariotaku.twidere.view.BadgeView
+            android:id="@+id/accounts_count"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/account_profile_image"
+            android:layout_alignEnd="@id/account_profile_image"
+            android:layout_alignLeft="@id/account_profile_image"
+            android:layout_alignRight="@id/account_profile_image"
+            android:layout_alignStart="@id/account_profile_image"
+            android:layout_alignTop="@id/account_profile_image"
+            android:layout_gravity="center"
+            android:textColor="?android:colorForeground" />
 
-            <android.support.v7.widget.ActionMenuView
-                android:id="@+id/menu_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@null" />
-        </HorizontalScrollView>
-    </LinearLayout>
+    </RelativeLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/account_selector_button"
+        android:layout_toLeftOf="@+id/send"
+        android:layout_toRightOf="@+id/account_selector_button"
+        android:layout_toStartOf="@+id/send">
+
+        <android.support.v7.widget.ActionMenuView
+            android:id="@+id/menu_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@null" />
+    </HorizontalScrollView>
 
     <LinearLayout
         android:id="@+id/send"
         style="?actionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="0"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:contentDescription="@string/send"
         android:gravity="center"
         android:orientation="horizontal"
@@ -117,4 +113,4 @@
             android:src="@drawable/ic_action_send" />
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

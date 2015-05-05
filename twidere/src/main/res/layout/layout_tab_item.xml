@@ -21,7 +21,7 @@
 <view xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     class="org.mariotaku.twidere.view.TabPagerIndicator$ItemLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="match_parent"
     android:background="?selectableItemBackground"
     tools:layout_height="?actionBarSize">

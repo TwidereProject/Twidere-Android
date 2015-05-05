@@ -29,7 +29,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.twitter.Extractor;
@@ -45,14 +44,11 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
+import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.mariotaku.twidere.util.ContentValuesCreator.createFilteredUser;
-import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
-import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
 public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment implements OnMultiChoiceClickListener,
         OnClickListener {
@@ -68,26 +64,26 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
         final Set<Long> user_ids = new HashSet<>();
         final Set<String> keywords = new HashSet<>();
         final Set<String> sources = new HashSet<>();
-        final ArrayList<ContentValues> user_values = new ArrayList<>();
-        final ArrayList<ContentValues> keyword_values = new ArrayList<>();
-        final ArrayList<ContentValues> source_values = new ArrayList<>();
+        final ArrayList<ContentValues> userValues = new ArrayList<>();
+        final ArrayList<ContentValues> keywordValues = new ArrayList<>();
+        final ArrayList<ContentValues> sourceValues = new ArrayList<>();
         for (final FilterItemInfo info : mCheckedFilterItems) {
             final Object value = info.value;
             if (value instanceof ParcelableUserMention) {
                 final ParcelableUserMention mention = (ParcelableUserMention) value;
                 user_ids.add(mention.id);
-                user_values.add(createFilteredUser(mention));
-            } else if (value instanceof ParcelableStatus) {
-                final ParcelableStatus status = (ParcelableStatus) value;
-                user_ids.add(status.user_id);
-                user_values.add(ContentValuesCreator.createFilteredUser(status));
+                userValues.add(ContentValuesCreator.createFilteredUser(mention));
+            } else if (value instanceof UserItem) {
+                final UserItem item = (UserItem) value;
+                user_ids.add(item.id);
+                userValues.add(createFilteredUser(item));
             } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
                 if (value != null) {
                     final String keyword = ParseUtils.parseString(value);
                     keywords.add(keyword);
                     final ContentValues values = new ContentValues();
                     values.put(Filters.Keywords.VALUE, "#" + keyword);
-                    keyword_values.add(values);
+                    keywordValues.add(values);
                 }
             } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
                 if (value != null) {
@@ -95,17 +91,17 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
                     sources.add(source);
                     final ContentValues values = new ContentValues();
                     values.put(Filters.Sources.VALUE, source);
-                    source_values.add(values);
+                    sourceValues.add(values);
                 }
             }
         }
         final ContentResolver resolver = getContentResolver();
-        bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, user_ids, null, false);
-        bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null, true);
-        bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null, true);
-        bulkInsert(resolver, Filters.Users.CONTENT_URI, user_values);
-        bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keyword_values);
-        bulkInsert(resolver, Filters.Sources.CONTENT_URI, source_values);
+        ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, user_ids, null, false);
+        ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null, true);
+        ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null, true);
+        ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues);
+        ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues);
+        ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues);
     }
 
     @Override
@@ -124,17 +120,23 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         mFilterItems = getFilterItemsInfo();
         final String[] entries = new String[mFilterItems.length];
+        final UserColorNameManager manager = UserColorNameManager.getInstance(getActivity());
+        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(getActivity(),
+                SharedPreferencesWrapper.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE,
+                SharedPreferenceConstants.class);
+        assert prefs != null;
+        final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST);
         for (int i = 0, j = entries.length; i < j; i++) {
             final FilterItemInfo info = mFilterItems[i];
             switch (info.type) {
                 case FilterItemInfo.FILTER_TYPE_USER:
-                    entries[i] = getString(R.string.user_filter_name, getName(info.value));
+                    entries[i] = getString(R.string.user_filter_name, getName(manager, info.value, nameFirst));
                     break;
                 case FilterItemInfo.FILTER_TYPE_KEYWORD:
-                    entries[i] = getString(R.string.keyword_filter_name, getName(info.value));
+                    entries[i] = getString(R.string.keyword_filter_name, getName(manager, info.value, nameFirst));
                     break;
                 case FilterItemInfo.FILTER_TYPE_SOURCE:
-                    entries[i] = getString(R.string.source_filter_name, getName(info.value));
+                    entries[i] = getString(R.string.source_filter_name, getName(manager, info.value, nameFirst));
                     break;
             }
         }
@@ -150,7 +152,16 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
         if (args == null || !args.containsKey(EXTRA_STATUS)) return new FilterItemInfo[0];
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
         final ArrayList<FilterItemInfo> list = new ArrayList<>();
-        list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, status));
+        if (status.is_retweet) {
+            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.retweeted_by_user_id,
+                    status.retweeted_by_user_name, status.retweeted_by_user_screen_name)));
+        }
+        if (status.is_quote) {
+            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.quoted_by_user_id,
+                    status.quoted_by_user_name, status.quoted_by_user_screen_name)));
+        }
+        list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.user_id,
+                status.user_name, status.user_screen_name)));
         final ParcelableUserMention[] mentions = status.mentions;
         if (mentions != null) {
             for (final ParcelableUserMention mention : mentions) {
@@ -169,23 +180,25 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
         return list.toArray(new FilterItemInfo[list.size()]);
     }
 
-    private String getName(final Object value) {
-        final FragmentActivity activity = getActivity();
-        final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
-        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(activity,
-                SharedPreferencesWrapper.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE,
-                SharedPreferenceConstants.class);
-        final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST);
+    private String getName(final UserColorNameManager manager, final Object value, boolean nameFirst) {
         if (value instanceof ParcelableUserMention) {
             final ParcelableUserMention mention = (ParcelableUserMention) value;
             return manager.getDisplayName(mention.id, mention.name, mention.screen_name, nameFirst,
                     true);
-        } else if (value instanceof ParcelableStatus) {
-            final ParcelableStatus status = (ParcelableStatus) value;
-            return manager.getDisplayName(status.user_id, status.user_name, status.user_screen_name,
-                    nameFirst, true);
+        } else if (value instanceof UserItem) {
+            final UserItem item = (UserItem) value;
+            return manager.getDisplayName(item.id, item.name, item.screen_name, nameFirst, true);
         } else
             return ParseUtils.parseString(value);
+    }
+
+    private static ContentValues createFilteredUser(UserItem item) {
+        if (item == null) return null;
+        final ContentValues values = new ContentValues();
+        values.put(Filters.Users.USER_ID, item.id);
+        values.put(Filters.Users.NAME, item.name);
+        values.put(Filters.Users.SCREEN_NAME, item.screen_name);
+        return values;
     }
 
     public static AddStatusFilterDialogFragment show(final FragmentManager fm, final ParcelableStatus status) {
@@ -238,6 +251,17 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
             return "FilterItemInfo{type=" + type + ", value=" + value + "}";
         }
 
+    }
+
+    private static class UserItem {
+        private final long id;
+        private final String name, screen_name;
+
+        public UserItem(long id, String name, String screen_name) {
+            this.id = id;
+            this.name = name;
+            this.screen_name = screen_name;
+        }
     }
 
 }

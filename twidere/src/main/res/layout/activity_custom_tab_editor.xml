@@ -18,6 +18,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,31 +51,15 @@
                     android:padding="@dimen/element_spacing_normal"
                     tools:listitem="@layout/spinner_item_custom_tab_icon" />
 
-                <LinearLayout
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/tab_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/element_spacing_normal">
-
-                    <TextView
-                        android:id="@+id/tab_type_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="0dp"
-                        android:paddingLeft="@dimen/element_spacing_normal"
-                        android:paddingRight="0dp"
-                        android:paddingStart="@dimen/element_spacing_normal"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <EditText
-                        android:id="@+id/tab_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/name"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
+                    android:layout_margin="@dimen/element_spacing_normal"
+                    android:hint="@string/name"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    app:met_floatingLabelAlwaysShown="true" />
             </LinearLayout>
 
             <LinearLayout
