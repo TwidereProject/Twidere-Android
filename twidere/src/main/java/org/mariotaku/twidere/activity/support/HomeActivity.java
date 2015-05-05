@@ -873,9 +873,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mRightDrawerContainer.setScrollScale(mSlidingMenu.getBehindScrollScale());
         mSlidingMenu.setBehindCanvasTransformer(new ListenerCanvasTransformer(this));
         final Window window = getWindow();
-        ThemeUtils.applyWindowBackground(this, mSlidingMenu.getContent(),
-                getCurrentThemeResourceId(), getThemeBackgroundOption(),
-                getCurrentThemeBackgroundAlpha());
+        ThemeUtils.applyWindowBackground(this, mSlidingMenu.getContent(), getCurrentThemeResourceId(),
+                getThemeBackgroundOption(), getCurrentThemeBackgroundAlpha());
         window.setBackgroundDrawable(new EmptyDrawable());
     }
 

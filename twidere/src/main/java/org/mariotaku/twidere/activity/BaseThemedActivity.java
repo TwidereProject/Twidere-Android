@@ -119,8 +119,14 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         super.onApplyThemeResource(theme, resId, first);
-        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
-                mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        if (shouldApplyWindowBackground()) {
+            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
+                    mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        }
+    }
+
+    protected boolean shouldApplyWindowBackground() {
+        return true;
     }
 
 }

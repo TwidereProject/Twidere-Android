@@ -249,8 +249,10 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
         super.onApplyThemeResource(theme, resid, first);
-        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
-                mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        if (shouldApplyWindowBackground()) {
+            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
+                    mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        }
     }
 
     @Override
@@ -262,6 +264,10 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setupActionBar();
+    }
+
+    protected boolean shouldApplyWindowBackground() {
+        return true;
     }
 
     private void setupActionBar() {

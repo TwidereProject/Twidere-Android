@@ -144,8 +144,10 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         super.onApplyThemeResource(theme, resId, first);
-        ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
-                mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        if (shouldApplyWindowBackground()) {
+            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
+                    mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        }
     }
 
     @Override
@@ -174,5 +176,9 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     @Override
     public int getThemeResourceId() {
         return 0;
+    }
+
+    protected boolean shouldApplyWindowBackground() {
+        return true;
     }
 }

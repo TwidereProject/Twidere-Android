@@ -132,8 +132,10 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
         super.onApplyThemeResource(theme, resid, first);
-        ThemeUtils.applyWindowBackground(this, getWindow(), resid,
-                mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
+        if (shouldApplyWindowBackground()) {
+            ThemeUtils.applyWindowBackground(this, getWindow(), resid, mCurrentThemeBackgroundOption,
+                    mCurrentThemeBackgroundAlpha);
+        }
     }
 
     @Override
@@ -155,6 +157,10 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
             return (Toolbar) actionBarView;
         }
         return null;
+    }
+
+    protected boolean shouldApplyWindowBackground() {
+        return true;
     }
 
 }

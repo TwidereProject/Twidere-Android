@@ -217,6 +217,11 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         return super.handleKeyboardShortcutSingle(handler, keyCode, event);
     }
 
+    @Override
+    protected boolean shouldApplyWindowBackground() {
+        return false;
+    }
+
     private ParcelableStatus getStatus() {
         return getIntent().getParcelableExtra(EXTRA_STATUS);
     }
@@ -820,7 +825,6 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onPause() {
             super.onPause();
         }
-
 
     }
 }
