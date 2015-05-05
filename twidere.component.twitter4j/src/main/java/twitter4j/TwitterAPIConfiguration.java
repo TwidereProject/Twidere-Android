@@ -34,7 +34,7 @@ public interface TwitterAPIConfiguration extends TwitterResponse, Serializable {
 
 	Map<Integer, MediaEntity.Size> getPhotoSizes();
 
-	int getShortURLLength();
+	int getShortUrlLength();
 
-	int getShortURLLengthHttps();
+	int getShortUrlLengthHttps();
 }

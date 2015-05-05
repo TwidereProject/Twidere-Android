@@ -35,7 +35,7 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
-import twitter4j.URLEntity;
+import twitter4j.UrlEntity;
 import twitter4j.User;
 
 @JsonObject
@@ -96,17 +96,17 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public String description_expanded;
 
     @JsonField(name = "followers_count")
-    public int followers_count;
+    public long followers_count;
     @JsonField(name = "friends_count")
-    public int friends_count;
+    public long friends_count;
     @JsonField(name = "statuses_count")
-    public int statuses_count;
+    public long statuses_count;
     @JsonField(name = "favorites_count")
-    public int favorites_count;
+    public long favorites_count;
     @JsonField(name = "listed_count")
-    public int listed_count;
+    public long listed_count;
     @JsonField(name = "media_count")
-    public int media_count;
+    public long media_count;
 
     @JsonField(name = "background_color")
     public int background_color;
@@ -209,12 +209,12 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         profile_banner_url = in.readString();
         url = in.readString();
         is_follow_request_sent = in.readInt() == 1;
-        followers_count = in.readInt();
-        friends_count = in.readInt();
-        statuses_count = in.readInt();
-        favorites_count = in.readInt();
-        listed_count = in.readInt();
-        media_count = in.readInt();
+        followers_count = in.readLong();
+        friends_count = in.readLong();
+        statuses_count = in.readLong();
+        favorites_count = in.readLong();
+        listed_count = in.readLong();
+        media_count = in.readLong();
         url_expanded = in.readString();
         is_following = in.readInt() == 1;
         background_color = in.readInt();
@@ -231,7 +231,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public ParcelableUser(final User user, final long account_id, final long position) {
         this.position = position;
         this.account_id = account_id;
-        final URLEntity[] urls_url_entities = user.getURLEntities();
+        final UrlEntity[] urls_url_entities = user.getUrlEntities();
         id = user.getId();
         created_at = user.getCreatedAt().getTime();
         is_protected = user.isProtected();
@@ -245,8 +245,8 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         location = user.getLocation();
         profile_image_url = user.getProfileImageUrlHttps();
         profile_banner_url = user.getProfileBannerImageUrl();
-        url = user.getURL();
-        url_expanded = url != null && urls_url_entities != null && urls_url_entities.length > 0 ? urls_url_entities[0].getExpandedURL() : null;
+        url = user.getUrl();
+        url_expanded = url != null && urls_url_entities != null && urls_url_entities.length > 0 ? urls_url_entities[0].getExpandedUrl() : null;
         is_follow_request_sent = user.isFollowRequestSent();
         followers_count = user.getFollowersCount();
         friends_count = user.getFriendsCount();
@@ -303,12 +303,12 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         out.writeString(profile_banner_url);
         out.writeString(url);
         out.writeByte((byte) (is_follow_request_sent ? 1 : 0));
-        out.writeInt(followers_count);
-        out.writeInt(friends_count);
-        out.writeInt(statuses_count);
-        out.writeInt(favorites_count);
-        out.writeInt(listed_count);
-        out.writeInt(media_count);
+        out.writeLong(followers_count);
+        out.writeLong(friends_count);
+        out.writeLong(statuses_count);
+        out.writeLong(favorites_count);
+        out.writeLong(listed_count);
+        out.writeLong(media_count);
         out.writeString(url_expanded);
         out.writeByte((byte) (is_following ? 1 : 0));
         out.writeInt(background_color);

@@ -23,7 +23,7 @@ import java.util.Map;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.2.3
  */
-public interface MediaEntity extends URLEntity, Serializable {
+public interface MediaEntity extends UrlEntity, Serializable {
     /**
      * Returns the id of the media.
      *
@@ -36,14 +36,14 @@ public interface MediaEntity extends URLEntity, Serializable {
      *
      * @return the media URL
      */
-    String getMediaURL();
+    String getMediaUrl();
 
     /**
      * Returns the media secure URL.
      *
      * @return the media secure URL
      */
-    String getMediaURLHttps();
+    String getMediaUrlHttps();
 
     /**
      * Returns size variations of the media.

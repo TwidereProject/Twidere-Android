@@ -19,7 +19,8 @@
 
 package twitter4j;
 
-import twitter4j.auth.Authorization;
+import org.mariotaku.simplerestapi.http.Authorization;
+
 import twitter4j.conf.Configuration;
 
 /**

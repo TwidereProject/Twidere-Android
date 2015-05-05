@@ -35,13 +35,12 @@ import twitter4j.api.TimelinesResources;
 import twitter4j.api.TrendsResources;
 import twitter4j.api.TweetResources;
 import twitter4j.api.UsersResources;
-import twitter4j.auth.OAuthSupport;
 
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.2.0
  */
-public interface Twitter extends OAuthSupport, TwitterConstants, TwitterBase, SearchResource, TimelinesResources,
+public interface Twitter extends TwitterConstants, TwitterBase, SearchResource, TimelinesResources,
         TweetResources, UsersResources, ListsResources, DirectMessagesResources, FriendsFollowersResources,
         FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
         HelpResources, PrivateActivityResources, PrivateTweetResources, PrivateTimelinesResources,

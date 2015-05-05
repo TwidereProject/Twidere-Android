@@ -398,7 +398,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         is_quote = orig.isQuote();
         quote_id = quoted != null ? quoted.getId() : -1;
         quote_text_html = TwitterContentUtils.formatStatusText(orig);
-        quote_text_plain = orig.getText();
+        quote_text_plain = TwitterContentUtils.unescapeTwitterStatusText(orig.getText());
         quote_text_unescaped = HtmlEscapeHelper.toPlainText(quote_text_html);
         quote_timestamp = orig.getCreatedAt().getTime();
         quote_source = orig.getSource();
@@ -429,7 +429,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         text_html = TwitterContentUtils.formatStatusText(status);
         media = ParcelableMedia.fromStatus(status);
         quote_media = quoted != null ? ParcelableMedia.fromStatus(orig) : null;
-        text_plain = status.getText();
+        text_plain = TwitterContentUtils.unescapeTwitterStatusText(status.getText());
         retweet_count = status.getRetweetCount();
         favorite_count = status.getFavoriteCount();
         reply_count = status.getReplyCount();

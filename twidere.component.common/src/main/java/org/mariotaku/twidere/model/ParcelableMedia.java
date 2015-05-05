@@ -32,7 +32,7 @@ import twitter4j.MediaEntity;
 import twitter4j.MediaEntity.Size;
 import twitter4j.MediaEntity.Type;
 import twitter4j.Status;
-import twitter4j.URLEntity;
+import twitter4j.UrlEntity;
 
 @SuppressWarnings("unused")
 @JsonObject
@@ -87,9 +87,9 @@ public class ParcelableMedia implements Parcelable {
     }
 
     public ParcelableMedia(final MediaEntity entity) {
-        page_url = entity.getMediaURL();
-        media_url = entity.getMediaURL();
-        preview_url = entity.getMediaURL();
+        page_url = entity.getMediaUrl();
+        media_url = entity.getMediaUrl();
+        preview_url = entity.getMediaUrl();
         start = entity.getStart();
         end = entity.getEnd();
         type = getTypeInt(entity.getType());
@@ -190,16 +190,16 @@ public class ParcelableMedia implements Parcelable {
         }
         if (mediaEntities != null) {
             for (final MediaEntity media : mediaEntities) {
-                final String mediaURL = media.getMediaURL();
+                final String mediaURL = media.getMediaUrl();
                 if (mediaURL != null) {
                     list.add(new ParcelableMedia(media));
                 }
             }
         }
-        final URLEntity[] urlEntities = entities.getURLEntities();
+        final UrlEntity[] urlEntities = entities.getUrlEntities();
         if (urlEntities != null) {
-            for (final URLEntity url : urlEntities) {
-                final String expanded = url.getExpandedURL();
+            for (final UrlEntity url : urlEntities) {
+                final String expanded = url.getExpandedUrl();
                 final String media_url = MediaPreviewUtils.getSupportedLink(expanded);
                 if (expanded != null && media_url != null) {
                     final ParcelableMedia media = new ParcelableMedia();
@@ -242,7 +242,7 @@ public class ParcelableMedia implements Parcelable {
     @Nullable
     public static ParcelableMedia[] fromStatus(final Status status) {
         final ParcelableMedia[] fromEntities = fromEntities(status);
-        final ParcelableMedia[] fromCard = fromCard(status.getCard(), status.getURLEntities());
+        final ParcelableMedia[] fromCard = fromCard(status.getCard(), status.getUrlEntities());
         if (fromEntities == null) {
             return fromCard;
         } else if (fromCard == null) {
@@ -258,7 +258,7 @@ public class ParcelableMedia implements Parcelable {
     }
 
     @Nullable
-    private static ParcelableMedia[] fromCard(@Nullable CardEntity card, @Nullable URLEntity[] entities) {
+    private static ParcelableMedia[] fromCard(@Nullable CardEntity card, @Nullable UrlEntity[] entities) {
         if (card == null) return null;
         if ("animated_gif".equals(card.getName())) {
             final BindingValue player_stream_url = card.getBindingValue("player_stream_url");
@@ -280,8 +280,8 @@ public class ParcelableMedia implements Parcelable {
                 media.height = ParseUtils.parseInt(((StringValue) player_height).getValue());
             }
             if (entities != null) {
-                for (URLEntity entity : entities) {
-                    if (entity.getURL().equals(media.page_url)) {
+                for (UrlEntity entity : entities) {
+                    if (entity.getUrl().equals(media.page_url)) {
                         media.start = entity.getStart();
                         media.end = entity.getEnd();
                         break;

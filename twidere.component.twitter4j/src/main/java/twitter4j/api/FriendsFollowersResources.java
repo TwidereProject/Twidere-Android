@@ -19,10 +19,11 @@
 
 package twitter4j.api;
 
-import twitter4j.CursorPaging;
+import twitter4j.Paging;
 import twitter4j.Friendship;
 import twitter4j.IDs;
 import twitter4j.PageableResponseList;
+import twitter4j.Paging;
 import twitter4j.Relationship;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -147,29 +148,29 @@ public interface FriendsFollowersResources {
 	 */
 	User destroyFriendship(String screenName) throws TwitterException;
 
-	IDs getFollowersIDs(CursorPaging paging) throws TwitterException;
+	IDs getFollowersIDs(Paging paging) throws TwitterException;
 
-	IDs getFollowersIDs(long userId, CursorPaging paging) throws TwitterException;
+	IDs getFollowersIDs(long userId, Paging paging) throws TwitterException;
 
-	IDs getFollowersIDs(String screenName, CursorPaging paging) throws TwitterException;
+	IDs getFollowersIDs(String screenName, Paging paging) throws TwitterException;
 
-	PageableResponseList<User> getFollowersList(CursorPaging paging) throws TwitterException;
+	PageableResponseList<User> getFollowersList(Paging paging) throws TwitterException;
 
-	PageableResponseList<User> getFollowersList(long userId, CursorPaging paging) throws TwitterException;
+	PageableResponseList<User> getFollowersList(long userId, Paging paging) throws TwitterException;
 
-	PageableResponseList<User> getFollowersList(String screenName, CursorPaging paging) throws TwitterException;
+	PageableResponseList<User> getFollowersList(String screenName, Paging paging) throws TwitterException;
 
-	IDs getFriendsIDs(CursorPaging paging) throws TwitterException;
+	IDs getFriendsIDs(Paging paging) throws TwitterException;
 
-	IDs getFriendsIDs(long userId, CursorPaging paging) throws TwitterException;
+	IDs getFriendsIDs(long userId, Paging paging) throws TwitterException;
 
-	IDs getFriendsIDs(String screenName, CursorPaging paging) throws TwitterException;
+	IDs getFriendsIDs(String screenName, Paging paging) throws TwitterException;
 
-	PageableResponseList<User> getFriendsList(CursorPaging paging) throws TwitterException;
+	PageableResponseList<User> getFriendsList(Paging paging) throws TwitterException;
 
-	PageableResponseList<User> getFriendsList(long userId, CursorPaging paging) throws TwitterException;
+	PageableResponseList<User> getFriendsList(long userId, Paging paging) throws TwitterException;
 
-	PageableResponseList<User> getFriendsList(String screenName, CursorPaging paging) throws TwitterException;
+	PageableResponseList<User> getFriendsList(String screenName, Paging paging) throws TwitterException;
 
 	/**
 	 * Returns an array of numeric IDs for every user who has a pending request
@@ -186,7 +187,7 @@ public interface FriendsFollowersResources {
 	 *      friendships/incoming | Twitter Developers</a>
 	 * @since Twitter4J 2.1.2
 	 */
-	IDs getIncomingFriendships(CursorPaging paging) throws TwitterException;
+	IDs getIncomingFriendships(Paging paging) throws TwitterException;
 
 	/**
 	 * Returns an array of numeric IDs for every protected user for whom the
@@ -203,7 +204,7 @@ public interface FriendsFollowersResources {
 	 *      friendships/outgoing | Twitter Developers</a>
 	 * @since Twitter4J 2.1.2
 	 */
-	IDs getOutgoingFriendships(CursorPaging paging) throws TwitterException;
+	IDs getOutgoingFriendships(Paging paging) throws TwitterException;
 
 	/**
 	 * Returns the relationship of the authenticating user to the specified

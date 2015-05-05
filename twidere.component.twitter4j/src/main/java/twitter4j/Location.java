@@ -30,7 +30,7 @@ public interface Location {
 
 	String getPlaceName();
 
-	String getURL();
+	String getUrl();
 
 	int getWoeid();
 }

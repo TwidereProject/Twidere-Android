@@ -32,7 +32,7 @@ import twitter4j.DirectMessage;
 import twitter4j.EntitySupport;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
-import twitter4j.URLEntity;
+import twitter4j.UrlEntity;
 import twitter4j.User;
 import twitter4j.UserMentionEntity;
 
@@ -56,10 +56,10 @@ public class TwitterContentUtils {
         final String text = user.getDescription();
         if (text == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        final URLEntity[] urls = user.getDescriptionEntities();
+        final UrlEntity[] urls = user.getDescriptionEntities();
         if (urls != null) {
-            for (final URLEntity url : urls) {
-                final String expanded_url = url.getExpandedURL();
+            for (final UrlEntity url : urls) {
+                final String expanded_url = url.getExpandedUrl();
                 if (expanded_url != null) {
                     builder.addLink(expanded_url, expanded_url, url.getStart(), url.getEnd());
                 }
@@ -70,9 +70,7 @@ public class TwitterContentUtils {
 
     public static String formatStatusText(final Status status) {
         if (status == null) return null;
-        final String text = status.getRawText();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
+        final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, true);
         TwitterContentUtils.parseEntities(builder, status);
         return builder.build().replace("\n", "<br/>");
     }
@@ -82,12 +80,12 @@ public class TwitterContentUtils {
         final String text = user.getDescription();
         if (text == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        final URLEntity[] urls = user.getDescriptionEntities();
+        final UrlEntity[] urls = user.getDescriptionEntities();
         if (urls != null) {
-            for (final URLEntity url : urls) {
-                final String expanded_url = url.getExpandedURL();
+            for (final UrlEntity url : urls) {
+                final String expanded_url = url.getExpandedUrl();
                 if (expanded_url != null) {
-                    builder.addLink(expanded_url, url.getDisplayURL(), url.getStart(), url.getEnd());
+                    builder.addLink(expanded_url, url.getDisplayUrl(), url.getStart(), url.getEnd());
                 }
             }
         }
@@ -158,25 +156,30 @@ public class TwitterContentUtils {
         return ConsumerKeyType.UNKNOWN;
     }
 
+    public static String unescapeTwitterStatusText(final String str) {
+        if (str == null) return null;
+        return str.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">");
+    }
+
     private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
         // Format media.
         final MediaEntity[] mediaEntities = entities.getMediaEntities();
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
                 final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
-                final String mediaUrl = mediaEntity.getMediaURL();
+                final String mediaUrl = mediaEntity.getMediaUrl();
                 if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(mediaUrl, mediaEntity.getDisplayURL(), start, end);
+                    builder.addLink(mediaUrl, mediaEntity.getDisplayUrl(), start, end);
                 }
             }
         }
-        final URLEntity[] urlEntities = entities.getURLEntities();
+        final UrlEntity[] urlEntities = entities.getUrlEntities();
         if (urlEntities != null) {
-            for (final URLEntity urlEntity : urlEntities) {
+            for (final UrlEntity urlEntity : urlEntities) {
                 final int start = urlEntity.getStart(), end = urlEntity.getEnd();
-                final String expandedUrl = urlEntity.getExpandedURL();
+                final String expandedUrl = urlEntity.getExpandedUrl();
                 if (expandedUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(expandedUrl, urlEntity.getDisplayURL(), start, end);
+                    builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), start, end);
                 }
             }
         }

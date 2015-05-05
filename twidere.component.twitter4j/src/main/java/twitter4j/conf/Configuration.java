@@ -23,8 +23,7 @@ import twitter4j.http.HttpClientWrapperConfiguration;
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public interface Configuration extends HttpClientConfiguration, HttpClientWrapperConfiguration,
-        AuthorizationConfiguration {
+public interface Configuration extends AuthorizationConfiguration {
 
     String getCardsPlatform();
 

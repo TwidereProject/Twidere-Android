@@ -17,7 +17,6 @@
 package twitter4j;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Date;
 
 /**
@@ -28,6 +27,8 @@ import java.util.Date;
 public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	Date getCreatedAt();
 
+	boolean isDefaultProfile();
+
 	/**
 	 * Returns the description of the user
 	 * 
@@ -35,9 +36,11 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 */
 	String getDescription();
 
-	URLEntity[] getDescriptionEntities();
+	UrlEntity[] getDescriptionEntities();
 
-	int getFavouritesCount();
+	long getFavouritesCount();
+
+	boolean isFollowedBy();
 
 	/**
 	 * Returns the number of followers
@@ -45,9 +48,11 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * @return the number of followers
 	 * @since Twitter4J 1.0.4
 	 */
-	int getFollowersCount();
+	long getFollowersCount();
 
-	int getFriendsCount();
+	long getFriendsCount();
+
+	boolean hasCustomTimelines();
 
 	/**
 	 * Returns the id of the user
@@ -71,7 +76,7 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * @return the number of public lists the user is listed on.
 	 * @since Twitter4J 2.1.4
 	 */
-	int getListedCount();
+	long getListedCount();
 
 	/**
 	 * Returns the location of the user
@@ -86,6 +91,10 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * @return the name of the user
 	 */
 	String getName();
+
+	boolean isNeedsPhoneVerification();
+
+	boolean isNotifications();
 
 	String getProfileBackgroundColor();
 
@@ -111,6 +120,8 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 
 	String getProfileLinkColor();
 
+	String getProfileLocation();
+
 	String getProfileSidebarBorderColor();
 
 	String getProfileSidebarFillColor();
@@ -133,9 +144,11 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 */
 	Status getStatus();
 
-	int getStatusesCount();
+	long getStatusesCount();
 
-	int getMediaCount();
+	long getMediaCount();
+
+	boolean isSuspended();
 
 	String getTimeZone();
 
@@ -144,11 +157,13 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 * 
 	 * @return the url of the user
 	 */
-    String getURL();
+    String getUrl();
 
-	URLEntity[] getURLEntities();
+	UrlEntity[] getUrlEntities();
 
 	int getUtcOffset();
+
+	boolean canMediaTag();
 
 	/**
 	 * Tests if the user is enabling contributors
@@ -189,7 +204,7 @@ public interface User extends Comparable<User>, TwitterResponse, Serializable {
 	 */
 	boolean isProtected();
 
-	boolean isShowAllInlineMedia();
+	boolean isTranslationEnabled();
 
 	/**
 	 * @return returns true if the user is a translator

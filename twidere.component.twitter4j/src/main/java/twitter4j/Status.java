@@ -95,13 +95,6 @@ public interface Status extends Comparable<Status>, TwitterResponse, ExtendedEnt
     Place getPlace();
 
     /**
-     * returns the raw text
-     *
-     * @return the raw text
-     */
-    String getRawText();
-
-    /**
      * Returns the number of times this tweet has been retweeted, or -1 when the
      * tweet was created before this feature was enabled.
      *

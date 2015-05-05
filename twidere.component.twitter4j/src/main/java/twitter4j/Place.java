@@ -29,5 +29,5 @@ public interface Place extends TwitterResponse, Comparable<Place> {
 
 	String getStreetAddress();
 
-	String getURL();
+	String getUrl();
 }

@@ -24,9 +24,9 @@ import java.io.InputStream;
 
 import twitter4j.AccountSettings;
 import twitter4j.Category;
-import twitter4j.CursorPaging;
 import twitter4j.IDs;
 import twitter4j.PageableResponseList;
+import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.SettingsUpdate;
 import twitter4j.TwitterException;
@@ -136,7 +136,7 @@ public interface UsersResources {
      */
     IDs getBlocksIDs() throws TwitterException;
 
-    IDs getBlocksIDs(CursorPaging paging) throws TwitterException;
+    IDs getBlocksIDs(Paging paging) throws TwitterException;
 
     /**
      * Returns a list of user objects that the authenticating user is blocking. <br>
@@ -151,7 +151,7 @@ public interface UsersResources {
      */
     PageableResponseList<User> getBlocksList() throws TwitterException;
 
-    PageableResponseList<User> getBlocksList(CursorPaging paging) throws TwitterException;
+    PageableResponseList<User> getBlocksList(Paging paging) throws TwitterException;
 
     /**
      * Access the users in a given category of the Twitter suggested user list
@@ -173,11 +173,11 @@ public interface UsersResources {
 
     IDs getMutesUsersIDs() throws TwitterException;
 
-    IDs getMutesUsersIDs(CursorPaging paging) throws TwitterException;
+    IDs getMutesUsersIDs(Paging paging) throws TwitterException;
 
     PageableResponseList<User> getMutesUsersList() throws TwitterException;
 
-    PageableResponseList<User> getMutesUsersList(CursorPaging paging) throws TwitterException;
+    PageableResponseList<User> getMutesUsersList(Paging paging) throws TwitterException;
 
     /**
      * Access to Twitter's suggested user list. This returns the list of

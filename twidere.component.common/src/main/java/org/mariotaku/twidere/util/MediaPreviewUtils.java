@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-import twitter4j.URLEntity;
+import twitter4j.UrlEntity;
 import twitter4j.http.HttpClientWrapper;
 import twitter4j.http.HttpParameter;
 import twitter4j.http.HttpResponse;
@@ -241,14 +241,14 @@ public class MediaPreviewUtils {
         final MediaEntity[] mediaEntities = status.getMediaEntities();
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
-                final String expanded = mediaEntity.getMediaURLHttps();
+                final String expanded = mediaEntity.getMediaUrlHttps();
                 if (getSupportedLink(expanded) != null) return expanded;
             }
         }
-        final URLEntity[] urlEntities = status.getURLEntities();
+        final UrlEntity[] urlEntities = status.getUrlEntities();
         if (urlEntities != null) {
-            for (final URLEntity urlEntity : urlEntities) {
-                final String expanded = urlEntity.getExpandedURL();
+            for (final UrlEntity urlEntity : urlEntities) {
+                final String expanded = urlEntity.getExpandedUrl();
                 if (getSupportedLink(expanded) != null) return expanded;
             }
         }

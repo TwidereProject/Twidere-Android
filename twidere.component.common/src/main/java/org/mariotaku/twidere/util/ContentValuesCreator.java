@@ -60,7 +60,7 @@ import twitter4j.SavedSearch;
 import twitter4j.Status;
 import twitter4j.Trend;
 import twitter4j.Trends;
-import twitter4j.URLEntity;
+import twitter4j.UrlEntity;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.Configuration;
@@ -149,8 +149,8 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createCachedUser(final User user) {
         if (user == null || user.getId() <= 0) return null;
         final String profile_image_url = user.getProfileImageUrlHttps();
-        final String url = user.getURL();
-        final URLEntity[] urls = user.getURLEntities();
+        final String url = user.getUrl();
+        final UrlEntity[] urls = user.getUrlEntities();
         final ContentValues values = new ContentValues();
         values.put(CachedUsers.USER_ID, user.getId());
         values.put(CachedUsers.NAME, user.getName());
@@ -173,7 +173,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(CachedUsers.DESCRIPTION_EXPANDED, TwitterContentUtils.formatExpandedUserDescription(user));
         values.put(CachedUsers.URL, url);
         if (url != null && urls != null && urls.length > 0) {
-            values.put(CachedUsers.URL_EXPANDED, urls[0].getExpandedURL());
+            values.put(CachedUsers.URL_EXPANDED, urls[0].getExpandedUrl());
         }
         values.put(CachedUsers.BACKGROUND_COLOR, ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0));
         values.put(CachedUsers.LINK_COLOR, ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0));
@@ -348,7 +348,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.QUOTE_ID, quotedStatus.getId());
             final String textHtml = TwitterContentUtils.formatStatusText(orig);
             values.put(Statuses.QUOTE_TEXT_HTML, textHtml);
-            values.put(Statuses.QUOTE_TEXT_PLAIN, orig.getText());
+            values.put(Statuses.QUOTE_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(orig.getText()));
             values.put(Statuses.QUOTE_TEXT_UNESCAPED, toPlainText(textHtml));
             values.put(Statuses.QUOTE_TIMESTAMP, orig.getCreatedAt().getTime());
             values.put(Statuses.QUOTE_SOURCE, orig.getSource());
@@ -395,7 +395,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(CachedUsers.IS_FOLLOWING, user.isFollowing());
         final String textHtml = TwitterContentUtils.formatStatusText(status);
         values.put(Statuses.TEXT_HTML, textHtml);
-        values.put(Statuses.TEXT_PLAIN, status.getText());
+        values.put(Statuses.TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(status.getText()));
         values.put(Statuses.TEXT_UNESCAPED, toPlainText(textHtml));
         values.put(Statuses.RETWEET_COUNT, status.getRetweetCount());
         values.put(Statuses.REPLY_COUNT, status.getReplyCount());

@@ -48,7 +48,7 @@ public interface EntitySupport extends Serializable {
 	 * @return An array of URLEntity mentioned in the tweet.
 	 * @since Twitter4J 2.1.9
 	 */
-	URLEntity[] getURLEntities();
+	UrlEntity[] getUrlEntities();
 
 	/**
 	 * Returns an array of user mentions in the tweet, or null if no users were
