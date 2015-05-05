@@ -39,7 +39,6 @@
         android:layout_toRightOf="@+id/profile_image"
         android:clickable="true"
         app:bubbleColor="?colorAccent"
-        android:layoutDirection="rtl"
         app:caretHeight="8dp"
         app:caretPosition="topStart"
         app:caretWidth="8dp"

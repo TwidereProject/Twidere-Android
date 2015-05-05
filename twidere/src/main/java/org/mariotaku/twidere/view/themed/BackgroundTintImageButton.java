@@ -32,19 +32,19 @@ import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 /**
  * Created by mariotaku on 14/11/5.
  */
-public class ThemedBackgroundTintImageButton extends ImageButton implements IThemeBackgroundTintView {
+public class BackgroundTintImageButton extends ImageButton implements IThemeBackgroundTintView {
 
     private final int mDefaultColor;
 
-    public ThemedBackgroundTintImageButton(Context context) {
+    public BackgroundTintImageButton(Context context) {
         this(context, null);
     }
 
-    public ThemedBackgroundTintImageButton(Context context, AttributeSet attrs) {
+    public BackgroundTintImageButton(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.imageButtonStyle);
     }
 
-    public ThemedBackgroundTintImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BackgroundTintImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.color,
                 android.R.attr.colorForeground});

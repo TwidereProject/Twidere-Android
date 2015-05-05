@@ -24,24 +24,30 @@ import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.pnikosis.materialishprogress.ProgressWheel;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
-import org.mariotaku.twidere.view.iface.IThemeAccentView;
+import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
 /**
- * Created by mariotaku on 15/4/25.
+ * TextView with tint background support
  */
-public class ThemedAccentProgressWheel extends ProgressWheel implements IThemeAccentView {
-    public ThemedAccentProgressWheel(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+public class BackgroundTintMaterialEditText extends MaterialEditText implements IThemeBackgroundTintView {
 
-    public ThemedAccentProgressWheel(Context context) {
+    public BackgroundTintMaterialEditText(Context context) {
         super(context);
     }
 
-    @Override
-    public void setAccentTintColor(@NonNull ColorStateList color) {
-        setBarColor(color.getDefaultColor());
+    public BackgroundTintMaterialEditText(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
+
+    public BackgroundTintMaterialEditText(Context context, AttributeSet attrs, int style) {
+        super(context, attrs, style);
+    }
+
+    @Override
+    public void setBackgroundTintColor(@NonNull ColorStateList color) {
+        setPrimaryColor(color.getDefaultColor());
+    }
+
 }

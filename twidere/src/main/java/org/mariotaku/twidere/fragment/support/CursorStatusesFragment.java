@@ -43,6 +43,7 @@ import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
 import org.mariotaku.twidere.loader.support.ExtendedCursorLoader;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -174,7 +175,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
             }
         };
         cr.registerContentObserver(Accounts.CONTENT_URI, true, mContentObserver);
+        cr.registerContentObserver(Filters.CONTENT_URI, true, mContentObserver);
         updateRefreshState();
+        reloadStatuses();
     }
 
     protected void reloadStatuses() {

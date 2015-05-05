@@ -51,7 +51,7 @@
             <requestFocus />
         </EditText>
 
-        <org.mariotaku.twidere.view.themed.ThemedBackgroundTintImageButton
+        <org.mariotaku.twidere.view.themed.BackgroundTintImageButton
             android:id="@+id/query_button"
             style="?cardActionButtonStyle"
             android:layout_width="@dimen/element_size_normal"

@@ -30,12 +30,12 @@ import org.mariotaku.twidere.view.iface.IThemeAccentView;
 /**
  * Created by mariotaku on 15/4/25.
  */
-public class ThemedAccentSwipeRefreshLayout extends SwipeRefreshLayout implements IThemeAccentView {
-    public ThemedAccentSwipeRefreshLayout(Context context, AttributeSet attrs) {
+public class AccentSwipeRefreshLayout extends SwipeRefreshLayout implements IThemeAccentView {
+    public AccentSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ThemedAccentSwipeRefreshLayout(Context context) {
+    public AccentSwipeRefreshLayout(Context context) {
         super(context);
     }
 
