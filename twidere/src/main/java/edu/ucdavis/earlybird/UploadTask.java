@@ -5,17 +5,18 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.Settings.Secure;
 
+import org.mariotaku.simplerestapi.http.RestHttpClient;
+import org.mariotaku.simplerestapi.http.RestRequest;
+import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.mime.FileTypedData;
+import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
+import org.mariotaku.simplerestapi.method.POST;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import twitter4j.TwitterException;
-import twitter4j.http.HttpClientWrapper;
-import twitter4j.http.HttpParameter;
-import twitter4j.http.HttpResponse;
 
 import static org.mariotaku.twidere.util.Utils.copyStream;
 
@@ -27,7 +28,7 @@ public class UploadTask extends AsyncTask<Object, Object, Object> {
     private final String device_id;
     private final Context context;
 
-    private final HttpClientWrapper client;
+    private final RestHttpClient client;
 
     private static final String PROFILE_SERVER_URL = "http://weik.metaisle.com/profiles";
 
@@ -53,11 +54,17 @@ public class UploadTask extends AsyncTask<Object, Object, Object> {
         file.renameTo(tmp);
 
         try {
-            final HttpParameter param = new HttpParameter("upload", tmp);
-            final HttpResponse resp = client.post(url, null, new HttpParameter[]{param});
+
+            final RestRequest.Builder builder = new RestRequest.Builder();
+            builder.url(PROFILE_SERVER_URL);
+            builder.method(POST.METHOD);
+            final MultipartTypedBody body = new MultipartTypedBody();
+            body.add("upload", new FileTypedData(tmp));
+            builder.body(body);
+            final RestResponse response = client.execute(builder.build());
 
             // Responses from the server (code and message)
-            final int serverResponseCode = resp.getStatusCode();
+            final int serverResponseCode = response.getStatus();
 
             ProfilingUtil.log(context, "server response code " + serverResponseCode);
 
@@ -67,7 +74,7 @@ public class UploadTask extends AsyncTask<Object, Object, Object> {
                 putBackProfile(context, tmp, file);
             }
 
-        } catch (final TwitterException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             putBackProfile(context, tmp, file);
         }

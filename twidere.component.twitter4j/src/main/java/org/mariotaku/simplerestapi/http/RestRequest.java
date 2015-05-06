@@ -1,8 +1,13 @@
 package org.mariotaku.simplerestapi.http;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,18 +15,11 @@ import java.util.List;
  */
 public class RestRequest {
 
-    private final Authorization authorization;
     private final String method;
     private final String url;
     private final List<KeyValuePair> headers;
-    private final Endpoint endpoint;
-    private final RestMethodInfo restMethodInfo;
-
-    public Authorization getAuthorization() {
-        return authorization;
-    }
-
     private final TypedData body;
+    private final Object extra;
 
     public String getMethod() {
         return method;
@@ -39,88 +37,84 @@ public class RestRequest {
         return body;
     }
 
+    public Object getExtra() {
+        return extra;
+    }
+
     @Override
     public String toString() {
-        return "Request{" +
-                "authorization=" + authorization +
-                ", method='" + method + '\'' +
+        return "RestRequest{" +
+                "method='" + method + '\'' +
                 ", url='" + url + '\'' +
                 ", headers=" + headers +
-                ", endpoint=" + endpoint +
-                ", restMethodInfo=" + restMethodInfo +
                 ", body=" + body +
                 '}';
     }
 
-    public RestRequest(String method, String url, List<KeyValuePair> headers, TypedData body, Endpoint endpoint,
-                       RestMethodInfo restMethodInfo, Authorization authorization) {
+    public RestRequest(String method, String url, List<KeyValuePair> headers, TypedData body, Object extra) {
         this.method = method;
         this.url = url;
         this.headers = headers;
         this.body = body;
-        this.endpoint = endpoint;
-        this.restMethodInfo = restMethodInfo;
-        this.authorization = authorization;
+        this.extra = extra;
     }
 
-    public RestMethodInfo getRestMethodInfo() {
-        return restMethodInfo;
-    }
-
-    public Endpoint getEndpoint() {
-        return endpoint;
-    }
-
-    public static class RequestBuilder {
-        private Authorization authorization;
+    public static final class Builder {
         private String method;
         private String url;
         private List<KeyValuePair> headers;
-        private Endpoint endpoint;
-        private RestMethodInfo restMethodInfo;
         private TypedData body;
+        private Object extra;
 
-        public RequestBuilder() {
+        public Builder() {
         }
 
-
-        public RequestBuilder authorization(Authorization authorization) {
-            this.authorization = authorization;
-            return this;
-        }
-
-        public RequestBuilder method(String method) {
+        public Builder method(String method) {
             this.method = method;
             return this;
         }
 
-        public RequestBuilder url(String url) {
+        public Builder url(String url) {
             this.url = url;
             return this;
         }
 
-        public RequestBuilder headers(List<KeyValuePair> headers) {
+        public Builder headers(List<KeyValuePair> headers) {
             this.headers = headers;
             return this;
         }
 
-        public RequestBuilder endpoint(Endpoint endpoint) {
-            this.endpoint = endpoint;
-            return this;
-        }
-
-        public RequestBuilder restMethodInfo(RestMethodInfo restMethodInfo) {
-            this.restMethodInfo = restMethodInfo;
-            return this;
-        }
-
-        public RequestBuilder body(TypedData body) {
+        public Builder body(TypedData body) {
             this.body = body;
             return this;
         }
 
+        public Builder extra(Object extra) {
+            this.extra = extra;
+            return this;
+        }
+
         public RestRequest build() {
-            return new RestRequest(method, url, headers, body, endpoint, restMethodInfo, authorization);
+            return new RestRequest(method, url, headers, body, extra);
+        }
+    }
+
+    public interface Factory {
+        RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo info, @Nullable Authorization authorization);
+    }
+
+    public static final class DefaultFactory implements Factory {
+
+        @Override
+        public RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo methodInfo, @Nullable Authorization authorization) {
+            final RestMethod restMethod = methodInfo.getMethod();
+            final String url = Endpoint.constructUrl(endpoint.getUrl(), methodInfo);
+            final ArrayList<KeyValuePair> headers = new ArrayList<>(methodInfo.getHeaders());
+
+            if (authorization != null && authorization.hasAuthorization()) {
+                headers.add(new KeyValuePair("Authorization", authorization.getHeader(endpoint, methodInfo)));
+            }
+            return new RestRequest(restMethod.value(), url, headers, methodInfo.getBody(), null);
         }
     }
 }

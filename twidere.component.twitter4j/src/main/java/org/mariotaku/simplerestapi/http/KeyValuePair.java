@@ -19,44 +19,23 @@
 
 package org.mariotaku.simplerestapi.http;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 /**
  * Created by mariotaku on 15/2/4.
  */
-public class KeyValuePair implements Comparable<KeyValuePair> {
+public class KeyValuePair extends MutablePair<String, String> {
 
-    private String key, value;
-
-    public String getKey() {
-        return key;
+    public KeyValuePair() {
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public KeyValuePair(String key, String value) {
-        this.key = key;
-        this.value = value;
+    public KeyValuePair(String left, String right) {
+        super(left, right);
     }
 
     @Override
     public String toString() {
-        return "'" + key + "'='" + value + "'";
+        return "'" + getKey() + "'='" + getValue() + "'";
     }
 
-    @Override
-    public int compareTo(KeyValuePair o) {
-        int keyDiff = key.compareTo(o.key);
-        if (keyDiff != 0) return keyDiff;
-        if (value == null) return o.value == null ? 0 : Integer.MIN_VALUE;
-        return value.compareTo(o.value);
-    }
 }

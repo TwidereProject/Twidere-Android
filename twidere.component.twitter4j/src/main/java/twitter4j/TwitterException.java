@@ -21,8 +21,9 @@ package twitter4j;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mariotaku.simplerestapi.http.RestRequest;
+import org.mariotaku.simplerestapi.http.RestResponse;
 
-import java.util.List;
 import java.util.Locale;
 
 import twitter4j.http.HttpResponseCode;
@@ -47,6 +48,8 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     private final static String[] FILTER = new String[]{"twitter4j"};
 
     boolean nested = false;
+    private RestRequest request;
+    private RestResponse response;
 
     public TwitterException(final Exception cause) {
         this(cause.getMessage(), cause);
@@ -64,20 +67,20 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         this.statusCode = statusCode;
     }
 
-    public TwitterException(final String message, final HttpRequest req, final HttpResponse res) {
+    public TwitterException(final String message, final RestRequest req, final RestResponse res) {
         this(message);
         response = res;
         request = req;
-        statusCode = res != null ? res.getStatusCode() : -1;
+        statusCode = res != null ? res.getStatus() : -1;
         if (response != null) {
-            try {
-                decode(response.asString());
-            } catch (TwitterException ignore) {
-            }
+//            try {
+//                decode(response.asString());
+//            } catch (TwitterException ignore) {
+//            }
         }
     }
 
-    public TwitterException(final String message, final HttpResponse res) {
+    public TwitterException(final String message, final RestResponse res) {
         this(message, null, res);
     }
 
@@ -157,11 +160,11 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return getExceptionDiagnosis().asHexString();
     }
 
-    public HttpRequest getHttpRequest() {
+    public RestRequest getHttpRequest() {
         return request;
     }
 
-    public HttpResponse getHttpResponse() {
+    public RestResponse getHttpResponse() {
         return response;
     }
 
@@ -192,14 +195,10 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     }
 
     public String getResponseHeader(final String name) {
-        String value = null;
         if (response != null) {
-            final List<String> header = response.getResponseHeaderFields().get(name);
-            if (header.size() > 0) {
-                value = header.get(0);
-            }
+            return response.getHeader(name);
         }
-        return value;
+        return null;
     }
 
     /**
@@ -228,7 +227,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
             }
         } else if (statusCode == ENHANCE_YOUR_CLAIM) {
             try {
-                final String retryAfterStr = response.getResponseHeader("Retry-After");
+                final String retryAfterStr = response.getHeader("Retry-After");
                 if (retryAfterStr != null) {
                     retryAfter = Integer.valueOf(retryAfterStr);
                 }

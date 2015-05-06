@@ -1,5 +1,9 @@
 package org.mariotaku.simplerestapi;
 
+import android.support.annotation.NonNull;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.http.KeyValuePair;
 import org.mariotaku.simplerestapi.http.ValueMap;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
@@ -40,7 +44,7 @@ public final class RestMethodInfo {
     private final FileValue file;
 
     private ArrayList<KeyValuePair> queriesCache, formsCache, headersCache;
-    private ArrayList<TypedData> partsCache;
+    private ArrayList<Pair<String, TypedData>> partsCache;
     private Map<String, Object> extrasCache;
     private TypedData bodyCache;
 
@@ -123,21 +127,23 @@ public final class RestMethodInfo {
         return formsCache = list;
     }
 
-    public List<TypedData> getParts() {
+    public List<Pair<String, TypedData>> getParts() {
         if (partsCache != null) return partsCache;
-        final ArrayList<TypedData> list = new ArrayList<>();
+        final ArrayList<Pair<String, TypedData>> list = new ArrayList<>();
         for (Map.Entry<Part, Object> entry : parts.entrySet()) {
             final Part form = entry.getKey();
+            final String[] names = form.value();
             final Object value = entry.getValue();
             if (value instanceof TypedData) {
-                list.add((TypedData) value);
+                list.add(new ImmutablePair<>(names[0], (TypedData) value));
             } else if (value != null) {
-                list.add(BaseTypedData.wrap(value));
+                list.add(new ImmutablePair<>(names[0], BaseTypedData.wrap(value)));
             }
         }
         return partsCache = list;
     }
 
+    @NonNull
     public List<KeyValuePair> getHeaders() {
         if (headersCache != null) return headersCache;
         final ArrayList<KeyValuePair> list = new ArrayList<>();

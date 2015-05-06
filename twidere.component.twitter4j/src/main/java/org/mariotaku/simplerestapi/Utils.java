@@ -23,6 +23,8 @@ import org.mariotaku.simplerestapi.http.KeyValuePair;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -119,4 +121,18 @@ public class Utils {
         }
     }
 
+    public static boolean copyStream(InputStream is, OutputStream os) throws IOException {
+        return copyStream(is, os, 8192);
+    }
+
+    public static boolean copyStream(InputStream is, OutputStream os, int bufferSize)
+            throws IOException {
+        final byte[] bytes = new byte[bufferSize];
+        int count;
+        while ((count = is.read(bytes, 0, bufferSize)) != -1) {
+            os.write(bytes, 0, count);
+        }
+        os.flush();
+        return true;
+    }
 }

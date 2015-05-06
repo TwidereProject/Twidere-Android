@@ -1,5 +1,6 @@
 package org.mariotaku.simplerestapi.http;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 
 import java.io.Closeable;
@@ -12,30 +13,31 @@ import java.util.List;
 public abstract class RestResponse implements Closeable {
     public abstract int getStatus();
 
-    public abstract List<KeyValuePair> getHeaders();
+    public abstract List<Pair<String, String>> getHeaders();
 
     public abstract TypedData getBody();
 
     public String getHeader(String name) {
         if (name == null) throw new NullPointerException();
-        final List<KeyValuePair> headers = getHeaders();
+        final List<Pair<String, String>> headers = getHeaders();
         if (headers == null) return null;
-        for (KeyValuePair header : headers) {
+        for (Pair<String, String> header : headers) {
             if (header.getKey().equalsIgnoreCase(name)) return header.getValue();
         }
         return null;
     }
 
-    public KeyValuePair[] getHeaders(String name) {
+    public String[] getHeaders(String name) {
         if (name == null) throw new NullPointerException();
-        final List<KeyValuePair> headers = getHeaders();
-        if (headers == null) return new KeyValuePair[0];
-        final ArrayList<KeyValuePair> result = new ArrayList<>();
-        for (KeyValuePair header : headers) {
+        final List<Pair<String, String>> headers = getHeaders();
+        if (headers == null) return new String[0];
+        final ArrayList<String> result = new ArrayList<>();
+        for (Pair<String, String> header : headers) {
             if (name.equalsIgnoreCase(header.getKey())) {
-                result.add(header);
+                result.add(header.getValue());
             }
         }
-        return result.toArray(new KeyValuePair[result.size()]);
+        return result.toArray(new String[result.size()]);
     }
+
 }

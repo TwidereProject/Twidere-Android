@@ -22,9 +22,7 @@ import java.util.List;
 
 import twitter4j.TwitterConstants;
 import twitter4j.Version;
-import twitter4j.http.HeaderMap;
 import twitter4j.http.HostAddressResolverFactory;
-import twitter4j.http.HttpClientFactory;
 
 /**
  * Configuration base class with default settings.
@@ -93,11 +91,7 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     private String clientURL;
     private String clientName;
 
-    private HttpClientFactory httpClientFactory;
     private HostAddressResolverFactory hostAddressResolverFactory;
-
-    // method for HttpRequestFactoryConfiguration
-    HeaderMap requestHeaders;
 
     private static final List<ConfigurationBase> instances = new ArrayList<ConfigurationBase>();
     private boolean includeCards;
@@ -120,7 +114,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
         setHttpRetryIntervalSeconds(5);
         setHttpMaxTotalConnections(20);
         setHttpDefaultMaxPerRoute(2);
-        setHttpClientFactory(null);
         setOAuthConsumerKey(null);
         setOAuthConsumerSecret(null);
         setOAuthAccessToken(null);
@@ -145,119 +138,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
         setIncludeRTsEnabled(true);
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ConfigurationBase)) return false;
-        final ConfigurationBase other = (ConfigurationBase) obj;
-        if (clientName == null) {
-            if (other.clientName != null) return false;
-        } else if (!clientName.equals(other.clientName)) return false;
-        if (clientURL == null) {
-            if (other.clientURL != null) return false;
-        } else if (!clientURL.equals(other.clientURL)) return false;
-        if (clientVersion == null) {
-            if (other.clientVersion != null) return false;
-        } else if (!clientVersion.equals(other.clientVersion)) return false;
-        if (debug != other.debug) return false;
-        if (defaultMaxPerRoute != other.defaultMaxPerRoute) return false;
-        if (gzipEnabled != other.gzipEnabled) return false;
-        if (hostAddressResolverFactory == null) {
-            if (other.hostAddressResolverFactory != null) return false;
-        } else if (!hostAddressResolverFactory.equals(other.hostAddressResolverFactory))
-            return false;
-        if (httpClientFactory == null) {
-            if (other.httpClientFactory != null) return false;
-        } else if (!httpClientFactory.equals(other.httpClientFactory)) return false;
-        if (httpConnectionTimeout != other.httpConnectionTimeout) return false;
-        if (httpProxyHost == null) {
-            if (other.httpProxyHost != null) return false;
-        } else if (!httpProxyHost.equals(other.httpProxyHost)) return false;
-        if (httpProxyPassword == null) {
-            if (other.httpProxyPassword != null) return false;
-        } else if (!httpProxyPassword.equals(other.httpProxyPassword)) return false;
-        if (httpProxyPort != other.httpProxyPort) return false;
-        if (httpProxyUser == null) {
-            if (other.httpProxyUser != null) return false;
-        } else if (!httpProxyUser.equals(other.httpProxyUser)) return false;
-        if (httpReadTimeout != other.httpReadTimeout) return false;
-        if (httpRetryCount != other.httpRetryCount) return false;
-        if (httpRetryIntervalSeconds != other.httpRetryIntervalSeconds) return false;
-        if (ignoreSSLError != other.ignoreSSLError) return false;
-        if (includeEntitiesEnabled != other.includeEntitiesEnabled) return false;
-        if (includeRTsEnabled != other.includeRTsEnabled) return false;
-        if (includeTwitterClientHeader != other.includeTwitterClientHeader) return false;
-        if (maxTotalConnections != other.maxTotalConnections) return false;
-        if (oAuthAccessToken == null) {
-            if (other.oAuthAccessToken != null) return false;
-        } else if (!oAuthAccessToken.equals(other.oAuthAccessToken)) return false;
-        if (oAuthAccessTokenSecret == null) {
-            if (other.oAuthAccessTokenSecret != null) return false;
-        } else if (!oAuthAccessTokenSecret.equals(other.oAuthAccessTokenSecret)) return false;
-        if (oAuthAccessTokenURL == null) {
-            if (other.oAuthAccessTokenURL != null) return false;
-        } else if (!oAuthAccessTokenURL.equals(other.oAuthAccessTokenURL)) return false;
-        if (oAuthAuthenticationURL == null) {
-            if (other.oAuthAuthenticationURL != null) return false;
-        } else if (!oAuthAuthenticationURL.equals(other.oAuthAuthenticationURL)) return false;
-        if (oAuthAuthorizationURL == null) {
-            if (other.oAuthAuthorizationURL != null) return false;
-        } else if (!oAuthAuthorizationURL.equals(other.oAuthAuthorizationURL)) return false;
-        if (oAuthBaseURL == null) {
-            if (other.oAuthBaseURL != null) return false;
-        } else if (!oAuthBaseURL.equals(other.oAuthBaseURL)) return false;
-        if (oAuthConsumerKey == null) {
-            if (other.oAuthConsumerKey != null) return false;
-        } else if (!oAuthConsumerKey.equals(other.oAuthConsumerKey)) return false;
-        if (oAuthConsumerSecret == null) {
-            if (other.oAuthConsumerSecret != null) return false;
-        } else if (!oAuthConsumerSecret.equals(other.oAuthConsumerSecret)) return false;
-        if (oAuthRequestTokenURL == null) {
-            if (other.oAuthRequestTokenURL != null) return false;
-        } else if (!oAuthRequestTokenURL.equals(other.oAuthRequestTokenURL)) return false;
-        if (password == null) {
-            if (other.password != null) return false;
-        } else if (!password.equals(other.password)) return false;
-        if (prettyDebug != other.prettyDebug) return false;
-        if (requestHeaders == null) {
-            if (other.requestHeaders != null) return false;
-        } else if (!requestHeaders.equals(other.requestHeaders)) return false;
-        if (restBaseURL == null) {
-            if (other.restBaseURL != null) return false;
-        } else if (!restBaseURL.equals(other.restBaseURL)) return false;
-        if (signingOAuthAccessTokenURL == null) {
-            if (other.signingOAuthAccessTokenURL != null) return false;
-        } else if (!signingOAuthAccessTokenURL.equals(other.signingOAuthAccessTokenURL))
-            return false;
-        if (signingOAuthAuthenticationURL == null) {
-            if (other.signingOAuthAuthenticationURL != null) return false;
-        } else if (!signingOAuthAuthenticationURL.equals(other.signingOAuthAuthenticationURL))
-            return false;
-        if (signingOAuthAuthorizationURL == null) {
-            if (other.signingOAuthAuthorizationURL != null) return false;
-        } else if (!signingOAuthAuthorizationURL.equals(other.signingOAuthAuthorizationURL))
-            return false;
-        if (signingOAuthBaseURL == null) {
-            if (other.signingOAuthBaseURL != null) return false;
-        } else if (!signingOAuthBaseURL.equals(other.signingOAuthBaseURL)) return false;
-        if (signingOAuthRequestTokenURL == null) {
-            if (other.signingOAuthRequestTokenURL != null) return false;
-        } else if (!signingOAuthRequestTokenURL.equals(other.signingOAuthRequestTokenURL))
-            return false;
-        if (signingRestBaseURL == null) {
-            if (other.signingRestBaseURL != null) return false;
-        } else if (!signingRestBaseURL.equals(other.signingRestBaseURL)) return false;
-        if (useSSL != other.useSSL) return false;
-        if (user == null) {
-            if (other.user != null) return false;
-        } else if (!user.equals(other.user)) return false;
-        if (userAgent == null) {
-            if (other.userAgent != null) return false;
-        } else if (!userAgent.equals(other.userAgent)) return false;
-        return true;
-    }
-
     public String getCardsPlatform() {
         return cardsPlatform;
     }
@@ -280,11 +160,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     @Override
     public HostAddressResolverFactory getHostAddressResolverFactory() {
         return hostAddressResolverFactory;
-    }
-
-    @Override
-    public HttpClientFactory getHttpClientFactory() {
-        return httpClientFactory;
     }
 
     @Override
@@ -393,11 +268,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     }
 
     @Override
-    public HeaderMap getRequestHeaders() {
-        return requestHeaders;
-    }
-
-    @Override
     public String getRestBaseURL() {
         return restBaseURL;
     }
@@ -445,57 +315,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     @Override
     public final String getUser() {
         return user;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (clientName == null ? 0 : clientName.hashCode());
-        result = prime * result + (clientURL == null ? 0 : clientURL.hashCode());
-        result = prime * result + (clientVersion == null ? 0 : clientVersion.hashCode());
-        result = prime * result + (debug ? 1231 : 1237);
-        result = prime * result + defaultMaxPerRoute;
-        result = prime * result + (gzipEnabled ? 1231 : 1237);
-        result = prime * result + (hostAddressResolverFactory == null ? 0 : hostAddressResolverFactory.hashCode());
-        result = prime * result + (httpClientFactory == null ? 0 : httpClientFactory.hashCode());
-        result = prime * result + httpConnectionTimeout;
-        result = prime * result + (httpProxyHost == null ? 0 : httpProxyHost.hashCode());
-        result = prime * result + (httpProxyPassword == null ? 0 : httpProxyPassword.hashCode());
-        result = prime * result + httpProxyPort;
-        result = prime * result + (httpProxyUser == null ? 0 : httpProxyUser.hashCode());
-        result = prime * result + httpReadTimeout;
-        result = prime * result + httpRetryCount;
-        result = prime * result + httpRetryIntervalSeconds;
-        result = prime * result + (ignoreSSLError ? 1231 : 1237);
-        result = prime * result + (includeEntitiesEnabled ? 1231 : 1237);
-        result = prime * result + (includeRTsEnabled ? 1231 : 1237);
-        result = prime * result + (includeTwitterClientHeader ? 1231 : 1237);
-        result = prime * result + maxTotalConnections;
-        result = prime * result + (oAuthAccessToken == null ? 0 : oAuthAccessToken.hashCode());
-        result = prime * result + (oAuthAccessTokenSecret == null ? 0 : oAuthAccessTokenSecret.hashCode());
-        result = prime * result + (oAuthAccessTokenURL == null ? 0 : oAuthAccessTokenURL.hashCode());
-        result = prime * result + (oAuthAuthenticationURL == null ? 0 : oAuthAuthenticationURL.hashCode());
-        result = prime * result + (oAuthAuthorizationURL == null ? 0 : oAuthAuthorizationURL.hashCode());
-        result = prime * result + (oAuthBaseURL == null ? 0 : oAuthBaseURL.hashCode());
-        result = prime * result + (oAuthConsumerKey == null ? 0 : oAuthConsumerKey.hashCode());
-        result = prime * result + (oAuthConsumerSecret == null ? 0 : oAuthConsumerSecret.hashCode());
-        result = prime * result + (oAuthRequestTokenURL == null ? 0 : oAuthRequestTokenURL.hashCode());
-        result = prime * result + (password == null ? 0 : password.hashCode());
-        result = prime * result + (prettyDebug ? 1231 : 1237);
-        result = prime * result + (requestHeaders == null ? 0 : requestHeaders.hashCode());
-        result = prime * result + (restBaseURL == null ? 0 : restBaseURL.hashCode());
-        result = prime * result + (signingOAuthAccessTokenURL == null ? 0 : signingOAuthAccessTokenURL.hashCode());
-        result = prime * result
-                + (signingOAuthAuthenticationURL == null ? 0 : signingOAuthAuthenticationURL.hashCode());
-        result = prime * result + (signingOAuthAuthorizationURL == null ? 0 : signingOAuthAuthorizationURL.hashCode());
-        result = prime * result + (signingOAuthBaseURL == null ? 0 : signingOAuthBaseURL.hashCode());
-        result = prime * result + (signingOAuthRequestTokenURL == null ? 0 : signingOAuthRequestTokenURL.hashCode());
-        result = prime * result + (signingRestBaseURL == null ? 0 : signingRestBaseURL.hashCode());
-        result = prime * result + (useSSL ? 1231 : 1237);
-        result = prime * result + (user == null ? 0 : user.hashCode());
-        result = prime * result + (userAgent == null ? 0 : userAgent.hashCode());
-        return result;
     }
 
     @Override
@@ -567,28 +386,193 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConfigurationBase that = (ConfigurationBase) o;
+
+        if (debug != that.debug) return false;
+        if (useSSL != that.useSSL) return false;
+        if (ignoreSSLError != that.ignoreSSLError) return false;
+        if (prettyDebug != that.prettyDebug) return false;
+        if (gzipEnabled != that.gzipEnabled) return false;
+        if (httpProxyPort != that.httpProxyPort) return false;
+        if (httpConnectionTimeout != that.httpConnectionTimeout) return false;
+        if (httpReadTimeout != that.httpReadTimeout) return false;
+        if (httpRetryCount != that.httpRetryCount) return false;
+        if (httpRetryIntervalSeconds != that.httpRetryIntervalSeconds) return false;
+        if (maxTotalConnections != that.maxTotalConnections) return false;
+        if (defaultMaxPerRoute != that.defaultMaxPerRoute) return false;
+        if (includeRTsEnabled != that.includeRTsEnabled) return false;
+        if (includeReplyCountEnabled != that.includeReplyCountEnabled) return false;
+        if (includeDescendentReplyCountEnabled != that.includeDescendentReplyCountEnabled)
+            return false;
+        if (includeEntitiesEnabled != that.includeEntitiesEnabled) return false;
+        if (includeTwitterClientHeader != that.includeTwitterClientHeader) return false;
+        if (includeCards != that.includeCards) return false;
+        if (userAgent != null ? !userAgent.equals(that.userAgent) : that.userAgent != null)
+            return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null)
+            return false;
+        if (httpProxyHost != null ? !httpProxyHost.equals(that.httpProxyHost) : that.httpProxyHost != null)
+            return false;
+        if (httpProxyUser != null ? !httpProxyUser.equals(that.httpProxyUser) : that.httpProxyUser != null)
+            return false;
+        if (httpProxyPassword != null ? !httpProxyPassword.equals(that.httpProxyPassword) : that.httpProxyPassword != null)
+            return false;
+        if (oAuthConsumerKey != null ? !oAuthConsumerKey.equals(that.oAuthConsumerKey) : that.oAuthConsumerKey != null)
+            return false;
+        if (oAuthConsumerSecret != null ? !oAuthConsumerSecret.equals(that.oAuthConsumerSecret) : that.oAuthConsumerSecret != null)
+            return false;
+        if (oAuthAccessToken != null ? !oAuthAccessToken.equals(that.oAuthAccessToken) : that.oAuthAccessToken != null)
+            return false;
+        if (oAuthAccessTokenSecret != null ? !oAuthAccessTokenSecret.equals(that.oAuthAccessTokenSecret) : that.oAuthAccessTokenSecret != null)
+            return false;
+        if (oAuthRequestTokenURL != null ? !oAuthRequestTokenURL.equals(that.oAuthRequestTokenURL) : that.oAuthRequestTokenURL != null)
+            return false;
+        if (oAuthAuthorizationURL != null ? !oAuthAuthorizationURL.equals(that.oAuthAuthorizationURL) : that.oAuthAuthorizationURL != null)
+            return false;
+        if (oAuthAccessTokenURL != null ? !oAuthAccessTokenURL.equals(that.oAuthAccessTokenURL) : that.oAuthAccessTokenURL != null)
+            return false;
+        if (oAuthAuthenticationURL != null ? !oAuthAuthenticationURL.equals(that.oAuthAuthenticationURL) : that.oAuthAuthenticationURL != null)
+            return false;
+        if (signingOAuthRequestTokenURL != null ? !signingOAuthRequestTokenURL.equals(that.signingOAuthRequestTokenURL) : that.signingOAuthRequestTokenURL != null)
+            return false;
+        if (signingOAuthAuthorizationURL != null ? !signingOAuthAuthorizationURL.equals(that.signingOAuthAuthorizationURL) : that.signingOAuthAuthorizationURL != null)
+            return false;
+        if (signingOAuthAccessTokenURL != null ? !signingOAuthAccessTokenURL.equals(that.signingOAuthAccessTokenURL) : that.signingOAuthAccessTokenURL != null)
+            return false;
+        if (signingOAuthAuthenticationURL != null ? !signingOAuthAuthenticationURL.equals(that.signingOAuthAuthenticationURL) : that.signingOAuthAuthenticationURL != null)
+            return false;
+        if (oAuthBaseURL != null ? !oAuthBaseURL.equals(that.oAuthBaseURL) : that.oAuthBaseURL != null)
+            return false;
+        if (signingOAuthBaseURL != null ? !signingOAuthBaseURL.equals(that.signingOAuthBaseURL) : that.signingOAuthBaseURL != null)
+            return false;
+        if (signingRestBaseURL != null ? !signingRestBaseURL.equals(that.signingRestBaseURL) : that.signingRestBaseURL != null)
+            return false;
+        if (signingUploadBaseURL != null ? !signingUploadBaseURL.equals(that.signingUploadBaseURL) : that.signingUploadBaseURL != null)
+            return false;
+        if (restBaseURL != null ? !restBaseURL.equals(that.restBaseURL) : that.restBaseURL != null)
+            return false;
+        if (uploadBaseURL != null ? !uploadBaseURL.equals(that.uploadBaseURL) : that.uploadBaseURL != null)
+            return false;
+        if (clientVersion != null ? !clientVersion.equals(that.clientVersion) : that.clientVersion != null)
+            return false;
+        if (clientURL != null ? !clientURL.equals(that.clientURL) : that.clientURL != null)
+            return false;
+        if (clientName != null ? !clientName.equals(that.clientName) : that.clientName != null)
+            return false;
+        if (hostAddressResolverFactory != null ? !hostAddressResolverFactory.equals(that.hostAddressResolverFactory) : that.hostAddressResolverFactory != null)
+            return false;
+        return !(cardsPlatform != null ? !cardsPlatform.equals(that.cardsPlatform) : that.cardsPlatform != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (debug ? 1 : 0);
+        result = 31 * result + (userAgent != null ? userAgent.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (useSSL ? 1 : 0);
+        result = 31 * result + (ignoreSSLError ? 1 : 0);
+        result = 31 * result + (prettyDebug ? 1 : 0);
+        result = 31 * result + (gzipEnabled ? 1 : 0);
+        result = 31 * result + (httpProxyHost != null ? httpProxyHost.hashCode() : 0);
+        result = 31 * result + (httpProxyUser != null ? httpProxyUser.hashCode() : 0);
+        result = 31 * result + (httpProxyPassword != null ? httpProxyPassword.hashCode() : 0);
+        result = 31 * result + httpProxyPort;
+        result = 31 * result + httpConnectionTimeout;
+        result = 31 * result + httpReadTimeout;
+        result = 31 * result + httpRetryCount;
+        result = 31 * result + httpRetryIntervalSeconds;
+        result = 31 * result + maxTotalConnections;
+        result = 31 * result + defaultMaxPerRoute;
+        result = 31 * result + (oAuthConsumerKey != null ? oAuthConsumerKey.hashCode() : 0);
+        result = 31 * result + (oAuthConsumerSecret != null ? oAuthConsumerSecret.hashCode() : 0);
+        result = 31 * result + (oAuthAccessToken != null ? oAuthAccessToken.hashCode() : 0);
+        result = 31 * result + (oAuthAccessTokenSecret != null ? oAuthAccessTokenSecret.hashCode() : 0);
+        result = 31 * result + (oAuthRequestTokenURL != null ? oAuthRequestTokenURL.hashCode() : 0);
+        result = 31 * result + (oAuthAuthorizationURL != null ? oAuthAuthorizationURL.hashCode() : 0);
+        result = 31 * result + (oAuthAccessTokenURL != null ? oAuthAccessTokenURL.hashCode() : 0);
+        result = 31 * result + (oAuthAuthenticationURL != null ? oAuthAuthenticationURL.hashCode() : 0);
+        result = 31 * result + (signingOAuthRequestTokenURL != null ? signingOAuthRequestTokenURL.hashCode() : 0);
+        result = 31 * result + (signingOAuthAuthorizationURL != null ? signingOAuthAuthorizationURL.hashCode() : 0);
+        result = 31 * result + (signingOAuthAccessTokenURL != null ? signingOAuthAccessTokenURL.hashCode() : 0);
+        result = 31 * result + (signingOAuthAuthenticationURL != null ? signingOAuthAuthenticationURL.hashCode() : 0);
+        result = 31 * result + (oAuthBaseURL != null ? oAuthBaseURL.hashCode() : 0);
+        result = 31 * result + (signingOAuthBaseURL != null ? signingOAuthBaseURL.hashCode() : 0);
+        result = 31 * result + (signingRestBaseURL != null ? signingRestBaseURL.hashCode() : 0);
+        result = 31 * result + (signingUploadBaseURL != null ? signingUploadBaseURL.hashCode() : 0);
+        result = 31 * result + (restBaseURL != null ? restBaseURL.hashCode() : 0);
+        result = 31 * result + (uploadBaseURL != null ? uploadBaseURL.hashCode() : 0);
+        result = 31 * result + (includeRTsEnabled ? 1 : 0);
+        result = 31 * result + (includeReplyCountEnabled ? 1 : 0);
+        result = 31 * result + (includeDescendentReplyCountEnabled ? 1 : 0);
+        result = 31 * result + (includeEntitiesEnabled ? 1 : 0);
+        result = 31 * result + (includeTwitterClientHeader ? 1 : 0);
+        result = 31 * result + (clientVersion != null ? clientVersion.hashCode() : 0);
+        result = 31 * result + (clientURL != null ? clientURL.hashCode() : 0);
+        result = 31 * result + (clientName != null ? clientName.hashCode() : 0);
+        result = 31 * result + (hostAddressResolverFactory != null ? hostAddressResolverFactory.hashCode() : 0);
+        result = 31 * result + (includeCards ? 1 : 0);
+        result = 31 * result + (cardsPlatform != null ? cardsPlatform.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "ConfigurationBase{debug=" + debug + ", userAgent=" + userAgent + ", user=" + user + ", password="
-                + password + ", useSSL=" + useSSL + ", ignoreSSLError=" + ignoreSSLError + ", prettyDebug="
-                + prettyDebug + ", gzipEnabled=" + gzipEnabled + ", httpProxyHost=" + httpProxyHost
-                + ", httpProxyUser=" + httpProxyUser + ", httpProxyPassword=" + httpProxyPassword + ", httpProxyPort="
-                + httpProxyPort + ", httpConnectionTimeout=" + httpConnectionTimeout + ", httpReadTimeout="
-                + httpReadTimeout + ", httpRetryCount=" + httpRetryCount + ", httpRetryIntervalSeconds="
-                + httpRetryIntervalSeconds + ", maxTotalConnections=" + maxTotalConnections + ", defaultMaxPerRoute="
-                + defaultMaxPerRoute + ", oAuthConsumerKey=" + oAuthConsumerKey + ", oAuthConsumerSecret="
-                + oAuthConsumerSecret + ", oAuthAccessToken=" + oAuthAccessToken + ", oAuthAccessTokenSecret="
-                + oAuthAccessTokenSecret + ", oAuthRequestTokenURL=" + oAuthRequestTokenURL
-                + ", oAuthAuthorizationURL=" + oAuthAuthorizationURL + ", oAuthAccessTokenURL=" + oAuthAccessTokenURL
-                + ", oAuthAuthenticationURL=" + oAuthAuthenticationURL + ", signingOAuthRequestTokenURL="
-                + signingOAuthRequestTokenURL + ", signingOAuthAuthorizationURL=" + signingOAuthAuthorizationURL
-                + ", signingOAuthAccessTokenURL=" + signingOAuthAccessTokenURL + ", signingOAuthAuthenticationURL="
-                + signingOAuthAuthenticationURL + ", oAuthBaseURL=" + oAuthBaseURL + ", signingOAuthBaseURL="
-                + signingOAuthBaseURL + ", signingRestBaseURL=" + signingRestBaseURL + ", restBaseURL=" + restBaseURL
-                + ", includeRTsEnabled=" + includeRTsEnabled + ", includeEntitiesEnabled=" + includeEntitiesEnabled
-                + ", includeTwitterClientHeader=" + includeTwitterClientHeader + ", clientVersion=" + clientVersion
-                + ", clientURL=" + clientURL + ", clientName=" + clientName + ", httpClientFactory="
-                + httpClientFactory + ", hostAddressResolverFactory=" + hostAddressResolverFactory
-                + ", requestHeaders=" + requestHeaders + "}";
+        return "ConfigurationBase{" +
+                "debug=" + debug +
+                ", userAgent='" + userAgent + '\'' +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", useSSL=" + useSSL +
+                ", ignoreSSLError=" + ignoreSSLError +
+                ", prettyDebug=" + prettyDebug +
+                ", gzipEnabled=" + gzipEnabled +
+                ", httpProxyHost='" + httpProxyHost + '\'' +
+                ", httpProxyUser='" + httpProxyUser + '\'' +
+                ", httpProxyPassword='" + httpProxyPassword + '\'' +
+                ", httpProxyPort=" + httpProxyPort +
+                ", httpConnectionTimeout=" + httpConnectionTimeout +
+                ", httpReadTimeout=" + httpReadTimeout +
+                ", httpRetryCount=" + httpRetryCount +
+                ", httpRetryIntervalSeconds=" + httpRetryIntervalSeconds +
+                ", maxTotalConnections=" + maxTotalConnections +
+                ", defaultMaxPerRoute=" + defaultMaxPerRoute +
+                ", oAuthConsumerKey='" + oAuthConsumerKey + '\'' +
+                ", oAuthConsumerSecret='" + oAuthConsumerSecret + '\'' +
+                ", oAuthAccessToken='" + oAuthAccessToken + '\'' +
+                ", oAuthAccessTokenSecret='" + oAuthAccessTokenSecret + '\'' +
+                ", oAuthRequestTokenURL='" + oAuthRequestTokenURL + '\'' +
+                ", oAuthAuthorizationURL='" + oAuthAuthorizationURL + '\'' +
+                ", oAuthAccessTokenURL='" + oAuthAccessTokenURL + '\'' +
+                ", oAuthAuthenticationURL='" + oAuthAuthenticationURL + '\'' +
+                ", signingOAuthRequestTokenURL='" + signingOAuthRequestTokenURL + '\'' +
+                ", signingOAuthAuthorizationURL='" + signingOAuthAuthorizationURL + '\'' +
+                ", signingOAuthAccessTokenURL='" + signingOAuthAccessTokenURL + '\'' +
+                ", signingOAuthAuthenticationURL='" + signingOAuthAuthenticationURL + '\'' +
+                ", oAuthBaseURL='" + oAuthBaseURL + '\'' +
+                ", signingOAuthBaseURL='" + signingOAuthBaseURL + '\'' +
+                ", signingRestBaseURL='" + signingRestBaseURL + '\'' +
+                ", signingUploadBaseURL='" + signingUploadBaseURL + '\'' +
+                ", restBaseURL='" + restBaseURL + '\'' +
+                ", uploadBaseURL='" + uploadBaseURL + '\'' +
+                ", includeRTsEnabled=" + includeRTsEnabled +
+                ", includeReplyCountEnabled=" + includeReplyCountEnabled +
+                ", includeDescendentReplyCountEnabled=" + includeDescendentReplyCountEnabled +
+                ", includeEntitiesEnabled=" + includeEntitiesEnabled +
+                ", includeTwitterClientHeader=" + includeTwitterClientHeader +
+                ", clientVersion='" + clientVersion + '\'' +
+                ", clientURL='" + clientURL + '\'' +
+                ", clientName='" + clientName + '\'' +
+                ", hostAddressResolverFactory=" + hostAddressResolverFactory +
+                ", includeCards=" + includeCards +
+                ", cardsPlatform='" + cardsPlatform + '\'' +
+                '}';
     }
 
     protected void cacheInstance() {
@@ -626,10 +610,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
 
     protected void setHostAddressResolverFactory(final HostAddressResolverFactory factory) {
         hostAddressResolverFactory = factory;
-    }
-
-    protected void setHttpClientFactory(final HttpClientFactory factory) {
-        httpClientFactory = factory;
     }
 
     protected final void setHttpConnectionTimeout(final int connectionTimeout) {
@@ -872,24 +852,6 @@ class ConfigurationBase implements TwitterConstants, Configuration {
     }
 
     final void initRequestHeaders() {
-        requestHeaders = new HeaderMap();
-        if (includeTwitterClientHeader) {
-            requestHeaders.addHeader("X-Twitter-Client-Version", getClientVersion());
-            requestHeaders.addHeader("X-Twitter-Client-URL", getClientURL());
-            requestHeaders.addHeader("X-Twitter-Client", getClientName());
-        }
-
-        requestHeaders.addHeader("User-Agent", getHttpUserAgent());
-        if (gzipEnabled) {
-            requestHeaders.addHeader("Accept-Encoding", "gzip");
-        }
-        // I found this may cause "Socket is closed" error in Android, so I
-        // changed it to "keep-alive".
-        if (!isNullOrEmpty(httpProxyHost) && httpProxyPort > 0) {
-            requestHeaders.addHeader("Connection", "keep-alive");
-        } else {
-            requestHeaders.addHeader("Connection", "close");
-        }
     }
 
     private static void cacheInstance(final ConfigurationBase conf) {

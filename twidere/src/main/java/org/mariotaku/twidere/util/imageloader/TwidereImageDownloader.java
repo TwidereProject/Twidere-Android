@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util.imageloader;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
@@ -30,6 +31,10 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
 
+import org.mariotaku.simplerestapi.http.Authorization;
+import org.mariotaku.simplerestapi.http.RestHttpClient;
+import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
@@ -45,10 +50,6 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import twitter4j.TwitterException;
-import twitter4j.auth.Authorization;
-import twitter4j.http.HeaderMap;
-import twitter4j.http.HttpClientWrapper;
-import twitter4j.http.HttpResponse;
 
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 import static org.mariotaku.twidere.util.Utils.getImageLoaderHttpClient;
@@ -63,7 +64,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     private final SharedPreferencesWrapper mPreferences;
     private final boolean mUseThumbor;
     private Thumbor mThumbor;
-    private HttpClientWrapper mClient;
+    private RestHttpClient mClient;
     private boolean mFastImageLoading;
     private final boolean mFullImage;
     private final String mTwitterProfileImageSize;
@@ -125,8 +126,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         }
     }
 
-    private String getReplacedUri(final Uri uri, final String apiUrlFormat) {
-        if (uri == null) return null;
+    private String getReplacedUri(@NonNull final Uri uri, final String apiUrlFormat) {
         if (apiUrlFormat == null) return uri.toString();
         if (isTwitterUri(uri)) {
             final StringBuilder sb = new StringBuilder();
@@ -169,8 +169,9 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             additionalHeaders.addHeader("Accept", "image/webp, */*");
         }
-        final HttpResponse resp = getRedirectedHttpResponse(mClient, modifiedUri, uriString, auth, additionalHeaders);
-        return new ContentLengthInputStream(resp.asStream(), (int) resp.getContentLength());
+        final RestResponse resp = getRedirectedHttpResponse(mClient, modifiedUri, uriString, auth, additionalHeaders);
+        final TypedData body = resp.getBody();
+        return new ContentLengthInputStream(body.stream(), (int) body.length());
     }
 
     private boolean isTwitterAuthRequired(final Uri uri) {

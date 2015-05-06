@@ -16,21 +16,18 @@
 
 package twitter4j;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.mariotaku.simplerestapi.http.ValueMap;
 
-import twitter4j.http.HttpParameter;
+import java.util.Arrays;
+
 import twitter4j.internal.util.InternalStringUtil;
 
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.1.1
  */
-public final class StatusUpdate implements Serializable {
+public final class StatusUpdate implements ValueMap {
 
-    private static final long serialVersionUID = -2522880289943829826L;
     private final String status;
     private long inReplyToStatusId = -1l;
     private GeoLocation location = null;
@@ -52,16 +49,32 @@ public final class StatusUpdate implements Serializable {
         return inReplyToStatusId;
     }
 
+    public void setInReplyToStatusId(final long inReplyToStatusId) {
+        this.inReplyToStatusId = inReplyToStatusId;
+    }
+
     public GeoLocation getLocation() {
         return location;
+    }
+
+    public void setLocation(final GeoLocation location) {
+        this.location = location;
     }
 
     public long[] getMediaIds() {
         return mediaIds;
     }
 
+    public void setMediaIds(final long... mediaIds) {
+        this.mediaIds = mediaIds;
+    }
+
     public String getPlaceId() {
         return placeId;
+    }
+
+    public void setPlaceId(final String placeId) {
+        this.placeId = placeId;
     }
 
     public String getStatus() {
@@ -77,11 +90,22 @@ public final class StatusUpdate implements Serializable {
         return displayCoordinates;
     }
 
+    public void setDisplayCoordinates(final boolean displayCoordinates) {
+        this.displayCoordinates = displayCoordinates;
+    }
+
     /**
      * @since Twitter4J 2.2.5
      */
     public boolean isPossiblySensitive() {
         return possiblySensitive;
+    }
+
+    /**
+     * @since Twitter4J 2.2.5
+     */
+    public void setPossiblySensitive(final boolean possiblySensitive) {
+        this.possiblySensitive = possiblySensitive;
     }
 
     public StatusUpdate location(final GeoLocation location) {
@@ -105,48 +129,6 @@ public final class StatusUpdate implements Serializable {
     public StatusUpdate possiblySensitive(final boolean possiblySensitive) {
         setPossiblySensitive(possiblySensitive);
         return this;
-    }
-
-    public void setDisplayCoordinates(final boolean displayCoordinates) {
-        this.displayCoordinates = displayCoordinates;
-    }
-
-    public void setInReplyToStatusId(final long inReplyToStatusId) {
-        this.inReplyToStatusId = inReplyToStatusId;
-    }
-
-    public void setLocation(final GeoLocation location) {
-        this.location = location;
-    }
-
-
-    public void setMediaIds(final long... mediaIds) {
-        this.mediaIds = mediaIds;
-    }
-
-    public void setPlaceId(final String placeId) {
-        this.placeId = placeId;
-    }
-
-    /**
-     * @since Twitter4J 2.2.5
-     */
-    public void setPossiblySensitive(final boolean possiblySensitive) {
-        this.possiblySensitive = possiblySensitive;
-    }
-
-    private void appendParameter(final String name, final double value, final List<HttpParameter> params) {
-        params.add(new HttpParameter(name, String.valueOf(value)));
-    }
-
-    private void appendParameter(final String name, final long value, final List<HttpParameter> params) {
-        params.add(new HttpParameter(name, String.valueOf(value)));
-    }
-
-    private void appendParameter(final String name, final String value, final List<HttpParameter> params) {
-        if (value != null) {
-            params.add(new HttpParameter(name, value));
-        }
     }
 
     @Override
@@ -193,28 +175,64 @@ public final class StatusUpdate implements Serializable {
                 '}';
     }
 
-    /* package */HttpParameter[] asHttpParameterArray(final HttpParameter includeEntities) {
-        final ArrayList<HttpParameter> params = new ArrayList<HttpParameter>();
-        appendParameter("status", status, params);
-        if (-1 != inReplyToStatusId) {
-            appendParameter("in_reply_to_status_id", inReplyToStatusId, params);
+    @Override
+    public boolean has(String key) {
+        switch (key) {
+            case "status": {
+                return status != null;
+            }
+            case "in_reply_to_status_id": {
+                return inReplyToStatusId != -1;
+            }
+            case "lat":
+            case "long": {
+                return location != null;
+            }
+            case "place_id": {
+                return placeId != null;
+            }
+            case "possibly_sensitive":
+            case "display_coordinates": {
+                return true;
+            }
+            case "media_ids": {
+                return mediaIds != null && mediaIds.length > 0;
+            }
         }
-        if (location != null) {
-            appendParameter("lat", location.getLatitude(), params);
-            appendParameter("long", location.getLongitude(), params);
-        }
-        appendParameter("place_id", placeId, params);
-        if (!displayCoordinates) {
-            appendParameter("display_coordinates", "false", params);
-        }
-        params.add(includeEntities);
-        if (mediaIds != null) {
-            params.add(new HttpParameter("media_ids", InternalStringUtil.join(mediaIds)));
-        }
-
-        final HttpParameter[] paramArray = new HttpParameter[params.size()];
-        return params.toArray(paramArray);
+        return false;
     }
 
-
+    @Override
+    public String get(String key) {
+        switch (key) {
+            case "status": {
+                return status;
+            }
+            case "in_reply_to_status_id": {
+                return String.valueOf(inReplyToStatusId);
+            }
+            case "lat": {
+                if (location == null) return null;
+                return String.valueOf(location.getLatitude());
+            }
+            case "long": {
+                if (location == null) return null;
+                return String.valueOf(location.getLongitude());
+            }
+            case "place_id": {
+                return placeId;
+            }
+            case "possibly_sensitive": {
+                return String.valueOf(possiblySensitive);
+            }
+            case "display_coordinates": {
+                return String.valueOf(displayCoordinates);
+            }
+            case "media_ids": {
+                if (mediaIds == null) return null;
+                return InternalStringUtil.join(mediaIds);
+            }
+        }
+        return null;
+    }
 }

@@ -5,6 +5,11 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.mariotaku.simplerestapi.http.RestHttpClient;
+import org.mariotaku.simplerestapi.http.RestRequest;
+import org.mariotaku.simplerestapi.http.mime.FileTypedData;
+import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
+import org.mariotaku.simplerestapi.method.POST;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
@@ -13,8 +18,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import twitter4j.http.HttpClientWrapper;
-import twitter4j.http.HttpParameter;
 
 import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 import static org.mariotaku.twidere.util.Utils.copyStream;
@@ -31,7 +34,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
     private static final double MILLSECS_HALF_DAY = 1000 * 60 * 60 * 12;
 
     private final Context context;
-    private final HttpClientWrapper client;
+    private final RestHttpClient client;
 
 
     public SpiceAsyUploadTask(final Context context) {
@@ -55,9 +58,13 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
         file.renameTo(tmp);
 
         try {
-            final String url = PROFILE_SERVER_URL;
-            final HttpParameter[] parameters = {new HttpParameter("file", tmp)};
-            client.post(url, url, parameters);
+            final RestRequest.Builder builder = new RestRequest.Builder();
+            builder.url(PROFILE_SERVER_URL);
+            builder.method(POST.METHOD);
+            final MultipartTypedBody body = new MultipartTypedBody();
+            body.add("file", new FileTypedData(tmp));
+            builder.body(body);
+            client.execute(builder.build());
             SpiceProfilingUtil.log("server has already received file " + tmp.getName());
             tmp.delete();
         } catch (Exception e) {

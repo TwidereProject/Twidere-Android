@@ -5,7 +5,10 @@ import org.mariotaku.simplerestapi.io.StreamingGZIPInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Created by mariotaku on 15/2/7.
@@ -73,6 +76,15 @@ public class BaseTypedData implements TypedData {
     }
 
     public static TypedData wrap(Object value) {
+        if (value instanceof TypedData) {
+            return (TypedData) value;
+        }
         throw new UnsupportedOperationException();
+    }
+
+    public static Reader reader(TypedData data) throws IOException {
+        final ContentType contentType = data.contentType();
+        final Charset charset = contentType != null ? contentType.getCharset() : null;
+        return new InputStreamReader(data.stream(), charset != null ? charset : Charset.defaultCharset());
     }
 }

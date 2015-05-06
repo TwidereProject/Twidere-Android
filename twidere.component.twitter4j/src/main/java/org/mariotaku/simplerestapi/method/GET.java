@@ -14,5 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RestMethod(value = "GET", hasBody = false)
 public @interface GET {
+    String METHOD = "GET";
+
     String value();
 }

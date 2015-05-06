@@ -22,8 +22,14 @@ package org.mariotaku.twidere.util;
 import android.text.TextUtils;
 import android.util.Xml;
 
+import com.nostra13.universalimageloader.utils.IoUtils;
+
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.simplerestapi.http.RestHttpClient;
+import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -36,15 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
+import twitter4j.TwitterOAuth;
 import twitter4j.conf.Configuration;
 import twitter4j.http.HeaderMap;
 import twitter4j.http.HttpClientWrapper;
 import twitter4j.http.HttpParameter;
-import twitter4j.http.HttpResponse;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -53,32 +56,32 @@ public class OAuthPasswordAuthenticator implements Constants {
     private static final String INPUT_AUTHENTICITY_TOKEN = "authenticity_token";
     private static final String INPUT_REDIRECT_AFTER_LOGIN = "redirect_after_login";
 
-    private final Twitter twitter;
-    private final HttpClientWrapper client;
+    private final TwitterOAuth twitter;
+    private final RestHttpClient client;
 
-    public OAuthPasswordAuthenticator(final Twitter twitter) {
+    public OAuthPasswordAuthenticator(final TwitterOAuth twitter) {
         final Configuration conf = twitter.getConfiguration();
         this.twitter = twitter;
         client = new HttpClientWrapper(conf);
     }
 
-    public AccessToken getOAuthAccessToken(final String username, final String password) throws AuthenticationException {
-        final RequestToken requestToken;
+    public OAuthToken getOAuthAccessToken(final String username, final String password) throws AuthenticationException {
+        final OAuthToken requestToken;
         try {
-            requestToken = twitter.getOAuthRequestToken(OAUTH_CALLBACK_OOB);
-        } catch (final TwitterException e) {
-            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
+            requestToken = twitter.getRequestToken(OAUTH_CALLBACK_OOB);
+        } catch (final Exception e) {
+//            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException();
         }
-        HttpResponse authorizePage = null, authorizeResult = null;
+        RestResponse authorizePage = null, authorizeResult = null;
         try {
-            final String oauthToken = requestToken.getToken();
+            final String oauthToken = requestToken.getOauthToken();
             final String authorizationUrl = requestToken.getAuthorizationURL();
             final HashMap<String, String> inputMap = new HashMap<>();
             authorizePage = client.get(authorizationUrl, authorizationUrl, null, null, null);
-            final List<String> cookieHeaders = authorizePage.getResponseHeaders("Set-Cookie");
-            readInputFromHtml(authorizePage.asReader(),
-                    inputMap, INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
+            final String[] cookieHeaders = authorizePage.getHeaders("Set-Cookie");
+            readInputFromHtml(BaseTypedData.reader(authorizePage.getBody()), inputMap,
+                    INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
             final Configuration conf = twitter.getConfiguration();
             final List<HttpParameter> params = new ArrayList<>();
             params.add(new HttpParameter("oauth_token", oauthToken));
@@ -114,16 +117,10 @@ public class OAuthPasswordAuthenticator implements Constants {
             throw new AuthenticationException(e);
         } finally {
             if (authorizePage != null) {
-                try {
-                    authorizePage.disconnect();
-                } catch (IOException ignore) {
-                }
+                IoUtils.closeSilently(authorizePage);
             }
             if (authorizeResult != null) {
-                try {
-                    authorizeResult.disconnect();
-                } catch (IOException ignore) {
-                }
+                IoUtils.closeSilently(authorizeResult);
             }
         }
     }

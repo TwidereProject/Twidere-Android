@@ -46,15 +46,23 @@ public class Endpoint {
             }
             urlBuilder.append(path);
         }
-        if (queries != null) {
-            for (int i = 0, j = queries.size(); i < j; i++) {
-                final KeyValuePair item = queries.get(i);
-                urlBuilder.append(i != 0 ? '&' : '?');
-                urlBuilder.append(Utils.encode(item.getKey(), "UTF-8"));
-                urlBuilder.append('=');
-                urlBuilder.append(Utils.encode(item.getValue(), "UTF-8"));
-            }
+        return constructUrl(urlBuilder.toString(), queries);
+    }
+
+    public static String constructUrl(String url, List<KeyValuePair> queries) {
+        if (queries == null || queries.isEmpty()) return url;
+        final StringBuilder urlBuilder = new StringBuilder(url);
+        for (int i = 0, j = queries.size(); i < j; i++) {
+            final KeyValuePair item = queries.get(i);
+            urlBuilder.append(i != 0 ? '&' : '?');
+            urlBuilder.append(Utils.encode(item.getKey(), "UTF-8"));
+            urlBuilder.append('=');
+            urlBuilder.append(Utils.encode(item.getValue(), "UTF-8"));
         }
         return urlBuilder.toString();
+    }
+
+    public static String constructUrl(String url, KeyValuePair... queries) {
+        return constructUrl(url, Arrays.asList(queries));
     }
 }

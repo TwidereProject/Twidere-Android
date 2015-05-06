@@ -19,29 +19,27 @@
 
 package twitter4j;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
+import org.mariotaku.simplerestapi.http.ValueMap;
 
-import twitter4j.http.HttpParameter;
+import java.util.HashMap;
 
 /**
  * Created by mariotaku on 15/1/6.
  */
-public class SettingsUpdate implements Serializable {
+public class SettingsUpdate implements ValueMap {
 
-    private final HashMap<String, HttpParameter> settingsMap = new HashMap<>();
+    private final HashMap<String, String> settingsMap = new HashMap<>();
 
     public void set(String key, boolean value) {
-        settingsMap.put(key, new HttpParameter(key, value));
+        set(key, String.valueOf(value));
     }
 
     public void set(String key, int value) {
-        settingsMap.put(key, new HttpParameter(key, value));
+        set(key, String.valueOf(value));
     }
 
     public void set(String key, String value) {
-        settingsMap.put(key, new HttpParameter(key, value));
+        settingsMap.put(key, value);
     }
 
     public void setTrendLocationWoeid(int woeid) {
@@ -77,8 +75,13 @@ public class SettingsUpdate implements Serializable {
     }
 
 
-    void addToHttpParameterList(List<HttpParameter> parameterList) {
-        parameterList.addAll(settingsMap.values());
+    @Override
+    public boolean has(String key) {
+        return settingsMap.containsKey(key);
     }
 
+    @Override
+    public String get(String key) {
+        return settingsMap.get(key);
+    }
 }

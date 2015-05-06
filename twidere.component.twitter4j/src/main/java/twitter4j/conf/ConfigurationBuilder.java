@@ -17,7 +17,6 @@
 package twitter4j.conf;
 
 import twitter4j.http.HostAddressResolverFactory;
-import twitter4j.http.HttpClientFactory;
 
 /**
  * A builder that can be used to construct a twitter4j configuration with
@@ -43,7 +42,6 @@ public final class ConfigurationBuilder {
         configuration.setDebug(conf.isDebugEnabled());
         configuration.setGZIPEnabled(conf.isGZIPEnabled());
         configuration.setHostAddressResolverFactory(conf.getHostAddressResolverFactory());
-        configuration.setHttpClientFactory(conf.getHttpClientFactory());
         configuration.setHttpConnectionTimeout(conf.getHttpConnectionTimeout());
         configuration.setHttpDefaultMaxPerRoute(conf.getHttpDefaultMaxPerRoute());
         configuration.setHttpMaxTotalConnections(conf.getHttpMaxTotalConnections());
@@ -123,12 +121,6 @@ public final class ConfigurationBuilder {
     public ConfigurationBuilder setHostAddressResolverFactory(final HostAddressResolverFactory factory) {
         checkNotBuilt();
         configuration.setHostAddressResolverFactory(factory);
-        return this;
-    }
-
-    public ConfigurationBuilder setHttpClientFactory(final HttpClientFactory factory) {
-        checkNotBuilt();
-        configuration.setHttpClientFactory(factory);
         return this;
     }
 

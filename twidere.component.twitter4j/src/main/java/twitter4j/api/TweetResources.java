@@ -19,8 +19,16 @@
 
 package twitter4j.api;
 
-import twitter4j.Paging;
+import org.mariotaku.simplerestapi.http.BodyType;
+import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.simplerestapi.method.POST;
+import org.mariotaku.simplerestapi.param.Body;
+import org.mariotaku.simplerestapi.param.Form;
+import org.mariotaku.simplerestapi.param.Path;
+import org.mariotaku.simplerestapi.param.Query;
+
 import twitter4j.IDs;
+import twitter4j.Paging;
 import twitter4j.ReportAs;
 import twitter4j.ResponseList;
 import twitter4j.Status;
@@ -31,21 +39,8 @@ import twitter4j.TwitterException;
  * @author Joern Huxhorn - jhuxhorn at googlemail.com
  */
 public interface TweetResources {
-    /**
-     * Destroys the status specified by the required ID parameter.<br>
-     * Usage note: The authenticating user must be the author of the specified
-     * status. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/destroy
-     *
-     * @param statusId The ID of the status to destroy.
-     * @return the deleted status
-     * @throws twitter4j.TwitterException when Twitter service or network is unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/post/statuses/destroy/:id">POST
-     * statuses/destroy/:id | Twitter Developers</a>
-     * @since 1.0.5
-     */
-    Status destroyStatus(long statusId) throws TwitterException;
+    @POST("/statuses/destroy/{id}.json")
+    Status destroyStatus(@Path("id") long statusId) throws TwitterException;
 
     IDs getRetweetersIDs(long statusId) throws TwitterException;
 
@@ -83,69 +78,18 @@ public interface TweetResources {
 
     int reportSpam(long statusId, ReportAs reportAs, boolean blockUser) throws TwitterException;
 
-    /**
-     * Retweets a tweet. Returns the original tweet with retweet details
-     * embedded. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/retweet
-     *
-     * @param statusId The ID of the status to retweet.
-     * @return the retweeted status
-     * @throws twitter4j.TwitterException when Twitter service or network is unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/post/statuses/retweet/:id">POST
-     * statuses/retweet/:id | Twitter Developers</a>
-     * @since Twitter4J 2.0.10
-     */
-    Status retweetStatus(long statusId) throws TwitterException;
+    @POST("/statuses/retweet/{id}.json")
+    Status retweetStatus(@Path("id") long statusId) throws TwitterException;
 
-    /**
-     * Returns a single status, specified by the id parameter below. The
-     * status's author will be returned inline. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/show
-     *
-     * @param id the numerical ID of the status you're trying to retrieve
-     * @return a single status
-     * @throws twitter4j.TwitterException when Twitter service or network is
-     *                                    unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/get/statuses/show/:id">GET
-     * statuses/show/:id | Twitter Developers</a>
-     * @since Twitter4J 2.0.1
-     */
-    Status showStatus(long id) throws TwitterException;
+    @GET("/statuses/show.json")
+    Status showStatus(@Query("id") long id) throws TwitterException;
 
-    /**
-     * Updates the authenticating user's status. A status update with text
-     * identical to the authenticating user's text identical to the
-     * authenticating user's current status will be ignored to prevent
-     * duplicates. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/update or<br>
-     * This method calls https://upload.twitter.com/1/statuses/update_with_media
-     *
-     * @param latestStatus the latest status to be updated.
-     * @return the latest status
-     * @throws twitter4j.TwitterException when Twitter service or network is unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/post/statuses/update">POST
-     * statuses/update | Twitter Developers</a>
-     * @since Twitter4J 2.1.1
-     */
-    Status updateStatus(StatusUpdate latestStatus) throws TwitterException;
+    @POST("/statuses/update.json")
+    @Body(BodyType.FORM)
+    Status updateStatus(@Form({"status", "in_reply_to_status_id", "possibly_sensitive", "lat",
+            "long", "place_id", "display_coordinates", "media_ids"}) StatusUpdate latestStatus) throws TwitterException;
 
-    /**
-     * Updates the authenticating user's status. A status update with text
-     * identical to the authenticating user's text identical to the
-     * authenticating user's current status will be ignored to prevent
-     * duplicates. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/update
-     *
-     * @param status the text of your status update
-     * @return the latest status
-     * @throws twitter4j.TwitterException when Twitter service or network is unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/post/statuses/update">POST
-     * statuses/update | Twitter Developers</a>
-     * @since Twitter4J 2.0.1
-     */
-    Status updateStatus(String status) throws TwitterException;
+    @POST("/statuses/update.json")
+    @Body(BodyType.FORM)
+    Status updateStatus(@Form("status") String status) throws TwitterException;
 }

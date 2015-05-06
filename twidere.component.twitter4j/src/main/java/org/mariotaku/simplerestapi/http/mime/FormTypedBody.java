@@ -1,9 +1,8 @@
 package org.mariotaku.simplerestapi.http.mime;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.ContentType;
-import org.mariotaku.simplerestapi.http.KeyValuePair;
-import org.mariotaku.simplerestapi.http.mime.TypedData;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,10 +16,10 @@ import java.util.List;
  */
 public class FormTypedBody implements TypedData {
 
-    private final List<KeyValuePair> forms;
+    private final List<Pair<String, String>> forms;
     private final Charset charset;
 
-    public FormTypedBody(List<KeyValuePair> forms) {
+    public FormTypedBody(List<Pair<String, String>> forms) {
         this.forms = forms;
         this.charset = Charset.forName("UTF-8");
     }
@@ -44,7 +43,7 @@ public class FormTypedBody implements TypedData {
             if (i != 0) {
                 sb.append('&');
             }
-            final KeyValuePair form = forms.get(i);
+            final Pair<String, String> form = forms.get(i);
             sb.append(Utils.encode(form.getKey(), charset.name()));
             sb.append('=');
             sb.append(Utils.encode(form.getValue(), charset.name()));

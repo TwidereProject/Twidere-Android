@@ -30,7 +30,6 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
-import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.http.KeyValuePair;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
@@ -59,7 +58,6 @@ public class OkHttpRestClient implements RestHttpClient {
 
     @Override
     public RestResponse execute(RestRequest restRequest) throws IOException {
-        final Authorization authorization = restRequest.getAuthorization();
         final Request.Builder builder = new Request.Builder();
         builder.url(restRequest.getUrl());
         builder.method(restRequest.getMethod(), RestToOkBody.wrap(restRequest.getBody()));
@@ -69,11 +67,6 @@ public class OkHttpRestClient implements RestHttpClient {
                 builder.addHeader(header.getKey(), header.getValue());
             }
         }
-        if (authorization != null && authorization.hasAuthorization()) {
-            builder.header("Authorization", authorization.getHeader(restRequest.getEndpoint(),
-                    restRequest.getRestMethodInfo()));
-        }
-        builder.header("Accept-Encoding", "gzip; q=1.0, *; q=0.5");
         final Call call = client.newCall(builder.build());
         return new OkRestResponse(call.execute());
     }
@@ -131,13 +124,9 @@ public class OkHttpRestClient implements RestHttpClient {
         }
 
         @Override
-        public KeyValuePair[] getHeaders(String name) {
+        public String[] getHeaders(String name) {
             final List<String> values = response.headers(name);
-            final KeyValuePair[] headers = new KeyValuePair[values.size()];
-            for (int i = 0, j = headers.length; i < j; i++) {
-                headers[i] = new KeyValuePair(name, values.get(i));
-            }
-            return headers;
+            return values.toArray(new String[values.size()]);
         }
 
         @Override

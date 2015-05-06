@@ -1,8 +1,8 @@
 package org.mariotaku.simplerestapi;
 
 import org.mariotaku.simplerestapi.http.Authorization;
-import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.Endpoint;
+import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
 
@@ -21,6 +21,7 @@ public class RestAPIFactory {
     private Authorization authorization;
     private Converter converter;
     private RestHttpClient restClient;
+    private RestRequest.Factory requestFactory;
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
@@ -38,6 +39,10 @@ public class RestAPIFactory {
         this.restClient = restClient;
     }
 
+    public void setRequestFactory(RestRequest.Factory factory) {
+        this.requestFactory = factory;
+    }
+
     public RestAPIFactory() {
 
     }
@@ -47,13 +52,14 @@ public class RestAPIFactory {
         final ClassLoader classLoader = cls.getClassLoader();
         final Class[] interfaces = new Class[]{cls};
         return (T) Proxy.newProxyInstance(classLoader, interfaces, new RestInvocationHandler(endpoint,
-                authorization, restClient, converter));
+                authorization, restClient, converter, requestFactory));
     }
 
     private static class RestInvocationHandler implements InvocationHandler, org.mariotaku.simplerestapi.RestClient {
         private final Endpoint endpoint;
         private final Authorization authorization;
         private final Converter converter;
+        private final RestRequest.Factory requestFactory;
 
         @Override
         public Endpoint getEndpoint() {
@@ -77,20 +83,19 @@ public class RestAPIFactory {
 
         private final RestHttpClient restClient;
 
-        public RestInvocationHandler(Endpoint endpoint, Authorization authorization, RestHttpClient restClient, Converter converter) {
+        public RestInvocationHandler(Endpoint endpoint, Authorization authorization, RestHttpClient restClient, Converter converter, RestRequest.Factory requestFactory) {
             this.endpoint = endpoint;
             this.authorization = authorization;
             this.restClient = restClient;
             this.converter = converter;
+            this.requestFactory = requestFactory != null ? requestFactory : new RestRequest.DefaultFactory();
         }
 
+        @SuppressWarnings("TryWithIdenticalCatches")
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) {
             final RestMethodInfo methodInfo = RestMethodInfo.get(method, args);
-            final RestMethod restMethod = methodInfo.getMethod();
-            final String url = Endpoint.constructUrl(endpoint.getUrl(), methodInfo);
-            final RestRequest restRequest = new RestRequest(restMethod.value(), url, methodInfo.getHeaders(), methodInfo.getBody(),
-                    endpoint, methodInfo, authorization);
+            final RestRequest restRequest = requestFactory.create(endpoint, methodInfo, authorization);
             final Class<?>[] parameterTypes = method.getParameterTypes();
             RestResponse response = null;
             try {
@@ -126,7 +131,11 @@ public class RestAPIFactory {
                     }
                 }
                 throw re;
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             } finally {
                 Utils.closeSilently(response);

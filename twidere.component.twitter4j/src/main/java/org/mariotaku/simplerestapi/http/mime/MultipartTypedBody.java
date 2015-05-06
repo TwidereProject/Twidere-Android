@@ -19,27 +19,36 @@
 
 package org.mariotaku.simplerestapi.http.mime;
 
+import android.support.annotation.NonNull;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.http.ContentType;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by mariotaku on 15/5/5.
  */
 public class MultipartTypedBody implements TypedData {
-    private final TypedData[] parts;
+    private List<Pair<String, TypedData>> parts;
     private boolean lengthSet;
     private long length;
 
-    public MultipartTypedBody(List<TypedData> parts) {
-        this(parts.toArray(new TypedData[parts.size()]));
+    public MultipartTypedBody(List<Pair<String, TypedData>> parts) {
+        this.parts = (parts);
     }
 
-    public MultipartTypedBody(TypedData... parts) {
-        this.parts = parts;
+    public MultipartTypedBody() {
+        this(new ArrayList<Pair<String, TypedData>>());
+    }
+
+    public void add(@NonNull String name, @NonNull TypedData data) {
+        parts.add(new ImmutablePair<>(name, data));
     }
 
     @Override
@@ -56,8 +65,8 @@ public class MultipartTypedBody implements TypedData {
     public long length() throws IOException {
         if (!lengthSet) {
             length = 0;
-            for (TypedData part : parts) {
-                length += part.length();
+            for (Pair<String, TypedData> part : parts) {
+                length += part.getValue().length();
             }
             lengthSet = true;
         }
@@ -66,8 +75,8 @@ public class MultipartTypedBody implements TypedData {
 
     @Override
     public void writeTo(OutputStream os) throws IOException {
-        for (TypedData part : parts) {
-            part.writeTo(os);
+        for (Pair<String, TypedData> part : parts) {
+            part.getValue().writeTo(os);
         }
     }
 
@@ -78,8 +87,8 @@ public class MultipartTypedBody implements TypedData {
 
     @Override
     public void close() throws IOException {
-        for (TypedData part : parts) {
-            part.close();
+        for (Pair<String, TypedData> part : parts) {
+            part.getValue().close();
         }
     }
 }

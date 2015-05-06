@@ -10,7 +10,9 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/2/4.
  */
-public class ContentType {
+public final class ContentType {
+
+    public static final ContentType OCTET_STREAM = ContentType.parse("application/octet-stream");
 
     private final String contentType;
     private final List<KeyValuePair> parameters;
