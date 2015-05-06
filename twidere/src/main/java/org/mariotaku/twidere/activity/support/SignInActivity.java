@@ -61,6 +61,7 @@ import com.meizu.flyme.reflect.StatusBarProxy;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
+import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -79,7 +80,6 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
@@ -89,6 +89,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.TwitterOAuth;
 import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -382,7 +383,6 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         final boolean ignore_ssl_error = mPreferences.getBoolean(KEY_IGNORE_SSL_ERROR, false);
         final boolean enable_proxy = mPreferences.getBoolean(KEY_ENABLE_PROXY, false);
         cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
-        cb.setHttpClientFactory(new OkHttpClientFactory(mApplication));
         Utils.setClientUserAgent(this, mConsumerKey, mConsumerSecret, cb);
         final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
         final String versionSuffix = mNoVersionSuffix ? null : "/1.1/";
@@ -615,40 +615,40 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     public static class BrowserSignInTask extends AbstractSignInTask {
 
         private final Configuration conf;
-        private final String request_token, request_token_secret, oauth_verifier;
+        private final String requestToken, requestTokenSecret, oauthVerifier;
 
         private final Context context;
-        private final String api_url_format;
-        private final boolean same_oauth_signing_url, no_version_suffix;
+        private final String apiUrlFormat;
+        private final boolean sameOauthSigningUrl, noVersionSuffix;
 
         public BrowserSignInTask(final SignInActivity context, final Configuration conf,
-                                 final String request_token, final String request_token_secret,
-                                 final String oauth_verifier, final String api_url_format,
-                                 final boolean same_oauth_signing_url, final boolean no_version_suffix) {
+                                 final String requestToken, final String requestTokenSecret,
+                                 final String oauthVerifier, final String apiUrlFormat,
+                                 final boolean sameOauthSigningUrl, final boolean noVersionSuffix) {
             super(context, conf);
             this.context = context;
             this.conf = conf;
-            this.request_token = request_token;
-            this.request_token_secret = request_token_secret;
-            this.oauth_verifier = oauth_verifier;
-            this.api_url_format = api_url_format;
-            this.same_oauth_signing_url = same_oauth_signing_url;
-            this.no_version_suffix = no_version_suffix;
+            this.requestToken = requestToken;
+            this.requestTokenSecret = requestTokenSecret;
+            this.oauthVerifier = oauthVerifier;
+            this.apiUrlFormat = apiUrlFormat;
+            this.sameOauthSigningUrl = sameOauthSigningUrl;
+            this.noVersionSuffix = noVersionSuffix;
         }
 
         @Override
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 final Twitter twitter = new TwitterFactory(conf).getInstance();
-                final OAuthToken access_token = twitter.getOAuthOAuthToken(new RequestToken(conf, request_token,
-                        request_token_secret), oauth_verifier);
-                final long userId = access_token.getUserId();
+                final OAuthToken accessToken = twitter.getAccessToken(new OAuthToken(requestToken,
+                        requestTokenSecret), oauthVerifier);
+                final long userId = accessToken.getUserId();
                 if (userId <= 0) return new SignInResponse(false, false, null);
                 final User user = twitter.verifyCredentials();
                 if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
                 final int color = analyseUserProfileColor(user);
-                return new SignInResponse(conf, access_token, user, Accounts.AUTH_TYPE_OAUTH, color,
-                        api_url_format, same_oauth_signing_url, no_version_suffix);
+                return new SignInResponse(conf, accessToken, user, Accounts.AUTH_TYPE_OAUTH, color,
+                        apiUrlFormat, sameOauthSigningUrl, noVersionSuffix);
             } catch (final TwitterException e) {
                 return new SignInResponse(false, false, e);
             }
@@ -732,7 +732,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
             final Twitter twitter = new TwitterFactory(conf).getInstance();
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(twitter);
-            final OAuthToken access_token = authenticator.getOAuthOAuthToken(username, password);
+            final OAuthToken access_token = authenticator.getOAuthAccessToken(username, password);
             final long user_id = access_token.getUserId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             final User user = twitter.verifyCredentials();
@@ -754,7 +754,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
 
         private SignInResponse authxAuth() throws TwitterException {
             final Twitter twitter = new TwitterFactory(conf).getInstance();
-            final OAuthToken OAuthToken = twitter.getOAuthOAuthToken(username, password);
+            final OAuthToken OAuthToken = twitter.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);
             final User user = twitter.verifyCredentials();
             final long user_id = user.getId();
             if (user_id <= 0) return new SignInResponse(false, false, null);

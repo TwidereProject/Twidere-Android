@@ -1,6 +1,7 @@
 package org.mariotaku.simplerestapi.http;
 
-import org.apache.commons.lang3.tuple.Pair;
+import android.util.Pair;
+
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.Utils;
 
@@ -57,9 +58,9 @@ public class Endpoint {
         for (int i = 0, j = queries.size(); i < j; i++) {
             final Pair<String, String> item = queries.get(i);
             urlBuilder.append(i != 0 ? '&' : '?');
-            urlBuilder.append(Utils.encode(item.getKey(), "UTF-8"));
+            urlBuilder.append(Utils.encode(item.first, "UTF-8"));
             urlBuilder.append('=');
-            urlBuilder.append(Utils.encode(item.getValue(), "UTF-8"));
+            urlBuilder.append(Utils.encode(item.second, "UTF-8"));
         }
         return urlBuilder.toString();
     }

@@ -47,7 +47,6 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -56,7 +55,6 @@ import java.io.StringReader;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
-import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -238,7 +236,6 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
             final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET,
                     TWITTER_CONSUMER_SECRET_3);
             cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
-            cb.setHttpClientFactory(new OkHttpClientFactory(mApplication));
             Utils.setClientUserAgent(mActivity, consumerKey, consumerSecret, cb);
             cb.setRestBaseURL(DEFAULT_REST_BASE_URL);
             cb.setOAuthBaseURL(DEFAULT_OAUTH_BASE_URL);
@@ -263,8 +260,8 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
             }
             try {
                 final Twitter twitter = new TwitterFactory(cb.build()).getInstance();
-                return twitter.getOAuthRequestToken(OAUTH_CALLBACK_OOB);
-            } catch (final TwitterException e) {
+                return twitter.getRequestToken(OAUTH_CALLBACK_OOB);
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -281,7 +278,8 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
                 }
                 return;
             }
-            mActivity.loadUrl(data.getAuthorizationURL());
+            //TODO
+//            mActivity.loadUrl(data.getAuthorizationURL());
         }
 
         @Override

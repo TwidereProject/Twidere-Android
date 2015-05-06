@@ -73,6 +73,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
@@ -98,7 +99,7 @@ import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
 import static org.mariotaku.twidere.util.Utils.getImagePathFromUri;
 import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 
 public class BackgroundOperationService extends IntentService implements Constants {
 
@@ -396,7 +397,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     private SingleResponse<ParcelableDirectMessage> sendDirectMessage(final NotificationCompat.Builder builder,
                                                                       final long accountId, final long recipientId,
                                                                       final String text, final String imageUri) {
-        final Twitter twitter = getTwitterInstance(this, accountId, true, true);
+        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, accountId, true, true);
         if (twitter == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
@@ -516,7 +517,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
             }
             for (final ParcelableAccount account : statusUpdate.accounts) {
-                final Twitter twitter = getTwitterInstance(this, account.account_id, true, true);
+                final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true);
                 final StatusUpdate status = new StatusUpdate(shortenedText);
                 status.setInReplyToStatusId(statusUpdate.in_reply_to_status_id);
                 if (statusUpdate.location != null) {

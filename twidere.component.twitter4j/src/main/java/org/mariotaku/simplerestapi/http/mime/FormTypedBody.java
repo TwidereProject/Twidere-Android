@@ -1,6 +1,8 @@
 package org.mariotaku.simplerestapi.http.mime;
 
-import org.apache.commons.lang3.tuple.Pair;
+import android.support.annotation.NonNull;
+import android.util.Pair;
+
 import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.ContentType;
 
@@ -44,9 +46,9 @@ public class FormTypedBody implements TypedData {
                 sb.append('&');
             }
             final Pair<String, String> form = forms.get(i);
-            sb.append(Utils.encode(form.getKey(), charset.name()));
+            sb.append(Utils.encode(form.first, charset.name()));
             sb.append('=');
-            sb.append(Utils.encode(form.getValue(), charset.name()));
+            sb.append(Utils.encode(form.second, charset.name()));
         }
         bytes = sb.toString().getBytes(charset);
     }
@@ -58,11 +60,12 @@ public class FormTypedBody implements TypedData {
     }
 
     @Override
-    public void writeTo(OutputStream os) throws IOException {
+    public void writeTo(@NonNull OutputStream os) throws IOException {
         toRawBytes();
         os.write(bytes);
     }
 
+    @NonNull
     @Override
     public InputStream stream() {
         toRawBytes();

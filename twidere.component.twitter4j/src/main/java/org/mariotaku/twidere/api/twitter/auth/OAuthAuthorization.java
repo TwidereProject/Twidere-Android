@@ -20,9 +20,8 @@
 package org.mariotaku.twidere.api.twitter.auth;
 
 import android.util.Base64;
+import android.util.Pair;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.Utils;
@@ -35,6 +34,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -81,12 +81,12 @@ public class OAuthAuthorization implements Authorization {
         }
         if (queries != null) {
             for (Pair<String, String> query : queries) {
-                encodeParams.add(encodeParameter(query.getKey(), query.getValue()));
+                encodeParams.add(encodeParameter(query.first, query.second));
             }
         }
         if (forms != null) {
             for (Pair<String, String> form : forms) {
-                encodeParams.add(encodeParameter(form.getKey(), form.getValue()));
+                encodeParams.add(encodeParameter(form.first, form.second));
             }
         }
         Collections.sort(encodeParams);
@@ -138,16 +138,21 @@ public class OAuthAuthorization implements Authorization {
         final String oauthSignature = generateOAuthSignature(method, url, oauthNonce, timestamp, oauthToken,
                 oauthTokenSecret, request.getQueries(), request.getForms());
         final List<Pair<String, String>> encodeParams = new ArrayList<>();
-        encodeParams.add(new ImmutablePair<>("oauth_consumer_key", consumerKey));
-        encodeParams.add(new ImmutablePair<>("oauth_nonce", oauthNonce));
-        encodeParams.add(new ImmutablePair<>("oauth_signature", encode(oauthSignature)));
-        encodeParams.add(new ImmutablePair<>("oauth_signature_method", OAUTH_SIGNATURE_METHOD));
-        encodeParams.add(new ImmutablePair<>("oauth_timestamp", String.valueOf(timestamp)));
-        encodeParams.add(new ImmutablePair<>("oauth_version", OAUTH_VERSION));
+        encodeParams.add(Pair.create("oauth_consumer_key", consumerKey));
+        encodeParams.add(Pair.create("oauth_nonce", oauthNonce));
+        encodeParams.add(Pair.create("oauth_signature", encode(oauthSignature)));
+        encodeParams.add(Pair.create("oauth_signature_method", OAUTH_SIGNATURE_METHOD));
+        encodeParams.add(Pair.create("oauth_timestamp", String.valueOf(timestamp)));
+        encodeParams.add(Pair.create("oauth_version", OAUTH_VERSION));
         if (oauthToken != null) {
-            encodeParams.add(new ImmutablePair<>("oauth_token", oauthToken));
+            encodeParams.add(Pair.create("oauth_token", oauthToken));
         }
-        Collections.sort(encodeParams);
+        Collections.sort(encodeParams, new Comparator<Pair<String, String>>() {
+            @Override
+            public int compare(Pair<String, String> lhs, Pair<String, String> rhs) {
+                return lhs.first.compareTo(rhs.first);
+            }
+        });
         final StringBuilder headerBuilder = new StringBuilder();
         headerBuilder.append("OAuth ");
         for (int i = 0, j = encodeParams.size(); i < j; i++) {
@@ -155,9 +160,9 @@ public class OAuthAuthorization implements Authorization {
                 headerBuilder.append(", ");
             }
             final Pair<String, String> keyValuePair = encodeParams.get(i);
-            headerBuilder.append(keyValuePair.getKey());
+            headerBuilder.append(keyValuePair.first);
             headerBuilder.append("=\"");
-            headerBuilder.append(keyValuePair.getValue());
+            headerBuilder.append(keyValuePair.second);
             headerBuilder.append('\"');
         }
         return headerBuilder.toString();

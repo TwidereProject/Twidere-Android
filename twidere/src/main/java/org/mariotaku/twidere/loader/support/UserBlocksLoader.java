@@ -25,7 +25,6 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-import twitter4j.CursorPaging;
 import twitter4j.PageableResponseList;
 import twitter4j.Paging;
 import twitter4j.Twitter;

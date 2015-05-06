@@ -39,6 +39,26 @@ public class Paging implements ValueMap {
         this.cursor = cursor;
     }
 
+    public long getSinceId() {
+        return sinceId;
+    }
+
+    public long getMaxId() {
+        return maxId;
+    }
+
+    public long getCursor() {
+        return cursor;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
     public Paging sinceId(long sinceId) {
         this.sinceId = sinceId;
         return this;

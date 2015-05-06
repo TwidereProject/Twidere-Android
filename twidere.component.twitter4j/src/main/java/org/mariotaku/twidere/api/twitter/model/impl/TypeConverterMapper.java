@@ -19,12 +19,15 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 15/5/5.
@@ -49,5 +52,22 @@ public class TypeConverterMapper<T> implements TypeConverter<T> {
 
     public static <T> void register(Class<T> cls, Class<? extends T> impl) {
         LoganSquare.registerTypeConverter(cls, new TypeConverterMapper<>(impl));
+        try {
+            //noinspection unchecked
+            final Field objectMappersField = LoganSquare.class.getDeclaredField("OBJECT_MAPPERS");
+            objectMappersField.setAccessible(true);
+            final Map<Class, JsonMapper> mappers = (Map<Class, JsonMapper>) objectMappersField.get(null);
+            mappers.put(cls, (JsonMapper) Class.forName(impl.getName() + "$$JsonObjectMapper").newInstance());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
 }

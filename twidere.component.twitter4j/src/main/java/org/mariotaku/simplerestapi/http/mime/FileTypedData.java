@@ -19,6 +19,8 @@
 
 package org.mariotaku.simplerestapi.http.mime;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.ContentType;
 
@@ -52,10 +54,11 @@ public class FileTypedData implements TypedData {
     }
 
     @Override
-    public void writeTo(OutputStream os) throws IOException {
+    public void writeTo(@NonNull OutputStream os) throws IOException {
         Utils.copyStream(stream(), os);
     }
 
+    @NonNull
     @Override
     public InputStream stream() throws IOException {
         if (stream != null) return stream;

@@ -17,21 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j.api;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.simplerestapi.method.GET;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import twitter4j.ResponseList;
-import twitter4j.SavedSearch;
-import twitter4j.TwitterException;
+import twitter4j.DirectMessage;
 
-public interface SavedSearchesResources {
-    SavedSearch createSavedSearch(String query) throws TwitterException;
-
-    SavedSearch destroySavedSearch(int id) throws TwitterException;
-
-    @GET("/saved_searches/list.json")
-    ResponseList<SavedSearch> getSavedSearches() throws TwitterException;
-
-    SavedSearch showSavedSearch(int id) throws TwitterException;
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+@JsonObject
+public class DirectMessageImpl  {
 }

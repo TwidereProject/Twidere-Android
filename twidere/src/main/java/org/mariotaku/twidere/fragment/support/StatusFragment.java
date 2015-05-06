@@ -108,6 +108,7 @@ import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -1011,7 +1012,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 ParcelableStatus status = params[0];
                 final long accountId = status.account_id;
                 if (Utils.isOfficialKeyAccount(context, accountId)) {
-                    final Twitter twitter = Utils.getTwitterInstance(context, accountId, true);
+                    final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, accountId, true);
                     while (status.in_reply_to_status_id > 0 && !isCancelled()) {
                         final ParcelableStatus cached = Utils.findStatusInDatabases(context, accountId, status.in_reply_to_status_id);
                         if (cached == null) break;

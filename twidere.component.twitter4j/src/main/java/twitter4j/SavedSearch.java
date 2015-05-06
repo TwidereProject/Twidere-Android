@@ -16,6 +16,8 @@
 
 package twitter4j;
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,7 +27,7 @@ import java.util.Date;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.0.8
  */
-public interface SavedSearch extends Comparable<SavedSearch>, TwitterResponse, Serializable {
+public interface SavedSearch extends Comparable<SavedSearch>, TwitterResponse {
 	Date getCreatedAt();
 
 	int getId();

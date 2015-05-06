@@ -20,9 +20,8 @@
 package org.mariotaku.simplerestapi.http.mime;
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.http.ContentType;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class MultipartTypedBody implements TypedData {
     }
 
     public void add(@NonNull String name, @NonNull TypedData data) {
-        parts.add(new ImmutablePair<>(name, data));
+        parts.add(Pair.create(name, data));
     }
 
     @Override
@@ -66,7 +65,7 @@ public class MultipartTypedBody implements TypedData {
         if (!lengthSet) {
             length = 0;
             for (Pair<String, TypedData> part : parts) {
-                length += part.getValue().length();
+                length += part.second.length();
             }
             lengthSet = true;
         }
@@ -74,12 +73,13 @@ public class MultipartTypedBody implements TypedData {
     }
 
     @Override
-    public void writeTo(OutputStream os) throws IOException {
+    public void writeTo(@NonNull OutputStream os) throws IOException {
         for (Pair<String, TypedData> part : parts) {
-            part.getValue().writeTo(os);
+            part.second.writeTo(os);
         }
     }
 
+    @NonNull
     @Override
     public InputStream stream() throws IOException {
         return null;
@@ -88,7 +88,7 @@ public class MultipartTypedBody implements TypedData {
     @Override
     public void close() throws IOException {
         for (Pair<String, TypedData> part : parts) {
-            part.getValue().close();
+            part.second.close();
         }
     }
 }

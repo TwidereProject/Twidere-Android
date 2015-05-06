@@ -20,13 +20,12 @@
 package org.mariotaku.twidere.util;
 
 import android.text.TextUtils;
+import android.util.Pair;
 import android.util.Xml;
 
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.RestClient;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
@@ -87,7 +86,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             final HashMap<String, String> inputMap = new HashMap<>();
             final RestRequest.Builder authorizePageBuilder = new RestRequest.Builder();
             authorizePageBuilder.method(GET.METHOD);
-            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", new ImmutablePair<>("oauth_token",
+            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", Pair.create("oauth_token",
                     requestToken.getOauthToken())));
             final RestRequest authorizePageRequest = authorizePageBuilder.build();
             authorizePage = client.execute(authorizePageRequest);
@@ -95,18 +94,18 @@ public class OAuthPasswordAuthenticator implements Constants {
             readInputFromHtml(BaseTypedData.reader(authorizePage.getBody()), inputMap,
                     INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
             final List<Pair<String, String>> params = new ArrayList<>();
-            params.add(new ImmutablePair<>("oauth_token", oauthToken));
-            params.add(new ImmutablePair<>(INPUT_AUTHENTICITY_TOKEN, inputMap.get(INPUT_AUTHENTICITY_TOKEN)));
+            params.add(Pair.create("oauth_token", oauthToken));
+            params.add(Pair.create(INPUT_AUTHENTICITY_TOKEN, inputMap.get(INPUT_AUTHENTICITY_TOKEN)));
             if (inputMap.containsKey(INPUT_REDIRECT_AFTER_LOGIN)) {
-                params.add(new ImmutablePair<>(INPUT_REDIRECT_AFTER_LOGIN, inputMap.get(INPUT_REDIRECT_AFTER_LOGIN)));
+                params.add(Pair.create(INPUT_REDIRECT_AFTER_LOGIN, inputMap.get(INPUT_REDIRECT_AFTER_LOGIN)));
             }
-            params.add(new ImmutablePair<>("session[username_or_email]", username));
-            params.add(new ImmutablePair<>("session[password]", password));
+            params.add(Pair.create("session[username_or_email]", username));
+            params.add(Pair.create("session[password]", password));
             final FormTypedBody authorizationResultBody = new FormTypedBody(params);
             final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
-            requestHeaders.add(new ImmutablePair<>("Origin", "https://twitter.com"));
-            requestHeaders.add(new ImmutablePair<>("Referer", Endpoint.constructUrl("https://twitter.com/oauth/authorize",
-                    new ImmutablePair<>("oauth_token", requestToken.getOauthToken()))));
+            requestHeaders.add(Pair.create("Origin", "https://twitter.com"));
+            requestHeaders.add(Pair.create("Referer", Endpoint.constructUrl("https://twitter.com/oauth/authorize",
+                    Pair.create("oauth_token", requestToken.getOauthToken()))));
 
             final String host = parseUrlHost(endpoint.getUrl());
             for (String cookieHeader : cookieHeaders) {
@@ -115,7 +114,7 @@ public class OAuthPasswordAuthenticator implements Constants {
                         cookie.setVersion(1);
                         cookie.setDomain("twitter.com");
                     }
-                    requestHeaders.add(new ImmutablePair<>("Cookie", cookie.toString()));
+                    requestHeaders.add(Pair.create("Cookie", cookie.toString()));
                 }
             }
             final RestRequest.Builder authorizeResultBuilder = new RestRequest.Builder();

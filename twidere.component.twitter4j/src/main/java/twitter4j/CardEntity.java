@@ -36,12 +36,12 @@ public interface CardEntity extends Serializable {
 
     java.util.Map<String, BindingValue> getBindingValues();
 
-    public interface BindingValue extends Serializable {
+    interface BindingValue extends Serializable {
 
-        public static final String TYPE_STRING = "STRING";
-        public static final String TYPE_IMAGE = "IMAGE";
-        public static final String TYPE_USER = "USER";
-        public static final String TYPE_BOOLEAN = "BOOLEAN";
+        String TYPE_STRING = "STRING";
+        String TYPE_IMAGE = "IMAGE";
+        String TYPE_USER = "USER";
+        String TYPE_BOOLEAN = "BOOLEAN";
 
         String getName();
 
@@ -49,19 +49,19 @@ public interface CardEntity extends Serializable {
     }
 
 
-    public interface UserValue extends BindingValue {
+    interface UserValue extends BindingValue {
         long getUserId();
     }
 
-    public interface StringValue extends BindingValue {
+    interface StringValue extends BindingValue {
         String getValue();
     }
 
-    public interface BooleanValue extends BindingValue {
+    interface BooleanValue extends BindingValue {
         boolean getValue();
     }
 
-    public interface ImageValue extends BindingValue {
+    interface ImageValue extends BindingValue {
         int getWidth();
 
         int getHeight();

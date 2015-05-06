@@ -1,9 +1,8 @@
 package org.mariotaku.simplerestapi;
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.http.ValueMap;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
 import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
@@ -114,12 +113,12 @@ public final class RestMethodInfo {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : form.value()) {
                     if (valueMap.has(key)) {
-                        list.add(new ImmutablePair<>(key, String.valueOf(valueMap.get(key))));
+                        list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
                 for (String key : form.value()) {
-                    list.add(new ImmutablePair<>(key, String.valueOf(value)));
+                    list.add(Pair.create(key, String.valueOf(value)));
                 }
             }
         }
@@ -134,9 +133,9 @@ public final class RestMethodInfo {
             final String[] names = form.value();
             final Object value = entry.getValue();
             if (value instanceof TypedData) {
-                list.add(new ImmutablePair<>(names[0], (TypedData) value));
+                list.add(Pair.create(names[0], (TypedData) value));
             } else if (value != null) {
-                list.add(new ImmutablePair<>(names[0], BaseTypedData.wrap(value)));
+                list.add(Pair.create(names[0], BaseTypedData.wrap(value)));
             }
         }
         return partsCache = list;
@@ -153,12 +152,12 @@ public final class RestMethodInfo {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : form.value()) {
                     if (valueMap.has(key)) {
-                        list.add(new ImmutablePair<>(key, String.valueOf(valueMap.get(key))));
+                        list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
                 for (String key : form.value()) {
-                    list.add(new ImmutablePair<>(key, String.valueOf(value)));
+                    list.add(Pair.create(key, String.valueOf(value)));
                 }
             }
         }
@@ -195,12 +194,12 @@ public final class RestMethodInfo {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : form.value()) {
                     if (valueMap.has(key)) {
-                        list.add(new ImmutablePair<>(key, String.valueOf(valueMap.get(key))));
+                        list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
                 for (String key : form.value()) {
-                    list.add(new ImmutablePair<>(key, String.valueOf(value)));
+                    list.add(Pair.create(key, String.valueOf(value)));
                 }
             }
         }

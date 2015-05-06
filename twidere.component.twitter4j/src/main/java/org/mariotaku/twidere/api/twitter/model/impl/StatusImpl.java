@@ -24,6 +24,8 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.api.twitter.TwitterDateConverter;
+
 import java.util.Arrays;
 import java.util.Date;
 
@@ -44,7 +46,7 @@ import twitter4j.UserMentionEntity;
 @JsonObject
 public class StatusImpl implements Status {
 
-    @JsonField(name = "created_at")
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
 
     @JsonField(name = "id")
@@ -163,7 +165,6 @@ public class StatusImpl implements Status {
 
     @Override
     public Date getCreatedAt() {
-
         return createdAt;
     }
 

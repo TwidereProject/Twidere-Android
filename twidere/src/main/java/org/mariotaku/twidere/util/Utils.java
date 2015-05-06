@@ -131,7 +131,6 @@ import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestResponse;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -141,7 +140,6 @@ import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.auth.XAuthAuthorization;
@@ -222,7 +220,6 @@ import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.util.net.OkHttpClientFactory;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
@@ -265,7 +262,6 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.UserMentionEntity;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -1172,7 +1168,7 @@ public final class Utils implements Constants, TwitterConstants {
         if (context == null) throw new NullPointerException();
         final ParcelableStatus cached = findStatusInDatabases(context, accountId, statusId);
         if (cached != null) return cached;
-        final Twitter twitter = getTwitterInstance(context, accountId, true);
+        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, accountId, true);
         if (twitter == null) throw new TwitterException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
@@ -1764,17 +1760,6 @@ public final class Utils implements Constants, TwitterConstants {
         return context.getResources().getInteger(R.integer.default_text_size);
     }
 
-    public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
-        if (context == null) return null;
-        return getDefaultTwitterInstance(context, includeEntities, true);
-    }
-
-    public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
-                                                    final boolean includeRetweets) {
-        if (context == null) return null;
-        return getTwitterInstance(context, getDefaultAccountId(context), includeEntities, includeRetweets);
-    }
-
     public static String getErrorMessage(final Context context, final CharSequence message) {
         if (context == null) return ParseUtils.parseString(message);
         if (isEmpty(message)) return context.getString(R.string.error_unknown_error);
@@ -1811,51 +1796,6 @@ public final class Utils implements Constants, TwitterConstants {
         return child.getTop();
     }
 
-
-    public static RestHttpClient getHttpClient(final Context context, final int timeoutMillis,
-                                               final boolean ignoreSslError, final Proxy proxy,
-                                               final HostAddressResolverFactory resolverFactory,
-                                               final String userAgent, final boolean twitterClientHeader) {
-        final ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setHttpConnectionTimeout(timeoutMillis);
-        cb.setIgnoreSSLError(ignoreSslError);
-        cb.setIncludeTwitterClientHeader(twitterClientHeader);
-        if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
-            final SocketAddress address = proxy.address();
-            if (address instanceof InetSocketAddress) {
-                cb.setHttpProxyHost(((InetSocketAddress) address).getHostName());
-                cb.setHttpProxyPort(((InetSocketAddress) address).getPort());
-            }
-        }
-        cb.setHostAddressResolverFactory(resolverFactory);
-        if (userAgent != null) {
-            cb.setHttpUserAgent(userAgent);
-        }
-        cb.setHttpClientFactory(new OkHttpClientFactory(context));
-        return new HttpClientWrapper(cb.build());
-    }
-
-    public static RestHttpClient getDefaultHttpClient(final Context context) {
-        if (context == null) return null;
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int timeoutMillis = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10000) * 1000;
-        final Proxy proxy = getProxy(context);
-        final String userAgent = TwidereApplication.getInstance(context).getDefaultUserAgent();
-        final HostAddressResolverFactory resolverFactory = new TwidereHostResolverFactory(
-                TwidereApplication.getInstance(context));
-        return getHttpClient(context, timeoutMillis, true, proxy, resolverFactory, userAgent, false);
-    }
-
-    public static RestHttpClient getImageLoaderHttpClient(final Context context) {
-        if (context == null) return null;
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int timeoutMillis = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10000) * 1000;
-        final Proxy proxy = getProxy(context);
-        final String userAgent = TwidereApplication.getInstance(context).getDefaultUserAgent();
-        final HostAddressResolverFactory resolverFactory = new TwidereHostResolverFactory(
-                TwidereApplication.getInstance(context));
-        return getHttpClient(context, timeoutMillis, true, proxy, resolverFactory, userAgent, false);
-    }
 
     public static String getImageMimeType(final File image) {
         if (image == null) return null;
@@ -2186,38 +2126,6 @@ public final class Utils implements Constants, TwitterConstants {
         return getTwitterProfileImageOfSize(url, "reasonably_small");
     }
 
-    public static RestResponse getRedirectedHttpResponse(@NonNull final RestHttpClient client, @NonNull final String url,
-                                                         final String signUrl, final Authorization auth,
-                                                         final HashMap<String, List<String>> additionalHeaders)
-            throws TwitterException {
-        final ArrayList<String> urls = new ArrayList<>();
-        urls.add(url);
-        RestResponse resp;
-        try {
-            resp = client.get(url, signUrl, auth, additionalHeaders);
-        } catch (final TwitterException te) {
-            if (isRedirected(te.getStatusCode())) {
-                resp = te.getHttpResponse();
-            } else
-                throw te;
-        }
-        while (resp != null && isRedirected(resp.getStatus())) {
-            final String request_url = resp.getHeader("Location");
-            if (request_url == null) return null;
-            if (urls.contains(request_url)) throw new TwitterException("Too many redirects");
-            urls.add(request_url);
-            try {
-                resp = client.get(request_url, request_url, additionalHeaders);
-            } catch (final TwitterException te) {
-                if (isRedirected(te.getStatusCode())) {
-                    resp = te.getHttpResponse();
-                } else
-                    throw te;
-            }
-        }
-        return resp;
-    }
-
     public static int getResId(final Context context, final String string) {
         if (context == null || string == null) return 0;
         Matcher m = PATTERN_RESOURCE_IDENTIFIER.matcher(string);
@@ -2524,103 +2432,6 @@ public final class Utils implements Constants, TwitterConstants {
             return te.getMessage();
     }
 
-    public static Twitter getTwitterInstance(final Context context, final long accountId,
-                                             final boolean includeEntities) {
-        return getTwitterInstance(context, accountId, includeEntities, true);
-    }
-
-
-    @Nullable
-    public static Twitter getTwitterInstance(final Context context, final long accountId,
-                                             final boolean includeEntities,
-                                             final boolean includeRetweets) {
-        if (context == null) return null;
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int connection_timeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10) * 1000;
-        final boolean enableGzip = prefs.getBoolean(KEY_GZIP_COMPRESSING, true);
-        final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
-        final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
-        // Here I use old consumer key/secret because it's default key for older
-        // versions
-        final ParcelableCredentials credentials = ParcelableCredentials.getCredentials(context, accountId);
-        if (credentials == null) return null;
-        final ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
-        cb.setHttpClientFactory(new OkHttpClientFactory(context));
-        cb.setHttpConnectionTimeout(connection_timeout);
-        cb.setGZIPEnabled(enableGzip);
-        cb.setIgnoreSSLError(ignoreSslError);
-        cb.setIncludeCards(true);
-        cb.setCardsPlatform("Android-12");
-//            cb.setModelVersion(7);
-        if (enableProxy) {
-            final String proxy_host = prefs.getString(KEY_PROXY_HOST, null);
-            final int proxy_port = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
-            if (!isEmpty(proxy_host) && proxy_port > 0) {
-                cb.setHttpProxyHost(proxy_host);
-                cb.setHttpProxyPort(proxy_port);
-            }
-        }
-        final String prefConsumerKey = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-        final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
-        final String apiUrlFormat = credentials.api_url_format;
-        final String consumerKey = trim(credentials.consumer_key);
-        final String consumerSecret = trim(credentials.consumer_secret);
-        final boolean sameOAuthSigningUrl = credentials.same_oauth_signing_url;
-        final boolean noVersionSuffix = credentials.no_version_suffix;
-        if (!isEmpty(apiUrlFormat)) {
-            final String versionSuffix = noVersionSuffix ? null : "/1.1/";
-            cb.setRestBaseURL(getApiUrl(apiUrlFormat, "api", versionSuffix));
-            cb.setOAuthBaseURL(getApiUrl(apiUrlFormat, "api", "/oauth/"));
-            cb.setUploadBaseURL(getApiUrl(apiUrlFormat, "upload", versionSuffix));
-            cb.setOAuthAuthorizationURL(getApiUrl(apiUrlFormat, null, null));
-            if (!sameOAuthSigningUrl) {
-                cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
-                cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
-                cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
-            }
-        }
-        setClientUserAgent(context, consumerKey, consumerSecret, cb);
-
-        cb.setIncludeEntitiesEnabled(includeEntities);
-        cb.setIncludeRTsEnabled(includeRetweets);
-        cb.setIncludeReplyCountEnabled(true);
-        cb.setIncludeDescendentReplyCountEnabled(true);
-        switch (credentials.auth_type) {
-            case Accounts.AUTH_TYPE_OAUTH:
-            case Accounts.AUTH_TYPE_XAUTH: {
-                if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
-                    cb.setOAuthConsumerKey(consumerKey);
-                    cb.setOAuthConsumerSecret(consumerSecret);
-                } else if (!isEmpty(prefConsumerKey) && !isEmpty(prefConsumerSecret)) {
-                    cb.setOAuthConsumerKey(prefConsumerKey);
-                    cb.setOAuthConsumerSecret(prefConsumerSecret);
-                } else {
-                    cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
-                    cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
-                }
-                final String token = credentials.oauth_token;
-                final String tokenSecret = credentials.oauth_token_secret;
-                if (isEmpty(token) || isEmpty(tokenSecret)) return null;
-                return new TwitterFactory(cb.build()).getInstance(new OAuthToken(token, tokenSecret));
-            }
-            case Accounts.AUTH_TYPE_BASIC: {
-                final String screenName = credentials.screen_name;
-                final String username = credentials.basic_auth_username;
-                final String loginName = username != null ? username : screenName;
-                final String password = credentials.basic_auth_password;
-                if (isEmpty(loginName) || isEmpty(password)) return null;
-                return new TwitterFactory(cb.build()).getInstance(new BasicAuthorization(loginName, password));
-            }
-            case Accounts.AUTH_TYPE_TWIP_O_MODE: {
-                return new TwitterFactory(cb.build()).getInstance(new EmptyAuthorization());
-            }
-            default: {
-                return null;
-            }
-        }
-    }
 
     public static String getTwitterProfileImageOfSize(final String url, final String size) {
         if (url == null) return null;

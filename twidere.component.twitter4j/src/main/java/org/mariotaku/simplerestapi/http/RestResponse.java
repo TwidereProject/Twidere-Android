@@ -1,6 +1,7 @@
 package org.mariotaku.simplerestapi.http;
 
-import org.apache.commons.lang3.tuple.Pair;
+import android.util.Pair;
+
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 
 import java.io.Closeable;
@@ -22,7 +23,7 @@ public abstract class RestResponse implements Closeable {
         final List<Pair<String, String>> headers = getHeaders();
         if (headers == null) return null;
         for (Pair<String, String> header : headers) {
-            if (header.getKey().equalsIgnoreCase(name)) return header.getValue();
+            if (header.first.equalsIgnoreCase(name)) return header.second;
         }
         return null;
     }
@@ -33,8 +34,8 @@ public abstract class RestResponse implements Closeable {
         if (headers == null) return new String[0];
         final ArrayList<String> result = new ArrayList<>();
         for (Pair<String, String> header : headers) {
-            if (name.equalsIgnoreCase(header.getKey())) {
-                result.add(header.getValue());
+            if (name.equalsIgnoreCase(header.first)) {
+                result.add(header.second);
             }
         }
         return result.toArray(new String[result.size()]);

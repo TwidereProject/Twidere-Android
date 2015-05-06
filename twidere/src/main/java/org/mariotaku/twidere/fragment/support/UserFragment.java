@@ -125,6 +125,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -436,15 +437,18 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final SupportTabSpec spec = mPagerAdapter.getTab(mViewPager.getCurrentItem());
         switch (spec.type) {
             case TAB_TYPE_STATUSES: {
-                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_statuses, user.statuses_count, user.statuses_count));
+                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_statuses,
+                        (int) user.statuses_count, user.statuses_count));
                 break;
             }
             case TAB_TYPE_MEDIA: {
-                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_media, user.media_count, user.media_count));
+                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_media,
+                        (int) user.media_count, user.media_count));
                 break;
             }
             case TAB_TYPE_FAVORITES: {
-                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_favorites, user.favorites_count, user.favorites_count));
+                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_favorites,
+                        (int) user.favorites_count, user.favorites_count));
                 break;
             }
             default: {
@@ -1633,7 +1637,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Override
         public SingleResponse<Relationship> loadInBackground() {
             if (account_id == user_id) return SingleResponse.getInstance();
-            final Twitter twitter = Utils.getTwitterInstance(context, account_id, false);
+            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Relationship relationship = twitter.showFriendship(account_id, user_id);

@@ -29,6 +29,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
@@ -46,7 +47,7 @@ import twitter4j.Paging;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.truncateActivities;
 
 public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoader {
@@ -145,7 +146,7 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
     protected abstract List<Activity> getActivities(Twitter twitter, Paging paging) throws TwitterException;
 
     protected final Twitter getTwitter() {
-        return getTwitterInstance(mContext, mAccountIds, true, true);
+        return TwitterAPIUtils.getTwitterInstance(mContext, mAccountIds, true, true);
     }
 
     protected abstract boolean shouldFilterActivity(final SQLiteDatabase database, final ParcelableActivity activity);

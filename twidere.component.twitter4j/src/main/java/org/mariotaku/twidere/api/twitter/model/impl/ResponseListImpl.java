@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,26 +17,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.net;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import android.content.Context;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import twitter4j.http.HttpClient;
-import twitter4j.http.HttpClientConfiguration;
-import twitter4j.http.HttpClientFactory;
+import twitter4j.RateLimitStatus;
+import twitter4j.ResponseList;
 
 /**
- * Created by mariotaku on 15/1/22.
+ * Created by mariotaku on 15/5/7.
  */
-public class OkHttpClientFactory implements HttpClientFactory {
-    private final Context context;
+public class ResponseListImpl<T> extends ArrayList<T> implements ResponseList<T> {
 
-    public OkHttpClientFactory(Context context) {
-        this.context = context;
+    @Override
+    public int getAccessLevel() {
+        return 0;
+    }
+
+    public ResponseListImpl(int capacity) {
+        super(capacity);
+    }
+
+    public ResponseListImpl() {
+    }
+
+    public ResponseListImpl(Collection<? extends T> collection) {
+        super(collection);
     }
 
     @Override
-    public HttpClient getInstance(HttpClientConfiguration conf) {
-        return new OkHttpClientImpl(context, conf);
+    public RateLimitStatus getRateLimitStatus() {
+        return null;
     }
 }

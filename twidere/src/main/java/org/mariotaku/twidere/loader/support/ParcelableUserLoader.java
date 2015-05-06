@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
 import twitter4j.Twitter;
@@ -41,7 +42,7 @@ import twitter4j.TwitterException;
 import twitter4j.User;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 
 public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<ParcelableUser>> implements Constants {
@@ -75,7 +76,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 return SingleResponse.getInstance(user);
             }
         }
-        final Twitter twitter = getTwitterInstance(context, mAccountId, true);
+        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, mAccountId, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
             final Expression where;

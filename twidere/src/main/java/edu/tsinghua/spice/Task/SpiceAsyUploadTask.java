@@ -10,6 +10,7 @@ import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.method.POST;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
 
     public SpiceAsyUploadTask(final Context context) {
         this.context = context;
-        this.client = Utils.getDefaultHttpClient(context);
+        this.client = TwitterAPIUtils.getDefaultHttpClient(context);
     }
 
 

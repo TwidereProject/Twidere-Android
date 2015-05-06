@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 
 import java.text.Collator;
 import java.util.Comparator;
@@ -49,7 +50,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.api.HelpResources.Language;
 
-import static org.mariotaku.twidere.util.Utils.getDefaultTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIUtils.getDefaultTwitterInstance;
 
 public class TranslationDestinationPreference extends Preference implements Constants, OnClickListener {
 
@@ -171,7 +172,7 @@ public class TranslationDestinationPreference extends Preference implements Cons
 
         @Override
         protected ResponseList<Language> doInBackground(final Object... args) {
-            final Twitter twitter = getDefaultTwitterInstance(getContext(), false);
+            final Twitter twitter = TwitterAPIUtils.getDefaultTwitterInstance(getContext(), false);
             final String pref = mPreferences.getString(KEY_TRANSLATION_DESTINATION, null);
             if (twitter == null) return null;
             try {

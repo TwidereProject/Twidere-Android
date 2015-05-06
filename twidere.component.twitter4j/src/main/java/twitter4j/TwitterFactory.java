@@ -19,13 +19,34 @@
 
 package twitter4j;
 
+import android.net.SSLCertificateSocketFactory;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.internal.Internal;
+import com.squareup.okhttp.internal.Network;
+
+import org.mariotaku.simplerestapi.RestAPIFactory;
 import org.mariotaku.simplerestapi.http.Authorization;
-import org.mariotaku.twidere.api.twitter.TwitterAPIFactory;
+import org.mariotaku.twidere.api.twitter.OkHttpRestClient;
+import org.mariotaku.twidere.api.twitter.TwitterConverter;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
+import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.SocketFactory;
 
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationContext;
+import twitter4j.http.HostAddressResolver;
+import twitter4j.http.HostAddressResolverFactory;
+import twitter4j.http.HttpClientConfiguration;
 
 /**
  * A factory class for Twitter. <br>
@@ -58,17 +79,6 @@ public final class TwitterFactory {
         this.conf = conf;
     }
 
-    /**
-     * Returns a OAuth Authenticated instance.<br>
-     * consumer key and consumer Secret must be provided by
-     * twitter4j.properties, or system properties.<br>
-     * Unlike {@link twitter4j.Twitter#setOAuthAccessToken(twitter4j.auth.AccessToken)} ,
-     * this factory method potentially returns a cached instance.
-     *
-     * @param accessToken access token
-     * @return an instance
-     * @since Twitter4J 2.1.9
-     */
     public Twitter getInstance(final OAuthToken accessToken) {
         final String consumerKey = conf.getOAuthConsumerKey();
         final String consumerSecret = conf.getOAuthConsumerSecret();
@@ -79,7 +89,54 @@ public final class TwitterFactory {
     }
 
     public Twitter getInstance(final Authorization auth) {
-        return TwitterAPIFactory.getInstance(auth);
+        final OAuthEndpoint endpoint = new OAuthEndpoint(conf.getRestBaseURL(), conf.getSigningRestBaseURL());
+        final RestAPIFactory factory = new RestAPIFactory();
+        factory.setClient(new OkHttpRestClient(createHttpClient(conf)));
+        factory.setConverter(new TwitterConverter());
+        factory.setEndpoint(endpoint);
+        factory.setAuthorization(auth);
+        return factory.build(Twitter.class);
     }
 
+    public Twitter getInstance() {
+        return getInstance(new OAuthToken(conf.getOAuthConsumerKey(), conf.getOAuthConsumerSecret()));
+    }
+
+
+    private static OkHttpClient createHttpClient(HttpClientConfiguration conf) {
+        final OkHttpClient client = new OkHttpClient();
+        final boolean ignoreSSLError = conf.isSSLErrorIgnored();
+        final SSLCertificateSocketFactory sslSocketFactory;
+        final HostAddressResolverFactory resolverFactory = conf.getHostAddressResolverFactory();
+        if (ignoreSSLError) {
+            sslSocketFactory = (SSLCertificateSocketFactory) SSLCertificateSocketFactory.getInsecure(0, null);
+        } else {
+            sslSocketFactory = (SSLCertificateSocketFactory) SSLCertificateSocketFactory.getDefault(0, null);
+        }
+//        sslSocketFactory.setTrustManagers(new TrustManager[]{new TwidereTrustManager(context)});
+//        client.setHostnameVerifier(new HostResolvedHostnameVerifier(context, ignoreSSLError));
+        client.setSslSocketFactory(sslSocketFactory);
+        client.setSocketFactory(SocketFactory.getDefault());
+        client.setConnectTimeout(conf.getHttpConnectionTimeout(), TimeUnit.MILLISECONDS);
+
+        if (conf.isProxyConfigured()) {
+            client.setProxy(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(conf.getHttpProxyHost(),
+                    conf.getHttpProxyPort())));
+        }
+        if (resolverFactory != null) {
+            final HostAddressResolver resolver = resolverFactory.getInstance(conf);
+            Internal.instance.setNetwork(client, new Network() {
+                @Override
+                public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {
+                    try {
+                        return resolver.resolve(host);
+                    } catch (IOException e) {
+                        if (e instanceof UnknownHostException) throw (UnknownHostException) e;
+                        throw new UnknownHostException("Unable to resolve address " + e.getMessage());
+                    }
+                }
+            });
+        }
+        return client;
+    }
 }

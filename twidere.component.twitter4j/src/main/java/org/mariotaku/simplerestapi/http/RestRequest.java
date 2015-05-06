@@ -2,9 +2,8 @@ package org.mariotaku.simplerestapi.http;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
@@ -114,7 +113,7 @@ public class RestRequest {
             final ArrayList<Pair<String, String>> headers = new ArrayList<>(methodInfo.getHeaders());
 
             if (authorization != null && authorization.hasAuthorization()) {
-                headers.add(new ImmutablePair<>("Authorization", authorization.getHeader(endpoint, methodInfo)));
+                headers.add(Pair.create("Authorization", authorization.getHeader(endpoint, methodInfo)));
             }
             return new RestRequest(restMethod.value(), url, headers, methodInfo.getBody(), null);
         }

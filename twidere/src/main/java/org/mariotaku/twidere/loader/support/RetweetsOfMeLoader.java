@@ -38,7 +38,7 @@ import static org.mariotaku.twidere.util.Utils.isFiltered;
 
 public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
 
-    private int mTotalItemsCount;
+    private long mTotalItemsCount;
 
     public RetweetsOfMeLoader(final Context context, final long accountId, final long sinceId, final long maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
@@ -46,7 +46,7 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
     }
 
-    public int getTotalItemsCount() {
+    public long getTotalItemsCount() {
         return mTotalItemsCount;
     }
 

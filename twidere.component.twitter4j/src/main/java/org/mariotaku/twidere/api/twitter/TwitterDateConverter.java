@@ -17,21 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j.api;
+package org.mariotaku.twidere.api.twitter;
 
-import org.mariotaku.simplerestapi.method.GET;
+import com.bluelinelabs.logansquare.typeconverters.DateTypeConverter;
 
-import twitter4j.ResponseList;
-import twitter4j.SavedSearch;
-import twitter4j.TwitterException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
-public interface SavedSearchesResources {
-    SavedSearch createSavedSearch(String query) throws TwitterException;
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+public class TwitterDateConverter extends DateTypeConverter {
 
-    SavedSearch destroySavedSearch(int id) throws TwitterException;
+    private final DateFormat mDateFormat;
 
-    @GET("/saved_searches/list.json")
-    ResponseList<SavedSearch> getSavedSearches() throws TwitterException;
+    public TwitterDateConverter() {
+        mDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.ENGLISH);
+    }
 
-    SavedSearch showSavedSearch(int id) throws TwitterException;
+    public DateFormat getDateFormat() {
+        return mDateFormat;
+    }
 }

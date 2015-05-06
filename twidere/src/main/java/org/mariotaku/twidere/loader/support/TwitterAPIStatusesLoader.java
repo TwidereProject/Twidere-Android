@@ -32,6 +32,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.jsonserializer.JSONFileIO;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +49,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.truncateStatuses;
 
 public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
@@ -168,7 +169,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     @Nullable
     protected final Twitter getTwitter() {
-        return getTwitterInstance(mContext, mAccountId, true, true);
+        return TwitterAPIUtils.getTwitterInstance(mContext, mAccountId, true, true);
     }
 
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);

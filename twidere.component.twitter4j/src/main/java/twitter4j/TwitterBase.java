@@ -27,7 +27,7 @@ import twitter4j.conf.Configuration;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.2.0
  */
-public interface TwitterBase {
+public interface TwitterBase extends TwitterOAuth{
 
 	/**
 	 * Registers a RateLimitStatusListener for account associated rate limits

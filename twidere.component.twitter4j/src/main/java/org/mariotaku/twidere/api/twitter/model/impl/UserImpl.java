@@ -25,6 +25,8 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.api.twitter.TwitterDateConverter;
+
 import java.util.Date;
 
 import twitter4j.RateLimitStatus;
@@ -74,7 +76,7 @@ public class UserImpl implements User {
     @JsonField(name = "listed_count")
     long listedCount;
 
-    @JsonField(name = "created_at")
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
 
     @JsonField(name = "favourites_count")

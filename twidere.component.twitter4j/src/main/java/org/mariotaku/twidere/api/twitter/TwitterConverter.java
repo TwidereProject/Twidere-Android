@@ -26,18 +26,37 @@ import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.http.RestResponse;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.api.twitter.model.impl.ResponseListImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.SavedSearchImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.StatusImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.TypeConverterMapper;
+import org.mariotaku.twidere.api.twitter.model.impl.UserImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 
+import twitter4j.ResponseList;
+import twitter4j.SavedSearch;
+import twitter4j.Status;
+import twitter4j.User;
+
 /**
  * Created by mariotaku on 15/5/5.
  */
-class TwitterConverter implements Converter {
+public class TwitterConverter implements Converter {
+
+    static {
+        TypeConverterMapper.register(Status.class, StatusImpl.class);
+        TypeConverterMapper.register(User.class, UserImpl.class);
+        TypeConverterMapper.register(SavedSearch.class, SavedSearchImpl.class);
+//        TypeConverterMapper.register(DirectMessage.class, DirectMessageImpl.class);
+    }
+
     @Override
     public Object convert(RestResponse response, Type type) throws IOException {
         final TypedData body = response.getBody();
@@ -48,7 +67,10 @@ class TwitterConverter implements Converter {
             if (OAuthToken.class.isAssignableFrom(cls)) {
                 final ByteArrayOutputStream os = new ByteArrayOutputStream();
                 body.writeTo(os);
-                Charset charset = contentType.getCharset();
+                Charset charset = contentType != null ? contentType.getCharset() : null;
+                if (charset == null) {
+                    charset = Charset.defaultCharset();
+                }
                 try {
                     return new OAuthToken(os.toString(charset.name()), charset);
                 } catch (ParseException e) {
@@ -56,7 +78,22 @@ class TwitterConverter implements Converter {
                 }
             }
             LoganSquare.parse(stream, cls);
+        } else if (type instanceof ParameterizedType) {
+            final Type rawType = ((ParameterizedType) type).getRawType();
+            if (rawType instanceof Class<?>) {
+                final Class<?> rawClass = (Class<?>) rawType;
+                if (ResponseList.class.isAssignableFrom(rawClass)) {
+                    final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+                    return new ResponseListImpl<>(LoganSquare.parseList(stream, (Class<?>) elementType));
+                }
+            }
         }
-        throw new UnsupportedOperationException();
+        throw new UnsupportedTypeException(type);
+    }
+
+    private class UnsupportedTypeException extends UnsupportedOperationException {
+        public UnsupportedTypeException(Type type) {
+            super("Unsupported type " + type);
+        }
     }
 }

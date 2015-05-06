@@ -45,6 +45,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ import twitter4j.http.HttpResponseCode;
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
-import static org.mariotaku.twidere.util.Utils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 
 public class UserListSelectorActivity extends BaseSupportDialogActivity implements OnClickListener, OnItemClickListener {
 
@@ -248,7 +249,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
-            final Twitter twitter = getTwitterInstance(mActivity, mAccountId, false);
+            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mActivity, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
@@ -319,7 +320,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
-            final Twitter twitter = getTwitterInstance(mActivity, mAccountId, false);
+            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mActivity, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<User> lists = twitter.searchUsers(mName, 1);

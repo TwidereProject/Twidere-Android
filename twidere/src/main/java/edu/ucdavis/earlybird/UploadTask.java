@@ -11,7 +11,7 @@ import org.mariotaku.simplerestapi.http.RestResponse;
 import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.method.POST;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +37,7 @@ public class UploadTask extends AsyncTask<Object, Object, Object> {
 
     public UploadTask(final Context context) {
         this.context = context;
-        this.client = Utils.getDefaultHttpClient(context);
+        this.client = TwitterAPIUtils.getDefaultHttpClient(context);
         device_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
     }
 

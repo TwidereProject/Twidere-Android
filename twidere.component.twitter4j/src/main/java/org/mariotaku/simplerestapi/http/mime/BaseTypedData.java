@@ -1,5 +1,7 @@
 package org.mariotaku.simplerestapi.http.mime;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.io.StreamingGZIPInputStream;
 
@@ -57,7 +59,7 @@ public class BaseTypedData implements TypedData {
     }
 
     @Override
-    public void writeTo(OutputStream os) throws IOException {
+    public void writeTo(@NonNull OutputStream os) throws IOException {
         final byte[] buffer = new byte[8192];
         for (int len; (len = stream.read(buffer)) != -1; ) {
             os.write(buffer, 0, len);
@@ -65,6 +67,7 @@ public class BaseTypedData implements TypedData {
 
     }
 
+    @NonNull
     @Override
     public InputStream stream() {
         return stream;
