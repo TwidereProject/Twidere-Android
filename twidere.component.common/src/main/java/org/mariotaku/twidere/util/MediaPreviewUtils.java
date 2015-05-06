@@ -23,8 +23,8 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.mariotaku.simplerestapi.http.Endpoint;
-import org.mariotaku.simplerestapi.http.KeyValuePair;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
@@ -350,7 +350,7 @@ public class MediaPreviewUtils {
         if (client != null) {
             final RestRequest.Builder builder = new RestRequest.Builder();
             builder.method(GET.METHOD);
-            builder.url(Endpoint.constructUrl(URL_PHOTOZOU_PHOTO_INFO, new KeyValuePair("photo_id", id)));
+            builder.url(Endpoint.constructUrl(URL_PHOTOZOU_PHOTO_INFO, new ImmutablePair<>("photo_id", id)));
             final RestResponse response = client.execute(builder.build());
             final PhotoZouPhotoInfo info = LoganSquare.parse(response.getBody().stream(), PhotoZouPhotoInfo.class);
             if (info.info != null && info.info.photo != null) {

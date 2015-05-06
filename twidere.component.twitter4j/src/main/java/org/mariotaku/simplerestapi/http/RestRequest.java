@@ -3,6 +3,8 @@ package org.mariotaku.simplerestapi.http;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
@@ -17,7 +19,7 @@ public class RestRequest {
 
     private final String method;
     private final String url;
-    private final List<KeyValuePair> headers;
+    private final List<Pair<String, String>> headers;
     private final TypedData body;
     private final Object extra;
 
@@ -29,7 +31,7 @@ public class RestRequest {
         return url;
     }
 
-    public List<KeyValuePair> getHeaders() {
+    public List<Pair<String, String>> getHeaders() {
         return headers;
     }
 
@@ -51,7 +53,7 @@ public class RestRequest {
                 '}';
     }
 
-    public RestRequest(String method, String url, List<KeyValuePair> headers, TypedData body, Object extra) {
+    public RestRequest(String method, String url, List<Pair<String, String>> headers, TypedData body, Object extra) {
         this.method = method;
         this.url = url;
         this.headers = headers;
@@ -62,7 +64,7 @@ public class RestRequest {
     public static final class Builder {
         private String method;
         private String url;
-        private List<KeyValuePair> headers;
+        private List<Pair<String, String>> headers;
         private TypedData body;
         private Object extra;
 
@@ -79,7 +81,7 @@ public class RestRequest {
             return this;
         }
 
-        public Builder headers(List<KeyValuePair> headers) {
+        public Builder headers(List<Pair<String, String>> headers) {
             this.headers = headers;
             return this;
         }
@@ -109,10 +111,10 @@ public class RestRequest {
         public RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo methodInfo, @Nullable Authorization authorization) {
             final RestMethod restMethod = methodInfo.getMethod();
             final String url = Endpoint.constructUrl(endpoint.getUrl(), methodInfo);
-            final ArrayList<KeyValuePair> headers = new ArrayList<>(methodInfo.getHeaders());
+            final ArrayList<Pair<String, String>> headers = new ArrayList<>(methodInfo.getHeaders());
 
             if (authorization != null && authorization.hasAuthorization()) {
-                headers.add(new KeyValuePair("Authorization", authorization.getHeader(endpoint, methodInfo)));
+                headers.add(new ImmutablePair<>("Authorization", authorization.getHeader(endpoint, methodInfo)));
             }
             return new RestRequest(restMethod.value(), url, headers, methodInfo.getBody(), null);
         }

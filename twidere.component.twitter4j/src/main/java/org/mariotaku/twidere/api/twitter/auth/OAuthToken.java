@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.api.twitter.auth;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.Utils;
-import org.mariotaku.simplerestapi.http.KeyValuePair;
 import org.mariotaku.simplerestapi.http.ValueMap;
 
 import java.nio.charset.Charset;
@@ -41,9 +41,9 @@ public class OAuthToken implements ValueMap {
     }
 
     public OAuthToken(String body, Charset charset) throws ParseException {
-        List<KeyValuePair> params = new ArrayList<>();
+        List<Pair<String, String>> params = new ArrayList<>();
         Utils.parseGetParameters(body, params, charset.name());
-        for (KeyValuePair param : params) {
+        for (Pair<String, String> param : params) {
             switch (param.getKey()) {
                 case "oauth_token": {
                     oauthToken = param.getValue();

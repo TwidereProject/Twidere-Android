@@ -25,26 +25,26 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-import twitter4j.CursorPaging;
 import twitter4j.IDs;
+import twitter4j.Paging;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 public class StatusFavoritersLoader extends IDsUsersLoader {
 
-	private final long mStatusId;
+    private final long mStatusId;
 
-	public StatusFavoritersLoader(final Context context, final long accountId, final long statusId,
+    public StatusFavoritersLoader(final Context context, final long accountId, final long statusId,
                                   final long cursor, final List<ParcelableUser> data, boolean fromUser) {
-		super(context, accountId, cursor, data, fromUser);
-		mStatusId = statusId;
-	}
+        super(context, accountId, cursor, data, fromUser);
+        mStatusId = statusId;
+    }
 
-	@Override
-	protected IDs getIDs(final Twitter twitter, final CursorPaging paging) throws TwitterException {
-		if (twitter == null) return null;
-		if (mStatusId > 0) return twitter.getStatusActivitySummary(mStatusId).getFavoriters();
-		return null;
-	}
+    @Override
+    protected IDs getIDs(final Twitter twitter, final Paging paging) throws TwitterException {
+        if (twitter == null) return null;
+        if (mStatusId > 0) return twitter.getStatusActivitySummary(mStatusId).getFavoriters();
+        return null;
+    }
 
 }

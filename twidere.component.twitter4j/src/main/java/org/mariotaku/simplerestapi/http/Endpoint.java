@@ -30,7 +30,8 @@ public class Endpoint {
         return constructUrl(url, path, queries);
     }
 
-    public String construct(String path, Pair<String, String>... queries) {
+    @SafeVarargs
+    public final String construct(String path, Pair<String, String>... queries) {
         return constructUrl(url, path, Arrays.asList(queries));
     }
 
@@ -54,7 +55,7 @@ public class Endpoint {
         if (queries == null || queries.isEmpty()) return url;
         final StringBuilder urlBuilder = new StringBuilder(url);
         for (int i = 0, j = queries.size(); i < j; i++) {
-            final KeyValuePair item = queries.get(i);
+            final Pair<String, String> item = queries.get(i);
             urlBuilder.append(i != 0 ? '&' : '?');
             urlBuilder.append(Utils.encode(item.getKey(), "UTF-8"));
             urlBuilder.append('=');
@@ -63,7 +64,8 @@ public class Endpoint {
         return urlBuilder.toString();
     }
 
-    public static String constructUrl(String url, KeyValuePair... queries) {
+    @SafeVarargs
+    public static String constructUrl(String url, Pair<String, String>... queries) {
         return constructUrl(url, Arrays.asList(queries));
     }
 }

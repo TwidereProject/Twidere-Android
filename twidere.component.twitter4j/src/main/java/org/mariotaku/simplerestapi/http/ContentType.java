@@ -1,6 +1,8 @@
 package org.mariotaku.simplerestapi.http;
 
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.Utils;
 
 import java.nio.charset.Charset;
@@ -15,20 +17,20 @@ public final class ContentType {
     public static final ContentType OCTET_STREAM = ContentType.parse("application/octet-stream");
 
     private final String contentType;
-    private final List<KeyValuePair> parameters;
+    private final List<Pair<String, String>> parameters;
 
     public ContentType(String contentType, Charset charset) {
-        this(contentType, new ArrayList<KeyValuePair>());
-        parameters.add(new KeyValuePair("charset", charset.name()));
+        this(contentType, new ArrayList<Pair<String, String>>());
+        parameters.add(new ImmutablePair<>("charset", charset.name()));
     }
 
-    public ContentType(String contentType, List<KeyValuePair> parameters) {
+    public ContentType(String contentType, List<Pair<String, String>> parameters) {
         this.contentType = contentType;
         this.parameters = parameters;
     }
 
     public static ContentType parse(String string) {
-        final List<KeyValuePair> parameters = new ArrayList<>();
+        final List<Pair<String, String>> parameters = new ArrayList<>();
         int previousIndex = string.indexOf(';', 0);
         String contentType;
         if (previousIndex == -1) {
@@ -45,7 +47,7 @@ public final class ContentType {
                 segs = Utils.split(string.substring(previousIndex + 1, idx).trim(), "=");
             }
             if (segs.length == 2) {
-                parameters.add(new KeyValuePair(segs[0], segs[1]));
+                parameters.add(new ImmutablePair<>(segs[0], segs[1]));
             }
             if (idx < 0) {
                 break;
@@ -65,7 +67,7 @@ public final class ContentType {
 
     public Charset getCharset() {
         if (parameters == null) return null;
-        for (KeyValuePair parameter : parameters) {
+        for (Pair<String, String> parameter : parameters) {
             if ("charset".equals(parameter.getKey())) {
                 return Charset.forName(parameter.getValue());
             }
@@ -79,7 +81,7 @@ public final class ContentType {
 
     public String toHeader() {
         final StringBuilder sb = new StringBuilder(contentType);
-        for (KeyValuePair parameter : parameters) {
+        for (Pair<String, String> parameter : parameters) {
             sb.append("; ");
             sb.append(parameter.getKey());
             sb.append("=");

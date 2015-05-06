@@ -480,7 +480,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
                     }
                     case Accounts.AUTH_TYPE_OAUTH:
                     case Accounts.AUTH_TYPE_XAUTH: {
-                        values = ContentValuesCreator.createAccount(result.conf, result.access_token,
+                        values = ContentValuesCreator.createAccount(result.conf, result.OAuthToken,
                                 result.user, result.auth_type, result.color, result.api_url_format,
                                 result.same_oauth_signing_url, result.no_version_suffix);
                         break;
@@ -640,7 +640,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 final Twitter twitter = new TwitterFactory(conf).getInstance();
-                final OAuthToken access_token = twitter.getOAuthAccessToken(new RequestToken(conf, request_token,
+                final OAuthToken access_token = twitter.getOAuthOAuthToken(new RequestToken(conf, request_token,
                         request_token_secret), oauth_verifier);
                 final long userId = access_token.getUserId();
                 if (userId <= 0) return new SignInResponse(false, false, null);
@@ -732,7 +732,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
             final Twitter twitter = new TwitterFactory(conf).getInstance();
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(twitter);
-            final OAuthToken access_token = authenticator.getOAuthAccessToken(username, password);
+            final OAuthToken access_token = authenticator.getOAuthOAuthToken(username, password);
             final long user_id = access_token.getUserId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             final User user = twitter.verifyCredentials();
@@ -754,13 +754,13 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
 
         private SignInResponse authxAuth() throws TwitterException {
             final Twitter twitter = new TwitterFactory(conf).getInstance();
-            final AccessToken accessToken = twitter.getOAuthAccessToken(username, password);
+            final OAuthToken OAuthToken = twitter.getOAuthOAuthToken(username, password);
             final User user = twitter.verifyCredentials();
             final long user_id = user.getId();
             if (user_id <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(conf, accessToken, user, Accounts.AUTH_TYPE_XAUTH, color,
+            return new SignInResponse(conf, OAuthToken, user, Accounts.AUTH_TYPE_XAUTH, color,
                     api_url_format, same_oauth_signing_url, no_version_suffix);
         }
 
@@ -772,7 +772,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         public final Exception exception;
         public final Configuration conf;
         public final String basic_username, basic_password;
-        public final AccessToken access_token;
+        public final OAuthToken OAuthToken;
         public final User user;
         public final int auth_type, color;
         public final String api_url_format;
@@ -784,7 +784,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
 
         public SignInResponse(final boolean already_logged_in, final boolean succeed, final Exception exception,
                               final Configuration conf, final String basic_username, final String basic_password,
-                              final AccessToken access_token, final User user, final int auth_type, final int color,
+                              final OAuthToken OAuthToken, final User user, final int auth_type, final int color,
                               final String api_url_format, final boolean same_oauth_signing_url, final boolean no_version_suffix) {
             this.already_logged_in = already_logged_in;
             this.succeed = succeed;
@@ -792,7 +792,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             this.conf = conf;
             this.basic_username = basic_username;
             this.basic_password = basic_password;
-            this.access_token = access_token;
+            this.OAuthToken = OAuthToken;
             this.user = user;
             this.auth_type = auth_type;
             this.color = color;
@@ -801,10 +801,10 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             this.no_version_suffix = no_version_suffix;
         }
 
-        public SignInResponse(final Configuration conf, final AccessToken access_token, final User user,
+        public SignInResponse(final Configuration conf, final OAuthToken OAuthToken, final User user,
                               final int auth_type, final int color, final String api_url_format,
                               final boolean same_oauth_signing_url, final boolean no_version_suffix) {
-            this(false, true, null, conf, null, null, access_token, user, auth_type, color, api_url_format,
+            this(false, true, null, conf, null, null, OAuthToken, user, auth_type, color, api_url_format,
                     same_oauth_signing_url, no_version_suffix);
         }
 

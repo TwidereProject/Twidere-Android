@@ -21,12 +21,13 @@ package org.mariotaku.twidere.api.twitter.auth;
 
 import android.util.Base64;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;
-import org.mariotaku.simplerestapi.http.KeyValuePair;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -67,8 +68,8 @@ public class OAuthAuthorization implements Authorization {
     private String generateOAuthSignature(RestMethod method, String url,
                                           String oauthNonce, long timestamp,
                                           String oauthToken, String oauthTokenSecret,
-                                          List<KeyValuePair> queries,
-                                          List<KeyValuePair> forms) {
+                                          List<Pair<String, String>> queries,
+                                          List<Pair<String, String>> forms) {
         final List<String> encodeParams = new ArrayList<>();
         encodeParams.add(encodeParameter("oauth_consumer_key", consumerKey));
         encodeParams.add(encodeParameter("oauth_nonce", oauthNonce));
@@ -79,12 +80,12 @@ public class OAuthAuthorization implements Authorization {
             encodeParams.add(encodeParameter("oauth_token", oauthToken));
         }
         if (queries != null) {
-            for (KeyValuePair query : queries) {
+            for (Pair<String, String> query : queries) {
                 encodeParams.add(encodeParameter(query.getKey(), query.getValue()));
             }
         }
         if (forms != null) {
-            for (KeyValuePair form : forms) {
+            for (Pair<String, String> form : forms) {
                 encodeParams.add(encodeParameter(form.getKey(), form.getValue()));
             }
         }
@@ -136,15 +137,15 @@ public class OAuthAuthorization implements Authorization {
         }
         final String oauthSignature = generateOAuthSignature(method, url, oauthNonce, timestamp, oauthToken,
                 oauthTokenSecret, request.getQueries(), request.getForms());
-        final List<KeyValuePair> encodeParams = new ArrayList<>();
-        encodeParams.add(new KeyValuePair("oauth_consumer_key", consumerKey));
-        encodeParams.add(new KeyValuePair("oauth_nonce", oauthNonce));
-        encodeParams.add(new KeyValuePair("oauth_signature", encode(oauthSignature)));
-        encodeParams.add(new KeyValuePair("oauth_signature_method", OAUTH_SIGNATURE_METHOD));
-        encodeParams.add(new KeyValuePair("oauth_timestamp", String.valueOf(timestamp)));
-        encodeParams.add(new KeyValuePair("oauth_version", OAUTH_VERSION));
+        final List<Pair<String, String>> encodeParams = new ArrayList<>();
+        encodeParams.add(new ImmutablePair<>("oauth_consumer_key", consumerKey));
+        encodeParams.add(new ImmutablePair<>("oauth_nonce", oauthNonce));
+        encodeParams.add(new ImmutablePair<>("oauth_signature", encode(oauthSignature)));
+        encodeParams.add(new ImmutablePair<>("oauth_signature_method", OAUTH_SIGNATURE_METHOD));
+        encodeParams.add(new ImmutablePair<>("oauth_timestamp", String.valueOf(timestamp)));
+        encodeParams.add(new ImmutablePair<>("oauth_version", OAUTH_VERSION));
         if (oauthToken != null) {
-            encodeParams.add(new KeyValuePair("oauth_token", oauthToken));
+            encodeParams.add(new ImmutablePair<>("oauth_token", oauthToken));
         }
         Collections.sort(encodeParams);
         final StringBuilder headerBuilder = new StringBuilder();
@@ -153,7 +154,7 @@ public class OAuthAuthorization implements Authorization {
             if (i != 0) {
                 headerBuilder.append(", ");
             }
-            final KeyValuePair keyValuePair = encodeParams.get(i);
+            final Pair<String, String> keyValuePair = encodeParams.get(i);
             headerBuilder.append(keyValuePair.getKey());
             headerBuilder.append("=\"");
             headerBuilder.append(keyValuePair.getValue());

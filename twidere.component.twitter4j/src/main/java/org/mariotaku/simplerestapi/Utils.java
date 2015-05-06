@@ -19,7 +19,8 @@
 
 package org.mariotaku.simplerestapi;
 
-import org.mariotaku.simplerestapi.http.KeyValuePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -103,7 +104,7 @@ public class Utils {
         return buf.toString();
     }
 
-    public static void parseGetParameters(final String queryString, final List<KeyValuePair> params,
+    public static void parseGetParameters(final String queryString, final List<Pair<String, String>> params,
                                           final String encoding) {
         final String[] queryStrings = split(queryString, "&");
         try {
@@ -111,9 +112,9 @@ public class Utils {
                 final String[] split = split(query, "=");
                 final String key = URLDecoder.decode(split[0], encoding);
                 if (split.length == 2) {
-                    params.add(new KeyValuePair(key, URLDecoder.decode(split[1], encoding)));
+                    params.add(new ImmutablePair<>(key, URLDecoder.decode(split[1], encoding)));
                 } else {
-                    params.add(new KeyValuePair(key, ""));
+                    params.add(new ImmutablePair<>(key, ""));
                 }
             }
         } catch (final UnsupportedEncodingException e) {

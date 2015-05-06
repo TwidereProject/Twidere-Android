@@ -30,8 +30,9 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.http.ContentType;
-import org.mariotaku.simplerestapi.http.KeyValuePair;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
@@ -61,9 +62,9 @@ public class OkHttpRestClient implements RestHttpClient {
         final Request.Builder builder = new Request.Builder();
         builder.url(restRequest.getUrl());
         builder.method(restRequest.getMethod(), RestToOkBody.wrap(restRequest.getBody()));
-        final List<KeyValuePair> headers = restRequest.getHeaders();
+        final List<Pair<String, String>> headers = restRequest.getHeaders();
         if (headers != null) {
-            for (KeyValuePair header : headers) {
+            for (Pair<String, String> header : headers) {
                 builder.addHeader(header.getKey(), header.getValue());
             }
         }
@@ -109,11 +110,11 @@ public class OkHttpRestClient implements RestHttpClient {
         }
 
         @Override
-        public List<KeyValuePair> getHeaders() {
+        public List<Pair<String, String>> getHeaders() {
             final Headers headers = response.headers();
-            final ArrayList<KeyValuePair> headersList = new ArrayList<>();
+            final ArrayList<Pair<String, String>> headersList = new ArrayList<>();
             for (int i = 0, j = headers.size(); i < j; i++) {
-                headersList.add(new KeyValuePair(headers.name(i), headers.value(i)));
+                headersList.add(new ImmutablePair<>(headers.name(i), headers.value(i)));
             }
             return headersList;
         }

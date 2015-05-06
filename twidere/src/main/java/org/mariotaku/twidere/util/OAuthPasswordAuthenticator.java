@@ -25,9 +25,17 @@ import android.util.Xml;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.mariotaku.simplerestapi.RestClient;
+import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
+import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
+import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
+import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.simplerestapi.method.POST;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.xmlpull.v1.XmlPullParser;
@@ -36,18 +44,15 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import twitter4j.TwitterException;
 import twitter4j.TwitterOAuth;
-import twitter4j.conf.Configuration;
-import twitter4j.http.HeaderMap;
-import twitter4j.http.HttpClientWrapper;
-import twitter4j.http.HttpParameter;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -56,19 +61,22 @@ public class OAuthPasswordAuthenticator implements Constants {
     private static final String INPUT_AUTHENTICITY_TOKEN = "authenticity_token";
     private static final String INPUT_REDIRECT_AFTER_LOGIN = "redirect_after_login";
 
-    private final TwitterOAuth twitter;
+    private final TwitterOAuth oauth;
     private final RestHttpClient client;
+    private final Endpoint endpoint;
 
-    public OAuthPasswordAuthenticator(final TwitterOAuth twitter) {
-        final Configuration conf = twitter.getConfiguration();
-        this.twitter = twitter;
-        client = new HttpClientWrapper(conf);
+    public OAuthPasswordAuthenticator(final TwitterOAuth oauth) {
+        final InvocationHandler handler = Proxy.getInvocationHandler(oauth);
+        if (!(handler instanceof RestClient)) throw new IllegalArgumentException();
+        this.oauth = oauth;
+        this.client = ((RestClient) handler).getRestClient();
+        this.endpoint = ((RestClient) handler).getEndpoint();
     }
 
     public OAuthToken getOAuthAccessToken(final String username, final String password) throws AuthenticationException {
         final OAuthToken requestToken;
         try {
-            requestToken = twitter.getRequestToken(OAUTH_CALLBACK_OOB);
+            requestToken = oauth.getRequestToken(OAUTH_CALLBACK_OOB);
         } catch (final Exception e) {
 //            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException();
@@ -76,44 +84,50 @@ public class OAuthPasswordAuthenticator implements Constants {
         RestResponse authorizePage = null, authorizeResult = null;
         try {
             final String oauthToken = requestToken.getOauthToken();
-            final String authorizationUrl = requestToken.getAuthorizationURL();
             final HashMap<String, String> inputMap = new HashMap<>();
-            authorizePage = client.get(authorizationUrl, authorizationUrl, null, null, null);
+            final RestRequest.Builder authorizePageBuilder = new RestRequest.Builder();
+            authorizePageBuilder.method(GET.METHOD);
+            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", new ImmutablePair<>("oauth_token",
+                    requestToken.getOauthToken())));
+            final RestRequest authorizePageRequest = authorizePageBuilder.build();
+            authorizePage = client.execute(authorizePageRequest);
             final String[] cookieHeaders = authorizePage.getHeaders("Set-Cookie");
             readInputFromHtml(BaseTypedData.reader(authorizePage.getBody()), inputMap,
                     INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
-            final Configuration conf = twitter.getConfiguration();
-            final List<HttpParameter> params = new ArrayList<>();
-            params.add(new HttpParameter("oauth_token", oauthToken));
-            params.add(new HttpParameter(INPUT_AUTHENTICITY_TOKEN, inputMap.get(INPUT_AUTHENTICITY_TOKEN)));
+            final List<Pair<String, String>> params = new ArrayList<>();
+            params.add(new ImmutablePair<>("oauth_token", oauthToken));
+            params.add(new ImmutablePair<>(INPUT_AUTHENTICITY_TOKEN, inputMap.get(INPUT_AUTHENTICITY_TOKEN)));
             if (inputMap.containsKey(INPUT_REDIRECT_AFTER_LOGIN)) {
-                params.add(new HttpParameter(INPUT_REDIRECT_AFTER_LOGIN, inputMap.get(INPUT_REDIRECT_AFTER_LOGIN)));
+                params.add(new ImmutablePair<>(INPUT_REDIRECT_AFTER_LOGIN, inputMap.get(INPUT_REDIRECT_AFTER_LOGIN)));
             }
-            params.add(new HttpParameter("session[username_or_email]", username));
-            params.add(new HttpParameter("session[password]", password));
-            final HeaderMap requestHeaders = new HeaderMap();
-            requestHeaders.addHeader("Origin", "https://twitter.com");
-            requestHeaders.addHeader("Referer", "https://twitter.com/oauth/authorize?oauth_token=" + requestToken.getToken());
-            final List<String> modifiedCookieHeaders = new ArrayList<>();
-            final String oAuthAuthorizationUrl = conf.getOAuthAuthorizationURL();
+            params.add(new ImmutablePair<>("session[username_or_email]", username));
+            params.add(new ImmutablePair<>("session[password]", password));
+            final FormTypedBody authorizationResultBody = new FormTypedBody(params);
+            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
+            requestHeaders.add(new ImmutablePair<>("Origin", "https://twitter.com"));
+            requestHeaders.add(new ImmutablePair<>("Referer", Endpoint.constructUrl("https://twitter.com/oauth/authorize",
+                    new ImmutablePair<>("oauth_token", requestToken.getOauthToken()))));
 
-            final String host = parseUrlHost(oAuthAuthorizationUrl);
+            final String host = parseUrlHost(endpoint.getUrl());
             for (String cookieHeader : cookieHeaders) {
                 for (HttpCookie cookie : HttpCookie.parse(cookieHeader)) {
                     if (HttpCookie.domainMatches(cookie.getDomain(), host)) {
                         cookie.setVersion(1);
                         cookie.setDomain("twitter.com");
                     }
-                    modifiedCookieHeaders.add(cookie.toString());
+                    requestHeaders.add(new ImmutablePair<>("Cookie", cookie.toString()));
                 }
             }
-            requestHeaders.put("Cookie", modifiedCookieHeaders);
-            authorizeResult = client.post(oAuthAuthorizationUrl, oAuthAuthorizationUrl,
-                    params.toArray(new HttpParameter[params.size()]), requestHeaders);
-            final String oauthPin = readOAuthPINFromHtml(authorizeResult.asReader());
+            final RestRequest.Builder authorizeResultBuilder = new RestRequest.Builder();
+            authorizeResultBuilder.method(POST.METHOD);
+            authorizeResultBuilder.url(endpoint.construct("/oauth/authorize"));
+            authorizeResultBuilder.headers(requestHeaders);
+            authorizeResultBuilder.body(authorizationResultBody);
+            authorizeResult = client.execute(authorizeResultBuilder.build());
+            final String oauthPin = readOAuthPINFromHtml(BaseTypedData.reader(authorizeResult.getBody()));
             if (isEmpty(oauthPin)) throw new WrongUserPassException();
-            return twitter.getOAuthAccessToken(requestToken, oauthPin);
-        } catch (final IOException | TwitterException | NullPointerException | XmlPullParserException e) {
+            return oauth.getAccessToken(requestToken, oauthPin);
+        } catch (final IOException | NullPointerException | XmlPullParserException e) {
             throw new AuthenticationException(e);
         } finally {
             if (authorizePage != null) {
