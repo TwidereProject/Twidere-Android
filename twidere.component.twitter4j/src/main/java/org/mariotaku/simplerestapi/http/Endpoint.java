@@ -1,5 +1,6 @@
 package org.mariotaku.simplerestapi.http;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.Utils;
 
@@ -25,15 +26,15 @@ public class Endpoint {
         return constructUrl(endpoint, requestInfo.getPath(), requestInfo.getQueries());
     }
 
-    public String construct(String path, List<KeyValuePair> queries) {
+    public String construct(String path, List<Pair<String, String>> queries) {
         return constructUrl(url, path, queries);
     }
 
-    public String construct(String path, KeyValuePair... queries) {
+    public String construct(String path, Pair<String, String>... queries) {
         return constructUrl(url, path, Arrays.asList(queries));
     }
 
-    public static String constructUrl(String endpoint, String path, List<KeyValuePair> queries) {
+    public static String constructUrl(String endpoint, String path, List<Pair<String, String>> queries) {
         final StringBuilder urlBuilder = new StringBuilder();
         if (endpoint.charAt(endpoint.length() - 1) == '/') {
             urlBuilder.append(endpoint.substring(0, endpoint.length() - 1));
@@ -49,7 +50,7 @@ public class Endpoint {
         return constructUrl(urlBuilder.toString(), queries);
     }
 
-    public static String constructUrl(String url, List<KeyValuePair> queries) {
+    public static String constructUrl(String url, List<Pair<String, String>> queries) {
         if (queries == null || queries.isEmpty()) return url;
         final StringBuilder urlBuilder = new StringBuilder(url);
         for (int i = 0, j = queries.size(); i < j; i++) {

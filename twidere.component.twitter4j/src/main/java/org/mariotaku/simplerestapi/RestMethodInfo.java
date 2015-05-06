@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.mariotaku.simplerestapi.http.KeyValuePair;
 import org.mariotaku.simplerestapi.http.ValueMap;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
 import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
@@ -43,7 +42,7 @@ public final class RestMethodInfo {
     private final HashMap<Extra, Object> extras;
     private final FileValue file;
 
-    private ArrayList<KeyValuePair> queriesCache, formsCache, headersCache;
+    private ArrayList<Pair<String, String>> queriesCache, formsCache, headersCache;
     private ArrayList<Pair<String, TypedData>> partsCache;
     private Map<String, Object> extrasCache;
     private TypedData bodyCache;
@@ -105,9 +104,9 @@ public final class RestMethodInfo {
         return extrasCache = map;
     }
 
-    public List<KeyValuePair> getForms() {
+    public List<Pair<String, String>> getForms() {
         if (formsCache != null) return formsCache;
-        final ArrayList<KeyValuePair> list = new ArrayList<>();
+        final ArrayList<Pair<String, String>> list = new ArrayList<>();
         for (Map.Entry<Form, Object> entry : forms.entrySet()) {
             final Form form = entry.getKey();
             final Object value = entry.getValue();
@@ -115,12 +114,12 @@ public final class RestMethodInfo {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : form.value()) {
                     if (valueMap.has(key)) {
-                        list.add(new KeyValuePair(key, String.valueOf(valueMap.get(key))));
+                        list.add(new ImmutablePair<>(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
                 for (String key : form.value()) {
-                    list.add(new KeyValuePair(key, String.valueOf(value)));
+                    list.add(new ImmutablePair<>(key, String.valueOf(value)));
                 }
             }
         }
@@ -144,9 +143,9 @@ public final class RestMethodInfo {
     }
 
     @NonNull
-    public List<KeyValuePair> getHeaders() {
+    public List<Pair<String, String>> getHeaders() {
         if (headersCache != null) return headersCache;
-        final ArrayList<KeyValuePair> list = new ArrayList<>();
+        final ArrayList<Pair<String, String>> list = new ArrayList<>();
         for (Map.Entry<Header, Object> entry : headers.entrySet()) {
             final Header form = entry.getKey();
             final Object value = entry.getValue();
@@ -154,12 +153,12 @@ public final class RestMethodInfo {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : form.value()) {
                     if (valueMap.has(key)) {
-                        list.add(new KeyValuePair(key, String.valueOf(valueMap.get(key))));
+                        list.add(new ImmutablePair<>(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
                 for (String key : form.value()) {
-                    list.add(new KeyValuePair(key, String.valueOf(value)));
+                    list.add(new ImmutablePair<>(key, String.valueOf(value)));
                 }
             }
         }
@@ -186,9 +185,9 @@ public final class RestMethodInfo {
         return sb.toString();
     }
 
-    public List<KeyValuePair> getQueries() {
+    public List<Pair<String, String>> getQueries() {
         if (queriesCache != null) return queriesCache;
-        final ArrayList<KeyValuePair> list = new ArrayList<>();
+        final ArrayList<Pair<String, String>> list = new ArrayList<>();
         for (Map.Entry<Query, Object> entry : queries.entrySet()) {
             final Query form = entry.getKey();
             final Object value = entry.getValue();
@@ -196,12 +195,12 @@ public final class RestMethodInfo {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : form.value()) {
                     if (valueMap.has(key)) {
-                        list.add(new KeyValuePair(key, String.valueOf(valueMap.get(key))));
+                        list.add(new ImmutablePair<>(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
                 for (String key : form.value()) {
-                    list.add(new KeyValuePair(key, String.valueOf(value)));
+                    list.add(new ImmutablePair<>(key, String.valueOf(value)));
                 }
             }
         }
