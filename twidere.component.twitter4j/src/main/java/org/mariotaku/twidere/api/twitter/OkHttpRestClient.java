@@ -64,8 +64,8 @@ public class OkHttpRestClient implements RestHttpClient {
     @Override
     public RestResponse execute(RestRequest restRequest) throws IOException {
         final Request.Builder builder = new Request.Builder();
-        builder.url(restRequest.getUrl());
         builder.method(restRequest.getMethod(), RestToOkBody.wrap(restRequest.getBody()));
+        builder.url(restRequest.getUrl());
         final List<Pair<String, String>> headers = restRequest.getHeaders();
         if (headers != null) {
             for (Pair<String, String> header : headers) {

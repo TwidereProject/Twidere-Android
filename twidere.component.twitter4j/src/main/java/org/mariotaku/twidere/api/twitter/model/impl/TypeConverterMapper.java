@@ -42,7 +42,7 @@ public class TypeConverterMapper<T> implements TypeConverter<T> {
 
     @Override
     public T parse(JsonParser jsonParser) throws IOException {
-        return jsonParser.readValueAs(cls);
+        return LoganSquare.mapperFor(cls).parse(jsonParser);
     }
 
     @Override

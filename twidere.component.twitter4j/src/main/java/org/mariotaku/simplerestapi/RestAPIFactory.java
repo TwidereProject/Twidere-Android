@@ -93,7 +93,7 @@ public class RestAPIFactory {
 
         @SuppressWarnings("TryWithIdenticalCatches")
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) {
+        public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
             final RestMethodInfo methodInfo = RestMethodInfo.get(method, args);
             final RestRequest restRequest = requestFactory.create(endpoint, methodInfo, authorization);
             final Class<?>[] parameterTypes = method.getParameterTypes();

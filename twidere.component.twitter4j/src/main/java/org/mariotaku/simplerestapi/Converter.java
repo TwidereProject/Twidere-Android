@@ -10,6 +10,6 @@ import java.lang.reflect.Type;
  */
 public interface Converter {
 
-    public Object convert(RestResponse response, Type type) throws IOException;
+    Object convert(RestResponse response, Type type) throws Exception;
 
 }

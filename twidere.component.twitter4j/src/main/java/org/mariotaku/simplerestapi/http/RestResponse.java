@@ -41,4 +41,13 @@ public abstract class RestResponse implements Closeable {
         return result.toArray(new String[result.size()]);
     }
 
+    /**
+     * Returns true if the code is in [200..300), which means the request was
+     * successfully received, understood, and accepted.
+     */
+    public boolean isSuccessful() {
+        final int status = getStatus();
+        return status >= 200 && status < 300;
+    }
+
 }

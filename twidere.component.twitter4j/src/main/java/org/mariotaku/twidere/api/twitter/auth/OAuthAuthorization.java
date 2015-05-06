@@ -110,7 +110,7 @@ public class OAuthAuthorization implements Authorization {
             String urlNoQuery = url.indexOf('?') != -1 ? url.substring(0, url.indexOf('?')) : url;
             final String baseString = encode(method.value()) + '&' + encode(urlNoQuery) + '&' + encode(paramBuilder.toString());
             final byte[] signature = mac.doFinal(baseString.getBytes(DEFAULT_ENCODING));
-            return Base64.encodeToString(signature, Base64.URL_SAFE);
+            return Base64.encodeToString(signature, Base64.NO_WRAP);
         } catch (NoSuchAlgorithmException e) {
             throw new UnsupportedOperationException(e);
         } catch (InvalidKeyException | UnsupportedEncodingException e) {
@@ -185,6 +185,7 @@ public class OAuthAuthorization implements Authorization {
     private String generateOAuthNonce() {
         final byte[] input = new byte[32];
         secureRandom.nextBytes(input);
-        return Base64.encodeToString(input, Base64.URL_SAFE | Base64.NO_PADDING);
+        return Base64.encodeToString(input, Base64.NO_WRAP).replaceAll("[^\\w\\d]", "");
     }
+
 }

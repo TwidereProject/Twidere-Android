@@ -16,82 +16,105 @@
 
 package twitter4j;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+
+import org.mariotaku.twidere.api.twitter.model.impl.GeoPoint;
+
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
  * A data class representing geo location.
- * 
+ *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
 public class GeoLocation implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4603460402828968366L;
-	protected double latitude;
-	protected double longitude;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4603460402828968366L;
 
-	/**
-	 * Creates a GeoLocation instance
-	 * 
-	 * @param latitude the latitude
-	 * @param longitude the longitude
-	 */
-	public GeoLocation(final double latitude, final double longitude) {
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
+    public static final TypeConverter<GeoLocation> CONVERTER = new TypeConverter<GeoLocation>() {
+        @Override
+        public GeoLocation parse(JsonParser jsonParser) throws IOException {
+            final GeoPoint geoPoint = LoganSquare.mapperFor(GeoPoint.class).parse(jsonParser);
+            if (geoPoint == null) return null;
+            return geoPoint.getGeoLocation();
+        }
 
-	/* For serialization purposes only. */
-	/* package */GeoLocation() {
+        @Override
+        public void serialize(GeoLocation object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
+            throw new UnsupportedOperationException();
+        }
+    };
 
-	}
+    protected double latitude;
+    protected double longitude;
 
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (!(o instanceof GeoLocation)) return false;
+    /**
+     * Creates a GeoLocation instance
+     *
+     * @param latitude  the latitude
+     * @param longitude the longitude
+     */
+    public GeoLocation(final double latitude, final double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
-		final GeoLocation that = (GeoLocation) o;
+    /* For serialization purposes only. */
+    /* package */GeoLocation() {
 
-		if (Double.compare(that.getLatitude(), latitude) != 0) return false;
-		if (Double.compare(that.getLongitude(), longitude) != 0) return false;
+    }
 
-		return true;
-	}
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GeoLocation)) return false;
 
-	/**
-	 * returns the latitude of the geo location
-	 * 
-	 * @return the latitude
-	 */
-	public double getLatitude() {
-		return latitude;
-	}
+        final GeoLocation that = (GeoLocation) o;
 
-	/**
-	 * returns the longitude of the geo location
-	 * 
-	 * @return the longitude
-	 */
-	public double getLongitude() {
-		return longitude;
-	}
+        if (Double.compare(that.getLatitude(), latitude) != 0) return false;
+        if (Double.compare(that.getLongitude(), longitude) != 0) return false;
 
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		temp = latitude != +0.0d ? Double.doubleToLongBits(latitude) : 0L;
-		result = (int) (temp ^ temp >>> 32);
-		temp = longitude != +0.0d ? Double.doubleToLongBits(longitude) : 0L;
-		result = 31 * result + (int) (temp ^ temp >>> 32);
-		return result;
-	}
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "GeoLocation{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
-	}
+    /**
+     * returns the latitude of the geo location
+     *
+     * @return the latitude
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * returns the longitude of the geo location
+     *
+     * @return the longitude
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = latitude != +0.0d ? Double.doubleToLongBits(latitude) : 0L;
+        result = (int) (temp ^ temp >>> 32);
+        temp = longitude != +0.0d ? Double.doubleToLongBits(longitude) : 0L;
+        result = 31 * result + (int) (temp ^ temp >>> 32);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "GeoLocation{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
+    }
 }
