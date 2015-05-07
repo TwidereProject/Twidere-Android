@@ -805,14 +805,17 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             }
 
             public ParcelableBindingValue(BindingValue value) {
-                this.type = value.getType();
-                if (BindingValue.TYPE_IMAGE.equals(type)) {
+                if (value instanceof ImageValue) {
+                    this.type = BindingValue.TYPE_IMAGE;
                     this.value = ((ImageValue) value).getUrl();
-                } else if (BindingValue.TYPE_STRING.equals(type)) {
+                } else if (value instanceof StringValue) {
+                    this.type = BindingValue.TYPE_STRING;
                     this.value = ((StringValue) value).getValue();
-                } else if (BindingValue.TYPE_BOOLEAN.equals(type)) {
+                } else if (value instanceof BooleanValue) {
+                    this.type = BindingValue.TYPE_BOOLEAN;
                     this.value = String.valueOf(((BooleanValue) value).getValue());
-                } else if (BindingValue.TYPE_USER.equals(type)) {
+                } else if (value instanceof UserValue) {
+                    this.type = BindingValue.TYPE_USER;
                     this.value = String.valueOf(((UserValue) value).getUserId());
                 }
             }

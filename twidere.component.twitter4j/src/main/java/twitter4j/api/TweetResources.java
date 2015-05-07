@@ -42,38 +42,14 @@ public interface TweetResources {
     @POST("/statuses/destroy/{id}.json")
     Status destroyStatus(@Path("id") long statusId) throws TwitterException;
 
-    IDs getRetweetersIDs(long statusId) throws TwitterException;
+    @GET("/statuses/retweeters/ids.json")
+    IDs getRetweetersIDs(@Query("id") long statusId) throws TwitterException;
 
-    IDs getRetweetersIDs(long statusId, Paging paging) throws TwitterException;
+    @GET("/statuses/retweeters/ids.json")
+    IDs getRetweetersIDs(@Query("id") long statusId, @Query Paging paging) throws TwitterException;
 
-    /**
-     * Returns up to 100 of the first retweets of a given tweet. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/retweets
-     *
-     * @param statusId The numerical ID of the tweet you want the retweets of.
-     * @return the retweets of a given tweet
-     * @throws twitter4j.TwitterException when Twitter service or network is unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/get/statuses/retweets/:id">Tweets
-     * Resources › statuses/retweets/:id</a>
-     * @since Twitter4J 2.0.10
-     */
     ResponseList<Status> getRetweets(long statusId) throws TwitterException;
 
-    /**
-     * Returns up to 100 of the first retweets of a given tweet. <br>
-     * This method calls http://api.twitter.com/1.1/statuses/retweets
-     *
-     * @param statusId The numerical ID of the desired status.
-     * @param count    Specifies the number of records to retrieve. Must be less
-     *                 than or equal to 100.
-     * @return the retweets of a given tweet
-     * @throws twitter4j.TwitterException when Twitter service or network is unavailable
-     * @see <a
-     * href="https://dev.twitter.com/docs/api/1.1/get/statuses/retweets/:id">Tweets
-     * Resources › statuses/retweets/:id</a>
-     * @since Twitter4J 2.0.10
-     */
     ResponseList<Status> getRetweets(long statusId, int count) throws TwitterException;
 
     int reportSpam(long statusId, ReportAs reportAs, boolean blockUser) throws TwitterException;
@@ -86,8 +62,7 @@ public interface TweetResources {
 
     @POST("/statuses/update.json")
     @Body(BodyType.FORM)
-    Status updateStatus(@Form({"status", "in_reply_to_status_id", "possibly_sensitive", "lat",
-            "long", "place_id", "display_coordinates", "media_ids"}) StatusUpdate latestStatus) throws TwitterException;
+    Status updateStatus(@Form StatusUpdate latestStatus) throws TwitterException;
 
     @POST("/statuses/update.json")
     @Body(BodyType.FORM)

@@ -33,6 +33,7 @@ import java.util.List;
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterFactory;
+import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.http.HostAddressResolverFactory;
 
@@ -91,6 +92,13 @@ public class TwitterAPIUtils {
                                            final boolean includeEntities,
                                            final boolean includeRetweets, Class<T> cls) {
         if (context == null) return null;
+        final ParcelableAccount.ParcelableCredentials credentials = ParcelableAccount.ParcelableCredentials.getCredentials(context, accountId);
+        if (credentials == null) return null;
+        final Configuration conf = getConfiguration(context, includeEntities, includeRetweets, credentials);
+        return new TwitterFactory(conf).getInstance(getAuthorization(credentials), cls);
+    }
+
+    private static Configuration getConfiguration(Context context, boolean includeEntities, boolean includeRetweets, ParcelableAccount.ParcelableCredentials credentials) {
         final TwidereApplication app = TwidereApplication.getInstance(context);
         final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int connection_timeout = prefs.getInt(SharedPreferenceConstants.KEY_CONNECTION_TIMEOUT, 10) * 1000;
@@ -99,8 +107,6 @@ public class TwitterAPIUtils {
         final boolean enableProxy = prefs.getBoolean(SharedPreferenceConstants.KEY_ENABLE_PROXY, false);
         // Here I use old consumer key/secret because it's default key for older
         // versions
-        final ParcelableAccount.ParcelableCredentials credentials = ParcelableAccount.ParcelableCredentials.getCredentials(context, accountId);
-        if (credentials == null) return null;
         final ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
         cb.setHttpConnectionTimeout(connection_timeout);
@@ -140,7 +146,7 @@ public class TwitterAPIUtils {
         cb.setIncludeRTsEnabled(includeRetweets);
         cb.setIncludeReplyCountEnabled(true);
         cb.setIncludeDescendentReplyCountEnabled(true);
-        return new TwitterFactory(cb.build()).getInstance(getAuthorization(credentials), cls);
+        return cb.build();
     }
 
     public static Authorization getAuthorization(ParcelableAccount.ParcelableCredentials credentials) {

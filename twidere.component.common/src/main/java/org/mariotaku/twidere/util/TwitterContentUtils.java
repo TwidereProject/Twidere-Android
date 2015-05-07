@@ -44,9 +44,7 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 public class TwitterContentUtils {
     public static String formatDirectMessageText(final DirectMessage message) {
         if (message == null) return null;
-        final String text = message.getRawText();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
+        final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
         TwitterContentUtils.parseEntities(builder, message);
         return builder.build().replace("\n", "<br/>");
     }

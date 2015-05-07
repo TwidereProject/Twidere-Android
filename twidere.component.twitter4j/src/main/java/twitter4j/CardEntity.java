@@ -20,6 +20,7 @@
 package twitter4j;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 14/12/31.
@@ -34,7 +35,7 @@ public interface CardEntity extends Serializable {
 
     BindingValue getBindingValue(String key);
 
-    java.util.Map<String, BindingValue> getBindingValues();
+    Map<String, BindingValue> getBindingValues();
 
     interface BindingValue extends Serializable {
 
@@ -43,9 +44,6 @@ public interface CardEntity extends Serializable {
         String TYPE_USER = "USER";
         String TYPE_BOOLEAN = "BOOLEAN";
 
-        String getName();
-
-        String getType();
     }
 
 

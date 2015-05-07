@@ -148,8 +148,6 @@ public final class TwitterFactory {
         } else {
             sslSocketFactory = (SSLCertificateSocketFactory) SSLCertificateSocketFactory.getDefault(0, null);
         }
-//        sslSocketFactory.setTrustManagers(new TrustManager[]{new TwidereTrustManager(context)});
-//        client.setHostnameVerifier(new HostResolvedHostnameVerifier(context, ignoreSSLError));
         client.setSslSocketFactory(sslSocketFactory);
         client.setSocketFactory(SocketFactory.getDefault());
         client.setConnectTimeout(conf.getHttpConnectionTimeout(), TimeUnit.MILLISECONDS);

@@ -17,88 +17,54 @@
 package twitter4j;
 
 import java.io.Serializable;
-import java.net.URI;
+import java.util.Date;
 
-/**
- * A data interface representing Basic list information element
- * 
- * @author Dan Checkoway - dcheckoway at gmail.com
- */
 public interface UserList extends Comparable<UserList>, TwitterResponse, Serializable {
-	/**
-	 * Returns the description of the list
-	 * 
-	 * @return the description of the list
-	 */
-	String getDescription();
+    Mode getMode();
 
-	/**
-	 * Returns the full name of the list
-	 * 
-	 * @return the full name of the list
-	 */
-	String getFullName();
+    String getDescription();
 
-	/**
-	 * Returns the id of the list
-	 * 
-	 * @return the id of the list
-	 */
-	long getId();
 
-	/**
-	 * Returns the member count of the list
-	 * 
-	 * @return the member count of the list
-	 */
-	int getMemberCount();
+    String getFullName();
 
-	/**
-	 * Returns the name of the list
-	 * 
-	 * @return the name of the list
-	 */
-	String getName();
 
-	/**
-	 * Returns the slug of the list
-	 * 
-	 * @return the slug of the list
-	 */
-	String getSlug();
+    long getId();
 
-	/**
-	 * Returns the subscriber count of the list
-	 * 
-	 * @return the subscriber count of the list
-	 */
-	int getSubscriberCount();
 
-	/**
-	 * Returns the uri of the list
-	 * 
-	 * @return the uri of the list
-	 */
-	URI getURI();
+    long getMemberCount();
 
-	/**
-	 * Returns the user of the list
-	 * 
-	 * @return the user of the list
-	 */
-	User getUser();
 
-	/**
-	 * Returns if the authenticated user is following the list
-	 * 
-	 * @return if the authenticated user is following the list
-	 */
-	boolean isFollowing();
+    String getName();
 
-	/**
-	 * tests if the list is public
-	 * 
-	 * @return if the list is public
-	 */
-	boolean isPublic();
+
+    String getSlug();
+
+
+    long getSubscriberCount();
+
+
+    String getUri();
+
+
+    User getUser();
+
+
+    Date getCreatedAt();
+
+    boolean isFollowing();
+
+    enum Mode {
+        PUBLIC, PRIVATE;
+
+        public static Mode parse(String str) {
+            switch (str) {
+                case "public":
+                    return PUBLIC;
+                case "private":
+                    return PRIVATE;
+            }
+            throw new UnsupportedOperationException();
+        }
+
+    }
 }

@@ -19,13 +19,109 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.api.twitter.TwitterDateConverter;
+
+import java.util.Date;
+
 import twitter4j.DirectMessage;
+import twitter4j.HashtagEntity;
+import twitter4j.MediaEntity;
+import twitter4j.UrlEntity;
+import twitter4j.UserMentionEntity;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class DirectMessageImpl  {
+public class DirectMessageImpl extends TwitterResponseImpl implements DirectMessage {
+
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
+    Date createdAt;
+
+    @JsonField(name = "sender")
+    UserImpl sender;
+
+    @JsonField(name = "recipient")
+    UserImpl recipient;
+
+    @JsonField(name = "entities")
+    EntitiesImpl entities;
+
+    @JsonField(name = "text")
+    String text;
+
+    @JsonField(name = "id")
+    long id;
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public String getText() {
+        return text;
+    }
+
+    @Override
+    public HashtagEntity[] getHashtagEntities() {
+        if (entities == null) return null;
+        return entities.getHashtags();
+    }
+
+    @Override
+    public MediaEntity[] getMediaEntities() {
+        if (entities == null) return null;
+        return entities.getMedia();
+    }
+
+    @Override
+    public UrlEntity[] getUrlEntities() {
+        if (entities == null) return null;
+        return entities.getUrls();
+    }
+
+    @Override
+    public UserMentionEntity[] getUserMentionEntities() {
+        if (entities == null) return null;
+        return entities.getUserMentions();
+    }
+
+    @Override
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public UserImpl getSender() {
+        return sender;
+    }
+
+    @Override
+    public long getSenderId() {
+        return sender.id;
+    }
+
+    @Override
+    public String getSenderScreenName() {
+        return sender.screenName;
+    }
+
+    @Override
+    public UserImpl getRecipient() {
+        return recipient;
+    }
+
+    @Override
+    public long getRecipientId() {
+        return recipient.id;
+    }
+
+    @Override
+    public String getRecipientScreenName() {
+        return recipient.screenName;
+    }
 }

@@ -45,34 +45,34 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     };
 
     @JsonField(name = "members_count")
-	public int members_count;
+    public long members_count;
     @JsonField(name = "subscribers_count")
-	public int subscribers_count;
+    public long subscribers_count;
 
     @JsonField(name = "account_id")
-	public long account_id;
+    public long account_id;
     @JsonField(name = "id")
-	public long id;
+    public long id;
     @JsonField(name = "user_id")
-	public long user_id;
+    public long user_id;
     @JsonField(name = "position")
-	public long position;
+    public long position;
 
     @JsonField(name = "is_public")
-	public boolean is_public;
+    public boolean is_public;
     @JsonField(name = "is_following")
-	public boolean is_following;
+    public boolean is_following;
 
     @JsonField(name = "description")
-	public String description;
+    public String description;
     @JsonField(name = "name")
-	public String name;
+    public String name;
     @JsonField(name = "user_screen_name")
-	public String user_screen_name;
+    public String user_screen_name;
     @JsonField(name = "user_name")
-	public String user_name;
+    public String user_name;
     @JsonField(name = "user_profile_image_url")
-	public String user_profile_image_url;
+    public String user_profile_image_url;
 
     public ParcelableUserList() {
     }
@@ -89,8 +89,8 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
         user_name = in.readString();
         user_screen_name = in.readString();
         user_profile_image_url = in.readString();
-        members_count = in.readInt();
-        subscribers_count = in.readInt();
+        members_count = in.readLong();
+        subscribers_count = in.readLong();
     }
 
     public ParcelableUserList(final UserList list, final long account_id) {
@@ -107,7 +107,7 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
         this.position = position;
         this.account_id = account_id;
         id = list.getId();
-        is_public = list.isPublic();
+        is_public = list.getMode() == UserList.Mode.PUBLIC;
         this.is_following = is_following;
         name = list.getName();
         description = list.getDescription();
@@ -174,8 +174,8 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
         out.writeString(user_name);
         out.writeString(user_screen_name);
         out.writeString(user_profile_image_url);
-        out.writeInt(members_count);
-        out.writeInt(subscribers_count);
+        out.writeLong(members_count);
+        out.writeLong(subscribers_count);
     }
 
 }

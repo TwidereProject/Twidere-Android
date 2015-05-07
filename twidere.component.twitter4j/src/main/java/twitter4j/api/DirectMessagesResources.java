@@ -41,13 +41,13 @@ public interface DirectMessagesResources {
     ResponseList<DirectMessage> getDirectMessages() throws TwitterException;
 
     @GET("/direct_messages.json")
-    ResponseList<DirectMessage> getDirectMessages(@Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
+    ResponseList<DirectMessage> getDirectMessages(@Query Paging paging) throws TwitterException;
 
     @GET("/direct_messages/sent.json")
     ResponseList<DirectMessage> getSentDirectMessages() throws TwitterException;
 
     @GET("/direct_messages/sent.json")
-    ResponseList<DirectMessage> getSentDirectMessages(@Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
+    ResponseList<DirectMessage> getSentDirectMessages(@Query Paging paging) throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @Body(BodyType.FORM)
@@ -65,5 +65,6 @@ public interface DirectMessagesResources {
     @Body(BodyType.FORM)
     DirectMessage sendDirectMessage(@Form("screen_name") String screenName, @Form("text") String text, @Form("media_id") long mediaId) throws TwitterException;
 
-    DirectMessage showDirectMessage(long id) throws TwitterException;
+    @GET("/direct_messages/show.json")
+    DirectMessage showDirectMessage(@Query("id") long id) throws TwitterException;
 }

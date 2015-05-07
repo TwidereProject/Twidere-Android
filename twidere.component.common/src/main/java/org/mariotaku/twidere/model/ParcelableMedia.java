@@ -262,7 +262,7 @@ public class ParcelableMedia implements Parcelable {
         if (card == null) return null;
         if ("animated_gif".equals(card.getName())) {
             final BindingValue player_stream_url = card.getBindingValue("player_stream_url");
-            if (player_stream_url == null || !BindingValue.TYPE_STRING.equals(player_stream_url.getType()))
+            if (!(player_stream_url instanceof StringValue))
                 return null;
 
             final ParcelableMedia media = new ParcelableMedia();
