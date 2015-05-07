@@ -61,10 +61,10 @@ public interface MediaEntity extends UrlEntity, Serializable {
     }
 
     interface Size extends Serializable {
-        Integer THUMB = 0;
-        Integer SMALL = 1;
-        Integer MEDIUM = 2;
-        Integer LARGE = 3;
+        String THUMB = "thumb";
+        String SMALL = "small";
+        String MEDIUM = "medium";
+        String LARGE = "large";
         int FIT = 100;
         int CROP = 101;
 

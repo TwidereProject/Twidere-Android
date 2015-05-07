@@ -123,6 +123,11 @@ public class TwitterException extends Exception implements TwitterResponse, Http
                 || statusCode == TOO_MANY_REQUESTS; // API 1.1
     }
 
+    @Override
+    public void processResponseHeader(RestResponse resp) {
+
+    }
+
     /**
      * {@inheritDoc}
      */

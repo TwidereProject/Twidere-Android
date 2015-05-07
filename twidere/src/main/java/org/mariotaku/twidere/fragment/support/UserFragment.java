@@ -1640,7 +1640,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final Relationship relationship = twitter.showFriendship(account_id, user_id);
+                final Relationship relationship = twitter.showFriendship(user_id);
                 if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
                     Utils.setLastSeen(context, user_id, -1);
                 } else {

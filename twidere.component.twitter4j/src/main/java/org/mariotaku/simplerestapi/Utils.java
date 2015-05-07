@@ -19,6 +19,9 @@
 
 package org.mariotaku.simplerestapi;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -135,5 +138,11 @@ public class Utils {
         }
         os.flush();
         return true;
+    }
+
+    @NonNull
+    public static <T> T assertNotNull(@Nullable T obj) {
+        if (obj == null) throw new NullPointerException();
+        return obj;
     }
 }

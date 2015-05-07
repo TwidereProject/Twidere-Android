@@ -47,8 +47,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
-
 public class TwitterWrapper implements Constants {
 
     public static int clearNotification(final Context context, final int notificationType, final long accountId) {
@@ -107,9 +105,10 @@ public class TwitterWrapper implements Constants {
 
     @NonNull
     public static User showUser(final Twitter twitter, final long id, final String screenName) throws TwitterException {
-        if (twitter.getId() == id || twitter.getScreenName().equalsIgnoreCase(screenName)) {
-            return twitter.verifyCredentials();
-        } else if (id != -1) {
+//        if (twitter.getId() == id || twitter.getScreenName().equalsIgnoreCase(screenName)) {
+//            return twitter.verifyCredentials();
+//        } else
+        if (id != -1) {
             return twitter.showUser(id);
         } else if (screenName != null) {
             return twitter.showUser(screenName);
@@ -124,7 +123,7 @@ public class TwitterWrapper implements Constants {
         if (screenName != null) {
             searchScreenName = screenName;
         } else if (id != -1) {
-            searchScreenName = twitter.showFriendship(twitter.getId(), id).getTargetUserScreenName();
+            searchScreenName = twitter.showFriendship(id).getTargetUserScreenName();
         } else
             throw new IllegalArgumentException();
         final Paging paging = new Paging();

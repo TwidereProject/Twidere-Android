@@ -19,47 +19,50 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.simplerestapi.http.RestResponse;
-
 import java.util.ArrayList;
-import java.util.Collection;
 
-import twitter4j.RateLimitStatus;
-import twitter4j.ResponseList;
-import twitter4j.internal.util.InternalParseUtil;
+import twitter4j.QueryResult;
+import twitter4j.Status;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class ResponseListImpl<T> extends ArrayList<T> implements ResponseList<T> {
+public class QueryResultImpl extends ResponseListImpl<Status> implements QueryResult {
 
-    private int accessLevel;
-    private RateLimitStatus rateLimitStatus;
+    private final QueryResultWrapper.SearchMetadata metadata;
 
-    public ResponseListImpl(int capacity) {
-        super(capacity);
-    }
-
-    public ResponseListImpl() {
-    }
-
-    public ResponseListImpl(Collection<? extends T> collection) {
-        super(collection);
+    @Override
+    public double getCompletedIn() {
+        return metadata.completedIn;
     }
 
     @Override
-    public final void processResponseHeader(RestResponse resp) {
-        rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(resp);
-        accessLevel = InternalParseUtil.toAccessLevel(resp);
+    public long getMaxId() {
+        return metadata.maxId;
     }
 
     @Override
-    public final int getAccessLevel() {
-        return accessLevel;
+    public String getQuery() {
+        return metadata.query;
     }
 
     @Override
-    public final RateLimitStatus getRateLimitStatus() {
-        return rateLimitStatus;
+    public int getResultsPerPage() {
+        return metadata.count;
+    }
+
+    @Override
+    public long getSinceId() {
+        return metadata.sinceId;
+    }
+
+    @Override
+    public String getWarning() {
+        return metadata.warning;
+    }
+
+    public QueryResultImpl(ArrayList<Status> statuses, QueryResultWrapper.SearchMetadata metadata) {
+        addAll(statuses);
+        this.metadata = metadata;
     }
 }

@@ -32,14 +32,20 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.impl.HashtagEntityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.Indices;
 import org.mariotaku.twidere.api.twitter.model.impl.MediaEntityImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.PageableResponseListWrapper;
 import org.mariotaku.twidere.api.twitter.model.impl.PlaceImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.QueryResultWrapper;
+import org.mariotaku.twidere.api.twitter.model.impl.RelationshipImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.RelationshipWrapper;
 import org.mariotaku.twidere.api.twitter.model.impl.ResponseListImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.SavedSearchImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.TwitterResponseImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.TypeConverterMapper;
 import org.mariotaku.twidere.api.twitter.model.impl.UrlEntityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.UserImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.UserMentionEntityImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.Wrapper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,11 +56,16 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import twitter4j.GeoLocation;
 import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
+import twitter4j.PageableResponseList;
 import twitter4j.Place;
+import twitter4j.QueryResult;
+import twitter4j.Relationship;
 import twitter4j.ResponseList;
 import twitter4j.SavedSearch;
 import twitter4j.Status;
@@ -68,19 +79,31 @@ import twitter4j.UserMentionEntity;
  */
 public class TwitterConverter implements Converter {
 
+    private static final Map<Class<?>, Class<? extends Wrapper<?>>> wrapperMap = new HashMap<>();
+
     static {
         TypeConverterMapper.register(Status.class, StatusImpl.class);
         TypeConverterMapper.register(User.class, UserImpl.class);
         TypeConverterMapper.register(SavedSearch.class, SavedSearchImpl.class);
         TypeConverterMapper.register(UrlEntity.class, UrlEntityImpl.class);
         TypeConverterMapper.register(MediaEntity.class, MediaEntityImpl.class);
+        TypeConverterMapper.register(MediaEntity.Size.class, MediaEntityImpl.SizeImpl.class);
+        TypeConverterMapper.register(MediaEntity.Feature.class, MediaEntityImpl.FeatureImpl.class);
+        TypeConverterMapper.register(MediaEntity.Feature.Face.class, MediaEntityImpl.FeatureImpl.FaceImpl.class);
+        TypeConverterMapper.register(MediaEntity.VideoInfo.class, MediaEntityImpl.VideoInfoImpl.class);
+        TypeConverterMapper.register(MediaEntity.VideoInfo.Variant.class, MediaEntityImpl.VideoInfoImpl.VariantImpl.class);
         TypeConverterMapper.register(UserMentionEntity.class, UserMentionEntityImpl.class);
         TypeConverterMapper.register(HashtagEntity.class, HashtagEntityImpl.class);
         TypeConverterMapper.register(Place.class, PlaceImpl.class);
+        TypeConverterMapper.register(Relationship.class, RelationshipImpl.class);
 
         LoganSquare.registerTypeConverter(Indices.class, Indices.CONVERTER);
         LoganSquare.registerTypeConverter(GeoLocation.class, GeoLocation.CONVERTER);
-        LoganSquare.registerTypeConverter(MediaEntity.Type.class, new EnumConverter(MediaEntity.Type.class));
+        LoganSquare.registerTypeConverter(MediaEntity.Type.class, EnumConverter.get(MediaEntity.Type.class));
+
+        registerWrapper(QueryResult.class, QueryResultWrapper.class);
+        registerWrapper(PageableResponseList.class, PageableResponseListWrapper.class);
+        registerWrapper(Relationship.class, RelationshipWrapper.class);
 //        TypeConverterMapper.register(DirectMessage.class, DirectMessageImpl.class);
     }
 
@@ -103,7 +126,12 @@ public class TwitterConverter implements Converter {
         final InputStream stream = body.stream();
         if (type instanceof Class<?>) {
             final Class<?> cls = (Class<?>) type;
-            if (OAuthToken.class.isAssignableFrom(cls)) {
+            final Class<?> wrapperCls = wrapperMap.get(cls);
+            if (wrapperCls != null) {
+                final Wrapper<?> wrapper = (Wrapper<?>) LoganSquare.parse(stream, wrapperCls);
+                wrapper.processResponseHeader(response);
+                return wrapper.getWrapped(null);
+            } else if (OAuthToken.class.isAssignableFrom(cls)) {
                 final ByteArrayOutputStream os = new ByteArrayOutputStream();
                 body.writeTo(os);
                 Charset charset = contentType != null ? contentType.getCharset() : null;
@@ -116,18 +144,40 @@ public class TwitterConverter implements Converter {
                     throw new IOException(e);
                 }
             }
-            LoganSquare.parse(stream, cls);
+            final Object object = LoganSquare.parse(stream, cls);
+            checkResponse(cls, object, response);
+            if (object instanceof TwitterResponseImpl) {
+                ((TwitterResponseImpl) object).processResponseHeader(response);
+            }
+            return object;
         } else if (type instanceof ParameterizedType) {
             final Type rawType = ((ParameterizedType) type).getRawType();
             if (rawType instanceof Class<?>) {
                 final Class<?> rawClass = (Class<?>) rawType;
-                if (ResponseList.class.isAssignableFrom(rawClass)) {
+                final Class<?> wrapperCls = wrapperMap.get(rawClass);
+                if (wrapperCls != null) {
+                    final Wrapper<?> wrapper = (Wrapper<?>) LoganSquare.parse(stream, wrapperCls);
+                    wrapper.processResponseHeader(response);
+                    return wrapper.getWrapped(((ParameterizedType) type).getActualTypeArguments());
+                } else if (ResponseList.class.isAssignableFrom(rawClass)) {
                     final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
-                    return new ResponseListImpl<>(LoganSquare.parseList(stream, (Class<?>) elementType));
+                    final ResponseListImpl<?> responseList = new ResponseListImpl<>(LoganSquare.parseList(stream, (Class<?>) elementType));
+                    responseList.processResponseHeader(response);
+                    return responseList;
                 }
             }
         }
         throw new UnsupportedTypeException(type);
+    }
+
+    private void checkResponse(Class<?> cls, Object object, RestResponse response) throws TwitterException {
+        if (User.class.isAssignableFrom(cls)) {
+            if (object == null) throw new TwitterException("User is null");
+        }
+    }
+
+    private static <T> void registerWrapper(Class<T> cls, Class<? extends Wrapper<? extends T>> wrapperCls) {
+        wrapperMap.put(cls, wrapperCls);
     }
 
     private static class EnumConverter<T extends Enum<T>> implements TypeConverter<T> {
@@ -156,9 +206,13 @@ public class TwitterConverter implements Converter {
         public void serialize(T object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) {
             throw new UnsupportedOperationException();
         }
+
+        public static <T extends Enum<T>> EnumConverter<T> get(Class<T> cls) {
+            return new EnumConverter<>(cls);
+        }
     }
 
-    private class UnsupportedTypeException extends UnsupportedOperationException {
+    public static class UnsupportedTypeException extends UnsupportedOperationException {
         public UnsupportedTypeException(Type type) {
             super("Unsupported type " + type);
         }

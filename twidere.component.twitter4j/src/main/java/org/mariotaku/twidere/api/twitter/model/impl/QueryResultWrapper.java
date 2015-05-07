@@ -19,67 +19,49 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import android.support.annotation.NonNull;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.TwitterDateConverter;
+import java.util.ArrayList;
 
-import java.util.Date;
-
-import twitter4j.RateLimitStatus;
-import twitter4j.SavedSearch;
+import twitter4j.QueryResult;
+import twitter4j.Status;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class SavedSearchImpl extends TwitterResponseImpl implements SavedSearch {
+public class QueryResultWrapper extends TwitterResponseImpl implements Wrapper<QueryResult> {
+
+    @JsonField(name = "previous_cursor")
+    long previousCursor;
+    @JsonField(name = "next_cursor")
+    long nextCursor;
+
+    @JsonField(name = "search_metadata")
+    SearchMetadata metadata;
+
+    @JsonField(name = "statuses")
+    ArrayList<Status> statuses;
 
     @Override
-    public int getId() {
-        return id;
+    public QueryResult getWrapped(Object extra) {
+        return new QueryResultImpl(statuses, metadata);
     }
 
-    @Override
-    public Date getCreatedAt() {
-        return createdAt;
+    @JsonObject
+    static class SearchMetadata {
+        @JsonField(name = "max_id")
+        long maxId;
+        @JsonField(name = "since_id")
+        long sinceId;
+        @JsonField(name = "count")
+        int count;
+        @JsonField(name = "completed_in")
+        double completedIn;
+        @JsonField(name = "query")
+        String query;
+        @JsonField(name = "warning")
+        String warning;
     }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int getPosition() {
-        return position;
-    }
-
-    @Override
-    public String getQuery() {
-        return query;
-    }
-
-    @JsonField(name = "id")
-    int id;
-
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-
-    @JsonField(name = "name")
-    String name;
-
-    @JsonField(name = "position")
-    int position;
-
-    @JsonField(name = "query")
-    String query;
-
-    @Override
-    public int compareTo(@NonNull SavedSearch another) {
-        return id - another.getId();
-    }
-
 }

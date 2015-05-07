@@ -29,7 +29,6 @@ import org.mariotaku.twidere.api.twitter.TwitterDateConverter;
 
 import java.util.Date;
 
-import twitter4j.RateLimitStatus;
 import twitter4j.Status;
 import twitter4j.UrlEntity;
 import twitter4j.User;
@@ -38,7 +37,7 @@ import twitter4j.User;
  * Created by mariotaku on 15/3/31.
  */
 @JsonObject
-public class UserImpl implements User {
+public class UserImpl extends TwitterResponseImpl implements User {
 
     @JsonField(name = "id")
     long id;
@@ -475,16 +474,6 @@ public class UserImpl implements User {
     @Override
     public Date getCreatedAt() {
         return createdAt;
-    }
-
-    @Override
-    public int getAccessLevel() {
-        return 0;
-    }
-
-    @Override
-    public RateLimitStatus getRateLimitStatus() {
-        return null;
     }
 
     @Override

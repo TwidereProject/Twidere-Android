@@ -19,6 +19,8 @@
 
 package twitter4j;
 
+import org.mariotaku.simplerestapi.http.RestResponse;
+
 import java.io.Serializable;
 
 /**
@@ -38,22 +40,10 @@ public interface TwitterResponse extends Serializable {
 	int READ_WRITE = 2;
 	int READ_WRITE_DIRECTMESSAGES = 3;
 
-	/**
-	 * @return application permission model
-	 * @see <a
-	 *      href="https://dev.twitter.com/pages/application-permission-model-faq#how-do-we-know-what-the-access-level-of-a-user-token-is">Application
-	 *      Permission Model FAQ - How do we know what the access level of a
-	 *      user token is?</a>
-	 * @since Twitter4J 2.2.3
-	 */
+	void processResponseHeader(RestResponse resp);
+
 	int getAccessLevel();
 
-	/**
-	 * Returns the current rate limit status if available.
-	 * 
-	 * @return current rate limit status
-	 * @since Twitter4J 2.1.0
-	 */
 	RateLimitStatus getRateLimitStatus();
 
 }

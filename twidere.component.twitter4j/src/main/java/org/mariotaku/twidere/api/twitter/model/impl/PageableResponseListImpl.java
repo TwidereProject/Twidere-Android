@@ -19,67 +19,50 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import android.support.annotation.NonNull;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.TwitterDateConverter;
+import java.util.Collection;
 
-import java.util.Date;
-
-import twitter4j.RateLimitStatus;
-import twitter4j.SavedSearch;
+import twitter4j.PageableResponseList;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
-@JsonObject
-public class SavedSearchImpl extends TwitterResponseImpl implements SavedSearch {
+public class PageableResponseListImpl<T> extends ResponseListImpl<T> implements PageableResponseList<T> {
 
-    @Override
-    public int getId() {
-        return id;
+    long previousCursor;
+    long nextCursor;
+
+
+    public PageableResponseListImpl(int capacity) {
+        super(capacity);
+    }
+
+    public PageableResponseListImpl() {
+    }
+
+    public PageableResponseListImpl(Collection<? extends T> collection) {
+        super(collection);
     }
 
     @Override
-    public Date getCreatedAt() {
-        return createdAt;
+    public long getNextCursor() {
+        return nextCursor;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public long getPreviousCursor() {
+        return previousCursor;
     }
 
     @Override
-    public int getPosition() {
-        return position;
+    public boolean hasNext() {
+        return nextCursor != 0;
     }
 
     @Override
-    public String getQuery() {
-        return query;
+    public boolean hasPrevious() {
+        return previousCursor != 0;
     }
-
-    @JsonField(name = "id")
-    int id;
-
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-
-    @JsonField(name = "name")
-    String name;
-
-    @JsonField(name = "position")
-    int position;
-
-    @JsonField(name = "query")
-    String query;
-
-    @Override
-    public int compareTo(@NonNull SavedSearch another) {
-        return id - another.getId();
-    }
-
 }

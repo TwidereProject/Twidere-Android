@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,13 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j;
+package org.mariotaku.twidere.api.twitter.model.impl;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import twitter4j.Relationship;
 
 /**
- * ResponseList with cursor support.
- * 
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/5/7.
  */
-public interface PageableResponseList<T > extends ResponseList<T>, CursorSupport {
+@JsonObject
+public class RelationshipWrapper extends TwitterResponseImpl implements Wrapper<Relationship> {
 
+    @JsonField(name = "relationship")
+    RelationshipImpl relationship;
+
+    @Override
+    public Relationship getWrapped(Object extra) {
+        return relationship;
+    }
 }

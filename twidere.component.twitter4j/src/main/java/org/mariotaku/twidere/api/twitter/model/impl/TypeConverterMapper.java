@@ -50,6 +50,7 @@ public class TypeConverterMapper<T> implements TypeConverter<T> {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings({"TryWithIdenticalCatches", "unchecked"})
     public static <T> void register(Class<T> cls, Class<? extends T> impl) {
         LoganSquare.registerTypeConverter(cls, new TypeConverterMapper<>(impl));
         try {

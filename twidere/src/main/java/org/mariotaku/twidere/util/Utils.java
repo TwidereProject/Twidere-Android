@@ -129,8 +129,9 @@ import org.mariotaku.querybuilder.Selectable;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.simplerestapi.RestAPIFactory;
+import org.mariotaku.simplerestapi.RestClient;
 import org.mariotaku.simplerestapi.http.Authorization;
-import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -141,9 +142,8 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
+import org.mariotaku.twidere.api.twitter.auth.OAuthSupport;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
-import org.mariotaku.twidere.api.twitter.auth.XAuthAuthorization;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
@@ -220,7 +220,6 @@ import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -265,7 +264,6 @@ import twitter4j.TwitterException;
 import twitter4j.UserMentionEntity;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.http.HostAddressResolverFactory;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
@@ -2677,11 +2675,12 @@ public final class Utils implements Constants, TwitterConstants {
 
     public static boolean isOfficialTwitterInstance(final Context context, final Twitter twitter) {
         if (context == null || twitter == null) return false;
-        final Configuration conf = twitter.getConfiguration();
-        final Authorization auth = twitter.getAuthorization();
-        final boolean isOAuth = auth instanceof OAuthAuthorization || auth instanceof XAuthAuthorization;
-        final String consumerKey = conf.getOAuthConsumerKey(), consumerSecret = conf.getOAuthConsumerSecret();
-        return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
+        final RestClient restClient = RestAPIFactory.getRestClient(twitter);
+        final Authorization auth = restClient.getAuthorization();
+        if (!(auth instanceof OAuthSupport)) return false;
+        final String consumerKey = ((OAuthSupport) auth).getConsumerKey();
+        final String consumerSecret = ((OAuthSupport) auth).getConsumerSecret();
+        return TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
     }
 
     public static boolean isOnWifi(final Context context) {

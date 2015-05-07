@@ -26,11 +26,7 @@ public interface QueryResult extends ResponseList<Status> {
 
     long getMaxId();
 
-    int getPage();
-
     String getQuery();
-
-    String getRefreshUrl();
 
     int getResultsPerPage();
 

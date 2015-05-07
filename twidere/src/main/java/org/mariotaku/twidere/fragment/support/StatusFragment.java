@@ -754,6 +754,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 profileTypeView.setVisibility(View.GONE);
             }
 
+            // TODO Handle source click
             final String timeString = Utils.formatToLongTimeString(context, timestamp);
             if (!TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(source)) {
                 timeSourceView.setText(Html.fromHtml(context.getString(R.string.time_source, timeString, source)));
@@ -763,7 +764,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 timeSourceView.setText(timeString);
             }
             timeSourceView.setMovementMethod(null);
-
 
             textView.setText(Html.fromHtml(status.text_html));
             linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);

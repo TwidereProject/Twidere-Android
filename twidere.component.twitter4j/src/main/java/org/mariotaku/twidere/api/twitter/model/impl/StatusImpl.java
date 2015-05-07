@@ -44,7 +44,7 @@ import twitter4j.UserMentionEntity;
  * Created by mariotaku on 15/5/5.
  */
 @JsonObject
-public class StatusImpl implements Status {
+public class StatusImpl extends TwitterResponseImpl implements Status {
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
@@ -293,16 +293,6 @@ public class StatusImpl implements Status {
             return Integer.MIN_VALUE;
         else if (delta > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         return (int) delta;
-    }
-
-    @Override
-    public int getAccessLevel() {
-        return 0;
-    }
-
-    @Override
-    public RateLimitStatus getRateLimitStatus() {
-        return null;
     }
 
     @Override

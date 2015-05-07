@@ -559,18 +559,6 @@
 
         <!-- Begin third Party components -->
 
-        <service android:name="edu.ucdavis.earlybird.UCDService" />
-        <receiver
-            android:name="edu.ucdavis.earlybird.UploadReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                <action android:name="edu.ucdavis.earlybird.UPLOAD_PROFILE" />
-            </intent-filter>
-        </receiver>
-
         <!-- SPICE -->
         <service android:name="edu.tsinghua.spice.SpiceService" />
         <receiver

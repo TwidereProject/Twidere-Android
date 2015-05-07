@@ -26,7 +26,7 @@ import org.mariotaku.simplerestapi.http.Endpoint;
 /**
  * Created by mariotaku on 15/4/19.
  */
-public final class XAuthAuthorization implements Authorization {
+public final class XAuthAuthorization implements Authorization, OAuthSupport {
 
     @Override
     public String getHeader(Endpoint endpoint, RestMethodInfo info) {
@@ -36,5 +36,15 @@ public final class XAuthAuthorization implements Authorization {
     @Override
     public boolean hasAuthorization() {
         return false;
+    }
+
+    @Override
+    public String getConsumerKey() {
+        return null;
+    }
+
+    @Override
+    public String getConsumerSecret() {
+        return null;
     }
 }

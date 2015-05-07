@@ -55,6 +55,12 @@ public class RestAPIFactory {
                 authorization, restClient, converter, requestFactory));
     }
 
+    public static RestClient getRestClient(Object obj) {
+        final InvocationHandler handler = Proxy.getInvocationHandler(obj);
+        if (!(handler instanceof RestClient)) throw new IllegalArgumentException();
+        return (RestClient) handler;
+    }
+
     private static class RestInvocationHandler implements InvocationHandler, org.mariotaku.simplerestapi.RestClient {
         private final Endpoint endpoint;
         private final Authorization authorization;

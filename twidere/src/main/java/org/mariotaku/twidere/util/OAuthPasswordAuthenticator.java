@@ -26,6 +26,7 @@ import android.util.Xml;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.simplerestapi.RestAPIFactory;
 import org.mariotaku.simplerestapi.RestClient;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
@@ -43,8 +44,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,11 +64,10 @@ public class OAuthPasswordAuthenticator implements Constants {
     private final Endpoint endpoint;
 
     public OAuthPasswordAuthenticator(final TwitterOAuth oauth) {
-        final InvocationHandler handler = Proxy.getInvocationHandler(oauth);
-        if (!(handler instanceof RestClient)) throw new IllegalArgumentException();
+        final RestClient restClient = RestAPIFactory.getRestClient(oauth);
         this.oauth = oauth;
-        this.client = ((RestClient) handler).getRestClient();
-        this.endpoint = ((RestClient) handler).getEndpoint();
+        this.client = restClient.getRestClient();
+        this.endpoint = restClient.getEndpoint();
     }
 
     public OAuthToken getOAuthAccessToken(final String username, final String password) throws AuthenticationException {
