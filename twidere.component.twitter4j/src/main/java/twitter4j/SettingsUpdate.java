@@ -22,6 +22,7 @@ package twitter4j;
 import org.mariotaku.simplerestapi.http.ValueMap;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by mariotaku on 15/1/6.
@@ -83,5 +84,11 @@ public class SettingsUpdate implements ValueMap {
     @Override
     public String get(String key) {
         return settingsMap.get(key);
+    }
+
+    @Override
+    public String[] keys() {
+        final Set<String> keySet = settingsMap.keySet();
+        return keySet.toArray(new String[keySet.size()]);
     }
 }

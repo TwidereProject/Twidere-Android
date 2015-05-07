@@ -35,12 +35,21 @@ import java.io.OutputStream;
  */
 public class FileTypedData implements TypedData {
 
-    private final File file;
-    private final ContentType contentType;
-    private FileInputStream stream;
+    private long length = -1;
+    private File file;
+    private ContentType contentType;
+    private String fileName;
+    private InputStream stream;
 
     public FileTypedData(File file, ContentType contentType) {
         this.file = file;
+        this.contentType = contentType;
+    }
+
+    public FileTypedData(InputStream stream, String fileName, long length, ContentType contentType) {
+        this.stream = stream;
+        this.fileName = fileName;
+        this.length = length;
         this.contentType = contentType;
     }
 
@@ -50,7 +59,9 @@ public class FileTypedData implements TypedData {
 
     @Override
     public long length() {
-        return file.length();
+        if (length != -1) return length;
+        if (file == null) return -1;
+        return length = file.length();
     }
 
     @Override
@@ -83,5 +94,10 @@ public class FileTypedData implements TypedData {
     @Override
     public String contentEncoding() {
         return null;
+    }
+
+    public String fileName() {
+        if (fileName != null) return fileName;
+        return fileName = file.getName();
     }
 }

@@ -2,18 +2,18 @@ package twitter4j;
 
 public interface MediaUploadResponse extends TwitterResponse {
 
-	public long getId();
+    long getId();
 
-	public Image getImage();
+    Image getImage();
 
-	public long getSize();
+    long getSize();
 
-	public interface Image {
+    interface Image {
 
-		public int getHeight();
+        int getHeight();
 
-		public String getImageType();
+        String getImageType();
 
-		public int getWidth();
-	}
+        int getWidth();
+    }
 }

@@ -43,6 +43,8 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.simplerestapi.http.ContentType;
+import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -94,12 +96,12 @@ import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UserMentionEntity;
+import twitter4j.api.TwitterUpload;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
 import static org.mariotaku.twidere.util.Utils.getImagePathFromUri;
 import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 
 public class BackgroundOperationService extends IntentService implements Constants {
 
@@ -398,7 +400,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                                                                       final long accountId, final long recipientId,
                                                                       final String text, final String imageUri) {
         final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, accountId, true, true);
-        if (twitter == null) return SingleResponse.getInstance();
+        final TwitterUpload twitterUpload = TwitterAPIUtils.getTwitterInstance(this, accountId, true, true, TwitterUpload.class);
+        if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
             if (imageUri != null) {
@@ -411,7 +414,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                 BitmapUtils.downscaleImageIfNeeded(file, 100);
                 final ContentLengthInputStream is = new ContentLengthInputStream(file);
                 is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager, builder, text));
-                final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
+//                final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
+                final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(file);
                 directMessage = new ParcelableDirectMessage(twitter.sendDirectMessage(recipientId, text,
                         uploadResp.getId()), accountId, true);
                 if (!file.delete()) {
@@ -518,6 +522,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             }
             for (final ParcelableAccount account : statusUpdate.accounts) {
                 final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true);
+                final TwitterUpload upload = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true, TwitterUpload.class);
                 final StatusUpdate status = new StatusUpdate(shortenedText);
                 status.setInReplyToStatusId(statusUpdate.in_reply_to_status_id);
                 if (statusUpdate.location != null) {
@@ -538,8 +543,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                             is = new ContentLengthInputStream(file);
                             is.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
                                     statusUpdate));
-                            final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is,
-                                    o.outMimeType);
+                            final MediaUploadResponse uploadResp = upload.uploadMedia(
+                                    new FileTypedData(is, file.getName(), file.length(), ContentType.parse(o.outMimeType)));
                             mediaIds[i] = uploadResp.getId();
                         }
                     } catch (final FileNotFoundException e) {

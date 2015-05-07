@@ -28,7 +28,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import java.util.List;
 
 import twitter4j.Paging;
-import twitter4j.Query;
+import twitter4j.SearchQuery;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -52,7 +52,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     @NonNull
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        final Query query = new Query(processQuery(mQuery));
+        final SearchQuery query = new SearchQuery(processQuery(mQuery));
         query.setRpp(paging.getCount());
         if (paging.getMaxId() > 0) {
             query.setMaxId(paging.getMaxId());

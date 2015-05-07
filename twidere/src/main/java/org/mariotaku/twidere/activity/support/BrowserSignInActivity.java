@@ -40,6 +40,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -53,9 +54,10 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.StringReader;
 
-import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterFactory;
+import twitter4j.TwitterOAuth;
+import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import static android.text.TextUtils.isEmpty;
@@ -259,7 +261,10 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
                 }
             }
             try {
-                final Twitter twitter = new TwitterFactory(cb.build()).getInstance();
+                final Configuration conf = cb.build();
+                final TwitterOAuth twitter = new TwitterFactory(conf).getInstance(
+                        new OAuthAuthorization(conf.getOAuthConsumerKey(), conf.getOAuthConsumerSecret()),
+                        TwitterOAuth.class);
                 return twitter.getRequestToken(OAUTH_CALLBACK_OOB);
             } catch (final Exception e) {
                 e.printStackTrace();

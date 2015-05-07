@@ -81,6 +81,8 @@ public class BaseTypedData implements TypedData {
     public static TypedData wrap(Object value) {
         if (value instanceof TypedData) {
             return (TypedData) value;
+        } else if (value instanceof java.io.File) {
+            return new FileTypedData((java.io.File) value);
         }
         throw new UnsupportedOperationException();
     }

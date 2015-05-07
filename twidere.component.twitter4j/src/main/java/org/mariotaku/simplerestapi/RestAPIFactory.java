@@ -61,7 +61,7 @@ public class RestAPIFactory {
         return (RestClient) handler;
     }
 
-    private static class RestInvocationHandler implements InvocationHandler, org.mariotaku.simplerestapi.RestClient {
+    private static class RestInvocationHandler implements InvocationHandler, RestClient {
         private final Endpoint endpoint;
         private final Authorization authorization;
         private final Converter converter;

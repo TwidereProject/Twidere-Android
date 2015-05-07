@@ -1,8 +1,8 @@
 package org.mariotaku.simplerestapi.http;
 
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import android.util.Pair;
+
 import org.mariotaku.simplerestapi.Utils;
 
 import java.nio.charset.Charset;
@@ -21,12 +21,62 @@ public final class ContentType {
 
     public ContentType(String contentType, Charset charset) {
         this(contentType, new ArrayList<Pair<String, String>>());
-        parameters.add(new ImmutablePair<>("charset", charset.name()));
+        addParameter("charset", charset.name());
+    }
+
+    public ContentType(String contentType) {
+        this(contentType, new ArrayList<Pair<String, String>>());
     }
 
     public ContentType(String contentType, List<Pair<String, String>> parameters) {
         this.contentType = contentType;
         this.parameters = parameters;
+    }
+
+    public boolean addParameter(String name, String value) {
+        return parameters.add(Pair.create(name, value));
+    }
+
+    public ContentType parameter(String name, String value) {
+        addParameter(name, value);
+        return this;
+    }
+
+    public String parameter(String name) {
+        for (Pair<String, String> parameter : parameters) {
+            if (name.equalsIgnoreCase(parameter.first)) return parameter.second;
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "ContentType{" +
+                "contentType='" + contentType + '\'' +
+                ", parameters=" + parameters +
+                '}';
+    }
+
+    public Charset getCharset() {
+        if (parameters == null) return null;
+        final String charset = parameter("charset");
+        if (charset != null) return Charset.forName(charset);
+        return null;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String toHeader() {
+        final StringBuilder sb = new StringBuilder(contentType);
+        for (Pair<String, String> parameter : parameters) {
+            sb.append("; ");
+            sb.append(parameter.first);
+            sb.append("=");
+            sb.append(parameter.second);
+        }
+        return sb.toString();
     }
 
     public static ContentType parse(String string) {
@@ -47,7 +97,7 @@ public final class ContentType {
                 segs = Utils.split(string.substring(previousIndex + 1, idx).trim(), "=");
             }
             if (segs.length == 2) {
-                parameters.add(new ImmutablePair<>(segs[0], segs[1]));
+                parameters.add(Pair.create(segs[0], segs[1]));
             }
             if (idx < 0) {
                 break;
@@ -55,38 +105,5 @@ public final class ContentType {
             previousIndex = idx;
         }
         return new ContentType(contentType, parameters);
-    }
-
-    @Override
-    public String toString() {
-        return "ContentType{" +
-                "contentType='" + contentType + '\'' +
-                ", parameters=" + parameters +
-                '}';
-    }
-
-    public Charset getCharset() {
-        if (parameters == null) return null;
-        for (Pair<String, String> parameter : parameters) {
-            if ("charset".equals(parameter.getKey())) {
-                return Charset.forName(parameter.getValue());
-            }
-        }
-        return null;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public String toHeader() {
-        final StringBuilder sb = new StringBuilder(contentType);
-        for (Pair<String, String> parameter : parameters) {
-            sb.append("; ");
-            sb.append(parameter.getKey());
-            sb.append("=");
-            sb.append(parameter.getValue());
-        }
-        return sb.toString();
     }
 }

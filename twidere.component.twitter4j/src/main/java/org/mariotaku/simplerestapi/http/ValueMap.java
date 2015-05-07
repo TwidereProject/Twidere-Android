@@ -5,8 +5,10 @@ package org.mariotaku.simplerestapi.http;
  */
 public interface ValueMap {
 
-    public boolean has(String key);
+    boolean has(String key);
 
-    public Object get(String key);
+    Object get(String key);
+
+    String[] keys();
 
 }

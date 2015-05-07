@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Created by mariotaku on 15/2/6.
  */
-@Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Part {
     String[] value();

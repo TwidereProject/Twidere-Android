@@ -19,8 +19,9 @@
 
 package twitter4j;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
 
@@ -29,8 +30,6 @@ import java.util.Locale;
 import twitter4j.http.HttpResponseCode;
 import twitter4j.internal.util.InternalParseUtil;
 
-import static twitter4j.internal.util.InternalParseUtil.getInt;
-
 /**
  * An exception class that will be thrown when TwitterAPI calls are failed.<br>
  * In case the Twitter server returned HTTP error code, you can get the HTTP
@@ -38,18 +37,27 @@ import static twitter4j.internal.util.InternalParseUtil.getInt;
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
+@JsonObject
 public class TwitterException extends Exception implements TwitterResponse, HttpResponseCode {
-    private int statusCode = -1;
-    private int errorCode = -1;
-    private static final long serialVersionUID = -2623309261327598087L;
-    private ExceptionDiagnosis exceptionDiagnosis = null;
-    private String errorMessage = null;
 
-    private final static String[] FILTER = new String[]{"twitter4j"};
+    @JsonField(name = "errors")
+    ErrorInfo[] errors;
+
+    private int statusCode = -1;
+
+    public ErrorInfo[] getErrors() {
+        return errors;
+    }
+
+    private static final long serialVersionUID = -2623309261327598087L;
+
 
     boolean nested = false;
     private RestRequest request;
     private RestResponse response;
+
+    public TwitterException() {
+    }
 
     public TwitterException(final Exception cause) {
         this(cause.getMessage(), cause);
@@ -86,28 +94,8 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     public TwitterException(final String message, final Throwable cause) {
         super(message, cause);
-        decode(message);
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final TwitterException that = (TwitterException) o;
-
-        if (errorCode != that.errorCode) return false;
-        if (nested != that.nested) return false;
-        if (statusCode != that.statusCode) return false;
-        if (errorMessage != null ? !errorMessage.equals(that.errorMessage) : that.errorMessage != null)
-            return false;
-        if (exceptionDiagnosis != null ? !exceptionDiagnosis.equals(that.exceptionDiagnosis)
-                : that.exceptionDiagnosis != null) return false;
-        if (response != null ? !response.equals(that.response) : that.response != null)
-            return false;
-
-        return true;
-    }
 
     /**
      * Tests if the exception is caused by rate limitation exceed
@@ -137,7 +125,8 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     }
 
     public int getErrorCode() {
-        return errorCode;
+        if (errors == null || errors.length == 0) return -1;
+        return errors[0].getCode();
     }
 
     /**
@@ -147,23 +136,10 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      * @since Twitter4J 2.2.3
      */
     public String getErrorMessage() {
-        return errorMessage;
+        if (errors == null || errors.length == 0) return null;
+        return errors[0].getMessage();
     }
 
-    /**
-     * Returns a hexadecimal representation of this exception stacktrace.<br>
-     * An exception code is a hexadecimal representation of the stacktrace which
-     * enables it easier to Google known issues.<br>
-     * Format : XXXXXXXX:YYYYYYYY[ XX:YY]<br>
-     * Where XX is a hash code of stacktrace without line number<br>
-     * YY is a hash code of stacktrace excluding line number<br>
-     * [-XX:YY] will appear when this instance a root cause
-     *
-     * @return a hexadecimal representation of this exception stacktrace
-     */
-    public String getExceptionCode() {
-        return getExceptionDiagnosis().asHexString();
-    }
 
     public RestRequest getHttpRequest() {
         return request;
@@ -178,8 +154,8 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      */
     @Override
     public String getMessage() {
-        if (errorMessage != null && errorCode != -1)
-            return String.format(Locale.US, "Error %d: %s", errorCode, errorMessage);
+        if (errors != null && errors.length > 0)
+            return String.format(Locale.US, "Error %d: %s", errors[0].getCode(), errors[0].getMessage());
         else if (statusCode != -1)
             return String.format(Locale.US, "Error %d", statusCode);
         else
@@ -246,17 +222,6 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return statusCode;
     }
 
-    @Override
-    public int hashCode() {
-        int result = statusCode;
-        result = 31 * result + errorCode;
-        result = 31 * result + (exceptionDiagnosis != null ? exceptionDiagnosis.hashCode() : 0);
-        result = 31 * result + (response != null ? response.hashCode() : 0);
-        result = 31 * result + (errorMessage != null ? errorMessage.hashCode() : 0);
-        result = 31 * result + (nested ? 1 : 0);
-        return result;
-    }
-
     /**
      * Tests if the exception is caused by network issue
      *
@@ -274,7 +239,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      * @since Twitter4J 2.2.3
      */
     public boolean isErrorMessageAvailable() {
-        return errorMessage != null;
+        return errors != null && errors.length > 0;
     }
 
     /**
@@ -292,26 +257,6 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return getMessage();
     }
 
-    private void decode(final String str) {
-        if (str != null && str.startsWith("{")) {
-            try {
-                final JSONObject json = new JSONObject(str);
-                if (!json.isNull("errors")) {
-                    final JSONObject error = json.getJSONArray("errors").getJSONObject(0);
-                    errorMessage = error.getString("message");
-                    errorCode = getInt("code", error);
-                }
-            } catch (final JSONException ignore) {
-            }
-        }
-    }
-
-    private ExceptionDiagnosis getExceptionDiagnosis() {
-        if (null == exceptionDiagnosis) {
-            exceptionDiagnosis = new ExceptionDiagnosis(this, FILTER);
-        }
-        return exceptionDiagnosis;
-    }
 
     void setNested() {
         nested = true;

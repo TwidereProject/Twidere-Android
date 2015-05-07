@@ -17,16 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j.api;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.simplerestapi.method.GET;
-import org.mariotaku.simplerestapi.param.Query;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import twitter4j.QueryResult;
-import twitter4j.SearchQuery;
-import twitter4j.TwitterException;
+import twitter4j.*;
 
-public interface SearchResource {
-    @GET("/search/tweets.json")
-    QueryResult search(@Query SearchQuery query) throws TwitterException;
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+@JsonObject
+public class ErrorInfoImpl implements ErrorInfo {
+
+    @JsonField(name = "code")
+    int code;
+    @JsonField(name = "message")
+    String message;
+
+    @Override
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

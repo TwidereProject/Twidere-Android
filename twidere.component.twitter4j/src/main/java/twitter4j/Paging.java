@@ -127,4 +127,9 @@ public class Paging implements ValueMap {
         }
         return null;
     }
+
+    @Override
+    public String[] keys() {
+        return new String[]{"since_id", "max_id", "count", "page", "cursor"};
+    }
 }

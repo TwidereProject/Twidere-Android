@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,19 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j.api;
+package twitter4j;
 
-import java.io.File;
-import java.io.InputStream;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import twitter4j.MediaUploadResponse;
-import twitter4j.TwitterException;
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+public interface ErrorInfo {
 
-public interface MediaResources {
+    int getCode();
 
-    public MediaUploadResponse uploadMedia(File file) throws TwitterException;
-
-    public MediaUploadResponse uploadMedia(String fileName, InputStream fileBody, String fileType)
-            throws TwitterException;
-
+    String getMessage();
 }

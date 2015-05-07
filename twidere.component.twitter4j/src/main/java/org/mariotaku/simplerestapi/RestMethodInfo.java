@@ -89,7 +89,7 @@ public final class RestMethodInfo {
             final Object value = entry.getValue();
             if (value instanceof ValueMap) {
                 final ValueMap valueMap = (ValueMap) value;
-                for (String key : extra.value()) {
+                for (String key : getValueMapKeys(extra.value(), valueMap)) {
                     if (valueMap.has(key)) {
                         map.put(key, valueMap.get(key));
                     }
@@ -111,7 +111,7 @@ public final class RestMethodInfo {
             final Object value = entry.getValue();
             if (value instanceof ValueMap) {
                 final ValueMap valueMap = (ValueMap) value;
-                for (String key : form.value()) {
+                for (String key : getValueMapKeys(form.value(), valueMap)) {
                     if (valueMap.has(key)) {
                         list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
@@ -129,8 +129,8 @@ public final class RestMethodInfo {
         if (partsCache != null) return partsCache;
         final ArrayList<Pair<String, TypedData>> list = new ArrayList<>();
         for (Map.Entry<Part, Object> entry : parts.entrySet()) {
-            final Part form = entry.getKey();
-            final String[] names = form.value();
+            final Part part = entry.getKey();
+            final String[] names = part.value();
             final Object value = entry.getValue();
             if (value instanceof TypedData) {
                 list.add(Pair.create(names[0], (TypedData) value));
@@ -146,17 +146,17 @@ public final class RestMethodInfo {
         if (headersCache != null) return headersCache;
         final ArrayList<Pair<String, String>> list = new ArrayList<>();
         for (Map.Entry<Header, Object> entry : headers.entrySet()) {
-            final Header form = entry.getKey();
+            final Header header = entry.getKey();
             final Object value = entry.getValue();
             if (value instanceof ValueMap) {
                 final ValueMap valueMap = (ValueMap) value;
-                for (String key : form.value()) {
+                for (String key : getValueMapKeys(header.value(), valueMap)) {
                     if (valueMap.has(key)) {
                         list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
                 }
             } else if (value != null) {
-                for (String key : form.value()) {
+                for (String key : header.value()) {
                     list.add(Pair.create(key, String.valueOf(value)));
                 }
             }
@@ -192,7 +192,7 @@ public final class RestMethodInfo {
             final Object value = entry.getValue();
             if (value instanceof ValueMap) {
                 final ValueMap valueMap = (ValueMap) value;
-                for (String key : form.value()) {
+                for (String key : getValueMapKeys(form.value(), valueMap)) {
                     if (valueMap.has(key)) {
                         list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
@@ -266,6 +266,10 @@ public final class RestMethodInfo {
         }
         checkMethod(restMethod, body, forms, parts, file);
         return new RestMethodInfo(restMethod, pathFormat, body, paths, queries, headers, forms, parts, file, extras);
+    }
+
+    private static String[] getValueMapKeys(String[] annotationValue, ValueMap valueMap) {
+        return annotationValue != null && annotationValue.length > 0 ? annotationValue : valueMap.keys();
     }
 
     private static void checkMethod(RestMethod restMethod, Body body, HashMap<Form, Object> forms, HashMap<Part, Object> parts, FileValue file) {

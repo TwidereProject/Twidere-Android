@@ -25,6 +25,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
+import twitter4j.Paging;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -41,6 +42,10 @@ public class UserSearchLoader extends Twitter4JUsersLoader {
         mPage = page;
     }
 
+    public int getPage() {
+        return mPage;
+    }
+
     public String getQuery() {
         return mQuery;
     }
@@ -48,7 +53,9 @@ public class UserSearchLoader extends Twitter4JUsersLoader {
     @Override
     public List<User> getUsers(final Twitter twitter) throws TwitterException {
         if (twitter == null) return null;
-        return twitter.searchUsers(mQuery, mPage);
+        final Paging paging = new Paging();
+        paging.page(mPage);
+        return twitter.searchUsers(mQuery, paging);
     }
 
     protected long getUserPosition(final User user, final int index) {

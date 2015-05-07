@@ -50,6 +50,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.SocketFactory;
 
+import twitter4j.api.TwitterUpload;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationContext;
 import twitter4j.http.HostAddressResolver;
@@ -97,7 +98,18 @@ public final class TwitterFactory {
     }
 
     public Twitter getInstance(final Authorization auth) {
-        final OAuthEndpoint endpoint = new OAuthEndpoint(conf.getRestBaseURL(), conf.getSigningRestBaseURL());
+        return getInstance(auth, Twitter.class);
+    }
+
+    public <T> T getInstance(final Authorization auth, Class<T> cls) {
+        final OAuthEndpoint endpoint;
+        if (TwitterOAuth.class.isAssignableFrom(cls)) {
+            endpoint = new OAuthEndpoint(conf.getOAuthBaseURL(), conf.getSigningOAuthBaseURL());
+        } else if (TwitterUpload.class.isAssignableFrom(cls)) {
+            endpoint = new OAuthEndpoint(conf.getUploadBaseURL(), conf.getSigningUploadBaseURL());
+        } else {
+            endpoint = new OAuthEndpoint(conf.getRestBaseURL(), conf.getSigningRestBaseURL());
+        }
         final RestAPIFactory factory = new RestAPIFactory();
         factory.setClient(new OkHttpRestClient(createHttpClient(conf)));
         factory.setConverter(new TwitterConverter());
@@ -118,7 +130,7 @@ public final class TwitterFactory {
                 return new RestRequest(restMethod.value(), url, headers, info.getBody(), null);
             }
         });
-        return factory.build(Twitter.class);
+        return factory.build(cls);
     }
 
     public Twitter getInstance() {

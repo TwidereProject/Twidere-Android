@@ -1,5 +1,5 @@
 /*
- *                 Twidere - Twitter client for Android
+ * Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -19,14 +19,25 @@
 
 package twitter4j.api;
 
-import org.mariotaku.simplerestapi.method.GET;
-import org.mariotaku.simplerestapi.param.Query;
+import org.mariotaku.simplerestapi.http.BodyType;
+import org.mariotaku.simplerestapi.http.mime.FileTypedData;
+import org.mariotaku.simplerestapi.method.POST;
+import org.mariotaku.simplerestapi.param.Body;
+import org.mariotaku.simplerestapi.param.Part;
 
-import twitter4j.QueryResult;
-import twitter4j.SearchQuery;
+import java.io.File;
+
+import twitter4j.MediaUploadResponse;
 import twitter4j.TwitterException;
 
-public interface SearchResource {
-    @GET("/search/tweets.json")
-    QueryResult search(@Query SearchQuery query) throws TwitterException;
+public interface TwitterUpload {
+
+    @POST("/media/upload.json")
+    @Body(BodyType.MULTIPART)
+    MediaUploadResponse uploadMedia(@Part("media") File file) throws TwitterException;
+
+    @POST("/media/upload.json")
+    @Body(BodyType.MULTIPART)
+    MediaUploadResponse uploadMedia(@Part("media") FileTypedData data) throws TwitterException;
+
 }

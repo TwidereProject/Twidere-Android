@@ -15,6 +15,7 @@ import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.OkHttpRestClient;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
+import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
@@ -80,8 +81,15 @@ public class TwitterAPIUtils {
 
     @Nullable
     public static Twitter getTwitterInstance(final Context context, final long accountId,
-                                             final boolean includeEntities,
-                                             final boolean includeRetweets) {
+                                           final boolean includeEntities,
+                                           final boolean includeRetweets) {
+        return getTwitterInstance(context, accountId, includeEntities, includeRetweets, Twitter.class);
+    }
+
+    @Nullable
+    public static <T> T getTwitterInstance(final Context context, final long accountId,
+                                           final boolean includeEntities,
+                                           final boolean includeRetweets, Class<T> cls) {
         if (context == null) return null;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -109,8 +117,6 @@ public class TwitterAPIUtils {
                 cb.setHttpProxyPort(proxy_port);
             }
         }
-        final String prefConsumerKey = prefs.getString(SharedPreferenceConstants.KEY_CONSUMER_KEY, TwidereConstants.TWITTER_CONSUMER_KEY);
-        final String prefConsumerSecret = prefs.getString(SharedPreferenceConstants.KEY_CONSUMER_SECRET, TwidereConstants.TWITTER_CONSUMER_SECRET);
         final String apiUrlFormat = credentials.api_url_format;
         final String consumerKey = Utils.trim(credentials.consumer_key);
         final String consumerSecret = Utils.trim(credentials.consumer_secret);
@@ -134,23 +140,15 @@ public class TwitterAPIUtils {
         cb.setIncludeRTsEnabled(includeRetweets);
         cb.setIncludeReplyCountEnabled(true);
         cb.setIncludeDescendentReplyCountEnabled(true);
+        return new TwitterFactory(cb.build()).getInstance(getAuthorization(credentials), cls);
+    }
+
+    public static Authorization getAuthorization(ParcelableAccount.ParcelableCredentials credentials) {
         switch (credentials.auth_type) {
             case TwidereDataStore.Accounts.AUTH_TYPE_OAUTH:
             case TwidereDataStore.Accounts.AUTH_TYPE_XAUTH: {
-                if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
-                    cb.setOAuthConsumerKey(consumerKey);
-                    cb.setOAuthConsumerSecret(consumerSecret);
-                } else if (!isEmpty(prefConsumerKey) && !isEmpty(prefConsumerSecret)) {
-                    cb.setOAuthConsumerKey(prefConsumerKey);
-                    cb.setOAuthConsumerSecret(prefConsumerSecret);
-                } else {
-                    cb.setOAuthConsumerKey(TwidereConstants.TWITTER_CONSUMER_KEY);
-                    cb.setOAuthConsumerSecret(TwidereConstants.TWITTER_CONSUMER_SECRET);
-                }
-                final String token = credentials.oauth_token;
-                final String tokenSecret = credentials.oauth_token_secret;
-                if (isEmpty(token) || isEmpty(tokenSecret)) return null;
-                return new TwitterFactory(cb.build()).getInstance(new OAuthToken(token, tokenSecret));
+                return new OAuthAuthorization(credentials.consumer_key, credentials.consumer_secret,
+                        new OAuthToken(credentials.oauth_token, credentials.oauth_token_secret));
             }
             case TwidereDataStore.Accounts.AUTH_TYPE_BASIC: {
                 final String screenName = credentials.screen_name;
@@ -158,15 +156,10 @@ public class TwitterAPIUtils {
                 final String loginName = username != null ? username : screenName;
                 final String password = credentials.basic_auth_password;
                 if (isEmpty(loginName) || isEmpty(password)) return null;
-                return new TwitterFactory(cb.build()).getInstance(new BasicAuthorization(loginName, password));
-            }
-            case TwidereDataStore.Accounts.AUTH_TYPE_TWIP_O_MODE: {
-                return new TwitterFactory(cb.build()).getInstance(new EmptyAuthorization());
-            }
-            default: {
-                return null;
+                return new BasicAuthorization(loginName, password);
             }
         }
+        return new EmptyAuthorization();
     }
 
     public static RestHttpClient getHttpClient(final Context context, final int timeoutMillis,

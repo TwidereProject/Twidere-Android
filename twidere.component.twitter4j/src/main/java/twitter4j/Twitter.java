@@ -21,7 +21,6 @@ import twitter4j.api.FavoritesResources;
 import twitter4j.api.FriendsFollowersResources;
 import twitter4j.api.HelpResources;
 import twitter4j.api.ListsResources;
-import twitter4j.api.MediaResources;
 import twitter4j.api.PlacesGeoResources;
 import twitter4j.api.PrivateActivityResources;
 import twitter4j.api.PrivateDirectMessagesResources;
@@ -40,9 +39,9 @@ import twitter4j.api.UsersResources;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.2.0
  */
-public interface Twitter extends TwitterConstants, TwitterBase, SearchResource, TimelinesResources,
+public interface Twitter extends SearchResource, TimelinesResources,
         TweetResources, UsersResources, ListsResources, DirectMessagesResources, FriendsFollowersResources,
         FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
         HelpResources, PrivateActivityResources, PrivateTweetResources, PrivateTimelinesResources,
-        PrivateFriendsFollowersResources, PrivateDirectMessagesResources, MediaResources {
+        PrivateFriendsFollowersResources, PrivateDirectMessagesResources {
 }

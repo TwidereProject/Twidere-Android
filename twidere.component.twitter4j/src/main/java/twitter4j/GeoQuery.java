@@ -212,4 +212,9 @@ public final class GeoQuery implements ValueMap {
         }
         return null;
     }
+
+    @Override
+    public String[] keys() {
+        return new String[]{"lat", "long", "ip", "accuracy", "granularity", "max_results"};
+    }
 }

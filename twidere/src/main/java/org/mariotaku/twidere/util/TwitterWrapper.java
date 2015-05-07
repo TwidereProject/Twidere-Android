@@ -142,7 +142,7 @@ public class TwitterWrapper implements Constants {
                     return user;
             }
         }
-        for (final User user : twitter.searchUsers(searchScreenName, 1)) {
+        for (final User user : twitter.searchUsers(searchScreenName, paging)) {
             if (user.getId() == id || searchScreenName.equalsIgnoreCase(user.getScreenName()))
                 return user;
         }

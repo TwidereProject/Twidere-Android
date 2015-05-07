@@ -235,4 +235,10 @@ public final class StatusUpdate implements ValueMap {
         }
         return null;
     }
+
+    @Override
+    public String[] keys() {
+        return new String[]{"status", "in_reply_to_status_id", "lat", "long", "place_id",
+                "possibly_sensitive", "display_coordinates", "media_ids"};
+    }
 }
