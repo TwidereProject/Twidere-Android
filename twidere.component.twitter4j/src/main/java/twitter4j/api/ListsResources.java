@@ -70,12 +70,15 @@ public interface ListsResources {
 
     PageableResponseList<UserList> getUserListMemberships(long cursor) throws TwitterException;
 
-    PageableResponseList<UserList> getUserListMemberships(long listMemberId, long cursor) throws TwitterException;
+    @GET("/lists/memberships.json")
+    PageableResponseList<UserList> getUserListMemberships(@Query("user_id") long listMemberId, @Query Paging paging) throws TwitterException;
 
-    PageableResponseList<UserList> getUserListMemberships(long listMemberId, long cursor, boolean filterToOwnedLists)
-            throws TwitterException;
+    @GET("/lists/memberships.json")
+    PageableResponseList<UserList> getUserListMemberships(@Query("user_id") long listMemberId, @Query Paging paging,
+                                                          @Query("filter_to_owned_lists") boolean filterToOwnedLists) throws TwitterException;
 
-    PageableResponseList<UserList> getUserListMemberships(String listMemberScreenName, long cursor)
+    @GET("/lists/memberships.json")
+    PageableResponseList<UserList> getUserListMemberships(@Query("screen_name") String listMemberScreenName, @Query Paging paging)
             throws TwitterException;
 
     PageableResponseList<UserList> getUserListMemberships(String listMemberScreenName, long cursor,

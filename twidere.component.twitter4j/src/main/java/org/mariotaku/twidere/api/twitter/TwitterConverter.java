@@ -121,6 +121,7 @@ public class TwitterConverter implements Converter {
         LoganSquare.registerTypeConverter(Indices.class, Indices.CONVERTER);
         LoganSquare.registerTypeConverter(GeoLocation.class, GeoLocation.CONVERTER);
         LoganSquare.registerTypeConverter(MediaEntity.Type.class, EnumConverter.get(MediaEntity.Type.class));
+        LoganSquare.registerTypeConverter(UserList.Mode.class, EnumConverter.get(UserList.Mode.class));
 
         registerWrapper(QueryResult.class, QueryResultWrapper.class);
         registerWrapper(PageableResponseList.class, PageableResponseListWrapper.class);
