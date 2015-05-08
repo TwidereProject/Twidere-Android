@@ -17,24 +17,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package twitter4j;
+package org.mariotaku.twidere.text.validator;
 
-import org.mariotaku.simplerestapi.http.SimpleValueMap;
+import android.support.annotation.NonNull;
+
+import com.rengwuxian.materialedittext.validation.METValidator;
 
 /**
  * Created by mariotaku on 15/5/8.
  */
-public class UserListUpdate extends SimpleValueMap {
-
-    public void setDescription(String description) {
-        put("description", description);
+public class UserListNameValidator extends METValidator {
+    public UserListNameValidator(@NonNull String errorMessage) {
+        super(errorMessage);
     }
 
-    public void setName(String name) {
-        put("name", name);
-    }
-
-    public void setMode(UserList.Mode mode) {
-        put("mode", mode.getMode());
+    @Override
+    public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
+        if (isEmpty) return false;
+        for (int i = 0, j = text.length(); i < j; i++) {
+            final char ch = text.charAt(i);
+            if (i == 0 && !Character.isLetter(ch)) return false;
+            if (!Character.isLetterOrDigit(ch) && ch != '-' && ch != '_') return false;
+        }
+        return true;
     }
 }

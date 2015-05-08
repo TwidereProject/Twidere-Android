@@ -53,7 +53,13 @@ public interface UserList extends Comparable<UserList>, TwitterResponse {
     boolean isFollowing();
 
     enum Mode {
-        PUBLIC, PRIVATE;
+        PUBLIC("public"), PRIVATE("private");
+
+        private final String mode;
+
+        Mode(String mode) {
+            this.mode = mode;
+        }
 
         public static Mode parse(String str) {
             switch (str) {
@@ -65,5 +71,8 @@ public interface UserList extends Comparable<UserList>, TwitterResponse {
             throw new UnsupportedOperationException();
         }
 
+        public String getMode() {
+            return mode;
+        }
     }
 }

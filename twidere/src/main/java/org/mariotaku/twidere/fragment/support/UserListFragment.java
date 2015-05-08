@@ -54,6 +54,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
@@ -67,6 +69,7 @@ import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.text.validator.UserListNameValidator;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -87,7 +90,6 @@ import twitter4j.UserListUpdate;
 
 import static org.mariotaku.twidere.util.MenuUtils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.openUserListDetails;
 import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
@@ -458,7 +460,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     public static class EditUserListDialogFragment extends BaseSupportDialogFragment implements
             DialogInterface.OnClickListener {
 
-        private EditText mEditName, mEditDescription;
+        private MaterialEditText mEditName, mEditDescription;
         private CheckBox mPublicCheckBox;
         private String mName, mDescription;
         private long mAccountId;
@@ -476,7 +478,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                     mIsPublic = mPublicCheckBox.isChecked();
                     if (mName == null || mName.length() <= 0) return;
                     final UserListUpdate update = new UserListUpdate();
-                    update.setPublic(mIsPublic);
+                    update.setMode(mIsPublic ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
                     update.setName(mName);
                     update.setDescription(mDescription);
                     mTwitterWrapper.updateUserListDetails(mAccountId, mListId, update);
@@ -500,8 +502,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
             final View view = LayoutInflater.from(wrapped).inflate(R.layout.dialog_user_list_detail_editor, null);
             builder.setView(view);
-            mEditName = (EditText) view.findViewById(R.id.name);
-            mEditDescription = (EditText) view.findViewById(R.id.description);
+            mEditName = (MaterialEditText) view.findViewById(R.id.name);
+            mEditName.addValidator(new UserListNameValidator(getString(R.string.invalid_list_name)));
+            mEditDescription = (MaterialEditText) view.findViewById(R.id.description);
             mPublicCheckBox = (CheckBox) view.findViewById(R.id.is_public);
             if (mName != null) {
                 mEditName.setText(mName);

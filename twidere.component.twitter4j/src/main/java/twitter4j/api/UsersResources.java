@@ -40,9 +40,6 @@ import twitter4j.SettingsUpdate;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-/**
- * @author Joern Huxhorn - jhuxhorn at googlemail.com
- */
 public interface UsersResources {
 
     @POST("/blocks/create.json")

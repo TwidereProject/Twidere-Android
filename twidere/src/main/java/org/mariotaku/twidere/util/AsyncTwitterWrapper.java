@@ -1172,7 +1172,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mContext, account_id, false);
             if (twitter == null || list_name == null) return SingleResponse.getInstance();
             try {
-                final UserList list = twitter.createUserList(list_name, is_public, description);
+                final UserListUpdate userListUpdate = new UserListUpdate();
+                userListUpdate.setName(list_name);
+                userListUpdate.setMode(is_public ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
+                userListUpdate.setDescription(description);
+                final UserList list = twitter.createUserList(userListUpdate);
                 return SingleResponse.getInstance(list, null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
