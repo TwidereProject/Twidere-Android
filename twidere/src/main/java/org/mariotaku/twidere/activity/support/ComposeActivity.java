@@ -61,8 +61,10 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -729,6 +731,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 setMenu();
                 updateTextCount();
+                if (s instanceof Spannable && count == 1 && before == 0) {
+                    final ImageSpan[] imageSpans = ((Spannable) s).getSpans(start, start + count, ImageSpan.class);
+                    if (imageSpans.length == 1) {
+                        final Intent intent = new Intent(ComposeActivity.this, ImagePickerActivity.class);
+                        intent.setAction(ImagePickerActivity.INTENT_ACTION_GET_IMAGE);
+                        intent.setData(Uri.parse(imageSpans[0].getSource()));
+                        startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                    }
+                }
             }
 
             @Override
@@ -1028,7 +1039,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean pickImage() {
         final Intent intent = new Intent(this, ImagePickerActivity.class);
-        intent.setAction(INTENT_ACTION_PICK_IMAGE);
+        intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
         startActivityForResult(intent, REQUEST_PICK_IMAGE);
         return true;
     }
@@ -1151,7 +1162,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean takePhoto() {
         final Intent intent = new Intent(this, ImagePickerActivity.class);
-        intent.setAction(INTENT_ACTION_TAKE_PHOTO);
+        intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
         startActivityForResult(intent, REQUEST_TAKE_PHOTO);
         return true;
     }

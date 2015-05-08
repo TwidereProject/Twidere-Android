@@ -33,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 
 import static android.os.Environment.getExternalStorageState;
 
@@ -40,6 +41,10 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
 
     public static final int REQUEST_PICK_IMAGE = 101;
     public static final int REQUEST_TAKE_PHOTO = 102;
+
+    public static final String INTENT_ACTION_TAKE_PHOTO = INTENT_PACKAGE_PREFIX + "TAKE_PHOTO";
+    public static final String INTENT_ACTION_PICK_IMAGE = INTENT_PACKAGE_PREFIX + "PICK_IMAGE";
+    public static final String INTENT_ACTION_GET_IMAGE = INTENT_PACKAGE_PREFIX + "GET_IMAGE";
 
     private Uri mTempPhotoUri;
     private CopyImageTask mTask;
@@ -104,6 +109,8 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
             takePhoto();
         } else if (INTENT_ACTION_PICK_IMAGE.equals(action)) {
             pickImage();
+        } else if (INTENT_ACTION_GET_IMAGE.equals(action)) {
+            imageSelected(intent.getData());
         } else {
             new ImageSourceDialogFragment().show(getSupportFragmentManager(), "image_source");
         }
@@ -180,10 +187,15 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
             OutputStream os = null;
             try {
                 final File cacheDir = mActivity.getCacheDir();
-                is = cr.openInputStream(mUri);
+                final Uri uri = this.mUri;
+                if (SCHEME_HTTP.equals(uri.getScheme()) || SCHEME_HTTPS.equals(uri.getScheme())) {
+                    is = new URL(uri.toString()).openStream();
+                } else {
+                    is = cr.openInputStream(uri);
+                }
                 final BitmapFactory.Options opts = new BitmapFactory.Options();
                 opts.inJustDecodeBounds = true;
-                BitmapFactory.decodeStream(cr.openInputStream(mUri), null, opts);
+                BitmapFactory.decodeStream(cr.openInputStream(uri), null, opts);
                 final String mimeType = opts.outMimeType;
                 final String suffix = mimeType != null ? "."
                         + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) : null;
