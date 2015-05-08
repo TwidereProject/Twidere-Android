@@ -54,11 +54,14 @@ public interface FriendsFollowersResources {
 
     IDs getFollowersIDs(String screenName, Paging paging) throws TwitterException;
 
-    PageableResponseList<User> getFollowersList(Paging paging) throws TwitterException;
+    @GET("/followers/list.json")
+    PageableResponseList<User> getFollowersList(@Query Paging paging) throws TwitterException;
 
-    PageableResponseList<User> getFollowersList(long userId, Paging paging) throws TwitterException;
+    @GET("/followers/list.json")
+    PageableResponseList<User> getFollowersList(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
 
-    PageableResponseList<User> getFollowersList(String screenName, Paging paging) throws TwitterException;
+    @GET("/followers/list.json")
+    PageableResponseList<User> getFollowersList(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
     IDs getFriendsIDs(Paging paging) throws TwitterException;
 

@@ -140,10 +140,7 @@ import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
-import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthSupport;
-import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
@@ -259,8 +256,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
 import twitter4j.UserMentionEntity;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
@@ -2254,125 +2249,6 @@ public final class Utils implements Constants, TwitterConstants {
         return date.getTime();
     }
 
-    public static Authorization getTwitterAuthorization(final Context context, final ParcelableCredentials account) {
-        if (context == null || account == null) return null;
-        switch (account.auth_type) {
-            case Accounts.AUTH_TYPE_OAUTH:
-            case Accounts.AUTH_TYPE_XAUTH: {
-                final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
-                        Context.MODE_PRIVATE);
-                // Here I use old consumer key/secret because it's default
-                // key for older
-                // versions
-                final String prefConsumerKey = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_LEGACY);
-                final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_LEGACY);
-                final ConfigurationBuilder cb = new ConfigurationBuilder();
-                if (!isEmpty(account.api_url_format)) {
-                    final String versionSuffix = account.no_version_suffix ? null : "/1.1/";
-                    cb.setRestBaseURL(getApiUrl(account.api_url_format, "api", versionSuffix));
-                    cb.setOAuthBaseURL(getApiUrl(account.api_url_format, "api", "/oauth/"));
-                    cb.setUploadBaseURL(getApiUrl(account.api_url_format, "upload", versionSuffix));
-                    cb.setOAuthAuthorizationURL(getApiUrl(account.api_url_format, null, null));
-                    if (!account.same_oauth_signing_url) {
-                        cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
-                        cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
-                        cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
-                    }
-                }
-                if (!isEmpty(account.consumer_key) && !isEmpty(account.consumer_secret)) {
-                    cb.setOAuthConsumerKey(account.consumer_key);
-                    cb.setOAuthConsumerSecret(account.consumer_secret);
-                } else if (!isEmpty(prefConsumerKey) && !isEmpty(prefConsumerSecret)) {
-                    cb.setOAuthConsumerKey(prefConsumerKey);
-                    cb.setOAuthConsumerSecret(prefConsumerSecret);
-                } else {
-                    cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY_LEGACY);
-                    cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET_LEGACY);
-                }
-                final Configuration conf = cb.build();
-                return new OAuthAuthorization(conf.getOAuthConsumerKey(), conf.getOAuthConsumerSecret(),
-                        new OAuthToken(account.oauth_token, account.oauth_token_secret));
-            }
-            case Accounts.AUTH_TYPE_BASIC: {
-                final String screenName = account.screen_name;
-                final String username = account.basic_auth_username;
-                final String loginName = username != null ? username : screenName;
-                final String password = account.basic_auth_password;
-                if (isEmpty(loginName) || isEmpty(password)) return null;
-                return new BasicAuthorization(loginName, password);
-            }
-            default: {
-                return null;
-            }
-        }
-    }
-
-    public static Authorization getTwitterAuthorization(final Context context, final long accountId) {
-
-        final String where = Expression.equals(new Column(Accounts.ACCOUNT_ID), accountId).getSQL();
-        final Cursor c = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, where, null, null);
-        if (c == null) return null;
-        try {
-            if (!c.moveToFirst()) return null;
-
-            switch (c.getInt(c.getColumnIndexOrThrow(Accounts.AUTH_TYPE))) {
-                case Accounts.AUTH_TYPE_OAUTH:
-                case Accounts.AUTH_TYPE_XAUTH: {
-                    final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
-                            Context.MODE_PRIVATE);
-                    // Here I use old consumer key/secret because it's default
-                    // key for older
-                    // versions
-                    final String prefConsumerKey = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_LEGACY);
-                    final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_LEGACY);
-                    final ConfigurationBuilder cb = new ConfigurationBuilder();
-                    final String apiUrlFormat = c.getString(c.getColumnIndex(Accounts.API_URL_FORMAT));
-                    final String consumerKey = trim(c.getString(c.getColumnIndex(Accounts.CONSUMER_KEY)));
-                    final String consumerSecret = trim(c.getString(c.getColumnIndex(Accounts.CONSUMER_SECRET)));
-                    final boolean sameOAuthSigningUrl = c.getInt(c.getColumnIndex(Accounts.SAME_OAUTH_SIGNING_URL)) == 1;
-                    if (!isEmpty(apiUrlFormat)) {
-                        cb.setRestBaseURL(getApiUrl(apiUrlFormat, "api", "/1.1/"));
-                        cb.setOAuthBaseURL(getApiUrl(apiUrlFormat, "api", "/oauth/"));
-                        cb.setUploadBaseURL(getApiUrl(apiUrlFormat, "upload", "/1.1/"));
-                        cb.setOAuthAuthorizationURL(getApiUrl(apiUrlFormat, null, null));
-                        if (!sameOAuthSigningUrl) {
-                            cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
-                            cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
-                            cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
-                        }
-                    }
-                    if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
-                        cb.setOAuthConsumerKey(consumerKey);
-                        cb.setOAuthConsumerSecret(consumerSecret);
-                    } else if (!isEmpty(prefConsumerKey) && !isEmpty(prefConsumerSecret)) {
-                        cb.setOAuthConsumerKey(prefConsumerKey);
-                        cb.setOAuthConsumerSecret(prefConsumerSecret);
-                    } else {
-                        cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY_LEGACY);
-                        cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET_LEGACY);
-                    }
-                    final Configuration conf = cb.build();
-                    final String token = c.getString(c.getColumnIndexOrThrow(Accounts.OAUTH_TOKEN));
-                    final String tokenSecret = c.getString(c.getColumnIndexOrThrow(Accounts.OAUTH_TOKEN_SECRET));
-                    return new OAuthAuthorization(conf.getOAuthConsumerKey(), conf.getOAuthConsumerSecret(), new OAuthToken(token, tokenSecret));
-                }
-                case Accounts.AUTH_TYPE_BASIC: {
-                    final String screenName = c.getString(c.getColumnIndexOrThrow(Accounts.SCREEN_NAME));
-                    final String username = c.getString(c.getColumnIndexOrThrow(Accounts.BASIC_AUTH_USERNAME));
-                    final String loginName = username != null ? username : screenName;
-                    final String password = c.getString(c.getColumnIndexOrThrow(Accounts.BASIC_AUTH_PASSWORD));
-                    if (isEmpty(loginName) || isEmpty(password)) return null;
-                    return new BasicAuthorization(loginName, password);
-                }
-                default: {
-                    return null;
-                }
-            }
-        } finally {
-            c.close();
-        }
-    }
 
     public static String getTwitterErrorMessage(final Context context, final CharSequence action,
                                                 final TwitterException te) {
@@ -3420,65 +3296,19 @@ public final class Utils implements Constants, TwitterConstants {
 
     }
 
-    public static void setUserAgent(final Context context, final ConfigurationBuilder cb) {
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final boolean gzipCompressing = prefs.getBoolean(KEY_GZIP_COMPRESSING, true);
+
+    public static String getTwidereUserAgent(final Context context) {
         final PackageManager pm = context.getPackageManager();
         try {
             final PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-            final String version_name = pi.versionName;
-            cb.setClientVersion(pi.versionName);
-            cb.setClientName(TWIDERE_APP_NAME);
-            cb.setClientURL(TWIDERE_PROJECT_URL);
-            cb.setHttpUserAgent(TWIDERE_APP_NAME + " " + TWIDERE_PROJECT_URL + " / " + version_name
-                    + (gzipCompressing ? " (gzip)" : ""));
+            return TWIDERE_APP_NAME + " " + TWIDERE_PROJECT_URL + " / " + pi.versionName;
         } catch (final PackageManager.NameNotFoundException e) {
             throw new AssertionError(e);
         }
     }
 
-    /**
-     * User-Agent format of official client:
-     * TwitterAndroid/[versionName] ([versionCode]-[buildName]-[r|d)]-[buildNumber]) [deviceInfo]
-     *
-     * @param context
-     * @param consumerKey
-     * @param consumerSecret
-     * @param cb
-     */
-    public static void setClientUserAgent(final Context context, String consumerKey, String consumerSecret, final ConfigurationBuilder cb) {
-        final ConsumerKeyType officialKeyType = TwitterContentUtils.getOfficialKeyType(context, consumerKey, consumerSecret);
-        if (officialKeyType == ConsumerKeyType.UNKNOWN) {
-            setUserAgent(context, cb);
-            return;
-        }
-        final String userAgentName = getUserAgentName(officialKeyType);
-        cb.setClientName(userAgentName);
-        cb.setClientURL(null);
-        cb.setClientVersion(null);
-        cb.setHttpUserAgent(userAgentName);
-//        final PackageManager pm = context.getPackageManager();
-//        final String clientName = "TwitterAndroid";
-//        cb.setClientName(clientName);
-//        cb.setClientURL(null);
-//        String versionName;
-//        int versionCode;
-//        try {
-//            final PackageInfo packageInfo = pm.getPackageInfo("com.twitter.android", 0);
-//            versionName = packageInfo.versionName;
-//            versionCode = packageInfo.versionCode;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            versionName = "5.53.0";
-//            versionCode = 4030814;
-//        }
-//        cb.setClientVersion(versionName);
-//        final String deviceInfo = String.format(Locale.ROOT, "%s/%s (%s;%s;%s;%s;)", Build.MODEL,
-//                Build.VERSION.RELEASE, Build.MANUFACTURER, Build.MODEL, Build.BRAND, Build.PRODUCT);
-//        cb.setHttpUserAgent(String.format(Locale.ROOT, "%s/%s (%d-%c-%d) %s", clientName,
-//                versionName, versionCode, 'r', versionCode / 4200, deviceInfo));
-    }
 
-    private static String getUserAgentName(ConsumerKeyType type) {
+    public static String getUserAgentName(ConsumerKeyType type) {
         switch (type) {
             case TWITTER_FOR_ANDROID: {
                 return "TwitterAndroid";

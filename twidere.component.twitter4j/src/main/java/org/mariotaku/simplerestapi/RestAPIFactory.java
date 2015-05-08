@@ -22,6 +22,7 @@ public class RestAPIFactory {
     private Converter converter;
     private RestHttpClient restClient;
     private RestRequest.Factory requestFactory;
+    private ExceptionFactory exceptionFactory;
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
@@ -43,6 +44,10 @@ public class RestAPIFactory {
         this.requestFactory = factory;
     }
 
+    public void setExceptionFactory(ExceptionFactory factory) {
+        this.exceptionFactory = factory;
+    }
+
     public RestAPIFactory() {
 
     }
@@ -52,7 +57,7 @@ public class RestAPIFactory {
         final ClassLoader classLoader = cls.getClassLoader();
         final Class[] interfaces = new Class[]{cls};
         return (T) Proxy.newProxyInstance(classLoader, interfaces, new RestInvocationHandler(endpoint,
-                authorization, restClient, converter, requestFactory));
+                authorization, restClient, converter, requestFactory, exceptionFactory));
     }
 
     public static RestClient getRestClient(Object obj) {
@@ -66,6 +71,7 @@ public class RestAPIFactory {
         private final Authorization authorization;
         private final Converter converter;
         private final RestRequest.Factory requestFactory;
+        private final ExceptionFactory exceptionFactory;
 
         @Override
         public Endpoint getEndpoint() {
@@ -89,12 +95,15 @@ public class RestAPIFactory {
 
         private final RestHttpClient restClient;
 
-        public RestInvocationHandler(Endpoint endpoint, Authorization authorization, RestHttpClient restClient, Converter converter, RestRequest.Factory requestFactory) {
+        public RestInvocationHandler(Endpoint endpoint, Authorization authorization,
+                                     RestHttpClient restClient, Converter converter,
+                                     RestRequest.Factory requestFactory, ExceptionFactory exceptionFactory) {
             this.endpoint = endpoint;
             this.authorization = authorization;
             this.restClient = restClient;
             this.converter = converter;
             this.requestFactory = requestFactory != null ? requestFactory : new RestRequest.DefaultFactory();
+            this.exceptionFactory = exceptionFactory != null ? exceptionFactory : new DefaultExceptionFactory();
         }
 
         @SuppressWarnings("TryWithIdenticalCatches")
@@ -124,8 +133,7 @@ public class RestAPIFactory {
                 }
                 return converter.convert(response, method.getGenericReturnType());
             } catch (IOException e) {
-                final RestException re = new RestException(e);
-                re.setResponse(response);
+                final Exception re = exceptionFactory.newException(e, response);
                 if (parameterTypes.length > 0) {
                     final Class<?> lastParameterType = parameterTypes[parameterTypes.length - 1];
                     if (ErrorCallback.class.isAssignableFrom(lastParameterType)) {
@@ -149,4 +157,19 @@ public class RestAPIFactory {
         }
     }
 
+    public interface ExceptionFactory {
+
+        Exception newException(Throwable cause, RestResponse response);
+
+    }
+
+    public static final class DefaultExceptionFactory implements ExceptionFactory {
+
+        @Override
+        public Exception newException(Throwable cause, RestResponse response) {
+            final RestException e = new RestException(cause);
+            e.setResponse(response);
+            return e;
+        }
+    }
 }

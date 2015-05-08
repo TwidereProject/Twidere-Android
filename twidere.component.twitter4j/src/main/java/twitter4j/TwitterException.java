@@ -61,7 +61,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     public TwitterException() {
     }
 
-    public TwitterException(final Exception cause) {
+    public TwitterException(final Throwable cause) {
         this(cause.getMessage(), cause);
         if (cause instanceof TwitterException) {
             ((TwitterException) cause).setNested();
@@ -72,7 +72,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         this(message, (Throwable) null);
     }
 
-    public TwitterException(final String message, final Exception cause, final int statusCode) {
+    public TwitterException(final String message, final Throwable cause, final int statusCode) {
         this(message, cause);
         this.statusCode = statusCode;
     }
@@ -84,7 +84,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         statusCode = res != null ? res.getStatus() : -1;
     }
 
-    private void setResponse(RestResponse res) {
+    public void setResponse(RestResponse res) {
         response = res;
         if (res != null) {
             rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(res);
@@ -261,4 +261,5 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     void setNested() {
         nested = true;
     }
+
 }
