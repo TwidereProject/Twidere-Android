@@ -61,8 +61,10 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -729,6 +731,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 setMenu();
                 updateTextCount();
+                if (s instanceof Spannable && count == 1 && before == 0) {
+                    final ImageSpan[] imageSpans = ((Spannable) s).getSpans(start, start + count, ImageSpan.class);
+                    if (imageSpans.length == 1) {
+                        Toast.makeText(ComposeActivity.this, imageSpans[0].getSource(), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
