@@ -16,10 +16,9 @@
 
 package twitter4j;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public interface UserList extends Comparable<UserList>, TwitterResponse, Serializable {
+public interface UserList extends Comparable<UserList>, TwitterResponse {
     Mode getMode();
 
     String getDescription();

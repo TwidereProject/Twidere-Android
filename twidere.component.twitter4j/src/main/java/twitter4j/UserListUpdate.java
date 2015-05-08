@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -19,14 +19,22 @@
 
 package twitter4j;
 
-import org.mariotaku.simplerestapi.http.Authorization;
-
-import twitter4j.conf.Configuration;
+import org.mariotaku.simplerestapi.http.SimpleValueMap;
 
 /**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.2.0
+ * Created by mariotaku on 15/5/8.
  */
-public interface TwitterBase extends TwitterOAuth{
+public class UserListUpdate extends SimpleValueMap {
 
+    public void setDescription(String description) {
+        put("description", description);
+    }
+
+    public void setName(String name) {
+        put("name", name);
+    }
+
+    public void setPublic(boolean isPublic) {
+        put("public", String.valueOf(isPublic));
+    }
 }

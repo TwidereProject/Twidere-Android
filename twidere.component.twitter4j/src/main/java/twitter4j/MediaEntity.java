@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 
-public interface MediaEntity extends UrlEntity, Serializable {
+public interface MediaEntity extends UrlEntity {
 
     long getId();
 
@@ -41,7 +41,7 @@ public interface MediaEntity extends UrlEntity, Serializable {
 
     VideoInfo getVideoInfo();
 
-    interface VideoInfo extends Serializable {
+    interface VideoInfo {
 
         Variant[] getVariants();
 
@@ -49,7 +49,7 @@ public interface MediaEntity extends UrlEntity, Serializable {
 
         long getDuration();
 
-        interface Variant extends Serializable {
+        interface Variant {
 
             String getContentType();
 
@@ -60,7 +60,7 @@ public interface MediaEntity extends UrlEntity, Serializable {
 
     }
 
-    interface Size extends Serializable {
+    interface Size {
         String THUMB = "thumb";
         String SMALL = "small";
         String MEDIUM = "medium";

@@ -24,7 +24,7 @@ import java.io.Serializable;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.1.9
  */
-public interface HashtagEntity extends Serializable {
+public interface HashtagEntity  {
 	/**
 	 * Returns the index of the end character of the hashtag.
 	 * 

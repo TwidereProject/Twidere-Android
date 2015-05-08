@@ -53,7 +53,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         final SearchQuery query = new SearchQuery(processQuery(mQuery));
-        query.setRpp(paging.getCount());
+        query.setCount(paging.getCount());
         if (paging.getMaxId() > 0) {
             query.setMaxId(paging.getMaxId());
         }

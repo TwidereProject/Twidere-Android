@@ -22,6 +22,7 @@ package org.mariotaku.twidere.api.twitter;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
 import org.mariotaku.simplerestapi.Converter;
@@ -63,6 +64,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import twitter4j.CardEntity;
@@ -124,14 +126,13 @@ public class TwitterConverter implements Converter {
         registerWrapper(PageableResponseList.class, PageableResponseListWrapper.class);
         registerWrapper(Relationship.class, RelationshipWrapper.class);
         registerWrapper(CardEntity.BindingValue.class, CardEntityImpl.BindingValueWrapper.class);
-//        TypeConverterMapper.register(DirectMessage.class, DirectMessageImpl.class);
     }
 
     @Override
     public Object convert(RestResponse response, Type type) throws Exception {
         final TypedData body = response.getBody();
         if (!response.isSuccessful()) {
-            throw LoganSquare.parse(body.stream(), TwitterException.class);
+            throw parseOrThrow(response, body.stream(), TwitterException.class);
         }
         final ContentType contentType = body.contentType();
         final InputStream stream = body.stream();
@@ -139,7 +140,7 @@ public class TwitterConverter implements Converter {
             final Class<?> cls = (Class<?>) type;
             final Class<?> wrapperCls = wrapperMap.get(cls);
             if (wrapperCls != null) {
-                final Wrapper<?> wrapper = (Wrapper<?>) LoganSquare.parse(stream, wrapperCls);
+                final Wrapper<?> wrapper = (Wrapper<?>) parseOrThrow(response, stream, wrapperCls);
                 wrapper.processResponseHeader(response);
                 return wrapper.getWrapped(null);
             } else if (OAuthToken.class.isAssignableFrom(cls)) {
@@ -155,7 +156,7 @@ public class TwitterConverter implements Converter {
                     throw new IOException(e);
                 }
             }
-            final Object object = LoganSquare.parse(stream, cls);
+            final Object object = parseOrThrow(response, stream, cls);
             checkResponse(cls, object, response);
             if (object instanceof TwitterResponseImpl) {
                 ((TwitterResponseImpl) object).processResponseHeader(response);
@@ -167,18 +168,34 @@ public class TwitterConverter implements Converter {
                 final Class<?> rawClass = (Class<?>) rawType;
                 final Class<?> wrapperCls = wrapperMap.get(rawClass);
                 if (wrapperCls != null) {
-                    final Wrapper<?> wrapper = (Wrapper<?>) LoganSquare.parse(stream, wrapperCls);
+                    final Wrapper<?> wrapper = (Wrapper<?>) parseOrThrow(response, stream, wrapperCls);
                     wrapper.processResponseHeader(response);
                     return wrapper.getWrapped(((ParameterizedType) type).getActualTypeArguments());
                 } else if (ResponseList.class.isAssignableFrom(rawClass)) {
                     final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
-                    final ResponseListImpl<?> responseList = new ResponseListImpl<>(LoganSquare.parseList(stream, (Class<?>) elementType));
+                    final ResponseListImpl<?> responseList = new ResponseListImpl<>(parseListOrThrow(response, stream, (Class<?>) elementType));
                     responseList.processResponseHeader(response);
                     return responseList;
                 }
             }
         }
         throw new UnsupportedTypeException(type);
+    }
+
+    private static <T> T parseOrThrow(RestResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
+        try {
+            return LoganSquare.parse(stream, cls);
+        } catch (JsonParseException e) {
+            throw new TwitterException("Malformed JSON Data", resp);
+        }
+    }
+
+    private static <T> List<T> parseListOrThrow(RestResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
+        try {
+            return LoganSquare.parseList(stream, elementCls);
+        } catch (JsonParseException e) {
+            throw new TwitterException("Malformed JSON Data", resp);
+        }
     }
 
     private void checkResponse(Class<?> cls, Object object, RestResponse response) throws TwitterException {

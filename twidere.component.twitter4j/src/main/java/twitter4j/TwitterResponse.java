@@ -32,7 +32,7 @@ import java.io.Serializable;
  * @see twitter4j.Status
  * @see User
  */
-public interface TwitterResponse extends Serializable {
+public interface TwitterResponse  {
 	int NONE = 0;
 
 	int READ = 1;

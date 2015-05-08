@@ -25,7 +25,7 @@ import java.net.URL;
  * @author Mocel - mocel at guma.jp
  * @since Twitter4J 2.1.9
  */
-public interface UrlEntity extends Serializable {
+public interface UrlEntity  {
 
 	/**
 	 * Returns the display URL if mentioned URL is shorten.

@@ -38,7 +38,7 @@ public final class SearchQuery implements ValueMap {
     private String lang = null;
     private String locale = null;
     private long maxId = -1l;
-    private int rpp = -1;
+    private int count = -1;
     private int page = -1;
     private String since = null;
     private long sinceId = -1;
@@ -77,7 +77,7 @@ public final class SearchQuery implements ValueMap {
 
         if (maxId != query1.maxId) return false;
         if (page != query1.page) return false;
-        if (rpp != query1.rpp) return false;
+        if (count != query1.count) return false;
         if (sinceId != query1.sinceId) return false;
         if (geocode != null ? !geocode.equals(query1.geocode) : query1.geocode != null)
             return false;
@@ -180,10 +180,10 @@ public final class SearchQuery implements ValueMap {
     /**
      * Returns the number of tweets to return per page, up to a max of 100
      *
-     * @return rpp
+     * @return count
      */
-    public int getRpp() {
-        return rpp;
+    public int getCount() {
+        return count;
     }
 
     /**
@@ -222,7 +222,7 @@ public final class SearchQuery implements ValueMap {
         result = 31 * result + (lang != null ? lang.hashCode() : 0);
         result = 31 * result + (locale != null ? locale.hashCode() : 0);
         result = 31 * result + (int) (maxId ^ maxId >>> 32);
-        result = 31 * result + rpp;
+        result = 31 * result + count;
         result = 31 * result + page;
         result = 31 * result + (since != null ? since.hashCode() : 0);
         result = 31 * result + (int) (sinceId ^ sinceId >>> 32);
@@ -322,7 +322,7 @@ public final class SearchQuery implements ValueMap {
      * @since Twitter4J 2.1.0
      */
     public SearchQuery rpp(final int rpp) {
-        setRpp(rpp);
+        setCount(rpp);
         return this;
     }
 
@@ -408,10 +408,10 @@ public final class SearchQuery implements ValueMap {
     /**
      * sets the number of tweets to return per page, up to a max of 100
      *
-     * @param rpp the number of tweets to return per page
+     * @param count the number of tweets to return per page
      */
-    public void setRpp(final int rpp) {
-        this.rpp = rpp;
+    public void setCount(final int count) {
+        this.count = count;
     }
 
     /**
@@ -473,7 +473,7 @@ public final class SearchQuery implements ValueMap {
     @Override
     public String toString() {
         return "Query{" + "query='" + query + '\'' + ", lang='" + lang + '\'' + ", locale='" + locale + '\''
-                + ", maxId=" + maxId + ", rpp=" + rpp + ", page=" + page + ", since='" + since + '\'' + ", sinceId="
+                + ", maxId=" + maxId + ", count=" + count + ", page=" + page + ", since='" + since + '\'' + ", sinceId="
                 + sinceId + ", geocode='" + geocode + '\'' + ", until='" + until + '\'' + ", resultType='" + resultType
                 + '\'' + '}';
     }
@@ -509,8 +509,8 @@ public final class SearchQuery implements ValueMap {
             case "since_id": {
                 return sinceId != -1;
             }
-            case "rpp": {
-                return rpp != -1;
+            case "count": {
+                return count != -1;
             }
             case "page": {
                 return page != -1;
@@ -551,9 +551,9 @@ public final class SearchQuery implements ValueMap {
                 if (sinceId == -1) return null;
                 return String.valueOf(sinceId);
             }
-            case "rpp": {
-                if (rpp == -1) return null;
-                return String.valueOf(rpp);
+            case "count": {
+                if (count == -1) return null;
+                return String.valueOf(count);
             }
             case "page": {
                 if (page == -1) return null;
@@ -577,7 +577,7 @@ public final class SearchQuery implements ValueMap {
 
     @Override
     public String[] keys() {
-        return new String[]{"q", "lang", "locale", "max_id", "since_id", "rpp", "page", "since",
+        return new String[]{"q", "lang", "locale", "max_id", "since_id", "count", "page", "since",
                 "until", "geocode", "result_type"};
     }
 

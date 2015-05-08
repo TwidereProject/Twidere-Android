@@ -24,19 +24,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import org.mariotaku.twidere.api.twitter.model.impl.GeoPoint;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * A data class representing geo location.
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public class GeoLocation implements Serializable {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 4603460402828968366L;
+public class GeoLocation {
 
     public static final TypeConverter<GeoLocation> CONVERTER = new TypeConverter<GeoLocation>() {
         @Override

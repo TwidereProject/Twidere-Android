@@ -34,9 +34,7 @@ import twitter4j.RateLimitStatus;
  * Twitter Developers</a>
  */
 @JsonObject
-final class RateLimitStatusJSONImpl implements RateLimitStatus, java.io.Serializable {
-
-    private static final long serialVersionUID = 1625565652687304084L;
+final class RateLimitStatusJSONImpl implements RateLimitStatus {
 
     private final long creationTimeInMillis;
 

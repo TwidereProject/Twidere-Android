@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.2.5
  */
-public interface EntitySupport extends Serializable {
+public interface EntitySupport  {
 	/**
 	 * Returns an array if hashtag mentioned in the tweet, or null if no hashtag
 	 * were mentioned.

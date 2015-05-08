@@ -24,7 +24,7 @@ import java.util.Date;
  * 
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public interface User extends Comparable<User>, TwitterResponse, Serializable {
+public interface User extends Comparable<User>, TwitterResponse {
 	Date getCreatedAt();
 
 	boolean isDefaultProfile();

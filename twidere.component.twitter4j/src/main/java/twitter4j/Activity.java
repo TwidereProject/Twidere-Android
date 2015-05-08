@@ -1,37 +1,36 @@
 package twitter4j;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public interface Activity extends TwitterResponse, Comparable<Activity>, Serializable {
+public interface Activity extends TwitterResponse, Comparable<Activity> {
 
-    public Action getAction();
+    Action getAction();
 
-    public Date getCreatedAt();
+    Date getCreatedAt();
 
-    public long getMaxPosition();
+    long getMaxPosition();
 
-    public long getMinPosition();
+    long getMinPosition();
 
-    public User[] getSources();
+    User[] getSources();
 
-    public int getSourcesSize();
+    int getSourcesSize();
 
-    public int getTargetObjectsSize();
+    int getTargetObjectsSize();
 
-    public Status[] getTargetObjectStatuses();
+    Status[] getTargetObjectStatuses();
 
-    public UserList[] getTargetObjectUserLists();
+    UserList[] getTargetObjectUserLists();
 
-    public int getTargetsSize();
+    int getTargetsSize();
 
-    public Status[] getTargetStatuses();
+    Status[] getTargetStatuses();
 
-    public UserList[] getTargetUserLists();
+    UserList[] getTargetUserLists();
 
-    public User[] getTargetUsers();
+    User[] getTargetUsers();
 
-    public static enum Action implements Serializable {
+    enum Action {
         FAVORITE(0x1), FOLLOW(0x2), MENTION(0x3), REPLY(0x4), RETWEET(0x5), LIST_MEMBER_ADDED(0x06),
         LIST_CREATED(0x07), FAVORITED_RETWEET(0x08), RETWEETED_RETWEET(0x09);
 

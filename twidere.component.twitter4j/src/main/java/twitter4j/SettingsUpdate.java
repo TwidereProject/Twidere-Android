@@ -19,76 +19,55 @@
 
 package twitter4j;
 
-import org.mariotaku.simplerestapi.http.ValueMap;
-
-import java.util.HashMap;
-import java.util.Set;
+import org.mariotaku.simplerestapi.http.SimpleValueMap;
 
 /**
  * Created by mariotaku on 15/1/6.
  */
-public class SettingsUpdate implements ValueMap {
+public class SettingsUpdate extends SimpleValueMap {
 
-    private final HashMap<String, String> settingsMap = new HashMap<>();
-
-    public void set(String key, boolean value) {
-        set(key, String.valueOf(value));
+    public void put(String key, boolean value) {
+        super.put(key, String.valueOf(value));
     }
 
-    public void set(String key, int value) {
-        set(key, String.valueOf(value));
+    public void put(String key, int value) {
+        super.put(key, String.valueOf(value));
     }
 
-    public void set(String key, String value) {
-        settingsMap.put(key, value);
+    public void put(String key, String value) {
+        super.put(key, value);
     }
 
     public void setTrendLocationWoeid(int woeid) {
-        set("trend_location_woeid", woeid);
+        put("trend_location_woeid", woeid);
     }
 
     public void setSleepTimeEnabled(boolean enabled) {
-        set("sleep_time_enabled", enabled);
+        put("sleep_time_enabled", enabled);
     }
 
     public void setStartSleepTime(int startSleepTime) {
-        set("start_sleep_time", startSleepTime);
+        put("start_sleep_time", startSleepTime);
     }
 
     public void setEndSleepTime(int endSleepTime) {
-        set("end_sleep_time", endSleepTime);
+        put("end_sleep_time", endSleepTime);
     }
 
     public void setTimezone(String timezone) {
-        set("time_zone", timezone);
+        put("time_zone", timezone);
     }
 
     public void setProtected(boolean userProtected) {
-        set("protected", userProtected);
+        put("protected", userProtected);
     }
 
     public void setLang(String lang) {
-        set("lang", lang);
+        put("lang", lang);
     }
 
     public void setScreenName(String screenName) {
-        set("screen_name", screenName);
+        put("screen_name", screenName);
     }
 
-
-    @Override
-    public boolean has(String key) {
-        return settingsMap.containsKey(key);
-    }
-
-    @Override
-    public String get(String key) {
-        return settingsMap.get(key);
-    }
-
-    @Override
-    public String[] keys() {
-        final Set<String> keySet = settingsMap.keySet();
-        return keySet.toArray(new String[keySet.size()]);
-    }
 }

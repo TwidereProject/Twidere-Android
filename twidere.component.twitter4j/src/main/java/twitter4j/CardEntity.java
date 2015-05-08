@@ -19,13 +19,12 @@
 
 package twitter4j;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Created by mariotaku on 14/12/31.
  */
-public interface CardEntity extends Serializable {
+public interface CardEntity {
 
     String getName();
 
@@ -37,7 +36,7 @@ public interface CardEntity extends Serializable {
 
     Map<String, BindingValue> getBindingValues();
 
-    interface BindingValue extends Serializable {
+    interface BindingValue {
 
         String TYPE_STRING = "STRING";
         String TYPE_IMAGE = "IMAGE";

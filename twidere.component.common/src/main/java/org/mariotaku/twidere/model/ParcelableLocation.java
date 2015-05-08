@@ -29,14 +29,10 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.util.ParseUtils;
 
-import java.io.Serializable;
-
 import twitter4j.GeoLocation;
 
 @JsonObject
-public class ParcelableLocation implements Serializable, Parcelable {
-
-    private static final long serialVersionUID = -1690848439775407442L;
+public class ParcelableLocation implements Parcelable {
 
     @JsonField(name = "latitude")
     public double latitude;
