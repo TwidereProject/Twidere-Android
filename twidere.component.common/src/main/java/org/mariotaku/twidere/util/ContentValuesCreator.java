@@ -27,6 +27,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -63,15 +64,13 @@ import twitter4j.Trend;
 import twitter4j.Trends;
 import twitter4j.UrlEntity;
 import twitter4j.User;
-import twitter4j.conf.Configuration;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 
 public final class ContentValuesCreator implements TwidereConstants {
 
-    public static ContentValues createAccount(final Configuration conf, final String basicUsername,
-                                              final String basicPassword, final User user,
-                                              final int color, final String apiUrlFormat,
+    public static ContentValues createAccount(final String basicUsername, final String basicPassword,
+                                              final User user, final int color, final String apiUrlFormat,
                                               final boolean noVersionSuffix) {
         if (user == null || user.getId() <= 0) return null;
         final ContentValues values = new ContentValues();
@@ -91,16 +90,17 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues createAccount(final Configuration conf, final OAuthToken accessToken,
-                                              final User user, final int authType, final int color,
+    public static ContentValues createAccount(final OAuthAuthorization auth, final User user,
+                                              final int authType, final int color,
                                               final String apiUrlFormat, final boolean sameOAuthSigningUrl,
                                               final boolean noVersionSuffix) {
-        if (user == null || accessToken == null) return null;
+        if (user == null || auth == null) return null;
         final ContentValues values = new ContentValues();
+        final OAuthToken accessToken = auth.getOauthToken();
         values.put(Accounts.OAUTH_TOKEN, accessToken.getOauthToken());
         values.put(Accounts.OAUTH_TOKEN_SECRET, accessToken.getOauthTokenSecret());
-        values.put(Accounts.CONSUMER_KEY, conf.getOAuthConsumerKey());
-        values.put(Accounts.CONSUMER_SECRET, conf.getOAuthConsumerSecret());
+        values.put(Accounts.CONSUMER_KEY, auth.getConsumerKey());
+        values.put(Accounts.CONSUMER_SECRET, auth.getConsumerSecret());
         values.put(Accounts.AUTH_TYPE, authType);
         values.put(Accounts.ACCOUNT_ID, user.getId());
         values.put(Accounts.SCREEN_NAME, user.getScreenName());
@@ -115,8 +115,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues createAccount(final Configuration conf, final User user, final int color,
-                                              final String apiUrlFormat, final boolean noVersionSuffix) {
+    public static ContentValues createAccount(final User user, final int color, final String apiUrlFormat,
+                                              final boolean noVersionSuffix) {
         if (user == null || user.getId() <= 0) return null;
         final ContentValues values = new ContentValues();
         values.put(Accounts.AUTH_TYPE, Accounts.AUTH_TYPE_TWIP_O_MODE);

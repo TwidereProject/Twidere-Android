@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.SSLCertificateSocketFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,11 +28,9 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore;
-import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -45,12 +42,9 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import twitter4j.Twitter;
-import twitter4j.TwitterConstants;
 import twitter4j.TwitterException;
 import twitter4j.TwitterOAuth;
 import twitter4j.api.TwitterUpload;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.http.HostAddressResolver;
 
 import static android.text.TextUtils.isEmpty;

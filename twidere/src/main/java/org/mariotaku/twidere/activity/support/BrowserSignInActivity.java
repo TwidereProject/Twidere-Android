@@ -48,10 +48,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
-import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -59,8 +56,6 @@ import java.io.StringReader;
 
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterOAuth;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
@@ -232,39 +227,20 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
 
         @Override
         protected OAuthToken doInBackground(final Object... params) {
-            final ConfigurationBuilder cb = new ConfigurationBuilder();
-            final boolean enable_gzip_compressing = mPreferences.getBoolean(KEY_GZIP_COMPRESSING, false);
-            final boolean ignore_ssl_error = mPreferences.getBoolean(KEY_IGNORE_SSL_ERROR, false);
-            final boolean enable_proxy = mPreferences.getBoolean(KEY_ENABLE_PROXY, false);
-            final String consumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-            final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET,
+            final String defConsumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+            final String defConsumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET,
                     TWITTER_CONSUMER_SECRET);
-            cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
-            cb.setRestBaseURL(DEFAULT_REST_BASE_URL);
-            cb.setOAuthBaseURL(DEFAULT_OAUTH_BASE_URL);
-            cb.setSigningRestBaseURL(DEFAULT_SIGNING_REST_BASE_URL);
-            cb.setSigningOAuthBaseURL(DEFAULT_SIGNING_OAUTH_BASE_URL);
+            final String consumerKey, consumerSecret;
             if (!isEmpty(mConsumerKey) && !isEmpty(mConsumerSecret)) {
-                cb.setOAuthConsumerKey(mConsumerKey);
-                cb.setOAuthConsumerSecret(mConsumerSecret);
+                consumerKey = mConsumerKey;
+                consumerSecret = mConsumerSecret;
             } else {
-                cb.setOAuthConsumerKey(consumerKey);
-                cb.setOAuthConsumerSecret(consumerSecret);
-            }
-            cb.setGZIPEnabled(enable_gzip_compressing);
-            cb.setIgnoreSSLError(ignore_ssl_error);
-            if (enable_proxy) {
-                final String proxy_host = mPreferences.getString(KEY_PROXY_HOST, null);
-                final int proxy_port = ParseUtils.parseInt(mPreferences.getString(KEY_PROXY_PORT, "-1"));
-                if (!isEmpty(proxy_host) && proxy_port > 0) {
-                    cb.setHttpProxyHost(proxy_host);
-                    cb.setHttpProxyPort(proxy_port);
-                }
+                consumerKey = defConsumerKey;
+                consumerSecret = defConsumerSecret;
             }
             try {
-                final Configuration conf = cb.build();
                 final Endpoint endpoint = new Endpoint(DEFAULT_OAUTH_BASE_URL);
-                final Authorization auth = new OAuthAuthorization(conf.getOAuthConsumerKey(), conf.getOAuthConsumerSecret());
+                final Authorization auth = new OAuthAuthorization(consumerKey, consumerSecret);
                 final TwitterOAuth twitter = TwitterAPIUtils.getInstance(mActivity, endpoint, auth, TwitterOAuth.class);
                 return twitter.getRequestToken(OAUTH_CALLBACK_OOB);
             } catch (final Exception e) {
