@@ -129,19 +129,19 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             }
             case R.id.profile_image_camera: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.setAction(INTENT_ACTION_PICK_IMAGE);
+                intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_image_gallery: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.setAction(INTENT_ACTION_TAKE_PHOTO);
+                intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_banner_gallery: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.setAction(INTENT_ACTION_PICK_IMAGE);
+                intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
                 break;
             }
