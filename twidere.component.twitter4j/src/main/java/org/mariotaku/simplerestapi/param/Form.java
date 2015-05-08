@@ -12,4 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Form {
     String[] value() default {};
+
+    char arrayDelimiter() default ',';
 }

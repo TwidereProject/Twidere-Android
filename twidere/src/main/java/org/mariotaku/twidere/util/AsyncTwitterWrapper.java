@@ -641,43 +641,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    public static class UpdateProfileTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
-
-        private final long account_id;
-        private final String name, url, location, description;
-        private final Context context;
-
-        public UpdateProfileTask(final Context context, final AsyncTaskManager manager, final long account_id,
-                                 final String name, final String url, final String location, final String description) {
-            super(context, manager);
-            this.context = context;
-            this.account_id = account_id;
-            this.name = name;
-            this.url = url;
-            this.location = location;
-            this.description = description;
-        }
-
-        @Override
-        protected SingleResponse<ParcelableUser> doInBackground(final Object... params) {
-            return updateProfile(context, account_id, name, url, location, description);
-        }
-
-        @Override
-        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
-            if (result.hasData()) {
-                showOkMessage(context, R.string.profile_updated, false);
-                final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
-                bus.post(new ProfileUpdatedEvent(result.getData()));
-            } else {
-                showErrorMessage(context, context.getString(R.string.action_updating_profile),
-                        result.getException(), true);
-            }
-            super.onPostExecute(result);
-        }
-
-    }
-
     class AcceptFriendshipTask extends ManagedAsyncTask<Object, Object, SingleResponse<User>> {
 
         private final long mAccountId;

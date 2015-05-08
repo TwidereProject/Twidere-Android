@@ -29,7 +29,6 @@ import org.mariotaku.simplerestapi.param.Query;
 
 import twitter4j.IDs;
 import twitter4j.Paging;
-import twitter4j.ReportAs;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -43,16 +42,10 @@ public interface TweetResources {
     Status destroyStatus(@Path("id") long statusId) throws TwitterException;
 
     @GET("/statuses/retweeters/ids.json")
-    IDs getRetweetersIDs(@Query("id") long statusId) throws TwitterException;
-
-    @GET("/statuses/retweeters/ids.json")
     IDs getRetweetersIDs(@Query("id") long statusId, @Query Paging paging) throws TwitterException;
 
-    ResponseList<Status> getRetweets(long statusId) throws TwitterException;
-
-    ResponseList<Status> getRetweets(long statusId, int count) throws TwitterException;
-
-    int reportSpam(long statusId, ReportAs reportAs, boolean blockUser) throws TwitterException;
+    @GET("/statuses/retweets/{id}.json")
+    ResponseList<Status> getRetweets(@Path("id") long statusId, @Query Paging paging) throws TwitterException;
 
     @POST("/statuses/retweet/{id}.json")
     Status retweetStatus(@Path("id") long statusId) throws TwitterException;
@@ -64,7 +57,4 @@ public interface TweetResources {
     @Body(BodyType.FORM)
     Status updateStatus(@Form StatusUpdate latestStatus) throws TwitterException;
 
-    @POST("/statuses/update.json")
-    @Body(BodyType.FORM)
-    Status updateStatus(@Form("status") String status) throws TwitterException;
 }

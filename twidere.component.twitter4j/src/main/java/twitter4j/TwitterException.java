@@ -24,6 +24,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.twidere.api.twitter.model.impl.RateLimitStatusJSONImpl;
 
 import java.util.Locale;
 
@@ -44,6 +45,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     ErrorInfo[] errors;
 
     private int statusCode = -1;
+    private RateLimitStatus rateLimitStatus;
 
     public ErrorInfo[] getErrors() {
         return errors;
@@ -77,14 +79,15 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     public TwitterException(final String message, final RestRequest req, final RestResponse res) {
         this(message);
-        response = res;
+        setResponse(res);
         request = req;
         statusCode = res != null ? res.getStatus() : -1;
-        if (response != null) {
-//            try {
-//                decode(response.asString());
-//            } catch (TwitterException ignore) {
-//            }
+    }
+
+    private void setResponse(RestResponse res) {
+        response = res;
+        if (res != null) {
+            rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(res);
         }
     }
 
@@ -169,10 +172,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      */
     @Override
     public RateLimitStatus getRateLimitStatus() {
-//        if (null == response) return null;
-//        return InternalJSONFactoryImpl.createRateLimitStatusFromResponseHeader(response);
-        // TODO support rate limit message
-        throw new UnsupportedOperationException();
+        return rateLimitStatus;
     }
 
     public String getResponseHeader(final String name) {

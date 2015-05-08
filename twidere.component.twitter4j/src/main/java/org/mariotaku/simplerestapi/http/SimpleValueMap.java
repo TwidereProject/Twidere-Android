@@ -44,6 +44,10 @@ public class SimpleValueMap implements ValueMap {
         internalMap.put(key, value);
     }
 
+    protected void remove(String key) {
+        internalMap.remove(key);
+    }
+
     @Override
     public String[] keys() {
         final Set<String> keySet = internalMap.keySet();

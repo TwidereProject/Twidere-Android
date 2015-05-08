@@ -262,7 +262,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());
             final boolean hasMedia = status.media != null && status.media.length > 0;
             if (hasMedia && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
-                mediaPreview.setVisibility(hasMedia ? View.VISIBLE : View.GONE);
+                mediaPreview.setVisibility(View.VISIBLE);
                 mediaPreview.displayMedia(status.media, loader, status.account_id, this,
                         adapter.getMediaLoadingHandler());
             } else {
@@ -473,7 +473,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         if (adapter.isMediaPreviewEnabled()) {
             final boolean hasMedia = media != null && media.length > 0;
             if (hasMedia && (adapter.isSensitiveContentEnabled() || !sensitive)) {
-                mediaPreview.setVisibility(hasMedia ? View.VISIBLE : View.GONE);
+                mediaPreview.setVisibility(View.VISIBLE);
                 mediaPreview.displayMedia(media, loader, account_id, this, adapter.getMediaLoadingHandler());
             } else {
                 mediaPreview.setVisibility(View.GONE);

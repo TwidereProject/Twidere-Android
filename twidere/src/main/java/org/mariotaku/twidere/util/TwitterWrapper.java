@@ -161,20 +161,6 @@ public class TwitterWrapper implements Constants {
         return showUserAlternative(twitter, id, screenName);
     }
 
-    public static SingleResponse<ParcelableUser> updateProfile(final Context context, final long account_id,
-                                                               final String name, final String url, final String location, final String description) {
-        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, account_id, false);
-        if (twitter != null) {
-            try {
-                final User user = twitter.updateProfile(name, url, location, description);
-                return new SingleResponse<>(new ParcelableUser(user, account_id), null);
-            } catch (final TwitterException e) {
-                return new SingleResponse<>(null, e);
-            }
-        }
-        return SingleResponse.getInstance();
-    }
-
     public static void updateProfileBannerImage(final Context context, final long accountId,
                                                 final Uri imageUri, final boolean deleteImage)
             throws FileNotFoundException, TwitterException {

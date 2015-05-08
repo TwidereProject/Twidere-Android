@@ -24,15 +24,4 @@ package twitter4j;
 public interface IDs extends TwitterResponse, CursorSupport {
 	long[] getIDs();
 
-	@Override
-	long getNextCursor();
-
-	@Override
-	long getPreviousCursor();
-
-	@Override
-	boolean hasNext();
-
-	@Override
-	boolean hasPrevious();
 }

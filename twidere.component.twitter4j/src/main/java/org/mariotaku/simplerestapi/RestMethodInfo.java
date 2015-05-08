@@ -109,6 +109,7 @@ public final class RestMethodInfo {
         for (Map.Entry<Form, Object> entry : forms.entrySet()) {
             final Form form = entry.getKey();
             final Object value = entry.getValue();
+            if (value == null) continue;
             if (value instanceof ValueMap) {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : getValueMapKeys(form.value(), valueMap)) {
@@ -116,9 +117,11 @@ public final class RestMethodInfo {
                         list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
                 }
-            } else if (value != null) {
+            } else {
+                final char delimiter = form.arrayDelimiter();
+                String valueString = Utils.toString(value, delimiter);
                 for (String key : form.value()) {
-                    list.add(Pair.create(key, String.valueOf(value)));
+                    list.add(Pair.create(key, valueString));
                 }
             }
         }
@@ -190,6 +193,7 @@ public final class RestMethodInfo {
         for (Map.Entry<Query, Object> entry : queries.entrySet()) {
             final Query form = entry.getKey();
             final Object value = entry.getValue();
+            if (value == null) continue;
             if (value instanceof ValueMap) {
                 final ValueMap valueMap = (ValueMap) value;
                 for (String key : getValueMapKeys(form.value(), valueMap)) {
@@ -197,9 +201,11 @@ public final class RestMethodInfo {
                         list.add(Pair.create(key, String.valueOf(valueMap.get(key))));
                     }
                 }
-            } else if (value != null) {
+            } else {
+                final char delimiter = form.arrayDelimiter();
+                String valueString = Utils.toString(value, delimiter);
                 for (String key : form.value()) {
-                    list.add(Pair.create(key, String.valueOf(value)));
+                    list.add(Pair.create(key, valueString));
                 }
             }
         }

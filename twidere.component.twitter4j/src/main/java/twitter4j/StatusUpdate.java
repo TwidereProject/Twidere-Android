@@ -16,28 +16,13 @@
 
 package twitter4j;
 
-import org.mariotaku.simplerestapi.http.ValueMap;
+import org.mariotaku.simplerestapi.Utils;
+import org.mariotaku.simplerestapi.http.SimpleValueMap;
 
-import java.util.Arrays;
-
-import twitter4j.internal.util.InternalStringUtil;
-
-/**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.1.1
- */
-public final class StatusUpdate implements ValueMap {
-
-    private final String status;
-    private long inReplyToStatusId = -1l;
-    private GeoLocation location = null;
-    private String placeId = null;
-    private boolean displayCoordinates = true;
-    private boolean possiblySensitive;
-    private long[] mediaIds;
+public final class StatusUpdate extends SimpleValueMap {
 
     public StatusUpdate(final String status) {
-        this.status = status;
+        put("status", status);
     }
 
     public StatusUpdate displayCoordinates(final boolean displayCoordinates) {
@@ -45,40 +30,26 @@ public final class StatusUpdate implements ValueMap {
         return this;
     }
 
-    public long getInReplyToStatusId() {
-        return inReplyToStatusId;
-    }
-
     public void setInReplyToStatusId(final long inReplyToStatusId) {
-        this.inReplyToStatusId = inReplyToStatusId;
-    }
-
-    public GeoLocation getLocation() {
-        return location;
+        put("in_reply_to_status_id", inReplyToStatusId);
     }
 
     public void setLocation(final GeoLocation location) {
-        this.location = location;
-    }
-
-    public long[] getMediaIds() {
-        return mediaIds;
+        remove("lat");
+        remove("long");
+        if (location == null) return;
+        put("lat", location.getLatitude());
+        put("long", location.getLongitude());
     }
 
     public void setMediaIds(final long... mediaIds) {
-        this.mediaIds = mediaIds;
-    }
-
-    public String getPlaceId() {
-        return placeId;
+        remove("media_ids");
+        if (mediaIds == null) return;
+        put("media_ids", Utils.toString(mediaIds, ','));
     }
 
     public void setPlaceId(final String placeId) {
-        this.placeId = placeId;
-    }
-
-    public String getStatus() {
-        return status;
+        put("place_id", placeId);
     }
 
     public StatusUpdate inReplyToStatusId(final long inReplyToStatusId) {
@@ -86,26 +57,14 @@ public final class StatusUpdate implements ValueMap {
         return this;
     }
 
-    public boolean isDisplayCoordinates() {
-        return displayCoordinates;
-    }
 
     public void setDisplayCoordinates(final boolean displayCoordinates) {
-        this.displayCoordinates = displayCoordinates;
+        put("display_coordinates", displayCoordinates);
     }
 
-    /**
-     * @since Twitter4J 2.2.5
-     */
-    public boolean isPossiblySensitive() {
-        return possiblySensitive;
-    }
 
-    /**
-     * @since Twitter4J 2.2.5
-     */
     public void setPossiblySensitive(final boolean possiblySensitive) {
-        this.possiblySensitive = possiblySensitive;
+        put("possibly_sensitive", possiblySensitive);
     }
 
     public StatusUpdate location(final GeoLocation location) {
@@ -123,122 +82,10 @@ public final class StatusUpdate implements ValueMap {
         return this;
     }
 
-    /**
-     * @since Twitter4J 2.2.5
-     */
     public StatusUpdate possiblySensitive(final boolean possiblySensitive) {
         setPossiblySensitive(possiblySensitive);
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        StatusUpdate that = (StatusUpdate) o;
-
-        if (displayCoordinates != that.displayCoordinates) return false;
-        if (inReplyToStatusId != that.inReplyToStatusId) return false;
-        if (possiblySensitive != that.possiblySensitive) return false;
-        if (location != null ? !location.equals(that.location) : that.location != null)
-            return false;
-        if (!Arrays.equals(mediaIds, that.mediaIds)) return false;
-        if (placeId != null ? !placeId.equals(that.placeId) : that.placeId != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = status != null ? status.hashCode() : 0;
-        result = 31 * result + (int) (inReplyToStatusId ^ (inReplyToStatusId >>> 32));
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (placeId != null ? placeId.hashCode() : 0);
-        result = 31 * result + (displayCoordinates ? 1 : 0);
-        result = 31 * result + (possiblySensitive ? 1 : 0);
-        result = 31 * result + (mediaIds != null ? Arrays.hashCode(mediaIds) : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "StatusUpdate{" +
-                "status='" + status + '\'' +
-                ", inReplyToStatusId=" + inReplyToStatusId +
-                ", location=" + location +
-                ", placeId='" + placeId + '\'' +
-                ", displayCoordinates=" + displayCoordinates +
-                ", possiblySensitive=" + possiblySensitive +
-                ", mediaIds=" + Arrays.toString(mediaIds) +
-                '}';
-    }
-
-    @Override
-    public boolean has(String key) {
-        switch (key) {
-            case "status": {
-                return status != null;
-            }
-            case "in_reply_to_status_id": {
-                return inReplyToStatusId != -1;
-            }
-            case "lat":
-            case "long": {
-                return location != null;
-            }
-            case "place_id": {
-                return placeId != null;
-            }
-            case "possibly_sensitive":
-            case "display_coordinates": {
-                return true;
-            }
-            case "media_ids": {
-                return mediaIds != null && mediaIds.length > 0;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public String get(String key) {
-        switch (key) {
-            case "status": {
-                return status;
-            }
-            case "in_reply_to_status_id": {
-                return String.valueOf(inReplyToStatusId);
-            }
-            case "lat": {
-                if (location == null) return null;
-                return String.valueOf(location.getLatitude());
-            }
-            case "long": {
-                if (location == null) return null;
-                return String.valueOf(location.getLongitude());
-            }
-            case "place_id": {
-                return placeId;
-            }
-            case "possibly_sensitive": {
-                return String.valueOf(possiblySensitive);
-            }
-            case "display_coordinates": {
-                return String.valueOf(displayCoordinates);
-            }
-            case "media_ids": {
-                if (mediaIds == null) return null;
-                return InternalStringUtil.join(mediaIds);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public String[] keys() {
-        return new String[]{"status", "in_reply_to_status_id", "lat", "long", "place_id",
-                "possibly_sensitive", "display_coordinates", "media_ids"};
-    }
 }

@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -156,5 +157,22 @@ public class Utils {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    @NonNull
+    public static String toString(@NonNull Object value, char delimiter) {
+        final Class<?> valueClass = value.getClass();
+        if (valueClass.isArray()) {
+            final StringBuilder sb = new StringBuilder();
+            for (int i = 0, j = Array.getLength(value); i < j; i++) {
+                if (i != 0) {
+                    sb.append(delimiter);
+                }
+                sb.append(Array.get(value, i));
+            }
+            return sb.toString();
+        } else {
+            return value.toString();
+        }
     }
 }

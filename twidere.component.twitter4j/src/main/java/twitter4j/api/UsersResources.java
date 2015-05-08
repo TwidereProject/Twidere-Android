@@ -19,7 +19,11 @@
 
 package twitter4j.api;
 
+import org.mariotaku.simplerestapi.http.BodyType;
 import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.simplerestapi.method.POST;
+import org.mariotaku.simplerestapi.param.Body;
+import org.mariotaku.simplerestapi.param.Form;
 import org.mariotaku.simplerestapi.param.Query;
 
 import java.io.File;
@@ -30,6 +34,7 @@ import twitter4j.Category;
 import twitter4j.IDs;
 import twitter4j.PageableResponseList;
 import twitter4j.Paging;
+import twitter4j.ProfileUpdate;
 import twitter4j.ResponseList;
 import twitter4j.SettingsUpdate;
 import twitter4j.TwitterException;
@@ -39,43 +44,52 @@ import twitter4j.User;
  * @author Joern Huxhorn - jhuxhorn at googlemail.com
  */
 public interface UsersResources {
-    User createBlock(long userId) throws TwitterException;
 
-    User createBlock(String screenName) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User createBlock(@Form("user_id") long userId) throws TwitterException;
 
-    User createMute(long userId) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User createBlock(@Query("screen_name") String screenName) throws TwitterException;
 
-    User createMute(String screenName) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User createMute(@Form("user_id") long userId) throws TwitterException;
 
-    User destroyBlock(long userId) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User createMute(@Query("screen_name") String screenName) throws TwitterException;
 
-    User destroyBlock(String screenName) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User destroyBlock(@Form("user_id") long userId) throws TwitterException;
 
-    User destroyMute(long userId) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User destroyBlock(@Query("screen_name") String screenName) throws TwitterException;
 
-    User destroyMute(String screenName) throws TwitterException;
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User destroyMute(@Form("user_id") long userId) throws TwitterException;
 
+    @POST("/blocks/create.json")
+    @Body(BodyType.FORM)
+    User destroyMute(@Query("screen_name") String screenName) throws TwitterException;
+
+    @GET("/account/settings.json")
     AccountSettings getAccountSettings() throws TwitterException;
 
     @GET("/blocks/ids.json")
-    IDs getBlocksIDs() throws TwitterException;
-
-    @GET("/blocks/ids.json")
     IDs getBlocksIDs(@Query Paging paging) throws TwitterException;
-
-    @GET("/blocks/list.json")
-    PageableResponseList<User> getBlocksList() throws TwitterException;
 
     @GET("/blocks/list.json")
     PageableResponseList<User> getBlocksList(@Query Paging paging) throws TwitterException;
 
     ResponseList<User> getMemberSuggestions(String categorySlug) throws TwitterException;
 
-    IDs getMutesUsersIDs() throws TwitterException;
-
+    @GET("/mutes/users/ids.json")
     IDs getMutesUsersIDs(Paging paging) throws TwitterException;
-
-    PageableResponseList<User> getMutesUsersList() throws TwitterException;
 
     @GET("/mutes/users/list.json")
     PageableResponseList<User> getMutesUsersList(@Query Paging paging) throws TwitterException;
@@ -84,10 +98,13 @@ public interface UsersResources {
 
     ResponseList<User> getUserSuggestions(String categorySlug) throws TwitterException;
 
-    ResponseList<User> lookupUsers(long[] ids) throws TwitterException;
+    @POST("/users/lookup.json")
+    ResponseList<User> lookupUsers(@Form("id") long[] ids) throws TwitterException;
 
-    ResponseList<User> lookupUsers(String[] screenNames) throws TwitterException;
+    @GET("/users/lookup.json")
+    ResponseList<User> lookupUsers(@Form("id") String[] screenNames) throws TwitterException;
 
+    @POST("/account/remove_profile_banner.json")
     void removeProfileBannerImage() throws TwitterException;
 
     @GET("/users/search.json")
@@ -99,9 +116,13 @@ public interface UsersResources {
     @GET("/users/show.json")
     User showUser(@Query("screen_name") String screenName) throws TwitterException;
 
-    AccountSettings updateAccountSettings(SettingsUpdate settingsUpdate) throws TwitterException;
+    @POST("/account/settings.json")
+    @Body(BodyType.FORM)
+    AccountSettings updateAccountSettings(@Form SettingsUpdate settingsUpdate) throws TwitterException;
 
-    User updateProfile(String name, String url, String location, String description) throws TwitterException;
+    @POST("/account/update_profile.json")
+    @Body(BodyType.FORM)
+    User updateProfile(@Form ProfileUpdate profileUpdate) throws TwitterException;
 
     User updateProfileBackgroundImage(File image, boolean tile) throws TwitterException;
 
@@ -117,13 +138,10 @@ public interface UsersResources {
     void updateProfileBannerImage(InputStream banner, int width, int height, int offsetLeft, int offsetTop)
             throws TwitterException;
 
-    User updateProfileColors(String profileBackgroundColor, String profileTextColor, String profileLinkColor,
-                             String profileSidebarFillColor, String profileSidebarBorderColor) throws TwitterException;
-
     User updateProfileImage(File image) throws TwitterException;
 
     User updateProfileImage(InputStream image) throws TwitterException;
 
-    @GET(" account/verify_credentials.json")
+    @GET("/account/verify_credentials.json")
     User verifyCredentials() throws TwitterException;
 }

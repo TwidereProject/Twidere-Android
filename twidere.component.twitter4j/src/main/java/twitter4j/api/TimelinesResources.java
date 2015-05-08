@@ -19,8 +19,8 @@
 
 package twitter4j.api;
 
-import org.mariotaku.simplerestapi.param.Query;
 import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.simplerestapi.param.Query;
 
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -33,38 +33,20 @@ import twitter4j.TwitterException;
 public interface TimelinesResources {
 
     @GET("/statuses/home_timeline.json")
-    ResponseList<Status> getHomeTimeline() throws TwitterException;
-
-    @GET("/statuses/home_timeline.json")
-    ResponseList<Status> getHomeTimeline(@Query({"since_id", "max_id", "count", "page"}) Paging paging) throws TwitterException;
+    ResponseList<Status> getHomeTimeline(@Query Paging paging) throws TwitterException;
 
     @GET("/statuses/mentions_timeline.json")
-    ResponseList<Status> getMentionsTimeline() throws TwitterException;
-
-    @GET("/statuses/mentions_timeline.json")
-    ResponseList<Status> getMentionsTimeline(@Query({"since_id", "max_id", "count", "page"}) Paging paging) throws TwitterException;
+    ResponseList<Status> getMentionsTimeline(@Query Paging paging) throws TwitterException;
 
     @GET("/statuses/retweets_of_me.json")
-    ResponseList<Status> getRetweetsOfMe() throws TwitterException;
-
-    @GET("/statuses/retweets_of_me.json")
-    ResponseList<Status> getRetweetsOfMe(@Query({"since_id", "max_id", "count", "page"}) Paging paging) throws TwitterException;
+    ResponseList<Status> getRetweetsOfMe(@Query Paging paging) throws TwitterException;
 
     @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline() throws TwitterException;
+    ResponseList<Status> getUserTimeline(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query("user_id") long userId) throws TwitterException;
+    ResponseList<Status> getUserTimeline(@Query Paging paging) throws TwitterException;
 
     @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query("user_id") long userId, @Query({"since_id", "max_id", "count", "page"}) Paging paging) throws TwitterException;
-
-    @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query({"since_id", "max_id", "count", "page"}) Paging paging) throws TwitterException;
-
-    @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query("screen_name") String screenName) throws TwitterException;
-
-    @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query("screen_name") String screenName, @Query({"since_id", "max_id", "count", "page"}) Paging paging) throws TwitterException;
+    ResponseList<Status> getUserTimeline(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 }

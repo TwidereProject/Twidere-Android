@@ -524,9 +524,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                 final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true);
                 final TwitterUpload upload = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true, TwitterUpload.class);
                 final StatusUpdate status = new StatusUpdate(shortenedText);
-                status.setInReplyToStatusId(statusUpdate.in_reply_to_status_id);
+                status.inReplyToStatusId(statusUpdate.in_reply_to_status_id);
                 if (statusUpdate.location != null) {
-                    status.setLocation(ParcelableLocation.toGeoLocation(statusUpdate.location));
+                    status.location(ParcelableLocation.toGeoLocation(statusUpdate.location));
                 }
                 if (!mUseUploader && hasMedia) {
                     final BitmapFactory.Options o = new BitmapFactory.Options();
@@ -558,7 +558,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     }
                     status.mediaIds(mediaIds);
                 }
-                status.setPossiblySensitive(statusUpdate.is_possibly_sensitive);
+                status.possiblySensitive(statusUpdate.is_possibly_sensitive);
 
                 if (twitter == null) {
                     results.add(new SingleResponse<ParcelableStatus>(null, new NullPointerException()));

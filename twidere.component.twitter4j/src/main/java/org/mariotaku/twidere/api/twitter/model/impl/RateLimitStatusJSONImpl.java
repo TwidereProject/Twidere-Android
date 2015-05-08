@@ -34,7 +34,7 @@ import twitter4j.RateLimitStatus;
  * Twitter Developers</a>
  */
 @JsonObject
-final class RateLimitStatusJSONImpl implements RateLimitStatus {
+public final class RateLimitStatusJSONImpl implements RateLimitStatus {
 
     private final long creationTimeInMillis;
 
@@ -129,7 +129,7 @@ final class RateLimitStatusJSONImpl implements RateLimitStatus {
                 '}';
     }
 
-    static RateLimitStatus createFromResponseHeader(final RestResponse res) {
+    public static RateLimitStatus createFromResponseHeader(final RestResponse res) {
         if (null == res) return null;
         int remainingHits;// "X-Rate-Limit-Remaining"
         int limit;// "X-Rate-Limit-Limit"
