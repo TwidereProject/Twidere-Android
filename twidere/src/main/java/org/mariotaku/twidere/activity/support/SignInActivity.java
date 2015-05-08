@@ -397,8 +397,8 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             cb.setSigningUploadBaseURL(DEFAULT_SIGNING_UPLOAD_BASE_URL);
         }
         if (isEmpty(mConsumerKey) || isEmpty(mConsumerSecret)) {
-            cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY_3);
-            cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET_3);
+            cb.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
+            cb.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
         } else {
             cb.setOAuthConsumerKey(mConsumerKey);
             cb.setOAuthConsumerSecret(mConsumerSecret);
@@ -428,8 +428,8 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         final int authType = mPreferences.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean sameOAuthSigningUrl = mPreferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean noVersionSuffix = mPreferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
-        final String consumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_3);
-        final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_3);
+        final String consumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
         if (isEmpty(mAPIUrlFormat) || defaultApiChanged) {
             mAPIUrlFormat = apiUrlFormat;
         }

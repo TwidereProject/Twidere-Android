@@ -102,8 +102,8 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         final int authType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean sameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean noVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
-        final String consumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_3);
-        final String consumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_3);
+        final String consumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String consumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
         setValues(apiUrlFormat, authType, noVersionSuffix, sameOAuthSigningUrl, consumerKey, consumerSecret);
     }
 
@@ -162,8 +162,8 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_REST_BASE_URL);
         final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean prefSameOAuthSigningUrl = pref.getBoolean(KEY_API_URL_FORMAT, false);
-        final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_3);
-        final String prefConsumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_3);
+        final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String prefConsumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
         final String apiUrlFormat = trim(savedInstanceState.getString(Accounts.API_URL_FORMAT, prefApiUrlFormat));
         final int authType = savedInstanceState.getInt(Accounts.AUTH_TYPE, prefAuthType);
         final boolean sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL,

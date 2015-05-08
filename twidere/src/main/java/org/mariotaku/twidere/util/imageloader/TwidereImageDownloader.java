@@ -44,6 +44,8 @@ import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
@@ -53,13 +55,6 @@ import java.util.List;
 import java.util.Locale;
 
 import twitter4j.TwitterException;
-
-import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getImageLoaderHttpClient;
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getRedirectedHttpResponse;
-import static org.mariotaku.twidere.util.Utils.getNormalTwitterProfileImage;
-import static org.mariotaku.twidere.util.Utils.getTwitterAuthorization;
-import static org.mariotaku.twidere.util.Utils.getTwitterProfileImageOfSize;
 
 public class TwidereImageDownloader extends BaseImageDownloader implements Constants {
 
@@ -85,7 +80,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     }
 
     public void reloadConnectivitySettings() {
-        mClient = getImageLoaderHttpClient(mContext);
+        mClient = TwitterAPIUtils.getDefaultHttpClient(mContext);
         mFastImageLoading = mPreferences.getBoolean(KEY_FAST_IMAGE_LOADING);
         if (mUseThumbor && mPreferences.getBoolean(KEY_THUMBOR_ENABLED)) {
             final String address = mPreferences.getString(KEY_THUMBOR_ADDRESS, null);
@@ -112,7 +107,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         try {
             final String mediaUrl = media != null ? media.media_url : uriString;
             if (isTwitterProfileImage(uriString)) {
-                final String replaced = getTwitterProfileImageOfSize(mediaUrl, mTwitterProfileImageSize);
+                final String replaced = Utils.getTwitterProfileImageOfSize(mediaUrl, mTwitterProfileImageSize);
                 return getStreamFromNetworkInternal(replaced, extras);
             } else
                 return getStreamFromNetworkInternal(mediaUrl, extras);
@@ -120,7 +115,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             final int statusCode = e.getStatusCode();
             if (statusCode != -1 && isTwitterProfileImage(uriString) && !uriString.contains("_normal.")) {
                 try {
-                    return getStreamFromNetworkInternal(getNormalTwitterProfileImage(uriString), extras);
+                    return getStreamFromNetworkInternal(Utils.getNormalTwitterProfileImage(uriString), extras);
                 } catch (final TwitterException ignored) {
                 }
             }
@@ -159,7 +154,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         if (isTwitterAuthRequired(uri) && extras instanceof AccountExtra) {
             final AccountExtra accountExtra = (AccountExtra) extras;
             account = ParcelableAccount.getCredentials(mContext, accountExtra.account_id);
-            auth = getTwitterAuthorization(mContext, accountExtra.account_id);
+            auth = Utils.getTwitterAuthorization(mContext, accountExtra.account_id);
         } else {
             account = null;
             auth = null;
@@ -172,7 +167,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             additionalHeaders.add(Pair.create("Accept", "image/webp, */*"));
         }
-        final RestResponse resp = getRedirectedHttpResponse(mClient, modifiedUri, uriString, auth, additionalHeaders);
+        final RestResponse resp = TwitterAPIUtils.getRedirectedHttpResponse(mClient, modifiedUri, uriString, auth, additionalHeaders);
         final TypedData body = resp.getBody();
         return new ContentLengthInputStream(body.stream(), (int) body.length());
     }
@@ -184,7 +179,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
 
     private boolean isTwitterProfileImage(final String uriString) {
         if (TextUtils.isEmpty(uriString)) return false;
-        return PATTERN_TWITTER_PROFILE_IMAGES.matcher(uriString).matches();
+        return TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES.matcher(uriString).matches();
     }
 
     private boolean isTwitterUri(final Uri uri) {

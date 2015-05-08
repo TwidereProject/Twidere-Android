@@ -234,9 +234,9 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
             final boolean enable_gzip_compressing = mPreferences.getBoolean(KEY_GZIP_COMPRESSING, false);
             final boolean ignore_ssl_error = mPreferences.getBoolean(KEY_IGNORE_SSL_ERROR, false);
             final boolean enable_proxy = mPreferences.getBoolean(KEY_ENABLE_PROXY, false);
-            final String consumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_3);
+            final String consumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
             final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET,
-                    TWITTER_CONSUMER_SECRET_3);
+                    TWITTER_CONSUMER_SECRET);
             cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(mApplication));
             Utils.setClientUserAgent(mActivity, consumerKey, consumerSecret, cb);
             cb.setRestBaseURL(DEFAULT_REST_BASE_URL);

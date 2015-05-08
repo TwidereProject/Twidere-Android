@@ -250,9 +250,9 @@ public interface SharedPreferenceConstants {
     String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
     @Preference(type = INT, hasDefault = true, defaultInt = Accounts.AUTH_TYPE_OAUTH)
     String KEY_AUTH_TYPE = "auth_type";
-    @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_KEY_3)
+    @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_KEY)
     String KEY_CONSUMER_KEY = "consumer_key";
-    @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_SECRET_3)
+    @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_SECRET)
     String KEY_CONSUMER_SECRET = "consumer_secret";
     String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)

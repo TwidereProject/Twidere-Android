@@ -1,5 +1,7 @@
 package org.mariotaku.simplerestapi.http;
 
+import android.support.annotation.NonNull;
+
 import java.io.IOException;
 
 /**
@@ -7,6 +9,7 @@ import java.io.IOException;
  */
 public interface RestHttpClient {
 
+    @NonNull
     RestResponse execute(RestRequest request) throws IOException;
 
 }

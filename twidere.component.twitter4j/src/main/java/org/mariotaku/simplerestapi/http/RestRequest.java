@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/2/7.
  */
-public class RestRequest {
+public final class RestRequest {
 
     private final String method;
     private final String url;
@@ -103,6 +103,7 @@ public class RestRequest {
     public interface Factory {
         RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo info, @Nullable Authorization authorization);
     }
+
 
     public static final class DefaultFactory implements Factory {
 

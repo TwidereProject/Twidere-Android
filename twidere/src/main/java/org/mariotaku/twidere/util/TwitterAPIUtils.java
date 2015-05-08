@@ -2,9 +2,15 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.SSLCertificateSocketFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Pair;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.internal.Internal;
+import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
@@ -24,26 +30,30 @@ import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.util.net.TwidereHostResolverFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterConstants;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.http.HostAddressResolverFactory;
+import twitter4j.http.HostAddressResolver;
 
 import static android.text.TextUtils.isEmpty;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class TwitterAPIUtils {
+public class TwitterAPIUtils implements TwidereConstants {
 
+    @NonNull
     public static RestResponse getRedirectedHttpResponse(@NonNull final RestHttpClient client, @NonNull final String url,
                                                          final String signUrl, final Authorization auth,
                                                          final List<Pair<String, String>> additionalHeaders)
@@ -53,7 +63,7 @@ public class TwitterAPIUtils {
         RestResponse resp;
         RestRequest req = new RestRequest.Builder().method(GET.METHOD).url(url).headers(additionalHeaders).build();
         resp = client.execute(req);
-        while (resp != null && Utils.isRedirected(resp.getStatus())) {
+        while (Utils.isRedirected(resp.getStatus())) {
             final String requestUrl = resp.getHeader("Location");
             if (requestUrl == null) return null;
             if (urls.contains(requestUrl)) throw new IOException("Too many redirects");
@@ -82,8 +92,8 @@ public class TwitterAPIUtils {
 
     @Nullable
     public static Twitter getTwitterInstance(final Context context, final long accountId,
-                                           final boolean includeEntities,
-                                           final boolean includeRetweets) {
+                                             final boolean includeEntities,
+                                             final boolean includeRetweets) {
         return getTwitterInstance(context, accountId, includeEntities, includeRetweets, Twitter.class);
     }
 
@@ -101,7 +111,7 @@ public class TwitterAPIUtils {
     private static Configuration getConfiguration(Context context, boolean includeEntities, boolean includeRetweets, ParcelableAccount.ParcelableCredentials credentials) {
         final TwidereApplication app = TwidereApplication.getInstance(context);
         final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int connection_timeout = prefs.getInt(SharedPreferenceConstants.KEY_CONNECTION_TIMEOUT, 10) * 1000;
+        final int connectionTimeout = prefs.getInt(SharedPreferenceConstants.KEY_CONNECTION_TIMEOUT, 10) * 1000;
         final boolean enableGzip = prefs.getBoolean(SharedPreferenceConstants.KEY_GZIP_COMPRESSING, true);
         final boolean ignoreSslError = prefs.getBoolean(SharedPreferenceConstants.KEY_IGNORE_SSL_ERROR, false);
         final boolean enableProxy = prefs.getBoolean(SharedPreferenceConstants.KEY_ENABLE_PROXY, false);
@@ -109,7 +119,7 @@ public class TwitterAPIUtils {
         // versions
         final ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setHostAddressResolverFactory(new TwidereHostResolverFactory(app));
-        cb.setHttpConnectionTimeout(connection_timeout);
+        cb.setHttpConnectionTimeout(connectionTimeout);
         cb.setGZIPEnabled(enableGzip);
         cb.setIgnoreSSLError(ignoreSslError);
         cb.setIncludeCards(true);
@@ -153,8 +163,12 @@ public class TwitterAPIUtils {
         switch (credentials.auth_type) {
             case TwidereDataStore.Accounts.AUTH_TYPE_OAUTH:
             case TwidereDataStore.Accounts.AUTH_TYPE_XAUTH: {
-                return new OAuthAuthorization(credentials.consumer_key, credentials.consumer_secret,
-                        new OAuthToken(credentials.oauth_token, credentials.oauth_token_secret));
+                final String consumerKey = TextUtils.isEmpty(credentials.consumer_key) ?
+                        TWITTER_CONSUMER_KEY_LEGACY : credentials.consumer_key;
+                final String consumerSecret = TextUtils.isEmpty(credentials.consumer_secret) ?
+                        TWITTER_CONSUMER_SECRET_LEGACY : credentials.consumer_secret;
+                final OAuthToken accessToken = new OAuthToken(credentials.oauth_token, credentials.oauth_token_secret);
+                return new OAuthAuthorization(consumerKey, consumerSecret, accessToken);
             }
             case TwidereDataStore.Accounts.AUTH_TYPE_BASIC: {
                 final String screenName = credentials.screen_name;
@@ -168,44 +182,52 @@ public class TwitterAPIUtils {
         return new EmptyAuthorization();
     }
 
-    public static RestHttpClient getHttpClient(final Context context, final int timeoutMillis,
-                                               final boolean ignoreSslError, final Proxy proxy,
-                                               final HostAddressResolverFactory resolverFactory,
-                                               final String userAgent, final boolean twitterClientHeader) {
-        final ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setHttpConnectionTimeout(timeoutMillis);
-        cb.setIgnoreSSLError(ignoreSslError);
-        cb.setIncludeTwitterClientHeader(twitterClientHeader);
-        if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
-            final SocketAddress address = proxy.address();
-            if (address instanceof InetSocketAddress) {
-                cb.setHttpProxyHost(((InetSocketAddress) address).getHostName());
-                cb.setHttpProxyPort(((InetSocketAddress) address).getPort());
-            }
-        }
-        cb.setHostAddressResolverFactory(resolverFactory);
-        return new OkHttpRestClient();
-    }
-
     public static RestHttpClient getDefaultHttpClient(final Context context) {
         if (context == null) return null;
-        final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int timeoutMillis = prefs.getInt(SharedPreferenceConstants.KEY_CONNECTION_TIMEOUT, 10000) * 1000;
-        final Proxy proxy = Utils.getProxy(context);
-        final String userAgent = TwidereApplication.getInstance(context).getDefaultUserAgent();
-        final HostAddressResolverFactory resolverFactory = new TwidereHostResolverFactory(
-                TwidereApplication.getInstance(context));
-        return getHttpClient(context, timeoutMillis, true, proxy, resolverFactory, userAgent, false);
+        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        //TODO set user agent
+        TwidereApplication.getInstance(context).getDefaultUserAgent();
+        return createHttpClient(context, prefs);
     }
 
-    public static RestHttpClient getImageLoaderHttpClient(final Context context) {
-        if (context == null) return null;
-        final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int timeoutMillis = prefs.getInt(SharedPreferenceConstants.KEY_CONNECTION_TIMEOUT, 10000) * 1000;
-        final Proxy proxy = Utils.getProxy(context);
-        final String userAgent = TwidereApplication.getInstance(context).getDefaultUserAgent();
-        final HostAddressResolverFactory resolverFactory = new TwidereHostResolverFactory(
-                TwidereApplication.getInstance(context));
-        return getHttpClient(context, timeoutMillis, true, proxy, resolverFactory, userAgent, false);
+    public static RestHttpClient createHttpClient(final Context context, final SharedPreferencesWrapper prefs) {
+        final int connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
+        final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
+        final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
+
+        final OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(connectionTimeout, TimeUnit.SECONDS);
+        if (ignoreSslError) {
+            client.setSslSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
+        } else {
+            client.setSslSocketFactory(SSLCertificateSocketFactory.getDefault(0, null));
+        }
+        if (enableProxy) {
+            client.setProxy(getProxy(prefs));
+        }
+        final HostAddressResolver resolver = TwidereApplication.getInstance(context).getHostAddressResolver();
+        Internal.instance.setNetwork(client, new Network() {
+            @Override
+            public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {
+                try {
+                    return resolver.resolve(host);
+                } catch (IOException e) {
+                    if (e instanceof UnknownHostException) throw (UnknownHostException) e;
+                    throw new UnknownHostException("Unable to resolve address " + e.getMessage());
+                }
+            }
+        });
+        return new OkHttpRestClient(client);
+    }
+
+
+    public static Proxy getProxy(final SharedPreferencesWrapper prefs) {
+        final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
+        final int proxyPort = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
+        if (!isEmpty(proxyHost) && proxyPort >= 0 && proxyPort < 65535) {
+            final SocketAddress addr = InetSocketAddress.createUnresolved(proxyHost, proxyPort);
+            return new Proxy(Proxy.Type.HTTP, addr);
+        }
+        return Proxy.NO_PROXY;
     }
 }

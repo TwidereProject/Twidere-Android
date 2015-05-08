@@ -15,4 +15,5 @@ public interface RestClient {
     Converter getConverter();
 
     Authorization getAuthorization();
+
 }

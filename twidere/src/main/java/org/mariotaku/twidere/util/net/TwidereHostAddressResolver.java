@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.LruCache;
 
 import org.apache.http.conn.util.InetAddressUtils;
 import org.mariotaku.twidere.Constants;
@@ -46,13 +47,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import twitter4j.http.HostAddressResolver;
-
-import static android.text.TextUtils.isEmpty;
 
 public class TwidereHostAddressResolver implements Constants, HostAddressResolver {
 
@@ -62,22 +60,16 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
 
     private final SharedPreferences mHostMapping, mPreferences;
     private final HostsFileParser mSystemHosts = new HostsFileParser();
-    private final HostCache mHostCache = new HostCache(512);
-    private final boolean mLocalMappingOnly;
+    private final LruCache<String, InetAddress[]> mHostCache = new LruCache<>(512);
     private final String mDnsAddress;
 
     private Resolver mDns;
 
     public TwidereHostAddressResolver(final Context context) {
-        this(context, false);
-    }
-
-    public TwidereHostAddressResolver(final Context context, final boolean localOnly) {
         mHostMapping = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String address = mPreferences.getString(KEY_DNS_SERVER, DEFAULT_DNS_SERVER_ADDRESS);
         mDnsAddress = isValidIpAddress(address) ? address : DEFAULT_DNS_SERVER_ADDRESS;
-        mLocalMappingOnly = localOnly;
     }
 
     @SuppressWarnings("unused")
@@ -91,15 +83,16 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
         return resolveInternal(host, host);
     }
 
+    @NonNull
     private InetAddress[] resolveInternal(String originalHost, String host) throws IOException {
         if (isValidIpAddress(host)) return fromAddressString(originalHost, host);
         // First, I'll try to load address cached.
-        if (mHostCache.containsKey(host)) {
-            final InetAddress[] hostAddr = mHostCache.get(host);
+        final InetAddress[] cachedHostAddr = mHostCache.get(host);
+        if (cachedHostAddr != null) {
             if (Utils.isDebugBuild()) {
-                Log.d(RESOLVER_LOGTAG, "Got cached " + Arrays.toString(hostAddr));
+                Log.d(RESOLVER_LOGTAG, "Got cached " + Arrays.toString(cachedHostAddr));
+                return cachedHostAddr;
             }
-            return hostAddr;
         }
         // Then I'll try to load from custom host mapping.
         // Stupid way to find top domain, but really fast.
@@ -209,22 +202,7 @@ public class TwidereHostAddressResolver implements Constants, HostAddressResolve
     }
 
     private static boolean isValidIpAddress(final String address) {
-        if (isEmpty(address)) return false;
         return InetAddressUtils.isIPv4Address(address) || InetAddressUtils.isIPv6Address(address);
     }
 
-    private static class HostCache extends LinkedHashMap<String, InetAddress[]> {
-
-        private static final long serialVersionUID = -9216545511009449147L;
-
-        HostCache(final int initialCapacity) {
-            super(initialCapacity);
-        }
-
-        @Override
-        public InetAddress[] put(final String key, final InetAddress... value) {
-            if (value == null) return null;
-            return super.put(key, value);
-        }
-    }
 }

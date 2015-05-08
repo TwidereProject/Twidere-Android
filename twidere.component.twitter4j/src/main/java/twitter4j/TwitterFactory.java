@@ -71,13 +71,6 @@ public final class TwitterFactory {
     private final Configuration conf;
 
     /**
-     * Creates a TwitterFactory with the root configuration.
-     */
-    public TwitterFactory() {
-        this(ConfigurationContext.getInstance());
-    }
-
-    /**
      * Creates a TwitterFactory with the given configuration.
      *
      * @param conf the configuration to use
