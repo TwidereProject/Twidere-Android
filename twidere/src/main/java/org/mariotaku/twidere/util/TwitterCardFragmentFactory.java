@@ -25,7 +25,7 @@ import org.mariotaku.twidere.fragment.support.CardBrowserFragment;
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
 
-import twitter4j.CardEntity.BindingValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
 
 /**
  * Created by mariotaku on 15/1/1.

@@ -52,7 +52,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -83,10 +82,10 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.UserList;
-import twitter4j.UserListUpdate;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 
 import static org.mariotaku.twidere.util.MenuUtils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;

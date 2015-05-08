@@ -1,43 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/hidden_settings">
 
-    <Preference android:layout="@layout/header_hidden_settings"/>
+    <Preference android:layout="@layout/header_hidden_settings" />
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="force_using_private_apis"
-        android:title="@string/force_using_private_apis"/>
+        android:title="@string/force_using_private_apis" />
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
         android:defaultValue="10"
         android:key="connection_timeout"
         android:title="@string/connection_timeout"
         app:max="30"
         app:min="5"
-        app:progressTextSuffix="s"/>
+        app:progressTextSuffix="s" />
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="ignore_ssl_error"
         android:summary="@string/ignore_ssl_error_summary"
-        android:title="@string/ignore_ssl_error"/>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="true"
-        android:key="gzip_compressing"
-        android:summary="@string/gzip_compressing_summary"
-        android:title="@string/gzip_compressing"/>
+        android:title="@string/ignore_ssl_error" />
 
     <org.mariotaku.twidere.preference.AutoFixEditTextPreference
         android:defaultValue="140"
         android:inputType="number"
         android:key="status_text_limit"
-        android:title="@string/status_text_limit"/>
+        android:title="@string/status_text_limit" />
 
     <Preference android:title="@string/settings_wizard">
         <intent
             android:targetClass="org.mariotaku.twidere.activity.SettingsWizardActivity"
-            android:targetPackage="org.mariotaku.twidere"/>
+            android:targetPackage="org.mariotaku.twidere" />
     </Preference>
 
 </PreferenceScreen>

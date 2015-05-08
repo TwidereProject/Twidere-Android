@@ -27,9 +27,9 @@ import org.mariotaku.twidere.util.TwitterAPIUtils;
 import java.util.Collections;
 import java.util.List;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 

@@ -21,9 +21,9 @@ package org.mariotaku.twidere.extension.streaming.util;
 
 import android.content.Context;
 
-import twitter4j.http.HostAddressResolver;
-import twitter4j.http.HostAddressResolverFactory;
-import twitter4j.http.HttpClientConfiguration;
+import org.mariotaku.twidere.api.twitter.http.HostAddressResolver;
+import org.mariotaku.twidere.api.twitter.http.HostAddressResolverFactory;
+import org.mariotaku.twidere.api.twitter.http.HttpClientConfiguration;
 
 /**
  * Created by mariotaku on 15/1/11.

@@ -30,8 +30,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import java.io.IOException;
 import java.util.List;
 
-import twitter4j.Status;
-import twitter4j.UserMentionEntity;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 
 @JsonObject
 public class ParcelableUserMention implements Parcelable {

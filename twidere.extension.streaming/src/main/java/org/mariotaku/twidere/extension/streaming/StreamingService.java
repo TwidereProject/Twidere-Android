@@ -45,7 +45,7 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.User;
 import twitter4j.UserList;
 import twitter4j.UserStreamListener;
-import twitter4j.auth.AccessToken;
+import org.mariotaku.twidere.api.twitter.auth.AccessToken;
 import twitter4j.conf.StreamConfigurationBuilder;
 
 import static android.text.TextUtils.isEmpty;

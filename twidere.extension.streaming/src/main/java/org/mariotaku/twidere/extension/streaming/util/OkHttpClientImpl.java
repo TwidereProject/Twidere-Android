@@ -53,14 +53,14 @@ import javax.net.SocketFactory;
 
 import okio.BufferedSink;
 import twitter4j.TwitterException;
-import twitter4j.auth.Authorization;
-import twitter4j.http.HostAddressResolver;
-import twitter4j.http.HttpClient;
-import twitter4j.http.HttpClientConfiguration;
-import twitter4j.http.HttpParameter;
-import twitter4j.http.HttpRequest;
-import twitter4j.http.HttpResponse;
-import twitter4j.http.RequestMethod;
+import org.mariotaku.twidere.api.twitter.auth.Authorization;
+import org.mariotaku.twidere.api.twitter.http.HostAddressResolver;
+import org.mariotaku.twidere.api.twitter.http.HttpClient;
+import org.mariotaku.twidere.api.twitter.http.HttpClientConfiguration;
+import org.mariotaku.twidere.api.twitter.http.HttpParameter;
+import org.mariotaku.twidere.api.twitter.http.HttpRequest;
+import org.mariotaku.twidere.api.twitter.http.HttpResponse;
+import org.mariotaku.twidere.api.twitter.http.RequestMethod;
 
 /**
  * Created by mariotaku on 15/1/22.

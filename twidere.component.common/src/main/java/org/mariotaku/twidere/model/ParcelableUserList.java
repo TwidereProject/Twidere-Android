@@ -26,8 +26,8 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import twitter4j.User;
-import twitter4j.UserList;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.model.UserList;
 
 @JsonObject
 public class ParcelableUserList implements Parcelable, Comparable<ParcelableUserList> {

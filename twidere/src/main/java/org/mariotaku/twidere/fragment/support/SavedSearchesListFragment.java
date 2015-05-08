@@ -34,8 +34,8 @@ import org.mariotaku.twidere.loader.support.SavedSearchesLoader;
 import java.util.Collections;
 import java.util.Comparator;
 
-import twitter4j.ResponseList;
-import twitter4j.SavedSearch;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 

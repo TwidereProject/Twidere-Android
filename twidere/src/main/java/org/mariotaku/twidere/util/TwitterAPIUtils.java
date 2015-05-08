@@ -9,7 +9,6 @@ import android.util.Pair;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
-import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.simplerestapi.RestAPIFactory;
 import org.mariotaku.simplerestapi.RestMethod;
@@ -20,32 +19,27 @@ import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.RestRequest;
 import org.mariotaku.simplerestapi.http.RestResponse;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.twitter.OkHttpRestClient;
-import org.mariotaku.twidere.api.twitter.TwitterConverter;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.TwitterOAuth;
+import org.mariotaku.twidere.api.twitter.api.TwitterUpload;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.api.twitter.util.TwitterConverter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.util.net.OkHttpRestClient;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterOAuth;
-import twitter4j.api.TwitterUpload;
-import twitter4j.http.HostAddressResolver;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -213,18 +207,7 @@ public class TwitterAPIUtils implements TwidereConstants {
         if (enableProxy) {
             client.setProxy(getProxy(prefs));
         }
-        final HostAddressResolver resolver = TwidereApplication.getInstance(context).getHostAddressResolver();
-        Internal.instance.setNetwork(client, new Network() {
-            @Override
-            public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {
-                try {
-                    return resolver.resolve(host);
-                } catch (IOException e) {
-                    if (e instanceof UnknownHostException) throw (UnknownHostException) e;
-                    throw new UnknownHostException("Unable to resolve address " + e.getMessage());
-                }
-            }
-        });
+        Internal.instance.setNetwork(client, TwidereApplication.getInstance(context).getNetwork());
         return new OkHttpRestClient(client);
     }
 

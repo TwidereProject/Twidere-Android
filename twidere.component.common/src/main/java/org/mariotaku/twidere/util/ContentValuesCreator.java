@@ -54,16 +54,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import twitter4j.DirectMessage;
-import twitter4j.GeoLocation;
-import twitter4j.Place;
-import twitter4j.Relationship;
-import twitter4j.SavedSearch;
-import twitter4j.Status;
-import twitter4j.Trend;
-import twitter4j.Trends;
-import twitter4j.UrlEntity;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.GeoLocation;
+import org.mariotaku.twidere.api.twitter.model.Place;
+import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.Trend;
+import org.mariotaku.twidere.api.twitter.model.Trends;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 

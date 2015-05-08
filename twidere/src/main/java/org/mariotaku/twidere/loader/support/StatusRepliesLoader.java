@@ -27,10 +27,10 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-import twitter4j.Paging;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 import static org.mariotaku.twidere.util.Utils.isOfficialTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.shouldForceUsingPrivateAPIs;

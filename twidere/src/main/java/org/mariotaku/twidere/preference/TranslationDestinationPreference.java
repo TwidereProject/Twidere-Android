@@ -45,10 +45,10 @@ import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
 
-import twitter4j.ResponseList;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.api.HelpResources.Language;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.api.HelpResources.Language;
 
 import static org.mariotaku.twidere.util.TwitterAPIUtils.getDefaultTwitterInstance;
 

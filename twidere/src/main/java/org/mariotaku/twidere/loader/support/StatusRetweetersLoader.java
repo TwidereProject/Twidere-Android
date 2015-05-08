@@ -25,10 +25,10 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-import twitter4j.IDs;
-import twitter4j.Paging;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.IDs;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 public class StatusRetweetersLoader extends IDsUsersLoader {
 

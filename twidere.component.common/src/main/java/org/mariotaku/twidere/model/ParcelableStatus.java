@@ -43,15 +43,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import twitter4j.CardEntity;
-import twitter4j.CardEntity.BindingValue;
-import twitter4j.CardEntity.BooleanValue;
-import twitter4j.CardEntity.ImageValue;
-import twitter4j.CardEntity.StringValue;
-import twitter4j.CardEntity.UserValue;
-import twitter4j.Place;
-import twitter4j.Status;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.model.CardEntity;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.BooleanValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.ImageValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.StringValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.UserValue;
+import org.mariotaku.twidere.api.twitter.model.Place;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 @SuppressWarnings("unused")
 @JsonObject

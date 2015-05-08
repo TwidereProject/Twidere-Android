@@ -25,11 +25,11 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
 
-import twitter4j.PageableResponseList;
-import twitter4j.Paging;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.UserList;
+import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.UserList;
 
 public class UserListMembershipsLoader extends BaseUserListsLoader {
 

@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import twitter4j.CardEntity;
-import twitter4j.CardEntity.BindingValue;
-import twitter4j.CardEntity.ImageValue;
-import twitter4j.CardEntity.StringValue;
-import twitter4j.EntitySupport;
-import twitter4j.ExtendedEntitySupport;
-import twitter4j.MediaEntity;
-import twitter4j.MediaEntity.Size;
-import twitter4j.MediaEntity.Type;
-import twitter4j.Status;
-import twitter4j.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.CardEntity;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.ImageValue;
+import org.mariotaku.twidere.api.twitter.model.CardEntity.StringValue;
+import org.mariotaku.twidere.api.twitter.model.EntitySupport;
+import org.mariotaku.twidere.api.twitter.model.ExtendedEntitySupport;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity.Size;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity.Type;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 
 @SuppressWarnings("unused")
 @JsonObject

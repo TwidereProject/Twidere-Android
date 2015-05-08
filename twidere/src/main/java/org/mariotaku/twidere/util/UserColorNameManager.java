@@ -34,7 +34,7 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import java.util.Map;
 import java.util.Set;
 
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 import static android.text.TextUtils.isEmpty;
 

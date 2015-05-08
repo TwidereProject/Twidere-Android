@@ -29,7 +29,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.util.ParseUtils;
 
-import twitter4j.GeoLocation;
+import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 
 @JsonObject
 public class ParcelableLocation implements Parcelable {

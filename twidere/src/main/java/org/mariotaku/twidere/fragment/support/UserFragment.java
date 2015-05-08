@@ -148,9 +148,9 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 import java.util.List;
 import java.util.Locale;
 
-import twitter4j.Relationship;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
         OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,

@@ -41,7 +41,7 @@ import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.Locale;
 
-import twitter4j.TranslationResult;
+import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;

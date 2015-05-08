@@ -27,7 +27,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-import twitter4j.CursorSupport;
+import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 
 public abstract class BaseCursorSupportUsersLoader extends Twitter4JUsersLoader
         implements ICursorSupportLoader {

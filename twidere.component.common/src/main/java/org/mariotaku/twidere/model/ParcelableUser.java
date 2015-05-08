@@ -35,8 +35,8 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
-import twitter4j.UrlEntity;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 @JsonObject
 public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {

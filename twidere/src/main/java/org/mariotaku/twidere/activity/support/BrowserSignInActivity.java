@@ -54,8 +54,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.StringReader;
 
-import twitter4j.TwitterConstants;
-import twitter4j.TwitterOAuth;
+import org.mariotaku.twidere.api.twitter.TwitterConstants;
+import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;

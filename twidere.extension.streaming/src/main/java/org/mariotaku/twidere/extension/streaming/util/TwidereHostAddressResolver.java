@@ -30,7 +30,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
-import twitter4j.http.HostAddressResolver;
+import org.mariotaku.twidere.api.twitter.http.HostAddressResolver;
 
 public class TwidereHostAddressResolver implements HostAddressResolver {
 

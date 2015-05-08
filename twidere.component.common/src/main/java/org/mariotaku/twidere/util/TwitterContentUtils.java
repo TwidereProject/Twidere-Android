@@ -28,13 +28,13 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import java.nio.charset.Charset;
 import java.util.zip.CRC32;
 
-import twitter4j.DirectMessage;
-import twitter4j.EntitySupport;
-import twitter4j.MediaEntity;
-import twitter4j.Status;
-import twitter4j.UrlEntity;
-import twitter4j.User;
-import twitter4j.UserMentionEntity;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.EntitySupport;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 

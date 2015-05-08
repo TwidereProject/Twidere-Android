@@ -40,7 +40,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
-import twitter4j.TwitterConstants;
+import org.mariotaku.twidere.api.twitter.TwitterConstants;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseString;

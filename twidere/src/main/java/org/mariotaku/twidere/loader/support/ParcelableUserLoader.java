@@ -37,9 +37,9 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;

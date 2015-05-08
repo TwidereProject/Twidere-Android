@@ -129,9 +129,9 @@ import java.util.Locale;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
-import twitter4j.Paging;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 /**
  * Created by mariotaku on 14/12/5.
@@ -1022,7 +1022,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     final Paging paging = new Paging();
                     paging.setMaxId(status.id);
                     final List<ParcelableStatus> conversations = new ArrayList<>();
-                    for (twitter4j.Status item : twitter.showConversation(status.id, paging)) {
+                    for (org.mariotaku.twidere.api.twitter.model.Status item : twitter.showConversation(status.id, paging)) {
                         if (item.getId() < status.id) {
                             final ParcelableStatus conversation = new ParcelableStatus(item, accountId, false);
                             publishProgress(conversation);

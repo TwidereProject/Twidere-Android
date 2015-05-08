@@ -140,6 +140,7 @@ import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
+import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.auth.OAuthSupport;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
@@ -248,14 +249,13 @@ import javax.net.ssl.SSLException;
 
 import edu.tsinghua.spice.SpiceService;
 import edu.ucdavis.earlybird.UCDService;
-import twitter4j.DirectMessage;
-import twitter4j.RateLimitStatus;
-import twitter4j.Relationship;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterConstants;
-import twitter4j.TwitterException;
-import twitter4j.UserMentionEntity;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
+import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterConstants;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
@@ -3556,10 +3556,10 @@ public final class Utils implements Constants, TwitterConstants {
         return in.size() != out.size();
     }
 
-    public static boolean truncateStatuses(final List<twitter4j.Status> in, final List<twitter4j.Status> out,
+    public static boolean truncateStatuses(final List<Status> in, final List<Status> out,
                                            final long sinceId) {
         if (in == null) return false;
-        for (final twitter4j.Status status : in) {
+        for (final Status status : in) {
             if (sinceId > 0 && status.getId() <= sinceId) {
                 continue;
             }
@@ -3568,10 +3568,10 @@ public final class Utils implements Constants, TwitterConstants {
         return in.size() != out.size();
     }
 
-    public static boolean truncateActivities(final List<twitter4j.Activity> in, final List<twitter4j.Activity> out,
+    public static boolean truncateActivities(final List<org.mariotaku.twidere.api.twitter.model.Activity> in, final List<org.mariotaku.twidere.api.twitter.model.Activity> out,
                                              final long sinceId) {
         if (in == null) return false;
-        for (final twitter4j.Activity status : in) {
+        for (final org.mariotaku.twidere.api.twitter.model.Activity status : in) {
             if (sinceId > 0 && status.getMaxPosition() <= sinceId) {
                 continue;
             }

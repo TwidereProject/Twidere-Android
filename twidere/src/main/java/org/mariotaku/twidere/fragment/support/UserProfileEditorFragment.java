@@ -69,10 +69,10 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
-import twitter4j.ProfileUpdate;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 import static android.text.TextUtils.isEmpty;
 

@@ -50,7 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import twitter4j.TwitterOAuth;
+import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 
 import static android.text.TextUtils.isEmpty;
 

@@ -41,9 +41,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import twitter4j.MediaEntity;
-import twitter4j.Status;
-import twitter4j.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 
 import static android.text.TextUtils.isEmpty;
 

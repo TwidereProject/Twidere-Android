@@ -40,6 +40,7 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.SQLFunctions;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ListResponse;
@@ -87,17 +88,17 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
-import twitter4j.DirectMessage;
-import twitter4j.Paging;
-import twitter4j.ResponseList;
-import twitter4j.SavedSearch;
-import twitter4j.Trends;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
-import twitter4j.UserList;
-import twitter4j.UserListUpdate;
-import twitter4j.http.HttpResponseCode;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.api.twitter.model.Trends;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
+import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createDirectMessage;
@@ -853,7 +854,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mContext, account_id, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final twitter4j.Status status = twitter.createFavorite(status_id);
+                final org.mariotaku.twidere.api.twitter.model.Status status = twitter.createFavorite(status_id);
                 Utils.setLastSeen(mContext, status.getUserMentionEntities(), System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
@@ -1431,7 +1432,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mContext, account_id, true);
             if (twitter != null) {
                 try {
-                    final twitter4j.Status status = twitter.destroyFavorite(status_id);
+                    final org.mariotaku.twidere.api.twitter.model.Status status = twitter.destroyFavorite(status_id);
                     final ContentValues values = new ContentValues();
                     values.put(Statuses.IS_FAVORITE, false);
                     if (status.isRetweet()) {
@@ -1896,7 +1897,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        public ResponseList<twitter4j.Status> getStatuses(final Twitter twitter, final Paging paging)
+        public ResponseList<org.mariotaku.twidere.api.twitter.model.Status> getStatuses(final Twitter twitter, final Paging paging)
                 throws TwitterException {
             return twitter.getHomeTimeline(paging);
         }
@@ -1958,7 +1959,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
 
         @Override
-        public ResponseList<twitter4j.Status> getStatuses(final Twitter twitter, final Paging paging)
+        public ResponseList<org.mariotaku.twidere.api.twitter.model.Status> getStatuses(final Twitter twitter, final Paging paging)
                 throws TwitterException {
             return twitter.getMentionsTimeline(paging);
         }
@@ -2055,7 +2056,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterListResponse<twitter4j.Status>, List<StatusListResponse>> {
+    abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterListResponse<Status>, List<StatusListResponse>> {
 
         private final long[] mAccountIds, mMaxIds, mSinceIds;
 
@@ -2066,7 +2067,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             mSinceIds = since_ids;
         }
 
-        public abstract ResponseList<twitter4j.Status> getStatuses(Twitter twitter, Paging paging)
+        public abstract ResponseList<org.mariotaku.twidere.api.twitter.model.Status> getStatuses(Twitter twitter, Paging paging)
                 throws TwitterException;
 
         @NonNull
@@ -2080,7 +2081,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             return mSinceIds != null && mSinceIds.length == mAccountIds.length;
         }
 
-        private void storeStatus(long accountId, List<twitter4j.Status> statuses, long maxId, boolean truncated, boolean notify) {
+        private void storeStatus(long accountId, List<org.mariotaku.twidere.api.twitter.model.Status> statuses, long maxId, boolean truncated, boolean notify) {
             if (statuses == null || statuses.isEmpty() || accountId <= 0) {
                 return;
             }
@@ -2091,7 +2092,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             long minId = -1;
             int minIdx = -1;
             for (int i = 0, j = statuses.size(); i < j; i++) {
-                final twitter4j.Status status = statuses.get(i);
+                final org.mariotaku.twidere.api.twitter.model.Status status = statuses.get(i);
                 values[i] = createStatus(status, accountId);
                 final long id = status.getId();
                 if (minId == -1 || id < minId) {
@@ -2135,7 +2136,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(TwitterListResponse<twitter4j.Status>... values) {
+        protected final void onProgressUpdate(TwitterListResponse<org.mariotaku.twidere.api.twitter.model.Status>... values) {
             AsyncTaskUtils.executeTask(new CacheUsersStatusesTask(mContext), values);
         }
 
@@ -2179,7 +2180,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     } else {
                         sinceId = -1;
                     }
-                    final List<twitter4j.Status> statuses = new ArrayList<>();
+                    final List<org.mariotaku.twidere.api.twitter.model.Status> statuses = new ArrayList<>();
                     final boolean truncated = truncateStatuses(getStatuses(twitter, paging), statuses, sinceId);
                     storeStatus(accountId, statuses, maxId, truncated, true);
                     publishProgress(new StatusListResponse(accountId, statuses));
@@ -2356,7 +2357,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance();
             }
             try {
-                final twitter4j.Status status = twitter.retweetStatus(status_id);
+                final org.mariotaku.twidere.api.twitter.model.Status status = twitter.retweetStatus(status_id);
                 Utils.setLastSeen(mContext, status.getUserMentionEntities(), System.currentTimeMillis());
                 return SingleResponse.getInstance(new ParcelableStatus(status, account_id, false));
             } catch (final TwitterException e) {

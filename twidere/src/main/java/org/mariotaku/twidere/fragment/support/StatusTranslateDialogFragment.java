@@ -43,9 +43,9 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
-import twitter4j.TranslationResult;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.TranslationResult;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 public class StatusTranslateDialogFragment extends BaseSupportDialogFragment implements
         LoaderCallbacks<SingleResponse<TranslationResult>> {

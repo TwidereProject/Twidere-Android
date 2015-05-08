@@ -151,8 +151,6 @@ public interface SharedPreferenceConstants {
     String KEY_LEFTSIDE_COMPOSE_BUTTON = "leftside_compose_button";
     @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = false)
     String KEY_ATTACH_LOCATION = "attach_location";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_GZIP_COMPRESSING = "gzip_compressing";
     @Preference(type = BOOLEAN)
     String KEY_IGNORE_SSL_ERROR = "ignore_ssl_error";
     @Preference(type = STRING)

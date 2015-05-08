@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import com.twitter.Extractor;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -42,7 +43,7 @@ import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createStatus;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
-public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<twitter4j.Status>, Object, Object> implements Constants {
+public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<Status>, Object, Object> implements Constants {
 
     private final Context context;
 
@@ -52,19 +53,19 @@ public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<twitte
 
     @SafeVarargs
     @Override
-    protected final Object doInBackground(final TwitterListResponse<twitter4j.Status>... args) {
+    protected final Object doInBackground(final TwitterListResponse<org.mariotaku.twidere.api.twitter.model.Status>... args) {
         if (args == null || args.length == 0) return null;
         final ContentResolver resolver = context.getContentResolver();
         final Extractor extractor = new Extractor();
 
-        for (final TwitterListResponse<twitter4j.Status> response : args) {
+        for (final TwitterListResponse<org.mariotaku.twidere.api.twitter.model.Status> response : args) {
             if (response == null || response.list == null) {
                 continue;
             }
-            final List<twitter4j.Status> list = response.list;
+            final List<org.mariotaku.twidere.api.twitter.model.Status> list = response.list;
             for (int bulkIdx = 0, totalSize = list.size(); bulkIdx < totalSize; bulkIdx += 100) {
                 for (int idx = bulkIdx, end = Math.min(totalSize, bulkIdx + ContentResolverUtils.MAX_BULK_COUNT); idx < end; idx++) {
-                    final twitter4j.Status status = list.get(idx);
+                    final org.mariotaku.twidere.api.twitter.model.Status status = list.get(idx);
 
                     final Set<ContentValues> usersValues = new HashSet<>();
                     final Set<ContentValues> statusesValues = new HashSet<>();

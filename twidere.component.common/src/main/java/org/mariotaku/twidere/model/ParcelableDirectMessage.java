@@ -34,8 +34,8 @@ import org.mariotaku.twidere.util.TwitterContentUtils;
 import java.util.Comparator;
 import java.util.Date;
 
-import twitter4j.DirectMessage;
-import twitter4j.User;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.User;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 import static org.mariotaku.twidere.util.content.ContentValuesUtils.getAsBoolean;

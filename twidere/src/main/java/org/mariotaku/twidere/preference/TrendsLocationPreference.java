@@ -43,10 +43,10 @@ import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
 
-import twitter4j.Location;
-import twitter4j.ResponseList;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Location;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 import static org.mariotaku.twidere.util.TwitterAPIUtils.getDefaultTwitterInstance;
 

@@ -30,11 +30,11 @@ import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import twitter4j.CursorSupport;
-import twitter4j.PageableResponseList;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.UserList;
+import org.mariotaku.twidere.api.twitter.model.CursorSupport;
+import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.UserList;
 
 import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 

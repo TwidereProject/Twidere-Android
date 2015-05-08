@@ -55,6 +55,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
 
+import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -109,8 +110,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import twitter4j.http.HostAddressResolver;
-
 import static org.mariotaku.twidere.util.Utils.clearAccountColor;
 import static org.mariotaku.twidere.util.Utils.clearAccountName;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
@@ -130,7 +129,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private ReadStateManager mReadStateManager;
     private SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;
-    private HostAddressResolver mHostAddressResolver;
+    private Network mNetwork;
     private Handler mHandler;
 
     private boolean mHomeActivityInBackground;
@@ -320,7 +319,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
-        mHostAddressResolver = app.getHostAddressResolver();
+        mNetwork = app.getNetwork();
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         updatePreferences();
@@ -668,7 +667,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private Cursor getDNSCursor(final String host) {
         final MatrixCursor c = new MatrixCursor(TwidereDataStore.DNS.MATRIX_COLUMNS);
         try {
-            final InetAddress[] addresses = mHostAddressResolver.resolve(host);
+            final InetAddress[] addresses = mNetwork.resolveInetAddresses(host);
             for (InetAddress address : addresses) {
                 c.addRow(new String[]{host, address.getHostAddress()});
             }
