@@ -353,14 +353,9 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    final SupportProgressDialogFragment f = SupportProgressDialogFragment.show(mActivity,
-                            FRAGMENT_TAG_DELETING_DRAFTS);
-                    f.setCancelable(false);
-                }
-            });
+            final SupportProgressDialogFragment f = SupportProgressDialogFragment.show(mActivity,
+                    FRAGMENT_TAG_DELETING_DRAFTS);
+            f.setCancelable(false);
         }
 
         @Override

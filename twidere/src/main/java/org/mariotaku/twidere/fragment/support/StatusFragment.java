@@ -761,8 +761,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             } else if (!TextUtils.isEmpty(timeString) && TextUtils.isEmpty(source)) {
                 timeSourceView.setText(timeString);
             }
-            timeSourceView.setMovementMethod(null);
-
+            timeSourceView.setMovementMethod(StatusContentMovementMethod.getInstance());
 
             textView.setText(Html.fromHtml(status.text_html));
             linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
