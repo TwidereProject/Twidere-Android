@@ -30,10 +30,12 @@ import java.util.Date;
  */
 
 public interface Trends extends TwitterResponse, Comparable<Trends>, Serializable {
-	Date getAsOf();
+    Date getAsOf();
 
-	Location[] getLocations();
+    Date getCreatedAt();
 
-	Trend[] getTrends();
+    Location[] getLocations();
+
+    Trend[] getTrends();
 
 }

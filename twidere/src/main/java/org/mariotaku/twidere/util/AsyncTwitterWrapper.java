@@ -40,7 +40,18 @@ import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.SQLFunctions;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.Trends;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ListResponse;
@@ -88,17 +99,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
 import edu.ucdavis.earlybird.ProfilingUtil;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
-import org.mariotaku.twidere.api.twitter.model.Trends;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
-import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createDirectMessage;
@@ -1934,12 +1934,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        public List<Trends> getTrends(final Twitter twitter) throws TwitterException {
-            final ArrayList<Trends> trends_list = new ArrayList<>();
-            if (twitter != null) {
-                trends_list.add(twitter.getLocationTrends(woeid));
-            }
-            return trends_list;
+        public List<Trends> getTrends(@NonNull final Twitter twitter) throws TwitterException {
+            return twitter.getLocationTrends(woeid);
         }
 
         @Override
@@ -2204,7 +2200,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             this.account_id = account_id;
         }
 
-        public abstract List<Trends> getTrends(Twitter twitter) throws TwitterException;
+        public abstract List<Trends> getTrends(@NonNull Twitter twitter) throws TwitterException;
 
         @Override
         protected ListResponse<Trends> doInBackground(final Object... params) {

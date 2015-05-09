@@ -21,13 +21,20 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 
 import android.support.annotation.NonNull;
 
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.util.TwitterTrendsDateConverter;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mariotaku on 15/5/10.
@@ -37,6 +44,8 @@ public class TrendsImpl extends TwitterResponseImpl implements Trends {
 
     @JsonField(name = "as_of", typeConverter = TwitterTrendsDateConverter.class)
     Date asOf;
+    @JsonField(name = "created_at", typeConverter = TwitterTrendsDateConverter.class)
+    Date createdAt;
     @JsonField(name = "trends")
     TrendImpl[] trends;
     @JsonField(name = "locations")
@@ -55,6 +64,11 @@ public class TrendsImpl extends TwitterResponseImpl implements Trends {
     @Override
     public LocationImpl[] getLocations() {
         return locations;
+    }
+
+    @Override
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
+import org.mariotaku.simplerestapi.http.ValueMap;
 import org.mariotaku.twidere.api.twitter.model.impl.GeoPoint;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.io.IOException;
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public class GeoLocation {
+public class GeoLocation implements ValueMap {
 
     public static final TypeConverter<GeoLocation> CONVERTER = new TypeConverter<GeoLocation>() {
         @Override
@@ -113,5 +114,22 @@ public class GeoLocation {
     @Override
     public String toString() {
         return "GeoLocation{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
+    }
+
+    @Override
+    public boolean has(String key) {
+        return "lat".equals(key) || "long".equals(key);
+    }
+
+    @Override
+    public Object get(String key) {
+        if ("lat".equals(key)) return latitude;
+        if ("long".equals(key)) return longitude;
+        return null;
+    }
+
+    @Override
+    public String[] keys() {
+        return new String[]{"lat", "long"};
     }
 }
