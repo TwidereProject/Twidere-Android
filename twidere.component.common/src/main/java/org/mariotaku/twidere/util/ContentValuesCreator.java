@@ -29,6 +29,16 @@ import org.json.JSONObject;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.GeoLocation;
+import org.mariotaku.twidere.api.twitter.model.Place;
+import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.Trend;
+import org.mariotaku.twidere.api.twitter.model.Trends;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
@@ -53,17 +63,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.GeoLocation;
-import org.mariotaku.twidere.api.twitter.model.Place;
-import org.mariotaku.twidere.api.twitter.model.Relationship;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.Trend;
-import org.mariotaku.twidere.api.twitter.model.Trends;
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.api.twitter.model.User;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 
@@ -463,7 +462,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         if (trendsList == null) return new ContentValues[0];
         final List<ContentValues> resultList = new ArrayList<>();
         for (final Trends trends : trendsList) {
-            final long timestamp = trends.getTrendAt().getTime();
+            final long timestamp = trends.getAsOf().getTime();
             for (final Trend trend : trends.getTrends()) {
                 final ContentValues values = new ContentValues();
                 values.put(CachedTrends.NAME, trend.getName());

@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public abstract class TwitterTrendsDateConverter implements TypeConverter<Date> {
+public class TwitterTrendsDateConverter implements TypeConverter<Date> {
     private static final Object FORMATTER_LOCK = new Object();
 
     private static final SimpleDateFormat DATE_FORMAT_1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);

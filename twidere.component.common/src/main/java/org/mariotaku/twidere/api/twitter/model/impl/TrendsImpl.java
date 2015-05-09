@@ -22,6 +22,7 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.util.TwitterTrendsDateConverter;
@@ -31,6 +32,7 @@ import java.util.Date;
 /**
  * Created by mariotaku on 15/5/10.
  */
+@JsonObject
 public class TrendsImpl extends TwitterResponseImpl implements Trends {
 
     @JsonField(name = "as_of", typeConverter = TwitterTrendsDateConverter.class)
