@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
+import org.mariotaku.simplerestapi.method.GET;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.Location;
@@ -30,23 +31,8 @@ import org.mariotaku.twidere.api.twitter.model.Trends;
  */
 @SuppressWarnings("RedundantThrows")
 public interface TrendsResources {
-	/**
-	 * Returns the locations that Twitter has trending topic information for.
-	 * The response is an array of &quot;locations&quot; that encode the
-	 * location's WOEID (a <a
-	 * href="http://developer.yahoo.com/geo/geoplanet/">Yahoo! Where On Earth
-	 * ID</a>) and some other human-readable information such as a canonical
-	 * name and country the location belongs in. <br>
-	 * This method calls http://api.twitter.com/1.1/trends/available.json
-	 * 
-	 * @return the locations
-	 * @throws TwitterException when Twitter service or network is
-	 *             unavailable
-	 * @see <a
-	 *      href="https://dev.twitter.com/docs/api/1.1/get/trends/available">GET
-	 *      trends/available | Twitter Developers</a>
-	 * @since Twitter4J 2.1.1
-	 */
+
+	@GET("/trends/available.json")
 	ResponseList<Location> getAvailableTrends() throws TwitterException;
 
 	/**

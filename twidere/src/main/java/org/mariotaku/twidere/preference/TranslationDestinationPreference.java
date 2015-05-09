@@ -48,7 +48,7 @@ import java.util.List;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.api.HelpResources.Language;
+import org.mariotaku.twidere.api.twitter.model.Language;
 
 import static org.mariotaku.twidere.util.TwitterAPIUtils.getDefaultTwitterInstance;
 

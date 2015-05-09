@@ -25,6 +25,7 @@ package org.mariotaku.twidere.api.twitter.model;
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
 public interface IDs extends TwitterResponse, CursorSupport {
+
 	long[] getIDs();
 
 }

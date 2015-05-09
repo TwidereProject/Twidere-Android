@@ -17,23 +17,38 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.Trend;
 
 /**
- * A data class representing Trends.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.0.2
+ * Created by mariotaku on 15/5/10.
  */
+@JsonObject
+public class TrendImpl implements Trend {
 
-public interface Trends extends TwitterResponse, Comparable<Trends>, Serializable {
-	Date getAsOf();
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "url")
+    String url;
+    @JsonField(name = "query")
+    String query;
 
-	Location[] getLocations();
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	Trend[] getTrends();
+    @Override
+    public String getUrl() {
+        return url;
+    }
 
+    @Override
+    public String getQuery() {
+        return query;
+    }
 }

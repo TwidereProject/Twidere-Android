@@ -19,21 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
 /**
- * A data class representing Trends.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.0.2
+ * Created by mariotaku on 15/5/10.
  */
+public interface Language {
+    String getCode();
 
-public interface Trends extends TwitterResponse, Comparable<Trends>, Serializable {
-	Date getAsOf();
+    String getName();
 
-	Location[] getLocations();
-
-	Trend[] getTrends();
-
+    String getStatus();
 }

@@ -29,11 +29,17 @@ public interface Location {
 
 	String getName();
 
-	int getPlaceCode();
-
-	String getPlaceName();
-
 	String getUrl();
 
 	int getWoeid();
+
+	PlaceType getPlaceType();
+
+	interface PlaceType {
+
+		int getCode();
+
+		String getName();
+
+	}
 }
