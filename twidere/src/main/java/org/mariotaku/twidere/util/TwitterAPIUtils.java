@@ -81,7 +81,6 @@ public class TwitterAPIUtils implements TwidereConstants {
         final String apiUrlFormat;
         final boolean sameOAuthSigningUrl = credentials.same_oauth_signing_url;
         final boolean noVersionSuffix = credentials.no_version_suffix;
-        final String endpointUrl, signEndpointUrl;
         if (!isEmpty(credentials.api_url_format)) {
             apiUrlFormat = credentials.api_url_format;
         } else {
@@ -100,6 +99,7 @@ public class TwitterAPIUtils implements TwidereConstants {
         } else {
             throw new TwitterConverter.UnsupportedTypeException(cls);
         }
+        final String endpointUrl, signEndpointUrl;
         endpointUrl = Utils.getApiUrl(apiUrlFormat, domain, versionSuffix);
         if (!sameOAuthSigningUrl) {
             signEndpointUrl = Utils.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);

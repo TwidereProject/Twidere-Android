@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RestMethod(value = "POST", hasBody = true)
 public @interface POST {
-    String METHOD = "METHOD";
+    String METHOD = "POST";
+
     String value();
 }

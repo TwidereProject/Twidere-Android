@@ -32,6 +32,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
+import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.RestRequest;
@@ -178,6 +179,7 @@ public class OkHttpRestClient implements RestHttpClient {
 
         @Override
         public void writeTo(@NonNull OutputStream os) throws IOException {
+            Utils.copyStream(stream(), os);
         }
 
         @NonNull

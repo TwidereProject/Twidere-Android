@@ -37,6 +37,8 @@ import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
 import org.mariotaku.simplerestapi.method.GET;
 import org.mariotaku.simplerestapi.method.POST;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -49,8 +51,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -74,9 +74,9 @@ public class OAuthPasswordAuthenticator implements Constants {
         final OAuthToken requestToken;
         try {
             requestToken = oauth.getRequestToken(OAUTH_CALLBACK_OOB);
-        } catch (final Exception e) {
+        } catch (final TwitterException e) {
 //            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
-            throw new AuthenticityTokenException();
+            throw new AuthenticityTokenException(e);
         }
         RestResponse authorizePage = null, authorizeResult = null;
         try {
@@ -124,7 +124,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             final String oauthPin = readOAuthPINFromHtml(BaseTypedData.reader(authorizeResult.getBody()));
             if (isEmpty(oauthPin)) throw new WrongUserPassException();
             return oauth.getAccessToken(requestToken, oauthPin);
-        } catch (final IOException | NullPointerException | XmlPullParserException e) {
+        } catch (final IOException | NullPointerException | XmlPullParserException | TwitterException e) {
             throw new AuthenticationException(e);
         } finally {
             if (authorizePage != null) {
@@ -212,6 +212,9 @@ public class OAuthPasswordAuthenticator implements Constants {
 
         private static final long serialVersionUID = -1840298989316218380L;
 
+        public AuthenticityTokenException(Exception e) {
+            super(e);
+        }
     }
 
     public static final class WrongUserPassException extends AuthenticationException {

@@ -132,7 +132,7 @@ public class OAuthAuthorization implements Authorization,OAuthSupport {
 
     @Override
     public String getHeader(Endpoint endpoint, RestMethodInfo request) {
-        if (!(endpoint instanceof OAuthEndpoint)) throw new IllegalArgumentException();
+        if (!(endpoint instanceof OAuthEndpoint)) throw new IllegalArgumentException("OAuthEndpoint required");
         final OAuthEndpoint oauthEndpoint = (OAuthEndpoint) endpoint;
         final RestMethod method = request.getMethod();
         final String url = Endpoint.constructUrl(oauthEndpoint.getSignUrl(), request);
