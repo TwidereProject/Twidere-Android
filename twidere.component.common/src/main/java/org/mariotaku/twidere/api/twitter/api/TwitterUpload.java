@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -30,6 +30,7 @@ import java.io.File;
 import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
+@SuppressWarnings("RedundantThrows")
 public interface TwitterUpload {
 
     @POST("/media/upload.json")

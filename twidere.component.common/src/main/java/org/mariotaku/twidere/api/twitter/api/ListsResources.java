@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -38,6 +38,7 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 /**
  * @author Joern Huxhorn - jhuxhorn at googlemail.com
  */
+@SuppressWarnings("RedundantThrows")
 public interface ListsResources {
     @POST("/lists/members/create.json")
     @Body(BodyType.FORM)

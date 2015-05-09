@@ -25,6 +25,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
+@SuppressWarnings("RedundantThrows")
 public interface SavedSearchesResources {
     SavedSearch createSavedSearch(String query) throws TwitterException;
 

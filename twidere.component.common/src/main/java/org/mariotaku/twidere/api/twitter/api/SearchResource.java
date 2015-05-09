@@ -26,6 +26,7 @@ import org.mariotaku.twidere.api.twitter.model.QueryResult;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
+@SuppressWarnings("RedundantThrows")
 public interface SearchResource {
     @GET("/search/tweets.json")
     QueryResult search(@Query SearchQuery query) throws TwitterException;

@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -21,9 +21,7 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
-/**
- * Created by mariotaku on 15/1/6.
- */
+@SuppressWarnings("RedundantThrows")
 public interface PrivateDirectMessagesResources extends PrivateResources {
 
     void destroyDirectMessagesConversation(long userId) throws TwitterException;

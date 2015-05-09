@@ -53,4 +53,10 @@ public class SimpleValueMap implements ValueMap {
         final Set<String> keySet = internalMap.keySet();
         return keySet.toArray(new String[keySet.size()]);
     }
+
+    protected void copyValue(ValueMap from, String key) {
+        if (from.has(key)) {
+            put(key, from.get(key));
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -40,6 +40,7 @@ import org.mariotaku.twidere.api.twitter.model.SettingsUpdate;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 
+@SuppressWarnings("RedundantThrows")
 public interface UsersResources {
 
     @POST("/blocks/create.json")
@@ -50,27 +51,27 @@ public interface UsersResources {
     @Body(BodyType.FORM)
     User createBlock(@Query("screen_name") String screenName) throws TwitterException;
 
-    @POST("/blocks/create.json")
+    @POST("/mutes/users/create.json")
     @Body(BodyType.FORM)
     User createMute(@Form("user_id") long userId) throws TwitterException;
 
-    @POST("/blocks/create.json")
+    @POST("/mutes/users/create.json")
     @Body(BodyType.FORM)
     User createMute(@Query("screen_name") String screenName) throws TwitterException;
 
-    @POST("/blocks/create.json")
+    @POST("/blocks/destroy.json")
     @Body(BodyType.FORM)
     User destroyBlock(@Form("user_id") long userId) throws TwitterException;
 
-    @POST("/blocks/create.json")
+    @POST("/blocks/destroy.json")
     @Body(BodyType.FORM)
     User destroyBlock(@Query("screen_name") String screenName) throws TwitterException;
 
-    @POST("/blocks/create.json")
+    @POST("/mutes/users/destroy.json")
     @Body(BodyType.FORM)
     User destroyMute(@Form("user_id") long userId) throws TwitterException;
 
-    @POST("/blocks/create.json")
+    @POST("/mutes/users/destroy.json")
     @Body(BodyType.FORM)
     User destroyMute(@Query("screen_name") String screenName) throws TwitterException;
 

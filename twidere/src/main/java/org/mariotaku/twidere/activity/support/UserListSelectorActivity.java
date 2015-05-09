@@ -39,6 +39,13 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.fragment.support.CreateUserListDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -49,14 +56,6 @@ import org.mariotaku.twidere.util.TwitterAPIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseString;

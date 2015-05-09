@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -26,17 +26,14 @@ import org.mariotaku.simplerestapi.param.Body;
 import org.mariotaku.simplerestapi.param.Form;
 import org.mariotaku.simplerestapi.param.Path;
 import org.mariotaku.simplerestapi.param.Query;
-
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
-/**
- * @author Joern Huxhorn - jhuxhorn at googlemail.com
- */
+@SuppressWarnings("RedundantThrows")
 public interface TweetResources {
     @POST("/statuses/destroy/{id}.json")
     Status destroyStatus(@Path("id") long statusId) throws TwitterException;

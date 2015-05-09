@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -30,6 +30,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.1.1
  */
+@SuppressWarnings("RedundantThrows")
 public interface PlacesGeoResources {
 	/**
 	 * Creates a new place at the given latitude and longitude. <br>

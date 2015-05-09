@@ -23,15 +23,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableStatus;
-
-import java.util.List;
-
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.model.ParcelableStatus;
+
+import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
@@ -53,10 +52,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         final SearchQuery query = new SearchQuery(processQuery(mQuery));
-        query.setCount(paging.getCount());
-        if (paging.getMaxId() > 0) {
-            query.setMaxId(paging.getMaxId());
-        }
+        query.paging(paging);
         return twitter.search(query);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -19,7 +19,9 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.simplerestapi.http.ValueMap;
+import android.support.annotation.NonNull;
+
+import org.mariotaku.simplerestapi.http.SimpleValueMap;
 
 /**
  * A data class represents search query.<br>
@@ -33,22 +35,22 @@ import org.mariotaku.simplerestapi.http.ValueMap;
  * @see <a href="http://search.twitter.com/operators">Twitter API / Search
  * Operators</a>
  */
-public final class SearchQuery implements ValueMap {
-    private String query = null;
-    private String lang = null;
-    private String locale = null;
-    private long maxId = -1l;
-    private int count = -1;
-    private int page = -1;
-    private String since = null;
-    private long sinceId = -1;
-    private String geocode = null;
-    private String until = null;
-    private String resultType = null;
+public final class SearchQuery extends SimpleValueMap {
 
-    public static final String MILES = "mi";
+    enum Unit {
+        MILES("mi"), KILOMETERS("km");
 
-    public static final String KILOMETERS = "km";
+        private final String value;
+
+        Unit(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
 
     /**
      * mixed: Include both popular and real time results in the response.
@@ -65,32 +67,9 @@ public final class SearchQuery implements ValueMap {
     }
 
     public SearchQuery(final String query) {
-        this.query = query;
+        setQuery(query);
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final SearchQuery query1 = (SearchQuery) o;
-
-        if (maxId != query1.maxId) return false;
-        if (page != query1.page) return false;
-        if (count != query1.count) return false;
-        if (sinceId != query1.sinceId) return false;
-        if (geocode != null ? !geocode.equals(query1.geocode) : query1.geocode != null)
-            return false;
-        if (lang != null ? !lang.equals(query1.lang) : query1.lang != null) return false;
-        if (locale != null ? !locale.equals(query1.locale) : query1.locale != null) return false;
-        if (query != null ? !query.equals(query1.query) : query1.query != null) return false;
-        if (since != null ? !since.equals(query1.since) : query1.since != null) return false;
-        if (until != null ? !until.equals(query1.until) : query1.until != null) return false;
-        if (resultType != null ? !resultType.equals(query1.resultType) : query1.resultType != null)
-            return false;
-
-        return true;
-    }
 
     /**
      * returns tweets by users located within a given radius of the given
@@ -99,138 +78,15 @@ public final class SearchQuery implements ValueMap {
      *
      * @param location geo location
      * @param radius   radius
-     * @param unit     Query.MILES or Query.KILOMETERS
+     * @param unit     {@link Unit#KILOMETERS} or {@link Unit#MILES}
      * @return the instance
      * @since Twitter4J 2.1.0
      */
-    public SearchQuery geoCode(final GeoLocation location, final double radius, final String unit) {
+    public SearchQuery geoCode(final GeoLocation location, final double radius, final Unit unit) {
         setGeoCode(location, radius, unit);
         return this;
     }
 
-    /**
-     * Returns the specified geocode
-     *
-     * @return geocode
-     */
-    public String getGeocode() {
-        return geocode;
-    }
-
-    /**
-     * Returns the lang
-     *
-     * @return lang
-     */
-    public String getLang() {
-        return lang;
-    }
-
-    /**
-     * Returns the language of the query you are sending (only ja is currently
-     * effective). This is intended for language-specific clients and the
-     * default should work in the majority of cases.
-     *
-     * @return locale
-     * @since Twitter4J 2.1.1
-     */
-    public String getLocale() {
-        return locale;
-    }
-
-    /**
-     * Returns tweets with status ids less than the given id.
-     *
-     * @return maxId
-     * @since Twitter4J 2.1.1
-     */
-    public long getMaxId() {
-        return maxId;
-    }
-
-    /**
-     * Returns the page number (starting at 1) to return, up to a max of roughly
-     * 1500 results
-     *
-     * @return the page number (starting at 1) to return
-     */
-    public int getPage() {
-        return page;
-    }
-
-    /**
-     * Returns the specified query
-     *
-     * @return query
-     */
-    public String getQuery() {
-        return query;
-    }
-
-    /**
-     * Returns resultType
-     *
-     * @return the resultType
-     * @since Twitter4J 2.1.3
-     */
-    public String getResultType() {
-        return resultType;
-    }
-
-    /**
-     * Returns the number of tweets to return per page, up to a max of 100
-     *
-     * @return count
-     */
-    public int getCount() {
-        return count;
-    }
-
-    /**
-     * Returns tweets with since the given date. Date should be formatted as
-     * YYYY-MM-DD
-     *
-     * @return since
-     * @since Twitter4J 2.1.1
-     */
-    public String getSince() {
-        return since;
-    }
-
-    /**
-     * returns sinceId
-     *
-     * @return sinceId
-     */
-    public long getSinceId() {
-        return sinceId;
-    }
-
-    /**
-     * Returns until
-     *
-     * @return until
-     * @since Twitter4J 2.1.1
-     */
-    public String getUntil() {
-        return until;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = query != null ? query.hashCode() : 0;
-        result = 31 * result + (lang != null ? lang.hashCode() : 0);
-        result = 31 * result + (locale != null ? locale.hashCode() : 0);
-        result = 31 * result + (int) (maxId ^ maxId >>> 32);
-        result = 31 * result + count;
-        result = 31 * result + page;
-        result = 31 * result + (since != null ? since.hashCode() : 0);
-        result = 31 * result + (int) (sinceId ^ sinceId >>> 32);
-        result = 31 * result + (geocode != null ? geocode.hashCode() : 0);
-        result = 31 * result + (until != null ? until.hashCode() : 0);
-        result = 31 * result + (resultType != null ? resultType.hashCode() : 0);
-        return result;
-    }
 
     /**
      * restricts tweets to the given language, given by an <a
@@ -321,7 +177,7 @@ public final class SearchQuery implements ValueMap {
      * @return the instance
      * @since Twitter4J 2.1.0
      */
-    public SearchQuery rpp(final int rpp) {
+    public SearchQuery count(final int rpp) {
         setCount(rpp);
         return this;
     }
@@ -333,10 +189,10 @@ public final class SearchQuery implements ValueMap {
      *
      * @param location geo location
      * @param radius   radius
-     * @param unit     Query.MILES or Query.KILOMETERS
+     * @param unit     {@link Unit#KILOMETERS} or {@link Unit#MILES}
      */
-    public void setGeoCode(final GeoLocation location, final double radius, final String unit) {
-        geocode = location.getLatitude() + "," + location.getLongitude() + "," + radius + unit;
+    public void setGeoCode(@NonNull final GeoLocation location, final double radius, @NonNull final Unit unit) {
+        put("geocode", location.getLatitude() + "," + location.getLongitude() + "," + radius + unit.getValue());
     }
 
     /**
@@ -347,7 +203,7 @@ public final class SearchQuery implements ValueMap {
      *             code</a>
      */
     public void setLang(final String lang) {
-        this.lang = lang;
+        put("lang", lang);
     }
 
     /**
@@ -359,7 +215,7 @@ public final class SearchQuery implements ValueMap {
      * @since Twitter4J 2.1.1
      */
     public void setLocale(final String locale) {
-        this.locale = locale;
+        put("locale", locale);
     }
 
     /**
@@ -369,7 +225,7 @@ public final class SearchQuery implements ValueMap {
      * @since Twitter4J 2.1.1
      */
     public void setMaxId(final long maxId) {
-        this.maxId = maxId;
+        put("max_id", maxId);
     }
 
     /**
@@ -379,7 +235,7 @@ public final class SearchQuery implements ValueMap {
      * @param page the page number (starting at 1) to return
      */
     public void setPage(final int page) {
-        this.page = page;
+        put("page", page);
     }
 
     /**
@@ -392,7 +248,7 @@ public final class SearchQuery implements ValueMap {
      * Operators</a>
      */
     public void setQuery(final String query) {
-        this.query = query;
+        put("q", query);
     }
 
     /**
@@ -402,7 +258,7 @@ public final class SearchQuery implements ValueMap {
      * @since Twitter4J 2.1.3
      */
     public void setResultType(final String resultType) {
-        this.resultType = resultType;
+        put("result_type", resultType);
     }
 
     /**
@@ -411,7 +267,7 @@ public final class SearchQuery implements ValueMap {
      * @param count the number of tweets to return per page
      */
     public void setCount(final int count) {
-        this.count = count;
+        put("count", count);
     }
 
     /**
@@ -422,7 +278,7 @@ public final class SearchQuery implements ValueMap {
      * @since Twitter4J 2.1.1
      */
     public void setSince(final String since) {
-        this.since = since;
+        put("since", since);
     }
 
     /**
@@ -431,7 +287,7 @@ public final class SearchQuery implements ValueMap {
      * @param sinceId returns tweets with status ids greater than the given id
      */
     public void setSinceId(final long sinceId) {
-        this.sinceId = sinceId;
+        put("since_id", sinceId);
     }
 
     /**
@@ -442,7 +298,7 @@ public final class SearchQuery implements ValueMap {
      * @since Twitter4J 2.1.1
      */
     public void setUntil(final String until) {
-        this.until = until;
+        put("until", until);
     }
 
     /**
@@ -470,13 +326,6 @@ public final class SearchQuery implements ValueMap {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "Query{" + "query='" + query + '\'' + ", lang='" + lang + '\'' + ", locale='" + locale + '\''
-                + ", maxId=" + maxId + ", count=" + count + ", page=" + page + ", since='" + since + '\'' + ", sinceId="
-                + sinceId + ", geocode='" + geocode + '\'' + ", until='" + until + '\'' + ", resultType='" + resultType
-                + '\'' + '}';
-    }
 
     /**
      * If specified, returns tweets with generated before the given date. Date
@@ -491,94 +340,18 @@ public final class SearchQuery implements ValueMap {
         return this;
     }
 
-    @Override
-    public boolean has(String key) {
-        switch (key) {
-            case "q": {
-                return query != null;
-            }
-            case "lang": {
-                return lang != null;
-            }
-            case "locale": {
-                return locale != null;
-            }
-            case "max_id": {
-                return maxId != -1;
-            }
-            case "since_id": {
-                return sinceId != -1;
-            }
-            case "count": {
-                return count != -1;
-            }
-            case "page": {
-                return page != -1;
-            }
-            case "since": {
-                return since != null;
-            }
-            case "until": {
-                return until != null;
-            }
-            case "geocode": {
-                return geocode != null;
-            }
-            case "result_type": {
-                return resultType != null;
-            }
-        }
-        return false;
+
+    public SearchQuery paging(Paging paging) {
+        setPaging(paging);
+        return this;
     }
 
-    @Override
-    public String get(String key) {
-        switch (key) {
-            case "q": {
-                return query;
-            }
-            case "lang": {
-                return lang;
-            }
-            case "locale": {
-                return locale;
-            }
-            case "max_id": {
-                if (maxId == -1) return null;
-                return String.valueOf(maxId);
-            }
-            case "since_id": {
-                if (sinceId == -1) return null;
-                return String.valueOf(sinceId);
-            }
-            case "count": {
-                if (count == -1) return null;
-                return String.valueOf(count);
-            }
-            case "page": {
-                if (page == -1) return null;
-                return String.valueOf(page);
-            }
-            case "since": {
-                return since;
-            }
-            case "until": {
-                return until;
-            }
-            case "geocode": {
-                return geocode;
-            }
-            case "result_type": {
-                return resultType;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public String[] keys() {
-        return new String[]{"q", "lang", "locale", "max_id", "since_id", "count", "page", "since",
-                "until", "geocode", "result_type"};
+    public void setPaging(Paging paging) {
+        if (paging == null) return;
+        copyValue(paging, "since_id");
+        copyValue(paging, "max_id");
+        copyValue(paging, "count");
+        copyValue(paging, "page");
     }
 
 }

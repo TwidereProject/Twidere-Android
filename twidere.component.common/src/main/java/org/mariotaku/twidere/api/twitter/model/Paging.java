@@ -1,135 +1,73 @@
+/*
+ *                 Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.simplerestapi.http.ValueMap;
+import org.mariotaku.simplerestapi.http.SimpleValueMap;
 
 /**
  * Created by mariotaku on 15/2/6.
  */
-public class Paging implements ValueMap {
-    private long sinceId;
-    private long maxId;
-    private long cursor;
-    private int count, page;
-
-    public Paging() {
-        setSinceId(-1);
-        setMaxId(-1);
-        setCount(-1);
-        setPage(-1);
-        setCursor(0);
-    }
+public class Paging extends SimpleValueMap {
 
     public void setSinceId(long sinceId) {
-        this.sinceId = sinceId;
+        put("since_id", sinceId);
     }
 
     public void setMaxId(long maxId) {
-        this.maxId = maxId;
+        put("max_id", maxId);
     }
 
     public void setCount(int count) {
-        this.count = count;
+        put("count", count);
     }
 
     public void setPage(int page) {
-        this.page = page;
+        put("page", page);
     }
 
     public void setCursor(long cursor) {
-        this.cursor = cursor;
-    }
-
-    public long getSinceId() {
-        return sinceId;
-    }
-
-    public long getMaxId() {
-        return maxId;
-    }
-
-    public long getCursor() {
-        return cursor;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public int getPage() {
-        return page;
+        put("cursor", cursor);
     }
 
     public Paging sinceId(long sinceId) {
-        this.sinceId = sinceId;
+        setSinceId(sinceId);
         return this;
     }
 
     public Paging maxId(long maxId) {
-        this.maxId = maxId;
+        setMaxId(maxId);
         return this;
     }
 
     public Paging count(int count) {
-        this.count = count;
+        setCount(count);
         return this;
     }
 
     public Paging page(int page) {
-        this.page = page;
+        setPage(page);
         return this;
     }
 
     public Paging cursor(long cursor) {
-        this.cursor = cursor;
+        setCursor(cursor);
         return this;
-    }
-
-    @Override
-    public boolean has(String key) {
-        switch (key) {
-            case "since_id": {
-                return sinceId != -1;
-            }
-            case "max_id": {
-                return maxId != -1;
-            }
-            case "count": {
-                return count != -1;
-            }
-            case "page": {
-                return page != -1;
-            }
-            case "cursor": {
-                return cursor != 0;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public String get(String key) {
-        switch (key) {
-            case "since_id": {
-                if (sinceId != -1) return String.valueOf(sinceId);
-            }
-            case "max_id": {
-                if (maxId != -1) return String.valueOf(maxId);
-            }
-            case "count": {
-                if (count != -1) return String.valueOf(count);
-            }
-            case "page": {
-                if (page != -1) return String.valueOf(page);
-            }
-            case "cursor": {
-                if (cursor != 0) return String.valueOf(cursor);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public String[] keys() {
-        return new String[]{"since_id", "max_id", "count", "page", "cursor"};
     }
 }
