@@ -30,8 +30,8 @@ import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.http.RestResponse;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
@@ -50,6 +50,8 @@ import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
+import org.mariotaku.twidere.api.twitter.model.impl.ActivityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.CardEntityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.DirectMessageImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.ErrorInfoImpl;
@@ -116,11 +118,13 @@ public class TwitterConverter implements Converter {
         TypeConverterMapper.register(MediaUploadResponse.Image.class, MediaUploadResponseImpl.ImageImpl.class);
         TypeConverterMapper.register(ErrorInfo.class, ErrorInfoImpl.class);
         TypeConverterMapper.register(TranslationResult.class, TranslationResultImpl.class);
+        TypeConverterMapper.register(Activity.class, ActivityImpl.class, ActivityImpl.MAPPER);
 
         LoganSquare.registerTypeConverter(Indices.class, Indices.CONVERTER);
         LoganSquare.registerTypeConverter(GeoLocation.class, GeoLocation.CONVERTER);
         LoganSquare.registerTypeConverter(MediaEntity.Type.class, EnumConverter.get(MediaEntity.Type.class));
         LoganSquare.registerTypeConverter(UserList.Mode.class, EnumConverter.get(UserList.Mode.class));
+        LoganSquare.registerTypeConverter(Activity.Action.class, EnumConverter.get(Activity.Action.class));
 
         registerWrapper(QueryResult.class, QueryResultWrapper.class);
         registerWrapper(PageableResponseList.class, PageableResponseListWrapper.class);

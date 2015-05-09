@@ -65,7 +65,7 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
 
         private final int actionId;
 
-        private Action(final int action) {
+        Action(final int action) {
             actionId = action;
         }
 
@@ -73,7 +73,7 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
             return actionId;
         }
 
-        public static Action fromString(final String string) {
+        public static Action parse(final String string) {
             if ("favorite".equalsIgnoreCase(string)) return FAVORITE;
             if ("follow".equalsIgnoreCase(string)) return FOLLOW;
             if ("mention".equalsIgnoreCase(string)) return MENTION;

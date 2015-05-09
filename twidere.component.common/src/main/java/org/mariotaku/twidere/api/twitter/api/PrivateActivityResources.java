@@ -19,15 +19,19 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
+import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.simplerestapi.param.Query;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 @SuppressWarnings("RedundantThrows")
 public interface PrivateActivityResources extends PrivateResources {
 
-	ResponseList<Activity> getActivitiesAboutMe(Paging paging) throws TwitterException;
+    @GET("/activity/about_me.json")
+    ResponseList<Activity> getActivitiesAboutMe(@Query Paging paging) throws TwitterException;
 
-	ResponseList<Activity> getActivitiesByFriends(Paging paging) throws TwitterException;
+    @GET("/activity/by_friends.json")
+    ResponseList<Activity> getActivitiesByFriends(@Query Paging paging) throws TwitterException;
 }
