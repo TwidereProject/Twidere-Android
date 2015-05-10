@@ -801,20 +801,20 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeResId, themeColor));
         ViewSupport.setBackground(mActionBarContainer, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
                 backgroundOption, true));
-        final int statusBarColor;
+        final int actionBarColor;
         final int[] foregroundColors = new int[2];
         ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
         if (ThemeUtils.isDarkTheme(themeResId)) {
-            statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
+            actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
             final int actionItemColor = ThemeUtils.getContrastForegroundColor(this,
                     getCurrentThemeResourceId(), themeColor);
-            homeActionButton.setButtonColor(statusBarColor);
+            homeActionButton.setButtonColor(actionBarColor);
             homeActionButton.setIconColor(actionItemColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);
             mTabIndicator.setIconColor(foregroundColors[0]);
             mTabIndicator.setLabelColor(foregroundColors[0]);
         } else {
-            statusBarColor = themeColor;
+            actionBarColor = themeColor;
             final int actionItemColor = ThemeUtils.getContrastForegroundColor(this,
                     getCurrentThemeResourceId(), themeColor);
             final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor,
@@ -828,8 +828,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         }
         mColorStatusFrameLayout.setDrawColor(true);
         mColorStatusFrameLayout.setDrawShadow(false);
-        mColorStatusFrameLayout.setColor(statusBarColor, actionBarAlpha);
-        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
+        mColorStatusFrameLayout.setColor(actionBarColor, actionBarAlpha);
+        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(actionBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
         mColorStatusFrameLayout.setFactor(1);
         mActionBarWithOverlay.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);

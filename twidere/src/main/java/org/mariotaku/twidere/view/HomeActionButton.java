@@ -21,13 +21,14 @@ package org.mariotaku.twidere.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -35,7 +36,6 @@ import android.util.Property;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -104,7 +104,13 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
 
     @Override
     public void setButtonColor(int color) {
-        ViewSupport.setBackground(this, new ColorDrawable(color));
+        if (isInEditMode()) {
+            final ShapeDrawable sd = new ShapeDrawable(new OvalShape());
+            sd.getPaint().setColor(color);
+            ViewSupport.setBackground(this, sd);
+        } else {
+            ViewSupport.setBackground(this, new ColorDrawable(color));
+        }
     }
 
     @Override
@@ -125,11 +131,6 @@ public class HomeActionButton extends FrameLayout implements IHomeActionButton {
     @Override
     public void setIconColor(int color, Mode mode) {
         mIconView.setColorFilter(color, mode);
-    }
-
-    @Override
-    public void setShowProgress(final boolean showProgress) {
-        mIconView.setVisibility(showProgress ? View.GONE : View.VISIBLE);
     }
 
     @Override

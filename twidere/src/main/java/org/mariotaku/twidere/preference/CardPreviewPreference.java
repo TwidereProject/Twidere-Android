@@ -88,14 +88,14 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 
     @Override
     protected View onCreateView(final ViewGroup parent) {
-        final View view;
+        final View statusView;
         if (mPreferences != null && mPreferences.getBoolean(KEY_COMPACT_CARDS, false)) {
-            view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
+            statusView = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
         } else {
-            view = mInflater.inflate(R.layout.card_item_status, parent, false);
+            statusView = mInflater.inflate(R.layout.card_item_status, parent, false);
         }
-        mHolder = new StatusViewHolder(mAdapter, view);
-        return view;
+        mHolder = new StatusViewHolder(mAdapter, statusView);
+        return statusView;
     }
 
 }

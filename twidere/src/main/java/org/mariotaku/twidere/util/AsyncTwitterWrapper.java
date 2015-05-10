@@ -242,6 +242,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
+    public int destroyMessageConversationAsync(final long accountId, final long userId) {
+        final DestroyMessageConversationTask task = new DestroyMessageConversationTask(accountId, userId);
+        return mAsyncTaskManager.add(task, true);
+    }
+
     public int destroyFavoriteAsync(final long accountId, final long status_id) {
         final DestroyFavoriteTask task = new DestroyFavoriteTask(accountId, status_id);
         return mAsyncTaskManager.add(task, true);
@@ -1413,6 +1418,65 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
 
     }
+
+
+    class DestroyMessageConversationTask extends ManagedAsyncTask<Object, Object, SingleResponse<Void>> {
+
+        private final long userId;
+        private final long accountId;
+
+        public DestroyMessageConversationTask(final long accountId, final long userId) {
+            super(mContext, mAsyncTaskManager);
+
+            this.accountId = accountId;
+            this.userId = userId;
+        }
+
+        private void deleteMessages(final long accountId, final long userId) {
+            mResolver.delete(DirectMessages.Inbox.CONTENT_URI, Expression.and(Expression.equals(Inbox.ACCOUNT_ID, accountId),
+                    Expression.equals(Inbox.SENDER_ID, userId)).getSQL(), null);
+            mResolver.delete(DirectMessages.Outbox.CONTENT_URI, Expression.and(Expression.equals(Outbox.ACCOUNT_ID, accountId),
+                    Expression.equals(Outbox.RECIPIENT_ID, userId)).getSQL(), null);
+        }
+
+        private boolean isMessageNotFound(final Exception e) {
+            if (!(e instanceof TwitterException)) return false;
+            final TwitterException te = (TwitterException) e;
+            return te.getErrorCode() == StatusCodeMessageUtils.PAGE_NOT_FOUND
+                    || te.getStatusCode() == HttpResponseCode.NOT_FOUND;
+        }
+
+        @Override
+        protected SingleResponse<Void> doInBackground(final Object... args) {
+            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mContext, accountId, false);
+            if (twitter == null) return SingleResponse.getInstance();
+            try {
+                twitter.destroyDirectMessagesConversation(accountId, userId);
+                deleteMessages(accountId, userId);
+                return SingleResponse.getInstance();
+            } catch (final TwitterException e) {
+                if (isMessageNotFound(e)) {
+                    deleteMessages(accountId, userId);
+                }
+                return SingleResponse.getInstance(e);
+            }
+        }
+
+
+        @Override
+        protected void onPostExecute(final SingleResponse<Void> result) {
+            super.onPostExecute(result);
+            if (result == null) return;
+            if (result.hasData() || isMessageNotFound(result.getException())) {
+                showInfoMessage(mContext, R.string.direct_message_deleted, false);
+            } else {
+                showErrorMessage(mContext, R.string.action_deleting, result.getException(), true);
+            }
+        }
+
+
+    }
+
 
     class DestroyFavoriteTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,11 +18,10 @@
   -->
 
 <org.mariotaku.twidere.view.HomeActionButton
-    android:id="@+id/actions_button"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actions_button"
     android:layout_width="@dimen/float_action_button_size"
     android:layout_height="@dimen/float_action_button_size"
     android:layout_gravity="bottom|end"
     android:layout_margin="@dimen/element_spacing_large"
-    android:elevation="@dimen/element_spacing_small"
-    android:visibility="visible"/>
+    android:elevation="@dimen/element_spacing_small" />

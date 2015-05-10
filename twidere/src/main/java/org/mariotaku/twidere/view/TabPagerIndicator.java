@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.v4.view.PagerAdapter;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -65,7 +67,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         setLayoutManager(mLayoutManager = new TabLayoutManager(this));
         setItemContext(context);
         setAdapter(mIndicatorAdapter);
-        setTabDisplayOption(ICON);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPagerIndicator);
         setTabExpandEnabled(a.getBoolean(R.styleable.TabPagerIndicator_tabExpandEnabled, false));
         setHorizontalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabHorizontalPadding, 0));
@@ -267,6 +268,109 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     @IntDef({ICON, LABEL, BOTH})
     @Retention(RetentionPolicy.SOURCE)
     public @interface DisplayOption {
+    }
+
+    public static final class SampleView extends LinearLayout {
+
+        private final LayoutInflater inflater;
+        private final int stripHeight;
+        private int horizontalPadding;
+        private int verticalPadding;
+        private int stripColor;
+        private int iconColor;
+        private int labelColor;
+        private int tabDisplayOption;
+        private boolean tabShowDivider;
+        private boolean tabExpandEnabled;
+
+        public SampleView(Context context) {
+            this(context, null);
+        }
+
+        public SampleView(Context context, AttributeSet attrs) {
+            this(context, attrs, 0);
+        }
+
+        public SampleView(Context context, AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+            inflater = LayoutInflater.from(context);
+            setOrientation(HORIZONTAL);
+
+            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPagerIndicator);
+            this.setHorizontalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabHorizontalPadding, 0));
+            this.setTabExpandEnabled(a.getBoolean(R.styleable.TabPagerIndicator_tabExpandEnabled, false));
+            this.setVerticalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabVerticalPadding, 0));
+            this.setStripColor(a.getColor(R.styleable.TabPagerIndicator_tabStripColor, 0));
+            this.setIconColor(a.getColor(R.styleable.TabPagerIndicator_tabIconColor, 0));
+            this.setLabelColor(a.getColor(R.styleable.TabPagerIndicator_tabLabelColor, ThemeUtils.getTextColorPrimary(context)));
+            this.setTabDisplayOption(a.getInt(R.styleable.TabPagerIndicator_tabDisplayOption, ICON));
+            this.setTabShowDivider(a.getBoolean(R.styleable.TabPagerIndicator_tabShowDivider, false));
+            a.recycle();
+
+            stripHeight = context.getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
+        }
+
+        public void setHorizontalPadding(int horizontalPadding) {
+            this.horizontalPadding = horizontalPadding;
+        }
+
+        public void setVerticalPadding(int verticalPadding) {
+            this.verticalPadding = verticalPadding;
+        }
+
+        public void setStripColor(int stripColor) {
+            this.stripColor = stripColor;
+        }
+
+        public void setIconColor(int iconColor) {
+            this.iconColor = iconColor;
+        }
+
+        public void setLabelColor(int labelColor) {
+            this.labelColor = labelColor;
+        }
+
+        public void setTabDisplayOption(int tabDisplayOption) {
+            this.tabDisplayOption = tabDisplayOption;
+        }
+
+        public void setTabShowDivider(boolean tabShowDivider) {
+            this.tabShowDivider = tabShowDivider;
+        }
+
+        public void addTab(int icon, CharSequence label, int unread, boolean isCurrent) {
+            final ItemLayout layout = (ItemLayout) inflater.inflate(R.layout.layout_tab_item, this, false);
+            final ImageView tabIcon = (ImageView) layout.findViewById(R.id.tab_icon);
+            final BadgeView badgeView = (BadgeView) layout.findViewById(R.id.unread_indicator);
+            final TextView tabLabel = (TextView) layout.findViewById(R.id.tab_label);
+
+            layout.setStripColor(stripColor);
+            layout.setStripHeight(stripHeight);
+            layout.setIsCurrent(isCurrent);
+
+            tabIcon.setImageResource(icon);
+            tabIcon.setColorFilter(iconColor, PorterDuff.Mode.SRC_ATOP);
+            tabIcon.setVisibility((tabDisplayOption & ICON) != 0 ? VISIBLE : GONE);
+
+            tabLabel.setText(label);
+            tabLabel.setTextColor(labelColor);
+            tabLabel.setVisibility((tabDisplayOption & LABEL) != 0 ? VISIBLE : GONE);
+
+            badgeView.setText(String.valueOf(unread));
+            badgeView.setVisibility(unread != 0 ? VISIBLE : GONE);
+
+            final LayoutParams params;
+            if (tabExpandEnabled) {
+                params = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+            } else {
+                params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 0);
+            }
+            addView(layout, params);
+        }
+
+        public void setTabExpandEnabled(boolean tabExpandEnabled) {
+            this.tabExpandEnabled = tabExpandEnabled;
+        }
     }
 
     public static final class ItemLayout extends RelativeLayout {

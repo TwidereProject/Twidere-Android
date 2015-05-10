@@ -126,8 +126,12 @@ public class ParcelableAccount implements Parcelable {
         out.writeInt(color);
     }
 
-    public static ParcelableAccount dummyInstance() {
+    public static ParcelableAccount dummyAccount() {
         return new ParcelableAccount();
+    }
+
+    public static ParcelableCredentials dummyCredentials() {
+        return new ParcelableCredentials();
     }
 
     public static ParcelableAccount getAccount(final Context context, final long account_id) {

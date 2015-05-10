@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,6 +18,12 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@id/delete_all"
+        android:enabled="false"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/delete_conversation"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>

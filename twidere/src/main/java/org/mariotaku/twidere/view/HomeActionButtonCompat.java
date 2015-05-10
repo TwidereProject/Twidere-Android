@@ -102,11 +102,6 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
     }
 
     @Override
-    public void setShowProgress(final boolean showProgress) {
-        mIconView.setVisibility(showProgress ? View.GONE : View.VISIBLE);
-    }
-
-    @Override
     public void setTitle(final CharSequence title) {
         setContentDescription(title);
     }

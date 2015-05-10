@@ -18,8 +18,6 @@ public interface IHomeActionButton {
 
     void setIconColor(int color, PorterDuff.Mode mode);
 
-    void setShowProgress(boolean showProgress);
-
     void setTitle(CharSequence title);
 
     void setTitle(int title);

@@ -298,11 +298,11 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
             mSecondaryFieldContainer.setVisibility(hasSecondaryField ? View.VISIBLE : View.GONE);
             final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
             if (!accountIdRequired) {
-                mAccountsAdapter.add(ParcelableAccount.dummyInstance());
+                mAccountsAdapter.add(ParcelableAccount.dummyCredentials());
             }
             final boolean officialKeyOnly = intent.getBooleanExtra(EXTRA_OFFICIAL_KEY_ONLY, false);
             final boolean forcePrivateAPIs = intent.getBooleanExtra(KEY_FORCE_USING_PRIVATE_APIS, false);
-            mAccountsAdapter.addAll(ParcelableAccount.getAccountsList(this, false, !forcePrivateAPIs && officialKeyOnly));
+            mAccountsAdapter.addAll(ParcelableAccount.getCredentialsList(this, false, !forcePrivateAPIs && officialKeyOnly));
             mAccountsAdapter.setDummyItemText(R.string.activated_accounts);
             switch (conf.getSecondaryFieldType()) {
                 case CustomTabConfiguration.FIELD_TYPE_USER: {

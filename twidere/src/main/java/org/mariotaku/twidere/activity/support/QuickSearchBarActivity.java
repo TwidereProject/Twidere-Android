@@ -62,6 +62,7 @@ import org.mariotaku.twidere.activity.support.QuickSearchBarActivity.SuggestionI
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -206,7 +207,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_search_bar);
-        final List<ParcelableAccount> accounts = ParcelableAccount.getAccountsList(this, false);
+        final List<ParcelableCredentials> accounts = ParcelableAccount.getCredentialsList(this, false);
         final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon);
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user);
         accountsSpinnerAdapter.addAll(accounts);
