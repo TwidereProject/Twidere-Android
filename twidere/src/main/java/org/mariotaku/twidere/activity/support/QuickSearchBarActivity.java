@@ -327,7 +327,9 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             text1.setText(mQuery);
             icon.setImageResource(R.drawable.ic_action_save);
-            icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
+            final View editQuery = view.findViewById(R.id.edit_query);
+            editQuery.setTag(position);
+            editQuery.setOnClickListener(adapter);
         }
 
         @Override
@@ -340,6 +342,9 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             return ITEM_VIEW_TYPE;
         }
 
+        public String getQuery() {
+            return mQuery;
+        }
 
         @Override
         public void onItemClick(QuickSearchBarActivity activity, int position) {
@@ -363,13 +368,19 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             return mCursorId;
         }
 
+        public String getQuery() {
+            return mQuery;
+        }
+
         @Override
         public void bindView(SuggestionsAdapter adapter, View view, int position) {
             final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             text1.setText(mQuery);
             icon.setImageResource(R.drawable.ic_action_history);
-            icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
+            final View editQuery = view.findViewById(R.id.edit_query);
+            editQuery.setTag(position);
+            editQuery.setOnClickListener(adapter);
         }
 
         @Override
@@ -388,20 +399,27 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             activity.finish();
         }
 
+
     }
 
-    public static class SuggestionsAdapter extends BaseAdapter {
+    private void setSearchQuery(String query) {
+        mSearchQuery.setText(query);
+        if (query == null) return;
+        mSearchQuery.setSelection(query.length());
+    }
 
-        private final Context mContext;
+    public static class SuggestionsAdapter extends BaseAdapter implements OnClickListener {
+
+        private final QuickSearchBarActivity mActivity;
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
         private final UserColorNameManager mUserColorNameManager;
         private List<SuggestionItem> mData;
 
-        SuggestionsAdapter(Context context) {
-            mContext = context;
-            mInflater = LayoutInflater.from(context);
-            final TwidereApplication application = TwidereApplication.getInstance(context);
+        SuggestionsAdapter(QuickSearchBarActivity activity) {
+            mActivity = activity;
+            mInflater = LayoutInflater.from(activity);
+            final TwidereApplication application = TwidereApplication.getInstance(activity);
             mImageLoader = application.getMediaLoaderWrapper();
             mUserColorNameManager = application.getUserColorNameManager();
         }
@@ -411,7 +429,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         }
 
         public Context getContext() {
-            return mContext;
+            return mActivity;
         }
 
         @Override
@@ -477,6 +495,21 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         public UserColorNameManager getUserColorNameManager() {
             return mUserColorNameManager;
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.edit_query: {
+                    final SuggestionItem item = getItem((Integer) v.getTag());
+                    if (item instanceof SearchHistoryItem) {
+                        mActivity.setSearchQuery(((SearchHistoryItem) item).getQuery());
+                    } else if (item instanceof SavedSearchItem) {
+                        mActivity.setSearchQuery(((SavedSearchItem) item).getQuery());
+                    }
+                    break;
+                }
+            }
         }
     }
 

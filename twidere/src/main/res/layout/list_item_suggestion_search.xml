@@ -21,27 +21,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/element_size_normal"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_small">
 
-    <org.mariotaku.twidere.view.SquareImageView
+    <org.mariotaku.twidere.view.SquareActionIconButton
         android:id="@android:id/icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:background="@null"
+        android:clickable="false"
+        android:color="?menuIconColor"
         android:contentDescription="@string/icon"
+        android:focusable="false"
         android:scaleType="centerInside"
         tools:src="@drawable/ic_action_search" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingEnd="0dp"
-        android:paddingRight="0dp"
         android:paddingLeft="@dimen/element_spacing_small"
+        android:paddingRight="0dp"
         android:paddingStart="@dimen/element_spacing_small">
 
         <TextView
@@ -53,5 +60,17 @@
             tools:text="Mariotaku" />
 
     </LinearLayout>
+
+    <org.mariotaku.twidere.view.SquareActionIconButton
+        android:id="@+id/edit_query"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:background="?actionBarItemBackground"
+        android:clickable="true"
+        android:color="?menuIconColor"
+        android:focusable="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_action_edit_query" />
 
 </LinearLayout>
