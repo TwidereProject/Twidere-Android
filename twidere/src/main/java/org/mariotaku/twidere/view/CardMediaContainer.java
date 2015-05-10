@@ -90,6 +90,14 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                              final long accountId,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
+        displayMedia(mediaArray, loader, accountId, false, mediaClickListener, loadingHandler);
+    }
+
+    public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
+                             @NonNull final MediaLoaderWrapper loader,
+                             final long accountId, boolean withCredentials,
+                             final OnMediaClickListener mediaClickListener,
+                             final MediaLoadingHandler loadingHandler) {
         if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
             for (int i = 0, j = getChildCount(); i < j; i++) {
                 final View child = getChildAt(i);
@@ -115,11 +123,11 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             }
             if (i < k) {
                 final ParcelableMedia media = mediaArray[i];
-                if (TextUtils.isEmpty(media.preview_url)) {
-                    // For backward compatibility
-                    loader.displayPreviewImage(imageView, media.media_url, loadingHandler);
+                final String url = TextUtils.isEmpty(media.preview_url) ? media.media_url : media.preview_url;
+                if (withCredentials) {
+                    loader.displayPreviewImageWithCredentials(imageView, url, accountId, loadingHandler);
                 } else {
-                    loader.displayPreviewImage(imageView, media.preview_url, loadingHandler);
+                    loader.displayPreviewImage(imageView, url, loadingHandler);
                 }
                 child.setTag(media);
                 child.setVisibility(VISIBLE);

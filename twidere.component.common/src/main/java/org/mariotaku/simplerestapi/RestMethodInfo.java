@@ -333,4 +333,67 @@ public final class RestMethodInfo {
         }
         return null;
     }
+
+    public RequestInfo toRequestInfo() {
+        return new RequestInfo(getMethod().value(), getPath(), getQueries(), getForms(),
+                getHeaders(), getParts(), getExtras(), getBody());
+    }
+
+    public static final class RequestInfo {
+
+        private String method;
+        private String path;
+
+        private List<Pair<String, String>> queries, forms, headers;
+        private List<Pair<String, TypedData>> parts;
+        private Map<String, Object> extras;
+        private TypedData body;
+
+        public RequestInfo(String method, String path, List<Pair<String, String>> queries,
+                           List<Pair<String, String>> forms, List<Pair<String, String>> headers,
+                           List<Pair<String, TypedData>> parts, Map<String, Object> extras, TypedData body) {
+            this.method = method;
+            this.path = path;
+            this.queries = queries;
+            this.forms = forms;
+            this.headers = headers;
+            this.parts = parts;
+            this.extras = extras;
+            this.body = body;
+        }
+
+
+
+        public List<Pair<String, String>> getQueries() {
+            return queries;
+        }
+
+        public List<Pair<String, String>> getForms() {
+            return forms;
+        }
+
+        public List<Pair<String, String>> getHeaders() {
+            return headers;
+        }
+
+        public List<Pair<String, TypedData>> getParts() {
+            return parts;
+        }
+
+        public Map<String, Object> getExtras() {
+            return extras;
+        }
+
+        public TypedData getBody() {
+            return body;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public String getMethod() {
+            return method;
+        }
+    }
 }

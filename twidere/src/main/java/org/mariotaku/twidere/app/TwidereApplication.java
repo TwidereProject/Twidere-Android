@@ -291,7 +291,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             stopService(new Intent(this, RefreshService.class));
             startRefreshServiceIfNeeded(this);
         } else if (KEY_ENABLE_PROXY.equals(key) || KEY_CONNECTION_TIMEOUT.equals(key) || KEY_PROXY_HOST.equals(key)
-                || KEY_PROXY_PORT.equals(key) || KEY_FAST_IMAGE_LOADING.equals(key)) {
+                || KEY_PROXY_PORT.equals(key)) {
             reloadConnectivitySettings();
         } else if (KEY_USAGE_STATISTICS.equals(key)) {
             stopService(new Intent(this, UCDService.class));

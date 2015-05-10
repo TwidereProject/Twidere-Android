@@ -100,6 +100,10 @@ public class MediaLoaderWrapper implements Constants {
 
     public void displayPreviewImageWithCredentials(final ImageView view, final String url, final long accountId,
                                                    final MediaLoadingHandler loadingHandler) {
+        if (accountId <= 0) {
+            displayPreviewImage(view, url, loadingHandler);
+            return;
+        }
         final DisplayImageOptions.Builder b = new DisplayImageOptions.Builder();
         b.cloneFrom(mImageDisplayOptions);
         b.extraForDownloader(new AccountExtra(accountId));

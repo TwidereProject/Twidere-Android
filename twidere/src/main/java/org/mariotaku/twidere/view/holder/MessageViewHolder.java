@@ -69,6 +69,7 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
         text = (TextView) itemView.findViewById(R.id.text);
         time = (TextView) itemView.findViewById(R.id.time);
         mediaContainer = (CardMediaContainer) itemView.findViewById(R.id.media_preview_container);
+        mediaContainer.setStyle(adapter.getMediaPreviewStyle());
     }
 
     public void displayMessage(Cursor cursor, CursorIndices indices) {
@@ -84,7 +85,7 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
         text.setMovementMethod(null);
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
-        mediaContainer.displayMedia(media, loader, accountId, this, null);
+        mediaContainer.displayMedia(media, loader, accountId, true, this, adapter.getMediaLoadingHandler());
     }
 
     @Override

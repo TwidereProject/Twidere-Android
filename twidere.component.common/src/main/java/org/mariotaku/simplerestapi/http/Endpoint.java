@@ -23,7 +23,7 @@ public class Endpoint {
         this.url = url;
     }
 
-    public static String constructUrl(String endpoint, RestMethodInfo requestInfo) {
+    public static String constructUrl(String endpoint, RestMethodInfo.RequestInfo requestInfo) {
         return constructUrl(endpoint, requestInfo.getPath(), requestInfo.getQueries());
     }
 

@@ -28,6 +28,10 @@ import android.util.Pair;
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.mariotaku.jsonserializer.JSONFileIO;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -42,12 +46,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.truncateActivities;
 
 public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoader {
@@ -153,8 +151,10 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
 
     private List<ParcelableActivity> getCachedData(final File file) {
         if (file == null) return null;
+        FileInputStream is = null;
         try {
-            return LoganSquare.parseList(new FileInputStream(file), ParcelableActivity.class);
+            is = new FileInputStream(file);
+            return LoganSquare.parseList(is, ParcelableActivity.class);
         } catch (final IOException e) {
             if (Utils.isDebugBuild()) {
                 Log.w(LOGTAG, e);
@@ -164,6 +164,8 @@ public abstract class Twitter4JActivitiesLoader extends ParcelableActivitiesLoad
                 throw e;
             }
             Log.e(LOGTAG, "Error unserializing data", e);
+        } finally {
+            Utils.closeSilently(is);
         }
         return null;
     }

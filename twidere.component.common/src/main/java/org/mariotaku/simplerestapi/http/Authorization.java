@@ -25,7 +25,7 @@ import org.mariotaku.simplerestapi.RestMethodInfo;
  * Created by mariotaku on 15/2/4.
  */
 public interface Authorization {
-    String getHeader(Endpoint endpoint, RestMethodInfo info);
+    String getHeader(Endpoint endpoint, RestMethodInfo.RequestInfo info);
 
     boolean hasAuthorization();
 }

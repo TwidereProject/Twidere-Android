@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
-import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 
@@ -101,22 +100,21 @@ public final class RestRequest {
     }
 
     public interface Factory {
-        RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo info, @Nullable Authorization authorization);
+        RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo.RequestInfo info, @Nullable Authorization authorization);
     }
 
 
     public static final class DefaultFactory implements Factory {
 
         @Override
-        public RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo methodInfo, @Nullable Authorization authorization) {
-            final RestMethod restMethod = methodInfo.getMethod();
-            final String url = Endpoint.constructUrl(endpoint.getUrl(), methodInfo);
-            final ArrayList<Pair<String, String>> headers = new ArrayList<>(methodInfo.getHeaders());
+        public RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo.RequestInfo requestInfo, @Nullable Authorization authorization) {
+            final String url = Endpoint.constructUrl(endpoint.getUrl(), requestInfo);
+            final ArrayList<Pair<String, String>> headers = new ArrayList<>(requestInfo.getHeaders());
 
             if (authorization != null && authorization.hasAuthorization()) {
-                headers.add(Pair.create("Authorization", authorization.getHeader(endpoint, methodInfo)));
+                headers.add(Pair.create("Authorization", authorization.getHeader(endpoint, requestInfo)));
             }
-            return new RestRequest(restMethod.value(), url, headers, methodInfo.getBody(), null);
+            return new RestRequest(requestInfo.getMethod(), url, headers, requestInfo.getBody(), null);
         }
     }
 }

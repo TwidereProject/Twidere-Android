@@ -97,6 +97,10 @@ public class MessageConversationAdapter extends Adapter<ViewHolder> implements C
         return mMediaLoader;
     }
 
+    public MediaLoadingHandler getMediaLoadingHandler() {
+        return mMediaLoadingHandler;
+    }
+
     public TwidereLinkify getLinkify() {
         return mLinkify;
     }

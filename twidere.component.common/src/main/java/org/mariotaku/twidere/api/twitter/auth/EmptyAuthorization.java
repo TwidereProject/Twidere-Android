@@ -31,7 +31,7 @@ import org.mariotaku.simplerestapi.http.Endpoint;
 public final class EmptyAuthorization implements Authorization {
 
     @Override
-    public String getHeader(Endpoint endpoint, RestMethodInfo info) {
+    public String getHeader(Endpoint endpoint, RestMethodInfo.RequestInfo info) {
         return null;
     }
 

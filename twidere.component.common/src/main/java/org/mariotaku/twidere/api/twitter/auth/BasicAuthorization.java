@@ -39,7 +39,7 @@ public final class BasicAuthorization implements Authorization {
     }
 
     @Override
-    public String getHeader(Endpoint endpoint, RestMethodInfo info) {
+    public String getHeader(Endpoint endpoint, RestMethodInfo.RequestInfo info) {
         if (!hasAuthorization()) return null;
         return "Basic " + Base64.encodeToString((user + ":" + password).getBytes(), Base64.NO_WRAP);
     }

@@ -110,7 +110,7 @@ public class RestAPIFactory {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
             final RestMethodInfo methodInfo = RestMethodInfo.get(method, args);
-            final RestRequest restRequest = requestFactory.create(endpoint, methodInfo, authorization);
+            final RestRequest restRequest = requestFactory.create(endpoint, methodInfo.toRequestInfo(), authorization);
             final Class<?>[] parameterTypes = method.getParameterTypes();
             RestResponse response = null;
             try {
