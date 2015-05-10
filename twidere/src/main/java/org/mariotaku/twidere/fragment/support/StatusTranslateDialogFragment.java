@@ -32,10 +32,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
@@ -43,17 +45,12 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
-import org.mariotaku.twidere.api.twitter.model.TranslationResult;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-
 public class StatusTranslateDialogFragment extends BaseSupportDialogFragment implements
         LoaderCallbacks<SingleResponse<TranslationResult>> {
 
     private StatusViewHolder mHolder;
-    private DummyStatusHolderAdapter mAdapter;
 
-    private ProgressBar mProgressBar;
+    private View mProgress;
     private TextView mMessageView;
     private View mProgressContainer;
     private View mStatusContainer;
@@ -70,8 +67,8 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
             dismiss();
             return;
         }
-        mAdapter = new DummyStatusHolderAdapter(getActivity());
-        mHolder = new StatusViewHolder(mAdapter, mStatusContainer);
+        DummyStatusHolderAdapter adapter = new DummyStatusHolderAdapter(getActivity());
+        mHolder = new StatusViewHolder(adapter, mStatusContainer);
         getLoaderManager().initLoader(0, args, this);
     }
 
@@ -80,7 +77,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
         mStatusContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.VISIBLE);
         mMessageView.setVisibility(View.VISIBLE);
         mMessageView.setText(R.string.please_wait);
         final long statusId;
@@ -96,7 +93,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProgressContainer = view.findViewById(R.id.progress_container);
-        mProgressBar = (ProgressBar) mProgressContainer.findViewById(android.R.id.progress);
+        mProgress = mProgressContainer.findViewById(R.id.load_progress);
         mMessageView = (TextView) mProgressContainer.findViewById(android.R.id.message);
         mStatusContainer = view.findViewById(R.id.status_container);
     }
@@ -123,7 +120,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         } else {
             mStatusContainer.setVisibility(View.GONE);
             mProgressContainer.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
+            mProgress.setVisibility(View.GONE);
             mMessageView.setVisibility(View.VISIBLE);
             mMessageView.setText(Utils.getErrorMessage(getActivity(), data.getException()));
         }

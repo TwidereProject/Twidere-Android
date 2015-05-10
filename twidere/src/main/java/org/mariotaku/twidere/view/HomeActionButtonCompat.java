@@ -36,7 +36,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -47,7 +46,6 @@ import org.mariotaku.twidere.view.iface.IHomeActionButton;
 public class HomeActionButtonCompat extends FrameLayout implements IHomeActionButton {
 
     private final ImageView mIconView;
-    private final ProgressBar mProgressBar;
     private final FloatingActionDrawable mBackground;
 
     public HomeActionButtonCompat(final Context context) {
@@ -72,7 +70,6 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
                     this);
         }
         mIconView = (ImageView) findViewById(android.R.id.icon);
-        mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
         final Resources resources = getResources();
         final int radius = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
         mBackground = new FloatingActionDrawable(this, radius);
@@ -82,19 +79,6 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
     @Override
     public void setButtonColor(int color) {
         mBackground.setColor(color);
-        final View child = getChildAt(0);
-        if (child instanceof FrameLayout) {
-            final Drawable foreground = ((FrameLayout) child).getForeground();
-            if (foreground != null) {
-                final Resources resources = getResources();
-//                final int colorDark = resources.getColor(R.color.action_icon_dark);
-//                final int colorLight = resources.getColor(R.color.action_icon_light);
-//                final int contrastColor = TwidereColorUtils.getContrastYIQ(color,
-//                        ThemeUtils.ACCENT_COLOR_THRESHOLD, colorDark, colorLight);
-//                foreground.setColorFilter(contrastColor, Mode.MULTIPLY);
-            }
-        }
-
     }
 
     @Override
@@ -119,7 +103,6 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
 
     @Override
     public void setShowProgress(final boolean showProgress) {
-        mProgressBar.setVisibility(showProgress ? View.VISIBLE : View.GONE);
         mIconView.setVisibility(showProgress ? View.GONE : View.VISIBLE);
     }
 

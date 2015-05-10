@@ -26,6 +26,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
+import android.text.method.ArrowKeyMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.StatusActionModeCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -45,12 +47,13 @@ import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 public class MessageViewHolder extends ViewHolder implements OnMediaClickListener {
 
     public final CardMediaContainer mediaContainer;
-    public final TextView text, time;
+    public final TextView textView, time;
 
     private final MessageBubbleView messageContent;
     protected final MessageConversationAdapter adapter;
 
     private final int textColorPrimary, textColorPrimaryInverse, textColorSecondary, textColorSecondaryInverse;
+    private final StatusActionModeCallback callback;
 
 
     public MessageViewHolder(final MessageConversationAdapter adapter, final View itemView) {
@@ -66,10 +69,11 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
         textColorSecondaryInverse = a.getColor(3, 0);
         a.recycle();
         messageContent = (MessageBubbleView) itemView.findViewById(R.id.message_content);
-        text = (TextView) itemView.findViewById(R.id.text);
+        textView = (TextView) itemView.findViewById(R.id.text);
         time = (TextView) itemView.findViewById(R.id.time);
         mediaContainer = (CardMediaContainer) itemView.findViewById(R.id.media_preview_container);
         mediaContainer.setStyle(adapter.getMediaPreviewStyle());
+        callback = new StatusActionModeCallback(textView, adapter.getContext());
     }
 
     public void displayMessage(Cursor cursor, CursorIndices indices) {
@@ -80,12 +84,15 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
         final long accountId = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.message_timestamp);
         final ParcelableMedia[] media = ParcelableMedia.fromSerializedJson(cursor.getString(indices.media));
-        text.setText(Html.fromHtml(cursor.getString(indices.text)));
-        linkify.applyAllLinks(text, accountId, false);
-        text.setMovementMethod(null);
+        textView.setText(Html.fromHtml(cursor.getString(indices.text)));
+        linkify.applyAllLinks(textView, accountId, false);
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
         mediaContainer.displayMedia(media, loader, accountId, true, this, adapter.getMediaLoadingHandler());
+
+        textView.setTextIsSelectable(true);
+        textView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
+        textView.setCustomSelectionActionModeCallback(callback);
     }
 
     @Override
@@ -115,13 +122,13 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
                 ThemeUtils.ACCENT_COLOR_THRESHOLD, textPrimaryDark, textPrimaryLight);
         final int textContrastSecondary = TwidereColorUtils.getContrastYIQ(color,
                 ThemeUtils.ACCENT_COLOR_THRESHOLD, textSecondaryDark, textSecondaryLight);
-        text.setTextColor(textContrastPrimary);
-        text.setLinkTextColor(textContrastSecondary);
+        textView.setTextColor(textContrastPrimary);
+        textView.setLinkTextColor(textContrastSecondary);
         time.setTextColor(textContrastSecondary);
     }
 
     public void setTextSize(final float textSize) {
-        text.setTextSize(textSize);
+        textView.setTextSize(textSize);
         time.setTextSize(textSize * 0.75f);
     }
 

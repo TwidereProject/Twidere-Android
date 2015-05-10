@@ -23,7 +23,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
-import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ClickableSpan;
@@ -31,6 +30,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 public class HandleSpanClickTextView extends AppCompatTextView {
+
+    private boolean mLongClickPerformed;
 
     public HandleSpanClickTextView(final Context context) {
         super(context);
@@ -68,19 +69,27 @@ public class HandleSpanClickTextView extends AppCompatTextView {
             if (links.length != 0 && x <= lineWidth) {
                 final ClickableSpan link = links[0];
                 if (action == MotionEvent.ACTION_UP) {
-                    Selection.removeSelection(buffer);
                     setClickable(false);
-                    link.onClick(this);
+                    if (!mLongClickPerformed) {
+                        link.onClick(this);
+                    }
                     return true;
                 } else {
-                    Selection.setSelection(buffer, buffer.getSpanStart(link), buffer.getSpanEnd(link));
+                    mLongClickPerformed = false;
                     setClickable(true);
                 }
             } else {
-                Selection.removeSelection(buffer);
                 setClickable(false);
             }
         }
         return super.onTouchEvent(event);
+    }
+
+
+    @Override
+    public boolean performLongClick() {
+        final boolean result = super.performLongClick();
+        mLongClickPerformed = true;
+        return result;
     }
 }

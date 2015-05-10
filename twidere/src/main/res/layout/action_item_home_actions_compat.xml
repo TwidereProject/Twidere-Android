@@ -25,14 +25,6 @@
     android:layout_gravity="center"
     android:foreground="@drawable/btn_home_actions_compat">
 
-    <ProgressBar
-        android:id="@android:id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
-
     <ImageView
         android:id="@android:id/icon"
         android:layout_width="wrap_content"

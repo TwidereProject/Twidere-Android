@@ -43,7 +43,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.FixedLinearLayoutManager;
@@ -55,22 +54,16 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.URLSpan;
-import android.view.ActionMode;
-import android.view.ActionMode.Callback;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
@@ -93,17 +86,16 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ClipboardUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
-import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.StatusActionModeCallback;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -695,7 +687,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final long timestamp;
             final String source;
             final int layoutPosition = getLayoutPosition();
-            final int linkHighlightingStyle = adapter.getLinkHighlightingStyle();
             if (status.is_quote) {
                 quotedNameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
                 quotedScreenNameView.setText("@" + status.user_screen_name);
@@ -941,55 +932,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, activity));
         }
 
-
-        private static class StatusActionModeCallback implements Callback {
-            private final TextView textView;
-            private final FragmentActivity activity;
-
-            public StatusActionModeCallback(TextView textView, FragmentActivity activity) {
-                this.textView = textView;
-                this.activity = activity;
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.action_status_text_selection, menu);
-                mode.setTitle(android.R.string.selectTextMode);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
-                final SpannableString string = SpannableString.valueOf(textView.getText());
-                final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
-                final boolean avail = spans.length == 1 && URLUtil.isValidUrl(spans[0].getURL());
-                MenuUtils.setMenuItemAvailability(menu, android.R.id.copyUrl, avail);
-                MenuUtils.setMenuItemShowAsActionFlags(menu, android.R.id.copyUrl, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-                return true;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case android.R.id.copyUrl: {
-                        final int start = textView.getSelectionStart(), end = textView.getSelectionEnd();
-                        final SpannableString string = SpannableString.valueOf(textView.getText());
-                        final URLSpan[] spans = string.getSpans(start, end, URLSpan.class);
-                        if (spans.length != 1) return true;
-                        ClipboardUtils.setText(activity, spans[0].getURL());
-                        mode.finish();
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        }
 
     }
 

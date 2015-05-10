@@ -34,11 +34,10 @@
         android:visibility="visible"
         tools:visibility="gone">
 
-        <ProgressBar
-            android:id="@android:id/progress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <include
+            layout="@layout/layout_progress_wheel_medium"
+            android:layout_width="@dimen/element_size_normal"
+            android:layout_height="@dimen/element_size_normal"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp" />
 
