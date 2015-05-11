@@ -19,9 +19,13 @@
 
 package org.mariotaku.simplerestapi;
 
+import android.support.annotation.Nullable;
 import android.util.Pair;
 
+import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
+import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
+import org.mariotaku.simplerestapi.param.Body;
 
 import java.util.List;
 import java.util.Map;
@@ -31,17 +35,21 @@ import java.util.Map;
  */
 public final class RequestInfo {
 
+
     private String method;
     private String path;
 
     private List<Pair<String, String>> queries, forms, headers;
     private List<Pair<String, TypedData>> parts;
     private Map<String, Object> extras;
-    private TypedData body;
+    private FileValue file;
+    private Body body;
+
+    private TypedData bodyCache;
 
     public RequestInfo(String method, String path, List<Pair<String, String>> queries,
                        List<Pair<String, String>> forms, List<Pair<String, String>> headers,
-                       List<Pair<String, TypedData>> parts, Map<String, Object> extras, TypedData body) {
+                       List<Pair<String, TypedData>> parts, FileValue file, Body body, Map<String, Object> extras) {
         this.method = method;
         this.path = path;
         this.queries = queries;
@@ -49,6 +57,7 @@ public final class RequestInfo {
         this.headers = headers;
         this.parts = parts;
         this.extras = extras;
+        this.file = file;
         this.body = body;
     }
 
@@ -72,8 +81,25 @@ public final class RequestInfo {
         return extras;
     }
 
+    @Nullable
     public TypedData getBody() {
-        return body;
+        if (bodyCache != null) return bodyCache;
+        if (body == null) return null;
+        switch (body.value()) {
+            case FORM: {
+                bodyCache = new FormTypedBody(getForms());
+                break;
+            }
+            case MULTIPART: {
+                bodyCache = new MultipartTypedBody(getParts());
+                break;
+            }
+            case FILE: {
+                bodyCache = file.body();
+                break;
+            }
+        }
+        return bodyCache;
     }
 
     public String getPath() {

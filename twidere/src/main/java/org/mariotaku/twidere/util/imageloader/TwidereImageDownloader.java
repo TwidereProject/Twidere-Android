@@ -176,7 +176,8 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
                     queries.add(Pair.create(name, value));
                 }
             }
-            final RequestInfo info = new RequestInfo(method, uri.getPath(), queries, null, additionalHeaders, null, null, null);
+            final RequestInfo info = new RequestInfo(method, uri.getPath(), queries, null,
+                    additionalHeaders, null, null, null, null);
             additionalHeaders.add(Pair.create("Authorization", auth.getHeader(endpoint, info)));
         }
         final String requestUri;

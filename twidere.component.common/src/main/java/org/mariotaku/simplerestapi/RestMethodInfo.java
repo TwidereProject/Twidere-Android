@@ -1,14 +1,11 @@
 package org.mariotaku.simplerestapi;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.mariotaku.simplerestapi.http.ValueMap;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
-import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
-import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.simplerestapi.param.Body;
 import org.mariotaku.simplerestapi.param.Extra;
@@ -63,25 +60,112 @@ public final class RestMethodInfo {
         this.file = file;
     }
 
-    @Nullable
-    public TypedData getBody() {
-        if (bodyCache != null) return bodyCache;
-        if (body == null) return null;
-        switch (body.value()) {
-            case FORM: {
-                bodyCache = new FormTypedBody(getForms());
-                break;
-            }
-            case MULTIPART: {
-                bodyCache = new MultipartTypedBody(getParts());
-                break;
-            }
-            case FILE: {
-                bodyCache = file.body();
+    static RestMethodInfo get(Method method, Object[] args) {
+        RestMethod restMethod = null;
+        String pathFormat = null;
+        for (Annotation annotation : method.getAnnotations()) {
+            final Class<?> annotationType = annotation.annotationType();
+            restMethod = annotationType.getAnnotation(RestMethod.class);
+            if (restMethod != null) {
+                try {
+                    pathFormat = (String) annotationType.getMethod("value").invoke(annotation);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             }
         }
-        return bodyCache;
+        final Body body = method.getAnnotation(Body.class);
+        final HashMap<Path, Object> paths = new HashMap<>();
+        final HashMap<Query, Object> queries = new HashMap<>();
+        final HashMap<Header, Object> headers = new HashMap<>();
+        final HashMap<Form, Object> forms = new HashMap<>();
+        final HashMap<Part, Object> parts = new HashMap<>();
+        final HashMap<Extra, Object> extras = new HashMap<>();
+        FileValue file = null;
+        final Annotation[][] annotations = method.getParameterAnnotations();
+        for (int i = 0, j = annotations.length; i < j; i++) {
+            final Path path = getAnnotation(annotations[i], Path.class);
+            if (path != null) {
+                paths.put(path, args[i]);
+            }
+            final Query query = getAnnotation(annotations[i], Query.class);
+            if (query != null) {
+                queries.put(query, args[i]);
+            }
+            final Header header = getAnnotation(annotations[i], Header.class);
+            if (header != null) {
+                headers.put(header, args[i]);
+            }
+            final Form form = getAnnotation(annotations[i], Form.class);
+            if (form != null) {
+                forms.put(form, args[i]);
+            }
+            final Part part = getAnnotation(annotations[i], Part.class);
+            if (part != null) {
+                parts.put(part, args[i]);
+            }
+            final File paramFile = getAnnotation(annotations[i], File.class);
+            if (paramFile != null) {
+                if (file == null) {
+                    file = new FileValue(paramFile, args[i]);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            }
+            final Extra extra = getAnnotation(annotations[i], Extra.class);
+            if (extra != null) {
+                extras.put(extra, args[i]);
+            }
+        }
+        checkMethod(restMethod, body, forms, parts, file);
+        return new RestMethodInfo(restMethod, pathFormat, body, paths, queries, headers, forms, parts, file, extras);
+    }
+
+    private static String[] getValueMapKeys(String[] annotationValue, ValueMap valueMap) {
+        return annotationValue != null && annotationValue.length > 0 ? annotationValue : valueMap.keys();
+    }
+
+    private static void checkMethod(RestMethod restMethod, Body body, HashMap<Form, Object> forms, HashMap<Part, Object> parts, FileValue file) {
+        if (restMethod == null)
+            throw new NotImplementedException("Method must has annotation annotated with @RestMethod");
+        if (!restMethod.hasBody() && body != null) {
+            throw new IllegalArgumentException(restMethod.value() + " does not allow body");
+        }
+        if (body == null) return;
+        switch (body.value()) {
+            case FILE: {
+                if (file == null) {
+                    throw new NullPointerException("@File annotation is required");
+                }
+                if (!forms.isEmpty() || !parts.isEmpty()) {
+                    throw new IllegalArgumentException("Only arguments with @File annotation allowed");
+                }
+                break;
+            }
+            case MULTIPART: {
+                if (!forms.isEmpty() || file != null) {
+                    throw new IllegalArgumentException("Only arguments with @Part annotation allowed");
+                }
+                break;
+            }
+            case FORM: {
+                if (file != null || !parts.isEmpty()) {
+                    throw new IllegalArgumentException("Only arguments with @Form annotation allowed");
+                }
+                break;
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotationClass) {
+        for (Annotation annotation : annotations) {
+            if (annotationClass.isAssignableFrom(annotation.annotationType())) {
+                return (T) annotation;
+            }
+        }
+        return null;
     }
 
     @NonNull
@@ -220,104 +304,6 @@ public final class RestMethodInfo {
         return queriesCache = list;
     }
 
-    static RestMethodInfo get(Method method, Object[] args) {
-        RestMethod restMethod = null;
-        String pathFormat = null;
-        for (Annotation annotation : method.getAnnotations()) {
-            final Class<?> annotationType = annotation.annotationType();
-            restMethod = annotationType.getAnnotation(RestMethod.class);
-            if (restMethod != null) {
-                try {
-                    pathFormat = (String) annotationType.getMethod("value").invoke(annotation);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                break;
-            }
-        }
-        final Body body = method.getAnnotation(Body.class);
-        final HashMap<Path, Object> paths = new HashMap<>();
-        final HashMap<Query, Object> queries = new HashMap<>();
-        final HashMap<Header, Object> headers = new HashMap<>();
-        final HashMap<Form, Object> forms = new HashMap<>();
-        final HashMap<Part, Object> parts = new HashMap<>();
-        final HashMap<Extra, Object> extras = new HashMap<>();
-        FileValue file = null;
-        final Annotation[][] annotations = method.getParameterAnnotations();
-        for (int i = 0, j = annotations.length; i < j; i++) {
-            final Path path = getAnnotation(annotations[i], Path.class);
-            if (path != null) {
-                paths.put(path, args[i]);
-            }
-            final Query query = getAnnotation(annotations[i], Query.class);
-            if (query != null) {
-                queries.put(query, args[i]);
-            }
-            final Header header = getAnnotation(annotations[i], Header.class);
-            if (header != null) {
-                headers.put(header, args[i]);
-            }
-            final Form form = getAnnotation(annotations[i], Form.class);
-            if (form != null) {
-                forms.put(form, args[i]);
-            }
-            final Part part = getAnnotation(annotations[i], Part.class);
-            if (part != null) {
-                parts.put(part, args[i]);
-            }
-            final File paramFile = getAnnotation(annotations[i], File.class);
-            if (paramFile != null) {
-                if (file == null) {
-                    file = new FileValue(paramFile, args[i]);
-                } else {
-                    throw new IllegalArgumentException();
-                }
-            }
-            final Extra extra = getAnnotation(annotations[i], Extra.class);
-            if (extra != null) {
-                extras.put(extra, args[i]);
-            }
-        }
-        checkMethod(restMethod, body, forms, parts, file);
-        return new RestMethodInfo(restMethod, pathFormat, body, paths, queries, headers, forms, parts, file, extras);
-    }
-
-    private static String[] getValueMapKeys(String[] annotationValue, ValueMap valueMap) {
-        return annotationValue != null && annotationValue.length > 0 ? annotationValue : valueMap.keys();
-    }
-
-    private static void checkMethod(RestMethod restMethod, Body body, HashMap<Form, Object> forms, HashMap<Part, Object> parts, FileValue file) {
-        if (restMethod == null)
-            throw new NotImplementedException("Method must has annotation annotated with @RestMethod");
-        if (!restMethod.hasBody() && body != null) {
-            throw new IllegalArgumentException(restMethod.value() + " does not allow body");
-        }
-        if (body == null) return;
-        switch (body.value()) {
-            case FILE: {
-                if (file == null) {
-                    throw new NullPointerException("@File annotation is required");
-                }
-                if (!forms.isEmpty() || !parts.isEmpty()) {
-                    throw new IllegalArgumentException("Only arguments with @File annotation allowed");
-                }
-                break;
-            }
-            case MULTIPART: {
-                if (!forms.isEmpty() || file != null) {
-                    throw new IllegalArgumentException("Only arguments with @Part annotation allowed");
-                }
-                break;
-            }
-            case FORM: {
-                if (file != null || !parts.isEmpty()) {
-                    throw new IllegalArgumentException("Only arguments with @Form annotation allowed");
-                }
-                break;
-            }
-        }
-    }
-
     private String findPathReplacement(String key) {
         for (Map.Entry<Path, Object> entry : paths.entrySet()) {
             final Path path = entry.getKey();
@@ -332,23 +318,20 @@ public final class RestMethodInfo {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotationClass) {
-        for (Annotation annotation : annotations) {
-            if (annotationClass.isAssignableFrom(annotation.annotationType())) {
-                return (T) annotation;
-            }
-        }
-        return null;
-    }
-
     public RequestInfo toRequestInfo() {
         return new RequestInfo(getMethod().value(), getPath(), getQueries(), getForms(),
-                getHeaders(), getParts(), getExtras(), getBody());
+                getHeaders(), getParts(), getFile(), getBody(), getExtras());
     }
 
     public RequestInfo toRequestInfo(RequestInfo.Factory factory) {
         return factory.create(this);
     }
 
+    public Body getBody() {
+        return body;
+    }
+
+    public FileValue getFile() {
+        return file;
+    }
 }

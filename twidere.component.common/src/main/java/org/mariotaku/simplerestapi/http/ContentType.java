@@ -106,4 +106,17 @@ public final class ContentType {
         }
         return new ContentType(contentType, parameters);
     }
+
+    public ContentType charset(Charset charset) {
+        removeParameter("charset");
+        return parameter("charset", charset.name());
+    }
+
+    private void removeParameter(String name) {
+        for (int i = parameters.size() - 1; i >= 0; i++) {
+            if (name.equals(parameters.get(i).first)) {
+                parameters.remove(i);
+            }
+        }
+    }
 }

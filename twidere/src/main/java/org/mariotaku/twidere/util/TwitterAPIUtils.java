@@ -10,6 +10,7 @@ import android.util.Pair;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
 
+import org.mariotaku.simplerestapi.FileValue;
 import org.mariotaku.simplerestapi.RequestInfo;
 import org.mariotaku.simplerestapi.RestAPIFactory;
 import org.mariotaku.simplerestapi.RestMethod;
@@ -19,6 +20,7 @@ import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
 import org.mariotaku.simplerestapi.http.RestHttpRequest;
 import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.simplerestapi.http.mime.StringTypedData;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -40,6 +42,7 @@ import org.mariotaku.twidere.util.net.OkHttpRestClient;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -170,23 +173,35 @@ public class TwitterAPIUtils implements TwidereConstants {
                 final List<Pair<String, String>> forms = new ArrayList<>(methodInfo.getForms());
                 final List<Pair<String, String>> headers = methodInfo.getHeaders();
                 final List<Pair<String, TypedData>> parts = methodInfo.getParts();
+                final FileValue file = methodInfo.getFile();
                 final Map<String, Object> extras = methodInfo.getExtras();
-                final TypedData body = methodInfo.getBody();
-                final List<Pair<String, String>> params = method.hasBody() ? forms : queries;
-                addParameter(params, "include_cards", true);
-                addParameter(params, "cards_platform", "Android-12");
-                addParameter(params, "include_entities", true);
-                addParameter(params, "include_my_retweet", 1);
-                addParameter(params, "include_rts", 1);
-                addParameter(params, "include_reply_count", true);
-                addParameter(params, "include_descendent_reply_count", true);
-                return new RequestInfo(method.value(), path, queries, forms, headers, parts, extras, body);
+                if (parts.isEmpty()) {
+                    final List<Pair<String, String>> params = method.hasBody() ? forms : queries;
+                    addParameter(params, "include_cards", true);
+                    addParameter(params, "cards_platform", "Android-12");
+                    addParameter(params, "include_entities", true);
+                    addParameter(params, "include_my_retweet", 1);
+                    addParameter(params, "include_rts", 1);
+                    addParameter(params, "include_reply_count", true);
+                    addParameter(params, "include_descendent_reply_count", true);
+                } else {
+                    addPart(parts, "include_cards", true);
+                    addPart(parts, "cards_platform", "Android-12");
+                    addPart(parts, "include_entities", true);
+                    addPart(parts, "include_my_retweet", 1);
+                    addPart(parts, "include_rts", 1);
+                    addPart(parts, "include_reply_count", true);
+                    addPart(parts, "include_descendent_reply_count", true);
+                }
+                return new RequestInfo(method.value(), path, queries, forms, headers, parts, file,
+                        methodInfo.getBody(), extras);
             }
         });
         factory.setRequestFactory(new RestHttpRequest.Factory() {
 
             @Override
-            public RestHttpRequest create(@NonNull Endpoint endpoint, @NonNull RequestInfo info, @Nullable Authorization authorization) {
+            public RestHttpRequest create(@NonNull Endpoint endpoint, @NonNull RequestInfo info,
+                                          @Nullable Authorization authorization) {
                 final String restMethod = info.getMethod();
                 final String url = Endpoint.constructUrl(endpoint.getUrl(), info);
                 final ArrayList<Pair<String, String>> headers = new ArrayList<>(info.getHeaders());
@@ -211,6 +226,11 @@ public class TwitterAPIUtils implements TwidereConstants {
 
     private static void addParameter(List<Pair<String, String>> params, String name, Object value) {
         params.add(Pair.create(name, String.valueOf(value)));
+    }
+
+    private static void addPart(List<Pair<String, TypedData>> params, String name, Object value) {
+        final TypedData typedData = new StringTypedData(String.valueOf(value), Charset.defaultCharset());
+        params.add(Pair.create(name, typedData));
     }
 
     public static RestHttpClient getDefaultHttpClient(final Context context) {
