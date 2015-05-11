@@ -744,4 +744,6 @@
     <string name="invalid_list_name">Must start with a letter and can consist only letters, numbers, \"-\", or \"_\".</string>
     <string name="delete_conversation">Delete conversation</string>
     <string name="delete_conversation_confirm_message">Delete all messages of this conversation?</string>
+    <string name="name_first_summary_on">Display name first</string>
+    <string name="name_first_summary_off">Display @screenname first</string>
 </resources>

@@ -73,6 +73,9 @@ import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
@@ -121,9 +124,6 @@ import java.util.Locale;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 /**
  * Created by mariotaku on 14/12/5.
@@ -161,6 +161,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
         @Override
         public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
+            mStatusAdapter.updateItemDecoration();
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
@@ -170,12 +171,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final StatusRepliesLoader loader = new StatusRepliesLoader(getActivity(), accountId,
                     screenName, statusId, maxId, sinceId, null, null, 0, true);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
-
             return loader;
         }
 
         @Override
         public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
+            mStatusAdapter.updateItemDecoration();
             final Pair<Long, Integer> readPosition = saveReadPosition();
             setReplies(data);
             restoreReadPosition(readPosition);
@@ -1525,10 +1526,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (mRecyclerView == null) return;
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
             decoration.setDecorationStart(0);
-            if (isLoadMoreIndicatorVisible()) {
-                decoration.setDecorationEndOffset(3);
+            if (mReplies == null) {
+                decoration.setDecorationEndOffset(2);
             } else {
-                decoration.setDecorationEndOffset(mReplies != null && mReplies.size() > 0 ? 1 : 2);
+                decoration.setDecorationEndOffset(1);
             }
             mRecyclerView.invalidateItemDecorations();
         }

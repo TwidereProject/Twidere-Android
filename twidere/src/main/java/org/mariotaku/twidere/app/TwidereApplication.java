@@ -43,6 +43,9 @@ import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.activity.MainActivity;
@@ -75,6 +78,11 @@ import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
+@ReportsCrashes(formUri = "https://mariotaku.cloudant.com/acra-twidere/_design/acra-storage/_update/report",
+        reportType = HttpSender.Type.JSON,
+        httpMethod = HttpSender.Method.PUT,
+        formUriBasicAuthLogin = "membeentlyposedistderryb",
+        formUriBasicAuthPassword = "oYETEB0KXUThmyXketa8V4XY")
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 
@@ -223,6 +231,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             StrictModeUtils.detectAllVmPolicy();
         }
         super.onCreate();
+        initBugReport();
         mDefaultUserAgent = UserAgentUtils.getDefaultUserAgentString(this);
         mHandler = new Handler();
         mMessageBus = new Bus();
@@ -253,6 +262,10 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         startRefreshServiceIfNeeded(this);
 
         reloadConnectivitySettings();
+    }
+
+    private void initBugReport() {
+        ACRA.init(this);
     }
 
     private void migrateUsageStatisticsPreferences() {

@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.Constants;
@@ -77,6 +78,7 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
         return result;
     }
 
+    @Nullable
     protected List<ParcelableStatus> getData() {
         return mData;
     }

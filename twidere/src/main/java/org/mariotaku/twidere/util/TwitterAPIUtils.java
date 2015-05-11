@@ -11,7 +11,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
 
 import org.mariotaku.simplerestapi.RestAPIFactory;
-import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;

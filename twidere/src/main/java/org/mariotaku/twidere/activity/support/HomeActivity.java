@@ -164,7 +164,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     private UpdateUnreadCountTask mUpdateUnreadCountTask;
 
-    private int mTabDisplayOption;
     private Toolbar mActionBar;
 
     private OnSharedPreferenceChangeListener mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
@@ -360,7 +359,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         setSupportActionBar(mActionBar);
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONCREATE));
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
-        mTabDisplayOption = getTabDisplayOptionInt(this);
+        int tabDisplayOptionInt = getTabDisplayOptionInt(this);
 
         mTabColumns = getResources().getInteger(R.integer.default_tab_columns);
 
@@ -371,12 +370,14 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mTabIndicator.setViewPager(mViewPager);
         mTabIndicator.setOnPageChangeListener(this);
         mTabIndicator.setColumns(mTabColumns);
-        if (mTabDisplayOption != 0) {
-            mTabIndicator.setTabDisplayOption(mTabDisplayOption);
-        } else {
-            mTabIndicator.setTabDisplayOption(TabPagerIndicator.ICON);
+        if (tabDisplayOptionInt == 0) {
+            tabDisplayOptionInt = TabPagerIndicator.ICON;
         }
+        mTabIndicator.setTabDisplayOption(tabDisplayOptionInt);
+        mTabIndicator.setTabExpandEnabled((tabDisplayOptionInt & TabPagerIndicator.LABEL) == 0);
         mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
+        mTabIndicator.updateAppearance();
+
         mActionsButton.setOnClickListener(this);
         mActionsButton.setOnLongClickListener(this);
         mEmptyTabHint.setOnClickListener(this);
@@ -438,9 +439,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mAccountChangeObserver);
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
         bus.register(this);
-        if (getTabDisplayOptionInt(this) != mTabDisplayOption) {
-            restart();
-        }
         // UCD
         ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStart");
         // spice
@@ -876,6 +874,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         ThemeUtils.applyWindowBackground(this, mSlidingMenu.getContent(), getCurrentThemeResourceId(),
                 getThemeBackgroundOption(), getCurrentThemeBackgroundAlpha());
         window.setBackgroundDrawable(new EmptyDrawable());
+
+        mSlidingMenu.addIgnoredView(mActionBarContainer);
     }
 
     private void showDataProfilingRequest() {

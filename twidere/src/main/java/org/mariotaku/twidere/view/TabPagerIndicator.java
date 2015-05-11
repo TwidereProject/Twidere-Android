@@ -170,7 +170,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     @DisplayOption
     public void setTabDisplayOption(int flags) {
         mOption = flags;
-        notifyDataSetChanged();
     }
 
     private void dispatchTabClick(int position) {
@@ -249,7 +248,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
     private void setHorizontalPadding(int padding) {
         mHorizontalPadding = padding;
-        notifyDataSetChanged();
     }
 
     private void setTabShowDivider(boolean showDivider) {
@@ -262,7 +260,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
     private void setVerticalPadding(int padding) {
         mVerticalPadding = padding;
-        notifyDataSetChanged();
     }
 
     @IntDef({ICON, LABEL, BOTH})

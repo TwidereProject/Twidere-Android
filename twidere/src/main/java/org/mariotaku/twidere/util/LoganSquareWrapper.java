@@ -1,21 +1,23 @@
-package org.mariotaku.jsonserializer;
+package org.mariotaku.twidere.util;
 
 import android.content.Context;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.List;
 
-public class JSONFileIO {
+public class LoganSquareWrapper extends LoganSquare {
 
     public static final String JSON_CACHE_DIR = "json_cache";
 
@@ -25,6 +27,16 @@ public class JSONFileIO {
             return new JSONObject(string);
         } catch (final JSONException e) {
             throw new IOException(e);
+        }
+    }
+
+    public static <E> List<E> parseList(File file, Class<E> jsonObjectClass) throws IOException {
+        final FileInputStream is = new FileInputStream(file);
+        //noinspection TryFinallyCanBeTryWithResources
+        try {
+            return LoganSquare.parseList(is, jsonObjectClass);
+        } finally {
+            is.close();
         }
     }
 

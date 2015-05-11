@@ -3,6 +3,7 @@ package org.mariotaku.simplerestapi;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.mariotaku.simplerestapi.http.ValueMap;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
 import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
@@ -280,7 +281,7 @@ public final class RestMethodInfo {
 
     private static void checkMethod(RestMethod restMethod, Body body, HashMap<Form, Object> forms, HashMap<Part, Object> parts, FileValue file) {
         if (restMethod == null)
-            throw new NullPointerException("Method must has annotation annotated with @RestMethod");
+            throw new NotImplementedException("Method must has annotation annotated with @RestMethod");
         if (!restMethod.hasBody() && body != null) {
             throw new IllegalArgumentException(restMethod.value() + " does not allow body");
         }
@@ -361,7 +362,6 @@ public final class RestMethodInfo {
             this.extras = extras;
             this.body = body;
         }
-
 
 
         public List<Pair<String, String>> getQueries() {

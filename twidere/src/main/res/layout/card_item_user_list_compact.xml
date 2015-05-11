@@ -52,53 +52,48 @@
             android:contentDescription="@string/profile_image"
             android:scaleType="fitCenter" />
 
-        <FrameLayout
-            android:id="@+id/name_frame"
+
+        <LinearLayout
+            android:id="@+id/name_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_alignWithParentIfMissing="true"
+            android:layout_gravity="start|center_vertical"
             android:layout_toEndOf="@id/profile_image"
-            android:layout_toRightOf="@id/profile_image">
+            android:layout_toRightOf="@id/profile_image"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <org.mariotaku.twidere.view.HandleSpanClickTextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
+                tools:text="List" />
 
-                <org.mariotaku.twidere.view.HandleSpanClickTextView
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textStyle="bold" />
-
-                <org.mariotaku.twidere.view.HandleSpanClickTextView
-                    android:id="@+id/created_by"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorSecondary" />
-            </LinearLayout>
-        </FrameLayout>
+            <org.mariotaku.twidere.view.HandleSpanClickTextView
+                android:id="@+id/created_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="Created by user" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/name_frame"
-            android:layout_alignStart="@id/name_frame"
-            android:layout_below="@id/name_frame"
+            android:layout_alignLeft="@id/name_container"
+            android:layout_alignStart="@id/name_container"
+            android:layout_below="@id/name_container"
             android:paddingTop="@dimen/element_spacing_small"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary" />

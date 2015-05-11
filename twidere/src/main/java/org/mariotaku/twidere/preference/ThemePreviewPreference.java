@@ -120,7 +120,6 @@ public class ThemePreviewPreference extends Preference implements Constants, OnS
         cardView.setCardBackgroundColor(cardBackgroundColor);
 
         actionBarView.setTitle(R.string.app_name);
-//        actionBarView.setTitleTextColor(ThemeUtils.getContrastActionBarTitleColor(context, themeId, accentColor));
         menuBar.setEnabled(false);
         final MenuInflater inflater = new SupportMenuInflater(context);
         inflater.inflate(R.menu.menu_status, menuBar.getMenu());

@@ -13,6 +13,8 @@
         android:defaultValue="true"
         android:key="name_first"
         android:order="22"
+        android:summaryOff="@string/name_first_summary_off"
+        android:summaryOn="@string/name_first_summary_on"
         android:title="@string/name_first">
         <extra
             android:name="notify_change"

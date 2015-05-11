@@ -30,7 +30,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 
-public class UserSearchLoader extends Twitter4JUsersLoader {
+public class UserSearchLoader extends TwitterAPIUsersLoader {
 
     private final String mQuery;
     private final int mPage;

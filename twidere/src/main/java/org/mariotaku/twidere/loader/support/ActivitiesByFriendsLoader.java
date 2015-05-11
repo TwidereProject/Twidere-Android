@@ -31,7 +31,7 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
-public class ActivitiesByFriendsLoader extends Twitter4JActivitiesLoader {
+public class ActivitiesByFriendsLoader extends TwitterAPIActivitiesLoader {
 
 
     public ActivitiesByFriendsLoader(final Context context, final long accountId, long sinceId,

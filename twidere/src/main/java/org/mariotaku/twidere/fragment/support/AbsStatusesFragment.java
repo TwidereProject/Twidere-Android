@@ -164,15 +164,15 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         final long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
         final String tag = getCurrentReadPositionTag();
-        final LinearLayoutManager mLayoutManager = getLayoutManager();
+        final LinearLayoutManager layoutManager = getLayoutManager();
         if (readFromBottom) {
-            lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
+            lastVisiblePos = layoutManager.findLastVisibleItemPosition();
         } else {
-            lastVisiblePos = mLayoutManager.findFirstVisibleItemPosition();
+            lastVisiblePos = layoutManager.findFirstVisibleItemPosition();
         }
         if (lastVisiblePos != RecyclerView.NO_POSITION) {
             lastReadId = adapter.getStatusId(lastVisiblePos);
-            final View positionView = mLayoutManager.findViewByPosition(lastVisiblePos);
+            final View positionView = layoutManager.findViewByPosition(lastVisiblePos);
             lastVisibleTop = positionView != null ? positionView.getTop() : 0;
         } else if (rememberPosition && tag != null) {
             lastReadId = mReadStateManager.getPosition(tag);
@@ -193,7 +193,12 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                 }
             }
             if (pos != -1 && adapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
-                mLayoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
+                if (layoutManager.getHeight() == 0) {
+                    // RecyclerView has not currently laid out, ignore padding.
+                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
+                } else {
+                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - layoutManager.getPaddingTop());
+                }
             }
         }
         if (loader instanceof IExtendedLoader) {
