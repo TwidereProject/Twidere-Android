@@ -60,6 +60,8 @@ public class BitmapUtils {
         BitmapFactory.decodeFile(path, o);
         // Corrupted image, so return now.
         if (o.outWidth <= 0 || o.outHeight <= 0) return false;
+        // Ignore for GIF image
+        if ("image/gif".equals(o.outMimeType)) return true;
         o.inJustDecodeBounds = false;
         if (o.outWidth > TwidereConstants.TWITTER_MAX_IMAGE_WIDTH || o.outHeight > TwidereConstants.TWITTER_MAX_IMAGE_HEIGHT) {
             // The image dimension is larger than Twitter's limit.

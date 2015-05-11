@@ -740,9 +740,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                         intent.setAction(ImagePickerActivity.INTENT_ACTION_GET_IMAGE);
                         intent.setData(Uri.parse(imageSpans[0].getSource()));
                         startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                        ((Spannable) s).setSpan(new MarkForDeleteSpan(), start, start + count,
+                                Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
-                    ((Spannable) s).setSpan(new MarkForDeleteSpan(), start, start + count,
-                            Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 }
             }
 
