@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/2/7.
  */
-public abstract class RestResponse implements Closeable {
+public abstract class RestHttpResponse implements Closeable {
     public abstract int getStatus();
 
     public abstract List<Pair<String, String>> getHeaders();

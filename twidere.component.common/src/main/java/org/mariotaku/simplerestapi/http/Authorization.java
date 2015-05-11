@@ -19,13 +19,13 @@
 
 package org.mariotaku.simplerestapi.http;
 
-import org.mariotaku.simplerestapi.RestMethodInfo;
+import org.mariotaku.simplerestapi.RequestInfo;
 
 /**
  * Created by mariotaku on 15/2/4.
  */
 public interface Authorization {
-    String getHeader(Endpoint endpoint, RestMethodInfo.RequestInfo info);
+    String getHeader(Endpoint endpoint, RequestInfo info);
 
     boolean hasAuthorization();
 }

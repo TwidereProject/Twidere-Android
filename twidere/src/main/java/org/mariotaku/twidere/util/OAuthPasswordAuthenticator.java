@@ -30,8 +30,8 @@ import org.mariotaku.simplerestapi.RestAPIFactory;
 import org.mariotaku.simplerestapi.RestClient;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.http.mime.BaseTypedData;
 import org.mariotaku.simplerestapi.http.mime.FormTypedBody;
 import org.mariotaku.simplerestapi.method.GET;
@@ -78,15 +78,15 @@ public class OAuthPasswordAuthenticator implements Constants {
 //            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException(e);
         }
-        RestResponse authorizePage = null, authorizeResult = null;
+        RestHttpResponse authorizePage = null, authorizeResult = null;
         try {
             final String oauthToken = requestToken.getOauthToken();
             final HashMap<String, String> inputMap = new HashMap<>();
-            final RestRequest.Builder authorizePageBuilder = new RestRequest.Builder();
+            final RestHttpRequest.Builder authorizePageBuilder = new RestHttpRequest.Builder();
             authorizePageBuilder.method(GET.METHOD);
             authorizePageBuilder.url(endpoint.construct("/oauth/authorize", Pair.create("oauth_token",
                     requestToken.getOauthToken())));
-            final RestRequest authorizePageRequest = authorizePageBuilder.build();
+            final RestHttpRequest authorizePageRequest = authorizePageBuilder.build();
             authorizePage = client.execute(authorizePageRequest);
             final String[] cookieHeaders = authorizePage.getHeaders("Set-Cookie");
             readInputFromHtml(BaseTypedData.reader(authorizePage.getBody()), inputMap,
@@ -115,7 +115,7 @@ public class OAuthPasswordAuthenticator implements Constants {
                     requestHeaders.add(Pair.create("Cookie", cookie.toString()));
                 }
             }
-            final RestRequest.Builder authorizeResultBuilder = new RestRequest.Builder();
+            final RestHttpRequest.Builder authorizeResultBuilder = new RestHttpRequest.Builder();
             authorizeResultBuilder.method(POST.METHOD);
             authorizeResultBuilder.url(endpoint.construct("/oauth/authorize"));
             authorizeResultBuilder.headers(requestHeaders);

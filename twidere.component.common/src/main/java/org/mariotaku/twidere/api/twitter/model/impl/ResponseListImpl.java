@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +48,7 @@ public class ResponseListImpl<T> extends ArrayList<T> implements ResponseList<T>
     }
 
     @Override
-    public final void processResponseHeader(RestResponse resp) {
+    public final void processResponseHeader(RestHttpResponse resp) {
         rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(resp);
         accessLevel = InternalParseUtil.toAccessLevel(resp);
     }

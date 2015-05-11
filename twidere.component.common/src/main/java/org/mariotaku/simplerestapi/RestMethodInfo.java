@@ -1,6 +1,7 @@
 package org.mariotaku.simplerestapi;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -62,6 +63,7 @@ public final class RestMethodInfo {
         this.file = file;
     }
 
+    @Nullable
     public TypedData getBody() {
         if (bodyCache != null) return bodyCache;
         if (body == null) return null;
@@ -82,6 +84,7 @@ public final class RestMethodInfo {
         return bodyCache;
     }
 
+    @NonNull
     public Map<String, Object> getExtras() {
         if (extrasCache != null) return extrasCache;
         final Map<String, Object> map = new HashMap<>();
@@ -104,6 +107,7 @@ public final class RestMethodInfo {
         return extrasCache = map;
     }
 
+    @NonNull
     public List<Pair<String, String>> getForms() {
         if (formsCache != null) return formsCache;
         final ArrayList<Pair<String, String>> list = new ArrayList<>();
@@ -129,6 +133,7 @@ public final class RestMethodInfo {
         return formsCache = list;
     }
 
+    @NonNull
     public List<Pair<String, TypedData>> getParts() {
         if (partsCache != null) return partsCache;
         final ArrayList<Pair<String, TypedData>> list = new ArrayList<>();
@@ -172,6 +177,7 @@ public final class RestMethodInfo {
         return method;
     }
 
+    @NonNull
     public String getPath() {
         StringBuilder sb = new StringBuilder();
         int start, end, prevEnd = -1;
@@ -188,6 +194,7 @@ public final class RestMethodInfo {
         return sb.toString();
     }
 
+    @NonNull
     public List<Pair<String, String>> getQueries() {
         if (queriesCache != null) return queriesCache;
         final ArrayList<Pair<String, String>> list = new ArrayList<>();
@@ -340,60 +347,8 @@ public final class RestMethodInfo {
                 getHeaders(), getParts(), getExtras(), getBody());
     }
 
-    public static final class RequestInfo {
-
-        private String method;
-        private String path;
-
-        private List<Pair<String, String>> queries, forms, headers;
-        private List<Pair<String, TypedData>> parts;
-        private Map<String, Object> extras;
-        private TypedData body;
-
-        public RequestInfo(String method, String path, List<Pair<String, String>> queries,
-                           List<Pair<String, String>> forms, List<Pair<String, String>> headers,
-                           List<Pair<String, TypedData>> parts, Map<String, Object> extras, TypedData body) {
-            this.method = method;
-            this.path = path;
-            this.queries = queries;
-            this.forms = forms;
-            this.headers = headers;
-            this.parts = parts;
-            this.extras = extras;
-            this.body = body;
-        }
-
-
-        public List<Pair<String, String>> getQueries() {
-            return queries;
-        }
-
-        public List<Pair<String, String>> getForms() {
-            return forms;
-        }
-
-        public List<Pair<String, String>> getHeaders() {
-            return headers;
-        }
-
-        public List<Pair<String, TypedData>> getParts() {
-            return parts;
-        }
-
-        public Map<String, Object> getExtras() {
-            return extras;
-        }
-
-        public TypedData getBody() {
-            return body;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public String getMethod() {
-            return method;
-        }
+    public RequestInfo toRequestInfo(RequestInfo.Factory factory) {
+        return factory.create(this);
     }
+
 }

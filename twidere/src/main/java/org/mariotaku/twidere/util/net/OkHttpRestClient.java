@@ -35,8 +35,8 @@ import com.squareup.okhttp.ResponseBody;
 import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 
 import java.io.IOException;
@@ -62,19 +62,20 @@ public class OkHttpRestClient implements RestHttpClient {
         this.client = client;
     }
 
+    @NonNull
     @Override
-    public RestResponse execute(RestRequest restRequest) throws IOException {
+    public RestHttpResponse execute(RestHttpRequest restHttpRequest) throws IOException {
         final Request.Builder builder = new Request.Builder();
-        builder.method(restRequest.getMethod(), RestToOkBody.wrap(restRequest.getBody()));
-        builder.url(restRequest.getUrl());
-        final List<Pair<String, String>> headers = restRequest.getHeaders();
+        builder.method(restHttpRequest.getMethod(), RestToOkBody.wrap(restHttpRequest.getBody()));
+        builder.url(restHttpRequest.getUrl());
+        final List<Pair<String, String>> headers = restHttpRequest.getHeaders();
         if (headers != null) {
             for (Pair<String, String> header : headers) {
                 builder.addHeader(header.first, header.second);
             }
         }
         final Call call = client.newCall(builder.build());
-        return new OkRestResponse(call.execute());
+        return new OkRestHttpResponse(call.execute());
     }
 
     private static class RestToOkBody extends RequestBody {
@@ -103,11 +104,11 @@ public class OkHttpRestClient implements RestHttpClient {
         }
     }
 
-    private static class OkRestResponse extends RestResponse {
+    private static class OkRestHttpResponse extends RestHttpResponse {
         private final Response response;
         private TypedData body;
 
-        public OkRestResponse(Response response) {
+        public OkRestHttpResponse(Response response) {
             this.response = response;
         }
 

@@ -26,8 +26,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
 import org.mariotaku.simplerestapi.Converter;
+import org.mariotaku.simplerestapi.Utils;
 import org.mariotaku.simplerestapi.http.ContentType;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
@@ -138,6 +139,7 @@ public class TwitterConverter implements Converter {
 
         LoganSquare.registerTypeConverter(Indices.class, Indices.CONVERTER);
         LoganSquare.registerTypeConverter(GeoLocation.class, GeoLocation.CONVERTER);
+        LoganSquare.registerTypeConverter(CardEntity.BindingValue.class, CardEntityImpl.BindingValueWrapper.CONVERTER);
         LoganSquare.registerTypeConverter(MediaEntity.Type.class, EnumConverter.get(MediaEntity.Type.class));
         LoganSquare.registerTypeConverter(UserList.Mode.class, EnumConverter.get(UserList.Mode.class));
         LoganSquare.registerTypeConverter(Activity.Action.class, EnumConverter.get(Activity.Action.class));
@@ -149,60 +151,64 @@ public class TwitterConverter implements Converter {
     }
 
     @Override
-    public Object convert(RestResponse response, Type type) throws Exception {
+    public Object convert(RestHttpResponse response, Type type) throws Exception {
         final TypedData body = response.getBody();
         if (!response.isSuccessful()) {
             throw parseOrThrow(response, body.stream(), TwitterException.class);
         }
         final ContentType contentType = body.contentType();
         final InputStream stream = body.stream();
-        if (type instanceof Class<?>) {
-            final Class<?> cls = (Class<?>) type;
-            final Class<?> wrapperCls = wrapperMap.get(cls);
-            if (wrapperCls != null) {
-                final Wrapper<?> wrapper = (Wrapper<?>) parseOrThrow(response, stream, wrapperCls);
-                wrapper.processResponseHeader(response);
-                return wrapper.getWrapped(null);
-            } else if (OAuthToken.class.isAssignableFrom(cls)) {
-                final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                body.writeTo(os);
-                Charset charset = contentType != null ? contentType.getCharset() : null;
-                if (charset == null) {
-                    charset = Charset.defaultCharset();
-                }
-                try {
-                    return new OAuthToken(os.toString(charset.name()), charset);
-                } catch (ParseException e) {
-                    throw new IOException(e);
-                }
-            }
-            final Object object = parseOrThrow(response, stream, cls);
-            checkResponse(cls, object, response);
-            if (object instanceof TwitterResponseImpl) {
-                ((TwitterResponseImpl) object).processResponseHeader(response);
-            }
-            return object;
-        } else if (type instanceof ParameterizedType) {
-            final Type rawType = ((ParameterizedType) type).getRawType();
-            if (rawType instanceof Class<?>) {
-                final Class<?> rawClass = (Class<?>) rawType;
-                final Class<?> wrapperCls = wrapperMap.get(rawClass);
+        try {
+            if (type instanceof Class<?>) {
+                final Class<?> cls = (Class<?>) type;
+                final Class<?> wrapperCls = wrapperMap.get(cls);
                 if (wrapperCls != null) {
                     final Wrapper<?> wrapper = (Wrapper<?>) parseOrThrow(response, stream, wrapperCls);
                     wrapper.processResponseHeader(response);
-                    return wrapper.getWrapped(((ParameterizedType) type).getActualTypeArguments());
-                } else if (ResponseList.class.isAssignableFrom(rawClass)) {
-                    final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
-                    final ResponseListImpl<?> responseList = new ResponseListImpl<>(parseListOrThrow(response, stream, (Class<?>) elementType));
-                    responseList.processResponseHeader(response);
-                    return responseList;
+                    return wrapper.getWrapped(null);
+                } else if (OAuthToken.class.isAssignableFrom(cls)) {
+                    final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    body.writeTo(os);
+                    Charset charset = contentType != null ? contentType.getCharset() : null;
+                    if (charset == null) {
+                        charset = Charset.defaultCharset();
+                    }
+                    try {
+                        return new OAuthToken(os.toString(charset.name()), charset);
+                    } catch (ParseException e) {
+                        throw new IOException(e);
+                    }
+                }
+                final Object object = parseOrThrow(response, stream, cls);
+                checkResponse(cls, object, response);
+                if (object instanceof TwitterResponseImpl) {
+                    ((TwitterResponseImpl) object).processResponseHeader(response);
+                }
+                return object;
+            } else if (type instanceof ParameterizedType) {
+                final Type rawType = ((ParameterizedType) type).getRawType();
+                if (rawType instanceof Class<?>) {
+                    final Class<?> rawClass = (Class<?>) rawType;
+                    final Class<?> wrapperCls = wrapperMap.get(rawClass);
+                    if (wrapperCls != null) {
+                        final Wrapper<?> wrapper = (Wrapper<?>) parseOrThrow(response, stream, wrapperCls);
+                        wrapper.processResponseHeader(response);
+                        return wrapper.getWrapped(((ParameterizedType) type).getActualTypeArguments());
+                    } else if (ResponseList.class.isAssignableFrom(rawClass)) {
+                        final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+                        final ResponseListImpl<?> responseList = new ResponseListImpl<>(parseListOrThrow(response, stream, (Class<?>) elementType));
+                        responseList.processResponseHeader(response);
+                        return responseList;
+                    }
                 }
             }
+            throw new UnsupportedTypeException(type);
+        } finally {
+            Utils.closeSilently(stream);
         }
-        throw new UnsupportedTypeException(type);
     }
 
-    private static <T> T parseOrThrow(RestResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
+    private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
         try {
             return LoganSquare.parse(stream, cls);
         } catch (JsonParseException e) {
@@ -210,7 +216,7 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    private static <T> List<T> parseListOrThrow(RestResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
+    private static <T> List<T> parseListOrThrow(RestHttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
         try {
             return LoganSquare.parseList(stream, elementCls);
         } catch (JsonParseException e) {
@@ -218,7 +224,7 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    private void checkResponse(Class<?> cls, Object object, RestResponse response) throws TwitterException {
+    private void checkResponse(Class<?> cls, Object object, RestHttpResponse response) throws TwitterException {
         if (User.class.isAssignableFrom(cls)) {
             if (object == null) throw new TwitterException("User is null");
         }

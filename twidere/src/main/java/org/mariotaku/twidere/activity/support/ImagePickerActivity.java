@@ -24,8 +24,8 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.mariotaku.simplerestapi.http.ContentType;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.simplerestapi.method.GET;
 import org.mariotaku.twidere.R;
@@ -197,10 +197,10 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                 final String mimeType;
                 if (SCHEME_HTTP.equals(uri.getScheme()) || SCHEME_HTTPS.equals(uri.getScheme())) {
                     final RestHttpClient client = TwitterAPIUtils.getDefaultHttpClient(mActivity);
-                    final RestRequest.Builder builder = new RestRequest.Builder();
+                    final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
                     builder.method(GET.METHOD);
                     builder.url(uri.toString());
-                    final RestResponse response = client.execute(builder.build());
+                    final RestHttpResponse response = client.execute(builder.build());
                     if (response.isSuccessful()) {
                         final TypedData body = response.getBody();
                         is = body.stream();

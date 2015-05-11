@@ -19,9 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.auth;
 
-import android.util.Base64;
-
-import org.mariotaku.simplerestapi.RestMethodInfo;
+import org.mariotaku.simplerestapi.RequestInfo;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;
 
@@ -31,7 +29,7 @@ import org.mariotaku.simplerestapi.http.Endpoint;
 public final class EmptyAuthorization implements Authorization {
 
     @Override
-    public String getHeader(Endpoint endpoint, RestMethodInfo.RequestInfo info) {
+    public String getHeader(Endpoint endpoint, RequestInfo info) {
         return null;
     }
 

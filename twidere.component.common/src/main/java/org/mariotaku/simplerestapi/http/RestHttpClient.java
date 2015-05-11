@@ -10,6 +10,6 @@ import java.io.IOException;
 public interface RestHttpClient {
 
     @NonNull
-    RestResponse execute(RestRequest request) throws IOException;
+    RestHttpResponse execute(RestHttpRequest request) throws IOException;
 
 }

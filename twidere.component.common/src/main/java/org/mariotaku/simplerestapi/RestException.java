@@ -1,6 +1,6 @@
 package org.mariotaku.simplerestapi;
 
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 
 /**
  * Created by mariotaku on 15/2/7.
@@ -21,7 +21,7 @@ public class RestException extends RuntimeException {
         super(cause);
     }
 
-    private RestResponse response;
+    private RestHttpResponse response;
 
     @Override
     public String toString() {
@@ -30,11 +30,11 @@ public class RestException extends RuntimeException {
                 "} " + super.toString();
     }
 
-    public RestResponse getResponse() {
+    public RestHttpResponse getResponse() {
         return response;
     }
 
-    public void setResponse(RestResponse response) {
+    public void setResponse(RestHttpResponse response) {
         this.response = response;
     }
 }

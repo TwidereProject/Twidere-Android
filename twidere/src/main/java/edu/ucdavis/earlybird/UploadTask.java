@@ -6,8 +6,8 @@ import android.os.AsyncTask;
 import android.provider.Settings.Secure;
 
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.method.POST;
@@ -55,13 +55,13 @@ public class UploadTask extends AsyncTask<Object, Object, Object> {
 
         try {
 
-            final RestRequest.Builder builder = new RestRequest.Builder();
+            final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
             builder.url(PROFILE_SERVER_URL);
             builder.method(POST.METHOD);
             final MultipartTypedBody body = new MultipartTypedBody();
             body.add("upload", new FileTypedData(tmp));
             builder.body(body);
-            final RestResponse response = client.execute(builder.build());
+            final RestHttpResponse response = client.execute(builder.build());
 
             // Responses from the server (code and message)
             final int serverResponseCode = response.getStatus();

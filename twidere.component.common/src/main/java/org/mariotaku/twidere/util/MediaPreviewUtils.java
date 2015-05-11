@@ -27,8 +27,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.method.GET;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.HtmlLinkExtractor.HtmlLink;
@@ -349,10 +349,10 @@ public class MediaPreviewUtils {
                                                     final boolean fullImage) throws IOException {
         if (isEmpty(id)) return null;
         if (client != null) {
-            final RestRequest.Builder builder = new RestRequest.Builder();
+            final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
             builder.method(GET.METHOD);
             builder.url(Endpoint.constructUrl(URL_PHOTOZOU_PHOTO_INFO, Pair.create("photo_id", id)));
-            final RestResponse response = client.execute(builder.build());
+            final RestHttpResponse response = client.execute(builder.build());
             final PhotoZouPhotoInfo info = LoganSquare.parse(response.getBody().stream(), PhotoZouPhotoInfo.class);
             if (info.info != null && info.info.photo != null) {
                 final String key = fullImage ? info.info.photo.originalImageUrl : info.info.photo.imageUrl;

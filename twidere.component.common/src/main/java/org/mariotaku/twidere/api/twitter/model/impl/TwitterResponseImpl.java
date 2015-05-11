@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
@@ -34,7 +34,7 @@ public class TwitterResponseImpl implements TwitterResponse {
     private RateLimitStatus rateLimitStatus;
 
     @Override
-    public final void processResponseHeader(RestResponse resp) {
+    public final void processResponseHeader(RestHttpResponse resp) {
         rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(resp);
         accessLevel = InternalParseUtil.toAccessLevel(resp);
     }

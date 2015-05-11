@@ -2,7 +2,7 @@ package org.mariotaku.simplerestapi.http;
 
 import android.util.Pair;
 
-import org.mariotaku.simplerestapi.RestMethodInfo;
+import org.mariotaku.simplerestapi.RequestInfo;
 import org.mariotaku.simplerestapi.Utils;
 
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public class Endpoint {
         this.url = url;
     }
 
-    public static String constructUrl(String endpoint, RestMethodInfo.RequestInfo requestInfo) {
+    public static String constructUrl(String endpoint, RequestInfo requestInfo) {
         return constructUrl(endpoint, requestInfo.getPath(), requestInfo.getQueries());
     }
 

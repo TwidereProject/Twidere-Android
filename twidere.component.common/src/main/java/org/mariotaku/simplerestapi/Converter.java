@@ -1,8 +1,7 @@
 package org.mariotaku.simplerestapi;
 
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -10,6 +9,6 @@ import java.lang.reflect.Type;
  */
 public interface Converter {
 
-    Object convert(RestResponse response, Type type) throws Exception;
+    Object convert(RestHttpResponse response, Type type) throws Exception;
 
 }

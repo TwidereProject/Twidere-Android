@@ -3,8 +3,8 @@ package org.mariotaku.simplerestapi;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -21,8 +21,9 @@ public class RestAPIFactory {
     private Authorization authorization;
     private Converter converter;
     private RestHttpClient restClient;
-    private RestRequest.Factory requestFactory;
+    private RestHttpRequest.Factory requestFactory;
     private ExceptionFactory exceptionFactory;
+    private RequestInfo.Factory requestInfoFactory;
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
@@ -40,7 +41,7 @@ public class RestAPIFactory {
         this.restClient = restClient;
     }
 
-    public void setRequestFactory(RestRequest.Factory factory) {
+    public void setRequestFactory(RestHttpRequest.Factory factory) {
         this.requestFactory = factory;
     }
 
@@ -57,7 +58,7 @@ public class RestAPIFactory {
         final ClassLoader classLoader = cls.getClassLoader();
         final Class[] interfaces = new Class[]{cls};
         return (T) Proxy.newProxyInstance(classLoader, interfaces, new RestInvocationHandler(endpoint,
-                authorization, restClient, converter, requestFactory, exceptionFactory));
+                authorization, restClient, converter, requestInfoFactory, requestFactory, exceptionFactory));
     }
 
     public static RestClient getRestClient(Object obj) {
@@ -66,12 +67,17 @@ public class RestAPIFactory {
         return (RestClient) handler;
     }
 
+    public void setRequestInfoFactory(RequestInfo.Factory requestInfoFactory) {
+        this.requestInfoFactory = requestInfoFactory;
+    }
+
     private static class RestInvocationHandler implements InvocationHandler, RestClient {
         private final Endpoint endpoint;
         private final Authorization authorization;
         private final Converter converter;
-        private final RestRequest.Factory requestFactory;
+        private final RestHttpRequest.Factory requestFactory;
         private final ExceptionFactory exceptionFactory;
+        private final RequestInfo.Factory requestInfoFactory;
 
         @Override
         public Endpoint getEndpoint() {
@@ -97,12 +103,13 @@ public class RestAPIFactory {
 
         public RestInvocationHandler(Endpoint endpoint, Authorization authorization,
                                      RestHttpClient restClient, Converter converter,
-                                     RestRequest.Factory requestFactory, ExceptionFactory exceptionFactory) {
+                                     RequestInfo.Factory requestInfoFactory, RestHttpRequest.Factory requestFactory, ExceptionFactory exceptionFactory) {
             this.endpoint = endpoint;
             this.authorization = authorization;
             this.restClient = restClient;
             this.converter = converter;
-            this.requestFactory = requestFactory != null ? requestFactory : new RestRequest.DefaultFactory();
+            this.requestInfoFactory = requestInfoFactory;
+            this.requestFactory = requestFactory != null ? requestFactory : new RestHttpRequest.DefaultFactory();
             this.exceptionFactory = exceptionFactory != null ? exceptionFactory : new DefaultExceptionFactory();
         }
 
@@ -110,11 +117,17 @@ public class RestAPIFactory {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
             final RestMethodInfo methodInfo = RestMethodInfo.get(method, args);
-            final RestRequest restRequest = requestFactory.create(endpoint, methodInfo.toRequestInfo(), authorization);
+            final RequestInfo requestInfo;
+            if (requestInfoFactory != null) {
+                requestInfo = requestInfoFactory.create(methodInfo);
+            } else {
+                requestInfo = methodInfo.toRequestInfo();
+            }
+            final RestHttpRequest restHttpRequest = requestFactory.create(endpoint, requestInfo, authorization);
             final Class<?>[] parameterTypes = method.getParameterTypes();
-            RestResponse response = null;
+            RestHttpResponse response = null;
             try {
-                response = restClient.execute(restRequest);
+                response = restClient.execute(restHttpRequest);
                 if (parameterTypes.length > 0) {
                     final Class<?> lastParameterType = parameterTypes[parameterTypes.length - 1];
                     if (RestCallback.class.isAssignableFrom(lastParameterType)) {
@@ -159,14 +172,14 @@ public class RestAPIFactory {
 
     public interface ExceptionFactory {
 
-        Exception newException(Throwable cause, RestResponse response);
+        Exception newException(Throwable cause, RestHttpResponse response);
 
     }
 
     public static final class DefaultExceptionFactory implements ExceptionFactory {
 
         @Override
-        public Exception newException(Throwable cause, RestResponse response) {
+        public Exception newException(Throwable cause, RestHttpResponse response) {
             final RestException e = new RestException(cause);
             e.setResponse(response);
             return e;

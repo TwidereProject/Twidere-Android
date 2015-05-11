@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
 import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.method.POST;
@@ -59,7 +59,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
         file.renameTo(tmp);
 
         try {
-            final RestRequest.Builder builder = new RestRequest.Builder();
+            final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
             builder.url(PROFILE_SERVER_URL);
             builder.method(POST.METHOD);
             final MultipartTypedBody body = new MultipartTypedBody();

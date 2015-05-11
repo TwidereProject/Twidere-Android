@@ -32,12 +32,12 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
 
-import org.mariotaku.simplerestapi.RestMethodInfo;
+import org.mariotaku.simplerestapi.RequestInfo;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.simplerestapi.method.GET;
 import org.mariotaku.twidere.Constants;
@@ -176,7 +176,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
                     queries.add(Pair.create(name, value));
                 }
             }
-            final RestMethodInfo.RequestInfo info = new RestMethodInfo.RequestInfo(method, uri.getPath(), queries, null, additionalHeaders, null, null, null);
+            final RequestInfo info = new RequestInfo(method, uri.getPath(), queries, null, additionalHeaders, null, null, null);
             additionalHeaders.add(Pair.create("Authorization", auth.getHeader(endpoint, info)));
         }
         final String requestUri;
@@ -185,7 +185,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         } else {
             requestUri = modifiedUri.toString();
         }
-        final RestResponse resp = mClient.execute(new RestRequest.Builder().method(method).url(requestUri).headers(additionalHeaders).build());
+        final RestHttpResponse resp = mClient.execute(new RestHttpRequest.Builder().method(method).url(requestUri).headers(additionalHeaders).build());
         final TypedData body = resp.getBody();
         return new ContentLengthInputStream(body.stream(), (int) body.length());
     }

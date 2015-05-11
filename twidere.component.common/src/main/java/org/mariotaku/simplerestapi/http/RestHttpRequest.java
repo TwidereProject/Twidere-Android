@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
-import org.mariotaku.simplerestapi.RestMethodInfo;
+import org.mariotaku.simplerestapi.RequestInfo;
 import org.mariotaku.simplerestapi.http.mime.TypedData;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/2/7.
  */
-public final class RestRequest {
+public final class RestHttpRequest {
 
     private final String method;
     private final String url;
@@ -51,7 +51,7 @@ public final class RestRequest {
                 '}';
     }
 
-    public RestRequest(String method, String url, List<Pair<String, String>> headers, TypedData body, Object extra) {
+    public RestHttpRequest(String method, String url, List<Pair<String, String>> headers, TypedData body, Object extra) {
         this.method = method;
         this.url = url;
         this.headers = headers;
@@ -94,27 +94,27 @@ public final class RestRequest {
             return this;
         }
 
-        public RestRequest build() {
-            return new RestRequest(method, url, headers, body, extra);
+        public RestHttpRequest build() {
+            return new RestHttpRequest(method, url, headers, body, extra);
         }
     }
 
     public interface Factory {
-        RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo.RequestInfo info, @Nullable Authorization authorization);
+        RestHttpRequest create(@NonNull Endpoint endpoint, @NonNull RequestInfo info, @Nullable Authorization authorization);
     }
 
 
     public static final class DefaultFactory implements Factory {
 
         @Override
-        public RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo.RequestInfo requestInfo, @Nullable Authorization authorization) {
+        public RestHttpRequest create(@NonNull Endpoint endpoint, @NonNull RequestInfo requestInfo, @Nullable Authorization authorization) {
             final String url = Endpoint.constructUrl(endpoint.getUrl(), requestInfo);
             final ArrayList<Pair<String, String>> headers = new ArrayList<>(requestInfo.getHeaders());
 
             if (authorization != null && authorization.hasAuthorization()) {
                 headers.add(Pair.create("Authorization", authorization.getHeader(endpoint, requestInfo)));
             }
-            return new RestRequest(requestInfo.getMethod(), url, headers, requestInfo.getBody(), null);
+            return new RestHttpRequest(requestInfo.getMethod(), url, headers, requestInfo.getBody(), null);
         }
     }
 }

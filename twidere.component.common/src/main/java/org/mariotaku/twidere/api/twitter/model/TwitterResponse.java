@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
 
 /**
  * Super interface of Twitter Response data interfaces which indicates that rate
@@ -38,7 +38,7 @@ public interface TwitterResponse  {
 	int READ_WRITE = 2;
 	int READ_WRITE_DIRECTMESSAGES = 3;
 
-	void processResponseHeader(RestResponse resp);
+	void processResponseHeader(RestHttpResponse resp);
 
 	int getAccessLevel();
 

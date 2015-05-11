@@ -10,13 +10,16 @@ import android.util.Pair;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
 
+import org.mariotaku.simplerestapi.RequestInfo;
 import org.mariotaku.simplerestapi.RestAPIFactory;
+import org.mariotaku.simplerestapi.RestMethod;
 import org.mariotaku.simplerestapi.RestMethodInfo;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestRequest;
-import org.mariotaku.simplerestapi.http.RestResponse;
+import org.mariotaku.simplerestapi.http.RestHttpRequest;
+import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.simplerestapi.http.mime.TypedData;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -38,6 +41,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static android.text.TextUtils.isEmpty;
@@ -156,10 +161,32 @@ public class TwitterAPIUtils implements TwidereConstants {
         factory.setConverter(new TwitterConverter());
         factory.setEndpoint(endpoint);
         factory.setAuthorization(auth);
-        factory.setRequestFactory(new RestRequest.Factory() {
+        factory.setRequestInfoFactory(new RequestInfo.Factory() {
+            @Override
+            public RequestInfo create(RestMethodInfo methodInfo) {
+                final RestMethod method = methodInfo.getMethod();
+                final String path = methodInfo.getPath();
+                final List<Pair<String, String>> queries = new ArrayList<>(methodInfo.getQueries());
+                final List<Pair<String, String>> forms = new ArrayList<>(methodInfo.getForms());
+                final List<Pair<String, String>> headers = methodInfo.getHeaders();
+                final List<Pair<String, TypedData>> parts = methodInfo.getParts();
+                final Map<String, Object> extras = methodInfo.getExtras();
+                final TypedData body = methodInfo.getBody();
+                final List<Pair<String, String>> params = method.hasBody() ? forms : queries;
+                addParameter(params, "include_cards", true);
+                addParameter(params, "cards_platform", "Android-12");
+                addParameter(params, "include_entities", true);
+                addParameter(params, "include_my_retweet", 1);
+                addParameter(params, "include_rts", 1);
+                addParameter(params, "include_reply_count", true);
+                addParameter(params, "include_descendent_reply_count", true);
+                return new RequestInfo(method.value(), path, queries, forms, headers, parts, extras, body);
+            }
+        });
+        factory.setRequestFactory(new RestHttpRequest.Factory() {
 
             @Override
-            public RestRequest create(@NonNull Endpoint endpoint, @NonNull RestMethodInfo.RequestInfo info, @Nullable Authorization authorization) {
+            public RestHttpRequest create(@NonNull Endpoint endpoint, @NonNull RequestInfo info, @Nullable Authorization authorization) {
                 final String restMethod = info.getMethod();
                 final String url = Endpoint.constructUrl(endpoint.getUrl(), info);
                 final ArrayList<Pair<String, String>> headers = new ArrayList<>(info.getHeaders());
@@ -168,12 +195,12 @@ public class TwitterAPIUtils implements TwidereConstants {
                     headers.add(Pair.create("Authorization", authorization.getHeader(endpoint, info)));
                 }
                 headers.add(Pair.create("User-Agent", userAgent));
-                return new RestRequest(restMethod, url, headers, info.getBody(), null);
+                return new RestHttpRequest(restMethod, url, headers, info.getBody(), null);
             }
         });
         factory.setExceptionFactory(new RestAPIFactory.ExceptionFactory() {
             @Override
-            public Exception newException(Throwable cause, RestResponse response) {
+            public Exception newException(Throwable cause, RestHttpResponse response) {
                 final TwitterException te = new TwitterException(cause);
                 te.setResponse(response);
                 return te;
@@ -182,6 +209,9 @@ public class TwitterAPIUtils implements TwidereConstants {
         return factory.build(cls);
     }
 
+    private static void addParameter(List<Pair<String, String>> params, String name, Object value) {
+        params.add(Pair.create(name, String.valueOf(value)));
+    }
 
     public static RestHttpClient getDefaultHttpClient(final Context context) {
         if (context == null) return null;
