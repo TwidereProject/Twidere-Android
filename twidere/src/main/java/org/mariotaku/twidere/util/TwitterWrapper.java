@@ -25,7 +25,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
+import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
@@ -37,14 +45,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
-
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
 
 public class TwitterWrapper implements Constants {
 
@@ -170,11 +170,12 @@ public class TwitterWrapper implements Constants {
     public static void updateProfileBannerImage(final Context context, final Twitter twitter,
                                                 final Uri imageUri, final boolean deleteImage)
             throws FileNotFoundException, TwitterException {
-        InputStream is;
+        InputStream is = null;
         try {
             is = context.getContentResolver().openInputStream(imageUri);
-            twitter.updateProfileBannerImage(is);
+            twitter.updateProfileBannerImage(new FileTypedData(is, "image", -1, null));
         } finally {
+            Utils.closeSilently(is);
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
@@ -187,11 +188,12 @@ public class TwitterWrapper implements Constants {
     public static User updateProfileImage(final Context context, final Twitter twitter,
                                           final Uri imageUri, final boolean deleteImage)
             throws FileNotFoundException, TwitterException {
-        InputStream is;
+        InputStream is = null;
         try {
             is = context.getContentResolver().openInputStream(imageUri);
-            return twitter.updateProfileImage(is);
+            return twitter.updateProfileImage(new FileTypedData(is, "image", -1, null));
         } finally {
+            Utils.closeSilently(is);
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
