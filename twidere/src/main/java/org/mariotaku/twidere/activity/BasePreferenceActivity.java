@@ -284,12 +284,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         if (mMainContent == null) return;
 
         final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
-        final int statusBarColor;
-        if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
-            statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
-        } else {
-            statusBarColor = getCurrentThemeColor();
-        }
+        final int statusBarColor=ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
         mMainContent.setColor(statusBarColor, alpha);
         StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
 

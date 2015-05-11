@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.github.ooxi.jdatauri.DataUri;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.mariotaku.simplerestapi.http.ContentType;
@@ -35,11 +36,13 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import static android.os.Environment.getExternalStorageState;
 
@@ -195,7 +198,8 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                 final File cacheDir = mActivity.getCacheDir();
                 final Uri uri = this.mUri;
                 final String mimeType;
-                if (SCHEME_HTTP.equals(uri.getScheme()) || SCHEME_HTTPS.equals(uri.getScheme())) {
+                final String scheme = uri.getScheme();
+                if (SCHEME_HTTP.equals(scheme) || SCHEME_HTTPS.equals(scheme)) {
                     final RestHttpClient client = TwitterAPIUtils.getDefaultHttpClient(mActivity);
                     final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
                     builder.method(GET.METHOD);
@@ -209,6 +213,10 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                     } else {
                         throw new IOException("Unable to get " + uri);
                     }
+                } else if (SCHEME_DATA.equals(scheme)) {
+                    final DataUri dataUri = DataUri.parse(uri.toString(), Charset.defaultCharset());
+                    is = new ByteArrayInputStream(dataUri.getData());
+                    mimeType = dataUri.getMime();
                 } else {
                     is = cr.openInputStream(uri);
                     final BitmapFactory.Options opts = new BitmapFactory.Options();

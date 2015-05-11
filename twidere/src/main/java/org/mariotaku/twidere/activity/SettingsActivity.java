@@ -323,12 +323,17 @@ public class SettingsActivity extends BasePreferenceActivity {
         if (mTwidereActionModeForChildListener.finishExisting()) {
             return;
         }
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
         if (isTopSettings() && shouldNotifyChange()) {
             final RestartConfirmDialogFragment df = new RestartConfirmDialogFragment();
             df.show(getFragmentManager().beginTransaction(), "restart_confirm");
             return;
         }
-        onBackPressed();
+        super.onBackPressed();
     }
 
     public static class RestartConfirmDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {

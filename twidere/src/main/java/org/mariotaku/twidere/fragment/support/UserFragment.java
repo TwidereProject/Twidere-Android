@@ -95,6 +95,9 @@ import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.activity.support.ThemedAppCompatActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
@@ -147,10 +150,6 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.util.List;
 import java.util.Locale;
-
-import org.mariotaku.twidere.api.twitter.model.Relationship;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener,
         OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,
@@ -1351,12 +1350,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
         final IThemedActivity themed = (IThemedActivity) activity;
         final int themeRes = themed.getCurrentThemeResourceId();
-        final int actionBarColor;
-        if (ThemeUtils.isDarkTheme(themeRes)) {
-            actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
-        } else {
-            actionBarColor = color;
-        }
+        final int actionBarColor = ThemeUtils.getActionBarColor(activity, color,
+                themed.getCurrentThemeResourceId(), themed.getThemeBackgroundOption());
         if (mTintedStatusContent != null) {
             mTintedStatusContent.setColor(actionBarColor, themed.getCurrentThemeBackgroundAlpha());
         }
@@ -1485,13 +1480,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
 
             final Drawable tabBackground = mPagerIndicator.getBackground();
-            int stackedTabColor;
             final int themeId = activity.getCurrentThemeResourceId();
-            if (ThemeUtils.isDarkTheme(themeId)) {
-                stackedTabColor = getResources().getColor(R.color.background_color_action_bar_dark);
-            } else {
-                stackedTabColor = mUiColor;
-            }
+            int stackedTabColor = ThemeUtils.getActionBarColor(activity, mUiColor, themeId,
+                    activity.getThemeBackgroundOption());
 
             if (ThemeUtils.isTransparentBackground(activity.getCurrentThemeBackgroundOption())) {
                 stackedTabColor = ColorUtils.setAlphaComponent(stackedTabColor, activity.getCurrentThemeBackgroundAlpha());

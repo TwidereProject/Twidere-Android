@@ -62,6 +62,7 @@ import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
@@ -108,6 +109,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.text.MarkForDeleteSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -739,12 +741,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                         intent.setData(Uri.parse(imageSpans[0].getSource()));
                         startActivityForResult(intent, REQUEST_PICK_IMAGE);
                     }
+                    ((Spannable) s).setSpan(new MarkForDeleteSpan(), start, start + count,
+                            Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 }
             }
 
             @Override
             public void afterTextChanged(final Editable s) {
                 mTextChanged = s.length() == 0;
+                final MarkForDeleteSpan[] deletes = s.getSpans(0, s.length(), MarkForDeleteSpan.class);
+                for (MarkForDeleteSpan delete : deletes) {
+                    s.delete(s.getSpanStart(delete), s.getSpanEnd(delete));
+                }
             }
         });
         mEditText.setCustomSelectionActionModeCallback(this);

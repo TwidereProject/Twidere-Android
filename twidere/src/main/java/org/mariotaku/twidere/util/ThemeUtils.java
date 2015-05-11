@@ -65,6 +65,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
@@ -228,10 +229,12 @@ public class ThemeUtils implements Constants {
                                                   final int accentColor, final String backgroundOption,
                                                   final boolean outlineEnabled) {
         final int actionBarColor;
-        if (isDarkTheme(themeRes)) {
-            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
-        } else {
+        if (!isDarkTheme(themeRes)) {
             actionBarColor = accentColor;
+        } else if (isSolidBackground(backgroundOption)) {
+            actionBarColor = Color.BLACK;
+        } else {
+            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
         }
         return ActionBarColorDrawable.create(actionBarColor, outlineEnabled);
     }
@@ -950,8 +953,14 @@ public class ThemeUtils implements Constants {
         final int drawerThemeRes = getDrawerThemeResource(themeRes);
         final String backgroundOption = ((IThemedActivity) context).getThemeBackgroundOption();
         final int alpha = ((IThemedActivity) context).getCurrentThemeBackgroundAlpha();
-        final Drawable d = getWindowBackgroundFromTheme(context, drawerThemeRes);
-        if (d != null && isTransparentBackground(backgroundOption)) {
+        final Drawable d;
+        if (isSolidBackground(backgroundOption)) {
+            d = new ColorDrawable(Color.BLACK);
+        } else {
+            d = getWindowBackgroundFromTheme(context, drawerThemeRes);
+        }
+        if (d == null) throw new NullPointerException();
+        if (isTransparentBackground(backgroundOption)) {
             d.setAlpha(alpha);
         }
         ViewSupport.setBackground(view, d);
@@ -1076,6 +1085,15 @@ public class ThemeUtils implements Constants {
         final ActionBarContextThemeWrapper actionBarContext = new ActionBarContextThemeWrapper(base, actionBarThemeId);
         actionBarContext.getTheme().setTo(actionBarTheme);
         return actionBarContext;
+    }
+
+    public static int getActionBarColor(Context context, int themeColor, int themeResId, String backgroundOption) {
+        if (!isDarkTheme(themeResId)) {
+            return themeColor;
+        } else if (isSolidBackground(backgroundOption)) {
+            return Color.BLACK;
+        }
+        return context.getResources().getColor(R.color.background_color_action_bar_dark);
     }
 
     public static final class ActionBarContextThemeWrapper extends android.support.v7.internal.view.ContextThemeWrapper {

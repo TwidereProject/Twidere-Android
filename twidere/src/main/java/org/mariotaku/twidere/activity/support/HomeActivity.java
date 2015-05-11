@@ -799,22 +799,17 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeResId, themeColor));
         ViewSupport.setBackground(mActionBarContainer, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
                 backgroundOption, true));
-        final int actionBarColor;
+        final int actionBarColor = ThemeUtils.getActionBarColor(this, themeColor, themeResId, backgroundOption);
+        final int actionItemColor = ThemeUtils.getContrastForegroundColor(this, getCurrentThemeResourceId(), themeColor);
         final int[] foregroundColors = new int[2];
         ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
         if (ThemeUtils.isDarkTheme(themeResId)) {
-            actionBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
-            final int actionItemColor = ThemeUtils.getContrastForegroundColor(this,
-                    getCurrentThemeResourceId(), themeColor);
             homeActionButton.setButtonColor(actionBarColor);
             homeActionButton.setIconColor(actionItemColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);
             mTabIndicator.setIconColor(foregroundColors[0]);
             mTabIndicator.setLabelColor(foregroundColors[0]);
         } else {
-            actionBarColor = themeColor;
-            final int actionItemColor = ThemeUtils.getContrastForegroundColor(this,
-                    getCurrentThemeResourceId(), themeColor);
             final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor,
                     ThemeUtils.ACCENT_COLOR_THRESHOLD, foregroundColors[0], foregroundColors[1]);
             homeActionButton.setButtonColor(themeColor);

@@ -365,12 +365,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 mMainContent.setDrawColor(true);
                 mMainContent.setFactor(1);
                 final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
-                final int statusBarColor;
-                if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
-                    statusBarColor = getResources().getColor(R.color.background_color_action_bar_dark);
-                } else {
-                    statusBarColor = getCurrentThemeColor();
-                }
+                final int statusBarColor=ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
                 mMainContent.setColor(statusBarColor, alpha);
                 StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
                 break;

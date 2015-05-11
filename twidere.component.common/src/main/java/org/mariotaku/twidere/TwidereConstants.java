@@ -58,6 +58,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String SCHEME_HTTPS = "https";
     String SCHEME_CONTENT = "content";
     String SCHEME_TWIDERE = "twidere";
+    String SCHEME_DATA = "data";
 
     String PROTOCOL_HTTP = SCHEME_HTTP + "://";
     String PROTOCOL_HTTPS = SCHEME_HTTPS + "://";
