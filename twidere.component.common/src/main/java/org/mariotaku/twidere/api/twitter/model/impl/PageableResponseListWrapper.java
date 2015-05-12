@@ -22,15 +22,14 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.util.TwitterConverter;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.api.twitter.util.TwitterConverter;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  * Created by mariotaku on 15/5/7.
@@ -56,13 +55,18 @@ public class PageableResponseListWrapper extends TwitterResponseImpl implements 
     public PageableResponseList<?> getWrapped(Object extra) {
         final Type[] typeArgs = (Type[]) extra;
         final Class<?> elementType = (Class<?>) typeArgs[0];
+        PageableResponseListImpl<?> list;
         if (User.class.isAssignableFrom(elementType)) {
-            return new PageableResponseListImpl<>(users);
+            list = new PageableResponseListImpl<>(users);
         } else if (Status.class.isAssignableFrom(elementType)) {
-            return new PageableResponseListImpl<>(statuses);
+            list = new PageableResponseListImpl<>(statuses);
         } else if (UserList.class.isAssignableFrom(elementType)) {
-            return new PageableResponseListImpl<>(userLists);
+            list = new PageableResponseListImpl<>(userLists);
+        } else {
+            throw new TwitterConverter.UnsupportedTypeException(elementType);
         }
-        throw new TwitterConverter.UnsupportedTypeException(elementType);
+        list.previousCursor = previousCursor;
+        list.nextCursor = nextCursor;
+        return list;
     }
 }
