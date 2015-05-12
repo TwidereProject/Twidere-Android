@@ -163,6 +163,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             additionalHeaders.add(Pair.create("Accept", "image/webp, */*"));
         }
         final String method = GET.METHOD;
+        final String requestUri;
         if (auth != null && auth.hasAuthorization()) {
             final Endpoint endpoint;
             if (auth instanceof OAuthAuthorization) {
@@ -179,9 +180,8 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             final RequestInfo info = new RequestInfo(method, uri.getPath(), queries, null,
                     additionalHeaders, null, null, null, null);
             additionalHeaders.add(Pair.create("Authorization", auth.getHeader(endpoint, info)));
-        }
-        final String requestUri;
-        if (mThumbor != null) {
+            requestUri = modifiedUri.toString();
+        } else if (mThumbor != null) {
             requestUri = mThumbor.buildImage(modifiedUri.toString()).filter(ThumborUrlBuilder.quality(85)).toUrl();
         } else {
             requestUri = modifiedUri.toString();

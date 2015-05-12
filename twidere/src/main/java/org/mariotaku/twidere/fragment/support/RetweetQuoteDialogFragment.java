@@ -25,15 +25,24 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.PopupMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
@@ -44,6 +53,9 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         DialogInterface.OnClickListener {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
+    private MaterialEditText mEditComment;
+    private PopupMenu mPopupMenu;
+    private View mCommentMenu;
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
@@ -53,7 +65,26 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             case DialogInterface.BUTTON_POSITIVE: {
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 if (twitter == null) return;
-                if (isMyRetweet(status)) {
+                if (mEditComment.length() > 0) {
+                    final Menu menu = mPopupMenu.getMenu();
+                    final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
+                    final MenuItem linkToQuotedStatus = menu.findItem(R.id.link_to_quoted_status);
+                    final Uri statusLink;
+                    final long inReplyToStatusId;
+                    if (!status.is_quote) {
+                        inReplyToStatusId = status.id;
+                        statusLink = LinkCreator.getTwitterStatusLink(status.quoted_by_user_screen_name, status.id);
+                    } else if (quoteOriginalStatus.isChecked()) {
+                        inReplyToStatusId = status.quote_id;
+                        statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id);
+                    } else {
+                        inReplyToStatusId = status.id;
+                        statusLink = LinkCreator.getTwitterStatusLink(status.quoted_by_user_screen_name, status.id);
+                    }
+                    final String commentText = mEditComment.getText() + " " + statusLink;
+                    twitter.updateStatusAsync(new long[]{status.account_id}, commentText, null, null,
+                            linkToQuotedStatus.isChecked() ? inReplyToStatusId : -1, status.is_possibly_sensitive);
+                } else if (isMyRetweet(status)) {
                     twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
                 } else {
                     twitter.retweetStatusAsync(status.account_id, status.id);
@@ -82,6 +113,8 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final StatusViewHolder holder = new StatusViewHolder(new DummyStatusHolderAdapter(context), view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
 
+        assert status != null;
+
         builder.setView(view);
         builder.setTitle(R.string.retweet_quote_confirm_title);
         builder.setPositiveButton(isMyRetweet(status) ? R.string.cancel_retweet : R.string.retweet, this);
@@ -93,6 +126,32 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
+        mEditComment = (MaterialEditText) view.findViewById(R.id.edit_comment);
+        mCommentMenu = view.findViewById(R.id.comment_menu);
+
+        mPopupMenu = new PopupMenu(context, mCommentMenu, Gravity.NO_GRAVITY,
+                R.attr.actionOverflowMenuStyle, 0);
+        mCommentMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupMenu.show();
+            }
+        });
+        mCommentMenu.setOnTouchListener(mPopupMenu.getDragToOpenListener());
+        mPopupMenu.inflate(R.menu.menu_dialog_comment);
+        final Menu menu = mPopupMenu.getMenu();
+        MenuUtils.setMenuItemAvailability(menu, R.id.quote_original_status,
+                status.retweet_id > 0 || status.quote_id > 0);
+        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.isCheckable()) {
+                    item.setChecked(!item.isChecked());
+                    return true;
+                }
+                return false;
+            }
+        });
 
         return builder.create();
     }

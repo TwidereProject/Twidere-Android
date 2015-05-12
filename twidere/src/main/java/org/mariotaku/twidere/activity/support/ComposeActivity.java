@@ -1453,12 +1453,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
         @Override
         protected Boolean doInBackground(final Object... params) {
+            InputStream is = null;
+             OutputStream os = null;
             try {
                 final ContentResolver resolver = activity.getContentResolver();
-                final InputStream is = resolver.openInputStream(src);
-                final OutputStream os = resolver.openOutputStream(dst);
+                is = resolver.openInputStream(src);
+                os = resolver.openOutputStream(dst);
                 Utils.copyStream(is, os);
-                os.close();
                 if (ContentResolver.SCHEME_FILE.equals(src.getScheme()) && delete_src) {
                     final File file = new File(src.getPath());
                     if (!file.delete()) {
@@ -1468,6 +1469,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             } catch (final IOException e) {
                 Log.w(LOGTAG, e);
                 return false;
+            } finally {
+                Utils.closeSilently(os);
+                Utils.closeSilently(is);
             }
             return true;
         }

@@ -76,6 +76,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapt
 
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
+    private DividerItemDecoration mItemDecoration;
 
     @Override
     public boolean canScroll(float dy) {
@@ -218,7 +219,8 @@ public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapt
             }
         });
         if (compact) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, mLayoutManager.getOrientation()));
+            mItemDecoration = new DividerItemDecoration(context, mLayoutManager.getOrientation());
+            mRecyclerView.addItemDecoration(mItemDecoration);
         }
         mRecyclerView.setAdapter((RecyclerView.Adapter) mAdapter);
 
@@ -268,6 +270,9 @@ public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapt
     }
 
     public void setLoadMoreIndicatorVisible(boolean visible) {
+        if (mItemDecoration != null) {
+            mItemDecoration.setDecorationEndOffset(visible ? 1 : 0);
+        }
         mAdapter.setLoadMoreIndicatorVisible(visible);
     }
 

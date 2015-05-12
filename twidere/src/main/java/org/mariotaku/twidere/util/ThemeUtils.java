@@ -65,7 +65,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
@@ -101,7 +100,7 @@ public class ThemeUtils implements Constants {
         if (actionBar == null || context == null) return;
         actionBar.setBackgroundDrawable(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
         actionBar.setSplitBackgroundDrawable(getActionBarSplitBackground(context, themeRes));
-        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes, accentColor, outlineEnabled));
+        actionBar.setStackedBackgroundDrawable(getActionBarStackedBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
     }
 
 
@@ -110,7 +109,7 @@ public class ThemeUtils implements Constants {
         if (actionBar == null || context == null) return;
         actionBar.setPrimaryBackground(getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
         actionBar.setSplitBackground(getActionBarSplitBackground(context, themeRes));
-        actionBar.setStackedBackground(getActionBarStackedBackground(context, themeRes, accentColor, outlineEnabled));
+        actionBar.setStackedBackground(getActionBarStackedBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled));
     }
 
     public static void applyColorFilterToMenuIcon(final Menu menu, final int color, final int popupColor,
@@ -261,14 +260,9 @@ public class ThemeUtils implements Constants {
 
     @NonNull
     public static Drawable getActionBarStackedBackground(final Context context, final int themeRes,
-                                                         final int accentColor, boolean outlineEnabled) {
-        final int actionBarColor;
-        if (isDarkTheme(themeRes)) {
-            actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
-        } else {
-            actionBarColor = accentColor;
-        }
-        return ActionBarColorDrawable.create(actionBarColor, outlineEnabled);
+                                                         final int accentColor, String backgroundOption,
+                                                         boolean outlineEnabled) {
+        return getActionBarBackground(context, themeRes, accentColor, backgroundOption, outlineEnabled);
     }
 
     public static int getCardBackgroundColor(final Context context, String backgroundOption, int themeAlpha) {
@@ -717,6 +711,7 @@ public class ThemeUtils implements Constants {
         if (!(activity instanceof IThemedActivity)) return;
         final int themeRes = ((IThemedActivity) activity).getCurrentThemeResourceId();
         final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
+        final String backgroundOption = ((IThemedActivity) activity).getCurrentThemeBackgroundOption();
         final int colorDark, colorLight;
         final int[] textColors = new int[2];
         getTextColorPrimaryAndInverse(activity, textColors);
@@ -729,7 +724,7 @@ public class ThemeUtils implements Constants {
         }
         final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor, ACCENT_COLOR_THRESHOLD,
                 colorDark, colorLight);
-        ViewSupport.setBackground(indicator, getActionBarStackedBackground(activity, themeRes, themeColor, true));
+        ViewSupport.setBackground(indicator, getActionBarStackedBackground(activity, themeRes, themeColor, backgroundOption, true));
         if (isDarkTheme(themeRes)) {
             final int foregroundColor = getThemeForegroundColor(activity);
             indicator.setIconColor(foregroundColor);

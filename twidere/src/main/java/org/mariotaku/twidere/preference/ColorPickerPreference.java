@@ -83,12 +83,12 @@ public class ColorPickerPreference extends DialogPreference implements DialogInt
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         mController = ColorPickerDialog.Controller.applyToDialogBuilder(builder);
+        mController.setAlphaEnabled(mAlphaSliderEnabled);
         final Resources res = builder.getContext().getResources();
         for (int presetColor : PRESET_COLORS) {
             mController.addColor(res.getColor(presetColor));
         }
         mController.setInitialColor(getValue());
-        mController.setAlphaEnabled(mAlphaSliderEnabled);
         builder.setPositiveButton(res.getString(android.R.string.ok), this);
         builder.setNegativeButton(res.getString(android.R.string.cancel), this);
     }
