@@ -114,6 +114,10 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         if (position == -1) return false;
         final ParcelableStatus status = getAdapter().getStatus(position);
         if (status == null) return false;
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            Utils.openStatus(getActivity(), status, null);
+            return true;
+        }
         if (action == null) {
             action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
         }
