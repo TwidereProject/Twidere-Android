@@ -56,6 +56,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -86,7 +87,6 @@ import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.text.method.StatusContentMovementMethod;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CompareUtils;
@@ -754,7 +754,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             } else if (!TextUtils.isEmpty(timeString) && TextUtils.isEmpty(source)) {
                 timeSourceView.setText(timeString);
             }
-            timeSourceView.setMovementMethod(StatusContentMovementMethod.getInstance());
+            timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
             textView.setText(Html.fromHtml(status.text_html));
             linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
@@ -826,8 +826,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             quoteTextView.setTextIsSelectable(true);
             textView.setTextIsSelectable(true);
 
-            quoteTextView.setMovementMethod(StatusContentMovementMethod.getInstance());
-            textView.setMovementMethod(StatusContentMovementMethod.getInstance());
+            quoteTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
         @Override

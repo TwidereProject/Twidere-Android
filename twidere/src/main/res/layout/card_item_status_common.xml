@@ -40,10 +40,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/reply_retweet_status"
+            android:layout_marginEnd="@dimen/element_spacing_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
-            android:layout_marginStart="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_small"
-            android:layout_marginEnd="@dimen/element_spacing_small" />
+            android:layout_marginStart="@dimen/element_spacing_normal" />
 
         <org.mariotaku.twidere.view.ActionIconView
             android:id="@+id/reply_retweet_icon"
@@ -68,8 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_toRightOf="@+id/reply_retweet_space"
             android:layout_toEndOf="@+id/reply_retweet_space"
+            android:layout_toRightOf="@+id/reply_retweet_space"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:minHeight="@dimen/element_size_small"
@@ -98,8 +98,8 @@
                 android:layout_height="@dimen/icon_size_status_profile_image"
                 android:layout_centerVertical="true"
                 android:layout_marginBottom="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
                 android:layout_marginEnd="@dimen/element_spacing_small"
+                android:layout_marginRight="@dimen/element_spacing_small"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:contentDescription="@string/profile_image"
                 android:scaleType="centerCrop" />
@@ -109,8 +109,8 @@
                 android:layout_width="@dimen/icon_size_profile_type"
                 android:layout_height="@dimen/icon_size_profile_type"
                 android:layout_alignBottom="@id/profile_image"
-                android:layout_alignRight="@id/profile_image"
                 android:layout_alignEnd="@id/profile_image"
+                android:layout_alignRight="@id/profile_image"
                 android:scaleType="fitCenter" />
 
             <LinearLayout
@@ -119,10 +119,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/element_spacing_normal"
                 android:layout_marginStart="@dimen/element_spacing_normal"
-                android:layout_toLeftOf="@+id/extra_type"
-                android:layout_toStartOf="@+id/extra_type"
-                android:layout_toRightOf="@id/profile_image"
                 android:layout_toEndOf="@id/profile_image"
+                android:layout_toLeftOf="@+id/extra_type"
+                android:layout_toRightOf="@id/profile_image"
+                android:layout_toStartOf="@+id/extra_type"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -176,8 +176,8 @@
                 android:id="@+id/extra_type"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginBottom="@dimen/element_spacing_normal"
                 android:layout_marginLeft="@dimen/element_spacing_mlarge"
@@ -222,8 +222,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/quote_text"
-            android:layout_toRightOf="@+id/quote_indicator"
             android:layout_toEndOf="@+id/quote_indicator"
+            android:layout_toRightOf="@+id/quote_indicator"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/element_spacing_normal"
@@ -260,8 +260,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/quoted_name_container"
             android:layout_marginTop="@dimen/element_spacing_normal"
-            android:layout_toRightOf="@+id/quote_indicator"
             android:layout_toEndOf="@+id/quote_indicator"
+            android:layout_toRightOf="@+id/quote_indicator"
             android:horizontalSpacing="@dimen/element_spacing_xsmall"
             android:verticalSpacing="@dimen/element_spacing_xsmall">
 
@@ -276,8 +276,8 @@
             android:layout_below="@id/media_preview"
             android:layout_marginBottom="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_normal"
-            android:layout_toRightOf="@+id/quote_indicator"
             android:layout_toEndOf="@+id/quote_indicator"
+            android:layout_toRightOf="@+id/quote_indicator"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -346,12 +346,11 @@
             android:id="@+id/item_menu"
             style="?cardActionButtonStyle"
             android:layout_width="@dimen/element_size_normal"
-            android:layout_height="@dimen/element_size_normal"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/action_buttons"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/action_buttons"
-            android:layout_marginBottom="@dimen/element_spacing_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:color="?android:textColorTertiary"
