@@ -160,6 +160,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 final ParcelableStatus status = getStatus();
                 if (twitter == null || status == null) return;
                 quoteStatus(twitter, status);
+                dismiss();
             }
         }, sendByEnter);
         mCommentMenu = view.findViewById(R.id.comment_menu);
