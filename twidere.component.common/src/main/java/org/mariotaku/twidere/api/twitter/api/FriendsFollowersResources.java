@@ -27,6 +27,7 @@ import org.mariotaku.simplerestapi.param.Form;
 import org.mariotaku.simplerestapi.param.Query;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Friendship;
+import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -111,9 +112,11 @@ public interface FriendsFollowersResources {
     Relationship showFriendship(@Query("source_screen_name") String sourceScreenName,
                                 @Query("target_screen_name") String targetScreenName) throws TwitterException;
 
-    Relationship updateFriendship(long userId, boolean enableDeviceNotification, boolean retweets)
-            throws TwitterException;
+    @POST("/friendships/update.json")
+    @Body(BodyType.FORM)
+    Relationship updateFriendship(@Form("user_id") long userId, @Form FriendshipUpdate update) throws TwitterException;
 
-    Relationship updateFriendship(String screenName, boolean enableDeviceNotification, boolean retweets)
-            throws TwitterException;
+    @POST("/friendships/update.json")
+    @Body(BodyType.FORM)
+    Relationship updateFriendship(@Form("screen_name") String screenName, @Form FriendshipUpdate update) throws TwitterException;
 }

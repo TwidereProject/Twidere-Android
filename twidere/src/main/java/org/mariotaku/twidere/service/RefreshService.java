@@ -29,6 +29,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
@@ -47,7 +48,6 @@ import static org.mariotaku.twidere.util.Utils.getNewestMessageIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
 import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
-import static org.mariotaku.twidere.util.Utils.isDebugBuild;
 import static org.mariotaku.twidere.util.Utils.isNetworkAvailable;
 import static org.mariotaku.twidere.util.Utils.shouldStopAutoRefreshOnBatteryLow;
 
@@ -65,7 +65,7 @@ public class RefreshService extends Service implements Constants {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
-            if (isDebugBuild()) {
+            if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, String.format("Refresh service received action %s", action));
             }
             if (BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING.equals(action)) {
@@ -82,7 +82,7 @@ public class RefreshService extends Service implements Constants {
                 if (BROADCAST_REFRESH_HOME_TIMELINE.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new HomeRefreshableFilter());
                     final long[] sinceIds = getNewestStatusIdsFromDatabase(context, Statuses.CONTENT_URI, refreshIds);
-                    if (isDebugBuild()) {
+                    if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing home for %s", Arrays.toString(refreshIds)));
                     }
                     if (!isHomeTimelineRefreshing()) {
@@ -91,7 +91,7 @@ public class RefreshService extends Service implements Constants {
                 } else if (BROADCAST_REFRESH_MENTIONS.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new MentionsRefreshableFilter());
                     final long[] sinceIds = getNewestStatusIdsFromDatabase(context, Mentions.CONTENT_URI, refreshIds);
-                    if (isDebugBuild()) {
+                    if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing mentions for %s", Arrays.toString(refreshIds)));
                     }
                     if (!isMentionsRefreshing()) {
@@ -101,7 +101,7 @@ public class RefreshService extends Service implements Constants {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new MessagesRefreshableFilter());
                     final long[] sinceIds = getNewestMessageIdsFromDatabase(context, DirectMessages.Inbox.CONTENT_URI,
                             refreshIds);
-                    if (isDebugBuild()) {
+                    if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing messages for %s", Arrays.toString(refreshIds)));
                     }
                     if (!isReceivedDirectMessagesRefreshing()) {
@@ -109,7 +109,7 @@ public class RefreshService extends Service implements Constants {
                     }
                 } else if (BROADCAST_REFRESH_TRENDS.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new TrendsRefreshableFilter());
-                    if (isDebugBuild()) {
+                    if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing trends for %s", Arrays.toString(refreshIds)));
                     }
                     if (!isLocalTrendsRefreshing()) {

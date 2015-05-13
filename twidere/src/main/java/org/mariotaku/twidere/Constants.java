@@ -116,6 +116,7 @@ public interface Constants extends TwidereConstants {
     int MENU_INVERSE_SELECTION = R.id.inverse_selection;
     int MENU_EDIT_MEDIA = R.id.edit_media;
     int MENU_RESET = R.id.reset;
+    int MENU_ENABLE_RETWEETS = R.id.enable_retweets;
 
     int LINK_ID_STATUS = 1;
     int LINK_ID_USER = 2;

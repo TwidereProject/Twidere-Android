@@ -1,68 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/mention"
         android:icon="@drawable/ic_action_at"
-        app:showAsAction="ifRoom"
-        android:title="@string/mention_this_user"/>
+        android:title="@string/mention_this_user"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@id/send_direct_message"
         android:icon="@drawable/ic_action_new_message"
         android:title="@string/send_direct_message"
-        android:visible="false"/>
+        android:visible="false" />
     <item
         android:id="@id/add_to_list"
         android:icon="@drawable/ic_action_add_to_list"
-        android:title="@string/add_to_list"/>
+        android:title="@string/add_to_list" />
     <item
         android:id="@id/set_color"
         android:icon="@drawable/ic_action_color_palette"
-        android:title="@string/set_color"/>
+        android:title="@string/set_color" />
     <item
         android:id="@id/set_nickname"
         android:icon="@drawable/ic_action_edit"
-        android:title="@string/set_nickname"/>
+        android:title="@string/set_nickname" />
     <item
         android:id="@id/add_to_filter"
         android:icon="@drawable/ic_action_speaker_muted"
-        android:title="@string/add_to_filter"/>
+        android:title="@string/add_to_filter" />
+    <item
+        android:id="@id/enable_retweets"
+        android:checkable="true"
+        android:icon="@drawable/ic_action_retweet"
+        android:title="@string/enable_retweets" />
     <item
         android:id="@id/mute_user"
         android:icon="@drawable/ic_action_mic_muted"
-        android:title="@string/twitter_mute_user"/>
+        android:title="@string/twitter_mute_user" />
     <item
         android:id="@id/block"
         android:icon="@drawable/ic_action_block"
-        android:title="@string/block"/>
+        android:title="@string/block" />
     <item
         android:id="@id/report_spam"
         android:icon="@drawable/ic_action_warning"
-        android:title="@string/report_for_spam"/>
+        android:title="@string/report_for_spam" />
     <item
         android:id="@+id/muted_users"
         android:icon="@drawable/ic_action_mic_muted"
-        android:title="@string/twitter_muted_users"/>
+        android:title="@string/twitter_muted_users" />
     <item
         android:id="@+id/blocked_users"
         android:icon="@drawable/ic_action_block"
-        android:title="@string/blocked_users"/>
+        android:title="@string/blocked_users" />
     <item
         android:id="@+id/incoming_friendships"
         android:icon="@drawable/ic_action_profile"
-        android:title="@string/incoming_friendships"/>
+        android:title="@string/incoming_friendships" />
     <item
         android:id="@+id/user_mentions"
         android:icon="@drawable/ic_action_at"
-        android:title="@string/user_mentions"/>
+        android:title="@string/user_mentions" />
     <item
         android:id="@+id/saved_searches"
         android:icon="@drawable/ic_action_search"
-        android:title="@string/saved_searches"/>
+        android:title="@string/saved_searches" />
     <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"
-        android:title="@string/open_with_account"/>
+        android:title="@string/open_with_account" />
 
 </menu>

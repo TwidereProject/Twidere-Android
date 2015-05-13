@@ -32,6 +32,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
+import com.desmond.asyncmanager.AsyncManager;
+import com.desmond.asyncmanager.BackgroundTask;
+import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -39,12 +42,15 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.SQLFunctions;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -82,6 +88,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
+import org.mariotaku.twidere.util.message.FriendshipUserUpdatedEvent;
 import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
@@ -518,6 +525,33 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return null;
     }
 
+    public BackgroundTask updateFriendship(final long accountId, final long userId, final FriendshipUpdate update) {
+        final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+        if (bus == null) return null;
+        return AsyncManager.runBackgroundTask(new TaskRunnable<Object, SingleResponse<Relationship>, Bus>() {
+            @Override
+            public SingleResponse<Relationship> doLongOperation(Object param) throws InterruptedException {
+                final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mContext, accountId, true);
+                try {
+                    return SingleResponse.getInstance(twitter.updateFriendship(userId, update));
+                } catch (TwitterException e) {
+                    return SingleResponse.getInstance(e);
+                }
+            }
+
+            @Override
+            public void callback(Bus handler, SingleResponse<Relationship> result) {
+                if (result.hasData()) {
+                    handler.post(new FriendshipUpdatedEvent(accountId, userId, result.getData()));
+                } else if (result.hasException()) {
+                    if (BuildConfig.DEBUG) {
+                        Log.w(LOGTAG, "Unable to update friendship", result.getException());
+                    }
+                }
+            }
+        }.setResultHandler(bus));
+    }
+
     static class GetSavedSearchesTask extends ManagedAsyncTask<Long, Object, SingleResponse<Object>> {
 
         private final Context mContext;
@@ -569,6 +603,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (result.hasData()) {
                 showOkMessage(mContext, R.string.profile_banner_image_updated, false);
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                assert bus != null;
                 bus.post(new ProfileUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_updating_profile_banner_image, result.getException(),
@@ -834,7 +869,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         manager.getDisplayName(result.getData(), nameFirst, true));
                 showInfoMessage(mContext, message, false);
                 final Bus bus = application.getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_blocking, result.getException(), true);
             }
@@ -968,7 +1003,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 showOkMessage(mContext, message, false);
                 final Bus bus = application.getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_following, result.getException(), false);
             }
@@ -1072,7 +1107,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         manager.getDisplayName(result.getData(), nameFirst, true));
                 showInfoMessage(mContext, message, false);
                 final Bus bus = application.getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_muting, result.getException(), true);
             }
@@ -1354,7 +1389,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         manager.getDisplayName(result.getData(), nameFirst, true));
                 showInfoMessage(mContext, message, false);
                 final Bus bus = application.getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_unblocking, result.getException(), true);
             }
@@ -1604,7 +1639,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         manager.getDisplayName(result.getData(), nameFirst, true));
                 showInfoMessage(mContext, message, false);
                 final Bus bus = application.getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_unfollowing, result.getException(), true);
             }
@@ -1648,7 +1683,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         manager.getDisplayName(result.getData(), nameFirst, true));
                 showInfoMessage(mContext, message, false);
                 final Bus bus = application.getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_unmuting, result.getException(), true);
             }
@@ -1902,7 +1937,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                             truncated));
                     storeMessages(accountId, messages, isOutgoing(), true);
                 } catch (final TwitterException e) {
-                    if (Utils.isDebugBuild()) {
+                    if (BuildConfig.DEBUG) {
                         Log.w(LOGTAG, e);
                     }
                     result.add(new MessageListResponse(accountId, e));
@@ -2388,7 +2423,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 showInfoMessage(mContext, R.string.reported_user_for_spam, false);
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
-                bus.post(new FriendshipUpdatedEvent(result.getData()));
+                bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 showErrorMessage(mContext, R.string.action_reporting_for_spam, result.getException(), true);
             }
@@ -2587,5 +2622,4 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
     }
-
 }

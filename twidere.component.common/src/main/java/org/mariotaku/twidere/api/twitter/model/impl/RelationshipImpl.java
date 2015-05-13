@@ -120,6 +120,16 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
         return target.followingRequested;
     }
 
+    @Override
+    public boolean isSourceWantRetweetsFromTarget() {
+        return source.wantRetweets;
+    }
+
+    @Override
+    public boolean isSourceNotificationsEnabledForTarget() {
+        return source.notificationsEnabled;
+    }
+
     @JsonObject
     static class Target {
         @JsonField(name = "id")
@@ -152,5 +162,9 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
         boolean followedBy;
         @JsonField(name = "following_requested")
         boolean followingRequested;
+        @JsonField(name = "want_retweets")
+        boolean wantRetweets;
+        @JsonField(name = "notifications_enabled")
+        boolean notificationsEnabled;
     }
 }

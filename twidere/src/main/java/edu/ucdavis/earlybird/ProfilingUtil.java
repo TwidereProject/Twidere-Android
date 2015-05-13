@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.util.Log;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -30,7 +30,7 @@ public class ProfilingUtil {
     }
 
     public static boolean log(final Context context, final String msg) {
-        if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
             final StackTraceElement ste = new Throwable().fillInStackTrace().getStackTrace()[1];
             final String fullname = ste.getClassName();
             final String name = fullname.substring(fullname.lastIndexOf('.'));

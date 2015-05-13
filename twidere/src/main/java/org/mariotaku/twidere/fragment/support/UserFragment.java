@@ -97,6 +97,7 @@ import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
@@ -133,6 +134,7 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
+import org.mariotaku.twidere.util.message.FriendshipUserUpdatedEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.support.ActivitySupport;
@@ -242,79 +244,82 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFollowProgress.setVisibility(View.GONE);
             final ParcelableUser user = getUser();
             final Relationship relationship = data.getData();
-            mRelationship = relationship;
-            if (user == null) return;
-            invalidateOptionsMenu();
-            final boolean isMyself = user.account_id == user.id;
-            if (isMyself) {
-                mFollowButton.setText(R.string.edit);
-                mFollowButton.setVisibility(View.VISIBLE);
-            } else if (relationship != null) {
-                final int drawableRes;
-                mFollowButton.setEnabled(!relationship.isSourceBlockedByTarget());
-                if (relationship.isSourceBlockedByTarget()) {
-                    mPagesErrorContainer.setVisibility(View.VISIBLE);
-                    final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
-                    mPagesErrorText.setText(getString(R.string.blocked_by_user_summary, displayName));
-                    mPagesErrorIcon.setImageResource(R.drawable.ic_info_error_generic);
-                    mPagesContent.setVisibility(View.GONE);
-                } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
-                    mPagesErrorContainer.setVisibility(View.VISIBLE);
-                    final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
-                    mPagesErrorText.setText(getString(R.string.user_protected_summary, displayName));
-                    mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
-                    mPagesContent.setVisibility(View.GONE);
-                } else {
-                    mPagesErrorContainer.setVisibility(View.GONE);
-                    mPagesErrorText.setText(null);
-                    mPagesContent.setVisibility(View.VISIBLE);
-                }
-                if (relationship.isSourceBlockingTarget()) {
-                    mFollowButton.setText(R.string.unblock);
-                    drawableRes = R.drawable.ic_follow_blocked;
-                } else if (relationship.isSourceFollowingTarget()) {
-                    mFollowButton.setText(R.string.unfollow);
-                    if (relationship.isTargetFollowingSource()) {
-                        drawableRes = R.drawable.ic_follow_bidirectional;
-                    } else {
-                        drawableRes = R.drawable.ic_follow_outgoing;
-                    }
-                } else if (user.is_follow_request_sent) {
-                    mFollowButton.setText(R.string.requested);
-                    if (relationship.isTargetFollowingSource()) {
-                        drawableRes = R.drawable.ic_follow_incoming;
-                    } else {
-                        drawableRes = R.drawable.ic_follow_pending;
-                    }
-                } else {
-                    mFollowButton.setText(R.string.follow);
-                    if (relationship.isTargetFollowingSource()) {
-                        drawableRes = R.drawable.ic_follow_incoming;
-                    } else {
-                        drawableRes = R.drawable.ic_follow_none;
-                    }
-                }
-                final Drawable icon = ResourcesCompat.getDrawable(getResources(), drawableRes, null);
-                final int iconSize = Math.round(mFollowButton.getTextSize() * 1.4f);
-                icon.setBounds(0, 0, iconSize, iconSize);
-                icon.setColorFilter(mFollowButton.getCurrentTextColor(), Mode.SRC_ATOP);
-                mFollowButton.setCompoundDrawables(icon, null, null, null);
-                mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
-
-                final ContentResolver resolver = getContentResolver();
-                final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
-                resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
-                mFollowButton.setVisibility(View.VISIBLE);
-            } else {
-                mFollowButton.setText(null);
-                mFollowButton.setVisibility(View.GONE);
-                mPagesErrorContainer.setVisibility(View.GONE);
-                mPagesContent.setVisibility(View.VISIBLE);
-//                mFollowingYouIndicator.setVisibility(View.GONE);
-            }
+            showRelationship(user, relationship);
         }
 
     };
+
+    private void showRelationship(ParcelableUser user, Relationship relationship) {
+        mRelationship = relationship;
+        if (user == null) return;
+        invalidateOptionsMenu();
+        final boolean isMyself = user.account_id == user.id;
+        if (isMyself) {
+            mFollowButton.setText(R.string.edit);
+            mFollowButton.setVisibility(View.VISIBLE);
+        } else if (relationship != null) {
+            final int drawableRes;
+            mFollowButton.setEnabled(!relationship.isSourceBlockedByTarget());
+            if (relationship.isSourceBlockedByTarget()) {
+                mPagesErrorContainer.setVisibility(View.VISIBLE);
+                final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
+                mPagesErrorText.setText(getString(R.string.blocked_by_user_summary, displayName));
+                mPagesErrorIcon.setImageResource(R.drawable.ic_info_error_generic);
+                mPagesContent.setVisibility(View.GONE);
+            } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
+                mPagesErrorContainer.setVisibility(View.VISIBLE);
+                final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
+                mPagesErrorText.setText(getString(R.string.user_protected_summary, displayName));
+                mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
+                mPagesContent.setVisibility(View.GONE);
+            } else {
+                mPagesErrorContainer.setVisibility(View.GONE);
+                mPagesErrorText.setText(null);
+                mPagesContent.setVisibility(View.VISIBLE);
+            }
+            if (relationship.isSourceBlockingTarget()) {
+                mFollowButton.setText(R.string.unblock);
+                drawableRes = R.drawable.ic_follow_blocked;
+            } else if (relationship.isSourceFollowingTarget()) {
+                mFollowButton.setText(R.string.unfollow);
+                if (relationship.isTargetFollowingSource()) {
+                    drawableRes = R.drawable.ic_follow_bidirectional;
+                } else {
+                    drawableRes = R.drawable.ic_follow_outgoing;
+                }
+            } else if (user.is_follow_request_sent) {
+                mFollowButton.setText(R.string.requested);
+                if (relationship.isTargetFollowingSource()) {
+                    drawableRes = R.drawable.ic_follow_incoming;
+                } else {
+                    drawableRes = R.drawable.ic_follow_pending;
+                }
+            } else {
+                mFollowButton.setText(R.string.follow);
+                if (relationship.isTargetFollowingSource()) {
+                    drawableRes = R.drawable.ic_follow_incoming;
+                } else {
+                    drawableRes = R.drawable.ic_follow_none;
+                }
+            }
+            final Drawable icon = ResourcesCompat.getDrawable(getResources(), drawableRes, null);
+            final int iconSize = Math.round(mFollowButton.getTextSize() * 1.4f);
+            icon.setBounds(0, 0, iconSize, iconSize);
+            icon.setColorFilter(mFollowButton.getCurrentTextColor(), Mode.SRC_ATOP);
+            mFollowButton.setCompoundDrawables(icon, null, null, null);
+            mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
+
+            final ContentResolver resolver = getContentResolver();
+            final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
+            resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
+            mFollowButton.setVisibility(View.VISIBLE);
+        } else {
+            mFollowButton.setText(null);
+            mFollowButton.setVisibility(View.GONE);
+            mPagesErrorContainer.setVisibility(View.GONE);
+            mPagesContent.setVisibility(View.VISIBLE);
+        }
+    }
 
     private final LoaderCallbacks<SingleResponse<ParcelableUser>> mUserInfoLoaderCallbacks = new LoaderCallbacks<SingleResponse<ParcelableUser>>() {
 
@@ -605,7 +610,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Subscribe
     public void notifyFriendshipUpdated(FriendshipUpdatedEvent event) {
-        if (!event.user.equals(mUser)) return;
+        final ParcelableUser user = getUser();
+        if (user == null || event.accountId != user.account_id || event.userId != user.id) return;
+        getFriendship();
+    }
+
+    @Subscribe
+    public void notifyFriendshipUserUpdated(FriendshipUserUpdatedEvent event) {
+        final ParcelableUser user = getUser();
+        if (user == null || !event.user.equals(user)) return;
         getFriendship();
     }
 
@@ -796,6 +809,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onStart() {
         super.onStart();
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.register(this);
     }
 
@@ -808,6 +822,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onStop() {
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.unregister(this);
         super.onStop();
     }
@@ -877,8 +892,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ActionIconDrawable.setMenuHighlight(filterItem, new TwidereMenuInfo(filtering));
                 filterItem.setTitle(filtering ? R.string.remove_from_filter : R.string.add_to_filter);
             }
+            final MenuItem wantRetweetsItem = menu.findItem(MENU_ENABLE_RETWEETS);
+            if (wantRetweetsItem != null) {
+
+                wantRetweetsItem.setChecked(relationship.isSourceWantRetweetsFromTarget());
+            }
         } else {
             MenuUtils.setMenuItemAvailability(menu, MENU_SEND_DIRECT_MESSAGE, false);
+            MenuUtils.setMenuItemAvailability(menu, MENU_ENABLE_RETWEETS, false);
             MenuUtils.setMenuItemAvailability(menu, MENU_BLOCK, false);
             MenuUtils.setMenuItemAvailability(menu, MENU_MUTE_USER, false);
             MenuUtils.setMenuItemAvailability(menu, MENU_REPORT_SPAM, false);
@@ -1009,6 +1030,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                         twitter.createFriendshipAsync(user.account_id, user.id);
                     }
                 }
+                return true;
+            }
+            case MENU_ENABLE_RETWEETS: {
+                final boolean newState = !item.isChecked();
+                final FriendshipUpdate update = new FriendshipUpdate();
+                update.retweets(newState);
+                twitter.updateFriendship(user.account_id, user.id, update);
+                item.setChecked(newState);
                 return true;
             }
             case R.id.muted_users: {

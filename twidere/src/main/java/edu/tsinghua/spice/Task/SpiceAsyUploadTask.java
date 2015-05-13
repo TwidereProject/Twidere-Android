@@ -10,8 +10,8 @@ import org.mariotaku.simplerestapi.http.RestHttpRequest;
 import org.mariotaku.simplerestapi.http.mime.FileTypedData;
 import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
 import org.mariotaku.simplerestapi.method.POST;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,7 +69,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
             SpiceProfilingUtil.log("server has already received file " + tmp.getName());
             tmp.delete();
         } catch (Exception e) {
-            if (Utils.isDebugBuild()) {
+            if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
                 SpiceProfilingUtil.log("server does not receive file " + tmp.getName());
             }

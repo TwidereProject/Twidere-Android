@@ -40,6 +40,7 @@
     <item name="report_spam" type="id"/>
     <item name="mute_source" type="id"/>
     <item name="mute_user" type="id"/>
+    <item name="enable_retweets" type="id"/>
     <item name="view_profile" type="id"/>
     <item name="mention" type="id"/>
     <item name="send_direct_message" type="id"/>

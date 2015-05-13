@@ -26,6 +26,7 @@ import android.os.Binder;
 import android.os.Process;
 import android.text.TextUtils;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
 import java.util.HashMap;
@@ -81,7 +82,7 @@ public class PermissionsManager implements Constants {
 
 	public boolean checkSignature(final String pname) {
 		if (mContext.getPackageName().equals(pname)) return true;
-		if (Utils.isDebugBuild()) return false;
+		if (BuildConfig.DEBUG) return false;
 		return mPackageManager.checkSignatures(pname, mContext.getPackageName()) == PackageManager.SIGNATURE_MATCH;
 	}
 

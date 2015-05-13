@@ -63,6 +63,7 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
@@ -629,7 +630,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Cursor getCachedImageCursor(final String url) {
-        if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, String.format("getCachedImageCursor(%s)", url));
         }
         final MatrixCursor c = new MatrixCursor(TwidereDataStore.CachedImages.MATRIX_COLUMNS);
@@ -641,7 +642,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private ParcelFileDescriptor getCachedImageFd(final String url) throws FileNotFoundException {
-        if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, String.format("getCachedImageFd(%s)", url));
         }
         final File file = mImagePreloader.getCachedImageFile(url);
@@ -672,7 +673,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 c.addRow(new String[]{host, address.getHostAddress()});
             }
         } catch (final IOException ignore) {
-            if (Utils.isDebugBuild()) {
+            if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, ignore);
             }
         }

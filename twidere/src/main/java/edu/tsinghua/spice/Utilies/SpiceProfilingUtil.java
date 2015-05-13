@@ -10,8 +10,8 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -44,7 +44,7 @@ public class SpiceProfilingUtil {
     }
 
     public static boolean log(final String msg) {
-        if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
             final StackTraceElement ste = new Throwable().fillInStackTrace().getStackTrace()[1];
             final String fullName = ste.getClassName();
             final String name = fullName.substring(fullName.lastIndexOf('.'));

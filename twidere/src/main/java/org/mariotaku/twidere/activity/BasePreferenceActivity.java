@@ -37,6 +37,7 @@ import android.widget.FrameLayout;
 
 import com.meizu.flyme.reflect.StatusBarProxy;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -139,7 +140,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }

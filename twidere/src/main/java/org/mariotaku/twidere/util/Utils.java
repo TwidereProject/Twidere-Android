@@ -2405,10 +2405,6 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
-    public static boolean isDebugBuild() {
-        return BuildConfig.DEBUG;
-    }
-
     public static boolean isFiltered(final SQLiteDatabase database, final long user_id, final String text_plain,
                                      final String text_html, final String source, final long retweeted_by_id) {
         return isFiltered(database, user_id, text_plain, text_html, source, retweeted_by_id, true);
@@ -3507,7 +3503,7 @@ public final class Utils implements Constants, TwitterConstants {
             @Override
             public void run() {
                 if (isNetworkAvailable(context) && hasAutoRefreshAccounts(context)) {
-                    if (isDebugBuild()) {
+                    if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, "Start background refresh service");
                     }
                     context.startService(refreshServiceIntent);

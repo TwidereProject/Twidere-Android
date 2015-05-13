@@ -23,11 +23,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
 
 public class MainActivity extends Activity implements Constants {
 
@@ -39,7 +39,7 @@ public class MainActivity extends Activity implements Constants {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }

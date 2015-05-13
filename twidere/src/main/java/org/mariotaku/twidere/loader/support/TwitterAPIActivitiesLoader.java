@@ -27,6 +27,7 @@ import android.util.Pair;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
@@ -34,7 +35,6 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.LoganSquareWrapper;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -153,11 +153,11 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
         try {
             return LoganSquareWrapper.parseList(file, ParcelableActivity.class);
         } catch (final IOException e) {
-            if (Utils.isDebugBuild()) {
+            if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
             }
         } catch (RuntimeException e) {
-            if (Utils.isDebugBuild()) {
+            if (BuildConfig.DEBUG) {
                 throw e;
             }
             Log.e(LOGTAG, "Error unserializing data", e);

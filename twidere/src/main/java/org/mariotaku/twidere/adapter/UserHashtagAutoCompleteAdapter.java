@@ -36,6 +36,7 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -180,7 +181,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
                     CachedUsers.NAME}, new boolean[]{false, false, true, true});
             final Cursor cursor = mResolver.query(Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId)),
                     CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null, selectionArgs, orderBy.getSQL());
-            if (Utils.isDebugBuild() && cursor == null) throw new NullPointerException();
+            if (BuildConfig.DEBUG && cursor == null) throw new NullPointerException();
             return cursor;
         } else {
             final String selection = constraintEscaped != null ? CachedHashtags.NAME + " LIKE ?||'%' ESCAPE '^'"
@@ -188,7 +189,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             final String[] selectionArgs = constraintEscaped != null ? new String[]{constraintEscaped} : null;
             final Cursor cursor = mDatabase.query(true, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, selection, selectionArgs,
                     null, null, CachedHashtags.NAME, null);
-            if (Utils.isDebugBuild() && cursor == null) throw new NullPointerException();
+            if (BuildConfig.DEBUG && cursor == null) throw new NullPointerException();
             return cursor;
         }
     }

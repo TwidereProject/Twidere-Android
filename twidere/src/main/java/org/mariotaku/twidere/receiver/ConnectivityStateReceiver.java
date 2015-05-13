@@ -27,8 +27,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.Utils;
 
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
@@ -43,7 +43,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
-		if (Utils.isDebugBuild()) {
+        if (BuildConfig.DEBUG) {
 			Log.d(RECEIVER_LOGTAG, String.format("Received Broadcast %s", intent));
 		}
 		if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;

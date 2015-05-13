@@ -95,6 +95,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.bluelinelabs:logansquare:1.0.6'
     compile 'ch.acra:acra:4.6.2'
+    compile 'com.github.boxme:AsyncManager:9391ed71d7@aar'
     googleCompile 'com.google.android.gms:play-services-maps:7.0.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
