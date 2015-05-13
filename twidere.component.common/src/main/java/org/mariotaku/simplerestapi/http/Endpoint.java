@@ -37,6 +37,7 @@ public class Endpoint {
     }
 
     public static String constructUrl(String endpoint, String path, List<Pair<String, String>> queries) {
+        if (endpoint == null) throw new NullPointerException("Endpoint is null");
         final StringBuilder urlBuilder = new StringBuilder();
         if (endpoint.charAt(endpoint.length() - 1) == '/') {
             urlBuilder.append(endpoint.substring(0, endpoint.length() - 1));

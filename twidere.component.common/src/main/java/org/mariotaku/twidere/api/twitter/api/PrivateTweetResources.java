@@ -32,10 +32,10 @@ import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 @SuppressWarnings("RedundantThrows")
 public interface PrivateTweetResources extends PrivateResources {
 
-    @GET("/statuses{id}/activity/summary.json")
+    @GET("/statuses/{id}/activity/summary.json")
     StatusActivitySummary getStatusActivitySummary(@Path("id") long statusId) throws TwitterException;
 
-    @GET("/statuses{id}/activity/summary.json")
+    @GET("/statuses/{id}/activity/summary.json")
     StatusActivitySummary getStatusActivitySummary(@Path("id") long statusId, boolean includeUserEntities) throws TwitterException;
 
     @GET("/conversation/show.json")

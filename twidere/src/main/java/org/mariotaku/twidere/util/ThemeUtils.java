@@ -197,7 +197,7 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void applyWindowBackground(Context context, Window window, int theme, String option, int alpha) {
+    public static void applyWindowBackground(@NonNull Context context, @NonNull Window window, int theme, String option, int alpha) {
         if (isWindowFloating(context, theme)) return;
         final int normalTheme = getThemeResource(theme);
         if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {

@@ -863,6 +863,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     Utils.openStatusRetweeters(activity, status.account_id, status.id);
                     break;
                 }
+                case R.id.favorites_container: {
+                    final FragmentActivity activity = fragment.getActivity();
+                    if (!Utils.isOfficialCredentials(activity, adapter.getStatusAccount())) return;
+                    if (status.is_retweet) {
+                        Utils.openStatusFavoriters(activity, status.account_id, status.retweet_id);
+                    } else {
+                        Utils.openStatusFavoriters(activity, status.account_id, status.id);
+                    }
+                    break;
+                }
                 case R.id.retweeted_by_container: {
                     if (status.retweet_id > 0) {
                         Utils.openUserProfile(adapter.getContext(), status.account_id, status.retweeted_by_user_id,

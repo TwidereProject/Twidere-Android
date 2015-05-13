@@ -242,13 +242,8 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
-    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resid, boolean first) {
-        mCurrentThemeColor = getThemeColor();
-        mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
-        mProfileImageStyle = Utils.getProfileImageStyle(this);
-        mCurrentThemeBackgroundOption = getThemeBackgroundOption();
-        mCurrentThemeFontFamily = getThemeFontFamily();
-        super.onApplyThemeResource(theme, resid, first);
+    public void setTheme(int resid) {
+        super.setTheme(mCurrentThemeResource = getThemeResourceId());
         if (shouldApplyWindowBackground()) {
             ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
                     mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
@@ -256,8 +251,13 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
-    public void setTheme(int resid) {
-        super.setTheme(mCurrentThemeResource = getThemeResourceId());
+    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resid, boolean first) {
+        mCurrentThemeColor = getThemeColor();
+        mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
+        mProfileImageStyle = Utils.getProfileImageStyle(this);
+        mCurrentThemeBackgroundOption = getThemeBackgroundOption();
+        mCurrentThemeFontFamily = getThemeFontFamily();
+        super.onApplyThemeResource(theme, resid, first);
     }
 
     @Override

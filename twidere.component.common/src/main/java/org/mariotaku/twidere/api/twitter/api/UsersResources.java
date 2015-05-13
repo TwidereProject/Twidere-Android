@@ -95,12 +95,14 @@ public interface UsersResources {
     ResponseList<User> getUserSuggestions(String categorySlug) throws TwitterException;
 
     @POST("/users/lookup.json")
+    @Body(BodyType.FORM)
     ResponseList<User> lookupUsers(@Form("id") long[] ids) throws TwitterException;
 
     @GET("/users/lookup.json")
     ResponseList<User> lookupUsers(@Form("id") String[] screenNames) throws TwitterException;
 
     @POST("/account/remove_profile_banner.json")
+    @Body(BodyType.FORM)
     void removeProfileBannerImage() throws TwitterException;
 
     @GET("/users/search.json")

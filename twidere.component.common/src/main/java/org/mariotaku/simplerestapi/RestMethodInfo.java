@@ -129,7 +129,9 @@ public final class RestMethodInfo {
     private static void checkMethod(RestMethod restMethod, Body body, HashMap<Form, Object> forms, HashMap<Part, Object> parts, FileValue file) {
         if (restMethod == null)
             throw new NotImplementedException("Method must has annotation annotated with @RestMethod");
-        if (!restMethod.hasBody() && body != null) {
+        if (restMethod.hasBody() && body == null) {
+            throw new IllegalArgumentException("@Body required for method " + restMethod.value());
+        } else if (!restMethod.hasBody() && body != null) {
             throw new IllegalArgumentException(restMethod.value() + " does not allow body");
         }
         if (body == null) return;

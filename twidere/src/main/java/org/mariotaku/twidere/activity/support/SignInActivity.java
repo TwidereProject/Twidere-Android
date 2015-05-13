@@ -35,6 +35,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,6 +46,7 @@ import android.support.v7.internal.widget.NativeActionModeAwareLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,6 +111,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     public static final String FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress";
     private static final String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
 
+    @Nullable
     private String mAPIUrlFormat;
     private int mAuthType;
     private String mConsumerKey, mConsumerSecret;
@@ -126,7 +129,6 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
     private TintedStatusLayout mMainContent;
-    private TwidereActionModeForChildListener mTwidereActionModeForChildListener;
 
     @Override
     public void afterTextChanged(final Editable s) {
@@ -311,9 +313,9 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         setContentView(R.layout.activity_sign_in);
         setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
 
-        mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
+        TwidereActionModeForChildListener actionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
         final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
-        layout.setActionModeForChildListener(mTwidereActionModeForChildListener);
+        layout.setActionModeForChildListener(actionModeForChildListener);
 
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
         final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
@@ -354,8 +356,10 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         }
         saveEditedText();
         setDefaultAPI();
-        mTask = new SignInTask(this, mUsername, mPassword, mAuthType, new OAuthToken(mConsumerKey,
-                mConsumerSecret), mAPIUrlFormat, mSameOAuthSigningUrl, mNoVersionSuffix);
+        final OAuthToken consumerKey = new OAuthToken(mConsumerKey, mConsumerSecret);
+        final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
+        mTask = new SignInTask(this, mUsername, mPassword, mAuthType, consumerKey, apiUrlFormat,
+                mSameOAuthSigningUrl, mNoVersionSuffix);
         AsyncTaskUtils.executeTask(mTask);
     }
 
@@ -366,11 +370,12 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         }
         saveEditedText();
         setDefaultAPI();
-        final String requestToken = intent.getStringExtra(EXTRA_REQUEST_TOKEN);
-        final String requestTokenSecret = intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET);
         final String verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER);
-        mTask = new BrowserSignInTask(this, new OAuthToken(mConsumerKey, mConsumerSecret),
-                new OAuthToken(requestToken, requestTokenSecret), verifier, mAPIUrlFormat,
+        final OAuthToken consumerKey = new OAuthToken(mConsumerKey, mConsumerSecret);
+        final OAuthToken requestToken = new OAuthToken(intent.getStringExtra(EXTRA_REQUEST_TOKEN),
+                intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET));
+        final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
+        mTask = new BrowserSignInTask(this, consumerKey, requestToken, verifier, apiUrlFormat,
                 mSameOAuthSigningUrl, mNoVersionSuffix);
         AsyncTaskUtils.executeTask(mTask);
     }
@@ -384,7 +389,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     private void setDefaultAPI() {
         final long apiLastChange = mPreferences.getLong(KEY_API_LAST_CHANGE, mAPIChangeTimestamp);
         final boolean defaultApiChanged = apiLastChange != mAPIChangeTimestamp;
-        final String apiUrlFormat = getNonEmptyString(mPreferences, KEY_API_URL_FORMAT, null);
+        final String apiUrlFormat = getNonEmptyString(mPreferences, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
         final int authType = mPreferences.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean sameOAuthSigningUrl = mPreferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean noVersionSuffix = mPreferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
@@ -489,10 +494,6 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         });
     }
 
-    protected TintedStatusLayout getMainContent() {
-        return mMainContent;
-    }
-
     protected boolean isActionBarOutlineEnabled() {
         return true;
     }
@@ -570,13 +571,14 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         private final String oauthVerifier;
 
         private final Context context;
+        @NonNull
         private final String apiUrlFormat;
         private final boolean sameOauthSigningUrl, noVersionSuffix;
         private final OAuthToken consumerKey, requestToken;
 
         public BrowserSignInTask(final SignInActivity context, OAuthToken consumerKey,
                                  final OAuthToken requestToken,
-                                 final String oauthVerifier, final String apiUrlFormat,
+                                 final String oauthVerifier, @NonNull final String apiUrlFormat,
                                  final boolean sameOauthSigningUrl, final boolean noVersionSuffix) {
             super(context);
             this.context = context;
@@ -630,21 +632,22 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
     public static class SignInTask extends AbstractSignInTask {
 
         private final String username, password;
-        private final int auth_type;
+        private final int authType;
 
         private final Context context;
+        @NonNull
         private final String apiUrlFormat;
         private final boolean sameOAuthSigningUrl, noVersionSuffix;
         private final OAuthToken consumerKey;
 
-        public SignInTask(final SignInActivity context, final String username, final String password, final int auth_type,
-                          final OAuthToken consumerKey, final String apiUrlFormat, final boolean sameOAuthSigningUrl,
+        public SignInTask(final SignInActivity context, final String username, final String password, final int authType,
+                          final OAuthToken consumerKey, @NonNull final String apiUrlFormat, final boolean sameOAuthSigningUrl,
                           final boolean noVersionSuffix) {
             super(context);
             this.context = context;
             this.username = username;
             this.password = password;
-            this.auth_type = auth_type;
+            this.authType = authType;
             this.consumerKey = consumerKey;
             this.apiUrlFormat = apiUrlFormat;
             this.sameOAuthSigningUrl = sameOAuthSigningUrl;
@@ -654,7 +657,7 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
         @Override
         protected SignInResponse doInBackground(final Object... params) {
             try {
-                switch (auth_type) {
+                switch (authType) {
                     case Accounts.AUTH_TYPE_OAUTH:
                         return authOAuth();
                     case Accounts.AUTH_TYPE_XAUTH:
@@ -680,9 +683,9 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             final Authorization auth = new BasicAuthorization(username, password);
             final Twitter twitter = TwitterAPIUtils.getInstance(context, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
-            final long user_id = user.getId();
-            if (user_id <= 0) return new SignInResponse(false, false, null);
-            if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
+            final long userId = user.getId();
+            if (userId <= 0) return new SignInResponse(false, false, null);
+            if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(username, password, user, color, apiUrlFormat,
                     noVersionSuffix);
@@ -701,9 +704,9 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             final TwitterOAuth oauth = TwitterAPIUtils.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth);
             final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
-            final long user_id = accessToken.getUserId();
-            if (user_id <= 0) return new SignInResponse(false, false, null);
-            if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
+            final long userId = accessToken.getUserId();
+            if (userId <= 0) return new SignInResponse(false, false, null);
+            if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
 
             final String versionSuffix = noVersionSuffix ? null : "1.1";
             endpointUrl = Utils.getApiUrl(apiUrlFormat, "api", versionSuffix);
@@ -728,9 +731,9 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             final Authorization auth = new EmptyAuthorization();
             final Twitter twitter = TwitterAPIUtils.getInstance(context, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
-            final long user_id = user.getId();
-            if (user_id <= 0) return new SignInResponse(false, false, null);
-            if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
+            final long userId = user.getId();
+            if (userId <= 0) return new SignInResponse(false, false, null);
+            if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(user, color, apiUrlFormat, noVersionSuffix);
         }
@@ -741,12 +744,11 @@ public class SignInActivity extends BaseAppCompatActivity implements TwitterCons
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIUtils.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);
-            final long user_id = accessToken.getUserId();
-            if (user_id <= 0) return new SignInResponse(false, false, null);
-            if (isUserLoggedIn(context, user_id)) return new SignInResponse(true, false, null);
+            final long userId = accessToken.getUserId();
+            if (userId <= 0) return new SignInResponse(false, false, null);
+            if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-            final Twitter twitter = TwitterAPIUtils.getInstance(context, endpoint,
-                    auth, Twitter.class);
+            final Twitter twitter = TwitterAPIUtils.getInstance(context, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(auth, user, Accounts.AUTH_TYPE_XAUTH, color, apiUrlFormat,

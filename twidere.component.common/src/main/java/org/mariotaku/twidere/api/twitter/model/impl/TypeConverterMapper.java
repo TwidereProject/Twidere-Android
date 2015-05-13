@@ -65,6 +65,7 @@ public class TypeConverterMapper<T> implements TypeConverter<T> {
         }
     }
 
+
     @SuppressWarnings({"TryWithIdenticalCatches"})
     public static <T> void register(Class<T> cls, Class<? extends T> impl, JsonMapper<? extends T> mapper) {
         LoganSquare.registerTypeConverter(cls, new TypeConverterMapper<>(impl));
