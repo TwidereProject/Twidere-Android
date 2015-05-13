@@ -126,7 +126,10 @@
                         android:maxHeight="140dp"
                         android:singleLine="false"
                         android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="?android:textColorPrimary">
+                        app:met_baseColor="?android:textColorSecondary"
+                        app:met_helperTextColor="?android:textColorSecondary"
+                        app:met_textColor="?android:textColorPrimary"
+                        app:met_textColorHint="?android:textColorSecondary">
 
                         <requestFocus />
                     </org.mariotaku.twidere.view.StatusComposeEditText>

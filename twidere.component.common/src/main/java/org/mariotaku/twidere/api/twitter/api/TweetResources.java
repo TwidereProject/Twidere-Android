@@ -56,4 +56,8 @@ public interface TweetResources {
     @Body(BodyType.FORM)
     Status updateStatus(@Form StatusUpdate latestStatus) throws TwitterException;
 
+    @POST("/statuses/lookup.json")
+    @Body(BodyType.FORM)
+    ResponseList<Status> lookupStatuses(@Form("id") long[] ids) throws TwitterException;
+
 }

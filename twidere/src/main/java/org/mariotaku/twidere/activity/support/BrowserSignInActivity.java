@@ -42,6 +42,7 @@ import android.widget.Toast;
 import org.mariotaku.simplerestapi.http.Authorization;
 import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -55,14 +56,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.mariotaku.twidere.api.twitter.TwitterConstants;
-import org.mariotaku.twidere.api.twitter.TwitterOAuth;
-
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class BrowserSignInActivity extends BaseSupportDialogActivity  {
+public class BrowserSignInActivity extends BaseSupportDialogActivity {
 
     private static final String INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');";
 

@@ -24,11 +24,6 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
-
-import java.util.Arrays;
-import java.util.Date;
-
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.HashtagEntity;
@@ -38,6 +33,10 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
+import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
+
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by mariotaku on 15/5/5.
@@ -324,6 +323,11 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
                 ", card=" + card +
                 ", possiblySensitive=" + possiblySensitive +
                 '}';
+    }
+
+    public static void setQuotedStatus(Status status, Status quoted) {
+        if (!(status instanceof StatusImpl)) return;
+        ((StatusImpl) status).quotedStatus = quoted;
     }
 
     @JsonObject

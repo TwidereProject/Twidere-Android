@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rengwuxian.materialedittext.validation.METLengthChecker;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -44,6 +45,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
@@ -56,6 +58,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
     private MaterialEditText mEditComment;
     private PopupMenu mPopupMenu;
     private View mCommentMenu;
+    private TwidereValidator mValidator;
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
@@ -108,6 +111,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         final Context context = builder.getContext();
+        mValidator = new TwidereValidator(context);
         final LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
         final StatusViewHolder holder = new StatusViewHolder(new DummyStatusHolderAdapter(context), view.findViewById(R.id.item_content));
@@ -127,6 +131,16 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
         mEditComment = (MaterialEditText) view.findViewById(R.id.edit_comment);
+        mEditComment.setLengthChecker(new METLengthChecker() {
+
+            final String statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id).toString();
+
+            @Override
+            public int getLength(CharSequence text) {
+                return mValidator.getTweetLength(text + " " + statusLink);
+            }
+        });
+        mEditComment.setMaxCharacters(mValidator.getMaxTweetLength());
         mCommentMenu = view.findViewById(R.id.comment_menu);
 
         mPopupMenu = new PopupMenu(context, mCommentMenu, Gravity.NO_GRAVITY,

@@ -37,6 +37,8 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.LoganSquareWrapper;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -108,6 +110,9 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             }
             statuses = new ArrayList<>();
             truncated = truncateStatuses(getStatuses(twitter, paging), statuses, mSinceId);
+            if (!Utils.isOfficialTwitterInstance(context, twitter)) {
+                TwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
+            }
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
             Log.w(LOGTAG, e);

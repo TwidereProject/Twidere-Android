@@ -124,7 +124,7 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     public void setTheme(int resid) {
         super.setTheme(mCurrentThemeResource = getThemeResourceId());
         if (shouldApplyWindowBackground()) {
-            ThemeUtils.applyWindowBackground(this, getWindow(), resid, mCurrentThemeBackgroundOption,
+            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption,
                     mCurrentThemeBackgroundAlpha);
         }
     }
