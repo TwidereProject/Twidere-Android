@@ -68,6 +68,7 @@ import android.widget.TextView;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperToast.Duration;
 import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
+import com.rengwuxian.materialedittext.validation.METLengthChecker;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -113,7 +114,6 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.StatusComposeEditText;
-import org.mariotaku.twidere.view.StatusTextCountView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -178,7 +178,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private RecyclerView mMessagesListView;
     private ListView mUsersSearchList;
     private StatusComposeEditText mEditText;
-    private StatusTextCountView mTextCountView;
     private View mSendButton;
     private ImageView mAddImageButton;
     private View mConversationContainer, mRecipientSelectorContainer;
@@ -338,6 +337,13 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             }
         }
         mEditText.setSelection(mEditText.length());
+        mEditText.setMaxCharacters(mValidator.getMaxTweetLength());
+        mEditText.setLengthChecker(new METLengthChecker() {
+            @Override
+            public int getLength(CharSequence text) {
+                return mValidator.getTweetLength(String.valueOf(text));
+            }
+        });
         final boolean isValid = mAccount != null && mRecipient != null;
         mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
         mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
@@ -354,7 +360,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         super.onStart();
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         bus.register(this);
-        updateTextCount();
         updateEmptyText();
         mMessagesListView.addOnScrollListener(mScrollListener);
         mScrollListener.reset();
@@ -434,7 +439,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mInputPanelShadowCompat = view.findViewById(R.id.input_panel_shadow_compat);
         mInputPanel = view.findViewById(R.id.input_panel);
         mEditText = (StatusComposeEditText) mInputPanel.findViewById(R.id.edit_text);
-        mTextCountView = (StatusTextCountView) mInputPanel.findViewById(R.id.text_count);
         mSendButton = mInputPanel.findViewById(R.id.send);
         mAddImageButton = (ImageView) mInputPanel.findViewById(R.id.add_image);
     }
@@ -720,7 +724,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-                updateTextCount();
                 if (mSendButton == null || s == null) return;
                 mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));
             }
@@ -819,12 +822,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 //
 //        }.executeTask();
 //    }
-
-    private void updateTextCount() {
-        if (mTextCountView == null || mEditText == null) return;
-        final int count = mValidator.getTweetLength(ParseUtils.parseString(mEditText.getText()));
-        mTextCountView.setTextCount(count);
-    }
 
     public static class CacheUserSearchLoader extends UserSearchLoader {
         private final boolean mFromCache;

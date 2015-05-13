@@ -42,15 +42,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:completionThreshold="1"
                 android:focusable="true"
                 android:hint="@string/comment_hint"
-                android:inputType="text"
+                android:inputType="textShortMessage|textMultiLine"
+                android:singleLine="false"
                 android:visibility="visible"
                 app:met_baseColor="?android:textColorSecondary"
                 app:met_helperTextColor="?android:textColorSecondary"
                 app:met_maxCharacters="140"
                 app:met_textColor="?android:textColorPrimary"
-                app:met_textColorHint="?android:textColorSecondary">
+                app:met_textColorHint="?android:textColorTertiary">
 
                 <requestFocus />
             </org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText>

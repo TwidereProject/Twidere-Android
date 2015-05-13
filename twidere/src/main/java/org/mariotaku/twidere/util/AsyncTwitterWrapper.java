@@ -119,8 +119,6 @@ import static org.mariotaku.twidere.util.Utils.getStatusCountInDatabase;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.showInfoMessage;
 import static org.mariotaku.twidere.util.Utils.showOkMessage;
-import static org.mariotaku.twidere.util.Utils.truncateMessages;
-import static org.mariotaku.twidere.util.Utils.truncateStatuses;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert;
 
@@ -1931,7 +1929,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         paging.setSinceId(since_id - 1);
                     }
                     final List<DirectMessage> messages = new ArrayList<>();
-                    final boolean truncated = truncateMessages(getDirectMessages(twitter, paging), messages,
+                    final boolean truncated = Utils.truncateMessages(getDirectMessages(twitter, paging), messages,
                             since_id);
                     result.add(new MessageListResponse(accountId, max_id, since_id, messages,
                             truncated));
@@ -2276,7 +2274,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         sinceId = -1;
                     }
                     final List<org.mariotaku.twidere.api.twitter.model.Status> statuses = new ArrayList<>();
-                    final boolean truncated = truncateStatuses(getStatuses(twitter, paging), statuses, sinceId);
+                    final boolean truncated = Utils.truncateStatuses(getStatuses(twitter, paging), statuses, sinceId);
+                    TwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
                     storeStatus(accountId, statuses, maxId, truncated, true);
                     publishProgress(new StatusListResponse(accountId, statuses));
                 } catch (final TwitterException e) {

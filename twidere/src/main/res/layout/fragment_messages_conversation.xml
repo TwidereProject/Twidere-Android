@@ -128,26 +128,13 @@
                         android:textAppearance="?android:textAppearanceMedium"
                         app:met_baseColor="?android:textColorSecondary"
                         app:met_helperTextColor="?android:textColorSecondary"
+                        app:met_hideUnderline="true"
                         app:met_textColor="?android:textColorPrimary"
                         app:met_textColorHint="?android:textColorSecondary">
 
                         <requestFocus />
                     </org.mariotaku.twidere.view.StatusComposeEditText>
 
-                    <org.mariotaku.twidere.view.StatusTextCountView
-                        android:id="@+id/text_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="@dimen/element_spacing_small"
-                        android:fontFamily="sans-serif-light"
-                        android:singleLine="true"
-                        android:textAllCaps="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="?android:textColorPrimary"
-                        android:textSize="@dimen/text_size_extra_small"
-                        tools:ignore="UnusedAttribute"
-                        tools:text="140" />
                 </FrameLayout>
             </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
