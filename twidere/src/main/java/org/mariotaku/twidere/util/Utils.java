@@ -266,7 +266,7 @@ import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_
 import static org.mariotaku.twidere.util.TwidereLinkify.TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES;
 
 @SuppressWarnings("unused")
-public final class Utils implements Constants, TwitterConstants {
+public final class Utils implements Constants {
 
     public static final Pattern PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml");
 

@@ -53,6 +53,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TWITTER_CONSUMER_SECRET = "0UnEHDq5IzVK9nstiz2nWOtG5rOMM5JkUpATfM78Do";
 
     String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
+    String DEFAULT_TWITTER_OAUTH_BASE_URL = "https://api.twitter.com/oauth/";
 
     String SCHEME_HTTP = "http";
     String SCHEME_HTTPS = "https";

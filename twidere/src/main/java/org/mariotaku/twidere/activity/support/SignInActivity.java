@@ -65,7 +65,6 @@ import org.mariotaku.simplerestapi.http.Endpoint;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterConstants;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
@@ -103,8 +102,7 @@ import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.trim;
 
-public class SignInActivity extends BaseAppCompatActivity implements TwitterConstants, OnClickListener,
-        TextWatcher {
+public class SignInActivity extends BaseAppCompatActivity implements OnClickListener, TextWatcher {
 
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
     private static final String EXTRA_API_LAST_CHANGE = "api_last_change";

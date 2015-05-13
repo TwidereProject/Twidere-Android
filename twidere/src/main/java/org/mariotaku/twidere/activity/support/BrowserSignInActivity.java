@@ -49,6 +49,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class BrowserSignInActivity extends BaseSupportDialogActivity implements TwitterConstants {
+public class BrowserSignInActivity extends BaseSupportDialogActivity  {
 
     private static final String INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');";
 
@@ -239,7 +240,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity implements 
                 consumerSecret = defConsumerSecret;
             }
             try {
-                final Endpoint endpoint = new Endpoint(DEFAULT_OAUTH_BASE_URL);
+                final Endpoint endpoint = new Endpoint(Utils.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", "oauth"));
                 final Authorization auth = new OAuthAuthorization(consumerKey, consumerSecret);
                 final TwitterOAuth twitter = TwitterAPIUtils.getInstance(mActivity, endpoint, auth, TwitterOAuth.class);
                 return twitter.getRequestToken(OAUTH_CALLBACK_OOB);

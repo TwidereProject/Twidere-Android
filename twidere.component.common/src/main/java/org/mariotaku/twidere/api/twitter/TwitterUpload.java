@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.api;
+package org.mariotaku.twidere.api.twitter;
 
 import org.mariotaku.simplerestapi.http.BodyType;
 import org.mariotaku.simplerestapi.http.mime.FileTypedData;

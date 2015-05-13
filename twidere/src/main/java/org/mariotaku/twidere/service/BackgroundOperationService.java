@@ -96,7 +96,7 @@ import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
-import org.mariotaku.twidere.api.twitter.api.TwitterUpload;
+import org.mariotaku.twidere.api.twitter.TwitterUpload;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;

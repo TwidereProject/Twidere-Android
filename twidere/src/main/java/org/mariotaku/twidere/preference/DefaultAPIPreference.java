@@ -40,15 +40,13 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
-import org.mariotaku.twidere.api.twitter.TwitterConstants;
-
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.trim;
 
-public class DefaultAPIPreference extends DialogPreference implements Constants, TwitterConstants,
-        OnCheckedChangeListener, OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class DefaultAPIPreference extends DialogPreference implements Constants, OnCheckedChangeListener,
+        OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private EditText mEditAPIUrlFormat;
     private CheckBox mEditSameOAuthSigningUrl, mEditNoVersionSuffix;
@@ -98,7 +96,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
     @Override
     protected void onBindDialogView(@NonNull final View view) {
         final SharedPreferences pref = getSharedPreferences();
-        final String apiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_REST_BASE_URL);
+        final String apiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
         final int authType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean sameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean noVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
@@ -159,7 +157,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         super.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRA_DATA));
 
         final SharedPreferences pref = getSharedPreferences();
-        final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_REST_BASE_URL);
+        final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
         final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
         final boolean prefSameOAuthSigningUrl = pref.getBoolean(KEY_API_URL_FORMAT, false);
         final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);

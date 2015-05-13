@@ -135,17 +135,6 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return errors[0].getCode();
     }
 
-    /**
-     * Returns error message from the API if available.
-     *
-     * @return error message from the API
-     * @since Twitter4J 2.2.3
-     */
-    public String getErrorMessage() {
-        if (errors == null || errors.length == 0) return null;
-        return errors[0].getMessage();
-    }
-
 
     public RestHttpRequest getHttpRequest() {
         return request;
