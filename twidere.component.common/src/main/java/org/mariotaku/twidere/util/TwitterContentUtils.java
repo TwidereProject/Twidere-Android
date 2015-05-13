@@ -190,7 +190,7 @@ public class TwitterContentUtils {
         // ids into batches
         final long[] quoteIds = quotes.keys();
         for (int currentBulkIdx = 0, totalLength = quoteIds.length; currentBulkIdx < totalLength; currentBulkIdx += TWITTER_BULK_QUERY_COUNT) {
-            final int currentBulkCount = Math.min(totalLength, currentBulkIdx + TWITTER_BULK_QUERY_COUNT);
+            final int currentBulkCount = Math.min(totalLength, currentBulkIdx + TWITTER_BULK_QUERY_COUNT) - currentBulkIdx;
             final long[] ids = new long[currentBulkCount];
             System.arraycopy(quoteIds, currentBulkIdx, ids, 0, currentBulkCount);
             // Lookup quoted statuses, then set each status into original status

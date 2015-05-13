@@ -112,7 +112,7 @@
                     android:minHeight="@dimen/element_size_normal"
                     android:padding="@dimen/element_spacing_normal">
 
-                    <org.mariotaku.twidere.view.StatusComposeEditText
+                    <org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText
                         android:id="@+id/edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,10 +130,10 @@
                         app:met_helperTextColor="?android:textColorSecondary"
                         app:met_hideUnderline="true"
                         app:met_textColor="?android:textColorPrimary"
-                        app:met_textColorHint="?android:textColorSecondary">
+                        app:met_textColorHint="?android:textColorTertiary">
 
                         <requestFocus />
-                    </org.mariotaku.twidere.view.StatusComposeEditText>
+                    </org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText>
 
                 </FrameLayout>
             </org.mariotaku.messagebubbleview.library.MessageBubbleView>

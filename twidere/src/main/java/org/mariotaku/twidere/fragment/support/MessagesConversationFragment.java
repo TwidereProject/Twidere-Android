@@ -113,7 +113,7 @@ import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
-import org.mariotaku.twidere.view.StatusComposeEditText;
+import org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -177,7 +177,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     // Views
     private RecyclerView mMessagesListView;
     private ListView mUsersSearchList;
-    private StatusComposeEditText mEditText;
+    private UserHashtagAutoCompleteEditText mEditText;
     private View mSendButton;
     private ImageView mAddImageButton;
     private View mConversationContainer, mRecipientSelectorContainer;
@@ -438,7 +438,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mRecipientSelectorContainer = view.findViewById(R.id.recipient_selector_container);
         mInputPanelShadowCompat = view.findViewById(R.id.input_panel_shadow_compat);
         mInputPanel = view.findViewById(R.id.input_panel);
-        mEditText = (StatusComposeEditText) mInputPanel.findViewById(R.id.edit_text);
+        mEditText = (UserHashtagAutoCompleteEditText) mInputPanel.findViewById(R.id.edit_text);
         mSendButton = mInputPanel.findViewById(R.id.send);
         mAddImageButton = (ImageView) mInputPanel.findViewById(R.id.add_image);
     }

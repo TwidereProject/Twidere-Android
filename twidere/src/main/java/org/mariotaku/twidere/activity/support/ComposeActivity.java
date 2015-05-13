@@ -128,8 +128,8 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
+import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.ShapedImageView;
-import org.mariotaku.twidere.view.StatusComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 
 import java.io.File;
@@ -167,7 +167,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     // Views
     private GridView mMediaPreviewGrid;
     private ActionMenuView mMenuBar;
-    private StatusComposeEditText mEditText;
+    private ComposeEditText mEditText;
     private View mSendView;
     private StatusTextCountView mSendTextCountView;
     private RecyclerView mAccountSelector;
@@ -511,7 +511,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mEditText = (StatusComposeEditText) findViewById(R.id.edit_text);
+        mEditText = (ComposeEditText) findViewById(R.id.edit_text);
         mMediaPreviewGrid = (GridView) findViewById(R.id.media_thumbnail_preview);
         mMenuBar = (ActionMenuView) findViewById(R.id.menu_bar);
         mSendView = findViewById(R.id.send);
@@ -1454,7 +1454,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         @Override
         protected Boolean doInBackground(final Object... params) {
             InputStream is = null;
-             OutputStream os = null;
+            OutputStream os = null;
             try {
                 final ContentResolver resolver = activity.getContentResolver();
                 is = resolver.openInputStream(src);

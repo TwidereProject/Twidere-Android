@@ -180,7 +180,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             final long inReplyToStatusId;
             if (!status.is_quote) {
                 inReplyToStatusId = status.id;
-                statusLink = LinkCreator.getTwitterStatusLink(status.quoted_by_user_screen_name, status.id);
+                statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
             } else if (quoteOriginalStatus.isChecked()) {
                 inReplyToStatusId = status.quote_id;
                 statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id);
