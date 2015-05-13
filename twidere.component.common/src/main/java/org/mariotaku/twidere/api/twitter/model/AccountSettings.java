@@ -32,20 +32,6 @@ public interface AccountSettings extends TwitterResponse {
 	String getLanguage();
 
 	/**
-	 * Returns sleep end time.
-	 * 
-	 * @return sleep end time
-	 */
-	String getSleepEndTime();
-
-	/**
-	 * Returns sleep start time.
-	 * 
-	 * @return sleep start time
-	 */
-	String getSleepStartTime();
-
-	/**
 	 * Returns the timezone configured for this user.
 	 * 
 	 * @return the timezone (formated as a Rails TimeZone name)
@@ -66,12 +52,6 @@ public interface AccountSettings extends TwitterResponse {
 	 */
 	boolean isAlwaysUseHttps();
 
-	/**
-	 * Returns true if the user is discoverable by email.
-	 * 
-	 * @return true if the user is discoverable by email
-	 */
-	boolean isDiscoverableByEmail();
 
 	/**
 	 * Return true if the user is enabling geo location
@@ -80,10 +60,4 @@ public interface AccountSettings extends TwitterResponse {
 	 */
 	boolean isGeoEnabled();
 
-	/**
-	 * Returns true if the user enabled sleep time.
-	 * 
-	 * @return true if the user enabled sleep time
-	 */
-	boolean isSleepTimeEnabled();
 }

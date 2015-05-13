@@ -17,15 +17,38 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.model.impl;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.TimeZone;
 
 /**
- * @author Alessandro Bahgat - ale.bahgat at gmail.com
+ * Created by mariotaku on 15/5/13.
  */
-public interface TimeZone {
-    String getName();
+@JsonObject
+public class TimeZoneImpl implements TimeZone {
 
-    String getTzInfoName();
+    @JsonField(name = "utc_offset")
+    int utcOffset;
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "tzinfo_name")
+    String tzInfoName;
 
-    int getUtcOffset();
+    @Override
+    public int getUtcOffset() {
+        return utcOffset;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getTzInfoName() {
+        return tzInfoName;
+    }
 }

@@ -25,19 +25,15 @@ import org.mariotaku.simplerestapi.method.POST;
 import org.mariotaku.simplerestapi.param.Body;
 import org.mariotaku.simplerestapi.param.Form;
 import org.mariotaku.simplerestapi.param.Query;
-
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 
-/**
- * @author Joern Huxhorn - jhuxhorn at googlemail.com
- */
 @SuppressWarnings("RedundantThrows")
 public interface ListsResources {
     @POST("/lists/members/create.json")
@@ -60,19 +56,33 @@ public interface ListsResources {
     @Body(BodyType.FORM)
     UserList createUserList(@Form UserListUpdate update) throws TwitterException;
 
-    UserList createUserListSubscription(@Query("list_id") long listId) throws TwitterException;
+    @POST("/lists/subscribers/create.json")
+    @Body(BodyType.FORM)
+    UserList createUserListSubscription(@Form("list_id") long listId) throws TwitterException;
 
+    @POST("/lists/members/destroy.json")
+    @Body(BodyType.FORM)
     UserList deleteUserListMember(@Query("list_id") long listId, @Query("user_id") long userId) throws TwitterException;
 
-    UserList deleteUserListMember(@Query("list_id") long listId, String screenName) throws TwitterException;
+    @POST("/lists/members/destroy.json")
+    @Body(BodyType.FORM)
+    UserList deleteUserListMember(@Query("list_id") long listId, @Form("screen_name") String screenName) throws TwitterException;
 
-    UserList deleteUserListMembers(@Query("list_id") long listId, long[] userIds) throws TwitterException;
+    @POST("/lists/members/destroy_all.json")
+    @Body(BodyType.FORM)
+    UserList deleteUserListMembers(@Form("list_id") long listId, @Form("user_id") long[] userIds) throws TwitterException;
 
-    UserList deleteUserListMembers(@Query("list_id") long listId, String[] screenNames) throws TwitterException;
+    @POST("/lists/members/destroy_all.json")
+    @Body(BodyType.FORM)
+    UserList deleteUserListMembers(@Query("list_id") long listId, @Form("screen_name") String[] screenNames) throws TwitterException;
 
-    UserList destroyUserList(@Query("list_id") long listId) throws TwitterException;
+    @POST("/lists/destroy.json")
+    @Body(BodyType.FORM)
+    UserList destroyUserList(@Form("list_id") long listId) throws TwitterException;
 
-    UserList destroyUserListSubscription(@Query("list_id") long listId) throws TwitterException;
+    @POST("/lists/subscribers/destroy.json")
+    @Body(BodyType.FORM)
+    UserList destroyUserListSubscription(@Form("list_id") long listId) throws TwitterException;
 
     @GET("/lists/members.json")
     PageableResponseList<User> getUserListMembers(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
@@ -160,5 +170,5 @@ public interface ListsResources {
 
     @POST("/lists/update.json")
     @Body(BodyType.FORM)
-    UserList updateUserList(@Query("list_id") long listId, @Form UserListUpdate update) throws TwitterException;
+    UserList updateUserList(@Form("list_id") long listId, @Form UserListUpdate update) throws TwitterException;
 }
