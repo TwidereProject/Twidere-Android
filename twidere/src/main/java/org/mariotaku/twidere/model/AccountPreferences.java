@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
@@ -142,6 +143,7 @@ public class AccountPreferences implements Constants {
         return enabledIds;
     }
 
+    @Nullable
     public static AccountPreferences[] getNotificationEnabledPreferences(final Context context, final long[] accountIds) {
         if (context == null || accountIds == null) return null;
         final AccountPreferences[] temp = new AccountPreferences[accountIds.length];

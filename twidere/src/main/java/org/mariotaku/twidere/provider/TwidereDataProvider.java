@@ -751,12 +751,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void notifyUnreadCountChanged(final int position) {
         final Context context = getContext();
         final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                bus.post(new UnreadCountUpdatedEvent(position));
-            }
-        });
+        if (bus != null) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    bus.post(new UnreadCountUpdatedEvent(position));
+                }
+            });
+        }
         notifyContentObserver(UnreadCounts.CONTENT_URI);
     }
 
@@ -779,13 +781,16 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues[] valuesArray, final long[] newIds) {
-        if (uri == null || valuesArray == null || valuesArray.length == 0) return;
+        final Context context = getContext();
+        if (uri == null || valuesArray == null || valuesArray.length == 0 || context == null)
+            return;
         preloadImages(valuesArray);
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
         switch (tableId) {
             case TABLE_ID_STATUSES: {
-                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
-                        getAccountIds(getContext()));
+                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
+                        getAccountIds(context));
+                assert prefs != null;
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isHomeTimelineNotificationEnabled()) continue;
                     showTimelineNotification(pref, getPositionTag(TAB_TYPE_HOME_TIMELINE, pref.getAccountId()));
@@ -794,8 +799,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             case TABLE_ID_MENTIONS: {
-                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
-                        getAccountIds(getContext()));
+                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
+                        getAccountIds(context));
+                assert prefs != null;
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isMentionsNotificationEnabled()) continue;
                     showMentionsNotification(pref, getPositionTag(TAB_TYPE_MENTIONS_TIMELINE, pref.getAccountId()));
@@ -804,8 +810,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             case TABLE_ID_DIRECT_MESSAGES_INBOX: {
-                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(getContext(),
-                        getAccountIds(getContext()));
+                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
+                        getAccountIds(context));
+                assert prefs != null;
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isDirectMessagesNotificationEnabled()) continue;
                     final StringLongPair[] pairs = mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES);

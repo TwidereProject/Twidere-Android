@@ -64,7 +64,7 @@
             android:id="@+id/label_auth_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/authType"
+            android:text="@string/auth_type"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <HorizontalScrollView

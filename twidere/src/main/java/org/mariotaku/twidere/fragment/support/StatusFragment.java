@@ -39,6 +39,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManagerTrojan;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -809,8 +810,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     twitterCard.setCardSize(0, 0);
                 }
                 final Fragment cardFragment = TwitterCardUtils.createCardFragment(status.card);
-                if (cardFragment != null) {
-                    final FragmentManager fm = fragment.getChildFragmentManager();
+                final FragmentManager fm = fragment.getChildFragmentManager();
+                if (cardFragment != null && !FragmentManagerTrojan.isStateSaved(fm)) {
                     final FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.twitter_card, cardFragment);
                     ft.commit();

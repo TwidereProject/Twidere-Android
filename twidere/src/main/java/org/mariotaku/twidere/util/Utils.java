@@ -1309,6 +1309,7 @@ public final class Utils implements Constants, TwitterConstants {
         }
     }
 
+    @NonNull
     public static long[] getAccountIds(final Context context) {
         if (context == null) return new long[0];
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
