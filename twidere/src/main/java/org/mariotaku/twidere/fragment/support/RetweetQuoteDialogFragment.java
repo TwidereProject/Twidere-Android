@@ -36,7 +36,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.METLengthChecker;
 
 import org.mariotaku.twidere.Constants;
@@ -50,6 +49,7 @@ import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
@@ -59,7 +59,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         Constants, DialogInterface.OnClickListener {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
-    private MaterialEditText mEditComment;
+    private UserHashtagAutoCompleteEditText mEditComment;
     private PopupMenu mPopupMenu;
     private View mCommentMenu;
     private TwidereValidator mValidator;
@@ -113,7 +113,8 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
-        mEditComment = (MaterialEditText) view.findViewById(R.id.edit_comment);
+        mEditComment = (UserHashtagAutoCompleteEditText) view.findViewById(R.id.edit_comment);
+        mEditComment.setAccountId(status.account_id);
         mEditComment.setLengthChecker(new METLengthChecker() {
 
             final String statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id).toString();
