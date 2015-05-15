@@ -57,6 +57,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -824,11 +825,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             Utils.setMenuForStatus(context, menuBar.getMenu(), status, adapter.getStatusAccount());
 
-            quoteTextView.setTextIsSelectable(true);
             textView.setTextIsSelectable(true);
+            quoteTextView.setTextIsSelectable(true);
 
-            quoteTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            textView.setMovementMethod(LinkMovementMethod.getInstance());
+            textView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
+            quoteTextView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
         }
 
         @Override

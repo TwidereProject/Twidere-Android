@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import org.mariotaku.twidere.text.SafeSpannableString;
 import org.mariotaku.twidere.text.SafeSpannableStringBuilder;
 
-public class StatusTextView extends AppCompatTextView {
+public class StatusTextView extends HandleSpanClickTextView {
 
     public StatusTextView(final Context context) {
         this(context, null);

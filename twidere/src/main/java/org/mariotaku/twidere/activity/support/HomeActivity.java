@@ -108,7 +108,6 @@ import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.ExtendedViewPager;
 import org.mariotaku.twidere.view.HomeSlidingMenu;
 import org.mariotaku.twidere.view.LeftDrawerFrameLayout;
-import org.mariotaku.twidere.view.RightDrawerFrameLayout;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IHomeActionButton;
@@ -159,7 +158,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     private View mActionsButton;
     private View mActionBarWithOverlay;
     private LeftDrawerFrameLayout mLeftDrawerContainer;
-    private RightDrawerFrameLayout mRightDrawerContainer;
     private TintedStatusFrameLayout mColorStatusFrameLayout;
 
     private UpdateUnreadCountTask mUpdateUnreadCountTask;
@@ -270,7 +268,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             switch (action) {
                 case ACTION_NAVIGATION_PREVIOUS_TAB: {
                     final int previous = mViewPager.getCurrentItem() - 1;
-                    if (previous < 0) {
+                    final int mode = mSlidingMenu.getMode();
+                    if (previous < 0 && (mode == SlidingMenu.LEFT || mode == SlidingMenu.LEFT_RIGHT)) {
                         mSlidingMenu.showMenu(true);
                         setControlBarVisibleAnimate(true);
                     } else if (previous < mPagerAdapter.getCount()) {
@@ -284,7 +283,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
                 case ACTION_NAVIGATION_NEXT_TAB: {
                     final int next = mViewPager.getCurrentItem() + 1;
-                    if (next >= mPagerAdapter.getCount()) {
+                    final int mode = mSlidingMenu.getMode();
+                    if (next >= mPagerAdapter.getCount() && (mode == SlidingMenu.RIGHT || mode == SlidingMenu.LEFT_RIGHT)) {
                         mSlidingMenu.showSecondaryMenu(true);
                         setControlBarVisibleAnimate(true);
                     } else if (next >= 0) {
@@ -438,6 +438,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mAccountChangeObserver);
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
+        assert bus != null;
         bus.register(this);
         // UCD
         ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStart");
@@ -472,6 +473,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mMultiSelectHandler.dispatchOnStop();
         mReadStateManager.unregisterOnSharedPreferenceChangeListener(mReadStateChangeListener);
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
+        assert bus != null;
         bus.unregister(this);
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mAccountChangeObserver);
@@ -841,7 +843,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final Resources res = getResources();
         final int marginThreshold = res.getDimensionPixelSize(R.dimen.default_sliding_menu_margin_threshold);
         final boolean relativeBehindWidth = res.getBoolean(R.bool.relative_behind_width);
-        mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+        mSlidingMenu.setMode(SlidingMenu.LEFT);
         mSlidingMenu.setShadowWidthRes(R.dimen.default_sliding_menu_shadow_width);
         mSlidingMenu.setShadowDrawable(R.drawable.shadow_left);
         mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
@@ -853,17 +855,12 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mSlidingMenu.setTouchmodeMarginThreshold(marginThreshold);
         mSlidingMenu.setFadeDegree(0.5f);
         mSlidingMenu.setMenu(R.layout.drawer_home_accounts);
-        mSlidingMenu.setSecondaryMenu(R.layout.drawer_home_quick_menu);
         mSlidingMenu.setOnOpenedListener(this);
         mSlidingMenu.setOnClosedListener(this);
         mLeftDrawerContainer = (LeftDrawerFrameLayout) mSlidingMenu.getMenu().findViewById(R.id.left_drawer_container);
-        mRightDrawerContainer = (RightDrawerFrameLayout) mSlidingMenu.getSecondaryMenu().findViewById(
-                R.id.right_drawer_container);
         final boolean isTransparentBackground = ThemeUtils.isTransparentBackground(getCurrentThemeBackgroundOption());
         mLeftDrawerContainer.setClipEnabled(isTransparentBackground);
         mLeftDrawerContainer.setScrollScale(mSlidingMenu.getBehindScrollScale());
-        mRightDrawerContainer.setClipEnabled(isTransparentBackground);
-        mRightDrawerContainer.setScrollScale(mSlidingMenu.getBehindScrollScale());
         mSlidingMenu.setBehindCanvasTransformer(new ListenerCanvasTransformer(this));
         final Window window = getWindow();
         ThemeUtils.applyWindowBackground(this, mSlidingMenu.getContent(), getCurrentThemeResourceId(),
@@ -942,9 +939,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     private void updateDrawerPercentOpen(final float percentOpen, final boolean horizontalScroll) {
-        if (mLeftDrawerContainer == null || mRightDrawerContainer == null) return;
+        if (mLeftDrawerContainer == null) return;
         mLeftDrawerContainer.setPercentOpen(percentOpen);
-        mRightDrawerContainer.setPercentOpen(percentOpen);
     }
 
     private void updateSlidingMenuTouchMode() {

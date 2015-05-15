@@ -51,8 +51,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnGenericMotionListener;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -553,7 +556,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
     }
 
     public static final class VideoPageFragment extends BaseSupportFragment
-            implements VideoLoadingListener, OnPreparedListener, OnErrorListener, OnCompletionListener {
+            implements VideoLoadingListener, OnPreparedListener, OnErrorListener, OnCompletionListener, OnClickListener {
 
         private static final String[] SUPPORTED_VIDEO_TYPES;
 
@@ -568,7 +571,9 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         private VideoLoader mVideoLoader;
 
         private TextureVideoView mVideoView;
-        private ProgressBar mVideoViewProgress;
+        private SeekBar mVideoViewProgress;
+        private TextView mDurationLabel, mPositionLabel;
+        private ImageButton mPlayPauseButton, mVolumeButton;
 
         private boolean mPlayAudio;
         private VideoPlayProgressRunnable mVideoProgressRunnable;
@@ -576,6 +581,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         private File mVideoFile;
         private Pair<String, String> mVideoUrlAndType;
         private ProgressWheel mProgressBar;
+        private MediaPlayer mMediaPlayer;
 
         public boolean isLoopEnabled() {
             return getArguments().getBoolean(EXTRA_LOOP, false);
@@ -589,13 +595,25 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         }
 
         @Override
+        public void onStart() {
+            super.onStart();
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+        }
+
+        @Override
         public void onCompletion(MediaPlayer mp) {
+            mMediaPlayer = null;
 //            mVideoViewProgress.removeCallbacks(mVideoProgressRunnable);
 //            mVideoViewProgress.setVisibility(View.GONE);
         }
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
+            mMediaPlayer = null;
             mVideoViewProgress.removeCallbacks(mVideoProgressRunnable);
             mVideoViewProgress.setVisibility(View.GONE);
             return true;
@@ -604,16 +622,28 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         @Override
         public void onPrepared(MediaPlayer mp) {
             if (getUserVisibleHint()) {
+                mMediaPlayer = mp;
                 mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                if (mPlayAudio) {
-                    mp.setVolume(1, 1);
-                } else {
-                    mp.setVolume(0, 0);
-                }
+                updateVolume();
                 mp.setLooping(isLoopEnabled());
                 mp.start();
                 mVideoViewProgress.setVisibility(View.VISIBLE);
                 mVideoViewProgress.post(mVideoProgressRunnable);
+                updatePlayerState();
+            }
+        }
+
+        private void updateVolume() {
+            final ImageButton b = mVolumeButton;
+            if (b != null) {
+                b.setImageResource(mPlayAudio ? R.drawable.ic_action_speaker_max : R.drawable.ic_action_speaker_muted);
+            }
+            final MediaPlayer mp = mMediaPlayer;
+            if (mp == null) return;
+            if (mPlayAudio) {
+                mp.setVolume(1, 1);
+            } else {
+                mp.setVolume(0, 0);
             }
         }
 
@@ -628,8 +658,12 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onBaseViewCreated(View view, Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
             mVideoView = (TextureVideoView) view.findViewById(R.id.video_view);
-            mVideoViewProgress = (ProgressBar) view.findViewById(R.id.video_view_progress);
+            mVideoViewProgress = (SeekBar) view.findViewById(R.id.video_view_progress);
             mProgressBar = (ProgressWheel) view.findViewById(R.id.load_progress);
+            mDurationLabel = (TextView) view.findViewById(R.id.duration_label);
+            mPositionLabel = (TextView) view.findViewById(R.id.position_label);
+            mPlayPauseButton = (ImageButton) view.findViewById(R.id.play_pause_button);
+            mVolumeButton = (ImageButton) view.findViewById(R.id.volume_button);
         }
 
         @Override
@@ -671,6 +705,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             super.setUserVisibleHint(isVisibleToUser);
             if (!isVisibleToUser && mVideoView != null && mVideoView.isPlaying()) {
                 mVideoView.pause();
+                updatePlayerState();
             }
         }
 
@@ -679,14 +714,23 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             super.onActivityCreated(savedInstanceState);
             setHasOptionsMenu(true);
             mVideoLoader = TwidereApplication.getInstance(getActivity()).getVideoLoader();
-            mVideoProgressRunnable = new VideoPlayProgressRunnable(mVideoViewProgress.getHandler(),
-                    mVideoViewProgress, mVideoView);
+
+            Handler handler = mVideoViewProgress.getHandler();
+            if (handler == null) {
+                handler = new Handler(getActivity().getMainLooper());
+            }
+            mVideoProgressRunnable = new VideoPlayProgressRunnable(handler, mVideoViewProgress,
+                    mDurationLabel, mPositionLabel, mVideoView);
+
 
             mVideoView.setOnPreparedListener(this);
             mVideoView.setOnErrorListener(this);
             mVideoView.setOnCompletionListener(this);
 
+            mPlayPauseButton.setOnClickListener(this);
+            mVolumeButton.setOnClickListener(this);
             loadVideo();
+            updateVolume();
         }
 
         private Pair<String, String> getBestVideoUrlAndType(ParcelableMedia media) {
@@ -732,16 +776,51 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             mSaveFileTask = AsyncTaskUtils.executeTask(new SaveFileTask(getActivity(), file, mimeType, saveDir));
         }
 
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.volume_button: {
+                    mPlayAudio = !mPlayAudio;
+                    updateVolume();
+                    break;
+                }
+                case R.id.play_pause_button: {
+                    final MediaPlayer mp = mMediaPlayer;
+                    if (mp != null) {
+                        if (mp.isPlaying()) {
+                            mp.pause();
+                        } else {
+                            mp.start();
+                        }
+                    }
+                    updatePlayerState();
+                    break;
+                }
+            }
+        }
+
+        private void updatePlayerState() {
+            final MediaPlayer mp = mMediaPlayer;
+            if (mp != null) {
+                mPlayPauseButton.setImageResource(mp.isPlaying() ? R.drawable.ic_action_pause : R.drawable.ic_action_play_arrow);
+            } else {
+                mPlayPauseButton.setImageResource(R.drawable.ic_action_play_arrow);
+            }
+        }
+
         private static class VideoPlayProgressRunnable implements Runnable {
 
             private final Handler mHandler;
             private final ProgressBar mProgressBar;
+            private final TextView mDurationLabel, mPositionLabel;
             private final MediaController.MediaPlayerControl mMediaPlayerControl;
 
-            VideoPlayProgressRunnable(Handler handler, ProgressBar progressBar,
-                                      MediaController.MediaPlayerControl mediaPlayerControl) {
+            VideoPlayProgressRunnable(Handler handler, ProgressBar progressBar, TextView durationLabel,
+                                      TextView positionLabel, MediaController.MediaPlayerControl mediaPlayerControl) {
                 mHandler = handler;
                 mProgressBar = progressBar;
+                mDurationLabel = durationLabel;
+                mPositionLabel = positionLabel;
                 mMediaPlayerControl = mediaPlayerControl;
                 mProgressBar.setMax(1000);
             }
@@ -752,6 +831,9 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 final int position = mMediaPlayerControl.getCurrentPosition();
                 if (duration <= 0 || position < 0) return;
                 mProgressBar.setProgress(Math.round(1000 * position / (float) duration));
+                final int durationSecs = duration / 1000, positionSecs = position / 1000;
+                mDurationLabel.setText(String.format("%02d:%02d", durationSecs / 60, durationSecs % 60));
+                mPositionLabel.setText(String.format("%02d:%02d", positionSecs / 60, positionSecs % 60));
                 mHandler.postDelayed(this, 16);
             }
         }

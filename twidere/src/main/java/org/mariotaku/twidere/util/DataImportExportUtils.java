@@ -54,13 +54,16 @@ public class DataImportExportUtils implements Constants {
     public static final String ENTRY_USER_COLORS = "user_colors.json";
     public static final String ENTRY_HOST_MAPPING = "host_mapping.json";
     public static final String ENTRY_KEYBOARD_SHORTCUTS = "keyboard_shortcuts.json";
+    public static final String ENTRY_FILTERS = "filters.json";
 
     public static final int FLAG_PREFERENCES = 0x1;
     public static final int FLAG_NICKNAMES = 0x2;
     public static final int FLAG_USER_COLORS = 0x4;
     public static final int FLAG_HOST_MAPPING = 0x8;
     public static final int FLAG_KEYBOARD_SHORTCUTS = 0x10;
-    public static final int FLAG_ALL = FLAG_PREFERENCES | FLAG_NICKNAMES | FLAG_USER_COLORS | FLAG_HOST_MAPPING | FLAG_KEYBOARD_SHORTCUTS;
+    public static final int FLAG_FILTERS = 0x20;
+    public static final int FLAG_ALL = FLAG_PREFERENCES | FLAG_NICKNAMES | FLAG_USER_COLORS
+            | FLAG_HOST_MAPPING | FLAG_KEYBOARD_SHORTCUTS | FLAG_FILTERS;
 
     public static void exportData(final Context context, final File dst, final int flags) throws IOException {
         if (dst == null) throw new FileNotFoundException();
@@ -107,6 +110,9 @@ public class DataImportExportUtils implements Constants {
         if (zipFile.getEntry(ENTRY_KEYBOARD_SHORTCUTS) != null) {
             flags |= FLAG_KEYBOARD_SHORTCUTS;
         }
+        if (zipFile.getEntry(ENTRY_FILTERS) != null) {
+            flags |= FLAG_FILTERS;
+        }
         zipFile.close();
         return flags;
     }
@@ -145,6 +151,9 @@ public class DataImportExportUtils implements Constants {
         }
         if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
             importSharedPreferencesData(zipFile, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME, ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
+        }
+        if (hasFlag(flags,FLAG_FILTERS)) {
+
         }
         zipFile.close();
     }
