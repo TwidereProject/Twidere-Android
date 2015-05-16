@@ -30,11 +30,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.PopupMenu;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.rengwuxian.materialedittext.validation.METLengthChecker;
 
@@ -127,7 +130,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         mEditComment.setMaxCharacters(mValidator.getMaxTweetLength());
 
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
-        EditTextEnterHandler.attach(mEditComment, new EditTextEnterHandler.EnterListener() {
+        final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(mEditComment, new EditTextEnterHandler.EnterListener() {
             @Override
             public void onHitEnter() {
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
@@ -137,6 +140,26 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 dismiss();
             }
         }, sendByEnter);
+        enterHandler.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                final Dialog dialog = getDialog();
+                if (!(dialog instanceof AlertDialog)) return;
+                final Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                if (positiveButton == null) return;
+                positiveButton.setText(s.length() > 0 ? R.string.comment : R.string.retweet);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         mCommentMenu = view.findViewById(R.id.comment_menu);
 
         mPopupMenu = new PopupMenu(context, mCommentMenu, Gravity.NO_GRAVITY,

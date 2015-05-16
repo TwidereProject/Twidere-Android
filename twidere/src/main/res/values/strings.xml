@@ -748,6 +748,7 @@
     <string name="name_first_summary_on">Display name first</string>
     <string name="name_first_summary_off">Display @screenname first</string>
     <string name="comment_hint">Comment…</string>
+    <string name="comment">Comment</string>
     <string name="enable_retweets">Enable retweets</string>
     <string name="disable_retweets">Disable retweets</string>
 </resources>
