@@ -82,7 +82,7 @@ public class RecyclerViewBackport extends RecyclerView {
                     float verticalDirection = mMouseScrollDirectionDecider.getVerticalDirection();
                     final float hFactor = scrollFactor * (horizontalDirection != 0 ? horizontalDirection : -1);
                     final float vFactor = scrollFactor * (verticalDirection != 0 ? verticalDirection : -1);
-                    smoothScrollBy((int) (hScroll * hFactor), (int) (vScroll * vFactor));
+                    scrollBy((int) (hScroll * hFactor), (int) (vScroll * vFactor));
                 }
             }
         }

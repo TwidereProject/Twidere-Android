@@ -35,64 +35,80 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/video_view_overlay"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_player_control_panel"
-            android:layout_alignBottom="@id/video_view"
-            android:background="@drawable/bg_shadow_video_player"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/video_view"
+            android:layout_alignEnd="@+id/video_view"
+            android:layout_alignLeft="@+id/video_view"
+            android:layout_alignRight="@+id/video_view"
+            android:layout_alignStart="@+id/video_view"
+            android:layout_alignTop="@+id/video_view"
+            android:animateLayoutChanges="true">
 
-            <ImageButton
-                android:id="@+id/play_pause_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:minWidth="@dimen/element_size_normal"
-                android:src="@drawable/ic_action_play_arrow" />
+            <LinearLayout
+                android:id="@+id/video_control"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_player_control_panel"
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_shadow_video_player"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-            <TextView
-                android:id="@+id/position_label"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:gravity="center"
-                android:minWidth="@dimen/element_size_normal"
-                android:textColor="?android:textColorPrimary"
-                tools:text="12:34" />
+                <ImageButton
+                    android:id="@+id/play_pause_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/play"
+                    android:minWidth="@dimen/element_size_normal"
+                    android:src="@drawable/ic_action_play_arrow" />
 
-            <SeekBar
-                android:id="@+id/video_view_progress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/position_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:minWidth="@dimen/element_size_normal"
+                    android:textColor="?android:textColorPrimary"
+                    tools:text="12:34" />
 
-            <TextView
-                android:id="@+id/duration_label"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:gravity="center"
-                android:minWidth="@dimen/element_size_normal"
-                android:textColor="?android:textColorPrimary"
-                tools:text="27:56" />
+                <SeekBar
+                    android:id="@+id/video_view_progress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/duration_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:minWidth="@dimen/element_size_normal"
+                    android:textColor="?android:textColorPrimary"
+                    tools:text="27:56" />
 
 
-            <ImageButton
-                android:id="@+id/volume_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:minWidth="@dimen/element_size_normal"
-                android:src="@drawable/ic_action_speaker_max" />
+                <ImageButton
+                    android:id="@+id/volume_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/mute"
+                    android:minWidth="@dimen/element_size_normal"
+                    android:src="@drawable/ic_action_speaker_max" />
 
 
-        </LinearLayout>
-
+            </LinearLayout>
+        </FrameLayout>
     </RelativeLayout>
 
     <include layout="@layout/layout_progress_wheel_medium" />

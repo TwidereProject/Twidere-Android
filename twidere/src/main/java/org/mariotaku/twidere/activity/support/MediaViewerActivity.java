@@ -571,16 +571,18 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         private VideoLoader mVideoLoader;
 
         private TextureVideoView mVideoView;
+        private View mVideoViewOverlay;
         private SeekBar mVideoViewProgress;
         private TextView mDurationLabel, mPositionLabel;
         private ImageButton mPlayPauseButton, mVolumeButton;
+        private ProgressWheel mProgressBar;
+        private View mVideoControl;
 
         private boolean mPlayAudio;
         private VideoPlayProgressRunnable mVideoProgressRunnable;
         private SaveFileTask mSaveFileTask;
         private File mVideoFile;
         private Pair<String, String> mVideoUrlAndType;
-        private ProgressWheel mProgressBar;
         private MediaPlayer mMediaPlayer;
 
         public boolean isLoopEnabled() {
@@ -630,6 +632,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 mVideoViewProgress.setVisibility(View.VISIBLE);
                 mVideoViewProgress.post(mVideoProgressRunnable);
                 updatePlayerState();
+                mVideoControl.setVisibility(View.VISIBLE);
             }
         }
 
@@ -658,12 +661,14 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onBaseViewCreated(View view, Bundle savedInstanceState) {
             super.onBaseViewCreated(view, savedInstanceState);
             mVideoView = (TextureVideoView) view.findViewById(R.id.video_view);
+            mVideoViewOverlay = view.findViewById(R.id.video_view_overlay);
             mVideoViewProgress = (SeekBar) view.findViewById(R.id.video_view_progress);
             mProgressBar = (ProgressWheel) view.findViewById(R.id.load_progress);
             mDurationLabel = (TextView) view.findViewById(R.id.duration_label);
             mPositionLabel = (TextView) view.findViewById(R.id.position_label);
             mPlayPauseButton = (ImageButton) view.findViewById(R.id.play_pause_button);
             mVolumeButton = (ImageButton) view.findViewById(R.id.volume_button);
+            mVideoControl = view.findViewById(R.id.video_control);
         }
 
         @Override
@@ -723,6 +728,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     mDurationLabel, mPositionLabel, mVideoView);
 
 
+            mVideoViewOverlay.setOnClickListener(this);
             mVideoView.setOnPreparedListener(this);
             mVideoView.setOnErrorListener(this);
             mVideoView.setOnCompletionListener(this);
@@ -796,14 +802,25 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     updatePlayerState();
                     break;
                 }
+                case R.id.video_view_overlay: {
+                    if (mVideoControl.getVisibility() == View.VISIBLE) {
+                        mVideoControl.setVisibility(View.GONE);
+                    } else {
+                        mVideoControl.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                }
             }
         }
 
         private void updatePlayerState() {
             final MediaPlayer mp = mMediaPlayer;
             if (mp != null) {
-                mPlayPauseButton.setImageResource(mp.isPlaying() ? R.drawable.ic_action_pause : R.drawable.ic_action_play_arrow);
+                final boolean playing = mp.isPlaying();
+                mPlayPauseButton.setContentDescription(getString(playing ? R.string.pause : R.string.play));
+                mPlayPauseButton.setImageResource(playing ? R.drawable.ic_action_pause : R.drawable.ic_action_play_arrow);
             } else {
+                mPlayPauseButton.setContentDescription(getString(R.string.play));
                 mPlayPauseButton.setImageResource(R.drawable.ic_action_play_arrow);
             }
         }
