@@ -63,6 +63,7 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
         mAccountId = getDefaultAccountId(getActivity());
         getListView().setOnItemClickListener(this);
         getLoaderManager().initLoader(0, null, this);
+        showProgress();
     }
 
     @NonNull
@@ -102,6 +103,7 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         getAdapter().swapCursor(cursor);
+        showContent();
     }
 
     @Override

@@ -836,6 +836,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final boolean hasNoTab = mPagerAdapter.getCount() == 0;
         mEmptyTabHint.setVisibility(hasNoTab ? View.VISIBLE : View.GONE);
         mViewPager.setVisibility(hasNoTab ? View.GONE : View.VISIBLE);
+        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() / 2);
     }
 
     private void setupSlidingMenu() {
