@@ -642,8 +642,8 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getActionBarAlpha(final int alpha) {
-        return MathUtils.clamp(alpha * 2, ThemeBackgroundPreference.MIN_ALPHA,
-                ThemeBackgroundPreference.MAX_ALPHA);
+        return MathUtils.clamp(ThemeBackgroundPreference.MIN_ALPHA + (ThemeBackgroundPreference.MAX_ALPHA - alpha) / 2,
+                ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
     }
 
     public static Typeface getUserTypeface(final Context context, final Typeface defTypeface) {

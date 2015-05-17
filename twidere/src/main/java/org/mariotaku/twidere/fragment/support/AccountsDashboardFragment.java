@@ -135,6 +135,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private TextView mAccountProfileNameView, mAccountProfileScreenNameView;
     private ActionMenuView mAccountsToggleMenu;
     private View mAccountProfileContainer;
+    private View mNoAccountContainer;
 
     private Context mThemedContext;
     private MediaLoaderWrapper mImageLoader;
@@ -244,6 +245,13 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
         final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(data);
+        if (accounts.length > 0) {
+            mNoAccountContainer.setVisibility(View.GONE);
+            mAccountProfileContainer.setVisibility(View.VISIBLE);
+        } else {
+            mNoAccountContainer.setVisibility(View.VISIBLE);
+            mAccountProfileContainer.setVisibility(View.INVISIBLE);
+        }
         long defaultId = -1;
         for (ParcelableAccount account : accounts) {
             if (account.is_activated) {
@@ -394,6 +402,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mAccountsSelector.setAdapter(mAccountsAdapter);
         mAccountsSelector.setItemAnimator(null);
         mAccountProfileContainer = mAccountSelectorView.findViewById(R.id.profile_container);
+        mNoAccountContainer = mAccountSelectorView.findViewById(R.id.no_account_container);
         mAccountProfileImageView = (ShapedImageView) mAccountSelectorView.findViewById(R.id.profile_image);
         mAccountProfileBannerView = (ImageView) mAccountSelectorView.findViewById(R.id.account_profile_banner);
         mFloatingProfileImageSnapshotView = (ImageView) mAccountSelectorView.findViewById(R.id.floating_profile_image_snapshot);

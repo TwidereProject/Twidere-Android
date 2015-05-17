@@ -146,4 +146,20 @@
             tools:ignore="ContentDescription" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/no_account_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/profile_container"
+        android:layout_alignTop="@+id/profile_container"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_account" />
+
+    </FrameLayout>
+
 </RelativeLayout>
