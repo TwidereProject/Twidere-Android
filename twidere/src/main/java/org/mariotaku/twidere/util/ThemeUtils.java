@@ -67,6 +67,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
+import org.mariotaku.twidere.preference.ThemeBackgroundPreference;
 import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -636,7 +637,13 @@ public class ThemeUtils implements Constants {
     public static int getUserThemeBackgroundAlpha(final Context context) {
         if (context == null) return DEFAULT_THEME_BACKGROUND_ALPHA;
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        return pref.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA);
+        return MathUtils.clamp(pref.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA),
+                ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
+    }
+
+    public static int getActionBarAlpha(final int alpha) {
+        return MathUtils.clamp(alpha * 2, ThemeBackgroundPreference.MIN_ALPHA,
+                ThemeBackgroundPreference.MAX_ALPHA);
     }
 
     public static Typeface getUserTypeface(final Context context, final Typeface defTypeface) {
@@ -687,7 +694,8 @@ public class ThemeUtils implements Constants {
         final Drawable d = a.getDrawable(0);
         a.recycle();
         if (d != null) {
-            d.setAlpha(alpha);
+            d.setAlpha(MathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
+                    ThemeBackgroundPreference.MAX_ALPHA));
         }
         return d;
     }

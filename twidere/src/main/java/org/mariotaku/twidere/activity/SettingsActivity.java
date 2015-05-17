@@ -268,6 +268,14 @@ public class SettingsActivity extends BasePreferenceActivity {
         ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
         setIntent(getIntent().addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 
+
+        final String backgroundOption = getCurrentThemeBackgroundOption();
+        final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
+        final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(this)) : 0xFF;
+
+        actionBarContainer.setAlpha(actionBarAlpha / 255f);
+        windowOverlay.setAlpha(actionBarAlpha / 255f);
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

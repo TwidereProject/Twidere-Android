@@ -31,6 +31,9 @@ import org.mariotaku.twidere.util.support.ViewSupport;
  */
 public class ThemeBackgroundPreference extends DialogPreference implements Constants {
 
+    public final static int MAX_ALPHA = 0xFF;
+    public final static int MIN_ALPHA = 0x40;
+
     private final String[] mBackgroundEntries, mBackgroundValues;
     private String mValue;
 
@@ -69,7 +72,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         if (positiveResult) {
             final SharedPreferences preferences = getSharedPreferences();
             final SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt(KEY_THEME_BACKGROUND_ALPHA, mAlphaSlider.getProgress());
+            editor.putInt(KEY_THEME_BACKGROUND_ALPHA, getSliderAlpha());
             editor.apply();
             persistValue(mValue);
         }
@@ -161,9 +164,9 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             mAlphaContainer = view.findViewById(R.id.alpha_container);
             mAlphaSlider = (SeekBar) view.findViewById(R.id.alpha_slider);
             mAlphaPreview = (ImageView) view.findViewById(R.id.alpha_preview);
-            mAlphaSlider.setMax(0xFF);
+            mAlphaSlider.setMax(MAX_ALPHA - MIN_ALPHA);
             mAlphaSlider.setOnSeekBarChangeListener(mAlphaSliderChangedListener);
-            mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA));
+            mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA) - MIN_ALPHA);
             final int patternSize = res.getDimensionPixelSize(R.dimen.element_spacing_msmall);
             ViewSupport.setBackground(mAlphaPreview, new AlphaPatternDrawable(patternSize));
             updateAlphaVisibility();
@@ -182,6 +185,10 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         if (mAlphaPreview == null || mAlphaSlider == null) return;
         final Drawable drawable = mAlphaPreview.getDrawable();
         if (drawable == null) return;
-        drawable.setAlpha(mAlphaSlider.getProgress());
+        drawable.setAlpha(getSliderAlpha());
+    }
+
+    private int getSliderAlpha() {
+        return mAlphaSlider.getProgress() + MIN_ALPHA;
     }
 }

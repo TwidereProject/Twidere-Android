@@ -60,6 +60,10 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
@@ -81,11 +85,6 @@ import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 
 import static org.mariotaku.twidere.util.MenuUtils.setMenuItemAvailability;
 import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
@@ -240,11 +239,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         mViewPager.setAdapter(mPagerAdapter);
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
-        if (activity instanceof IThemedActivity) {
-            mPagerIndicator.setStripColor(((IThemedActivity) activity).getCurrentThemeColor());
-        } else {
-
-        }
         getUserListInfo(false);
         setupUserPages();
     }
@@ -454,6 +448,13 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
         ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
         ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
+
+        if (activity instanceof IThemedActivity) {
+            final String backgroundOption = ((IThemedActivity) activity).getCurrentThemeBackgroundOption();
+            final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
+            final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(activity)) : 0xFF;
+            mPagerIndicator.setAlpha(actionBarAlpha / 255f);
+        }
     }
 
     public static class EditUserListDialogFragment extends BaseSupportDialogFragment implements

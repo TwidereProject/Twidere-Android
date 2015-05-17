@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredKeywordsFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredLinksFragment;
@@ -78,6 +79,13 @@ public class FiltersFragment extends BaseSupportFragment implements RefreshScrol
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
         ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
         ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
+
+        if (activity instanceof IThemedActivity) {
+            final String backgroundOption = ((IThemedActivity) activity).getCurrentThemeBackgroundOption();
+            final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
+            final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(activity)) : 0xFF;
+            mPagerIndicator.setAlpha(actionBarAlpha / 255f);
+        }
     }
 
     @Override

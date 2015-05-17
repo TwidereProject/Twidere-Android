@@ -128,7 +128,7 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
         if (mDrawShadow) {
             canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mShadowPaint);
         } else if (mDrawColor) {
-            canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mBlackPaint);
+//            canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mBlackPaint);
         }
         canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mDrawColor ? mColorPaint : mBlackPaint);
     }
@@ -146,7 +146,7 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
     private void updateAlpha() {
         final float f = mFactor;
         mShadowPaint.setAlpha(Math.round(mShadowAlpha * MathUtils.clamp(1 - f, 0, 1)));
-        mColorPaint.setAlpha(Math.round(0xFF * MathUtils.clamp(f, 0, 1)));
+        mColorPaint.setAlpha(Math.round(mColorAlpha * MathUtils.clamp(f, 0, 1)));
         invalidate();
     }
 }
