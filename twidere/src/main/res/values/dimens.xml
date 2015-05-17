@@ -18,6 +18,7 @@
     <dimen name="element_spacing_minus_small">-4dp</dimen>
     <dimen name="element_spacing_minus_msmall">-6dp</dimen>
     <dimen name="element_spacing_minus_normal">-8dp</dimen>
+    <dimen name="element_spacing_minus_mlarge">-12dp</dimen>
     <dimen name="element_spacing_minus_large">-16dp</dimen>
     <dimen name="element_spacing_minus_xlarge">-24dp</dimen>
     <dimen name="icon_size_list_item">56dp</dimen>

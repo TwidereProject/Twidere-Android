@@ -238,13 +238,12 @@ public class ThemeUtils implements Constants {
         return ActionBarColorDrawable.create(actionBarColor, outlineEnabled);
     }
 
-    public static int getActionBarPopupThemeRes(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.actionBarPopupTheme});
-        try {
-            return a.getResourceId(0, 0);
-        } finally {
-            a.recycle();
+    public static int getActionBarPopupThemeRes(final Context context, int def) {
+        final TypedValue outValue = new TypedValue();
+        if (context.getTheme().resolveAttribute(R.attr.actionBarPopupTheme, outValue, true)) {
+            return outValue.resourceId;
         }
+        return def;
     }
 
     public static Drawable getActionBarSplitBackground(final Context context, final int themeRes) {
@@ -419,6 +418,18 @@ public class ThemeUtils implements Constants {
     public static int getColorFromAttribute(Context context, int attr, int def) {
         final TypedValue outValue = new TypedValue();
         if (!context.getTheme().resolveAttribute(attr, outValue, true))
+            return def;
+        if (outValue.type == TypedValue.TYPE_REFERENCE)
+            return context.getResources().getColor(attr);
+        return outValue.data;
+    }
+
+
+    public static int getColorFromAttribute(Context context, int themeId, int attr, int def) {
+        final TypedValue outValue = new TypedValue();
+        final Resources.Theme theme = context.getResources().newTheme();
+        theme.applyStyle(themeId, true);
+        if (!theme.resolveAttribute(attr, outValue, true))
             return def;
         if (outValue.type == TypedValue.TYPE_REFERENCE)
             return context.getResources().getColor(attr);

@@ -62,7 +62,6 @@ import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
@@ -314,11 +313,10 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         final Activity activity = getActivity();
         if (activity instanceof BasePreferenceActivity) {
             final ActionBar actionBar = ((BasePreferenceActivity) activity).getSupportActionBar();
-            final int themeResId = ((IThemedActivity) activity).getThemeResourceId();
-            final int themeColor = ((IThemedActivity) activity).getCurrentThemeColor();
+            final int themeResourceId = ((BasePreferenceActivity) activity).getCurrentThemeResourceId();
             final int itemColor = ThemeUtils.getContrastActionBarItemColor(actionBar.getThemedContext());
-            final int popupTheme = ThemeUtils.getActionBarPopupThemeRes(actionBar.getThemedContext());
-            final int popupColor = ThemeUtils.getContrastActionBarItemColor(activity);
+            final int popupTheme = ThemeUtils.getActionBarPopupThemeRes(actionBar.getThemedContext(), themeResourceId);
+            final int popupColor = ThemeUtils.getColorFromAttribute(activity, popupTheme, android.R.attr.colorForeground, 0);
             ThemeUtils.applyColorFilterToMenuIcon(menu, itemColor, popupColor, 0, Mode.SRC_ATOP);
         }
     }

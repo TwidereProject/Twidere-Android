@@ -44,7 +44,7 @@ public class ComposeNowPreference extends ComponentStatePreference {
 
     @Override
     protected boolean isComponentAvailable() {
-        return Utils.isComposeNowSupported();
+        return Utils.isComposeNowSupported(getContext());
     }
 
     @Override

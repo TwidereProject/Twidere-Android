@@ -255,7 +255,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
         }
-        if (!Utils.isComposeNowSupported()) {
+        if (!Utils.isComposeNowSupported(this)) {
             final ComponentName assist = new ComponentName(this, AssistLauncherActivity.class);
             pm.setComponentEnabledSetting(assist, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);

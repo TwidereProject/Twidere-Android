@@ -66,7 +66,8 @@
         android:layout_toEndOf="@+id/account_selector_button"
         android:layout_toLeftOf="@+id/send"
         android:layout_toRightOf="@+id/account_selector_button"
-        android:layout_toStartOf="@+id/send">
+        android:layout_toStartOf="@+id/send"
+        android:scrollbars="none">
 
         <android.support.v7.widget.ActionMenuView
             android:id="@+id/menu_bar"

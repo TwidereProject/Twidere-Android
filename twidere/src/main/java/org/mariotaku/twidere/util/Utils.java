@@ -602,17 +602,17 @@ public final class Utils implements Constants {
         final int itemLimit = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getInt(
                 KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
 
-        for (final long account_id : getAccountIds(context)) {
+        for (final long accountId : getAccountIds(context)) {
             // Clean statuses.
             for (final Uri uri : STATUSES_URIS) {
                 if (CachedStatuses.CONTENT_URI.equals(uri)) {
                     continue;
                 }
                 final String table = getTableNameByUri(uri);
-                final Expression account_where = new Expression(Statuses.ACCOUNT_ID + " = " + account_id);
+                final Expression account_where = new Expression(Statuses.ACCOUNT_ID + " = " + accountId);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(Statuses._ID)).from(new Tables(table));
-                qb.where(Expression.equals(Statuses.ACCOUNT_ID, account_id));
+                qb.where(Expression.equals(Statuses.ACCOUNT_ID, accountId));
                 qb.orderBy(new OrderBy(Statuses.STATUS_ID, false));
                 qb.limit(itemLimit);
                 final Expression where = Expression.and(Expression.notIn(new Column(Statuses._ID), qb.build()), account_where);
@@ -620,12 +620,12 @@ public final class Utils implements Constants {
             }
             for (final Uri uri : DIRECT_MESSAGES_URIS) {
                 final String table = getTableNameByUri(uri);
-                final Expression account_where = new Expression(DirectMessages.ACCOUNT_ID + " = " + account_id);
+                final Expression account_where = new Expression(DirectMessages.ACCOUNT_ID + " = " + accountId);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(DirectMessages._ID)).from(new Tables(table));
-                qb.where(Expression.equals(DirectMessages.ACCOUNT_ID, account_id));
+                qb.where(Expression.equals(DirectMessages.ACCOUNT_ID, accountId));
                 qb.orderBy(new OrderBy(DirectMessages.MESSAGE_ID, false));
-                qb.limit(itemLimit);
+                qb.limit(itemLimit * 10);
                 final Expression where = Expression.and(Expression.notIn(new Column(DirectMessages._ID), qb.build()), account_where);
                 resolver.delete(uri, where.getSQL(), null);
             }
@@ -1528,9 +1528,9 @@ public final class Utils implements Constants {
         return ids;
     }
 
-    public static boolean isComposeNowSupported() {
+    public static boolean isComposeNowSupported(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return false;
-        return !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME);
+        return hasNavBar(context);
     }
 
     public static boolean isOfficialCredentials(final Context context, final ParcelableCredentials account) {
@@ -2253,6 +2253,17 @@ public final class Utils implements Constants {
         return date.getTime();
     }
 
+    public static boolean hasNavBar(Context context) {
+        final Resources resources = context.getResources();
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            return resources.getBoolean(id);
+        } else {
+            // Check for keys
+            return !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+                    && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME);
+        }
+    }
 
     public static String getTwitterErrorMessage(final Context context, final CharSequence action,
                                                 final TwitterException te) {

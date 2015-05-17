@@ -260,9 +260,16 @@ public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapt
         super.onDetach();
     }
 
+    @NonNull
+    protected Rect getExtraContentPadding() {
+        return new Rect();
+    }
+
     @Override
     protected void fitSystemWindows(Rect insets) {
-        mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        final Rect extraPadding = getExtraContentPadding();
+        mRecyclerView.setPadding(insets.left + extraPadding.left, insets.top + extraPadding.top,
+                insets.right + extraPadding.right, insets.bottom + extraPadding.bottom);
         mErrorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mProgressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         mSystemWindowsInsets.set(insets);

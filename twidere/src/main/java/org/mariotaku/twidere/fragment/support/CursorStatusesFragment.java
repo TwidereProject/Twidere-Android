@@ -25,13 +25,14 @@ import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 
+import com.desmond.asyncmanager.AsyncManager;
+import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.querybuilder.Columns.Column;
@@ -45,7 +46,6 @@ import org.mariotaku.twidere.loader.support.ExtendedCursorLoader;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.AccountChangedEvent;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
@@ -215,10 +215,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     @Override
     public void onLoadMoreContents() {
         super.onLoadMoreContents();
-        AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
-
+        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorStatusesFragment>() {
             @Override
-            protected long[][] doInBackground(final Object... params) {
+            public long[][] doLongOperation(Object o) throws InterruptedException {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[1] = getOldestStatusIds(result[0]);
@@ -226,20 +225,18 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
             }
 
             @Override
-            protected void onPostExecute(final long[][] result) {
-                getStatuses(result[0], result[1], result[2]);
+            public void callback(CursorStatusesFragment fragment, long[][] result) {
+                fragment.getStatuses(result[0], result[1], result[2]);
             }
-
-        });
+        }.setResultHandler(this));
     }
 
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
-        AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
-
+        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorStatusesFragment>() {
             @Override
-            protected long[][] doInBackground(final Object... params) {
+            public long[][] doLongOperation(Object o) throws InterruptedException {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[2] = getNewestStatusIds(result[0]);
@@ -247,11 +244,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
             }
 
             @Override
-            protected void onPostExecute(final long[][] result) {
-                getStatuses(result[0], result[1], result[2]);
+            public void callback(CursorStatusesFragment fragment, long[][] result) {
+                fragment.getStatuses(result[0], result[1], result[2]);
             }
-
-        });
+        }.setResultHandler(this));
         return true;
     }
 

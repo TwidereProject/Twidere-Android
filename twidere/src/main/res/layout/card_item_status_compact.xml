@@ -266,7 +266,7 @@
             android:layout_alignLeft="@id/status_content"
             android:layout_alignStart="@id/status_content"
             android:layout_below="@+id/status_content"
-            android:layout_marginTop="@dimen/element_spacing_minus_normal"
+            android:layout_marginTop="@dimen/element_spacing_minus_mlarge"
             android:layout_toLeftOf="@+id/item_menu"
             android:layout_toStartOf="@+id/item_menu"
             android:gravity="center_vertical|start"

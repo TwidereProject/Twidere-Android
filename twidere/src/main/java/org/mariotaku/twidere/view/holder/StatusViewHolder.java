@@ -211,8 +211,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
                 typeIconRes = 0;
             }
 
-            final int userColor = manager.getUserColor(status.quoted_by_user_id, false);
-            itemContent.drawStart(userColor);
+            itemContent.drawStart(manager.getUserColor(status.quoted_by_user_id, false),
+                    manager.getUserColor(status.user_id, false));
         } else {
             primaryNameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
             secondaryNameView.setText("@" + status.user_screen_name);
@@ -239,8 +239,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
                 typeIconRes = 0;
             }
-            final int userColor = manager.getUserColor(status.user_id, false);
-            itemContent.drawStart(userColor);
+            if (status.is_retweet) {
+                itemContent.drawStart(manager.getUserColor(status.retweeted_by_user_id, false),
+                        manager.getUserColor(status.user_id, false));
+            } else {
+                itemContent.drawStart(manager.getUserColor(status.user_id, false));
+            }
         }
 
         if (typeIconRes != 0) {
@@ -346,6 +350,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final long my_retweet_id = cursor.getLong(indices.my_retweet_id);
         final long in_reply_to_status_id = cursor.getLong(indices.in_reply_to_status_id);
         final long in_reply_to_user_id = cursor.getLong(indices.in_reply_to_user_id);
+        final long retweeted_by_id = cursor.getLong(indices.retweeted_by_user_id);
 
         final String user_name = cursor.getString(indices.user_name);
         final String user_screen_name = cursor.getString(indices.user_screen_name);
@@ -358,7 +363,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final ParcelableLocation location = ParcelableLocation.fromString(cursor.getString(indices.location));
 
         if (retweet_id > 0) {
-            final long retweeted_by_id = cursor.getLong(indices.retweeted_by_user_id);
             final String retweeted_by_name = cursor.getString(indices.retweeted_by_user_name);
             final String retweeted_by_screen_name = cursor.getString(indices.retweeted_by_user_screen_name);
             final String retweetedBy = manager.getDisplayName(retweeted_by_id, retweeted_by_name,
@@ -422,8 +426,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
                 typeIconRes = 0;
             }
 
-            final int userColor = manager.getUserColor(cursor.getLong(indices.quoted_by_user_id), false);
-            itemContent.drawStart(userColor);
+            itemContent.drawStart(manager.getUserColor(cursor.getLong(indices.quoted_by_user_id), false),
+                    manager.getUserColor(cursor.getLong(indices.user_id), false));
 
         } else {
             primaryNameView.setText(user_name);
@@ -452,8 +456,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
                 typeIconRes = 0;
             }
-            final int userColor = manager.getUserColor(user_id, false);
-            itemContent.drawStart(userColor);
+            if (retweet_id > 0) {
+                itemContent.drawStart(manager.getUserColor(retweeted_by_id, false), manager.getUserColor(user_id, false));
+            } else {
+                itemContent.drawStart(manager.getUserColor(user_id, false));
+            }
         }
 
         if (typeIconRes != 0) {
@@ -503,7 +510,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             retweet_count = Math.max(0, cursor.getLong(indices.retweet_count) - 1);
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(account_id, status_id);
-            final long retweeted_by_id = cursor.getLong(indices.retweeted_by_user_id);
             retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(account_id,
                     retweeted_by_id, my_retweet_id));
             retweet_count = cursor.getLong(indices.retweet_count) + (creatingRetweet ? 1 : 0);
