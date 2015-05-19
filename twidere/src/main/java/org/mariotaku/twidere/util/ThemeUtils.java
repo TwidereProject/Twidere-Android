@@ -85,7 +85,6 @@ public class ThemeUtils implements Constants {
     private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
             android.R.attr.activityCloseExitAnimation};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
-    public static final int[] ATTRS_TEXT_COLOR_PRIMARY_INVERSE = {android.R.attr.textColorPrimaryInverse};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY_AND_INVERSE = {android.R.attr.textColorPrimary,
             android.R.attr.textColorPrimaryInverse};
     public static final int[] ATTRS_COLOR_FOREGROUND_AND_INVERSE = {android.R.attr.colorForeground,
@@ -642,7 +641,9 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getActionBarAlpha(final int alpha) {
-        return MathUtils.clamp(ThemeBackgroundPreference.MIN_ALPHA + (ThemeBackgroundPreference.MAX_ALPHA - alpha) / 2,
+        final int normalizedAlpha = MathUtils.clamp(alpha, 0, 0xFF);
+        final int delta = (ThemeBackgroundPreference.MAX_ALPHA - normalizedAlpha);
+        return MathUtils.clamp(ThemeBackgroundPreference.MAX_ALPHA - delta / 2,
                 ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
     }
 

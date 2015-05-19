@@ -7,11 +7,12 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.view.iface.ICustomTypefaceTextView;
 
 /**
  * Created by mariotaku on 14/11/14.
  */
-public class AssetFontTextView extends TextView {
+public class AssetFontTextView extends TextView implements ICustomTypefaceTextView {
     public AssetFontTextView(Context context) {
         this(context, null);
     }

@@ -29,25 +29,20 @@
         </org.mariotaku.twidere.preference.SeekBarDialogPreference>
 
     </PreferenceCategory>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
         android:key="unread_count"
         android:title="@string/unread_count">
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="leftside_compose_button"
         android:summary="@string/leftside_compose_button_summary"
         android:title="@string/leftside_compose_button" />
-
-    <!--<org.mariotaku.twidere.preference.AutoFixCheckBoxPreference-->
-        <!--android:defaultValue="false"-->
-        <!--android:key="fast_scroll_thumb"-->
-        <!--android:title="@string/fast_scroll_thumb" />-->
 
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="@string/default_tab_display_option"

@@ -1382,7 +1382,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final String backgroundOption = themed.getThemeBackgroundOption();
         final int actionBarColor = ThemeUtils.getActionBarColor(activity, color, themeRes, backgroundOption);
         if (mTintedStatusContent != null) {
-            mTintedStatusContent.setColor(actionBarColor, ThemeUtils.getActionBarAlpha(themed.getCurrentThemeBackgroundAlpha()));
+            final int alpha = ThemeUtils.isTransparentBackground(backgroundOption) ? themed.getCurrentThemeBackgroundAlpha() : 0xFF;
+            mTintedStatusContent.setColor(actionBarColor, ThemeUtils.getActionBarAlpha(alpha));
         }
         if (mActionBarBackground != null) {
             mActionBarBackground.setColor(actionBarColor);

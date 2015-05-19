@@ -57,6 +57,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
     public TabPagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        ViewCompat.setLayoutDirection(this, ViewCompat.LAYOUT_DIRECTION_LTR);
         final Resources res = getResources();
         mIndicatorAdapter = new TabPagerIndicatorAdapter(this);
         mItemDecoration = new DividerItemDecoration(context, HORIZONTAL);

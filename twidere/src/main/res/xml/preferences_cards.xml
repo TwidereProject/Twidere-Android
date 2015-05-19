@@ -9,7 +9,7 @@
         <org.mariotaku.twidere.preference.CardPreviewPreference android:key="card_preview" />
     </PreferenceCategory>
 
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
         android:key="name_first"
         android:order="22"
@@ -19,9 +19,9 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
         android:key="display_profile_image"
         android:order="23"
@@ -29,7 +29,7 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
@@ -42,7 +42,7 @@
             android:value="true" />
     </org.mariotaku.twidere.preference.SummaryListPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="media_preview"
         android:order="25"
@@ -50,7 +50,7 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="crop"
         android:entries="@array/entries_media_preview_style"
@@ -73,7 +73,7 @@
             android:value="true" />
     </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="show_absolute_time"
         android:order="30"
@@ -82,8 +82,8 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
         android:key="card_animation"
         android:order="31"
@@ -91,8 +91,8 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="compact_cards"
         android:order="32"
@@ -101,8 +101,8 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="hide_card_actions"
         android:order="33"
@@ -110,6 +110,6 @@
         <extra
             android:name="notify_change"
             android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
 </PreferenceScreen>
