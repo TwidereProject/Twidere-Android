@@ -125,12 +125,10 @@
                 android:layout_toStartOf="@+id/extra_type"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/name_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/element_spacing_xsmall"
-                    android:layout_marginTop="@dimen/element_spacing_small"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -148,14 +146,17 @@
                         android:id="@+id/screen_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/name"
                         android:layout_marginLeft="@dimen/element_spacing_small"
                         android:layout_marginStart="@dimen/element_spacing_small"
+                        android:layout_toRightOf="@+id/name"
+                        android:layout_toEndOf="@+id/name"
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorSecondary"
                         tools:text="\@user"
                         tools:textSize="@dimen/text_size_extra_small" />
-                </LinearLayout>
+                </RelativeLayout>
 
 
                 <org.mariotaku.twidere.view.ShortTimeView
