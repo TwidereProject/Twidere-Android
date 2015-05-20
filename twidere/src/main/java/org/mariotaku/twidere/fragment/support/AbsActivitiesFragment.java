@@ -71,7 +71,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        return false;
+        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event);
     }
 
     @Override
@@ -96,7 +96,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
-        mNavigationHelper = new RecyclerViewNavigationHelper(getRecyclerView(), getLayoutManager(), adapter);
+        mNavigationHelper = new RecyclerViewNavigationHelper(getRecyclerView(), getLayoutManager(),
+                adapter, this);
         final View view = getView();
         if (view == null) throw new AssertionError();
         adapter.setListener(this);
@@ -108,12 +109,14 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
     public void onStart() {
         super.onStart();
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.register(mStatusesBusCallback);
     }
 
     @Override
     public void onStop() {
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.unregister(mStatusesBusCallback);
         super.onStop();
     }

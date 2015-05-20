@@ -144,7 +144,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                 return true;
             }
         }
-        return false;
+        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event);
     }
 
     @Override
@@ -367,7 +367,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter);
+        mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager,
+                adapter, this);
 
         adapter.setListener(this);
 

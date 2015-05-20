@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -41,13 +42,17 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
     private final LinearLayoutManager manager;
     @NonNull
     private final Adapter<ViewHolder> adapter;
+    @Nullable
+    private final ContentListScrollListener.ContentListSupport support;
 
     public RecyclerViewNavigationHelper(@NonNull final RecyclerView view,
                                         @NonNull final LinearLayoutManager manager,
-                                        @NonNull final Adapter<ViewHolder> adapter) {
+                                        @NonNull final Adapter<ViewHolder> adapter,
+                                        @Nullable final ContentListScrollListener.ContentListSupport support) {
         this.view = view;
         this.manager = manager;
         this.adapter = adapter;
+        this.support = support;
     }
 
     @Override
@@ -103,6 +108,9 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
             case ACTION_NAVIGATION_TOP: {
                 view.stopScroll();
                 manager.scrollToPositionWithOffset(0, 0);
+                if (support != null) {
+                    support.setControlVisible(true);
+                }
                 return true;
             }
         }
