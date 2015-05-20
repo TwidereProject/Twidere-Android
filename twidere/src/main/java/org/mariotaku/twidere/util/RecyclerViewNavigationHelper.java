@@ -97,6 +97,15 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (action == null) return false;
+        switch (action) {
+            case ACTION_NAVIGATION_TOP: {
+                view.stopScroll();
+                manager.scrollToPositionWithOffset(0, 0);
+                return true;
+            }
+        }
         return false;
     }
 }

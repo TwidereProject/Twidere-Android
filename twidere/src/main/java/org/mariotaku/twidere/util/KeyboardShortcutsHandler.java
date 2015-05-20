@@ -38,6 +38,7 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         sActionLabelMap.put(ACTION_STATUS_FAVORITE, R.string.favorite);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS, R.string.previous_item);
         sActionLabelMap.put(ACTION_NAVIGATION_NEXT, R.string.next_item);
+        sActionLabelMap.put(ACTION_NAVIGATION_TOP, R.string.jump_to_top);
         sActionLabelMap.put(ACTION_NAVIGATION_REFRESH, R.string.refresh);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS_TAB, R.string.previous_tab);
         sActionLabelMap.put(ACTION_NAVIGATION_NEXT_TAB, R.string.next_tab);
@@ -218,6 +219,7 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         editor.putString("navigation.k", ACTION_NAVIGATION_PREVIOUS);
         editor.putString("navigation.h", ACTION_NAVIGATION_PREVIOUS_TAB);
         editor.putString("navigation.l", ACTION_NAVIGATION_NEXT_TAB);
+        editor.putString("navigation.u", ACTION_NAVIGATION_TOP);
         editor.putString("status.f", ACTION_STATUS_FAVORITE);
         editor.putString("status.r", ACTION_STATUS_REPLY);
         editor.putString("status.t", ACTION_STATUS_RETWEET);

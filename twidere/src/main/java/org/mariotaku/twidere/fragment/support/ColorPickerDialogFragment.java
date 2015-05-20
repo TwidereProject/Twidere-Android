@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.iface.IDialogFragmentCallback;
@@ -34,6 +35,8 @@ import me.uucky.colorpicker.ColorPickerDialog;
 
 public final class ColorPickerDialogFragment extends BaseSupportDialogFragment implements
         DialogInterface.OnClickListener {
+
+    private ColorPickerDialog.Controller mController;
 
     @Override
     public void onCancel(final DialogInterface dialog) {
@@ -47,11 +50,10 @@ public final class ColorPickerDialogFragment extends BaseSupportDialogFragment i
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         final FragmentActivity a = getActivity();
-        final Dialog d = getDialog();
-        if (!(a instanceof Callback) || !(d instanceof ColorPickerDialog)) return;
+        if (!(a instanceof Callback) || mController == null) return;
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {
-                final int color = ((ColorPickerDialog) d).getColor();
+                final int color = mController.getColor();
                 ((Callback) a).onColorSelected(color);
                 break;
             }
@@ -72,20 +74,32 @@ public final class ColorPickerDialogFragment extends BaseSupportDialogFragment i
         } else {
             color = args.getInt(EXTRA_COLOR, Color.WHITE);
         }
-        final boolean showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true);
-        final ColorPickerDialog d = new ColorPickerDialog(getActivity());
-        final Resources res = getResources();
-        for (int presetColor : PRESET_COLORS) {
-            d.addColor(res.getColor(presetColor));
-        }
-        d.setInitialColor(color);
-        d.setAlphaEnabled(showAlphaSlider);
-        d.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), this);
+
+        final FragmentActivity activity = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setView(me.uucky.colorpicker.R.layout.cp__dialog_color_picker);
+        builder.setPositiveButton(android.R.string.ok, this);
         if (args.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
-            d.setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.clear), this);
+            builder.setNeutralButton(R.string.clear, this);
         }
-        d.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), this);
-        return d;
+        builder.setNegativeButton(android.R.string.cancel, this);
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface di) {
+                final Dialog dialog = (Dialog) di;
+                mController = new ColorPickerDialog.Controller(dialog.getContext(), dialog.getWindow().getDecorView());
+
+                final boolean showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true);
+                final Resources res = getResources();
+                for (int presetColor : PRESET_COLORS) {
+                    mController.addColor(res.getColor(presetColor));
+                }
+                mController.setAlphaEnabled(showAlphaSlider);
+                mController.setInitialColor(color);
+            }
+        });
+        return dialog;
     }
 
     @Override
@@ -99,9 +113,8 @@ public final class ColorPickerDialogFragment extends BaseSupportDialogFragment i
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        final Dialog d = getDialog();
-        if (d instanceof ColorPickerDialog) {
-            outState.putInt(EXTRA_COLOR, ((ColorPickerDialog) d).getColor());
+        if (mController != null) {
+            outState.putInt(EXTRA_COLOR, mController.getColor());
         }
         super.onSaveInstanceState(outState);
     }

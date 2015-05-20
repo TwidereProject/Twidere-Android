@@ -753,4 +753,5 @@
     <string name="disable_retweets">Disable retweets</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
+    <string name="jump_to_top">Jump to top</string>
 </resources>

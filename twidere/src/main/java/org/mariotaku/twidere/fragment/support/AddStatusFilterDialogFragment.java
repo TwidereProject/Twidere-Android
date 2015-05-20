@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
