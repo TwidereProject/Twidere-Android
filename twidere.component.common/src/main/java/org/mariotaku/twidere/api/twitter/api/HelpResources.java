@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
-import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Language;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;

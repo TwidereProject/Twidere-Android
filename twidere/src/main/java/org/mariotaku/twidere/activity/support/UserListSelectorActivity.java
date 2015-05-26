@@ -52,7 +52,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -248,7 +248,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mActivity, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
@@ -319,7 +319,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mActivity, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Paging paging = new Paging();

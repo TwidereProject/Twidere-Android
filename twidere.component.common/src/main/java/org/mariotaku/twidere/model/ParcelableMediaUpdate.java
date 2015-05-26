@@ -7,11 +7,13 @@ import android.text.TextUtils;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import java.io.IOException;
 import java.util.List;
 
 @JsonObject
+@ParcelablePlease(allFields = false)
 public class ParcelableMediaUpdate implements Parcelable {
 
     public static final Parcelable.Creator<ParcelableMediaUpdate> CREATOR = new Parcelable.Creator<ParcelableMediaUpdate>() {

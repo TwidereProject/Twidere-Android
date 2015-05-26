@@ -37,7 +37,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.text.Collator;
 import java.util.Comparator;
@@ -48,7 +48,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getDefaultTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIFactory.getDefaultTwitterInstance;
 
 public class TrendsLocationPreference extends Preference implements Constants, OnClickListener {
 
@@ -172,7 +172,7 @@ public class TrendsLocationPreference extends Preference implements Constants, O
 
         @Override
         protected ResponseList<Location> doInBackground(final Object... args) {
-            final Twitter twitter = TwitterAPIUtils.getDefaultTwitterInstance(getContext(), false);
+            final Twitter twitter = TwitterAPIFactory.getDefaultTwitterInstance(getContext(), false);
             if (twitter == null) return null;
             try {
                 return twitter.getAvailableTrends();

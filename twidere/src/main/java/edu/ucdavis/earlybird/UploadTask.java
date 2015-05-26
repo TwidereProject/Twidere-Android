@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.Settings.Secure;
 
-import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestHttpRequest;
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
-import org.mariotaku.simplerestapi.http.mime.FileTypedData;
-import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
-import org.mariotaku.simplerestapi.method.POST;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.http.RestHttpRequest;
+import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.MultipartTypedBody;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +37,7 @@ public class UploadTask extends AsyncTask<Object, Object, Object> {
 
     public UploadTask(final Context context) {
         this.context = context;
-        this.client = TwitterAPIUtils.getDefaultHttpClient(context);
+        this.client = TwitterAPIFactory.getDefaultHttpClient(context);
         device_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
     }
 

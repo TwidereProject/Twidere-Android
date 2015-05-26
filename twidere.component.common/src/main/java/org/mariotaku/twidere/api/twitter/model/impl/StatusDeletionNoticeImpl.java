@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,26 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.streaming.util;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import android.content.Context;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.http.HostAddressResolver;
-import org.mariotaku.twidere.api.twitter.http.HostAddressResolverFactory;
-import org.mariotaku.twidere.api.twitter.http.HttpClientConfiguration;
+import org.mariotaku.twidere.api.twitter.model.StatusDeletionNotice;
 
 /**
- * Created by mariotaku on 15/1/11.
+ * Created by mariotaku on 15/5/26.
  */
-public class TwidereHostAddressResolverFactory implements HostAddressResolverFactory {
-    private final Context context;
-
-    public TwidereHostAddressResolverFactory(Context context) {
-        this.context = context;
-    }
-
+@JsonObject
+public class StatusDeletionNoticeImpl implements StatusDeletionNotice {
     @Override
-    public HostAddressResolver getInstance(HttpClientConfiguration conf) {
-        return new TwidereHostAddressResolver(context);
+    public long getStatusId() {
+        return 0;
     }
 }

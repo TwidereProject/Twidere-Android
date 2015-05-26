@@ -84,7 +84,7 @@ import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
 import org.mariotaku.twidere.model.ListResponse;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -105,7 +105,7 @@ import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -966,7 +966,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 ParcelableStatus status = params[0];
                 final long accountId = status.account_id;
                 if (Utils.isOfficialKeyAccount(context, accountId)) {
-                    final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, accountId, true);
+                    final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
                     while (status.in_reply_to_status_id > 0 && !isCancelled()) {
                         final ParcelableStatus cached = Utils.findStatusInDatabases(context, accountId, status.in_reply_to_status_id);
                         if (cached == null) break;

@@ -107,7 +107,7 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -129,7 +129,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -195,6 +195,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
     private View mPagerOverlay;
+    private View mErrorOverlay;
     private View mUuckyFooter;
     private View mProfileBannerContainer;
     private Button mFollowButton;
@@ -794,6 +795,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (activity instanceof IThemedActivity) {
             ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
                     ((IThemedActivity) activity).getCurrentThemeResourceId()));
+            ViewSupport.setBackground(mErrorOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
+                    ((IThemedActivity) activity).getCurrentThemeResourceId()));
         }
 
         setupBaseActionBar();
@@ -1110,6 +1113,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.view_pager_tabs);
         mPagerOverlay = contentView.findViewById(R.id.pager_window_overlay);
+        mErrorOverlay = contentView.findViewById(R.id.error_window_overlay);
         mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
         mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
@@ -1485,7 +1489,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ProfileBannerImageView profileBannerView = mProfileBannerView;
         final View profileBannerContainer = mProfileBannerContainer;
         final int spaceHeight = space.getHeight();
-        final float factor = MathUtils.clamp(offset / (float) spaceHeight, 0, 1);
+        final float factor = MathUtils.clamp(spaceHeight == 0 ? 0 : (offset / (float) spaceHeight), 0, 1);
 //        profileBannerContainer.setTranslationY(Math.max(-offset, -spaceHeight));
 //        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
         profileBannerContainer.setTranslationY(-offset);
@@ -1659,7 +1663,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Override
         public SingleResponse<Relationship> loadInBackground() {
             if (account_id == user_id) return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, account_id, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, account_id, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Relationship relationship = twitter.showFriendship(user_id);

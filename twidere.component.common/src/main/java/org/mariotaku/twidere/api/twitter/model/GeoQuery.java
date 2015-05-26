@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.simplerestapi.http.ValueMap;
+import org.mariotaku.restfu.http.ValueMap;
 
 
 /**

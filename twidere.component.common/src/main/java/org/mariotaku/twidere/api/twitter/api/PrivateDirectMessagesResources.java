@@ -19,10 +19,10 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
-import org.mariotaku.simplerestapi.http.BodyType;
-import org.mariotaku.simplerestapi.method.POST;
-import org.mariotaku.simplerestapi.param.Body;
-import org.mariotaku.simplerestapi.param.Path;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Body;
+import org.mariotaku.restfu.annotation.param.Path;
+import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 
 @SuppressWarnings("RedundantThrows")

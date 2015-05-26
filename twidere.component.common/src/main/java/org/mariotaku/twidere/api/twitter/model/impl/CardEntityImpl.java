@@ -26,7 +26,7 @@ import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.User;

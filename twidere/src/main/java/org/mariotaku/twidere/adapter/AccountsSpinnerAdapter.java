@@ -28,7 +28,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
 import java.util.Collection;

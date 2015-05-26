@@ -22,10 +22,10 @@ package org.mariotaku.twidere.api.twitter.auth;
 import android.util.Base64;
 import android.util.Pair;
 
-import org.mariotaku.simplerestapi.RequestInfo;
-import org.mariotaku.simplerestapi.Utils;
-import org.mariotaku.simplerestapi.http.Authorization;
-import org.mariotaku.simplerestapi.http.Endpoint;
+import org.mariotaku.restfu.RestRequestInfo;
+import org.mariotaku.restfu.Utils;
+import org.mariotaku.restfu.http.Authorization;
+import org.mariotaku.restfu.http.Endpoint;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -130,7 +130,7 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     }
 
     @Override
-    public String getHeader(Endpoint endpoint, RequestInfo request) {
+    public String getHeader(Endpoint endpoint, RestRequestInfo request) {
         if (!(endpoint instanceof OAuthEndpoint))
             throw new IllegalArgumentException("OAuthEndpoint required");
         final OAuthEndpoint oauthEndpoint = (OAuthEndpoint) endpoint;

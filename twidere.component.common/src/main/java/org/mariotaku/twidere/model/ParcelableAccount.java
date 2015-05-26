@@ -29,6 +29,8 @@ import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ParcelablePlease(allFields = false)
 @JsonObject
 public class ParcelableAccount implements Parcelable {
 
@@ -57,28 +60,35 @@ public class ParcelableAccount implements Parcelable {
         }
     };
 
-
+    @ParcelableThisPlease
     @JsonField(name = "screen_name")
     public String screen_name;
 
+    @ParcelableThisPlease
     @JsonField(name = "name")
     public String name;
 
+    @ParcelableThisPlease
     @JsonField(name = "profile_image_url")
     public String profile_image_url;
 
+    @ParcelableThisPlease
     @JsonField(name = "profile_banner_url")
     public String profile_banner_url;
 
+    @ParcelableThisPlease
     @JsonField(name = "account_id")
     public long account_id;
 
+    @ParcelableThisPlease
     @JsonField(name = "color")
     public int color;
 
+    @ParcelableThisPlease
     @JsonField(name = "is_activated")
     public boolean is_activated;
 
+    @ParcelableThisPlease
     @JsonField(name = "is_dummy")
     public boolean is_dummy;
 
@@ -95,14 +105,7 @@ public class ParcelableAccount implements Parcelable {
     }
 
     public ParcelableAccount(final Parcel source) {
-        is_dummy = source.readInt() == 1;
-        is_activated = source.readInt() == 1;
-        account_id = source.readLong();
-        name = source.readString();
-        screen_name = source.readString();
-        profile_image_url = source.readString();
-        profile_banner_url = source.readString();
-        color = source.readInt();
+        ParcelableAccountParcelablePlease.readFromParcel(this, source);
     }
 
     public ParcelableAccount() {
@@ -116,14 +119,7 @@ public class ParcelableAccount implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel out, final int flags) {
-        out.writeInt(is_dummy ? 1 : 0);
-        out.writeInt(is_activated ? 1 : 0);
-        out.writeLong(account_id);
-        out.writeString(name);
-        out.writeString(screen_name);
-        out.writeString(profile_image_url);
-        out.writeString(profile_banner_url);
-        out.writeInt(color);
+        ParcelableAccountParcelablePlease.writeToParcel(this, out, flags);
     }
 
     public static ParcelableAccount dummyAccount() {
@@ -285,109 +281,6 @@ public class ParcelableAccount implements Parcelable {
         return "Account{screen_name=" + screen_name + ", name=" + name + ", profile_image_url=" + profile_image_url
                 + ", profile_banner_url=" + profile_banner_url + ", account_id=" + account_id + ", color=" + color
                 + ", is_activated=" + is_activated + ", is_dummy=" + is_dummy + "}";
-    }
-
-    @JsonObject
-    public static class ParcelableCredentials extends ParcelableAccount {
-
-        public static final Parcelable.Creator<ParcelableCredentials> CREATOR = new Parcelable.Creator<ParcelableCredentials>() {
-
-            @Override
-            public ParcelableCredentials createFromParcel(final Parcel in) {
-                return new ParcelableCredentials(in);
-            }
-
-            @Override
-            public ParcelableCredentials[] newArray(final int size) {
-                return new ParcelableCredentials[size];
-            }
-        };
-
-
-        @JsonField(name = "auth_type")
-        public int auth_type;
-
-        @JsonField(name = "consumer_key")
-        public String consumer_key;
-
-        @JsonField(name = "consumer_secret")
-        public String consumer_secret;
-
-        @JsonField(name = "basic_auth_username")
-        public String basic_auth_username;
-
-        @JsonField(name = "basic_auth_password")
-        public String basic_auth_password;
-
-        @JsonField(name = "oauth_token")
-        public String oauth_token;
-
-        @JsonField(name = "oauth_token_secret")
-        public String oauth_token_secret;
-
-        @JsonField(name = "api_url_format")
-        public String api_url_format;
-
-        @JsonField(name = "same_oauth_signing_url")
-        public boolean same_oauth_signing_url;
-
-        @JsonField(name = "no_version_suffix")
-        public boolean no_version_suffix;
-
-        public ParcelableCredentials() {
-        }
-
-        public ParcelableCredentials(final Cursor cursor, final Indices indices) {
-            super(cursor, indices);
-            auth_type = cursor.getInt(indices.auth_type);
-            consumer_key = cursor.getString(indices.consumer_key);
-            consumer_secret = cursor.getString(indices.consumer_secret);
-            basic_auth_username = cursor.getString(indices.basic_auth_username);
-            basic_auth_password = cursor.getString(indices.basic_auth_password);
-            oauth_token = cursor.getString(indices.oauth_token);
-            oauth_token_secret = cursor.getString(indices.oauth_token_secret);
-            api_url_format = cursor.getString(indices.api_url_format);
-            same_oauth_signing_url = cursor.getInt(indices.same_oauth_signing_url) == 1;
-            no_version_suffix = cursor.getInt(indices.no_version_suffix) == 1;
-        }
-
-        public ParcelableCredentials(Parcel in) {
-            super(in);
-            auth_type = in.readInt();
-            consumer_key = in.readString();
-            consumer_secret = in.readString();
-            basic_auth_username = in.readString();
-            basic_auth_password = in.readString();
-            oauth_token = in.readString();
-            oauth_token_secret = in.readString();
-            api_url_format = in.readString();
-            same_oauth_signing_url = in.readInt() == 1;
-            no_version_suffix = in.readInt() == 1;
-        }
-
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeInt(auth_type);
-            out.writeString(consumer_key);
-            out.writeString(consumer_secret);
-            out.writeString(basic_auth_username);
-            out.writeString(basic_auth_password);
-            out.writeString(oauth_token);
-            out.writeString(oauth_token_secret);
-            out.writeString(api_url_format);
-            out.writeInt(same_oauth_signing_url ? 1 : 0);
-            out.writeInt(no_version_suffix ? 1 : 0);
-        }
-
-        @Override
-        public String toString() {
-            return "AccountWithCredentials{auth_type=" + auth_type + ", consumer_key=" + consumer_key
-                    + ", consumer_secret=" + consumer_secret + ", basic_auth_password=" + basic_auth_password
-                    + ", oauth_token=" + oauth_token + ", oauth_token_secret=" + oauth_token_secret
-                    + ", api_url_format=" + api_url_format + ", same_oauth_signing_url=" + same_oauth_signing_url + "}";
-        }
     }
 
     public static final class Indices {

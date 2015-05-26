@@ -55,6 +55,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ErrorLogger;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -270,6 +271,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private void initBugReport() {
         ACRA.init(this);
+        ErrorLogger.setEnabled(BuildConfig.DEBUG);
     }
 
     private void migrateUsageStatisticsPreferences() {

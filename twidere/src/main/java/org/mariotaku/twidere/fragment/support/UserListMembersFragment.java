@@ -30,13 +30,13 @@ import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserListMembersLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
 
 public class UserListMembersFragment extends CursorSupportUsersListFragment {
 
@@ -124,7 +124,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
 
         @Override
         protected ParcelableUserList doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(getActivity(), accountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), accountId, true);
             if (twitter == null) return null;
             try {
                 final UserList list;

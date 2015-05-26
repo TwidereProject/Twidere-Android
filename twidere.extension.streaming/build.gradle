@@ -29,6 +29,16 @@ android {
         versionCode 14
         versionName "1.12 (0.3.0-dev)"
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -42,8 +52,7 @@ android {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile project(':twidere.library.extension')
-    compile project(':twidere.component.twitter4j.streaming')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

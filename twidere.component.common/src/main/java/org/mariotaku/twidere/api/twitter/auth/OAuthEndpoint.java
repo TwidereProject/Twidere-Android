@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.auth;
 
-import org.mariotaku.simplerestapi.http.Endpoint;
+import org.mariotaku.restfu.http.Endpoint;
 
 /**
  * Created by mariotaku on 15/2/6.

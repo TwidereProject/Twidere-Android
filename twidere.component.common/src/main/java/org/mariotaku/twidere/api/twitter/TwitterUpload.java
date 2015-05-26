@@ -19,16 +19,15 @@
 
 package org.mariotaku.twidere.api.twitter;
 
-import org.mariotaku.simplerestapi.http.BodyType;
-import org.mariotaku.simplerestapi.http.mime.FileTypedData;
-import org.mariotaku.simplerestapi.method.POST;
-import org.mariotaku.simplerestapi.param.Body;
-import org.mariotaku.simplerestapi.param.Part;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Body;
+import org.mariotaku.restfu.annotation.param.Part;
+import org.mariotaku.restfu.http.BodyType;
+import org.mariotaku.restfu.http.mime.FileTypedData;
 
 import java.io.File;
 
 import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 @SuppressWarnings("RedundantThrows")
 public interface TwitterUpload {

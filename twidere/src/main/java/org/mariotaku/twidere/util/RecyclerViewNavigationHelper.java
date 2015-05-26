@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.KeyEvent;
 import android.view.View;
 
+import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 
 /**
@@ -43,16 +44,16 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
     @NonNull
     private final Adapter<ViewHolder> adapter;
     @Nullable
-    private final ContentListScrollListener.ContentListSupport support;
+    private final RefreshScrollTopInterface iface;
 
     public RecyclerViewNavigationHelper(@NonNull final RecyclerView view,
                                         @NonNull final LinearLayoutManager manager,
                                         @NonNull final Adapter<ViewHolder> adapter,
-                                        @Nullable final ContentListScrollListener.ContentListSupport support) {
+                                        @Nullable final RefreshScrollTopInterface iface) {
         this.view = view;
         this.manager = manager;
         this.adapter = adapter;
-        this.support = support;
+        this.iface = iface;
     }
 
     @Override
@@ -106,10 +107,8 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
         if (action == null) return false;
         switch (action) {
             case ACTION_NAVIGATION_TOP: {
-                view.stopScroll();
-                manager.scrollToPositionWithOffset(0, 0);
-                if (support != null) {
-                    support.setControlVisible(true);
+                if (iface != null) {
+                    iface.scrollToStart();
                 }
                 return true;
             }

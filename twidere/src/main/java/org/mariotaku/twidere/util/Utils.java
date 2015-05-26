@@ -33,7 +33,6 @@ import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -129,9 +128,9 @@ import org.mariotaku.querybuilder.Selectable;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Tables;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
-import org.mariotaku.simplerestapi.RestAPIFactory;
-import org.mariotaku.simplerestapi.RestClient;
-import org.mariotaku.simplerestapi.http.Authorization;
+import org.mariotaku.restfu.RestAPIFactory;
+import org.mariotaku.restfu.RestClient;
+import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -187,9 +186,8 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
-import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -1161,7 +1159,7 @@ public final class Utils implements Constants {
         if (context == null) throw new NullPointerException();
         final ParcelableStatus cached = findStatusInDatabases(context, accountId, statusId);
         if (cached != null) return cached;
-        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, accountId, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
         if (twitter == null) throw new TwitterException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
@@ -1535,8 +1533,8 @@ public final class Utils implements Constants {
 
     public static boolean isOfficialCredentials(final Context context, final ParcelableCredentials account) {
         if (account == null) return false;
-        final boolean isOAuth = account.auth_type == Accounts.AUTH_TYPE_OAUTH
-                || account.auth_type == Accounts.AUTH_TYPE_XAUTH;
+        final boolean isOAuth = account.auth_type == ParcelableCredentials.AUTH_TYPE_OAUTH
+                || account.auth_type == ParcelableCredentials.AUTH_TYPE_XAUTH;
         final String consumerKey = account.consumer_key, consumerSecret = account.consumer_secret;
         return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
     }
@@ -1584,49 +1582,6 @@ public final class Utils implements Constants {
         return cr.update(CachedUsers.CONTENT_URI, values, where.getSQL(), null) != 0;
     }
 
-
-    public static String getApiBaseUrl(String format, final String domain) {
-        if (format == null) return null;
-        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]").matcher(format);
-        if (!matcher.find()) {
-            // For backward compatibility
-            format = substituteLegacyApiBaseUrl(format, domain);
-            if (!format.endsWith("/1.1") && !format.endsWith("/1.1/")) {
-                return format;
-            }
-            final String versionSuffix = "/1.1";
-            final int suffixLength = versionSuffix.length();
-            final int lastIndex = format.lastIndexOf(versionSuffix);
-            return format.substring(0, lastIndex) + format.substring(lastIndex + suffixLength);
-        }
-        if (TextUtils.isEmpty(domain)) return matcher.replaceAll("");
-        return matcher.replaceAll(String.format("$1%s$2", domain));
-    }
-
-    private static String substituteLegacyApiBaseUrl(@NonNull String format, String domain) {
-        final int startOfHost = format.indexOf("://") + 3, endOfHost = format.indexOf('/', startOfHost);
-        final String host = endOfHost != -1 ? format.substring(startOfHost, endOfHost) : format.substring(startOfHost);
-        if (!host.equalsIgnoreCase("api.twitter.com")) return format;
-        return format.substring(0, startOfHost) + domain + ".twitter.com" + format.substring(endOfHost);
-    }
-
-    public static String getApiUrl(final String pattern, final String domain, final String appendPath) {
-        final String urlBase = getApiBaseUrl(pattern, domain);
-        if (urlBase == null) return null;
-        if (appendPath == null) return urlBase.endsWith("/") ? urlBase : urlBase + "/";
-        final StringBuilder sb = new StringBuilder(urlBase);
-        if (urlBase.endsWith("/")) {
-            sb.append(appendPath.startsWith("/") ? appendPath.substring(1) : appendPath);
-        } else {
-            if (appendPath.startsWith("/")) {
-                sb.append(appendPath);
-            } else {
-                sb.append('/');
-                sb.append(appendPath);
-            }
-        }
-        return sb.toString();
-    }
 
     public static String getBestBannerUrl(final String baseUrl, final int width) {
         final String type = getBestBannerType(width);
@@ -3308,36 +3263,6 @@ public final class Utils implements Constants {
             addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
         }
 
-    }
-
-
-    public static String getTwidereUserAgent(final Context context) {
-        final PackageManager pm = context.getPackageManager();
-        try {
-            final PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-            return TWIDERE_APP_NAME + " " + TWIDERE_PROJECT_URL + " / " + pi.versionName;
-        } catch (final PackageManager.NameNotFoundException e) {
-            throw new AssertionError(e);
-        }
-    }
-
-
-    public static String getUserAgentName(ConsumerKeyType type) {
-        switch (type) {
-            case TWITTER_FOR_ANDROID: {
-                return "TwitterAndroid";
-            }
-            case TWITTER_FOR_IPHONE: {
-                return "Twitter-iPhone";
-            }
-            case TWITTER_FOR_IPAD: {
-                return "Twitter-iPad";
-            }
-            case TWITTER_FOR_MAC: {
-                return "Twitter-Mac";
-            }
-        }
-        return "Twitter";
     }
 
     public static boolean shouldForceUsingPrivateAPIs(final Context context) {

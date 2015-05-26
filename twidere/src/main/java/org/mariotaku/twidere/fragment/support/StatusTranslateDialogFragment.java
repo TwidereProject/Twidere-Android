@@ -40,7 +40,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
@@ -157,7 +157,7 @@ public class StatusTranslateDialogFragment extends BaseSupportDialogFragment imp
         @Override
         public SingleResponse<TranslationResult> loadInBackground() {
             final Context context = getContext();
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(context, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, false);
             final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             if (twitter == null) return SingleResponse.getInstance();
             try {

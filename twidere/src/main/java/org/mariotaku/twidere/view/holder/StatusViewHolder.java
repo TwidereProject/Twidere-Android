@@ -388,10 +388,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final int typeIconRes;
 
         if (cursor.getShort(indices.is_quote) == 1) {
-            quotedPrimaryNameView.setText(user_name);
+            quotedPrimaryNameView.setText(manager.getUserNickname(user_id, user_name, false));
             quotedSecondaryNameView.setText("@" + user_screen_name);
             timeView.setTime(cursor.getLong(indices.quote_timestamp));
-            primaryNameView.setText(cursor.getString(indices.quoted_by_user_name));
+            primaryNameView.setText(manager.getUserNickname(cursor.getLong(indices.quoted_by_user_id),
+                    cursor.getString(indices.quoted_by_user_name), false));
             secondaryNameView.setText("@" + cursor.getString(indices.quoted_by_user_screen_name));
 
             final String quote_text_unescaped = cursor.getString(indices.quote_text_unescaped);
@@ -430,7 +431,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
                     manager.getUserColor(cursor.getLong(indices.user_id), false));
 
         } else {
-            primaryNameView.setText(user_name);
+            primaryNameView.setText(manager.getUserNickname(user_id, user_name, false));
             secondaryNameView.setText("@" + user_screen_name);
             if (retweet_id > 0) {
                 timeView.setTime(cursor.getLong(indices.retweet_timestamp));

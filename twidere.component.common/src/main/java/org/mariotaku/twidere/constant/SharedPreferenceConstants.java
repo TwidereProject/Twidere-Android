@@ -21,7 +21,7 @@ package org.mariotaku.twidere.constant;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.Preference;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 
 import static org.mariotaku.twidere.annotation.Preference.Type.BOOLEAN;
 import static org.mariotaku.twidere.annotation.Preference.Type.INT;
@@ -240,7 +240,7 @@ public interface SharedPreferenceConstants {
     String KEY_SAME_OAUTH_SIGNING_URL = "same_oauth_signing_url";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
-    @Preference(type = INT, hasDefault = true, defaultInt = Accounts.AUTH_TYPE_OAUTH)
+    @Preference(type = INT, hasDefault = true, defaultInt = ParcelableCredentials.AUTH_TYPE_OAUTH)
     String KEY_AUTH_TYPE = "auth_type";
     @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_KEY)
     String KEY_CONSUMER_KEY = "consumer_key";

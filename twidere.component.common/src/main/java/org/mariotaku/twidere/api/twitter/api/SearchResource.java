@@ -19,12 +19,11 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
-import org.mariotaku.simplerestapi.method.GET;
-import org.mariotaku.simplerestapi.param.Query;
-
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.QueryResult;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 @SuppressWarnings("RedundantThrows")
 public interface SearchResource {

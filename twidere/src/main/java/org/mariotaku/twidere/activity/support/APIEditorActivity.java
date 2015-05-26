@@ -35,6 +35,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
 import static org.mariotaku.twidere.util.ParseUtils.parseString;
@@ -56,12 +57,12 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
     @Override
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         final int authType = getCheckedAuthType(checkedId);
-        final boolean isOAuth = authType == Accounts.AUTH_TYPE_OAUTH || authType == Accounts.AUTH_TYPE_XAUTH;
+        final boolean isOAuth = authType == ParcelableCredentials.AUTH_TYPE_OAUTH || authType == ParcelableCredentials.AUTH_TYPE_XAUTH;
         mEditSameOAuthSigningUrl.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         mEditConsumerKey.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         mEditConsumerSecret.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         if (!mEditNoVersionSuffixChanged) {
-            mEditNoVersionSuffix.setChecked(authType == Accounts.AUTH_TYPE_TWIP_O_MODE);
+            mEditNoVersionSuffix.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
         }
     }
 
@@ -149,7 +150,7 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
 
         final SharedPreferences pref = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
-        final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, Accounts.AUTH_TYPE_OAUTH);
+        final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
         final boolean prefSameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean prefNoVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
         final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
@@ -185,10 +186,10 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
         mEditConsumerKey.setText(consumerKey);
         mEditConsumerSecret.setText(consumerSecret);
 
-        mButtonOAuth.setChecked(authType == Accounts.AUTH_TYPE_OAUTH);
-        mButtonXAuth.setChecked(authType == Accounts.AUTH_TYPE_XAUTH);
-        mButtonBasic.setChecked(authType == Accounts.AUTH_TYPE_BASIC);
-        mButtonTWIPOMode.setChecked(authType == Accounts.AUTH_TYPE_TWIP_O_MODE);
+        mButtonOAuth.setChecked(authType == ParcelableCredentials.AUTH_TYPE_OAUTH);
+        mButtonXAuth.setChecked(authType == ParcelableCredentials.AUTH_TYPE_XAUTH);
+        mButtonBasic.setChecked(authType == ParcelableCredentials.AUTH_TYPE_BASIC);
+        mButtonTWIPOMode.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
         if (mEditAuthType.getCheckedRadioButtonId() == -1) {
             mButtonOAuth.setChecked(true);
         }
@@ -202,16 +203,16 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
     private int getCheckedAuthType(final int checkedId) {
         switch (checkedId) {
             case R.id.xauth: {
-                return Accounts.AUTH_TYPE_XAUTH;
+                return ParcelableCredentials.AUTH_TYPE_XAUTH;
             }
             case R.id.basic: {
-                return Accounts.AUTH_TYPE_BASIC;
+                return ParcelableCredentials.AUTH_TYPE_BASIC;
             }
             case R.id.twip_o: {
-                return Accounts.AUTH_TYPE_TWIP_O_MODE;
+                return ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE;
             }
             default: {
-                return Accounts.AUTH_TYPE_OAUTH;
+                return ParcelableCredentials.AUTH_TYPE_OAUTH;
             }
         }
     }

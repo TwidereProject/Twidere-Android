@@ -81,7 +81,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
@@ -558,7 +558,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 final ParcelableUserList cache = mExtras.getParcelable(EXTRA_USER_LIST);
                 if (cache != null) return SingleResponse.getInstance(cache);
             }
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(getContext(), mAccountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final UserList list;

@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
+import org.mariotaku.twidere.util.ErrorLogger;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
@@ -111,6 +112,7 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
         if (handledIntent != null) {
             startActivity(handledIntent);
         } else {
+            ErrorLogger.exception(new TwitterLinkException("Unable to handle twitter uri " + uri));
             final String packageName = mPreferences.getString(KEY_FALLBACK_TWITTER_LINK_HANDLER, null);
             final Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, uri);
             fallbackIntent.setPackage(packageName);
@@ -239,14 +241,13 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                 builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, pathSegments.get(1));
                 return new Intent(Intent.ACTION_VIEW, builder.build());
             }
-            default: {
-                final String fragment = uri.getFragment();
-                if (fragment != null && fragment.startsWith("#!")) {
-
-                }
-            }
         }
         return null;
     }
 
+    private class TwitterLinkException extends Exception {
+        public TwitterLinkException(final String s) {
+            super(s);
+        }
+    }
 }

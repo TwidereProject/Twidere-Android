@@ -32,12 +32,12 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
-import org.mariotaku.simplerestapi.Utils;
-import org.mariotaku.simplerestapi.http.ContentType;
-import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestHttpRequest;
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
-import org.mariotaku.simplerestapi.http.mime.TypedData;
+import org.mariotaku.restfu.Utils;
+import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.http.RestHttpRequest;
+import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.mime.TypedData;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.restfu.http.RestHttpResponse;
 
 /**
  * Super interface of Twitter Response data interfaces which indicates that rate

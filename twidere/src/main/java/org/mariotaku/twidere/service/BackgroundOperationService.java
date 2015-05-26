@@ -43,8 +43,8 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.simplerestapi.http.ContentType;
-import org.mariotaku.simplerestapi.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.mime.FileTypedData;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -75,7 +75,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
@@ -399,8 +399,8 @@ public class BackgroundOperationService extends IntentService implements Constan
     private SingleResponse<ParcelableDirectMessage> sendDirectMessage(final NotificationCompat.Builder builder,
                                                                       final long accountId, final long recipientId,
                                                                       final String text, final String imageUri) {
-        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, accountId, true, true);
-        final TwitterUpload twitterUpload = TwitterAPIUtils.getTwitterInstance(this, accountId, true, true, TwitterUpload.class);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, accountId, true, true);
+        final TwitterUpload twitterUpload = TwitterAPIFactory.getTwitterInstance(this, accountId, true, true, TwitterUpload.class);
         if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
@@ -521,8 +521,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
             }
             for (final ParcelableAccount account : statusUpdate.accounts) {
-                final Twitter twitter = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true);
-                final TwitterUpload upload = TwitterAPIUtils.getTwitterInstance(this, account.account_id, true, true, TwitterUpload.class);
+                final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, account.account_id, true, true);
+                final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this, account.account_id, true, true, TwitterUpload.class);
                 final StatusUpdate status = new StatusUpdate(shortenedText);
                 status.inReplyToStatusId(statusUpdate.in_reply_to_status_id);
                 if (statusUpdate.location != null) {

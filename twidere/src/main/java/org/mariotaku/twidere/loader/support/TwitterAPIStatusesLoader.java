@@ -36,7 +36,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.LoganSquareWrapper;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
 
@@ -172,7 +172,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     @Nullable
     protected final Twitter getTwitter() {
-        return TwitterAPIUtils.getTwitterInstance(mContext, mAccountId, true, true);
+        return TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true, true);
     }
 
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);

@@ -22,6 +22,8 @@ package org.mariotaku.twidere.extension.streaming.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.squareup.okhttp.internal.Network;
+
 import org.mariotaku.twidere.Twidere;
 import org.mariotaku.twidere.extension.streaming.BuildConfig;
 
@@ -30,11 +32,10 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
-import org.mariotaku.twidere.api.twitter.http.HostAddressResolver;
-
-public class TwidereHostAddressResolver implements HostAddressResolver {
+public class TwidereHostAddressResolver implements Network {
 
     private static final String RESOLVER_LOGTAG = "Twidere.Streaming.Host";
+    private static TwidereHostAddressResolver sInstance;
 
     private final HostCache mHostCache = new HostCache(512);
     private final Context mContext;
@@ -44,7 +45,7 @@ public class TwidereHostAddressResolver implements HostAddressResolver {
     }
 
     @Override
-    public InetAddress[] resolve(final String host) throws UnknownHostException {
+    public InetAddress[] resolveInetAddresses(final String host) throws UnknownHostException {
         if (host == null) return null;
         // First, I'll try to load address cached.
         final InetAddress[] cached = mHostCache.get(host);
@@ -57,6 +58,11 @@ public class TwidereHostAddressResolver implements HostAddressResolver {
         final InetAddress[] resolved = Twidere.resolveHost(mContext, host);
         mHostCache.put(host, resolved);
         return resolved;
+    }
+
+    public static Network getInstance(final Context context) {
+        if (sInstance != null) return sInstance;
+        return sInstance = new TwidereHostAddressResolver(context);
     }
 
     private static class HostCache extends LinkedHashMap<String, InetAddress[]> {

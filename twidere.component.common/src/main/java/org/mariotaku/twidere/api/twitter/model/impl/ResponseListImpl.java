@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.restfu.http.RestHttpResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;

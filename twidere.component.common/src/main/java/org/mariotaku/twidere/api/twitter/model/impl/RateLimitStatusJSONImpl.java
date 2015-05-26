@@ -22,7 +22,7 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.restfu.http.RestHttpResponse;
 
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 

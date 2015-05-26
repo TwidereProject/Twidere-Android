@@ -51,6 +51,10 @@ import com.twitter.Validator;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.ImagePickerActivity;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -62,17 +66,12 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
-
-import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -130,13 +129,13 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             }
             case R.id.profile_image_camera: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
+                intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_image_gallery: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
+                intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
@@ -439,7 +438,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
         @Override
         protected SingleResponse<ParcelableUser> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIUtils.getTwitterInstance(mActivity, mAccountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, true);
             try {
                 User user = null;
                 if (isProfileChanged()) {

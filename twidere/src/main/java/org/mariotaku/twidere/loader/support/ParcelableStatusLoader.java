@@ -25,6 +25,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 
@@ -64,7 +65,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
         }
         try {
             final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
-            final ParcelableAccount.ParcelableCredentials credentials = ParcelableAccount.getCredentials(getContext(), mAccountId);
+            final ParcelableCredentials credentials = ParcelableAccount.getCredentials(getContext(), mAccountId);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
             final Bundle extras = response.getExtras();
             extras.putParcelable(EXTRA_ACCOUNT, credentials);

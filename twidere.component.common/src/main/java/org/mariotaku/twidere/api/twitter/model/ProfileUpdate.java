@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.simplerestapi.http.SimpleValueMap;
+import org.mariotaku.restfu.http.SimpleValueMap;
 
 /**
  * Created by mariotaku on 15/1/6.

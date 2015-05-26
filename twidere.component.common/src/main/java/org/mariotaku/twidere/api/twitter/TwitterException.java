@@ -22,17 +22,16 @@ package org.mariotaku.twidere.api.twitter;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.simplerestapi.http.RestHttpRequest;
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
+import org.mariotaku.restfu.http.RestHttpRequest;
+import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 import org.mariotaku.twidere.api.twitter.model.impl.RateLimitStatusJSONImpl;
+import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 import java.util.Locale;
-
-import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
-import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 /**
  * An exception class that will be thrown when TwitterAPI calls are failed.<br>
@@ -84,13 +83,16 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         this(message);
         setResponse(res);
         request = req;
-        statusCode = res != null ? res.getStatus() : -1;
     }
 
     public void setResponse(RestHttpResponse res) {
         response = res;
         if (res != null) {
             rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(res);
+            statusCode = res.getStatus();
+        } else {
+            rateLimitStatus = null;
+            statusCode = -1;
         }
     }
 

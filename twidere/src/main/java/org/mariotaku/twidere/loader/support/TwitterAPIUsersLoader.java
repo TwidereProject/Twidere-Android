@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +31,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
 
 public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
@@ -50,7 +50,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         final List<ParcelableUser> data = getData();
         final List<User> users;
         try {
-            users = getUsers(TwitterAPIUtils.getTwitterInstance(mContext, mAccountId, true));
+            users = getUsers(TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true));
             if (users == null) return data;
         } catch (final TwitterException e) {
             e.printStackTrace();

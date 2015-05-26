@@ -24,7 +24,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 
-import static org.mariotaku.twidere.util.TwitterAPIUtils.getTwitterInstance;
+import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
 
 public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<ParcelableUserList>>
         implements ICursorSupportLoader {
@@ -76,7 +76,7 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
 
     @Override
     public List<ParcelableUserList> loadInBackground() {
-        final Twitter twitter = TwitterAPIUtils.getTwitterInstance(getContext(), mAccountId, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
         List<UserList> listLoaded = null;
         try {
             listLoaded = getUserLists(twitter);

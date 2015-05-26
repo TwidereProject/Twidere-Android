@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,24 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.streaming.util;
-
-import android.content.Context;
-
-import org.mariotaku.twidere.api.twitter.http.HttpClient;
-import org.mariotaku.twidere.api.twitter.http.HttpClientConfiguration;
-import org.mariotaku.twidere.api.twitter.http.HttpClientFactory;
+package org.mariotaku.twidere.api.twitter.model;
 
 /**
- * Created by mariotaku on 15/1/22.
+ * Created by mariotaku on 15/5/26.
  */
-public class OkHttpClientFactory implements HttpClientFactory {
-    public OkHttpClientFactory(Context context) {
-
-    }
-
-    @Override
-    public HttpClient getInstance(HttpClientConfiguration conf) {
-        return new OkHttpClientImpl(conf);
-    }
+public interface Warning {
 }

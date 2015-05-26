@@ -32,26 +32,27 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
 
-import org.mariotaku.simplerestapi.RequestInfo;
-import org.mariotaku.simplerestapi.http.Authorization;
-import org.mariotaku.simplerestapi.http.Endpoint;
-import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestHttpRequest;
-import org.mariotaku.simplerestapi.http.RestHttpResponse;
-import org.mariotaku.simplerestapi.http.mime.TypedData;
-import org.mariotaku.simplerestapi.method.GET;
+import org.mariotaku.restfu.RestRequestInfo;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.http.Authorization;
+import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.http.RestHttpRequest;
+import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.mime.TypedData;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccount.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.FileNotFoundException;
@@ -84,7 +85,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     }
 
     public void reloadConnectivitySettings() {
-        mClient = TwitterAPIUtils.getDefaultHttpClient(mContext);
+        mClient = TwitterAPIFactory.getDefaultHttpClient(mContext);
         if (mUseThumbor && mPreferences.getBoolean(KEY_THUMBOR_ENABLED)) {
             final String address = mPreferences.getString(KEY_THUMBOR_ADDRESS, null);
             final String securityKey = mPreferences.getString(KEY_THUMBOR_SECURITY_KEY, null);
@@ -128,7 +129,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             final String host = uri.getHost();
             final String domain = host.substring(0, host.lastIndexOf(".twitter.com"));
             final String path = uri.getPath();
-            sb.append(Utils.getApiUrl(apiUrlFormat, domain, path));
+            sb.append(TwitterAPIUtils.getApiUrl(apiUrlFormat, domain, path));
             final String query = uri.getQuery();
             if (!TextUtils.isEmpty(query)) {
                 sb.append("?");
@@ -177,7 +178,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
                     queries.add(Pair.create(name, value));
                 }
             }
-            final RequestInfo info = new RequestInfo(method, uri.getPath(), queries, null,
+            final RestRequestInfo info = new RestRequestInfo(method, uri.getPath(), queries, null,
                     additionalHeaders, null, null, null, null);
             additionalHeaders.add(Pair.create("Authorization", auth.getHeader(endpoint, info)));
             requestUri = modifiedUri.toString();

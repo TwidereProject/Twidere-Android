@@ -40,6 +40,7 @@ import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -76,7 +77,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         if (basicUsername == null || basicPassword == null) return null;
         values.put(Accounts.BASIC_AUTH_USERNAME, basicUsername);
         values.put(Accounts.BASIC_AUTH_PASSWORD, basicPassword);
-        values.put(Accounts.AUTH_TYPE, Accounts.AUTH_TYPE_BASIC);
+        values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_BASIC);
         values.put(Accounts.ACCOUNT_ID, user.getId());
         values.put(Accounts.SCREEN_NAME, user.getScreenName());
         values.put(Accounts.NAME, user.getName());
@@ -118,7 +119,7 @@ public final class ContentValuesCreator implements TwidereConstants {
                                               final boolean noVersionSuffix) {
         if (user == null || user.getId() <= 0) return null;
         final ContentValues values = new ContentValues();
-        values.put(Accounts.AUTH_TYPE, Accounts.AUTH_TYPE_TWIP_O_MODE);
+        values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
         values.put(Accounts.ACCOUNT_ID, user.getId());
         values.put(Accounts.SCREEN_NAME, user.getScreenName());
         values.put(Accounts.NAME, user.getName());

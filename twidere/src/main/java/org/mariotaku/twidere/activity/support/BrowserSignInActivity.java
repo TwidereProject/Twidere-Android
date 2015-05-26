@@ -39,8 +39,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import org.mariotaku.simplerestapi.http.Authorization;
-import org.mariotaku.simplerestapi.http.Endpoint;
+import org.mariotaku.restfu.http.Authorization;
+import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
@@ -49,8 +49,8 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterAPIUtils;
-import org.mariotaku.twidere.util.Utils;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -238,9 +238,9 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
                 consumerSecret = defConsumerSecret;
             }
             try {
-                final Endpoint endpoint = new Endpoint(Utils.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", "oauth"));
+                final Endpoint endpoint = new Endpoint(TwitterAPIUtils.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", "oauth"));
                 final Authorization auth = new OAuthAuthorization(consumerKey, consumerSecret);
-                final TwitterOAuth twitter = TwitterAPIUtils.getInstance(mActivity, endpoint, auth, TwitterOAuth.class);
+                final TwitterOAuth twitter = TwitterAPIFactory.getInstance(mActivity, endpoint, auth, TwitterOAuth.class);
                 return twitter.getRequestToken(OAUTH_CALLBACK_OOB);
             } catch (final Exception e) {
                 e.printStackTrace();

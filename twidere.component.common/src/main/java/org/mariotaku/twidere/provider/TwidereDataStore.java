@@ -59,11 +59,6 @@ public interface TwidereDataStore {
 
     public static interface Accounts extends BaseColumns {
 
-        int AUTH_TYPE_OAUTH = 0;
-        int AUTH_TYPE_XAUTH = 1;
-        int AUTH_TYPE_BASIC = 2;
-        int AUTH_TYPE_TWIP_O_MODE = 3;
-
         String TABLE_NAME = "accounts";
         String CONTENT_PATH = TABLE_NAME;
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);

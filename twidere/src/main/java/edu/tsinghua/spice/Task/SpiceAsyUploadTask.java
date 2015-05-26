@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.mariotaku.simplerestapi.http.RestHttpClient;
-import org.mariotaku.simplerestapi.http.RestHttpRequest;
-import org.mariotaku.simplerestapi.http.mime.FileTypedData;
-import org.mariotaku.simplerestapi.http.mime.MultipartTypedBody;
-import org.mariotaku.simplerestapi.method.POST;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.http.RestHttpRequest;
+import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.MultipartTypedBody;
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +40,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
 
     public SpiceAsyUploadTask(final Context context) {
         this.context = context;
-        this.client = TwitterAPIUtils.getDefaultHttpClient(context);
+        this.client = TwitterAPIFactory.getDefaultHttpClient(context);
     }
 
 
