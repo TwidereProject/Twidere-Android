@@ -3,7 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/auto_refresh">
 
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:disableDependentsState="false"
+        android:key="auto_refresh"
+        android:title="@string/auto_refresh"/>
+
     <PreferenceCategory
+        android:dependency="auto_refresh"
         android:key="cat_refresh_content"
         android:title="@string/content_to_refresh">
         <CheckBoxPreference
@@ -22,6 +28,17 @@
             android:defaultValue="false"
             android:key="auto_refresh_trends"
             android:title="@string/trends"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:enabled="false"
+        android:key="cat_streaming"
+        android:title="@string/streaming">
+
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+            android:key="enable_streaming"
+            android:title="@string/enable_streaming"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

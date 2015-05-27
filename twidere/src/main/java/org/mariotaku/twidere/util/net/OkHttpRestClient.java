@@ -38,6 +38,7 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.TypedData;
+import org.mariotaku.twidere.util.DebugModeUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,6 +61,7 @@ public class OkHttpRestClient implements RestHttpClient {
 
     public OkHttpRestClient(OkHttpClient client) {
         this.client = client;
+        DebugModeUtils.initForHttpClient(client);
     }
 
     @NonNull

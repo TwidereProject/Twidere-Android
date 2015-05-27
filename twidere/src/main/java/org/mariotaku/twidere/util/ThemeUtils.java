@@ -1111,6 +1111,10 @@ public class ThemeUtils implements Constants {
         return context.getResources().getColor(R.color.background_color_action_bar_dark);
     }
 
+    public static boolean isDarkTheme(final String name) {
+        return VALUE_THEME_NAME_DARK.equals(name);
+    }
+
     public static final class ActionBarContextThemeWrapper extends android.support.v7.internal.view.ContextThemeWrapper {
 
         public ActionBarContextThemeWrapper(Context base, int themeres) {

@@ -1,9 +1,0 @@
-<resources>
-
-	<string name="app_name">Twidere Streaming Extension</string>
-	<string name="select_accounts">Select accounts</string>
-	<string name="enable_streaming">Enable streaming</string>
-	<string name="streaming_service_running">Streaming service is running</string>
-	<string name="request_permission">Permission request to access Twidere</string>
-
-</resources>

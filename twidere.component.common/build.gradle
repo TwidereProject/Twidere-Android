@@ -45,7 +45,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.github.mariotaku:RestFu:6ef0913'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
     compile project(':twidere.component.querybuilder')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

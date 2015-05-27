@@ -50,7 +50,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -238,7 +237,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
                 consumerSecret = defConsumerSecret;
             }
             try {
-                final Endpoint endpoint = new Endpoint(TwitterAPIUtils.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", "oauth"));
+                final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", "oauth"));
                 final Authorization auth = new OAuthAuthorization(consumerKey, consumerSecret);
                 final TwitterOAuth twitter = TwitterAPIFactory.getInstance(mActivity, endpoint, auth, TwitterOAuth.class);
                 return twitter.getRequestToken(OAUTH_CALLBACK_OOB);

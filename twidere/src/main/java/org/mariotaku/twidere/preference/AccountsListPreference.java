@@ -27,16 +27,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -55,6 +51,7 @@ import java.util.List;
 public abstract class AccountsListPreference extends PreferenceCategory implements Constants {
 
     private static final int[] ATTRS = {R.attr.switchKey, R.attr.switchDefault};
+    @Nullable
     private final String mSwitchKey;
     private final boolean mSwitchDefault;
 
@@ -77,8 +74,8 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     public void setAccountsData(final List<ParcelableAccount> accounts) {
         removeAll();
         for (final ParcelableAccount account : accounts) {
-            final AccountItemPreference preference = new AccountItemPreference(getContext(), account, mSwitchKey,
-                    mSwitchDefault);
+            final AccountItemPreference preference = new AccountItemPreference(getContext(), account,
+                    mSwitchKey, mSwitchDefault);
             setupPreference(preference, account);
             addPreference(preference);
         }
@@ -96,37 +93,21 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     protected abstract void setupPreference(AccountItemPreference preference, ParcelableAccount account);
 
     public static final class AccountItemPreference extends Preference implements ImageLoadingListener,
-            OnCheckedChangeListener, OnSharedPreferenceChangeListener, OnPreferenceClickListener, OnClickListener {
+            OnSharedPreferenceChangeListener {
 
         private final ParcelableAccount mAccount;
         private final SharedPreferences mSwitchPreference;
         private final MediaLoaderWrapper mImageLoader;
 
-        private final String mSwitchKey;
-        private final boolean mSwitchDefault;
-        private CompoundButton mToggle;
-
         public AccountItemPreference(final Context context, final ParcelableAccount account, final String switchKey,
                                      final boolean switchDefault) {
             super(context);
-            setWidgetLayoutResource(R.layout.preference_widget_account_preference_item);
-            setOnPreferenceClickListener(this);
             final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_id;
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
             final TwidereApplication app = TwidereApplication.getInstance(context);
             mImageLoader = app.getMediaLoaderWrapper();
-            mSwitchKey = switchKey;
-            mSwitchDefault = switchDefault;
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
-        }
-
-        @Override
-        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-            if (mSwitchKey == null) return;
-            final SharedPreferences.Editor editor = mSwitchPreference.edit();
-            editor.putBoolean(mSwitchKey, isChecked);
-            editor.apply();
         }
 
         @Override
@@ -165,16 +146,6 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         }
 
         @Override
-        protected View onCreateView(ViewGroup parent) {
-            final View view = super.onCreateView(parent);
-            view.findViewById(R.id.settings).setOnClickListener(this);
-            final CompoundButton toggle = (CompoundButton) view.findViewById(android.R.id.toggle);
-            toggle.setOnCheckedChangeListener(this);
-            mToggle = toggle;
-            return view;
-        }
-
-        @Override
         protected void onBindView(@NonNull final View view) {
             super.onBindView(view);
 //            final View iconView = view.findViewById(android.R.id.icon);
@@ -190,26 +161,6 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             if (summaryView instanceof TextView) {
                 ((TextView) summaryView).setSingleLine(true);
             }
-            final CompoundButton toggle = (CompoundButton) view.findViewById(android.R.id.toggle);
-            if (mSwitchKey != null) {
-                toggle.setChecked(mSwitchPreference.getBoolean(mSwitchKey, mSwitchDefault));
-            }
-        }
-
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            if (mToggle != null) {
-                mToggle.toggle();
-            }
-            return true;
-        }
-
-        @Override
-        public void onClick(View v) {
-            final Context context = getContext();
-            if (!(context instanceof PreferenceActivity)) return;
-            final PreferenceActivity activity = (PreferenceActivity) context;
-            activity.startPreferencePanel(getFragment(), getExtras(), getTitleRes(), getTitle(), null, 0);
         }
     }
 

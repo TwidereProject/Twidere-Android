@@ -51,7 +51,6 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.TwitterAPIUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
@@ -129,7 +128,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             final String host = uri.getHost();
             final String domain = host.substring(0, host.lastIndexOf(".twitter.com"));
             final String path = uri.getPath();
-            sb.append(TwitterAPIUtils.getApiUrl(apiUrlFormat, domain, path));
+            sb.append(TwitterAPIFactory.getApiUrl(apiUrlFormat, domain, path));
             final String query = uri.getQuery();
             if (!TextUtils.isEmpty(query)) {
                 sb.append("?");
@@ -152,7 +151,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         if (isTwitterAuthRequired(uri) && extras instanceof AccountExtra) {
             final AccountExtra accountExtra = (AccountExtra) extras;
             account = ParcelableAccount.getCredentials(mContext, accountExtra.account_id);
-            auth = TwitterAPIUtils.getAuthorization(account);
+            auth = TwitterAPIFactory.getAuthorization(account);
         } else {
             account = null;
             auth = null;

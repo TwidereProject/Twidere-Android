@@ -189,6 +189,8 @@ public interface SharedPreferenceConstants {
     String KEY_MENTIONS_NOTIFICATION = "mentions_notification";
     @Preference(type = BOOLEAN)
     String KEY_DIRECT_MESSAGES_NOTIFICATION = "direct_messages_notification";
+    @Preference(type = BOOLEAN)
+    String KEY_ENABLE_STREAMING = "enable_streaming";
     @Preference(type = INT)
     String KEY_LOCAL_TRENDS_WOEID = "local_trends_woeid";
     String KEY_NOTIFICATION_RINGTONE = "notification_ringtone";

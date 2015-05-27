@@ -22,16 +22,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/ASL2.0'
-    }
     productFlavors {
         google {
         }
@@ -95,11 +85,14 @@ dependencies {
     compile 'com.bluelinelabs:logansquare:1.1.0'
     compile 'ch.acra:acra:4.6.2'
     compile 'org.jraf:android-switch-backport:2.0.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
     googleCompile 'com.google.android.gms:play-services-maps:7.3.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.12'
     debugCompile 'im.dino:dbinspector:3.1.0@aar'
+    debugCompile 'com.facebook.stetho:stetho:1.1.1'
+    debugCompile 'com.facebook.stetho:stetho-okhttp:1.1.1'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
     compile fileTree(dir: 'libs/main', include: ['*.jar'])

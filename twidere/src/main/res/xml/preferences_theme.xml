@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/theme">
 
@@ -7,20 +8,18 @@
         android:key="cat_theme_preview"
         android:order="11"
         android:title="@string/preview">
-        <org.mariotaku.twidere.preference.ThemePreviewPreference android:key="theme_preview" />
+        <org.mariotaku.twidere.preference.ThemePreviewPreference
+            android:key="theme_preview"/>
     </PreferenceCategory>
 
-    <org.mariotaku.twidere.preference.SummaryListPreference
-        android:defaultValue="twidere"
-        android:entries="@array/entries_theme"
-        android:entryValues="@array/values_theme"
-        android:key="theme"
+    <org.mariotaku.twidere.preference.DarkLightThemeTogglePreference
         android:order="21"
-        android:title="@string/style">
+        android:key="theme"
+        android:title="@string/dark_theme">
         <extra
             android:name="notify_change"
-            android:value="true" />
-    </org.mariotaku.twidere.preference.SummaryListPreference>
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.DarkLightThemeTogglePreference>
 
     <org.mariotaku.twidere.preference.ThemeBackgroundPreference
         android:defaultValue="default"
@@ -28,7 +27,7 @@
         android:title="@string/background">
         <extra
             android:name="notify_change"
-            android:value="true" />
+            android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeBackgroundPreference>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
@@ -38,7 +37,7 @@
         app:defaultColor="@color/branding_color">
         <extra
             android:name="notify_change"
-            android:value="true" />
+            android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
 

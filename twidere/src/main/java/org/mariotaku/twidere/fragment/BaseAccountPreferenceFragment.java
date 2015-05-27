@@ -28,6 +28,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -78,12 +80,15 @@ public abstract class BaseAccountPreferenceFragment extends PreferenceFragment i
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_switch_preference, menu);
-        final View actionView = menu.findItem(MENU_TOGGLE).getActionView();
-        final CompoundButton toggle = (CompoundButton) actionView.findViewById(android.R.id.toggle);
-        final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-        toggle.setOnCheckedChangeListener(this);
-        toggle.setChecked(prefs.getBoolean(getSwitchPreferenceKey(), getSwitchPreferenceDefault()));
+        final String switchKey = getSwitchPreferenceKey();
+        if (!TextUtils.isEmpty(switchKey)) {
+            inflater.inflate(R.menu.menu_switch_preference, menu);
+            final View actionView = menu.findItem(MENU_TOGGLE).getActionView();
+            final CompoundButton toggle = (CompoundButton) actionView.findViewById(android.R.id.toggle);
+            final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+            toggle.setOnCheckedChangeListener(this);
+            toggle.setChecked(prefs.getBoolean(switchKey, getSwitchPreferenceDefault()));
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -104,6 +109,7 @@ public abstract class BaseAccountPreferenceFragment extends PreferenceFragment i
 
     protected abstract boolean getSwitchPreferenceDefault();
 
+    @Nullable
     protected abstract String getSwitchPreferenceKey();
 
     private void updatePreferenceScreen() {

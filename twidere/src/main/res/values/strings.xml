@@ -44,6 +44,7 @@
     <string name="password">Password</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_refresh_service">Refresh service</string>
+    <string name="label_streaming_service">Streaming service</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="open_in_browser">Open in browser</string>
     <string name="tap_to_load_more">Tap to load more</string>
@@ -754,4 +755,8 @@
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="jump_to_top">Jump to top</string>
+    <string name="timeline_streaming_running">Timeline streaming running</string>
+    <string name="streaming">Streaming</string>
+    <string name="enable_streaming">Enable streaming</string>
+    <string name="dark_theme">Dark theme</string>
 </resources>

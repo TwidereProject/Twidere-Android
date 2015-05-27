@@ -87,6 +87,7 @@ import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.service.StreamingService;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CustomTabUtils;
@@ -120,7 +121,6 @@ import java.util.Map.Entry;
 
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.Utils.cleanDatabasesByItemLimit;
@@ -428,6 +428,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
         setTabPosition(initialTabPosition);
+
+        startService(new Intent(this, StreamingService.class));
     }
 
     @Override
@@ -440,8 +442,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
         assert bus != null;
         bus.register(this);
-        // UCD
-        ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStart");
         // spice
         SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Launch" + "," + Build.MODEL
                 + "," + "mediaPreview=" + mPreferences.getBoolean(KEY_MEDIA_PREVIEW, false));
@@ -480,8 +480,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).apply();
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONSTOP));
 
-        // UCD
-        ProfilingUtil.profile(this, ProfilingUtil.FILE_NAME_APP, "App onStop");
         // spice
         SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Stop");
         SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Stop" + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
@@ -621,6 +619,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     @Override
     protected void onDestroy() {
+
+        stopService(new Intent(this, StreamingService.class));
+
         // Delete unused items in databases.
         cleanDatabasesByItemLimit(this);
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONDESTROY));

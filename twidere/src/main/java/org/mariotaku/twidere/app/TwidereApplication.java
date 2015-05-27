@@ -55,6 +55,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ErrorLogger;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -73,7 +74,6 @@ import org.mariotaku.twidere.util.net.TwidereHostAddressResolver;
 import java.io.File;
 
 import edu.tsinghua.spice.SpiceService;
-import edu.ucdavis.earlybird.UCDService;
 
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
@@ -236,6 +236,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             StrictModeUtils.detectAllVmPolicy();
         }
         super.onCreate();
+        initDebugMode();
         initBugReport();
         mDefaultUserAgent = UserAgentUtils.getDefaultUserAgentString(this);
         mHandler = new Handler();
@@ -267,6 +268,10 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         startRefreshServiceIfNeeded(this);
 
         reloadConnectivitySettings();
+    }
+
+    private void initDebugMode() {
+        DebugModeUtils.initForApplication(this);
     }
 
     private void initBugReport() {
@@ -313,7 +318,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
                 || KEY_PROXY_PORT.equals(key)) {
             reloadConnectivitySettings();
         } else if (KEY_USAGE_STATISTICS.equals(key)) {
-            stopService(new Intent(this, UCDService.class));
             //spice
             stopService(new Intent(this, SpiceService.class));
             startUsageStatisticsServiceIfNeeded(this);

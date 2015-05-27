@@ -22,34 +22,34 @@ package org.mariotaku.twidere.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
-import android.view.View;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.ThemeUtils;
 
-public class AutoFixSwitchPreference extends SwitchPreference {
+public class DarkLightThemeTogglePreference extends SwitchPreference implements Constants {
 
-    public AutoFixSwitchPreference(final Context context) {
-        super(context);
+    public DarkLightThemeTogglePreference(final Context context) {
+        this(context, null);
     }
 
-    public AutoFixSwitchPreference(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
+    public DarkLightThemeTogglePreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, R.attr.asb_switchPreferenceStyle);
     }
 
-    public AutoFixSwitchPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+    public DarkLightThemeTogglePreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
-    protected void onSetInitialValue(final boolean restoreValue, final Object defaultValue) {
-        try {
-            super.onSetInitialValue(restoreValue, defaultValue);
-        } catch (final ClassCastException e) {
-            final SharedPreferences prefs = getSharedPreferences();
-            if (prefs != null) {
-                prefs.edit().remove(getKey()).apply();
-            }
-        }
+    protected boolean getPersistedBoolean(final boolean defaultReturnValue) {
+        final SharedPreferences preferences = getSharedPreferences();
+        return ThemeUtils.isDarkTheme(getPersistedString(VALUE_THEME_NAME_TWIDERE));
     }
 
+    @Override
+    protected boolean persistBoolean(final boolean value) {
+        return persistString(value ? VALUE_THEME_NAME_DARK : VALUE_THEME_NAME_TWIDERE);
+    }
 }

@@ -19,9 +19,11 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
@@ -73,6 +75,16 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
         final AsyncTwitterWrapper twitter = getTwitterWrapper();
         if (twitter == null) return false;
         return twitter.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        final FragmentActivity activity = getActivity();
+        if (isVisibleToUser && activity != null) {
+            final NotificationManager nm = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.cancel(NOTIFICATION_ID_MENTIONS_TIMELINE);
+        }
     }
 
     @Override

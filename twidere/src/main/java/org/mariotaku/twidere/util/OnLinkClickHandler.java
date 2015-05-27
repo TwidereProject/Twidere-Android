@@ -33,7 +33,6 @@ import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
-import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
@@ -57,8 +56,6 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                             final boolean sensitive, int start, int end) {
         if (manager != null && manager.isActive()) return;
         if (!isPrivateData()) {
-            // UCD
-            ProfilingUtil.profile(context, accountId, "Click, " + link + ", " + type);
             //spice
             SpiceProfilingUtil.profile(context, accountId, accountId + ",Visit," + link + "," + TypeMappingUtil.getLinkType(type));
             //end

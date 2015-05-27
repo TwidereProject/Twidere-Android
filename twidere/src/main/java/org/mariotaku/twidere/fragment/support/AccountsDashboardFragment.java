@@ -136,6 +136,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private ActionMenuView mAccountsToggleMenu;
     private View mAccountProfileContainer;
     private View mNoAccountContainer;
+    private ActionMenuView mActionMenuView;
 
     private Context mThemedContext;
     private MediaLoaderWrapper mImageLoader;
@@ -313,30 +314,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                     break;
                 }
             }
-        } else if (adapter instanceof AppMenuAdapter) {
-            if (!(item instanceof OptionItem)) return;
-            final OptionItem option = (OptionItem) item;
-            switch (option.id) {
-                case MENU_ACCOUNTS: {
-                    Utils.openAccountsManager(getActivity());
-                    break;
-                }
-                case MENU_DRAFTS: {
-                    Utils.openDrafts(getActivity());
-                    break;
-                }
-                case MENU_FILTERS: {
-                    Utils.openFilters(getActivity());
-                    break;
-                }
-                case MENU_SETTINGS: {
-                    final Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    startActivityForResult(intent, REQUEST_SETTINGS);
-                    break;
-                }
-            }
-            closeAccountsDrawer();
         }
     }
 
@@ -431,11 +408,41 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         mAdapter.addView(mAccountSelectorView, true);
         mAdapter.addAdapter(mAccountOptionsAdapter);
-        mAdapter.addView(mAppMenuSectionView, false);
-        mAdapter.addAdapter(mAppMenuAdapter);
+//        mAdapter.addView(mAppMenuSectionView, false);
+//        mAdapter.addAdapter(mAppMenuAdapter);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        menuInflater.inflate(R.menu.menu_dashboard, mActionMenuView.getMenu());
+
+        mActionMenuView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
+                switch (item.getItemId()) {
+                    case MENU_ACCOUNTS: {
+                        Utils.openAccountsManager(getActivity());
+                        return true;
+                    }
+                    case MENU_DRAFTS: {
+                        Utils.openDrafts(getActivity());
+                        return true;
+                    }
+                    case MENU_FILTERS: {
+                        Utils.openFilters(getActivity());
+                        return true;
+                    }
+                    case MENU_SETTINGS: {
+                        final Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivityForResult(intent, REQUEST_SETTINGS);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        ThemeUtils.resetCheatSheet(mActionMenuView);
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -448,6 +455,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     public void onBaseViewCreated(View view, Bundle savedInstanceState) {
         super.onBaseViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(android.R.id.list);
+        mActionMenuView = (ActionMenuView) view.findViewById(R.id.dashboard_menu);
     }
 
     @Override
@@ -849,7 +857,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         private final int mActionIconColor;
 
         public OptionItemsAdapter(final Context context) {
-            super(context, R.layout.list_item_menu);
+            super(context, R.layout.list_item_dashboard_menu);
             mActionIconColor = ThemeUtils.getThemeForegroundColor(context);
         }
 

@@ -252,7 +252,6 @@ import java.util.zip.CRC32;
 import javax.net.ssl.SSLException;
 
 import edu.tsinghua.spice.SpiceService;
-import edu.ucdavis.earlybird.UCDService;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
@@ -3418,15 +3417,12 @@ public final class Utils implements Constants {
 
     public static void startUsageStatisticsServiceIfNeeded(final Context context) {
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final Intent profilingServiceIntent = new Intent(context, UCDService.class);
         //spice
         final Intent spiceProfilingServiceIntent = new Intent(context, SpiceService.class);
         if (prefs.getBoolean(KEY_USAGE_STATISTICS, false)) {
-            context.startService(profilingServiceIntent);
             //spice
             context.startService(spiceProfilingServiceIntent);
         } else {
-            context.stopService(profilingServiceIntent);
             //spice
             context.stopService(spiceProfilingServiceIntent);
         }

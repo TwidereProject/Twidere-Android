@@ -93,6 +93,10 @@ public class AccountPreferences implements Constants {
         return mPreferences.getBoolean(KEY_AUTO_REFRESH_TRENDS, DEFAULT_AUTO_REFRESH_TRENDS);
     }
 
+    public boolean isStreamingEnabled() {
+        return mPreferences.getBoolean(KEY_ENABLE_STREAMING, false);
+    }
+
     public boolean isDirectMessagesNotificationEnabled() {
         return mPreferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION, DEFAULT_DIRECT_MESSAGES_NOTIFICATION);
     }

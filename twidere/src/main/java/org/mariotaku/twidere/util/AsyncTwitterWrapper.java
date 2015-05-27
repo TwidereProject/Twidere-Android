@@ -105,7 +105,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
-import edu.ucdavis.earlybird.ProfilingUtil;
 
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createDirectMessage;
@@ -2207,8 +2206,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 rowsDeleted = 0;
             }
             countCur.close();
-            // UCD
-            ProfilingUtil.profile(mContext, accountId, "Download tweets, " + TwidereArrayUtils.toString(statusIds, ',', true));
             //spice
             SpiceProfilingUtil.profile(mContext, accountId, accountId + ",Refresh," + TwidereArrayUtils.toString(statusIds, ',', true));
             //end
