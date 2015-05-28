@@ -23,22 +23,16 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:ignore="AlwaysShowAction">
     <item
-        android:id="@id/accounts"
-        android:layout_weight="0"
-        android:icon="@drawable/ic_action_accounts"
-        android:title="@string/accounts"
-        app:showAsAction="always"/>
-    <item
-        android:id="@id/filters"
-        android:layout_weight="0"
-        android:icon="@drawable/ic_action_speaker_muted"
-        android:title="@string/filters"
-        app:showAsAction="always"/>
-    <item
         android:id="@id/settings"
         android:layout_weight="0"
         android:icon="@drawable/ic_action_settings"
         android:title="@string/settings"
+        app:showAsAction="always"/>
+    <item
+        android:id="@id/accounts"
+        android:layout_weight="0"
+        android:icon="@drawable/ic_action_accounts"
+        android:title="@string/accounts"
         app:showAsAction="always"/>
     <item
         android:layout_weight="1"
