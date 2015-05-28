@@ -83,7 +83,10 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
         final FragmentActivity activity = getActivity();
         if (isVisibleToUser && activity != null) {
             final NotificationManager nm = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.cancel(NOTIFICATION_ID_MENTIONS_TIMELINE);
+            for (long accountId : getAccountIds()) {
+                final String tag = "mentions_" + accountId;
+                nm.cancel(tag, NOTIFICATION_ID_MENTIONS_TIMELINE);
+            }
         }
     }
 

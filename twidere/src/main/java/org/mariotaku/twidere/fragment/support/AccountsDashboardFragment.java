@@ -123,10 +123,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     private AccountSelectorAdapter mAccountsAdapter;
     private AccountOptionsAdapter mAccountOptionsAdapter;
-    private AppMenuAdapter mAppMenuAdapter;
 
     private ListView mListView;
-    private TextView mAppMenuSectionView;
     private View mAccountSelectorView;
     private RecyclerView mAccountsSelector;
     private ImageView mAccountProfileBannerView;
@@ -368,8 +366,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         mAccountsAdapter = new AccountSelectorAdapter(context, inflater, this);
         mAccountOptionsAdapter = new AccountOptionsAdapter(context);
-        mAppMenuAdapter = new AppMenuAdapter(context);
-        mAppMenuSectionView = Utils.newSectionView(context, R.string.more);
         mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, mListView, false);
         mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.other_accounts_list);
         final LinearLayoutManager layoutManager = new FixedLinearLayoutManager(context);
@@ -477,7 +473,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mAccountOptionsAdapter.clear();
         mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
         if (accounts.length > 1) {
-            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
+//            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
         }
         mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));

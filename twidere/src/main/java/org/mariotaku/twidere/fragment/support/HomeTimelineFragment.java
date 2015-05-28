@@ -74,7 +74,10 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
         final FragmentActivity activity = getActivity();
         if (isVisibleToUser && activity != null) {
             final NotificationManager nm = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.cancel(NOTIFICATION_ID_HOME_TIMELINE);
+            for (long accountId : getAccountIds()) {
+                final String tag = "home_" + accountId;
+                nm.cancel(tag, NOTIFICATION_ID_HOME_TIMELINE);
+            }
         }
     }
 
