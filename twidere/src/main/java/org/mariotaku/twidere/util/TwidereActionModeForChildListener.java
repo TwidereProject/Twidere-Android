@@ -26,7 +26,6 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.internal.view.StandaloneActionMode;
 import android.support.v7.internal.view.SupportActionModeWrapper;
 import android.support.v7.internal.widget.ActionBarContextView;
-import android.support.v7.internal.widget.NativeActionModeAwareLayout;
 import android.support.v7.view.ActionMode;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -40,11 +39,12 @@ import android.widget.PopupWindow;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 /**
  * Created by mariotaku on 15/4/27.
  */
-public class TwidereActionModeForChildListener implements NativeActionModeAwareLayout.OnActionModeForChildListener {
+public class TwidereActionModeForChildListener implements TintedStatusNativeActionModeAwareLayout.OnActionModeForChildListener {
     private final Activity mActivity;
     private final IThemedActivity mThemed;
     private final AppCompatCallback mAppCompatCallback;

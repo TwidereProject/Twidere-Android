@@ -33,11 +33,12 @@ import android.content.res.Resources;
 import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.ThemedAppCompatDelegateFactory;
-import android.support.v7.internal.widget.NativeActionModeAwareLayout;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -66,6 +67,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
+import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 import org.mariotaku.twidere.view.holder.ViewListHolder;
 
 import java.util.ArrayList;
@@ -257,7 +259,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         setSupportActionBar(toolbar);
 
         mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
-        final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
+        final TintedStatusNativeActionModeAwareLayout layout = (TintedStatusNativeActionModeAwareLayout) findViewById(R.id.main_content);
         layout.setActionModeForChildListener(mTwidereActionModeForChildListener);
 
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
@@ -342,6 +344,12 @@ public class SettingsActivity extends BasePreferenceActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    @Nullable
+    @Override
+    public ActionMode onWindowStartingSupportActionMode(final ActionMode.Callback callback) {
+        return null;
     }
 
     public static class RestartConfirmDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {

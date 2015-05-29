@@ -20,18 +20,18 @@
 <org.mariotaku.twidere.view.MainFrameLayout
     android:id="@+id/home_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <org.mariotaku.twidere.view.ExtendedViewPager
         android:id="@+id/main_pager"
-        android:focusable="true"
-        android:focusableInTouchMode="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="false"/>
 
-    <include layout="@layout/layout_empty_tab_hint" />
+    <include layout="@layout/layout_empty_tab_hint"/>
 
     <RelativeLayout
         android:id="@+id/twidere_action_bar_with_overlay"
@@ -47,15 +47,15 @@
             android:layout_alignParentTop="true"
             android:layout="@layout/layout_actionbar_home"
             android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute" />
+            tools:ignore="UnusedAttribute"/>
 
         <View
             android:id="@+id/window_overlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/twidere_action_bar_container"
-            android:background="?android:windowContentOverlay" />
+            android:background="?android:windowContentOverlay"/>
     </RelativeLayout>
 
-    <include layout="@layout/layout_home_actions_button" />
+    <include layout="@layout/layout_home_actions_button"/>
 </org.mariotaku.twidere.view.MainFrameLayout>

@@ -32,7 +32,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.internal.widget.ActionBarContainer;
-import android.support.v7.internal.widget.NativeActionModeAwareLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -65,6 +64,7 @@ import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
+import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
@@ -206,7 +206,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
 
         mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
-        final NativeActionModeAwareLayout layout = (NativeActionModeAwareLayout) findViewById(android.R.id.content);
+        final TintedStatusNativeActionModeAwareLayout layout = (TintedStatusNativeActionModeAwareLayout) findViewById(R.id.main_content);
         layout.setActionModeForChildListener(mTwidereActionModeForChildListener);
 
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());

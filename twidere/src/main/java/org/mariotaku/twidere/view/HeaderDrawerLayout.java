@@ -63,8 +63,8 @@ public class HeaderDrawerLayout extends ViewGroup {
     public HeaderDrawerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HeaderDrawerLayout);
-        final int headerLayoutId = a.getResourceId(R.styleable.HeaderDrawerLayout_headerLayout, 0);
-        final int contentLayoutId = a.getResourceId(R.styleable.HeaderDrawerLayout_contentLayout, 0);
+        final int headerLayoutId = a.getResourceId(R.styleable.HeaderDrawerLayout_hdl_headerLayout, 0);
+        final int contentLayoutId = a.getResourceId(R.styleable.HeaderDrawerLayout_hdl_contentLayout, 0);
         addView(mContainer = new InternalContainer(this, context, headerLayoutId, contentLayoutId),
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         a.recycle();

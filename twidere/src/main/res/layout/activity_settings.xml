@@ -17,7 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.TintedStatusFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -51,4 +51,4 @@
             android:layout_below="@+id/twidere_action_bar_container"
             android:background="?android:windowContentOverlay" />
     </RelativeLayout>
-</org.mariotaku.twidere.view.TintedStatusFrameLayout>
+</org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>

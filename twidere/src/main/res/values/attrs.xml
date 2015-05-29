@@ -93,8 +93,8 @@
         <attr name="sivShape"/>
     </declare-styleable>
     <declare-styleable name="HeaderDrawerLayout">
-        <attr name="headerLayout" format="reference"/>
-        <attr name="contentLayout" format="reference"/>
+        <attr name="hdl_headerLayout" format="reference"/>
+        <attr name="hdl_contentLayout" format="reference"/>
     </declare-styleable>
     <declare-styleable name="TintedStatusLayout">
         <attr name="setPadding" format="boolean"/>
