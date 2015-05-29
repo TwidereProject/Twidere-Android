@@ -47,6 +47,6 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        android:textStyle="bold"/>
+        android:textSize="16sp"/>
 
 </LinearLayout>

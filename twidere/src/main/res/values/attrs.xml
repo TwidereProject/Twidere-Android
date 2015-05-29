@@ -12,7 +12,7 @@
         <attr name="cardItemBackgroundColor" format="color"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
     </declare-styleable>
-    <declare-styleable name="ColorLabelView" >
+    <declare-styleable name="ColorLabelView">
         <attr name="ignorePadding" format="boolean"/>
         <attr name="backgroundColor" format="color"/>
     </declare-styleable>
@@ -47,6 +47,12 @@
         <attr name="gapWidth" format="dimension"/>
         <!-- View background -->
         <attr name="android:background"/>
+    </declare-styleable>
+    <declare-styleable name="NameView">
+        <attr name="nv_primaryTextColor" format="color"/>
+        <attr name="nv_secondaryTextColor" format="color"/>
+        <attr name="nv_primaryTextStyle"/>
+        <attr name="nv_secondaryTextStyle"/>
     </declare-styleable>
     <declare-styleable name="ValueDependencyPreference">
         <attr name="dependencyKey" format="string"/>
@@ -106,5 +112,15 @@
     <attr name="sivShape">
         <enum name="circle" value="0x1"/>
         <enum name="rectangle" value="0x2"/>
+    </attr>
+    <attr name="nv_primaryTextStyle">
+        <flag name="normal" value="0"/>
+        <flag name="bold" value="1"/>
+        <flag name="italic" value="2"/>
+    </attr>
+    <attr name="nv_secondaryTextStyle">
+        <flag name="normal" value="0"/>
+        <flag name="bold" value="1"/>
+        <flag name="italic" value="2"/>
     </attr>
 </resources>

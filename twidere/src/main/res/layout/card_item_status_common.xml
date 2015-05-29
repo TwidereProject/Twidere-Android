@@ -18,10 +18,10 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/item_content"
@@ -43,7 +43,7 @@
             android:layout_marginEnd="@dimen/element_spacing_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_small"
-            android:layout_marginStart="@dimen/element_spacing_normal" />
+            android:layout_marginStart="@dimen/element_spacing_normal"/>
 
         <org.mariotaku.twidere.view.ActionIconView
             android:id="@+id/reply_retweet_icon"
@@ -60,7 +60,7 @@
             android:scaleType="centerInside"
             android:visibility="gone"
             tools:src="@drawable/ic_activity_action_retweet"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <TextView
             android:id="@+id/reply_retweet_status"
@@ -77,7 +77,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:visibility="gone"
             tools:text="Mariotaku and 10 others retweeted"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/profile_container"
@@ -102,7 +102,7 @@
                 android:layout_marginRight="@dimen/element_spacing_small"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:contentDescription="@string/profile_image"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"/>
 
             <org.mariotaku.twidere.view.BoundsImageView
                 android:id="@+id/profile_type"
@@ -111,7 +111,7 @@
                 android:layout_alignBottom="@id/profile_image"
                 android:layout_alignEnd="@id/profile_image"
                 android:layout_alignRight="@id/profile_image"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,51 +125,25 @@
                 android:layout_toStartOf="@+id/extra_type"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/name_container"
+                <org.mariotaku.twidere.view.NameView
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorPrimary"
-                        android:textStyle="bold"
-                        tools:text="User" />
-
-                    <TextView
-                        android:id="@+id/screen_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/name"
-                        android:layout_marginLeft="@dimen/element_spacing_small"
-                        android:layout_marginStart="@dimen/element_spacing_small"
-                        android:layout_toRightOf="@+id/name"
-                        android:layout_toEndOf="@+id/name"
-                        android:singleLine="true"
-                        android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorSecondary"
-                        tools:text="\@user"
-                        tools:textSize="@dimen/text_size_extra_small" />
-                </RelativeLayout>
-
+                    android:orientation="horizontal"
+                    app:nv_primaryTextColor="?android:textColorPrimary"
+                    app:nv_primaryTextStyle="bold"
+                    app:nv_secondaryTextColor="?android:textColorSecondary"/>
 
                 <org.mariotaku.twidere.view.ShortTimeView
                     android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:paddingBottom="@dimen/element_spacing_small"
                     android:paddingTop="@dimen/element_spacing_xsmall"
                     android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="10 mins ago"
-                    tools:textSize="@dimen/text_size_extra_small" />
+                    tools:textSize="@dimen/text_size_extra_small"/>
 
             </LinearLayout>
 
@@ -185,7 +159,7 @@
                 android:layout_marginRight="@dimen/element_spacing_mlarge"
                 android:layout_marginTop="@dimen/element_spacing_normal"
                 android:color="?android:textColorSecondary"
-                tools:src="@drawable/ic_action_gallery" />
+                tools:src="@drawable/ic_action_gallery"/>
 
         </RelativeLayout>
 
@@ -204,62 +178,41 @@
             android:textColor="?android:attr/textColorPrimary"
             android:visibility="gone"
             tools:text="@string/sample_status_text"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <org.mariotaku.twidere.view.ForegroundColorView
             android:id="@+id/quote_indicator"
             android:layout_width="@dimen/element_spacing_small"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/text"
-            android:layout_alignTop="@+id/quoted_name_container"
+            android:layout_alignTop="@+id/quoted_name"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginStart="@dimen/element_spacing_normal"
             android:background="?android:dividerHorizontal"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
-        <LinearLayout
-            android:id="@+id/quoted_name_container"
+        <org.mariotaku.twidere.view.NameView
+            android:id="@+id/quoted_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/quote_text"
             android:layout_toEndOf="@+id/quote_indicator"
             android:layout_toRightOf="@+id/quote_indicator"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
             android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-                android:id="@+id/quoted_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                tools:text="User" />
-
-            <TextView
-                android:id="@+id/quoted_screen_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_small"
-                android:layout_marginStart="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"
-                tools:text="\@user"
-                tools:textSize="@dimen/text_size_extra_small" />
-        </LinearLayout>
+            app:nv_primaryTextColor="?android:textColorPrimary"
+            app:nv_primaryTextStyle="bold"
+            app:nv_secondaryTextColor="?android:textColorSecondary"
+            tools:visibility="visible"/>
 
         <org.mariotaku.twidere.view.CardMediaContainer
             android:id="@+id/media_preview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/quoted_name_container"
+            android:layout_below="@+id/quoted_name"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:layout_toEndOf="@+id/quote_indicator"
             android:layout_toRightOf="@+id/quote_indicator"
@@ -283,7 +236,7 @@
             android:paddingRight="@dimen/element_spacing_normal"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
-            tools:text="@string/sample_status_text" />
+            tools:text="@string/sample_status_text"/>
 
         <LinearLayout
             android:id="@+id/action_buttons"
@@ -309,7 +262,7 @@
                 android:paddingRight="@dimen/element_spacing_normal"
                 android:textAppearance="?android:textAppearanceSmall"
                 app:iabActivatedColor="@color/highlight_reply"
-                app:iabColor="?android:textColorTertiary" />
+                app:iabColor="?android:textColorTertiary"/>
 
             <org.mariotaku.twidere.view.ActionIconThemedTextView
                 android:id="@+id/retweet_count"
@@ -324,7 +277,7 @@
                 android:paddingRight="@dimen/element_spacing_normal"
                 android:textAppearance="?android:textAppearanceSmall"
                 app:iabActivatedColor="@color/highlight_retweet"
-                app:iabColor="?android:textColorTertiary" />
+                app:iabColor="?android:textColorTertiary"/>
 
             <org.mariotaku.twidere.view.ActionIconThemedTextView
                 android:id="@+id/favorite_count"
@@ -339,7 +292,7 @@
                 android:paddingRight="@dimen/element_spacing_normal"
                 android:textAppearance="?android:textAppearanceSmall"
                 app:iabActivatedColor="@color/highlight_favorite"
-                app:iabColor="?android:textColorTertiary" />
+                app:iabColor="?android:textColorTertiary"/>
 
         </LinearLayout>
 
@@ -356,7 +309,7 @@
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:color="?android:textColorTertiary"
             android:focusable="false"
-            android:src="@drawable/ic_action_more_vertical" />
+            android:src="@drawable/ic_action_more_vertical"/>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 </merge>

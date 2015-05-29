@@ -135,7 +135,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private ActionMenuView mAccountsToggleMenu;
     private View mAccountProfileContainer;
     private View mNoAccountContainer;
-    private ActionMenuView mActionMenuView;
 
     private Context mThemedContext;
     private MediaLoaderWrapper mImageLoader;
@@ -436,35 +435,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mListView.setOnItemClickListener(this);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        menuInflater.inflate(R.menu.menu_dashboard, mActionMenuView.getMenu());
-
-        mActionMenuView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-                switch (item.getItemId()) {
-                    case MENU_ACCOUNTS: {
-                        Utils.openAccountsManager(getActivity());
-                        return true;
-                    }
-                    case MENU_DRAFTS: {
-                        Utils.openDrafts(getActivity());
-                        return true;
-                    }
-                    case MENU_FILTERS: {
-                        Utils.openFilters(getActivity());
-                        return true;
-                    }
-                    case MENU_SETTINGS: {
-                        final Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivityForResult(intent, REQUEST_SETTINGS);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-        ThemeUtils.resetCheatSheet(mActionMenuView);
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -477,7 +447,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     public void onBaseViewCreated(View view, Bundle savedInstanceState) {
         super.onBaseViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mActionMenuView = (ActionMenuView) view.findViewById(R.id.dashboard_menu);
     }
 
     @Override
@@ -827,10 +796,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         public AppMenuAdapter(final Context context) {
             super(context);
-//            add(new OptionItem(R.string.accounts, R.drawable.ic_action_accounts, MENU_ACCOUNTS));
+            add(new OptionItem(R.string.accounts, R.drawable.ic_action_accounts, MENU_ACCOUNTS));
             add(new OptionItem(R.string.drafts, R.drawable.ic_action_draft, MENU_DRAFTS));
             add(new OptionItem(R.string.filters, R.drawable.ic_action_speaker_muted, MENU_FILTERS));
-//            add(new OptionItem(R.string.settings, R.drawable.ic_action_settings, MENU_SETTINGS));
+            add(new OptionItem(R.string.settings, R.drawable.ic_action_settings, MENU_SETTINGS));
         }
 
     }

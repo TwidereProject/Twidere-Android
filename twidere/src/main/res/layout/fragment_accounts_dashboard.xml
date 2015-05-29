@@ -17,30 +17,14 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<LinearLayout
+<ListView
+    android:id="@android:id/list"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="?dividerVertical"
-    android:orientation="vertical"
-    android:showDividers="middle">
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:focusable="true"
-        android:listSelector="?selectableItemBackground"
-        tools:context=".fragment.support.AccountsDashboardFragment"/>
-
-    <android.support.v7.widget.ActionMenuView
-        android:id="@+id/dashboard_menu"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:layout_weight="0"/>
-</LinearLayout>
+    android:divider="@null"
+    android:dividerHeight="0dp"
+    android:focusable="true"
+    android:listSelector="?selectableItemBackground"
+    tools:context=".fragment.support.AccountsDashboardFragment"/>
