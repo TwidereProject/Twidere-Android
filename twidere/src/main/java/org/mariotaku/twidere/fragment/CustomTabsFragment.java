@@ -34,7 +34,6 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -60,7 +59,6 @@ import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
@@ -222,6 +220,43 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_custom_tabs, menu);
+        final Resources res = getResources();
+        final boolean hasOfficialKeyAccounts = Utils.hasAccountSignedWithOfficialKeys(getActivity());
+        final boolean forcePrivateAPI = mPreferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
+        final long[] accountIds = getAccountIds(getActivity());
+        final MenuItem itemAdd = menu.findItem(R.id.add_submenu);
+        if (itemAdd != null && itemAdd.hasSubMenu()) {
+            final SubMenu subMenu = itemAdd.getSubMenu();
+            subMenu.clear();
+            final HashMap<String, CustomTabConfiguration> map = getConfigurationMap();
+            final List<Entry<String, CustomTabConfiguration>> tabs = new ArrayList<>(
+                    map.entrySet());
+            Collections.sort(tabs, CustomTabConfigurationComparator.SINGLETON);
+            for (final Entry<String, CustomTabConfiguration> entry : tabs) {
+                final String type = entry.getKey();
+                final CustomTabConfiguration conf = entry.getValue();
+
+                final boolean isOfficialKeyAccountRequired = TAB_TYPE_ACTIVITIES_ABOUT_ME.equals(type)
+                        || TAB_TYPE_ACTIVITIES_BY_FRIENDS.equals(type);
+                final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
+
+                final Intent intent = new Intent(INTENT_ACTION_ADD_TAB);
+                intent.setClass(getActivity(), CustomTabEditorActivity.class);
+                intent.putExtra(EXTRA_TYPE, type);
+                intent.putExtra(EXTRA_OFFICIAL_KEY_ONLY, isOfficialKeyAccountRequired);
+
+                final MenuItem subItem = subMenu.add(conf.getDefaultTitle());
+                final boolean disabledByNoAccount = accountIdRequired && accountIds.length == 0;
+                final boolean disabledByNoOfficialKey = !forcePrivateAPI && isOfficialKeyAccountRequired && !hasOfficialKeyAccounts;
+                final boolean disabledByDuplicateTab = conf.isSingleTab() && isTabAdded(getActivity(), type);
+                final boolean shouldDisable = disabledByDuplicateTab || disabledByNoOfficialKey || disabledByNoAccount;
+                subItem.setVisible(!shouldDisable);
+                subItem.setEnabled(!shouldDisable);
+                final Drawable icon = ResourcesCompat.getDrawable(res, conf.getDefaultIcon(), null);
+                subItem.setIcon(icon);
+                subItem.setIntent(intent);
+            }
+        }
     }
 
     @Override
@@ -268,57 +303,6 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
         updateTitle(mode);
         return true;
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(final Menu menu) {
-        final Resources res = getResources();
-        final boolean hasOfficialKeyAccounts = Utils.hasAccountSignedWithOfficialKeys(getActivity());
-        final boolean forcePrivateAPI = mPreferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
-        final long[] accountIds = getAccountIds(getActivity());
-        final MenuItem itemAdd = menu.findItem(R.id.add_submenu);
-        if (itemAdd != null && itemAdd.hasSubMenu()) {
-            final SubMenu subMenu = itemAdd.getSubMenu();
-            subMenu.clear();
-            final HashMap<String, CustomTabConfiguration> map = getConfigurationMap();
-            final List<Entry<String, CustomTabConfiguration>> tabs = new ArrayList<>(
-                    map.entrySet());
-            Collections.sort(tabs, CustomTabConfigurationComparator.SINGLETON);
-            for (final Entry<String, CustomTabConfiguration> entry : tabs) {
-                final String type = entry.getKey();
-                final CustomTabConfiguration conf = entry.getValue();
-
-                final boolean isOfficialKeyAccountRequired = TAB_TYPE_ACTIVITIES_ABOUT_ME.equals(type)
-                        || TAB_TYPE_ACTIVITIES_BY_FRIENDS.equals(type);
-                final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
-
-                final Intent intent = new Intent(INTENT_ACTION_ADD_TAB);
-                intent.setClass(getActivity(), CustomTabEditorActivity.class);
-                intent.putExtra(EXTRA_TYPE, type);
-                intent.putExtra(EXTRA_OFFICIAL_KEY_ONLY, isOfficialKeyAccountRequired);
-
-                final MenuItem subItem = subMenu.add(conf.getDefaultTitle());
-                final boolean disabledByNoAccount = accountIdRequired && accountIds.length == 0;
-                final boolean disabledByNoOfficialKey = !forcePrivateAPI && isOfficialKeyAccountRequired && !hasOfficialKeyAccounts;
-                final boolean disabledByDuplicateTab = conf.isSingleTab() && isTabAdded(getActivity(), type);
-                final boolean shouldDisable = disabledByDuplicateTab || disabledByNoOfficialKey || disabledByNoAccount;
-                subItem.setVisible(!shouldDisable);
-                subItem.setEnabled(!shouldDisable);
-                final Drawable icon = ResourcesCompat.getDrawable(res, conf.getDefaultIcon(), null);
-                subItem.setIcon(icon);
-                subItem.setIntent(intent);
-            }
-        }
-
-        final Activity activity = getActivity();
-        if (activity instanceof BasePreferenceActivity) {
-            final ActionBar actionBar = ((BasePreferenceActivity) activity).getSupportActionBar();
-            final int themeResourceId = ((BasePreferenceActivity) activity).getCurrentThemeResourceId();
-            final int itemColor = ThemeUtils.getContrastActionBarItemColor(actionBar.getThemedContext());
-            final int popupTheme = ThemeUtils.getActionBarPopupThemeRes(actionBar.getThemedContext(), themeResourceId);
-            final int popupColor = ThemeUtils.getColorFromAttribute(activity, popupTheme, android.R.attr.colorForeground, 0);
-            ThemeUtils.applyColorFilterToMenuIcon(menu, itemColor, popupColor, 0, Mode.SRC_ATOP);
-        }
     }
 
     @Override

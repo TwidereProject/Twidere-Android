@@ -351,6 +351,9 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.QUOTE_TEXT_UNESCAPED, toPlainText(textHtml));
             values.put(Statuses.QUOTE_TIMESTAMP, orig.getCreatedAt().getTime());
             values.put(Statuses.QUOTE_SOURCE, orig.getSource());
+            values.put(Statuses.QUOTE_RETWEET_COUNT, orig.getRetweetCount());
+            values.put(Statuses.QUOTE_FAVORITE_COUNT, orig.getFavoriteCount());
+            values.put(Statuses.QUOTE_REPLY_COUNT, orig.getReplyCount());
             final ParcelableMedia[] quoteMedia = ParcelableMedia.fromStatus(orig);
             if (quoteMedia != null && quoteMedia.length > 0) {
                 try {
@@ -399,7 +402,6 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.RETWEET_COUNT, status.getRetweetCount());
         values.put(Statuses.REPLY_COUNT, status.getReplyCount());
         values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
-        values.put(Statuses.DESCENDENT_REPLY_COUNT, status.getDescendentReplyCount());
         values.put(Statuses.SOURCE, status.getSource());
         values.put(Statuses.IS_POSSIBLY_SENSITIVE, status.isPossiblySensitive());
         final GeoLocation location = status.getGeoLocation();

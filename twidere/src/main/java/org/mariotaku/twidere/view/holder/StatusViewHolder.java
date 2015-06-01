@@ -140,7 +140,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
 
-        final long reply_count = status.reply_count;
+        final long reply_count = status.is_quote ? status.quote_reply_count : status.reply_count;
         final long retweet_count;
         final long favorite_count;
 
@@ -292,12 +292,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         if (twitter.isDestroyingStatus(status.account_id, status.my_retweet_id)) {
             retweetCountView.setActivated(false);
-            retweet_count = Math.max(0, status.retweet_count - 1);
+            retweet_count = Math.max(0, (status.is_quote ? status.quote_retweet_count : status.retweet_count) - 1);
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_id, status.id);
             retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status.account_id,
                     status.retweeted_by_user_id, status.my_retweet_id));
-            retweet_count = status.retweet_count + (creatingRetweet ? 1 : 0);
+            retweet_count = (status.is_quote ? status.quote_retweet_count : status.retweet_count)
+                    + (creatingRetweet ? 1 : 0);
         }
         if (retweet_count > 0) {
             retweetCountView.setText(Utils.getLocalizedNumber(locale, retweet_count));
@@ -306,11 +307,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
         if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
             favoriteCountView.setActivated(false);
-            favorite_count = Math.max(0, status.favorite_count - 1);
+            favorite_count = Math.max(0, (status.is_quote ? status.quote_favorite_count : status.favorite_count) - 1);
         } else {
             final boolean creatingFavorite = twitter.isCreatingFavorite(status.account_id, status.id);
             favoriteCountView.setActivated(creatingFavorite || status.is_favorite);
-            favorite_count = status.favorite_count + (creatingFavorite ? 1 : 0);
+            favorite_count = (status.is_quote ? status.quote_favorite_count : status.favorite_count)
+                    + (creatingFavorite ? 1 : 0);
         }
         if (favorite_count > 0) {
             favoriteCountView.setText(Utils.getLocalizedNumber(locale, favorite_count));
@@ -337,7 +339,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
 
-        final long reply_count = cursor.getLong(indices.reply_count);
+        final boolean is_quote = cursor.getShort(indices.is_quote) == 1;
+
+        final long reply_count = cursor.getLong(is_quote ? indices.quote_reply_count : indices.reply_count);
         final long retweet_count;
         final long favorite_count;
 
@@ -385,7 +389,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         final int typeIconRes;
 
-        if (cursor.getShort(indices.is_quote) == 1) {
+        if (is_quote) {
             quotedNameView.setName(manager.getUserNickname(user_id, user_name, false));
             quotedNameView.setScreenName("@" + user_screen_name);
             timeView.setTime(cursor.getLong(indices.quote_timestamp));
@@ -506,12 +510,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         if (twitter.isDestroyingStatus(account_id, my_retweet_id)) {
             retweetCountView.setActivated(false);
-            retweet_count = Math.max(0, cursor.getLong(indices.retweet_count) - 1);
+            retweet_count = Math.max(0, cursor.getLong(is_quote ? indices.quote_retweet_count : indices.retweet_count) - 1);
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(account_id, status_id);
             retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(account_id,
                     retweeted_by_id, my_retweet_id));
-            retweet_count = cursor.getLong(indices.retweet_count) + (creatingRetweet ? 1 : 0);
+            retweet_count = cursor.getLong(is_quote ? indices.quote_retweet_count : indices.retweet_count) + (creatingRetweet ? 1 : 0);
         }
         if (retweet_count > 0) {
             retweetCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), retweet_count));
@@ -520,11 +524,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
         if (twitter.isDestroyingFavorite(account_id, status_id)) {
             favoriteCountView.setActivated(false);
-            favorite_count = Math.max(0, cursor.getLong(indices.favorite_count) - 1);
+            favorite_count = Math.max(0, cursor.getLong(is_quote ? indices.quote_favorite_count : indices.favorite_count) - 1);
         } else {
             final boolean creatingFavorite = twitter.isCreatingFavorite(account_id, status_id);
             favoriteCountView.setActivated(creatingFavorite || cursor.getShort(indices.is_favorite) == 1);
-            favorite_count = cursor.getLong(indices.favorite_count) + (creatingFavorite ? 1 : 0);
+            favorite_count = cursor.getLong(is_quote ? indices.quote_favorite_count : indices.favorite_count) + (creatingFavorite ? 1 : 0);
         }
         if (favorite_count > 0) {
             favoriteCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), favorite_count));

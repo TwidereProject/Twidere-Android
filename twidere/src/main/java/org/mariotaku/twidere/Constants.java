@@ -33,7 +33,7 @@ import static org.mariotaku.twidere.annotation.Preference.Type.STRING;
 public interface Constants extends TwidereConstants {
 
     String DATABASES_NAME = "twidere.sqlite";
-    int DATABASES_VERSION = 98;
+    int DATABASES_VERSION = 99;
 
     int MENU_GROUP_STATUS_EXTENSION = 10;
     int MENU_GROUP_COMPOSE_EXTENSION = 11;
@@ -168,8 +168,6 @@ public interface Constants extends TwidereConstants {
     String EASTER_EGG_RESTORE_TEXT_PART1 = "\u5927\u738B";
     String EASTER_EGG_RESTORE_TEXT_PART2 = "\u5C0F\u7684";
     String EASTER_EGG_RESTORE_TEXT_PART3 = "\u77E5\u9519";
-
-    float DEFAULT_PULL_TO_REFRESH_SCROLL_DISTANCE = 0.3f;
 
     int[] PRESET_COLORS = {R.color.material_red, R.color.material_pink,
             R.color.material_purple, R.color.material_deep_purple, R.color.material_indigo,

@@ -66,7 +66,7 @@
                 app:sivBorderWidth="2dp"
                 tools:src="@mipmap/ic_launcher" />
 
-            <android.support.v7.widget.RecyclerView
+            <org.mariotaku.twidere.view.ExtendedRecyclerView
                 android:id="@+id/other_accounts_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

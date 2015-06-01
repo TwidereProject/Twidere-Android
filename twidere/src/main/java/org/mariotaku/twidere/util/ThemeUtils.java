@@ -544,14 +544,26 @@ public class ThemeUtils implements Constants {
         return getThemeForegroundColor(context, 0);
     }
 
-    public static int getThemeForegroundColor(final Context context, int theme) {
+    public static int getThemeForegroundColor(final Context context, int themeRes) {
         @SuppressWarnings("ConstantConditions")
-        final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.colorForeground}, 0, theme);
-        try {
-            return a.getColor(0, 0);
-        } finally {
-            a.recycle();
+        final TypedValue value = new TypedValue();
+        final Resources.Theme theme;
+        if (themeRes != 0) {
+            theme = context.getResources().newTheme();
+            theme.applyStyle(themeRes, false);
+        } else {
+            theme = context.getTheme();
         }
+        if (!theme.resolveAttribute(android.R.attr.colorForeground, value, true)) {
+            return 0;
+        }
+        if (value.type >= TypedValue.TYPE_FIRST_COLOR_INT && value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+            // windowBackground is a color
+            return value.data;
+        } else if (value.type == TypedValue.TYPE_REFERENCE) {
+            return theme.getResources().getColor(value.resourceId);
+        }
+        return 0;
     }
 
     public static String getThemeNameOption(final Context context) {

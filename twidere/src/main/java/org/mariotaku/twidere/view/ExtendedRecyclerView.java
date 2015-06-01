@@ -32,21 +32,21 @@ import org.mariotaku.twidere.util.MouseScrollDirectionDecider;
 /**
  * Created by mariotaku on 15/3/30.
  */
-public class RecyclerViewBackport extends RecyclerView {
+public class ExtendedRecyclerView extends RecyclerView {
 
     private final MouseScrollDirectionDecider mMouseScrollDirectionDecider;
     // This value is used when handling generic motion events.
     private float mScrollFactor = Float.MIN_VALUE;
 
-    public RecyclerViewBackport(Context context) {
+    public ExtendedRecyclerView(Context context) {
         this(context, null);
     }
 
-    public RecyclerViewBackport(Context context, AttributeSet attrs) {
+    public ExtendedRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RecyclerViewBackport(Context context, AttributeSet attrs, int defStyle) {
+    public ExtendedRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mMouseScrollDirectionDecider = new MouseScrollDirectionDecider(context, getScrollFactorBackport());
     }
@@ -87,6 +87,42 @@ public class RecyclerViewBackport extends RecyclerView {
             }
         }
         return false;
+    }
+
+    @Override
+    public int computeVerticalScrollRange() {
+        if (getLayoutManager() == null) return 0;
+        return super.computeVerticalScrollRange();
+    }
+
+    @Override
+    public int computeHorizontalScrollRange() {
+        if (getLayoutManager() == null) return 0;
+        return super.computeHorizontalScrollRange();
+    }
+
+    @Override
+    public int computeHorizontalScrollOffset() {
+        if (getLayoutManager() == null) return 0;
+        return super.computeHorizontalScrollOffset();
+    }
+
+    @Override
+    public int computeHorizontalScrollExtent() {
+        if (getLayoutManager() == null) return 0;
+        return super.computeHorizontalScrollExtent();
+    }
+
+    @Override
+    public int computeVerticalScrollOffset() {
+        if (getLayoutManager() == null) return 0;
+        return super.computeVerticalScrollOffset();
+    }
+
+    @Override
+    public int computeVerticalScrollExtent() {
+        if (getLayoutManager() == null) return 0;
+        return super.computeVerticalScrollExtent();
     }
 
     /**

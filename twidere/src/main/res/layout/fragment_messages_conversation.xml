@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/input_panel">
 
-            <android.support.v7.widget.RecyclerView
+            <org.mariotaku.twidere.view.ExtendedRecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
