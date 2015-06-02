@@ -35,6 +35,10 @@
         android:layout_alignParentStart="true"
         android:clickable="true"
         android:paddingBottom="@dimen/element_spacing_msmall"
+        android:paddingEnd="@dimen/element_spacing_msmall"
+        android:paddingLeft="@dimen/element_spacing_msmall"
+        android:paddingRight="@dimen/element_spacing_msmall"
+        android:paddingStart="@dimen/element_spacing_msmall"
         android:paddingTop="@dimen/element_spacing_msmall">
 
         <org.mariotaku.twidere.view.SquareShapedImageView

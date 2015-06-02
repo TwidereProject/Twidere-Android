@@ -30,15 +30,15 @@
             android:title="@string/trends"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:enabled="false"
-        android:key="cat_streaming"
-        android:title="@string/streaming">
+    <!--<PreferenceCategory-->
+        <!--android:enabled="false"-->
+        <!--android:key="cat_streaming"-->
+        <!--android:title="@string/streaming">-->
 
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-            android:key="enable_streaming"
-            android:title="@string/enable_streaming"/>
+        <!--<org.mariotaku.twidere.preference.AutoFixSwitchPreference-->
+            <!--android:key="enable_streaming"-->
+            <!--android:title="@string/enable_streaming"/>-->
 
-    </PreferenceCategory>
+    <!--</PreferenceCategory>-->
 
 </PreferenceScreen>
