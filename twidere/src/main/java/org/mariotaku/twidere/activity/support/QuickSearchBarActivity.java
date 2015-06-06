@@ -84,6 +84,8 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by mariotaku on 15/1/6.
@@ -516,6 +518,8 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     public static class SuggestionsLoader extends AsyncTaskLoader<List<SuggestionItem>> {
 
+        private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");
+
         private final long mAccountId;
         private final String mQuery;
 
@@ -553,7 +557,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                 final OrderBy orderBy = new OrderBy(order, ascending);
                 final Uri uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId));
                 final Cursor usersCursor = context.getContentResolver().query(uri,
-                        CachedUsers.COLUMNS, selection != null ? selection.getSQL() : null,
+                        CachedUsers.COLUMNS, selection.getSQL(),
                         selectionArgs, orderBy.getSQL());
                 final CachedIndices usersIndices = new CachedIndices(usersCursor);
                 final int screenNamePos = result.size();
@@ -567,8 +571,11 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                         hasName = true;
                     }
                 }
-                if (!hasName && mQuery.matches("(?i)[a-z0-9_]{1,20}")) {
-                    result.add(screenNamePos, new UserScreenNameItem(mQuery, mAccountId));
+                if (!hasName) {
+                    final Matcher m = PATTERN_SCREEN_NAME.matcher(mQuery);
+                    if (m.matches()) {
+                        result.add(screenNamePos, new UserScreenNameItem(m.group(1), mAccountId));
+                    }
                 }
                 usersCursor.close();
             } else {

@@ -88,7 +88,6 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
@@ -1181,8 +1180,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     protected void fitSystemWindows(Rect insets) {
         final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
-        mHeaderDrawerLayout.setPadding(insets.left, Utils.getInsetsTopWithoutActionBarHeight(activity, insets.top),
-                insets.right, insets.bottom);
+        mHeaderDrawerLayout.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         final String backgroundOption = activity.getCurrentThemeBackgroundOption();
         final boolean isTransparentBackground = ThemeUtils.isTransparentBackground(backgroundOption);
         mHeaderDrawerLayout.setClipToPadding(isTransparentBackground);
@@ -1497,8 +1495,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         profileBannerContainer.setTranslationY(-offset);
         profileBannerView.setTranslationY(offset / 2);
 
-        final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
-
         if (mActionBarBackground != null && mTintedStatusContent != null) {
             mActionBarBackground.setFactor(factor);
             mTintedStatusContent.setFactor(factor);
@@ -1511,6 +1507,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 tabOutlineAlphaFactor = 1f;
             }
             mActionBarBackground.setOutlineAlphaFactor(tabOutlineAlphaFactor);
+
+            final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);

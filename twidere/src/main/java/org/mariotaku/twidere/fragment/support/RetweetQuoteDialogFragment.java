@@ -107,7 +107,11 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
         builder.setView(view);
         builder.setTitle(R.string.retweet_quote_confirm_title);
-        builder.setPositiveButton(isMyRetweet(status) ? R.string.cancel_retweet : R.string.retweet, this);
+        if (isMyRetweet(status)) {
+            builder.setPositiveButton(R.string.cancel_retweet, this);
+        } else if (!status.user_is_protected) {
+            builder.setPositiveButton(R.string.retweet, this);
+        }
         builder.setNeutralButton(R.string.quote, this);
         builder.setNegativeButton(android.R.string.cancel, null);
 
@@ -116,6 +120,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
+        view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
         mEditComment = (UserHashtagAutoCompleteEditText) view.findViewById(R.id.edit_comment);
         mEditComment.setAccountId(status.account_id);
         mEditComment.setLengthChecker(new METLengthChecker() {

@@ -48,7 +48,7 @@ public class TwitLongerService extends Service implements Constants {
 		final WeakReference<TwitLongerService> mService;
 
 		public TweetShortenerStub(TwitLongerService service) {
-			mService = new WeakReference<TwitLongerService>(service);
+			mService = new WeakReference<>(service);
 		}
 
 		@Override
