@@ -58,7 +58,7 @@
             tools:text="Created by Mariotaku" />
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.SquareShapedImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profile_image"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"

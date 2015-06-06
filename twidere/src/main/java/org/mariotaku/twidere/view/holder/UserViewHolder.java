@@ -46,7 +46,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final IUsersAdapter<?> adapter;
 
     private final IColorLabelView itemContent;
-    private final ShapedImageView profileImageView;
+    private final ImageView profileImageView;
     private final ImageView profileTypeView;
     private final TextView nameView, screenNameView, descriptionView, locationView, urlView,
             statusesCountView, followersCountView, friendsCountView;
@@ -57,7 +57,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         super(itemView);
         this.adapter = adapter;
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
-        profileImageView = (ShapedImageView) itemView.findViewById(R.id.profile_image);
+        profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
         nameView = (TextView) itemView.findViewById(R.id.name);
         screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
@@ -104,7 +104,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         }
     }
 
-    public ShapedImageView getProfileImageView() {
+    public ImageView getProfileImageView() {
         return profileImageView;
     }
 
@@ -157,7 +157,6 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     public void setupViewOptions() {
         setTextSize(adapter.getTextSize());
-        profileImageView.setStyle(adapter.getProfileImageStyle());
     }
 
     public interface UserClickListener extends ContentCardClickListener {

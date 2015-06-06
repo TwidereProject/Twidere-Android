@@ -58,7 +58,7 @@
             android:paddingStart="@dimen/element_spacing_normal"
             android:paddingTop="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.ShapedImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 android:id="@+id/profile_image"
                 style="?profileImageStyle"
                 android:layout_width="@dimen/icon_size_card_list_item"

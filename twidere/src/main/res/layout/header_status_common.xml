@@ -65,7 +65,7 @@
         android:padding="@dimen/element_spacing_small"
         app:ignorePadding="true">
 
-        <org.mariotaku.twidere.view.ShapedImageView
+        <org.mariotaku.twidere.view.ProfileImageView
             android:id="@+id/profile_image"
             style="?profileImageStyle"
             android:layout_width="@dimen/icon_size_card_details"
