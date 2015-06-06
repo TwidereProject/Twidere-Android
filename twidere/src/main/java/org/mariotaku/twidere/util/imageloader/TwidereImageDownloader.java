@@ -88,7 +88,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         if (mUseThumbor && mPreferences.getBoolean(KEY_THUMBOR_ENABLED)) {
             final String address = mPreferences.getString(KEY_THUMBOR_ADDRESS, null);
             final String securityKey = mPreferences.getString(KEY_THUMBOR_SECURITY_KEY, null);
-            if (URLUtil.isValidUrl(address)) {
+            if (address != null && URLUtil.isValidUrl(address)) {
                 if (TextUtils.isEmpty(securityKey)) {
                     mThumbor = Thumbor.create(address);
                 } else {

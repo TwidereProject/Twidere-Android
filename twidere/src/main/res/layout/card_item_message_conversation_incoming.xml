@@ -23,7 +23,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/profile_image"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"

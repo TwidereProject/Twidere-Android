@@ -15,6 +15,8 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
+
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
@@ -58,7 +60,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     private final IStatusesAdapter<?> adapter;
 
     private final ImageView replyRetweetIcon;
-    private final ShapedImageView profileImageView;
+    private final RoundedImageView profileImageView;
     private final ImageView profileTypeView;
     private final ImageView extraTypeView;
     private final TextView textView;
@@ -80,7 +82,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         super(itemView);
         this.adapter = adapter;
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
-        profileImageView = (ShapedImageView) itemView.findViewById(R.id.profile_image);
+        profileImageView = (RoundedImageView) itemView.findViewById(R.id.profile_image);
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
         extraTypeView = (ImageView) itemView.findViewById(R.id.extra_type);
         textView = (TextView) itemView.findViewById(R.id.text);
@@ -545,7 +547,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         return (CardView) itemView.findViewById(R.id.card);
     }
 
-    public ShapedImageView getProfileImageView() {
+    public ImageView getProfileImageView() {
         return profileImageView;
     }
 
@@ -631,7 +633,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     public void setupViewOptions() {
         setTextSize(adapter.getTextSize());
         mediaPreview.setStyle(adapter.getMediaPreviewStyle());
-        profileImageView.setStyle(adapter.getProfileImageStyle());
+//        profileImageView.setStyle(adapter.getProfileImageStyle());
+        profileImageView.setOval(adapter.getProfileImageStyle() == ShapedImageView.SHAPE_CIRCLE);
         actionButtons.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
         itemMenu.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
 
