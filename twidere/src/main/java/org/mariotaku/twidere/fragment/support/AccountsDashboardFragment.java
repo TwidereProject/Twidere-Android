@@ -721,7 +721,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
 //            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
             final ParcelableAccount account = getAdapterAccount(position);
-            mImageLoader.cancelDisplayTask(holder.icon);
 //            holder.icon.setImageDrawable(null);
             mImageLoader.displayDashboardProfileImage(holder.icon, account.profile_image_url, null);
             holder.icon.setBorderColor(account.color);

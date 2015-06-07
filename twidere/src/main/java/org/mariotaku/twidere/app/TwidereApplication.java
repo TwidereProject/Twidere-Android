@@ -35,7 +35,7 @@ import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -347,7 +347,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 //                1024 * 1024);
 //        discCache.setReserveCacheDir(fallbackCacheDir);
 //        return discCache;
-        return new UnlimitedDiscCache(cacheDir, fallbackCacheDir, new URLFileNameGenerator());
+        return new UnlimitedDiskCache(cacheDir, fallbackCacheDir, new URLFileNameGenerator());
     }
 
     private void initializeAsyncTask() {
