@@ -331,12 +331,14 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         final RecyclerView recyclerView = getRecyclerView();
         recyclerView.addOnScrollListener(mOnScrollListener);
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.register(mStatusesBusCallback);
     }
 
     @Override
     public void onStop() {
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.unregister(mStatusesBusCallback);
         final RecyclerView recyclerView = getRecyclerView();
         recyclerView.removeOnScrollListener(mOnScrollListener);
