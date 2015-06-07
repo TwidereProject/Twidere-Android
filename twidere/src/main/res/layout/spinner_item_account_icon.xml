@@ -22,7 +22,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/element_spacing_small">
 
-    <org.mariotaku.twidere.view.SquareShapedImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
         android:layout_width="match_parent"
