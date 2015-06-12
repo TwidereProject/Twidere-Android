@@ -367,7 +367,12 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static class TwidereExceptionFactory implements ExceptionFactory {
         @Override
         public Exception newException(Throwable cause, RestHttpRequest request, RestHttpResponse response) {
-            final TwitterException te = new TwitterException(cause);
+            final TwitterException te;
+            if (cause != null) {
+                te = new TwitterException(cause);
+            } else {
+                te = new TwitterException();
+            }
             te.setResponse(response);
             return te;
         }

@@ -740,8 +740,14 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
 
         private SignInResponse authxAuth() throws TwitterException {
-            final String versionSuffix = noVersionSuffix ? null : "1.1";
-            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
+            String endpointUrl, signEndpointUrl;
+            endpointUrl = TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", null);
+            if (!sameOAuthSigningUrl) {
+                signEndpointUrl = TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", null);
+            } else {
+                signEndpointUrl = endpointUrl;
+            }
+            Endpoint endpoint = new OAuthEndpoint(endpointUrl, signEndpointUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);

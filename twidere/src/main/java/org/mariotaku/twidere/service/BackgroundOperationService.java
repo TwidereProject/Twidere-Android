@@ -36,6 +36,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -50,6 +51,13 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.TwitterUpload;
+import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
+import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -90,13 +98,6 @@ import java.util.List;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 import edu.tsinghua.spice.Utilies.TypeMappingUtil;
-import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
-import org.mariotaku.twidere.api.twitter.TwitterUpload;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
@@ -543,8 +544,13 @@ public class BackgroundOperationService extends IntentService implements Constan
                             is = new ContentLengthInputStream(file);
                             is.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
                                     statusUpdate));
-                            final MediaUploadResponse uploadResp = upload.uploadMedia(
-                                    new FileTypedData(is, file.getName(), file.length(), ContentType.parse(o.outMimeType)));
+                            final ContentType contentType;
+                            if (TextUtils.isEmpty(o.outMimeType)) {
+                                contentType = ContentType.parse("image/*");
+                            } else {
+                                contentType = ContentType.parse(o.outMimeType);
+                            }
+                            final MediaUploadResponse uploadResp = upload.uploadMedia(new FileTypedData(is, file.getName(), file.length(), contentType));
                             mediaIds[i] = uploadResp.getId();
                         }
                     } catch (final FileNotFoundException e) {
