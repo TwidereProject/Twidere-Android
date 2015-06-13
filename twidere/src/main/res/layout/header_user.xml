@@ -376,19 +376,4 @@
         android:scaleType="fitCenter"
         tools:visibility="gone" />
 
-    <org.mariotaku.twidere.view.AssetFontTextView
-        android:id="@+id/uucky_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_details_container"
-        android:gravity="center"
-        android:padding="@dimen/element_spacing_small"
-        android:text="@string/uucky_footer_text"
-        android:textColor="?android:textColorTertiary"
-        android:textSize="10sp"
-        android:textStyle="italic"
-        android:typeface="serif"
-        android:visibility="gone"
-        app:fontPath="fonts/LibreBaskerville-Italic.ttf" />
-
 </RelativeLayout>

@@ -45,7 +45,6 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -196,7 +195,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private TabPagerIndicator mPagerIndicator;
     private View mPagerOverlay;
     private View mErrorOverlay;
-    private View mUuckyFooter;
     private View mProfileBannerContainer;
     private Button mFollowButton;
     private ProgressBar mFollowProgress;
@@ -554,7 +552,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final int defWidth = resources.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
         mProfileImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
-        mUuckyFooter.setVisibility(isUucky(user.id, user.screen_name, user) ? View.VISIBLE : View.GONE);
         final Relationship relationship = mRelationship;
         if (relationship == null || relationship.getTargetUserId() != user.id) {
             getFriendship();
@@ -787,7 +784,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileNameBackground.setBackgroundColor(mCardBackgroundColor);
         mProfileDetailsContainer.setBackgroundColor(mCardBackgroundColor);
         mPagerIndicator.setBackgroundColor(mCardBackgroundColor);
-        mUuckyFooter.setBackgroundColor(mCardBackgroundColor);
 
         final float actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity);
         ViewCompat.setElevation(mPagerIndicator, actionBarElevation);
@@ -1116,7 +1112,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mErrorOverlay = contentView.findViewById(R.id.error_window_overlay);
         mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
-        mUuckyFooter = headerView.findViewById(R.id.uucky_footer);
         mPagesContent = view.findViewById(R.id.pages_content);
         mPagesErrorContainer = view.findViewById(R.id.pages_error_container);
         mPagesErrorIcon = (ImageView) view.findViewById(R.id.pages_error_icon);
@@ -1352,15 +1347,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = mUser;
         if (user == null) return;
         getUserInfo(user.account_id, user.id, user.screen_name, omitIntentExtra);
-    }
-
-    private boolean isUucky(long userId, String screenName, Parcelable parcelable) {
-        if (userId == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(screenName)) return true;
-        if (parcelable instanceof ParcelableUser) {
-            final ParcelableUser user = (ParcelableUser) parcelable;
-            return user.id == UUCKY_ID || UUCKY_SCREEN_NAME.equalsIgnoreCase(user.screen_name);
-        }
-        return false;
     }
 
     private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
