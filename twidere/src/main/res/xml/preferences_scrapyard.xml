@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~                 Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:defaultValue="true"
+        android:key="name_first"
+        android:order="22"
+        android:summaryOff="@string/name_first_summary_off"
+        android:summaryOn="@string/name_first_summary_on"
+        android:title="@string/name_first">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    <org.mariotaku.twidere.preference.SummaryListPreference
+        android:defaultValue="@string/default_profile_image_style"
+        android:entries="@array/entries_profile_image_style"
+        android:entryValues="@array/values_profile_image_style"
+        android:key="profile_image_style"
+        android:order="24"
+        android:title="@string/profile_image_style">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.SummaryListPreference>
+
+    <org.mariotaku.twidere.preference.SummaryListPreference
+        android:defaultValue="crop"
+        android:entries="@array/entries_media_preview_style"
+        android:entryValues="@array/values_media_preview_style"
+        android:key="media_preview_style"
+        android:order="26"
+        android:title="@string/media_preview_style">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.SummaryListPreference>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:defaultValue="false"
+        android:key="show_absolute_time"
+        android:order="30"
+        android:summary="@string/show_absolute_time_summary"
+        android:title="@string/show_absolute_time">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:defaultValue="true"
+        android:key="card_animation"
+        android:order="31"
+        android:title="@string/card_animation">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:defaultValue="true"
+        android:key="unread_count"
+        android:title="@string/unread_count">
+        <extra
+            android:name="notify_change"
+            android:value="true" />
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+
+    <org.mariotaku.twidere.preference.SummaryListPreference
+        android:defaultValue="@string/default_tab_display_option"
+        android:entries="@array/entries_tab_display_option"
+        android:entryValues="@array/values_tab_display_option"
+        android:key="tab_display_option"
+        android:title="@string/tab_display_option" />
+
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:defaultValue="false"
+        android:key="leftside_compose_button"
+        android:summary="@string/leftside_compose_button_summary"
+        android:title="@string/leftside_compose_button" />
+</PreferenceScreen>

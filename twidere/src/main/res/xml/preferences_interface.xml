@@ -5,51 +5,6 @@
 
     <PreferenceCategory android:title="@string/font">
 
-        <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
-            android:defaultValue="sans-serif-light"
-            android:enabled="@bool/has_font_family"
-            android:key="theme_font_family"
-            android:title="@string/style">
-            <extra
-                android:name="notify_change"
-                android:value="true" />
-        </org.mariotaku.twidere.preference.ThemeFontFamilyPreference>
-
-        <org.mariotaku.twidere.preference.SeekBarDialogPreference
-            android:defaultValue="@integer/default_text_size"
-            android:key="text_size_int"
-            android:summary="@string/text_size_summary"
-            android:title="@string/size"
-            app:max="24"
-            app:min="12"
-            app:progressTextSuffix="sp">
-            <extra
-                android:name="notify_change"
-                android:value="true" />
-        </org.mariotaku.twidere.preference.SeekBarDialogPreference>
-
     </PreferenceCategory>
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-        android:defaultValue="true"
-        android:key="unread_count"
-        android:title="@string/unread_count">
-        <extra
-            android:name="notify_change"
-            android:value="true" />
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
-
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-        android:defaultValue="false"
-        android:key="leftside_compose_button"
-        android:summary="@string/leftside_compose_button_summary"
-        android:title="@string/leftside_compose_button" />
-
-    <org.mariotaku.twidere.preference.SummaryListPreference
-        android:defaultValue="@string/default_tab_display_option"
-        android:entries="@array/entries_tab_display_option"
-        android:entryValues="@array/values_tab_display_option"
-        android:key="tab_display_option"
-        android:title="@string/tab_display_option" />
-
 
 </PreferenceScreen>

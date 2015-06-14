@@ -341,15 +341,15 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
-//        if (!Utils.hasAccount(this)) {
-//            final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
-//            signInIntent.setClass(this, SignInActivity.class);
-//            startActivity(signInIntent);
-//            finish();
-//            return;
-//        } else {
-//            notifyAccountsChanged();
-//        }
+        if (!Utils.hasAccount(this)) {
+            final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
+            signInIntent.setClass(this, SignInActivity.class);
+            startActivity(signInIntent);
+            finish();
+            return;
+        } else {
+            notifyAccountsChanged();
+        }
         final Intent intent = getIntent();
         if (openSettingsWizard()) {
             finish();
@@ -482,7 +482,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         // spice
         SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Stop");
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Stop" + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
+        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Stop" + ","
+                + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
         //end
         super.onStop();
     }

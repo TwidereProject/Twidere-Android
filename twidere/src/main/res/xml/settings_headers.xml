@@ -12,14 +12,6 @@
     </header>
     <header
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
-        android:icon="@drawable/ic_action_view_quilt"
-        android:title="@string/settings_interface">
-        <extra
-            android:name="resid"
-            android:value="@xml/preferences_interface"/>
-    </header>
-    <header
-        android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:icon="@drawable/ic_action_card"
         android:title="@string/cards">
         <extra

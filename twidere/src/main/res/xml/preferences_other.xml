@@ -39,7 +39,6 @@
 
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
-        android:key="data_profiling_settings"
         android:title="@string/usage_statistics">
         <extra
             android:name="resid"
@@ -49,5 +48,13 @@
     <org.mariotaku.twidere.preference.SettingsImportExportPreference
         android:key="import_export_settings"
         android:title="@string/import_export_settings"/>
+
+    <Preference
+        android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
+        android:title="@string/scrapyard">
+        <extra
+            android:name="resid"
+            android:value="@xml/preferences_scrapyard"/>
+    </Preference>
 
 </PreferenceScreen>
