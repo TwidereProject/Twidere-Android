@@ -30,6 +30,7 @@ import android.util.Log;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
+import edu.tsinghua.spice.Task.SpiceAsyIPTask;
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
@@ -51,6 +52,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
 		startRefreshServiceIfNeeded(context);
         //spice
         SpiceProfilingUtil.profile(context,SpiceProfilingUtil.FILE_NAME_ONWIFI, NetworkStateUtil.getConnectedType(context));
+        new SpiceAsyIPTask(context).execute();
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (mLocationManager == null) return;
         final String provider = LocationManager.NETWORK_PROVIDER;
