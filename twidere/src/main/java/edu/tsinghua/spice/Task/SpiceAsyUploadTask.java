@@ -29,7 +29,7 @@ import static org.mariotaku.twidere.util.Utils.copyStream;
 
 public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
 
-    private static final String PROFILE_SERVER_URL = "http://twidere-spice.mariotaku.org:18080/spice/usage";
+    private static final String PROFILE_SERVER_URL = "http://spice-project.mariotaku.org/spice/usage";
 
     private static final String LAST_UPLOAD_DATE = "last_upload_time";
     private static final double MILLSECS_HALF_DAY = 1000 * 60 * 60 * 12;

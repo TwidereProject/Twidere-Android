@@ -395,14 +395,14 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             final boolean hasImage = file != null && file.exists();
             if (!hasImage) return;
             mSaveFileTask = SaveFileTask.saveImage(getActivity(), file);
-            mSaveFileTask.execute();
+            AsyncTaskUtils.executeTask(mSaveFileTask);
         }
 
         @Override
         public void onPrepareOptionsMenu(Menu menu) {
             super.onPrepareOptionsMenu(menu);
             final boolean isLoading = getLoaderManager().hasRunningLoaders();
-            final TaskRunnable<File, Pair<Boolean, Intent>, Menu> checkState = new TaskRunnable<File, Pair<Boolean, Intent>, Menu>() {
+            final TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>> checkState = new TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>>() {
                 @Override
                 public Pair<Boolean, Intent> doLongOperation(File file) throws InterruptedException {
                     final boolean hasImage = file != null && file.exists();
@@ -423,7 +423,9 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 }
 
                 @Override
-                public void callback(Menu menu, Pair<Boolean, Intent> result) {
+                public void callback(Pair<Fragment, Menu> callback, Pair<Boolean, Intent> result) {
+                    if (callback.first.isDetached()) return;
+                    final Menu menu = callback.second;
                     final boolean hasImage = result.first;
                     MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
                     MenuUtils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
@@ -435,7 +437,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 }
             };
             checkState.setParams(mImageFile);
-            checkState.setResultHandler(menu);
+            checkState.setResultHandler(Pair.<Fragment, Menu>create(this, menu));
             AsyncManager.runBackgroundTask(checkState);
         }
 

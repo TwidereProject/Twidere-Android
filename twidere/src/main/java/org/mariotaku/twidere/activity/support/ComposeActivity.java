@@ -1146,30 +1146,34 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
      */
     private boolean startLocationUpdateIfEnabled() {
         final LocationManager lm = mLocationManager;
-        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
-        if (!attachLocation) {
-            lm.removeUpdates(this);
+        try {
+            final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
+            if (!attachLocation) {
+                lm.removeUpdates(this);
+                return false;
+            }
+            final Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            final String provider = lm.getBestProvider(criteria, true);
+            if (provider != null) {
+                mLocationText.setText(R.string.getting_location);
+                lm.requestLocationUpdates(provider, 0, 0, this);
+                final Location location;
+                if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                } else {
+                    location = lm.getLastKnownLocation(provider);
+                }
+                if (location != null) {
+                    onLocationChanged(location);
+                }
+            } else {
+                Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
+            }
+            return provider != null;
+        } catch (SecurityException e) {
             return false;
         }
-        final Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        final String provider = lm.getBestProvider(criteria, true);
-        if (provider != null) {
-            mLocationText.setText(R.string.getting_location);
-            lm.requestLocationUpdates(provider, 0, 0, this);
-            final Location location;
-            if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                location = lm.getLastKnownLocation(provider);
-            }
-            if (location != null) {
-                onLocationChanged(location);
-            }
-        } else {
-            Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
-        }
-        return provider != null;
     }
 
     private boolean takePhoto() {

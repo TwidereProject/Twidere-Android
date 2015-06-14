@@ -23,14 +23,14 @@
     <item
         android:id="@id/refresh"
         android:icon="@drawable/ic_action_refresh"
-        app:showAsAction="ifRoom"
-        android:title="@string/refresh"/>
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/share"
         android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom"
+        android:title="@string/share"
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        android:title="@string/share"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/save"
         android:icon="@drawable/ic_action_save"

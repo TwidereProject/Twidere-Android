@@ -20,13 +20,6 @@
                 android:action="android.intent.action.VIEW"
                 android:data="twidere://user?user_id=57610574&amp;finish_only=true"/>
         </Preference>
-        <Preference
-            android:summary="@string/designer_name"
-            android:title="@string/designed_by">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="twidere://user?user_id=1062473329&amp;finish_only=true"/>
-        </Preference>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="cat_translate"

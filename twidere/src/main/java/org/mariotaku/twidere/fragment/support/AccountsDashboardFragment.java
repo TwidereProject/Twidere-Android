@@ -625,13 +625,20 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         public AccountOptionsAdapter(final Context context) {
             super(context);
             mUserColorNameManager = UserColorNameManager.getInstance(context);
-            mNameFirst = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
-                    Context.MODE_PRIVATE, SharedPreferenceConstants.class).getBoolean(KEY_NAME_FIRST);
+            final SharedPreferencesWrapper wrapper = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
+                    Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+            assert wrapper != null;
+            mNameFirst = wrapper.getBoolean(KEY_NAME_FIRST);
         }
 
         public void setSelectedAccount(ParcelableAccount account) {
             mSelectedAccount = account;
             notifyDataSetChanged();
+        }
+
+        @Override
+        public boolean isEnabled(final int position) {
+            return mSelectedAccount != null;
         }
 
         @Override
