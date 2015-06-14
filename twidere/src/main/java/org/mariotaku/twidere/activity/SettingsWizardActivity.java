@@ -64,6 +64,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.LinePageIndicator;
 
 import java.io.File;
@@ -334,6 +335,12 @@ public class SettingsWizardActivity extends Activity implements Constants {
             return R.xml.settings_wizard_page_hints;
         }
 
+        @Override
+        public void gotoNextPage() {
+            // Try getting location, some custom rom will popup requirement dialog
+            Utils.getCachedLocation(getActivity());
+            super.gotoNextPage();
+        }
     }
 
     public static class WizardPageTabsFragment extends BaseWizardPageFragment {

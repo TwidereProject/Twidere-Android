@@ -4,15 +4,15 @@
     android:title="@string/hints">
 
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
-        android:icon="@drawable/ic_action_accounts"
+        android:icon="@drawable/ic_action_location"
         android:order="11"
+        android:summary="@string/wizard_hint_summary_location_requirement"
+        android:title="@string/wizard_hint_title_location_requirement"/>
+    <org.mariotaku.twidere.preference.ForegroundColorIconPreference
+        android:icon="@drawable/ic_action_accounts"
+        android:order="12"
         android:summary="@string/wizard_hint_compose_select_account"
         android:title="@string/select_account"/>
-    <org.mariotaku.twidere.preference.ForegroundColorIconPreference
-        android:icon="@drawable/ic_action_quote"
-        android:order="12"
-        android:summary="@string/wizard_hint_quote_format"
-        android:title="@string/quote_format"/>
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:icon="@drawable/ic_action_speaker_muted"
         android:order="13"

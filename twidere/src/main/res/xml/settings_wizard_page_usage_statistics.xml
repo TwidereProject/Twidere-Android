@@ -24,9 +24,6 @@
 
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:order="11"
-        android:title="@string/research_ucdavis_earlybird"/>
-    <org.mariotaku.twidere.preference.ForegroundColorIconPreference
-        android:order="12"
         android:title="@string/research_tsinghua_spice"/>
 
 </PreferenceScreen>
