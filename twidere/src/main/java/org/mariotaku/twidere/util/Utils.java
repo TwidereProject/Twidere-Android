@@ -48,6 +48,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -3875,6 +3877,23 @@ public final class Utils implements Constants {
 
             context.getApplicationContext().sendBroadcast(intent);
         }
+    }
+
+    public Location getCachedLocation(Context context) {
+        final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Location location = null;
+        try {
+            location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } catch (Exception ignore) {
+
+        }
+        if (location != null) return location;
+        try {
+            location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ignore) {
+
+        }
+        return location;
     }
 
 }
