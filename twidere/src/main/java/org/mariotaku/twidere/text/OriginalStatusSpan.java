@@ -48,13 +48,13 @@ public class OriginalStatusSpan extends ReplacementSpan {
         final float density = context.getResources().getDisplayMetrics().density;
         mCornerRadius = density * 2;
         mPaint.setStrokeWidth(density);
-        mPadding = (int) (density * 2);
+        mPadding = (int) (density * 4);
         ThemeUtils.getDarkLightForegroundColors(context, mDarkLightColors);
     }
 
     @Override
     public int getSize(final Paint paint, final CharSequence text, final int start, final int end, final Paint.FontMetricsInt fm) {
-//        paint.setTextSize(paint.getTextSize() * 0.8f);
+        paint.setTextSize(paint.getTextSize() * 0.8f);
         return (int) paint.measureText(text, start, end) + mPadding * 2;
     }
 
@@ -78,6 +78,6 @@ public class OriginalStatusSpan extends ReplacementSpan {
         mBounds.inset(mPaint.getStrokeWidth() / 2, mPaint.getStrokeWidth() / 2);
         canvas.drawRoundRect(mBounds, mCornerRadius, mCornerRadius, mPaint);
         paint.setColor(innerTextColor);
-        canvas.drawText(text, start, end, x + mPadding, y, paint);
+        canvas.drawText(text, start, end, x + mPadding, top + (bottom - top) / 2 - (paint.descent() + paint.ascent()) / 2, paint);
     }
 }
