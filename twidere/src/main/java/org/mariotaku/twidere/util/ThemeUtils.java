@@ -32,6 +32,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.internal.app.WindowDecorActionBar;
@@ -445,6 +446,18 @@ public class ThemeUtils implements Constants {
         }
     }
 
+
+    public static void getColorsFromAttribute(final Context context, int[] inAttrs, int[] outColors) {
+        final TypedArray a = context.obtainStyledAttributes(inAttrs);
+        try {
+            for (int i = 0, j = inAttrs.length; i < j; i++) {
+                outColors[i] = a.getColor(i, 0);
+            }
+        } finally {
+            a.recycle();
+        }
+    }
+
     public static void getTextColorPrimaryAndInverse(final Context context, int[] colors) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY_AND_INVERSE);
         try {
@@ -464,6 +477,23 @@ public class ThemeUtils implements Constants {
             } else {
                 colors[0] = a.getColor(0, Color.WHITE);
                 colors[1] = a.getColor(1, Color.BLACK);
+            }
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static void getDarkLightForegroundColors(final Context context, int[] colors) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_COLOR_FOREGROUND_AND_INVERSE);
+        try {
+            final int foreground = a.getColor(0, 0), background = a.getColor(1, 0);
+
+            if (ColorUtils.calculateLuminance(foreground) > ColorUtils.calculateLuminance(background)) {
+                colors[0] = background;
+                colors[1] = foreground;
+            } else {
+                colors[0] = foreground;
+                colors[1] = background;
             }
         } finally {
             a.recycle();

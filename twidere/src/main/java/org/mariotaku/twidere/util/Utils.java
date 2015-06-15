@@ -84,12 +84,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -221,6 +223,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
+import org.mariotaku.twidere.text.OriginalStatusSpan;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -3816,6 +3819,27 @@ public final class Utils implements Constants {
             }
         }
         return null;
+    }
+
+    public static void applyOriginalTweetSpan(final TextView textView, final ParcelableStatus status) {
+        if (!status.is_quote) return;
+        final SpannableStringBuilder text = SpannableStringBuilder.valueOf(textView.getText());
+        final URLSpan[] spans = text.getSpans(0, text.length(), URLSpan.class);
+        URLSpan found = null;
+        String findPattern = "twitter.com/" + status.quoted_by_user_screen_name + "/status/" + status.quote_id;
+        for (URLSpan span : spans) {
+            if (span.getURL().contains(findPattern)) {
+                found = span;
+                break;
+            }
+        }
+        if (found == null) return;
+        int start = text.getSpanStart(found), end = text.getSpanEnd(found);
+        text.replace(start, end, textView.getResources().getString(R.string.original_status));
+        start = text.getSpanStart(found);
+        end = text.getSpanEnd(found);
+        text.setSpan(new OriginalStatusSpan(textView.getContext()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(text);
     }
 
     static class UtilsL {

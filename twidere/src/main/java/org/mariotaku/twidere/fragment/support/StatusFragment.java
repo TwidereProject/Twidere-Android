@@ -55,6 +55,7 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.ArrowKeyMovementMethod;
@@ -696,9 +697,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 nameView.setText(manager.getUserNickname(status.quoted_by_user_id, status.quoted_by_user_name, false));
                 screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
-                final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
-                final Spanned quote_text = Html.fromHtml(status.quote_text_html);
-                quoteTextView.setText(idx > 0 ? quote_text.subSequence(0, idx) : quote_text);
+                quoteTextView.setText(Html.fromHtml(status.quote_text_html));
+                Utils.applyOriginalTweetSpan(quoteTextView, status);
+
                 linkify.applyAllLinks(quoteTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
                 ThemeUtils.applyParagraphSpacing(quoteTextView, 1.1f);
 
