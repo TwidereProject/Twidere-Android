@@ -362,15 +362,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.CameraCropActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.CAMERA_CROP"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity.support.UserListSelectorActivity"
             android:label="@string/select_user_list"
             android:theme="@style/Theme.Twidere.Dark.Dialog">
@@ -480,6 +471,11 @@
             android:name=".activity.UsageStatisticsActivity"
             android:label="@string/usage_statistics"
             android:theme="@android:style/Theme.NoDisplay"/>
+        <activity
+            android:name=".activity.ImageCropperActivity"
+            android:label="@string/crop_image"
+            android:theme="@style/Theme.Twidere.Dark.NoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
 
         <service
             android:name=".service.RefreshService"

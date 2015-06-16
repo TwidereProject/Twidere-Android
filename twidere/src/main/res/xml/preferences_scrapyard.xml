@@ -18,15 +18,16 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
         android:key="name_first"
-        android:order="22"
-        android:summaryOff="@string/name_first_summary_off"
-        android:summaryOn="@string/name_first_summary_on"
-        android:title="@string/name_first">
+        android:title="@string/name_first"
+        app:asb_summaryOff="@string/name_first_summary_off"
+        app:asb_summaryOn="@string/name_first_summary_on">
         <extra
             android:name="notify_change"
             android:value="true"/>
@@ -36,7 +37,6 @@
         android:entries="@array/entries_profile_image_style"
         android:entryValues="@array/values_profile_image_style"
         android:key="profile_image_style"
-        android:order="24"
         android:title="@string/profile_image_style">
         <extra
             android:name="notify_change"
@@ -48,7 +48,6 @@
         android:entries="@array/entries_media_preview_style"
         android:entryValues="@array/values_media_preview_style"
         android:key="media_preview_style"
-        android:order="26"
         android:title="@string/media_preview_style">
         <extra
             android:name="notify_change"
@@ -57,7 +56,6 @@
     <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="show_absolute_time"
-        android:order="30"
         android:summary="@string/show_absolute_time_summary"
         android:title="@string/show_absolute_time">
         <extra
@@ -67,11 +65,10 @@
     <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
         android:key="card_animation"
-        android:order="31"
         android:title="@string/card_animation">
         <extra
             android:name="notify_change"
-            android:value="true" />
+            android:value="true"/>
     </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
     <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="true"
@@ -79,7 +76,7 @@
         android:title="@string/unread_count">
         <extra
             android:name="notify_change"
-            android:value="true" />
+            android:value="true"/>
     </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
     <org.mariotaku.twidere.preference.SummaryListPreference
@@ -87,14 +84,14 @@
         android:entries="@array/entries_tab_display_option"
         android:entryValues="@array/values_tab_display_option"
         android:key="tab_display_option"
-        android:title="@string/tab_display_option" />
+        android:title="@string/tab_display_option"/>
 
     <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="leftside_compose_button"
         android:summary="@string/leftside_compose_button_summary"
-        android:title="@string/leftside_compose_button" />
-    <CheckBoxPreference
+        android:title="@string/leftside_compose_button"/>
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="sort_timeline_by_id"
         android:title="@string/sort_timeline_by_id"/>

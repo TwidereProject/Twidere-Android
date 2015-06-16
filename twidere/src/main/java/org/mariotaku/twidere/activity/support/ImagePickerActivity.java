@@ -22,6 +22,7 @@ import android.webkit.MimeTypeMap;
 
 import com.github.ooxi.jdatauri.DataUri;
 import com.nostra13.universalimageloader.utils.IoUtils;
+import com.soundcloud.android.crop.Crop;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.ContentType;
@@ -30,6 +31,7 @@ import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.TypedData;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.ImageCropperActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -50,10 +52,16 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
 
     public static final int REQUEST_PICK_IMAGE = 101;
     public static final int REQUEST_TAKE_PHOTO = 102;
+    public static final int REQUEST_CROP = 103;
 
     public static final String INTENT_ACTION_TAKE_PHOTO = INTENT_PACKAGE_PREFIX + "TAKE_PHOTO";
     public static final String INTENT_ACTION_PICK_IMAGE = INTENT_PACKAGE_PREFIX + "PICK_IMAGE";
     public static final String INTENT_ACTION_GET_IMAGE = INTENT_PACKAGE_PREFIX + "GET_IMAGE";
+
+    public static final String EXTRA_ASPECT_X = "aspect_x";
+    public static final String EXTRA_ASPECT_Y = "aspect_y";
+    public static final String EXTRA_MAX_WIDTH = "max_width";
+    public static final String EXTRA_MAX_HEIGHT = "max_height";
 
     private Uri mTempPhotoUri;
     private CopyImageTask mTask;
@@ -76,13 +84,21 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
             finish();
             return;
         }
+        final boolean needsCrop;
         final Uri src;
         switch (requestCode) {
             case REQUEST_PICK_IMAGE: {
+                needsCrop = true;
                 src = intent.getData();
                 break;
             }
             case REQUEST_TAKE_PHOTO: {
+                needsCrop = true;
+                src = mTempPhotoUri;
+                break;
+            }
+            case REQUEST_CROP: {
+                needsCrop = false;
                 src = mTempPhotoUri;
                 break;
             }
@@ -96,7 +112,7 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
 
             @Override
             public void run() {
-                imageSelected(src);
+                imageSelected(src, needsCrop, !needsCrop);
             }
         };
     }
@@ -119,7 +135,7 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
         } else if (INTENT_ACTION_PICK_IMAGE.equals(action)) {
             pickImage();
         } else if (INTENT_ACTION_GET_IMAGE.equals(action)) {
-            imageSelected(intent.getData());
+            imageSelected(intent.getData(), true, false);
         } else {
             new ImageSourceDialogFragment().show(getSupportFragmentManager(), "image_source");
         }
@@ -131,10 +147,10 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
         super.onStop();
     }
 
-    private void imageSelected(final Uri uri) {
+    private void imageSelected(final Uri uri, final boolean needsCrop, final boolean deleteSource) {
         final CopyImageTask task = mTask;
         if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) return;
-        mTask = new CopyImageTask(this, uri);
+        mTask = new CopyImageTask(this, uri, needsCrop, deleteSource);
         mTask.execute();
     }
 
@@ -150,16 +166,9 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
 
     private void takePhoto() {
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (!getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) return;
-        final File extCacheDir = getExternalCacheDir();
-        final File file;
-        try {
-            file = File.createTempFile("temp_image_", ".tmp", extCacheDir);
-        } catch (final IOException e) {
-            return;
-        }
-        mTempPhotoUri = Uri.fromFile(file);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mTempPhotoUri);
+        final Uri uri = createTempImageUri();
+        mTempPhotoUri = uri;
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         try {
             startActivityForResult(intent, REQUEST_TAKE_PHOTO);
         } catch (final ActivityNotFoundException ignored) {
@@ -167,6 +176,17 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
         }
     }
 
+    private Uri createTempImageUri() {
+        if (!getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) return null;
+        final File extCacheDir = getExternalCacheDir();
+        final File file;
+        try {
+            file = File.createTempFile("temp_image_", ".tmp", extCacheDir);
+        } catch (final IOException e) {
+            return null;
+        }
+        return Uri.fromFile(file);
+    }
 
     private boolean takePhotoFallback(Uri uri) {
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -183,10 +203,14 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
         private static final String TAG_COPYING_IMAGE = "copying_image";
         private final ImagePickerActivity mActivity;
         private final Uri mUri;
+        private final boolean mNeedsCrop;
+        private final boolean mDeleteSource;
 
-        public CopyImageTask(final ImagePickerActivity activity, final Uri uri) {
+        public CopyImageTask(final ImagePickerActivity activity, final Uri uri, final boolean needsCrop, final boolean deleteSource) {
             mActivity = activity;
             mUri = uri;
+            mNeedsCrop = needsCrop;
+            mDeleteSource = deleteSource;
         }
 
         @Override
@@ -229,6 +253,10 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                 final File outFile = File.createTempFile("temp_image_", suffix, cacheDir);
                 os = new FileOutputStream(outFile);
                 IoUtils.copyStream(is, os, null);
+                if (mDeleteSource && SCHEME_FILE.equals(scheme)) {
+                    final File sourceFile = new File(mUri.getPath());
+                    sourceFile.delete();
+                }
                 return SingleResponse.getInstance(outFile);
             } catch (final IOException e) {
                 return SingleResponse.getInstance(e);
@@ -251,8 +279,30 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                 ((DialogFragment) f).dismiss();
             }
             if (result.hasData()) {
+                final Uri dstUri = Uri.fromFile(result.getData());
+                final Intent callingIntent = mActivity.getIntent();
+                if (mNeedsCrop && ((callingIntent.hasExtra(EXTRA_ASPECT_X) && callingIntent.hasExtra(EXTRA_ASPECT_Y))
+                        || (callingIntent.hasExtra(EXTRA_MAX_WIDTH) && callingIntent.hasExtra(EXTRA_MAX_HEIGHT)))) {
+                    final Uri tempImageUri = mActivity.createTempImageUri();
+                    final Crop crop = Crop.of(dstUri, tempImageUri);
+                    final int aspectX = callingIntent.getIntExtra(EXTRA_ASPECT_X, -1);
+                    final int aspectY = callingIntent.getIntExtra(EXTRA_ASPECT_Y, -1);
+                    if (aspectX > 0 && aspectY > 0) {
+                        crop.withAspect(aspectX, aspectY);
+                    }
+                    final int maxWidth = callingIntent.getIntExtra(EXTRA_MAX_WIDTH, -1);
+                    final int maxHeight = callingIntent.getIntExtra(EXTRA_MAX_HEIGHT, -1);
+                    if (maxWidth > 0 && maxHeight > 0) {
+                        crop.withMaxSize(maxWidth, maxHeight);
+                    }
+                    final Intent cropIntent = crop.getIntent(mActivity);
+                    cropIntent.setClass(mActivity, ImageCropperActivity.class);
+                    mActivity.mTempPhotoUri = tempImageUri;
+                    mActivity.startActivityForResult(cropIntent, REQUEST_CROP);
+                    return;
+                }
                 final Intent data = new Intent();
-                data.setData(Uri.fromFile(result.getData()));
+                data.setData(dstUri);
                 mActivity.setResult(RESULT_OK, data);
             } else if (result.hasException()) {
                 Log.w(LOGTAG, result.getException());

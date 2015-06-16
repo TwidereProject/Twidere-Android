@@ -42,6 +42,7 @@
   <string name="select_account">Выберите учетную запись</string>
   <string name="username">Имя пользователя</string>
   <string name="password">Пароль</string>
+  <string name="label_data_provider">Провайдер базы данных Twidere</string>
   <string name="label_refresh_service">Обновить сервис</string>
   <string name="label_background_operation_service">Справочная служба</string>
   <string name="open_in_browser">Открыть в браузере</string>
@@ -97,6 +98,8 @@
   <string name="users_favorited_this">Пользователи добавившие в избранное</string>
   <string name="reply_to">Ответ на <xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">Цитата <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, через <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Фильтры</string>
   <string name="users">Пользователи</string>
   <string name="user">Пользователь</string>
@@ -127,7 +130,7 @@
   <string name="url">URL</string>
   <string name="favorites">Избранное</string>
   <string name="name">Имя</string>
-  <string name="refresh">Обновить</string>
+  <string name="refresh">Автоматическое обновление</string>
   <string name="retry">Повторить</string>
   <string name="more">Еще</string>
   <string name="quote_format">Формат цитаты</string>
@@ -239,6 +242,7 @@
   <string name="status_shortener">Укорачиватель твитов</string>
   <string name="status_shortener_default">Ничего (Отмена отправки)</string>
   <string name="error_message_status_too_long">Твит слишком длинный.</string>
+  <string name="error_message_message_too_long">Слишком длинное сообщение.</string>
   <string name="error_message_no_content">Нет содержимого</string>
   <string name="error_message_tweet_shorten_failed">Не удалось укоротить твит.</string>
   <string name="error_message_tweet_shortener_not_found">Сокращатель ссылок не найден, возможно он был удален.</string>
@@ -254,6 +258,8 @@
   <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> элементов выбрано</string>
   <string name="custom_host_mapping">Перенаправление узлов</string>
   <string name="custom_host_mapping_summary">Перенаправление узлов, как с помощью /etc/hosts, но не требующее дополнительных разрешений.</string>
+  <string name="host_mapping_host">Хост</string>
+  <string name="host_mapping_address">Адрес (Может быть указан другой адрес хоста)</string>
   <string name="add_host_mapping">Добавить перенаправление узлов</string>
   <string name="tcp_dns_query">TCP DNS-запрос</string>
   <string name="tcp_dns_query_summary">Использовать протокол TCP для запросов DNS в целях предотвращения DNS Cache Poisoning.</string>
@@ -338,6 +344,7 @@
   <string name="hashtag">Хэштег</string>
   <string name="links">Ссылки</string>
   <string name="edit_profile">Редактировать профиль</string>
+  <string name="edit_details">Редактировать</string>
   <string name="display_sensitive_contents">Показывать особый контент</string>
   <string name="display_sensitive_contents_summary">Показывать особый контент в ленте без предупреждения</string>
   <string name="sensitive_content_warning">Этот твит содержит особый контент, продолжить?</string>
@@ -376,7 +383,7 @@
 </string>
   <string name="quote_protected_status_notice">Не рекомендуется цитировать защищенный твит.</string>
   <string name="edit_draft">Редактировать черновик</string>
-  <string name="profile_image">Изображение в профиле</string>
+  <string name="profile_image">Аватар пользователя</string>
   <string name="your_profile_image">Изображение профиля</string>
   <string name="mention_user">Упоминание <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Цвет темы</string>
@@ -400,6 +407,7 @@
   <string name="search_name_deleted">Запрос \"<xliff:g id="name">%s</xliff:g>\" удалён.</string>
   <string name="import_from">Импортировать из&#8230;</string>
   <string name="link_to_quoted_status">Ссылка на цитированный твит</string>
+  <string name="quote_original_status">Цитировать оригинальный твит</string>
   <string name="followed_user">Подписан на <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Послать запрос на подписку <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user">Отписан от <xliff:g id="user">%s</xliff:g>.</string>
@@ -461,6 +469,9 @@
   <string name="users_statuses">Твиты пользователя</string>
   <string name="card_animation">Анимация карточек</string>
   <string name="name_first">Отображать имя сначала</string>
+  <string name="next_step">Далее</string>
+  <string name="previous_item">Предыдущий</string>
+  <string name="next_item">Следующий</string>
   <string name="settings_wizard">Мастер настройки</string>
   <string name="wizard_page_welcome_title">Добро пожаловать</string>
   <string name="wizard_page_welcome_text">Спасибо за то, что выбрали Twidere. Вы бы хотели настроить его сейчас?</string>
@@ -522,7 +533,6 @@
   <string name="theme_background_solid">Просто белый/чёрный</string>
   <string name="theme_background_transparent">Прозрачный</string>
   <string name="theme_dark_actionbar">Тёмный ActionBar</string>
-  <string name="wizard_hint_compose_select_account">Нажмите на эту иконку для выбора аккаунта при написании твита.</string>
   <string name="wizard_hint_quote_format">Выберите  предпочитаемый формат цитаты в \"Настройках\" - \"Содержимое &amp; Память\"</string>
   <string name="wizard_hint_filters">Вы можете убрать ненужные вам твиты из ленты и уведомления используя \"Фильтры\".</string>
   <string name="view_replies">Посмотреть ответы</string>
@@ -624,8 +634,8 @@
   <string name="style">Стиль</string>
   <string name="color">Цвет</string>
   <string name="font_family">Шрифт</string>
-  <string name="appearance">Появление</string>
-  <string name="function">Функция</string>
+  <string name="appearance">Внешний вид</string>
+  <string name="function">Функции</string>
   <string name="replies">Ответы</string>
   <string name="profile_banner">Обложка профиля</string>
   <string name="profile">Профиль</string>
@@ -644,17 +654,99 @@
   <string name="size">Размер</string>
   <string name="just_now">Прямо сейчас</string>
   <string name="requested">Запросы</string>
-  <string name="round">Вокруг</string>
+  <string name="round">Круг</string>
   <string name="square">Квадрат</string>
-  <string name="profile_image_style">Изображение профиля</string>
+  <string name="profile_image_style">Стиль аватара</string>
   <string name="media_preview_style">Предпросмотр медиа</string>
   <string name="draft_saved">Проект сохранен</string>
   <string name="open_twitter_links">Открыть Twitter ссылки</string>
   <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">другое</string>
+  <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> других</string>
   <string name="type_name_to_search">Введи логин для поиска</string>
   <string name="no_user_found">Такой пользователь не найден</string>
   <string name="members">Участники</string>
   <string name="subscribers">Читатели</string>
+  <string name="read_from_bottom">Читать новые твиты снизу</string>
+  <string name="read_from_bottom_summary_off">Перейти к последнему твиту после обновления</string>
+  <string name="read_from_bottom_summary_on">Оставаться на том же месте после обновления ленты</string>
+  <string name="register">Регистрация</string>
   <string name="follows">Читаю</string>
+  <string name="belongs_to">Списки со мной</string>
+  <string name="blocked_by_user_summary">Вы были заблокированы пользователем <xliff:g id="name">%s</xliff:g></string>
+  <string name="select_accounts">Выберете аккаунт</string>
   <string name="media_preview">Предпросмотр медиа</string>
+  <string name="edit_tabs">Выбрать вкладки</string>
+  <string name="no_location">Не отправлять местоположение</string>
+  <string name="getting_location">Определение местонахождения</string>
+  <string name="save_to_gallery">Сохранить в галерею</string>
+  <string name="usage_statistics">Статистика использования</string>
+  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
+  <string name="research_tsinghua_spice">Tsinghua Spice</string>
+  <string name="unknown_location">Неизвестное местоположение</string>
+  <string name="ellipsis">...</string>
+  <string name="designed_by">Дизайнер</string>
+  <string name="designer_name">Uucky Lee</string>
+  <string name="import_export_settings">Импорт/Экспорт настроек</string>
+  <string name="usage_statistics_header_summary">Twidere принимает участие в некоторых исследовательских проектах, присоединившись к которым вы сделаете Twidere и другие приложения лучше.</string>
+  <string name="no_tab">Нет вкладок</string>
+  <string name="user_protected_summary">Необходимо отправить запрос этому пользователю, чтобы вы могли видеть его твиты</string>
+  <string name="no_account">Нет аккаунтов</string>
+  <string name="permission_description_shorten_status">Приложение может укоротить твит для Twindere, чтобы Twindere смог его отправить.</string>
+  <string name="permission_description_upload_media">Приложение может загрузить медиа для Twindere, чтобы Twindere смог его отправить.</string>
+  <string name="permission_description_sync_timeline">Приложение может синхронизировать позицию чтения для Twindere.</string>
+  <string name="usage_statistics_notification_summary">Помоги нам улучшить Twidere!</string>
+  <string name="from_name">От <xliff:g id="name">%1$s</xliff:g></string>
+  <string name="from_name_and_name">От <xliff:g id="name">%1$s</xliff:g> и <xliff:g id="name">%2$s</xliff:g></string>
+  <string name="from_name_and_N_others">От <xliff:g id="name">%1$s</xliff:g> и <xliff:g id="name">%2$d</xliff:g> других</string>
+  <string name="projects_we_took_part">Проекты, в которых мы принимаем участие</string>
+  <string name="activated_accounts">Все аккаунты</string>
+  <string name="search">Поиск</string>
+  <string name="crop">Обрезать</string>
+  <string name="scale">Масштаб</string>
+  <string name="user_type_verified">Подлинная учётная запись</string>
+  <string name="user_type_protected">Закрытая учетная запись</string>
+  <string name="tweet_hashtag">Твит #<xliff:g id="text">%1$s</xliff:g></string>
+  <string name="share_status">Поделиться твитом</string>
+  <string name="pebble_notifications">Pebble Уведомления</string>
+  <string name="pebble_notifications_summary">Отправлять оповещения на Ваш Pebble</string>
+  <string name="tweet_from_name">Твитнуть от имени <xliff:g id="text">%1$s</xliff:g></string>
+  <string name="permission_label_shorten_status">Сокращенный твит</string>
+  <string name="permission_label_upload_media">Загрузить медиа</string>
+  <string name="permission_label_sync_timeline">Синхронизировать ленту</string>
+  <string name="thumbor_integration">Интеграция Thumbor</string>
+  <string name="server_address">Адрес сервера</string>
+  <string name="security_key">Приватный ключ</string>
+  <string name="hide_card_actions">Скрыть кнопки на карточках</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> твит</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> твита</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> избранное</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> избранных</string>
+  <string name="drafts_hint_messages">Здесь сохраняются ваши неотправленные твиты</string>
+  <string name="keyboard_shortcuts">Клавиатурные сокращения</string>
+  <string name="keyboard_shortcut_hint">Нажмите клавиши</string>
+  <string name="conflicts_with_name">Конфликтует с <xliff:g id="name">%s</xliff:g></string>
+  <string name="overwrite">Перезаписать</string>
+  <string name="navigation">Навигация</string>
+  <string name="reset_to_default">Сбросить до исходного состояния</string>
+  <string name="reset_keyboard_shortcuts_confirm">Сбросить клавиатурные сокращения?</string>
+  <string name="open_accounts_dashboard">Открыть панель аккаунтов</string>
+  <string name="previous_tab">Предыдущая вкладка</string>
+  <string name="next_tab">Следующая вкладка</string>
+  <string name="keyboard_shortcut_back">Назад</string>
+  <string name="press_again_to_close">Нажмите снова, чтобы закрыть</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> не задано</string>
+  <string name="swipe_down_to_refresh">Потяните вниз для обновления</string>
+  <string name="app_restart_confirm">Twidere будет перезапущен для применения настроек.</string>
+  <string name="dont_restart">Не перезапускать</string>
+  <string name="user_list_details">Детали списка</string>
+  <string name="invalid_list_name">Должно начинаться с буквы и может состоять только из букв, цифр, \"-\", или \"_\".</string>
+  <string name="delete_conversation">Удалить беседу</string>
+  <string name="delete_conversation_confirm_message">Удалить все сообщения в этой беседе?</string>
+  <string name="name_first_summary_on">Отображать сначала имя</string>
+  <string name="comment_hint">Комментарий&#8230;</string>
+  <string name="comment">Комментировать</string>
+  <string name="enable_retweets">Включить ретвиты</string>
+  <string name="disable_retweets">Отключить ретвиты</string>
+  <string name="play">Воспроизвести</string>
+  <string name="pause">Пауза</string>
 </resources>

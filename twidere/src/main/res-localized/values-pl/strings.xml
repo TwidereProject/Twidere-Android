@@ -508,7 +508,6 @@ Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna prz
   <string name="theme_background_solid">Czyste biało-czarne</string>
   <string name="theme_background_transparent">Przezroczyste</string>
   <string name="theme_dark_actionbar">Ciemny ActionBar</string>
-  <string name="wizard_hint_compose_select_account">Dotknij tej ikony aby wybrać konto podczas pisania tweeta.</string>
   <string name="wizard_hint_quote_format">Ustaw ulubiony format cytatu w \"Ustawienia\" - \"Zawartość i przechowywanie\"</string>
   <string name="wizard_hint_filters">Możesz ukryć niechciane tweety w strumieniu i powiadomieniach za pomocą opcji \"Filtry\".</string>
   <string name="view_replies">Zobacz odpowiedzi</string>

@@ -82,7 +82,7 @@
   <string name="clear_cache_summary">Limpiar caché de imagen de perfil almacenado.</string>
   <string name="clear_databases">Limpiar bases de datos</string>
   <string name="clear_databases_summary">Borra todos los tweets, perfiles y mensajes. Las credenciales de su cuenta no se perderán.</string>
-  <string name="look_and_feel">Estilos y comportamiento</string>
+  <string name="look_and_feel">Apariencia y comportamiento</string>
   <string name="display_profile_image">Imagen de perfil para mostrar</string>
   <string name="image_load_summary">Desactivarlo aumentará la velocidad de desplazamiento en la lista y reducirá el uso de datos.</string>
   <string name="in_reply_to_name">En respuesta a <xliff:g id="user_name">%s</xliff:g></string>
@@ -226,7 +226,7 @@
   <string name="pick_file">Selecciona el archivo</string>
   <string name="user_timeline">Cronología del usuario</string>
   <string name="notification_ringtone">Tono</string>
-  <string name="notification_light_color">Color claro</string>
+  <string name="notification_light_color">Color de la luz</string>
   <string name="share_format">Formato al compartir</string>
   <string name="share_format_summary">\"[TÍTULO]\" = Título del contenido\n\"[TEXTO]\" = Texto</string>
   <string name="network">Red</string>
@@ -344,6 +344,7 @@
   <string name="hashtag">Hashtag</string>
   <string name="links">Enlaces</string>
   <string name="edit_profile">Editar perfil</string>
+  <string name="edit_details">Editar detalles</string>
   <string name="display_sensitive_contents">Mostrar contenido sensible</string>
   <string name="display_sensitive_contents_summary">Mostrar contenidos sensibles en la cronología sin aviso</string>
   <string name="sensitive_content_warning">Este tweet puede tener contenido sensible, ¿continuar?</string>
@@ -405,6 +406,7 @@
   <string name="search_name_deleted">Búsqueda \"<xliff:g id="name">%s</xliff:g>\" borrada.</string>
   <string name="import_from">Importar desde...</string>
   <string name="link_to_quoted_status">Enlace al tweet mencionado</string>
+  <string name="quote_original_status">Citar tweet original</string>
   <string name="followed_user">Siguiendo a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Enviar una petición de Seguir a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user">Ya no sigues a <xliff:g id="user">%s</xliff:g>.</string>
@@ -530,7 +532,6 @@
   <string name="theme_background_solid">Blanco/Negro puro</string>
   <string name="theme_background_transparent">Transparente</string>
   <string name="theme_dark_actionbar">Barra de acciones oscura</string>
-  <string name="wizard_hint_compose_select_account">Cliquear este icono para seleccionar una cuenta cuando escriba un tweet.</string>
   <string name="wizard_hint_quote_format">Configure su formato de cita favorita en \"Configuración\">\"Contenido y Almacenamiento\"</string>
   <string name="wizard_hint_filters">Puede ocultar tweets indeseados de su cronología y notificaciones usando «Filtros».</string>
   <string name="view_replies">Ver respuestas</string>
@@ -736,4 +737,15 @@
   <string name="swipe_down_to_refresh">Desliza hacia abajo para actualizar</string>
   <string name="app_restart_confirm">Twidere se reiniciará para aplicar los ajustes.</string>
   <string name="dont_restart">No reinicie</string>
+  <string name="user_list_details">Detalles de la lista</string>
+  <string name="invalid_list_name">Debe empezar con una letra y estar formado sólo por letras, números, \"-\", o \"_\".</string>
+  <string name="delete_conversation">Borrar la conversación</string>
+  <string name="delete_conversation_confirm_message">¿Borrar todos los mensajes de esta conversación?</string>
+  <string name="name_first_summary_on">Mostrar nombre primero</string>
+  <string name="comment_hint">Comentario&#8230;</string>
+  <string name="comment">Comentario</string>
+  <string name="enable_retweets">Habilitar retweets</string>
+  <string name="disable_retweets">Deshabilitar retweets</string>
+  <string name="play">Reproducir</string>
+  <string name="pause">Pausa</string>
 </resources>

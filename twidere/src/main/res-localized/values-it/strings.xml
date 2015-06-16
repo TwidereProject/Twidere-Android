@@ -42,6 +42,7 @@
   <string name="select_account">Seleziona account</string>
   <string name="username">Username</string>
   <string name="password">Password</string>
+  <string name="label_data_provider">Twidere database provider</string>
   <string name="label_refresh_service">Aggiorna servizio</string>
   <string name="label_background_operation_service">Background operation service</string>
   <string name="open_in_browser">Apri nel browser</string>
@@ -87,9 +88,9 @@
   <string name="in_reply_to_name">Risposta a <xliff:g id="user_name">%s</xliff:g></string>
   <string name="name_retweeted">ReTweettato da <xliff:g id="user_name">%s</xliff:g></string>
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> e un altro hanno ReTweettato</string>
-  <string name="name_and_count_retweeted">Retwittato da <xliff:g id="user_name">%1$s</xliff:g> e da altri<xliff:g id="retweet_count">%2$d</xliff:g></string>
+  <string name="name_and_count_retweeted">Retwittato da <xliff:g id="user_name">%1$s</xliff:g> e da altri <xliff:g id="retweet_count">%2$d</xliff:g></string>
   <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweet</string>
-  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweets</string>
+  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweet</string>
   <string name="retweeted_by_name">ReTweettato da <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">ReTweettato da <xliff:g id="user_name">%1$s</xliff:g> e altri <xliff:g id="retweet_count">%2$d</xliff:g></string>
   <string name="retweeted_by_count">ReTweettato da <xliff:g id="retweet_count">%d</xliff:g> utenti</string>
@@ -241,6 +242,7 @@
   <string name="status_shortener">Tweet shortener</string>
   <string name="status_shortener_default">None (Abort sending)</string>
   <string name="error_message_status_too_long">Tweet troppo lungo.</string>
+  <string name="error_message_message_too_long">Messaggio troppo lungo.</string>
   <string name="error_message_no_content">Nessun contenuto</string>
   <string name="error_message_tweet_shorten_failed">Abbreviazione del tweet non riuscita.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet shortener non trovato, forse è stato disinstallato.</string>
@@ -279,11 +281,13 @@
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> ti ha aggiunto ad una lista <xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> ti ha aggiunto alle sue liste.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> ha inserito nei preferiti il tweet di<xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ha aggiunto a preferiti i tweet di <xliff:g id="target">%2$s</xliff:g> e <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> sta seguendo <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> sta seguendo <xliff:g id="target">%2$s</xliff:g> e <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> ha ritwittato il tweet di <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> ha aggiunto <xliff:g id="target">%2$s</xliff:g> ad una lista.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> ha creato la lista <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> ha creato le liste <xliff:g id="target">%2$s</xliff:g> e <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">Tweet non inviato.</string>
   <string name="status_not_updated_summary">Tweet non inviato, salvato in bozze.</string>
   <string name="incoming_friendships">Richieste di seguirti in attesa</string>
@@ -340,6 +344,7 @@
   <string name="hashtag">Hashtag</string>
   <string name="links">Collegamenti</string>
   <string name="edit_profile">Modifica profilo</string>
+  <string name="edit_details">Modifica dettagli</string>
   <string name="display_sensitive_contents">Mostra contenuti sensibili</string>
   <string name="display_sensitive_contents_summary">Mostra contenuti sensibili senza preavviso in timeline</string>
   <string name="sensitive_content_warning">Questo tweet può contenere materiale sensibile, continuare?</string>
@@ -401,6 +406,7 @@
   <string name="search_name_deleted">Ricerca \"<xliff:g id="name">%s</xliff:g>\" eliminata.</string>
   <string name="import_from">Importa da&#8230;</string>
   <string name="link_to_quoted_status">Link al tweet quotato</string>
+  <string name="quote_original_status">Cita il tweet originale</string>
   <string name="followed_user">Seguito <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Richiesta di follow inviata a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user">Non seguito <xliff:g id="user">%s</xliff:g>.</string>
@@ -462,6 +468,9 @@
   <string name="users_statuses">Tweet dell\'utente</string>
   <string name="card_animation">Animazione delle schede</string>
   <string name="name_first">Visualizza prima il nome</string>
+  <string name="next_step">Successivo</string>
+  <string name="previous_item">Precedente</string>
+  <string name="next_item">Successivo</string>
   <string name="settings_wizard">Impostazione guidata</string>
   <string name="wizard_page_welcome_title">Benvenuto</string>
   <string name="wizard_page_welcome_text">Grazie per aver scelto Twidere.\nVuoi configurarlo adesso?</string>
@@ -523,7 +532,6 @@
   <string name="theme_background_solid">Bianco/Nero puro</string>
   <string name="theme_background_transparent">Trasparente</string>
   <string name="theme_dark_actionbar">ActionBar scura</string>
-  <string name="wizard_hint_compose_select_account">Clicca questa icona per selezionare l\'account quando stai scrivendo un tweet.</string>
   <string name="wizard_hint_quote_format">Imposta il tipo di citazione preferita in \"Impostazioni\" - \"Contenuti &amp; Archiviazione\"</string>
   <string name="wizard_hint_filters">Puoi nascondere tweet e notifiche non desiderate utilizzando i \"Filtri\".</string>
   <string name="view_replies">Visualizza Risposte</string>
@@ -651,11 +659,15 @@
   <string name="media_preview_style">Stile anteprima media</string>
   <string name="draft_saved">Progetto salvato</string>
   <string name="open_twitter_links">Apri i link di Twitter</string>
+  <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">un altro</string>
   <string name="N_others_quantity_other" tools:ignore="PluralsCandidate">altri <xliff:g id="count">%d</xliff:g></string>
   <string name="type_name_to_search">Digita un nome da cercare</string>
   <string name="no_user_found">Nessun utente trovato</string>
   <string name="members">Membri</string>
   <string name="read_from_bottom">Leggi dal basso</string>
+  <string name="read_from_bottom_summary_off">Salta all\'ultimo tweet dopo l\'aggiornamento</string>
+  <string name="read_from_bottom_summary_on">Mantieni la posizione dopo l\'aggiornamento</string>
+  <string name="register">Registrati</string>
   <string name="follows">Segui</string>
   <string name="belongs_to">Appartiene a</string>
   <string name="blocked_by_user_summary">Sei stato bloccato da <xliff:g id="name">%s</xliff:g></string>
@@ -691,11 +703,46 @@
   <string name="scale">Scala</string>
   <string name="user_type_verified">Verificato</string>
   <string name="user_type_protected">Protetto</string>
+  <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
   <string name="share_status">Condividi tweet</string>
   <string name="pebble_notifications">Notifiche Pebble</string>
   <string name="pebble_notifications_summary">Invia Notifiche al tuo Pebble</string>
   <string name="tweet_from_name">Tweet da <xliff:g id="text">%1$s</xliff:g></string>
+  <string name="permission_label_shorten_status">Riduci il tweet</string>
   <string name="permission_label_upload_media">Upload media</string>
+  <string name="permission_label_sync_timeline">Sincronizza timeline</string>
   <string name="thumbor_integration">Integrazione Thumbor</string>
   <string name="server_address">Indirizzo del server</string>
+  <string name="security_key">Chiave di sicurezza</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> preferito</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> preferiti</string>
+  <string name="drafts_hint_messages">I tuoi tween non inviati saranno salvati qui</string>
+  <string name="keyboard_shortcuts">Scorciatoie da tastiera</string>
+  <string name="keyboard_shortcut_hint">Premi i tasti</string>
+  <string name="conflicts_with_name">Confitti con <xliff:g id="name">%s</xliff:g></string>
+  <string name="overwrite">Sovrascrivi</string>
+  <string name="navigation">Navigazione</string>
+  <string name="reset_to_default">Ripristina come da default</string>
+  <string name="reset_keyboard_shortcuts_confirm">Resettare le scorciatoie da tastiera ai valori di default?</string>
+  <string name="open_accounts_dashboard">Apri la dashboard</string>
+  <string name="previous_tab">Tab precedente</string>
+  <string name="next_tab">Tab successiva</string>
+  <string name="keyboard_shortcut_back">Indietro</string>
+  <string name="press_again_to_close">Premi di nuovo per chiudere</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> non settato</string>
+  <string name="swipe_down_to_refresh">Tira in giù per aggiornare</string>
+  <string name="app_restart_confirm">Twidere si riavvierà per rendere effettive le nuove le impostazioni.</string>
+  <string name="dont_restart">Non riavviare</string>
+  <string name="invalid_list_name">Deve iniziare con una lettera e può contenere solo lettere, numeri, \"-\" o \"_\".</string>
+  <string name="delete_conversation">Cancella conversazione</string>
+  <string name="delete_conversation_confirm_message">Cancellare tutti i messaggi di questa conversazione?</string>
+  <string name="name_first_summary_on">Mostra il nome prima</string>
+  <string name="comment_hint">Commento&#8230;</string>
+  <string name="comment">Commenta</string>
+  <string name="enable_retweets">Abilita retweet</string>
+  <string name="disable_retweets">Disabilita retweet</string>
+  <string name="play">Play</string>
+  <string name="pause">Pausa</string>
 </resources>

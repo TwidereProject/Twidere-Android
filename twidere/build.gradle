@@ -87,6 +87,7 @@ dependencies {
     compile 'org.jraf:android-switch-backport:2.0.1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
     compile 'com.makeramen:roundedimageview:2.1.0'
+    compile 'com.soundcloud.android:android-crop:1.0.0@aar'
     googleCompile 'com.google.android.gms:play-services-maps:7.5.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'

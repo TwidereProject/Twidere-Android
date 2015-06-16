@@ -9,7 +9,7 @@
   <string name="error_twitter_130">Twitter està temporalment sobrecarregat.</string>
   <string name="error_twitter_131">Els servidors de Twitter estan temporalment fora de servei. Si us plau, intenteu-ho més tard.</string>
   <string name="error_twitter_135">Comproveu el rellotge del vostre sistema.</string>
-  <string name="error_twitter_161">Ja heu sol·licitat abans seguir a aquest usuari.</string>
+  <string name="error_twitter_161">Ja heu soŀlicitat abans seguir a aquest usuari.</string>
   <string name="error_twitter_162">Aquest usuari us ha bloquejat.</string>
   <string name="error_twitter_172">Ja heu desat abans aquesta cerca.</string>
   <string name="error_twitter_179">No podeu veure aquesta piulada perquè està protegida.</string>

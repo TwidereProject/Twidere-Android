@@ -270,8 +270,11 @@
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> Tweet anda difavoritkan.</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g>dan<xliff:g id="other">%2$s</xliff:g> memfavoritkan retweet.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> mengikuti Anda.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> dan<xliff:g id="other">%2$s</xliff:g> mengikuti Anda.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> me-retweet tweet anda.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> dan<xliff:g id="other">%2$s</xliff:g> me-retweet tweet Anda.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> menambahkan Anda ke dalam daftar.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> memfavoritkan kicauan <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> mengikuti <xliff:g id="target">%2$s</xliff:g>.</string>
@@ -334,6 +337,7 @@
   <string name="hashtag">tanda pagar</string>
   <string name="links">Tautan</string>
   <string name="edit_profile">Edit profil</string>
+  <string name="edit_details">Ubah rincian</string>
   <string name="display_sensitive_contents">Tampilkan konten yang sensitif.</string>
   <string name="display_sensitive_contents_summary">Tampilkan konten yang sensitif di timeline tanpa pemberitahuan.</string>
   <string name="sensitive_content_warning">Tweet ini mungkin berisi konten yang sensitif, mau melanjutkan?</string>
@@ -395,6 +399,7 @@
   <string name="search_name_deleted">Pencarian \"<xliff:g id="name">%s</xliff:g>\" terhapus.</string>
   <string name="import_from">Impor dari&#8230;</string>
   <string name="link_to_quoted_status">Link ke tweet kutipan</string>
+  <string name="quote_original_status">Kutip tweet asli</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> diikuti.</string>
   <string name="sent_follow_request_to_user">Mengirim permintaan mengikuti ke <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user">Batal mengikuti <xliff:g id="user">%s</xliff:g>.</string>
@@ -456,6 +461,9 @@
   <string name="users_statuses">Twit pengguna</string>
   <string name="card_animation">Animasi kartu</string>
   <string name="name_first">Tampilkan nama depan</string>
+  <string name="next_step">Lanjutkan</string>
+  <string name="previous_item">Sebelumnya</string>
+  <string name="next_item">Lanjutkan</string>
   <string name="settings_wizard">Pengaturan</string>
   <string name="wizard_page_welcome_title">Selamat datang</string>
   <string name="wizard_page_welcome_text">Terima kasih telah memilih Twidere.\nAnda mau konfigurasi sekarang?</string>
@@ -467,6 +475,7 @@
   <string name="wizard_page_tabs_unchanged_message">Anda dapat menambah tab di \"Pengaturan\" - \"Tab\"</string>
   <string name="wizard_page_cards_text">Konfigurasi item kartu.</string>
   <string name="wizard_page_hints_text">Disini ada berbagai petunjuk berguna.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere mengambil bagian dalam beberapa proyek penelitian yang membutuhkan penggunaan data.</string>
   <string name="wizard_page_finished_title">Selesai</string>
   <string name="wizard_page_finished_text">Twidere sudah dapat digunakan.</string>
   <string name="invalid_tab">Salah tab</string>
@@ -516,7 +525,6 @@
   <string name="theme_background_solid">Putih/hitam murni</string>
   <string name="theme_background_transparent">Transparan</string>
   <string name="theme_dark_actionbar">Bar aksi gelap</string>
-  <string name="wizard_hint_compose_select_account">Klik gambar ini untuk memilih akun saat menulis twit.</string>
   <string name="wizard_hint_quote_format">Atur format kutipan anda di \"Pengaturan\" - \"Isi &amp; Penyimpanan\"</string>
   <string name="wizard_hint_filters">Anda dapat menyembunyikan twit yang tidak diinginkan pada linimasa dan pemberitahuan dengan menggunakan \"Filters\".</string>
   <string name="view_replies">Lihat balasan</string>
@@ -528,6 +536,8 @@
   <string name="N_new_mentions_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> mentions baru</string>
   <string name="N_new_messages_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> percakapan baru</string>
   <string name="N_new_messages_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> percakapan-percakapan baru</string>
+  <string name="status_share_subject_format_with_time">Tweet dari <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), pada <xliff:g id="time">%3$s</xliff:g></string>
+  <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">Batasan Rate</string>
   <string name="wizard_hint_rate_limit">Jika Anda mengalami batasan rate, jangan salahkan saya, itu kebijakan Twitter.</string>
   <string name="preparing_database">Menyiapkan database</string>
@@ -643,11 +653,14 @@
   <string name="draft_saved">Draft tersimpan</string>
   <string name="open_twitter_links">Buka Link Twitter</string>
   <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">Lainnya</string>
+  <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> lainnya</string>
   <string name="type_name_to_search">Ketik nama untuk mencari</string>
   <string name="no_user_found">Tidak menemukan pengguna</string>
   <string name="members">Anggota</string>
   <string name="subscribers">Langganan</string>
   <string name="read_from_bottom">Baca dari bawah</string>
+  <string name="read_from_bottom_summary_off">Langsung menuju tweet terbaru setelah menyegarkan</string>
+  <string name="read_from_bottom_summary_on">Pertahankan posisi membanca setelah menyegarkan</string>
   <string name="register">Registrasi</string>
   <string name="follows">Ikuti</string>
   <string name="belongs_to">Milik</string>
@@ -658,4 +671,31 @@
   <string name="no_location">Tidak ada lokasi</string>
   <string name="getting_location">Mendapatkan lokasi</string>
   <string name="save_to_gallery">Simpan ke galeri</string>
+  <string name="usage_statistics">Statistik penggunaan</string>
+  <string name="unknown_location">Lokasi tidak diketahui</string>
+  <string name="ellipsis">...</string>
+  <string name="designed_by">Dirancang oleh</string>
+  <string name="designer_name">Uucky Lee</string>
+  <string name="import_export_settings">Impor/Ekspor pengaturan</string>
+  <string name="usage_statistics_header_summary">Twidere mengambil bagian dalam beberapa proyek penelitian, bergabung dengan proyek ini akan membuat Twidere dan beberapa aplikasi lain menjadi lebih baik.</string>
+  <string name="no_tab">Tidak ada tab</string>
+  <string name="no_account">Tidak ada akun</string>
+  <string name="activated_accounts">Akun diaktifkan</string>
+  <string name="search">Pencarian</string>
+  <string name="user_type_verified">Diverifikasi</string>
+  <string name="user_type_protected">Dilindungi</string>
+  <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
+  <string name="share_status">Bagikan tweet</string>
+  <string name="permission_label_shorten_status">Mempersingkat tweet</string>
+  <string name="user_list_details">Daftar rincian</string>
+  <string name="invalid_list_name">Harus dimulai dengan huruf dan dapat terdiri dari huruf, angka, \"-\", atau \"_\".</string>
+  <string name="delete_conversation">Hapus percakapan</string>
+  <string name="delete_conversation_confirm_message">Hapus semua pesan pada percakapan ini?</string>
+  <string name="name_first_summary_on">Tampilkan nama lebih dahulu</string>
+  <string name="comment_hint">Komentar...</string>
+  <string name="comment">Komentar</string>
+  <string name="enable_retweets">Aktifkan retweets</string>
+  <string name="disable_retweets">Nonaktifkan retweets</string>
+  <string name="play">Mainkan</string>
+  <string name="pause">Jeda</string>
 </resources>

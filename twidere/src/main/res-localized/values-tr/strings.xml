@@ -42,6 +42,7 @@
   <string name="select_account">Hesap seç</string>
   <string name="username">Kullanıcı adı</string>
   <string name="password">Şifre</string>
+  <string name="label_data_provider">Twidere veritabanı sağlayıcı</string>
   <string name="label_refresh_service">Servisi yenile</string>
   <string name="label_background_operation_service">Arkaplan çalışma servisi</string>
   <string name="open_in_browser">Tarayıcıda aç</string>
@@ -241,6 +242,7 @@
   <string name="status_shortener">Tweet kısaltıcı</string>
   <string name="status_shortener_default">Hiçbiri (Göndermekten vazgeç)</string>
   <string name="error_message_status_too_long">Tweet çok uzun.</string>
+  <string name="error_message_message_too_long">Mesaj çok uzun.</string>
   <string name="error_message_no_content">İçerik yok</string>
   <string name="error_message_tweet_shorten_failed">Tweet kısaltılamadı.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet kısaltıcı bulunamadı, belki kaldırılmıştır.</string>
@@ -256,6 +258,8 @@
   <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> nesne seçildi</string>
   <string name="custom_host_mapping">Özel sunucu haritalama</string>
   <string name="custom_host_mapping_summary">/etc/hosts şeklinde sunucu haritalama, ancak ekstra izin gerektirmez.</string>
+  <string name="host_mapping_host">Sunucu</string>
+  <string name="host_mapping_address">Adres (başka bir sunucu adresi olabilir)</string>
   <string name="add_host_mapping">Sunucu haritalama ekle</string>
   <string name="tcp_dns_query">TCP DNS sorgualama</string>
   <string name="dns_server">DNS Sunucusu</string>
@@ -338,6 +342,7 @@
   <string name="hashtag">Etiket</string>
   <string name="links">Kısayollar</string>
   <string name="edit_profile">Profil düzenle</string>
+  <string name="edit_details">Detayları Düzenle</string>
   <string name="display_sensitive_contents">Hassas içeriği görüntüle</string>
   <string name="display_sensitive_contents_summary">Hassas içeriği uyarmadan zaman akışında görüntüle</string>
   <string name="sensitive_content_warning">Bu tweet hassas içeriğe sahip olabilir, devam edilsin mi?</string>
@@ -505,7 +510,6 @@
   <string name="theme_background_solid">Tamamen beyaz/siyah</string>
   <string name="theme_background_transparent">Transparan</string>
   <string name="theme_dark_actionbar">Koyu AksiyonBarı</string>
-  <string name="wizard_hint_compose_select_account">Tweet yazarken hesap seçmek için bu ikona basın.</string>
   <string name="view_replies">Yanıtlara bak</string>
   <string name="compact_cards_summary">Ekranda daha fazla kart görüntüle</string>
   <string name="N_new_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> yeni tweet</string>

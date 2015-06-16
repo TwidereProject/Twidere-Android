@@ -129,18 +129,30 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             }
             case R.id.profile_image_camera: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_X, 1);
+                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_Y, 1);
+                intent.putExtra(ImagePickerActivity.EXTRA_MAX_WIDTH, 512);
+                intent.putExtra(ImagePickerActivity.EXTRA_MAX_HEIGHT, 512);
                 intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_image_gallery: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_X, 3);
+                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_Y, 1);
+                intent.putExtra(ImagePickerActivity.EXTRA_MAX_WIDTH, 1500);
+                intent.putExtra(ImagePickerActivity.EXTRA_MAX_HEIGHT, 500);
                 intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
             case R.id.profile_banner_gallery: {
                 final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_X, 1);
+                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_Y, 1);
+                intent.putExtra(ImagePickerActivity.EXTRA_MAX_WIDTH, 512);
+                intent.putExtra(ImagePickerActivity.EXTRA_MAX_HEIGHT, 512);
                 intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
                 break;

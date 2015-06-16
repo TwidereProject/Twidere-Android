@@ -38,7 +38,13 @@
   <string name="browser">Περιηγητής</string>
   <string name="pick_from_gallery">Επιλογή από τη γκαλερί</string>
   <string name="statuses">Tweets</string>
+  <string name="about">Πληροφορίες</string>
+  <string name="open_source_license">Άδεια ελεύθερου λογισμικού</string>
   <string name="api">API</string>
+  <string name="clear_cache">Καθαρισμός κρυφής μνήμης</string>
+  <string name="clear_cache_summary">Καθαρισμός αποθηκευμένων εικόνων προφίλ στην κρυφή μνήμη.</string>
+  <string name="clear_databases_summary">Καθαρισμός των tweets, προφίλ, μηνυμάτων. Τα στοιχεία του λογαρισμού σας δεν θα χαθούν.</string>
+  <string name="display_profile_image">Προβολή εικόνας προφίλ</string>
   <string name="filters">Φίλτρα</string>
   <string name="users">Χρήστες</string>
   <string name="user">Χρήστης</string>

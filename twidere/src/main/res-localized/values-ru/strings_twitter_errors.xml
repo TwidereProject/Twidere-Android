@@ -12,7 +12,7 @@
   <string name="error_twitter_161">Вы уже отравили запрос этому пользователю.</string>
   <string name="error_twitter_162">Вы заблокированы этим пользователем.</string>
   <string name="error_twitter_172">Вы уже сохранили этот поисковой запрос.</string>
-  <string name="error_twitter_179">Вы не можете видеть этот защищенный твит.</string>
+  <string name="error_twitter_179">Вы не можете видеть твиты этого пользователя.</string>
   <string name="error_twitter_187">Вы уже отправили этот твит.</string>
   <string name="error_twitter_193">Фотография слишком большая.</string>
   <string name="error_twitter_215">Вам необходимо войти заново.</string>

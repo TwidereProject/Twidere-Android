@@ -42,6 +42,7 @@
   <string name="select_account">アカウントを選択</string>
   <string name="username">ユーザー名かメールアドレス</string>
   <string name="password">パスワード</string>
+  <string name="label_data_provider">Twidereデータベースプロバイダ</string>
   <string name="label_refresh_service">サービスをリフレッシュ</string>
   <string name="label_background_operation_service">バックグラウンド操作サービス</string>
   <string name="open_in_browser">ブラウザで開く</string>
@@ -97,6 +98,8 @@
   <string name="users_favorited_this">お気に入りに登録したユーザーを表示</string>
   <string name="reply_to"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
   <string name="quote_user"><xliff:g id="user_name">%s</xliff:g>さんのツイートを引用</string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">フィルタ</string>
   <string name="users">ユーザー</string>
   <string name="user">ユーザー</string>
@@ -239,6 +242,7 @@
   <string name="status_shortener">ツイート短縮サービス</string>
   <string name="status_shortener_default">なし (送信を取り消す)</string>
   <string name="error_message_status_too_long">ツイートのテキストが長過ぎます。</string>
+  <string name="error_message_message_too_long">メッセージが長すぎます。</string>
   <string name="error_message_no_content">コンテンツなし</string>
   <string name="error_message_tweet_shorten_failed">ツイートを短縮できません。</string>
   <string name="error_message_tweet_shortener_not_found">ツイート短縮サービスが見つかりません。</string>
@@ -264,15 +268,26 @@
   <string name="activities_about_me">みんなの反応</string>
   <string name="activities_by_friends">アクティビティ</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g>さんは、あなたのツイートをお気に入りに登録しました </string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がつぶやきをお気に入りしました。</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g>さんはあなたのリツイートををお気に入りに登録しました</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> さんと<xliff:g id="other">%2$s</xliff:g> があなたのリツイートをお気に入りしました。</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> があなたをフォローしました。</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> さんと<xliff:g id="other">%2$s</xliff:g> さんがあなたをフォローしました。</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g>さんがあなたのツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> さんと<xliff:g id="other">%2$s</xliff:g> さんがあなたのツイートをリツイートしました</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> さんがあなたのツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> さんと<xliff:g id="other">%2$s</xliff:g> さんがあなたのリツイートをリツイートしました。</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g>さんがあなたをリストに追加しました。</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> があなとを <xliff:g id="list">%2$s</xliff:g> のリストに追加しました。</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをリストに追加しました。</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g>さんは<xliff:g id="target">%2$s</xliff:g>さんのツイートをお気に入りに登録しました。</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> が <xliff:g id="target">%2$s</xliff:g> と <xliff:g id="other">%3$s</xliff:g> のつぶやきをお気に入りに追加しました。</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g>さんは<xliff:g id="target">%2$s</xliff:g>さんをフォローしました。</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> が <xliff:g id="target">%2$s</xliff:g> と <xliff:g id="other">%3$s</xliff:g> をフォローしています。</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g>さんは<xliff:g id="target">%2$s</xliff:g>さんのツイートをリツイートしました。</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g>さんは<xliff:g id="target">%2$s</xliff:g>さんをリストに追加しました。</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g>さんはリスト<xliff:g id="target">%2$s</xliff:g>を作成しました。</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> が <xliff:g id="target">%2$s</xliff:g> と <xliff:g id="other">%1$s</xliff:g> のリストを作成しました。</string>
   <string name="status_not_updated">ツイートは送信されませんでした。</string>
   <string name="status_not_updated_summary">ツイートは送信されませんでした。下書きに保存されています。</string>
   <string name="incoming_friendships">保留中のフォローリクエスト</string>
@@ -329,6 +344,7 @@
   <string name="hashtag">ハッシュタグ</string>
   <string name="links">リンク</string>
   <string name="edit_profile">プロフィール編集</string>
+  <string name="edit_details">詳細の編集</string>
   <string name="display_sensitive_contents">不適切な内容を表示</string>
   <string name="display_sensitive_contents_summary">プロンプトを表示せずに不適切な可能性のある内容を表示します。</string>
   <string name="sensitive_content_warning">このツイートには不適切な内容が含まれている可能性があります。続行しますか？</string>
@@ -390,6 +406,7 @@
   <string name="search_name_deleted">検索 \"<xliff:g id="name">%s</xliff:g>\"を削除しました。</string>
   <string name="import_from">インポート</string>
   <string name="link_to_quoted_status">引用ツイートへのリンク</string>
+  <string name="quote_original_status">ツイートを引用</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g>さんをフォローしました。</string>
   <string name="sent_follow_request_to_user">フォローリクエストを<xliff:g id="user">%s</xliff:g>さんに送りました。</string>
   <string name="unfollowed_user"><xliff:g id="user">%s</xliff:g>さんのフォローを解除しました。</string>
@@ -451,6 +468,9 @@
   <string name="users_statuses">ユーザーのツイート</string>
   <string name="card_animation">カードアニメーション</string>
   <string name="name_first">名前を先に表示</string>
+  <string name="next_step">次</string>
+  <string name="previous_item">前</string>
+  <string name="next_item">次</string>
   <string name="settings_wizard">設定ウィザード</string>
   <string name="wizard_page_welcome_title">ようこそ</string>
   <string name="wizard_page_welcome_text">Twidereを選んで頂きありがとうございます。\n初期設定をしますか?</string>
@@ -462,6 +482,7 @@
   <string name="wizard_page_tabs_unchanged_message">設定 - タブでタブを追加出来ます。</string>
   <string name="wizard_page_cards_text">カードアイテムを編集します。</string>
   <string name="wizard_page_hints_text">お役立ちヒント!</string>
+  <string name="wizard_page_usage_statistics_text">Twidereは使用状況データを研究目的において必要とするプロジェクトに参加しています</string>
   <string name="wizard_page_finished_title">完了</string>
   <string name="wizard_page_finished_text">Twidereを使う準備ができました。</string>
   <string name="invalid_tab">不正なタブです</string>
@@ -511,7 +532,6 @@
   <string name="theme_background_solid">白/黒一色</string>
   <string name="theme_background_transparent">背景透過</string>
   <string name="theme_dark_actionbar">黒アクションバー</string>
-  <string name="wizard_hint_compose_select_account">ツイート編集時にこのアイコンをタップするとアカウントを選択できます。</string>
   <string name="wizard_hint_quote_format">引用の書式は\"設定\" - \"コンテンツ &amp; ストレージ\"で設定できます。</string>
   <string name="wizard_hint_filters">\"フィルタ\"を使うとみたくないツイートをTLや通知で表示しないように出来ます。</string>
   <string name="view_replies">返信を表示</string>
@@ -630,19 +650,25 @@
   <string name="font">フォント</string>
   <string name="size">サイズ</string>
   <string name="just_now">たった今</string>
+  <string name="requested">要求した</string>
   <string name="round">丸型</string>
   <string name="square">四角</string>
   <string name="profile_image_style">プロフィール画像のスタイル</string>
   <string name="media_preview_style">画像プレビューのスタイル</string>
   <string name="draft_saved">下書きを保存</string>
   <string name="open_twitter_links">Twitterリンクを開く</string>
+  <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">その他</string>
+  <string name="type_name_to_search">検索する名前を入力</string>
   <string name="no_user_found">ユーザーが見つかりません。</string>
-  <string name="members">追加されているユーザー</string>
-  <string name="subscribers">追加しているユーザー</string>
+  <string name="members">追加されている</string>
+  <string name="subscribers">追加している</string>
   <string name="read_from_bottom">タイムラインを下から読む</string>
+  <string name="read_from_bottom_summary_off">更新後、最新のツイートにジャンプする</string>
+  <string name="read_from_bottom_summary_on">現在の位置を更新後も維持する</string>
   <string name="register">新規登録</string>
   <string name="follows">保存している</string>
   <string name="belongs_to">保存されている</string>
+  <string name="blocked_by_user_summary"><xliff:g id="name">%s</xliff:g> にブロックされました</string>
   <string name="select_accounts">アカウントを選択</string>
   <string name="media_preview">メディアのプレビュー</string>
   <string name="edit_tabs">タブの編集</string>
@@ -662,6 +688,7 @@
   <string name="user_protected_summary">このツイートは非公開です。見るためにはフォローリクエストを送信し、承認される必要があります</string>
   <string name="no_account">アカウント無し</string>
   <string name="usage_statistics_notification_summary">Twidereの機能向上にご協力ください</string>
+  <string name="from_name"><xliff:g id="name">%1$s</xliff:g>から</string>
   <string name="projects_we_took_part">参加されたプロジェクト：</string>
   <string name="activated_accounts">アクティブアカウント</string>
   <string name="search">検索</string>
@@ -669,6 +696,7 @@
   <string name="scale">拡大縮小</string>
   <string name="user_type_verified">認証された</string>
   <string name="user_type_protected">保護されている</string>
+  <string name="tweet_hashtag">つぶやき#<xliff:g id="text">%1$s</xliff:g></string>
   <string name="share_status">ツイートをシエア</string>
   <string name="pebble_notifications">Pebbleへ通知</string>
   <string name="pebble_notifications_summary">通知をPebbleへ送信する</string>
@@ -680,6 +708,10 @@
   <string name="server_address">サーバーのアドレス</string>
   <string name="security_key">セキュリティーキー</string>
   <string name="hide_card_actions">アクションボタンを非表示</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> つぶやき</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> つぶやき</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> お気に入り</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> お気に入り</string>
   <string name="drafts_hint_messages">未送信のツイートが保存されます</string>
   <string name="keyboard_shortcuts">キーボードショートカット</string>
   <string name="keyboard_shortcut_hint">キーを押してください</string>
@@ -687,4 +719,19 @@
   <string name="navigation">ナビゲーション</string>
   <string name="reset_to_default">初期化する</string>
   <string name="reset_keyboard_shortcuts_confirm">キーボードショートカットを初期化しますか？</string>
+  <string name="open_accounts_dashboard">アカウント・ダッシュボードを開く</string>
+  <string name="previous_tab">前のタブ</string>
+  <string name="next_tab">次のタブ</string>
+  <string name="keyboard_shortcut_back">前</string>
+  <string name="press_again_to_close">閉じるにはもう一度押して下さい</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> が設定されていない</string>
+  <string name="swipe_down_to_refresh">下にスワイプすると更新されます</string>
+  <string name="app_restart_confirm">設定を有効にするのに再起動します</string>
+  <string name="dont_restart">再起動しない</string>
+  <string name="user_list_details">リストの詳細</string>
+  <string name="delete_conversation">返信を削除</string>
+  <string name="delete_conversation_confirm_message">この返信のツイートを全て削除しますか？</string>
+  <string name="name_first_summary_on">先に名前を表示する</string>
+  <string name="enable_retweets">リツイートを有効にする</string>
+  <string name="disable_retweets">リツイートを無効にする</string>
 </resources>

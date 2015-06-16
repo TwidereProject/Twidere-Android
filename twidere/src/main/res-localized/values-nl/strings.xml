@@ -17,6 +17,8 @@
   <string name="oauth_base_url">OAuth Basis URL</string>
   <string name="signing_oauth_base_url">Ondertekening OAuth Basis URL</string>
   <string name="signing_rest_base_url">Ondertekening REST basis-URL</string>
+  <string name="api_url_format">API URL Formaat</string>
+  <string name="same_oauth_signing_url">Gebruik de zelfde URL voor OAuth ondertekening</string>
   <string name="auth_type">Auth type</string>
   <string name="oauth">OAuth</string>
   <string name="xauth">xAuth</string>
@@ -81,6 +83,7 @@
   <string name="look_and_feel">Vormgeving en stijl</string>
   <string name="display_profile_image">Geef profielafbeeldingen weer</string>
   <string name="image_load_summary">Dit uitschakelen versnelt het scrollen en vermindert data verkeer.</string>
+  <string name="in_reply_to_name">Als antwoord van <xliff:g id="user_name">%s </xliff:g></string>
   <string name="users_retweeted_this">Gebruikers retweet dit</string>
   <string name="users_favorited_this">Gebruikers hebben dit toegevoegd als favoriet</string>
   <string name="reply_to">Antwoord aan <xliff:g id="user_name">%s</xliff:g>;</string>
@@ -103,6 +106,7 @@
   <string name="load_item_limit">Tweetlijst limiet</string>
   <string name="load_item_limit_summary">Lengte tweetlijst bij laden.</string>
   <string name="load_more_automatically">Laad meer inhoud automatisch</string>
+  <string name="load_more_automatically_summary">Laad meer inhoud (b.v. foto\'s, kaarten, tweets) automatisch</string>
   <string name="quote">Citeer</string>
   <string name="add_rule">Regel toevoegen</string>
   <string name="text_size">lettergrootte</string>
@@ -135,6 +139,7 @@
   <string name="reported_users_for_spam">Rapporteer deze gebruikers voor spam.</string>
   <string name="filename_hint">Bestandsnaam</string>
   <string name="please_wait">Een ogenblik geduld.</string>
+  <string name="saved_to_gallery">Opgeslagen in galerij.</string>
   <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP-Proxy</string>
   <string name="http_proxy_summary">HTTP-Proxy gebruiken voor alle netwerk verzoeken.</string>
@@ -147,6 +152,7 @@
   <string name="twitter_muted_users">Gedempte gebruikers</string>
   <string name="message_user_muted">Deze gebruiker is toegevoegd aan de filter lijst. Je zult geen tweets meer zien van deze gebruiker in je algemene tijdlijn / vermeldingen lijst.</string>
   <string name="message_users_muted">Deze gebruikers zijn toegevoegd aan de filter lijst. Je zult geen tweets meer zien van deze gebruikers in je algemene tijdlijn / vermeldingen lijst.</string>
+  <string name="message_user_unmuted">Gebeuiker verwijderd van filter lijst.</string>
   <string name="inbox">Inbox</string>
   <string name="load_images">Afbeeldingen laden</string>
   <string name="other_settings">Andere instellingen</string>
@@ -169,6 +175,7 @@
   <string name="list_members">Lijst-leden</string>
   <string name="list_subscribers">Lijst-abonnees</string>
   <string name="type_to_compose">Typ om op te stellen</string>
+  <string name="lists">Lijsten</string>
   <string name="users_lists">Gebruikers lijst</string>
   <string name="lists_following_user">Lijsten die deze gebruiker volgen</string>
   <string name="lists_following_you">Lijsten die jou volgen</string>
@@ -222,6 +229,7 @@
   <string name="status_shortener">Tweetverkorter</string>
   <string name="status_shortener_default">Geen (verzenden afbreken)</string>
   <string name="error_message_status_too_long">Tweet te lang.</string>
+  <string name="error_message_message_too_long">Bericht te lang.</string>
   <string name="error_message_no_content">Geen inhoud</string>
   <string name="error_message_tweet_shorten_failed">Tweet inkorten mislukt.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet verkorter niet gevonden, misschien was het verwijderd.</string>
@@ -346,6 +354,7 @@
   <string name="quote_protected_status_notice">Het is niet aangeraden om beschermde tweets te citeren.</string>
   <string name="edit_draft">Wijzig concept</string>
   <string name="profile_image">Profielfoto</string>
+  <string name="your_profile_image">Je profiel foto</string>
   <string name="mention_user">Vermeldt <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Themakleur</string>
   <string name="wrong_url_format">Verkeerde URL-indeling.</string>
@@ -429,6 +438,9 @@
   <string name="users_statuses">Gebruikers tweets</string>
   <string name="card_animation">Kaart animatie</string>
   <string name="name_first">Toon naam eerst</string>
+  <string name="next_step">Volgende</string>
+  <string name="previous_item">Vorige</string>
+  <string name="next_item">Volgende</string>
   <string name="settings_wizard">Instellingen tovenaar</string>
   <string name="wizard_page_welcome_title">Welkom</string>
   <string name="wizard_page_welcome_text">Bedankt voor het kiezen van Twidere!\nWil je het nu configureren?</string>
@@ -488,7 +500,6 @@
   <string name="theme_background_solid">Zuiver wit/zwart</string>
   <string name="theme_background_transparent">Transparant</string>
   <string name="theme_dark_actionbar">Donkere ActionBar</string>
-  <string name="wizard_hint_compose_select_account">Klik op dit icoon om een account te selecteren bij het typen van een tweet.</string>
   <string name="wizard_hint_quote_format">Stel je favoriete citaat formaat in via \'\'Instellingen\'\' - \'\'Inhoud &amp; Opslag\'\'</string>
   <string name="wizard_hint_filters">Je kunt ongewenste tweets verbergen van de tijdlijn en meldingen via \'\'Filters\'\'.</string>
   <string name="view_replies">Bekijk Reacties</string>
@@ -565,6 +576,9 @@
   <string name="click_item_to_config">Klik op een item om in te stellen</string>
   <string name="dark_drawer">Donker schuifpaneel</string>
   <string name="retweets_of_me">Retweets van mij</string>
+  <string name="from_gallery">Uit galerij</string>
+  <string name="from_camera">Uit camera</string>
+  <string name="excluded">Exclusief</string>
   <string name="media">Media</string>
   <string name="color">Kleur</string>
   <string name="profile">Profiel</string>

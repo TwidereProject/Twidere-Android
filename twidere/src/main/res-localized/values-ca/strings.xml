@@ -42,6 +42,7 @@
   <string name="select_account">Tria un compte</string>
   <string name="username">Nom d\'usuari</string>
   <string name="password">Contrasenya</string>
+  <string name="label_data_provider">Proveïdor de la base de dades de Twidere</string>
   <string name="label_refresh_service">Actualitza el servei</string>
   <string name="label_background_operation_service">Servei d\'execució en rerefons</string>
   <string name="open_in_browser">Obrir al navegador</string>
@@ -98,6 +99,8 @@
   <string name="users_favorited_this">Usuaris que ho han marcat com a preferit</string>
   <string name="reply_to">Respon a <xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">Cita a <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Filtres</string>
   <string name="users">Usuaris</string>
   <string name="user">Usuari</string>
@@ -240,6 +243,7 @@
   <string name="status_shortener">Escurçador de piulades</string>
   <string name="status_shortener_default">Cap (Atura l\'enviament)</string>
   <string name="error_message_status_too_long">Piulada massa llarga.</string>
+  <string name="error_message_message_too_long">El missatge és massa llarg.</string>
   <string name="error_message_no_content">Sense contingut</string>
   <string name="error_message_tweet_shorten_failed">Ha fallat l\'escurçador de piulades.</string>
   <string name="error_message_tweet_shortener_not_found">No s\'ha trobat l\'escurçador de piulades; potser s\'ha desinstal·lat.</string>
@@ -255,6 +259,7 @@
   <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> elements seleccionats</string>
   <string name="custom_host_mapping">Associacions de servidors personalitzades</string>
   <string name="custom_host_mapping_summary">Associa servidors com el fitxer /etc/hosts sense requerir permisos addicionals.</string>
+  <string name="host_mapping_host">Servidor</string>
   <string name="host_mapping_address">Adreça (pot ser una altra adreça de servidor)</string>
   <string name="add_host_mapping">Afegeix una associació de servidor</string>
   <string name="tcp_dns_query">Petició DNS per TCP</string>
@@ -264,14 +269,26 @@
   <string name="activities_about_me">Activitats sobre mi</string>
   <string name="activities_by_friends">Activitats de qui segueixes</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> ha marcat la teva piulada com a preferida.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="other">%2$s</xliff:g> han marcat com a preferida una piulada teva.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> ha marcat com a preferida una repiulada teva.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="other">%2$s</xliff:g> han marcat com a preferida una repiulada teva.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> us està seguint.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="other">%2$s</xliff:g> ara et segueixen.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> us ha repiulat.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="other">%2$s</xliff:g> t\'han repiulat.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> t\'ha repiulat.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> t\'ha repiulat una repiulada.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> t\'ha afegit a una llista.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> t\'ha afegit a la llista <xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="other">%2$s</xliff:g> t\'han afegit a llistes seves.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> ha marcat com a preferida la piulada de <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ha marcat com a preferida la piulada de <xliff:g id="target">%2$s</xliff:g> i <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> segueix a <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> ara segueix a <xliff:g id="target">%2$s</xliff:g> i <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> ha repiulat a <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> ha afegit a <xliff:g id="target">%2$s</xliff:g> a una llista.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> ha creat la llista <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> ha creat les llistes <xliff:g id="target">%2$s</xliff:g> i <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">No s\'ha enviat la piulada</string>
   <string name="status_not_updated_summary">No s\'ha enviat la piulada, però s\'ha desat com a esborrany.</string>
   <string name="incoming_friendships">Peticions de seguiment pendents</string>
@@ -328,6 +345,7 @@
   <string name="hashtag">Etiqueta</string>
   <string name="links">Enllaços</string>
   <string name="edit_profile">Edita el perfil</string>
+  <string name="edit_details">Edita els detalls</string>
   <string name="display_sensitive_contents">Mostra continguts sensibles</string>
   <string name="display_sensitive_contents_summary">Mostra continguts sensibles a la cronologia sense previ avís</string>
   <string name="sensitive_content_warning">Aquesta piulada pot contenir continguts sensibles. Voleu continuar?</string>
@@ -389,6 +407,7 @@
   <string name="search_name_deleted">La cerca «<xliff:g id="name">%s</xliff:g>» ha estat esborrada.</string>
   <string name="import_from">Importa des de&#8230;</string>
   <string name="link_to_quoted_status">Enllaça la piulada citada</string>
+  <string name="quote_original_status">Cita la piulada original</string>
   <string name="followed_user">Esteu seguint <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">S\'ha soŀlicitat a <xliff:g id="user">%s</xliff:g> que us segueixi.</string>
   <string name="unfollowed_user">Heu deixat de seguir <xliff:g id="user">%s</xliff:g>.</string>
@@ -450,6 +469,9 @@
   <string name="users_statuses">Piulades de l\'usuari</string>
   <string name="card_animation">Animació de les targetes</string>
   <string name="name_first">Mostra el nom al principi</string>
+  <string name="next_step">Següent</string>
+  <string name="previous_item">Anterior</string>
+  <string name="next_item">Següent</string>
   <string name="settings_wizard">Ajudant de configuració</string>
   <string name="wizard_page_welcome_title">Benvingut/da</string>
   <string name="wizard_page_welcome_text">Gràcies per escollir el Twidere.\nVoleu configurar-lo ara?</string>
@@ -461,6 +483,7 @@
   <string name="wizard_page_tabs_unchanged_message">Podeu afegir pestanyes a «Paràmetres» - «Pestanyes»</string>
   <string name="wizard_page_cards_text">Configura els elements de les targetes.</string>
   <string name="wizard_page_hints_text">A continuació us deixem uns consells.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere participa en un projecte de recerca, que consumeix una mica de dades.</string>
   <string name="wizard_page_finished_title">Ja heu acabat</string>
   <string name="wizard_page_finished_text">Ara el Twidere està preparat per funcionar.</string>
   <string name="invalid_tab">Pestanya invàlida</string>
@@ -511,7 +534,6 @@
   <string name="theme_background_solid">Blanc i negre pur</string>
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">Barra d\'acció fosca</string>
-  <string name="wizard_hint_compose_select_account">Clica aquesta icona per escollir un compte a l\'hora d\'escriure una piulada.</string>
   <string name="wizard_hint_quote_format">Estableix el text de cita a «Paràmetres» - «Contingut i emmagatzematge»</string>
   <string name="wizard_hint_filters">Podeu evitar que apareguin piulades no desitjades a la vostra cronologia i com a notificacions mitjançant «Filtres».</string>
   <string name="view_replies">Mostra les respostes</string>
@@ -523,6 +545,8 @@
   <string name="N_new_mentions_quantity_other" tools:ignore="PluralsCandidate">Hi ha <xliff:g id="items">%d</xliff:g> noves mencions</string>
   <string name="N_new_messages_quantity_one" tools:ignore="PluralsCandidate">Hi ha <xliff:g id="items">%d</xliff:g> nova conversa</string>
   <string name="N_new_messages_quantity_other" tools:ignore="PluralsCandidate">Hi ha <xliff:g id="items">%d</xliff:g> noves converses</string>
+  <string name="status_share_subject_format_with_time">Piulada de <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), a <xliff:g id="time">%3$s</xliff:g></string>
+  <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">Freqüència màxima</string>
   <string name="wizard_hint_rate_limit">Si heu tingut un problema amb la freqüència d\'actualització no em culpeu, si us plau. És culpa de la política de Twitter.</string>
   <string name="preparing_database">S\'està preparant la base de dades</string>
@@ -625,35 +649,105 @@
   <string name="load_media">Carregar multimèdia</string>
   <string name="profile_text_color">Color de la lletra</string>
   <string name="profile_background_color">Color de fons</string>
+  <string name="profile_link_color_main_color">Color dels enllaços (el principal)</string>
   <string name="retweet_quote_confirm_title">Retweet als teus seguidors?</string>
   <string name="font">Font</string>
   <string name="size">Tamany</string>
   <string name="just_now">Just ara</string>
+  <string name="requested">Soŀlicitat</string>
+  <string name="round">Rodó</string>
+  <string name="square">Quadrat</string>
+  <string name="profile_image_style">Estil de la imatge de perfil</string>
+  <string name="media_preview_style">Vista prèvia dels multimèdia</string>
+  <string name="draft_saved">S\'ha desat l\'esborrany</string>
+  <string name="open_twitter_links">Obre els enllaços de Twitter</string>
   <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">Altre</string>
+  <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> més</string>
   <string name="type_name_to_search">Escriu el nom a cerca</string>
   <string name="no_user_found">No s\'ha trobat cap usuari</string>
   <string name="members">Membres</string>
   <string name="subscribers">Subscriptor</string>
   <string name="read_from_bottom">Llegeix des de sota</string>
+  <string name="read_from_bottom_summary_off">Salta a la piulada més recent després d\'actualitzar</string>
+  <string name="read_from_bottom_summary_on">Mantingues la posició després d\'actualitzar</string>
   <string name="register">Registrar-se</string>
   <string name="follows">Segueix</string>
   <string name="belongs_to">Pertany a</string>
+  <string name="blocked_by_user_summary"><xliff:g id="name">%s</xliff:g> t\'ha bloquejat</string>
   <string name="select_accounts">Escolliu un compte</string>
   <string name="media_preview">Previsualització multimèdia</string>
   <string name="edit_tabs">Editar pestanyes</string>
   <string name="no_location">Sense localització</string>
+  <string name="getting_location">S\'està intentant aconseguir la ubicació</string>
   <string name="save_to_gallery">Desar a la galeria</string>
+  <string name="usage_statistics">Estadístiques d\'ús</string>
+  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
+  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Localització desconeguda</string>
+  <string name="ellipsis">&#8230;</string>
   <string name="designed_by">Disenyat per</string>
+  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Importar/Exportar configuració</string>
   <string name="usage_statistics_header_summary">Twidere forma part en alguns projectes d\'investigació; contribuint a aquests projectes faràs Twidere i altres aplicacions futures millor.</string>
   <string name="no_tab">No hi ha pestanyes</string>
+  <string name="user_protected_summary">Has de demanar a aquest usuari que et segueixi per poder veure\'n les piulades, perquè està protegit</string>
   <string name="no_account">Sense compte</string>
+  <string name="permission_description_shorten_status">L\'aplicació pot escurçar les piulades pel Twidere. Per tant, ha de poder-les llegir.</string>
+  <string name="permission_description_upload_media">L\'aplicació pot pujar multimèdia pel Twidere. Per tant, ha de poder accedir als adjunts de les piulades abans de ser enviades.</string>
+  <string name="permission_description_sync_timeline">L\'aplicació pot sincronitzar la posició de lectura pel Twidere. Per tant, ha de tenir accés a la posició de lectura.</string>
   <string name="usage_statistics_notification_summary">Ajuda\'ns a millorar Twidere!</string>
+  <string name="from_name">De <xliff:g id="name">%1$s</xliff:g></string>
+  <string name="from_name_and_name">De <xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$s</xliff:g></string>
+  <string name="from_name_and_N_others">De <xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$d</xliff:g> més</string>
   <string name="projects_we_took_part">Projectes dels quals formem part</string>
   <string name="activated_accounts">Comptes activades</string>
   <string name="search">Cerca</string>
+  <string name="crop">Retalla</string>
+  <string name="scale">Escala</string>
+  <string name="user_type_verified">Verificat</string>
+  <string name="user_type_protected">Protegit</string>
+  <string name="tweet_hashtag">Piulada #<xliff:g id="text">%1$s</xliff:g></string>
   <string name="share_status">Compartir tweet</string>
+  <string name="pebble_notifications">Notificacions Pebble</string>
+  <string name="pebble_notifications_summary">Envia notificacions al teu Pebble</string>
+  <string name="tweet_from_name">Piulada de <xliff:g id="text">%1$s</xliff:g></string>
+  <string name="permission_label_shorten_status">Escurçar piulades</string>
   <string name="permission_label_upload_media">Pujar multimèdia</string>
+  <string name="permission_label_sync_timeline">Sincronitzar la cronologia</string>
+  <string name="thumbor_integration">Integració amb Thumbor</string>
   <string name="server_address">Direcció del servidor</string>
+  <string name="security_key">Clau de seguretat</string>
+  <string name="hide_card_actions">Amaga les accions de targeta</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> piulada</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> piulades</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> preferit</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> preferits</string>
+  <string name="drafts_hint_messages">Els esborranys de piulada es desaran aquí</string>
+  <string name="keyboard_shortcuts">Dreceres de teclat</string>
+  <string name="keyboard_shortcut_hint">Prem les tecles</string>
+  <string name="conflicts_with_name">Entra en conflicte amb <xliff:g id="name">%s</xliff:g></string>
+  <string name="overwrite">Sobreescriu</string>
+  <string name="navigation">Navegació</string>
+  <string name="reset_to_default">Reinicia als valors per defecte</string>
+  <string name="reset_keyboard_shortcuts_confirm">Segur que vols recuperar les dreceres de teclat per defecte?</string>
+  <string name="open_accounts_dashboard">Obre el tauler del compte</string>
+  <string name="previous_tab">Pestanya anterior</string>
+  <string name="next_tab">Pestanya següent</string>
+  <string name="keyboard_shortcut_back">Enrere</string>
+  <string name="press_again_to_close">Torna a prémer per tancar</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> indeterminat</string>
+  <string name="swipe_down_to_refresh">Arrossega cap abaix per a actualitzar</string>
+  <string name="app_restart_confirm">Per tal d\'aplicar els canvis, el Twidere es reinciarà.</string>
+  <string name="dont_restart">No reiniciïs</string>
+  <string name="user_list_details">Detalls de la llista</string>
+  <string name="invalid_list_name">Ha de començar per una lletra i contenir només lletres, números i/o guions: \"-\" i \"_\".</string>
+  <string name="delete_conversation">Esborra la conversa</string>
+  <string name="delete_conversation_confirm_message">Segur que vols esborrar tots els missatges de la conversa?</string>
+  <string name="name_first_summary_on">Mostra el nom al principi</string>
+  <string name="comment_hint">Comentari&#8230;</string>
+  <string name="comment">Comentari</string>
+  <string name="enable_retweets">Activa les repiulades</string>
+  <string name="disable_retweets">Desactiva les repiulades</string>
+  <string name="play">Reprodueix</string>
+  <string name="pause">Pausa</string>
 </resources>

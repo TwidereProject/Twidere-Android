@@ -242,6 +242,7 @@
   <string name="status_shortener">推文縮短服務</string>
   <string name="status_shortener_default">無（不發送過長推文）</string>
   <string name="error_message_status_too_long">推文太長</string>
+  <string name="error_message_message_too_long">訊息過長</string>
   <string name="error_message_no_content">沒有內容</string>
   <string name="error_message_tweet_shorten_failed">推文縮短失敗</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文縮短擴展，它可能已經被移除</string>
@@ -343,6 +344,7 @@
   <string name="hashtag">話題標籤</string>
   <string name="links">連結</string>
   <string name="edit_profile">編輯個人資料</string>
+  <string name="edit_details">編輯細節</string>
   <string name="display_sensitive_contents">顯示敏感內容</string>
   <string name="display_sensitive_contents_summary">顯示色情等敏感內容而不發出提示</string>
   <string name="sensitive_content_warning">這條推文可能有敏感內容，繼續？</string>
@@ -404,6 +406,7 @@
   <string name="search_name_deleted">搜尋 \"<xliff:g id="name">%s</xliff:g>\" 已刪除</string>
   <string name="import_from">匯入從&#8230;</string>
   <string name="link_to_quoted_status">連結到引用的推文</string>
+  <string name="quote_original_status">引用原推</string>
   <string name="followed_user">關注了 <xliff:g id="user">%s</xliff:g></string>
   <string name="sent_follow_request_to_user">向 <xliff:g id="user">%s</xliff:g> 送出了關注請求</string>
   <string name="unfollowed_user">取消關注了 <xliff:g id="user">%s</xliff:g></string>
@@ -466,6 +469,8 @@
   <string name="card_animation">卡片動畫</string>
   <string name="name_first">優先顯示名字</string>
   <string name="next_step">下一步</string>
+  <string name="previous_item">前一個</string>
+  <string name="next_item">下一個</string>
   <string name="settings_wizard">設定精靈</string>
   <string name="wizard_page_welcome_title">歡迎</string>
   <string name="wizard_page_welcome_text">感謝您選擇 Twidere。\n您想現在設定它嗎？</string>
@@ -527,7 +532,6 @@
   <string name="theme_background_solid">純白/純黑</string>
   <string name="theme_background_transparent">透明</string>
   <string name="theme_dark_actionbar">深色 ActionBar</string>
-  <string name="wizard_hint_compose_select_account">於撰寫推文時點擊這個圖示選擇帳號</string>
   <string name="wizard_hint_quote_format">在\"設定\"-\"內容與存儲\"設定您喜歡的引用格式</string>
   <string name="wizard_hint_filters">你可以透過使用\"過濾\"功能隱藏不想看到的推文和通知</string>
   <string name="view_replies">檢視回應</string>
@@ -662,6 +666,8 @@
   <string name="members">成員</string>
   <string name="subscribers">訂閱者</string>
   <string name="read_from_bottom">從底部閱讀</string>
+  <string name="read_from_bottom_summary_off">更新後跳至最新推</string>
+  <string name="read_from_bottom_summary_on">更新後保持在目前位置</string>
   <string name="register">註冊</string>
   <string name="follows">關注</string>
   <string name="belongs_to">屬於</string>
@@ -693,4 +699,19 @@
   <string name="from_name_and_N_others">來自<xliff:g id="name">%1$s</xliff:g>和其他<xliff:g id="name">%2$d</xliff:g>人</string>
   <string name="projects_we_took_part">我們參與的項目</string>
   <string name="activated_accounts">已啟用的帳號</string>
+  <string name="search">搜尋</string>
+  <string name="crop">裁剪</string>
+  <string name="scale">縮放</string>
+  <string name="user_type_verified">已認證</string>
+  <string name="user_type_protected">鎖推</string>
+  <string name="permission_label_upload_media">上傳媒體</string>
+  <string name="permission_label_sync_timeline">更新河道</string>
+  <string name="server_address">伺服器位址</string>
+  <string name="security_key">安全金鑰</string>
+  <string name="drafts_hint_messages">未被送出的推將被儲存於此處</string>
+  <string name="keyboard_shortcuts">快捷鍵</string>
+  <string name="overwrite">覆寫</string>
+  <string name="navigation">引導</string>
+  <string name="reset_to_default">還原初始值</string>
+  <string name="reset_keyboard_shortcuts_confirm">還原快捷鍵設定</string>
 </resources>

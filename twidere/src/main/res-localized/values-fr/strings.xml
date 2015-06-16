@@ -42,6 +42,7 @@
   <string name="select_account">Sélectionner un compte</string>
   <string name="username">Nom d\'utilisateur</string>
   <string name="password">Mot de passe</string>
+  <string name="label_data_provider">Fournisseur de base de donnée pour Twidere</string>
   <string name="label_refresh_service">Refraîcher le service</string>
   <string name="label_background_operation_service">Service en arrière-plan</string>
   <string name="open_in_browser">Ouvrir dans un navigateur</string>
@@ -241,6 +242,7 @@
   <string name="status_shortener">Raccourcisseur de tweet</string>
   <string name="status_shortener_default">Aucun (Annuler l\'envoi)</string>
   <string name="error_message_status_too_long">Tweet trop long.</string>
+  <string name="error_message_message_too_long">Message trop long.</string>
   <string name="error_message_no_content">Aucun contenu</string>
   <string name="error_message_tweet_shorten_failed">Le raccourcissement du tweet a échoué.</string>
   <string name="error_message_tweet_shortener_not_found">Le raccourcisseur de tweet est introuvable, il a peut-être été désinstallé.</string>
@@ -342,6 +344,7 @@
   <string name="hashtag">Hashtag</string>
   <string name="links">Liens</string>
   <string name="edit_profile">Modifier le profil</string>
+  <string name="edit_details">Editer les détails</string>
   <string name="display_sensitive_contents">Afficher le contenu qui peut être sensible</string>
   <string name="display_sensitive_contents_summary">Afficher le contenu qui peut être sensible sans avertissement dans votre fil d\'actualité</string>
   <string name="sensitive_content_warning">Ce tweet a peut-être un contenu sensible, continuer ?</string>
@@ -403,6 +406,7 @@
   <string name="search_name_deleted">Recherche \"<xliff:g id="name">%s</xliff:g>\" supprimée.</string>
   <string name="import_from">Importer depuis&#8230;</string>
   <string name="link_to_quoted_status">Lien vers le tweet cité</string>
+  <string name="quote_original_status">Citer le tweet original</string>
   <string name="followed_user">Abonné à <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Demande d\'abonnement à <xliff:g id="user">%s</xliff:g> envoyée.</string>
   <string name="unfollowed_user">Désabonné de <xliff:g id="user">%s</xliff:g>.</string>
@@ -528,7 +532,6 @@
   <string name="theme_background_solid">Blanc/noir pur</string>
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">«ActionBar» sombre</string>
-  <string name="wizard_hint_compose_select_account">Cliquer ce cette icône lorsque vous écrivez un tweet pour séléctionner le compte.</string>
   <string name="wizard_hint_quote_format">Configurer le format de citation favori dans \"Paramètres\" - \"Contenu &amp; Stockage\"</string>
   <string name="wizard_hint_filters">Vous pouvez cacher les tweets indésirables du fil d\'actualité et des notifications en utilisant les \"Filtres\".</string>
   <string name="view_replies">Voir les réponses</string>
@@ -663,6 +666,7 @@
   <string name="members">Membres</string>
   <string name="subscribers">Abonné</string>
   <string name="read_from_bottom">Lire depuis le bas</string>
+  <string name="read_from_bottom_summary_off">Allez au dernier tweet après rafraichissement</string>
   <string name="register">S\'inscrire</string>
   <string name="follows">Suit</string>
   <string name="belongs_to">Appartient à</string>

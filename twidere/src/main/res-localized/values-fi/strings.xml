@@ -507,7 +507,6 @@
   <string name="theme_background_solid">Pelkkä valkoinen/musta</string>
   <string name="theme_background_transparent">Läpinäkyvä</string>
   <string name="theme_dark_actionbar">Tumma ActionBar</string>
-  <string name="wizard_hint_compose_select_account">Valitse tili tästä kuvakkeesta silloin, kun kirjoitat twiittiä.</string>
   <string name="wizard_hint_quote_format">Määritä haluamasi lainausmuoto kohdasta \"Asetukset\" - \"Sisältö &amp; säilytys\"</string>
   <string name="wizard_hint_filters">Suodattimilla voit piilottaa aikajanasta ja ilmoituksista twiitit, joita et halua nähdä.</string>
   <string name="view_replies">Näytä vastaukset</string>

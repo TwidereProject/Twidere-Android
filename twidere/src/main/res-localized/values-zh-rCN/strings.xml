@@ -44,6 +44,7 @@
   <string name="password">密码</string>
   <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_refresh_service">刷新服务</string>
+  <string name="label_streaming_service">实时流服务</string>
   <string name="label_background_operation_service">后台操作服务</string>
   <string name="open_in_browser">在浏览器中打开</string>
   <string name="tap_to_load_more">轻按以加载更多</string>
@@ -242,7 +243,7 @@
   <string name="status_shortener">推文缩短服务</string>
   <string name="status_shortener_default">无（不发送过长推文）</string>
   <string name="error_message_status_too_long">推文太长</string>
-  <string name="error_message_message_too_long">　信息太长</string>
+  <string name="error_message_message_too_long">信息太长</string>
   <string name="error_message_no_content">没有内容</string>
   <string name="error_message_tweet_shorten_failed">推文缩短失败</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文缩短扩展，它可能已经被删除</string>
@@ -344,6 +345,7 @@
   <string name="hashtag">话题标签</string>
   <string name="links">链接</string>
   <string name="edit_profile">编辑个人资料</string>
+  <string name="edit_details">编辑详情</string>
   <string name="display_sensitive_contents">显示敏感内容</string>
   <string name="display_sensitive_contents_summary">显示色情等敏感内容而不发出提示</string>
   <string name="sensitive_content_warning">这条推文可能有敏感内容，继续？</string>
@@ -405,6 +407,7 @@
   <string name="search_name_deleted">搜索“<xliff:g id="name">%s</xliff:g>”已删除</string>
   <string name="import_from">导入自&#8230;</string>
   <string name="link_to_quoted_status">链接到引用的推文</string>
+  <string name="quote_original_status">引用原推文</string>
   <string name="followed_user">关注了<xliff:g id="user">%s</xliff:g></string>
   <string name="sent_follow_request_to_user">向<xliff:g id="user">%s</xliff:g>发送了关注请求</string>
   <string name="unfollowed_user">取消关注了<xliff:g id="user">%s</xliff:g></string>
@@ -530,7 +533,7 @@
   <string name="theme_background_solid">纯白/纯黑</string>
   <string name="theme_background_transparent">透明</string>
   <string name="theme_dark_actionbar">暗色 ActionBar</string>
-  <string name="wizard_hint_compose_select_account">在写推文时点击这个图标选择帐号</string>
+  <string name="wizard_hint_compose_select_account">写推文时点击个人资料图片选择帐号</string>
   <string name="wizard_hint_quote_format">在“设定”-“内容与存储”设定你喜欢的引用格式</string>
   <string name="wizard_hint_filters">你可以通过使用“过滤”功能隐藏不想看到的推文和通知</string>
   <string name="view_replies">查看回复</string>
@@ -736,4 +739,23 @@
   <string name="swipe_down_to_refresh">下拉以刷新</string>
   <string name="app_restart_confirm">Twidere将重启以应用设定</string>
   <string name="dont_restart">不重启</string>
+  <string name="user_list_details">列表详情</string>
+  <string name="invalid_list_name">只能包含字母、数字、“-”和“_”且必须以字母开始</string>
+  <string name="delete_conversation">删除对话</string>
+  <string name="delete_conversation_confirm_message">删除此对话的所有信息？</string>
+  <string name="name_first_summary_on">优先显示名字</string>
+  <string name="name_first_summary_off">优先显示 \@screenname</string>
+  <string name="comment_hint">评论&#8230;</string>
+  <string name="comment">评论</string>
+  <string name="enable_retweets">启用转推</string>
+  <string name="disable_retweets">禁用转推</string>
+  <string name="play">播放</string>
+  <string name="pause">暂停</string>
+  <string name="jump_to_top">跳到顶部</string>
+  <string name="timeline_streaming_running">时间轴实时流正在运行</string>
+  <string name="streaming">实时流</string>
+  <string name="enable_streaming">启用实时流</string>
+  <string name="dark_theme">暗色主题</string>
+  <string name="wizard_hint_title_location_requirement">位置权限</string>
+  <string name="wizard_hint_summary_location_requirement">在你发送含有位置的推文时，Twidere需要位置权限</string>
 </resources>

@@ -529,7 +529,6 @@
   <string name="theme_background_solid">Branco/Preto puro</string>
   <string name="theme_background_transparent">Transparente</string>
   <string name="theme_dark_actionbar">ActionBar Escura</string>
-  <string name="wizard_hint_compose_select_account">Clique neste ícone para selecionar a conta ao enviar um tweet.</string>
   <string name="wizard_hint_quote_format">Defina seu formato de citação favorito nas \"Configurações\" - \"Conteúdo e Armazenamento\"</string>
   <string name="wizard_hint_filters">Você pode ocultar tweets indesejados da linha do tempo e notificações usando \"Filtros\".</string>
   <string name="view_replies">Ver Respostas</string>

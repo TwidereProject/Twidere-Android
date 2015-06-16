@@ -11,7 +11,7 @@
   <string name="remove_location">Hely eltávolítása</string>
   <string name="remove_image">Kép eltávolítása</string>
   <string name="remove_photo">Fotó eltávolítása</string>
-  <string name="status_hint">Mi újság?</string>
+  <string name="status_hint">Mi történik?</string>
   <string name="sign_up">Feliratkozás</string>
   <string name="sign_in">Bejelentkezés</string>
   <string name="rest_base_url">REST alap URL-je</string>
@@ -42,6 +42,7 @@
   <string name="select_account">Válasszon fiókot</string>
   <string name="username">Felhasználónév</string>
   <string name="password">Jelszó</string>
+  <string name="label_data_provider">Twidere adatbázis szolgáltató</string>
   <string name="label_refresh_service">Frissítő szolgáltatás</string>
   <string name="label_background_operation_service">Háttér szolgáltatás</string>
   <string name="open_in_browser">Megnyitás böngészőben</string>
@@ -343,6 +344,7 @@
   <string name="hashtag">Hashtag</string>
   <string name="links">Linkek</string>
   <string name="edit_profile">Profil szerkesztése</string>
+  <string name="edit_details">Részletek szerkesztése</string>
   <string name="display_sensitive_contents">Érzékeny információk megjelenítése</string>
   <string name="display_sensitive_contents_summary">Érzékeny információk megjelenítése a kezdőlapon figyelmeztetés nélkül</string>
   <string name="sensitive_content_warning">Ez a tweet érzékeny információt tartalmazhat. Folytatja?</string>
@@ -404,6 +406,7 @@
   <string name="search_name_deleted">A keresés, \"<xliff:g id="name">%s</xliff:g>\" törölve.</string>
   <string name="import_from">Importálás&#8230;</string>
   <string name="link_to_quoted_status">Link az idézett tweet-hez</string>
+  <string name="quote_original_status">Eredeti tweet idézése</string>
   <string name="followed_user">Követve <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Követési kérelem elküldve ide: <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user"><xliff:g id="user">%s</xliff:g> követése megszüntetve.</string>
@@ -529,7 +532,6 @@
   <string name="theme_background_solid">Tiszta fehér/fekete</string>
   <string name="theme_background_transparent">Átlátszó</string>
   <string name="theme_dark_actionbar">Sötét ActionBar</string>
-  <string name="wizard_hint_compose_select_account">Érintsd meg ezt az ikont a fiók kiválasztásához tweet írása közben.</string>
   <string name="wizard_hint_quote_format">Állítsd be a kedvenc idézet formátumodat a \"Beállítások\" - \"Tartalom\" menüben</string>
   <string name="wizard_hint_filters">Elrejtheted a nem kívánt tweeteket az idővonaladról és az értesítésekből a \"Szűrők\" használatával.</string>
   <string name="view_replies">Válaszok megtekintése</string>
@@ -731,4 +733,19 @@
   <string name="next_tab">Következő fül</string>
   <string name="keyboard_shortcut_back">Vissza</string>
   <string name="press_again_to_close">Nyomd meg újra a bezáráshoz</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> nincs beállítva</string>
+  <string name="swipe_down_to_refresh">Húzd le a frissítéshez</string>
+  <string name="app_restart_confirm">A Twidere újraindul a beállítások alkalmazásához.</string>
+  <string name="dont_restart">Ne induljon újra</string>
+  <string name="user_list_details">Részletek listázása</string>
+  <string name="invalid_list_name">Betűvel kell kezdődnie és csak betűket, számokat, \"-\" és \"_\" jelet tartalmazhat.</string>
+  <string name="delete_conversation">Beszélgetés törlése</string>
+  <string name="delete_conversation_confirm_message">Töröljem az összes elemét ennek a beszélgetésnek ?</string>
+  <string name="name_first_summary_on">Név megjelenítése először</string>
+  <string name="comment_hint">Megjegyzés&#8230;</string>
+  <string name="comment">Megjegyzés</string>
+  <string name="enable_retweets">Retweetek engedélyezése</string>
+  <string name="disable_retweets">Retweetek tiltása</string>
+  <string name="play">Lejátszás</string>
+  <string name="pause">Szünet</string>
 </resources>
