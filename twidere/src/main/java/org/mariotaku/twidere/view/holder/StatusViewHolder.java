@@ -113,6 +113,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         profileImageView.setImageResource(R.mipmap.ic_launcher);
         nameView.setName(TWIDERE_PREVIEW_NAME);
         nameView.setScreenName("@" + TWIDERE_PREVIEW_SCREEN_NAME);
+        nameView.updateText();
         if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(Html.fromHtml(TWIDERE_PREVIEW_TEXT_HTML));
             adapter.getTwidereLinkify().applyAllLinks(textView, -1, -1, false, adapter.getLinkHighlightingStyle());

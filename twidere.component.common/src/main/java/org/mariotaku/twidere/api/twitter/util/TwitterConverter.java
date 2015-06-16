@@ -48,6 +48,7 @@ import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.QueryResult;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -194,6 +195,8 @@ public class TwitterConverter implements Converter {
                     } catch (ParseException e) {
                         throw new IOException(e);
                     }
+                } else if (ResponseCode.class.isAssignableFrom(cls)) {
+                    return new ResponseCode(response);
                 }
                 final Object object = parseOrThrow(response, stream, cls);
                 checkResponse(cls, object, response);
@@ -226,7 +229,11 @@ public class TwitterConverter implements Converter {
 
     private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
         try {
-            return LoganSquare.parse(stream, cls);
+            final T parse = LoganSquare.parse(stream, cls);
+            if (TwitterException.class.isAssignableFrom(cls) && parse == null) {
+                throw new TwitterException();
+            }
+            return parse;
         } catch (JsonParseException e) {
             throw new TwitterException("Malformed JSON Data", resp);
         }

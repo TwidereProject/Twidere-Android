@@ -4,20 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/theme">
 
-    <PreferenceCategory
-        android:key="cat_theme_preview"
-        android:order="11"
-        android:title="@string/preview">
-        <org.mariotaku.twidere.preference.ThemePreviewPreference
-            android:key="theme_preview"/>
-    </PreferenceCategory>
-
     <org.mariotaku.twidere.preference.DarkLightThemeTogglePreference
         android:key="theme"
         android:order="21"
         android:title="@string/dark_theme">
         <extra
             android:name="notify_change"
+            android:value="true"/>
+        <extra
+            android:name="restart_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.DarkLightThemeTogglePreference>
 
@@ -27,6 +22,9 @@
         android:title="@string/background">
         <extra
             android:name="notify_change"
+            android:value="true"/>
+        <extra
+            android:name="restart_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeBackgroundPreference>
 
@@ -38,6 +36,9 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
+        <extra
+            android:name="restart_activity"
+            android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
     <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
@@ -45,9 +46,12 @@
         android:enabled="@bool/has_font_family"
         android:key="theme_font_family"
         android:order="24"
-        android:title="@string/style">
+        android:title="@string/font_family">
         <extra
             android:name="notify_change"
+            android:value="true"/>
+        <extra
+            android:name="restart_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeFontFamilyPreference>
 

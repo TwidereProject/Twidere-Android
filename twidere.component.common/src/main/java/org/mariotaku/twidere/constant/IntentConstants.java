@@ -210,6 +210,7 @@ public interface IntentConstants {
     String EXTRA_MY_FOLLOWING_ONLY = "my_following_only";
     String EXTRA_CHANGED = "changed";
     String EXTRA_NOTIFY_CHANGE = "notify_change";
+    String EXTRA_RESTART_ACTIVITY = "restart_activity";
     String EXTRA_FROM_USER = "from_user";
     String EXTRA_SHOW_MEDIA_PREVIEW = "show_media_preview";
     String EXTRA_SHOW_EXTRA_TYPE = "show_extra_type";
