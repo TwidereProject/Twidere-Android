@@ -679,12 +679,8 @@
   <string name="getting_location">Hely meghatározása</string>
   <string name="save_to_gallery">Mentés a galériába</string>
   <string name="usage_statistics">Használati statisztikák</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Ismeretlen hely</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">Tervezte:</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Beállítások Importálása/Exportálása</string>
   <string name="usage_statistics_header_summary">A Twidere részt vesz néhány kutatási projektben. Csatlakozz ezekhez, hogy a Twidere és néhány másik alkalmazás jobb lehessen.</string>
   <string name="no_tab">Nincs fül</string>

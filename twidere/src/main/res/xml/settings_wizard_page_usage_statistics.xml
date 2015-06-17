@@ -24,6 +24,6 @@
 
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:order="11"
-        android:title="@string/research_tsinghua_spice"/>
+        android:title="@string/research_tsinghua_hot_mobile"/>
 
 </PreferenceScreen>

@@ -556,7 +556,6 @@
   <string name="getting_location">يجلب الموقع</string>
   <string name="save_to_gallery">حفظ في المعرض</string>
   <string name="unknown_location">مكان مجهول</string>
-  <string name="designed_by">صمّمه</string>
   <string name="usage_statistics_notification_summary">ساعدنا كي نحسن تويدر!</string>
   <string name="hide_card_actions">إخفاء أزرار البطاقة</string>
 </resources>

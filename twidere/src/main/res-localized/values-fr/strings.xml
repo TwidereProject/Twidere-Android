@@ -678,12 +678,8 @@
   <string name="getting_location">Obtenir la localisation</string>
   <string name="save_to_gallery">Enregistrer dans la galerie</string>
   <string name="usage_statistics">Statistiques d\'utilisation</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Localisation inconnue</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">Design conçu par</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Importer/Exporter des paramètres</string>
   <string name="usage_statistics_header_summary">Twidere prend part à quelques projets de recherche, rejoindre ces projets vont rendre Twidere et d\'autres applications encore meilleures.</string>
   <string name="no_tab">Aucun onglet</string>

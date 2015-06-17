@@ -674,8 +674,6 @@
   <string name="usage_statistics">Statistik penggunaan</string>
   <string name="unknown_location">Lokasi tidak diketahui</string>
   <string name="ellipsis">...</string>
-  <string name="designed_by">Dirancang oleh</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Impor/Ekspor pengaturan</string>
   <string name="usage_statistics_header_summary">Twidere mengambil bagian dalam beberapa proyek penelitian, bergabung dengan proyek ini akan membuat Twidere dan beberapa aplikasi lain menjadi lebih baik.</string>
   <string name="no_tab">Tidak ada tab</string>

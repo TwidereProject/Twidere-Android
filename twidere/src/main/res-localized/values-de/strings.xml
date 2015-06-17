@@ -678,12 +678,8 @@
   <string name="getting_location">Hole Position</string>
   <string name="save_to_gallery">In Galerie speichern</string>
   <string name="usage_statistics">Nutzungsstatistiken</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Unbekannte Position</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">Designed von</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Einstellungen importieren/exportieren</string>
   <string name="usage_statistics_header_summary">Twidere hat an einem Forschungsprojekt teilgenommen, an diesem Projekt mitzumachen wird Twidere und andere Anwendungen verbessern.</string>
   <string name="no_tab">Kein Tab</string>

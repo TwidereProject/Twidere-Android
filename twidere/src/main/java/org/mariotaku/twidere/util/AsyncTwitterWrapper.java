@@ -2087,7 +2087,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         public ResponseList<DirectMessage> getDirectMessages(final Twitter twitter, final Paging paging)
                 throws TwitterException {
-            return twitter.getDirectMessages(paging);
+            return twitter.getDirectMessages(paging, true);
         }
 
         @Override
@@ -2126,7 +2126,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         public ResponseList<DirectMessage> getDirectMessages(final Twitter twitter, final Paging paging)
                 throws TwitterException {
-            return twitter.getSentDirectMessages(paging);
+            return twitter.getSentDirectMessages(paging, true);
         }
 
         @Override

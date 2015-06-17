@@ -30,11 +30,9 @@
     <PreferenceCategory
         android:title="@string/projects_we_took_part"
         android:order="12">
-        <Preference
-            android:title="@string/research_ucdavis_earlybird"/>
 
         <Preference
-            android:title="@string/research_tsinghua_spice"/>
+            android:title="@string/research_tsinghua_hot_mobile"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

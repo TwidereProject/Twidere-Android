@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -21,22 +22,16 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.github.ooxi.jdatauri.DataUri;
-import com.nostra13.universalimageloader.utils.IoUtils;
 import com.soundcloud.android.crop.Crop;
 
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.http.ContentType;
-import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.http.RestHttpRequest;
-import org.mariotaku.restfu.http.RestHttpResponse;
-import org.mariotaku.restfu.http.mime.TypedData;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ImageCropperActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.util.RestFuNetworkStreamDownloader;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -224,19 +219,10 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                 final String mimeType;
                 final String scheme = uri.getScheme();
                 if (SCHEME_HTTP.equals(scheme) || SCHEME_HTTPS.equals(scheme)) {
-                    final RestHttpClient client = TwitterAPIFactory.getDefaultHttpClient(mActivity);
-                    final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
-                    builder.method(GET.METHOD);
-                    builder.url(uri.toString());
-                    final RestHttpResponse response = client.execute(builder.build());
-                    if (response.isSuccessful()) {
-                        final TypedData body = response.getBody();
-                        is = body.stream();
-                        final ContentType contentType = body.contentType();
-                        mimeType = contentType != null ? contentType.getContentType() : "image/*";
-                    } else {
-                        throw new IOException("Unable to get " + uri);
-                    }
+                    final NetworkStreamDownloader downloader = new RestFuNetworkStreamDownloader(mActivity);
+                    final NetworkStreamDownloader.DownloadResult result = downloader.get(uri);
+                    is = result.stream;
+                    mimeType = result.mimeType;
                 } else if (SCHEME_DATA.equals(scheme)) {
                     final DataUri dataUri = DataUri.parse(uri.toString(), Charset.defaultCharset());
                     is = new ByteArrayInputStream(dataUri.getData());
@@ -252,7 +238,7 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
                         + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) : null;
                 final File outFile = File.createTempFile("temp_image_", suffix, cacheDir);
                 os = new FileOutputStream(outFile);
-                IoUtils.copyStream(is, os, null);
+                Utils.copyStream(is, os);
                 if (mDeleteSource && SCHEME_FILE.equals(scheme)) {
                     final File sourceFile = new File(mUri.getPath());
                     sourceFile.delete();
@@ -261,8 +247,8 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
             } catch (final IOException e) {
                 return SingleResponse.getInstance(e);
             } finally {
-                IoUtils.closeSilently(os);
-                IoUtils.closeSilently(is);
+                Utils.closeSilently(os);
+                Utils.closeSilently(is);
             }
         }
 
@@ -348,4 +334,36 @@ public class ImagePickerActivity extends ThemedFragmentActivity {
             super.onDismiss(dialog);
         }
     }
+
+    public static abstract class NetworkStreamDownloader {
+
+        private final Context mContext;
+
+        protected NetworkStreamDownloader(Context context) {
+            mContext = context;
+        }
+
+        public final Context getContext() {
+            return mContext;
+        }
+
+        public abstract DownloadResult get(Uri uri) throws IOException;
+
+        public static final class DownloadResult {
+
+            private final InputStream stream;
+            private final String mimeType;
+
+            public DownloadResult(final InputStream stream, final String mimeType) {
+                this.stream = stream;
+                this.mimeType = mimeType;
+            }
+
+            public static DownloadResult get(InputStream stream, String mimeType) {
+                return new DownloadResult(stream, mimeType);
+            }
+
+        }
+    }
+
 }

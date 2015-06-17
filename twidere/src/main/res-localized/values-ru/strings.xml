@@ -680,12 +680,8 @@
   <string name="getting_location">Определение местонахождения</string>
   <string name="save_to_gallery">Сохранить в галерею</string>
   <string name="usage_statistics">Статистика использования</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Неизвестное местоположение</string>
   <string name="ellipsis">...</string>
-  <string name="designed_by">Дизайнер</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Импорт/Экспорт настроек</string>
   <string name="usage_statistics_header_summary">Twidere принимает участие в некоторых исследовательских проектах, присоединившись к которым вы сделаете Twidere и другие приложения лучше.</string>
   <string name="no_tab">Нет вкладок</string>

@@ -25,11 +25,10 @@ import org.mariotaku.restfu.annotation.param.Body;
 import org.mariotaku.restfu.annotation.param.Form;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
-
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 @SuppressWarnings("RedundantThrows")
 public interface DirectMessagesResources {
@@ -39,16 +38,11 @@ public interface DirectMessagesResources {
     DirectMessage destroyDirectMessage(@Form("id") long id) throws TwitterException;
 
     @GET("/direct_messages.json")
-    ResponseList<DirectMessage> getDirectMessages() throws TwitterException;
+    ResponseList<DirectMessage> getDirectMessages(@Query Paging paging, @Query("full_text") boolean fullText) throws TwitterException;
 
-    @GET("/direct_messages.json")
-    ResponseList<DirectMessage> getDirectMessages(@Query Paging paging) throws TwitterException;
 
     @GET("/direct_messages/sent.json")
-    ResponseList<DirectMessage> getSentDirectMessages() throws TwitterException;
-
-    @GET("/direct_messages/sent.json")
-    ResponseList<DirectMessage> getSentDirectMessages(@Query Paging paging) throws TwitterException;
+    ResponseList<DirectMessage> getSentDirectMessages(@Query Paging paging, @Query("full_text") boolean fullText) throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @Body(BodyType.FORM)

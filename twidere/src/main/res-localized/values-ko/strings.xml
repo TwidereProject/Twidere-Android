@@ -685,12 +685,8 @@
   <string name="getting_location">위치 찾는 중</string>
   <string name="save_to_gallery">갤러리에 저장</string>
   <string name="usage_statistics">사용 통계</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">알 수 없는 위치</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">다음에 의해 디자인됨:</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">설정 가져오기/내보내기</string>
   <string name="usage_statistics_header_summary">Twidere는 일부 연구 프로젝트에 참여하고 있습니다. 프로젝트에 참여하면 Twidere와 다른 앱들을 향상시킬 수 있을 것입니다.</string>
   <string name="no_tab">탭 없음</string>

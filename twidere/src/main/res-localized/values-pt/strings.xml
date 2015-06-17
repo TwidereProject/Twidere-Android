@@ -674,12 +674,8 @@
   <string name="getting_location">Recebendo localização</string>
   <string name="save_to_gallery">Guardado na galeria</string>
   <string name="usage_statistics">Estatísticas de uso</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Localização desconhecida</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">Designed por</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Importar/Exportar configurações</string>
   <string name="no_tab">Sem separador</string>
   <string name="user_protected_summary">Necessitas de seguir esta conta privada para ver os tweets</string>

@@ -681,12 +681,8 @@
   <string name="getting_location">S\'està intentant aconseguir la ubicació</string>
   <string name="save_to_gallery">Desar a la galeria</string>
   <string name="usage_statistics">Estadístiques d\'ús</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Localització desconeguda</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">Disenyat per</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Importar/Exportar configuració</string>
   <string name="usage_statistics_header_summary">Twidere forma part en alguns projectes d\'investigació; contribuint a aquests projectes faràs Twidere i altres aplicacions futures millor.</string>
   <string name="no_tab">No hi ha pestanyes</string>

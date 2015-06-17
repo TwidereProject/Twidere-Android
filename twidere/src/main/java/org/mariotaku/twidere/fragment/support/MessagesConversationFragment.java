@@ -359,6 +359,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     public void onStart() {
         super.onStart();
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.register(this);
         updateEmptyText();
         mMessagesListView.addOnScrollListener(mScrollListener);

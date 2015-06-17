@@ -679,12 +679,8 @@
   <string name="getting_location">Buscando localización</string>
   <string name="save_to_gallery">Guardar en la galería</string>
   <string name="usage_statistics">Estadísticas de uso</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">Localización desconocida</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">Diseñado por</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">Importar/Exportar ajustes</string>
   <string name="usage_statistics_header_summary">Twidere forma parte de un proyecto de investigación, unirse a estos proyectos hará de Twidere, y otras, una aplicación mejor.</string>
   <string name="no_tab">Sin pestañas</string>

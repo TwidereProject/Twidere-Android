@@ -676,12 +676,8 @@
   <string name="getting_location">位置を取得しています。</string>
   <string name="save_to_gallery">ギャラリーに保存</string>
   <string name="usage_statistics">匿名利用状況データ</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">場所不明</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">作成者：</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">設定の保存/読み込み</string>
   <string name="usage_statistics_header_summary">ツイデレは研究プロジェクトに参加された事が有ります。貴方はプロジェクトに参加する事で、ツイデレや他将来のアプリケーションはより良く成ります。</string>
   <string name="no_tab">タブがありません</string>

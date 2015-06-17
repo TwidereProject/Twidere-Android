@@ -681,12 +681,8 @@
   <string name="getting_location">获取位置</string>
   <string name="save_to_gallery">保存到相册</string>
   <string name="usage_statistics">使用信息统计</string>
-  <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-  <string name="research_tsinghua_spice">Tsinghua Spice</string>
   <string name="unknown_location">未知位置</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="designed_by">设计</string>
-  <string name="designer_name">Uucky Lee</string>
   <string name="import_export_settings">导入/导出设定</string>
   <string name="usage_statistics_header_summary">Twidere参与了一些研究项目，加入这些项目帮助Twidere和更多应用做得更好。</string>
   <string name="no_tab">没有标签页</string>

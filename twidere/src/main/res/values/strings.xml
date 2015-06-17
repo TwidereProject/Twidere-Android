@@ -683,12 +683,9 @@
     <string name="getting_location">Getting location</string>
     <string name="save_to_gallery">Save to gallery</string>
     <string name="usage_statistics">Usage statistics</string>
-    <string name="research_ucdavis_earlybird">UCDavis Earlybird</string>
-    <string name="research_tsinghua_spice">Tsinghua Spice</string>
+    <string name="research_tsinghua_hot_mobile">Tsinghua HotMobile</string>
     <string name="unknown_location">Unknown location</string>
     <string name="ellipsis">…</string>
-    <string name="designed_by">Designed by</string>
-    <string name="designer_name">Uucky Lee</string>
     <string name="import_export_settings">Import/Export settings</string>
     <string name="usage_statistics_header_summary">Twidere took part in some research project, join these projects will make Twidere and some other application better.</string>
     <string name="no_tab">No tab</string>
