@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -87,6 +88,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private static final int REQUEST_PICK_BACKGROUND_COLOR = 4;
 
     private static final int RESULT_REMOVE_BANNER = 101;
+    private static final String UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile";
 
     private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
@@ -204,6 +206,14 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mTask != null && mTask.getStatus() == Status.PENDING) {
+            AsyncTaskUtils.executeTask(mTask);
+        }
+    }
+
+    @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
@@ -295,13 +305,11 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                 } else {
                     mTask = new UpdateProfileBannerImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
                 }
-                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
                 if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
                 mTask = new UpdateProfileImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
-                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case REQUEST_PICK_LINK_COLOR: {
@@ -320,20 +328,6 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             }
         }
 
-    }
-
-
-    boolean isProfileChanged() {
-        final ParcelableUser user = mUser;
-        if (user == null) return true;
-        if (!stringEquals(mEditName.getText(), user.name)) return true;
-        if (!stringEquals(mEditDescription.getText(), user.description_expanded)) return true;
-        if (!stringEquals(mEditLocation.getText(), user.location)) return true;
-        if (!stringEquals(mEditUrl.getText(), isEmpty(user.url_expanded) ? user.url : user.url_expanded))
-            return true;
-        if (mLinkColor.getColor() != user.link_color) return true;
-        if (mBackgroundColor.getColor() != user.background_color) return true;
-        return false;
     }
 
     private void displayUser(final ParcelableUser user) {
@@ -373,15 +367,15 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     }
 
     private void setUpdateState(final boolean start) {
-        mEditName.setEnabled(!start);
-        mEditDescription.setEnabled(!start);
-        mEditLocation.setEnabled(!start);
-        mEditUrl.setEnabled(!start);
-        mProfileImageView.setEnabled(!start);
-        mProfileImageView.setOnClickListener(start ? null : this);
-        mProfileBannerView.setEnabled(!start);
-        mProfileBannerView.setOnClickListener(start ? null : this);
-        invalidateOptionsMenu();
+        final FragmentManager fm = getChildFragmentManager();
+        final Fragment f = fm.findFragmentByTag(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
+        if (!start && f instanceof DialogFragment) {
+            ((DialogFragment) f).dismiss();
+        } else if (start) {
+            SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+            df.show(fm, UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
+            df.setCancelable(false);
+        }
     }
 
     private static boolean stringEquals(final CharSequence str1, final CharSequence str2) {

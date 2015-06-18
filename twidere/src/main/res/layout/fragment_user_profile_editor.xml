@@ -105,7 +105,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/element_spacing_normal"
                             android:layout_marginStart="@dimen/element_spacing_normal"
-                            android:paddingTop="@dimen/element_spacing_normal"
                             android:text="@string/profile_banner"
                             android:textAllCaps="true"
                             android:textAppearance="?android:textAppearanceSmall"

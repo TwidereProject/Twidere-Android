@@ -133,14 +133,14 @@ public interface UsersResources {
 
     @POST("/account/update_profile_banner.json")
     @Body(BodyType.MULTIPART)
-    ResponseCode updateProfileBannerImage(@Part("image") FileTypedData data, @Part("width") int width,
+    ResponseCode updateProfileBannerImage(@Part("banner") FileTypedData data, @Part("width") int width,
                                   @Part("height") int height, @Part("offset_left") int offsetLeft,
                                   @Part("offset_top") int offsetTop)
             throws TwitterException;
 
     @POST("/account/update_profile_banner.json")
     @Body(BodyType.MULTIPART)
-    ResponseCode updateProfileBannerImage(@Part("image") FileTypedData data) throws TwitterException;
+    ResponseCode updateProfileBannerImage(@Part("banner") FileTypedData data) throws TwitterException;
 
     @POST("/account/update_profile_image.json")
     @Body(BodyType.MULTIPART)
