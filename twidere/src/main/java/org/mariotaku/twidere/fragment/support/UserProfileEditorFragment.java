@@ -50,7 +50,7 @@ import com.twitter.Validator;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
-import org.mariotaku.twidere.activity.support.ImagePickerActivity;
+import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
@@ -86,6 +86,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private static final int REQUEST_PICK_LINK_COLOR = 3;
     private static final int REQUEST_PICK_BACKGROUND_COLOR = 4;
 
+    private static final int RESULT_REMOVE_BANNER = 101;
+
     private MediaLoaderWrapper mLazyImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private AsyncTask<Object, Object, ?> mTask;
@@ -93,8 +95,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private ImageView mProfileBannerView;
     private MaterialEditText mEditName, mEditDescription, mEditLocation, mEditUrl;
     private View mProgressContainer, mEditProfileContent;
-    private View mProfileImageCamera, mProfileImageGallery;
-    private View mProfileBannerGallery, mProfileBannerRemove;
+    private View mEditProfileImage;
+    private View mEditProfileBanner;
     private View mSetLinkColor, mSetBackgroundColor;
     private ForegroundColorView mLinkColor, mBackgroundColor;
     private long mAccountId;
@@ -127,39 +129,16 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             case R.id.profile_banner: {
                 break;
             }
-            case R.id.profile_image_camera: {
-                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_X, 1);
-                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_Y, 1);
-                intent.putExtra(ImagePickerActivity.EXTRA_MAX_WIDTH, 512);
-                intent.putExtra(ImagePickerActivity.EXTRA_MAX_HEIGHT, 512);
-                intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
+            case R.id.edit_profile_image: {
+                final Intent intent = ThemedImagePickerActivity.withThemed(getActivity()).aspectRatio(1, 1)
+                        .maximumSize(512, 512).build();
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
                 break;
             }
-            case R.id.profile_image_gallery: {
-                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_X, 3);
-                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_Y, 1);
-                intent.putExtra(ImagePickerActivity.EXTRA_MAX_WIDTH, 1500);
-                intent.putExtra(ImagePickerActivity.EXTRA_MAX_HEIGHT, 500);
-                intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
-                startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE);
-                break;
-            }
-            case R.id.profile_banner_gallery: {
-                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_X, 1);
-                intent.putExtra(ImagePickerActivity.EXTRA_ASPECT_Y, 1);
-                intent.putExtra(ImagePickerActivity.EXTRA_MAX_WIDTH, 512);
-                intent.putExtra(ImagePickerActivity.EXTRA_MAX_HEIGHT, 512);
-                intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
+            case R.id.edit_profile_banner: {
+                final Intent intent = ThemedImagePickerActivity.withThemed(getActivity()).aspectRatio(3, 1)
+                        .maximumSize(1500, 500).addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER).build();
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE);
-                break;
-            }
-            case R.id.profile_banner_remove: {
-                mTask = new RemoveProfileBannerTaskInternal(user.account_id);
-                AsyncTaskUtils.executeTask(mTask);
                 break;
             }
             case R.id.set_link_color: {
@@ -249,10 +228,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
         mProfileImageView.setOnClickListener(this);
         mProfileBannerView.setOnClickListener(this);
-        mProfileImageCamera.setOnClickListener(this);
-        mProfileImageGallery.setOnClickListener(this);
-        mProfileBannerGallery.setOnClickListener(this);
-        mProfileBannerRemove.setOnClickListener(this);
+        mEditProfileBanner.setOnClickListener(this);
+        mEditProfileImage.setOnClickListener(this);
         mSetLinkColor.setOnClickListener(this);
         mSetBackgroundColor.setOnClickListener(this);
 
@@ -299,10 +276,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         mEditDescription = (MaterialEditText) view.findViewById(R.id.description);
         mEditLocation = (MaterialEditText) view.findViewById(R.id.location);
         mEditUrl = (MaterialEditText) view.findViewById(R.id.url);
-        mProfileImageCamera = view.findViewById(R.id.profile_image_camera);
-        mProfileImageGallery = view.findViewById(R.id.profile_image_gallery);
-        mProfileBannerGallery = view.findViewById(R.id.profile_banner_gallery);
-        mProfileBannerRemove = view.findViewById(R.id.profile_banner_remove);
+        mEditProfileImage = view.findViewById(R.id.edit_profile_image);
+        mEditProfileBanner = view.findViewById(R.id.edit_profile_banner);
         mLinkColor = (ForegroundColorView) view.findViewById(R.id.link_color);
         mBackgroundColor = (ForegroundColorView) view.findViewById(R.id.background_color);
         mSetLinkColor = view.findViewById(R.id.set_link_color);
@@ -315,7 +290,11 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         switch (requestCode) {
             case REQUEST_UPLOAD_PROFILE_BANNER_IMAGE: {
                 if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
-                mTask = new UpdateProfileBannerImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
+                if (resultCode == RESULT_REMOVE_BANNER) {
+                    mTask = new RemoveProfileBannerTaskInternal(mAccountId);
+                } else {
+                    mTask = new UpdateProfileBannerImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
+                }
                 AsyncTaskUtils.executeTask(mTask);
                 break;
             }
@@ -342,6 +321,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         }
 
     }
+
 
     boolean isProfileChanged() {
         final ParcelableUser user = mUser;

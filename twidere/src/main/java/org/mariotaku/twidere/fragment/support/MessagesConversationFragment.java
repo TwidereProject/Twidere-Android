@@ -78,7 +78,7 @@ import org.mariotaku.querybuilder.OrderBy;
 import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
-import org.mariotaku.twidere.activity.support.ImagePickerActivity;
+import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
@@ -467,7 +467,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 break;
             }
             case R.id.add_image: {
-                final Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+                final Intent intent = ThemedImagePickerActivity.withThemed(getActivity()).build();
                 startActivityForResult(intent, REQUEST_PICK_IMAGE);
                 break;
             }

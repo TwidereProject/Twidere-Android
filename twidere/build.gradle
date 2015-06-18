@@ -57,6 +57,7 @@ configurations {
 dependencies {
 //    wearApp project(':twidere.wear')
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
+    apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
@@ -88,6 +89,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
     compile 'com.makeramen:roundedimageview:2.1.0'
     compile 'com.soundcloud.android:android-crop:1.0.0@aar'
+    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
+    compile 'com.github.mariotaku:PickNCrop:76563fae81'
     googleCompile 'com.google.android.gms:play-services-maps:7.5.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'

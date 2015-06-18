@@ -736,9 +736,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 if (s instanceof Spannable && count == 1 && before == 0) {
                     final ImageSpan[] imageSpans = ((Spannable) s).getSpans(start, start + count, ImageSpan.class);
                     if (imageSpans.length == 1) {
-                        final Intent intent = new Intent(ComposeActivity.this, ImagePickerActivity.class);
-                        intent.setAction(ImagePickerActivity.INTENT_ACTION_GET_IMAGE);
-                        intent.setData(Uri.parse(imageSpans[0].getSource()));
+                        final Intent intent = ThemedImagePickerActivity.withThemed(ComposeActivity.this)
+                                .getImage(Uri.parse(imageSpans[0].getSource())).build();
                         startActivityForResult(intent, REQUEST_PICK_IMAGE);
                         ((Spannable) s).setSpan(new MarkForDeleteSpan(), start, start + count,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -1050,8 +1049,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     }
 
     private boolean pickImage() {
-        final Intent intent = new Intent(this, ImagePickerActivity.class);
-        intent.setAction(ImagePickerActivity.INTENT_ACTION_PICK_IMAGE);
+        final Intent intent = ThemedImagePickerActivity.withThemed(this).pickImage().build();
         startActivityForResult(intent, REQUEST_PICK_IMAGE);
         return true;
     }
@@ -1177,8 +1175,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     }
 
     private boolean takePhoto() {
-        final Intent intent = new Intent(this, ImagePickerActivity.class);
-        intent.setAction(ImagePickerActivity.INTENT_ACTION_TAKE_PHOTO);
+        final Intent intent = ThemedImagePickerActivity.withThemed(this).takePhoto().build();
         startActivityForResult(intent, REQUEST_TAKE_PHOTO);
         return true;
     }

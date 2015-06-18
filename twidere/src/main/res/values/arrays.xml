@@ -104,12 +104,14 @@
         <item>@string/scale</item>
     </string-array>
     <string-array name="entries_image_sources">
-        <item>@string/from_camera</item>
-        <item>@string/from_gallery</item>
+        <item>@string/source_camera</item>
+        <item>@string/source_gallery</item>
+        <item>@string/source_clipboard</item>
     </string-array>
     <string-array name="value_image_sources">
         <item>camera</item>
         <item>gallery</item>
+        <item>clipboard</item>
     </string-array>
     <string-array name="values_profile_image_style">
         <item>round</item>

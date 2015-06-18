@@ -17,10 +17,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -53,8 +54,11 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/edit_profile_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?selectableItemBackground"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="@dimen/element_spacing_normal">
 
@@ -64,71 +68,27 @@
                             android:layout_height="@dimen/element_size_mlarge"
                             android:layout_gravity="center"
                             android:foreground="?selectableItemBackground"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/element_spacing_normal"
-                                android:layout_marginStart="@dimen/element_spacing_normal"
-                                android:paddingTop="@dimen/element_spacing_normal"
-                                android:text="@string/profile_image"
-                                android:textAllCaps="true"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="?android:textColorPrimary"
-                                android:textStyle="bold" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:splitMotionEvents="false">
-
-                                <org.mariotaku.twidere.view.ActionIconThemedTextView
-                                    android:id="@+id/profile_image_camera"
-                                    style="?android:borderlessButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="?selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_action_camera"
-                                    android:drawableStart="@drawable/ic_action_camera"
-                                    android:paddingBottom="0dp"
-                                    android:paddingLeft="@dimen/element_spacing_normal"
-                                    android:paddingRight="@dimen/element_spacing_normal"
-                                    android:paddingTop="0dp"
-                                    android:text="@string/photo" />
-
-                                <org.mariotaku.twidere.view.ActionIconThemedTextView
-                                    android:id="@+id/profile_image_gallery"
-                                    style="?android:borderlessButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="?selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_action_gallery"
-                                    android:drawableStart="@drawable/ic_action_gallery"
-                                    android:paddingBottom="0dp"
-                                    android:paddingLeft="@dimen/element_spacing_normal"
-                                    android:paddingRight="@dimen/element_spacing_normal"
-                                    android:paddingTop="0dp"
-                                    android:text="@string/gallery" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                            android:layout_marginLeft="@dimen/element_spacing_normal"
+                            android:layout_marginStart="@dimen/element_spacing_normal"
+                            android:text="@string/profile_image"
+                            android:textAllCaps="true"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="?android:textColorPrimary"
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/edit_profile_banner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?selectableItemBackground"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="@dimen/element_spacing_normal">
 
@@ -138,65 +98,19 @@
                             android:layout_height="@dimen/element_size_mlarge"
                             android:layout_gravity="center"
                             android:foreground="?selectableItemBackground"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/element_spacing_normal"
-                                android:layout_marginStart="@dimen/element_spacing_normal"
-                                android:paddingTop="@dimen/element_spacing_normal"
-                                android:text="@string/profile_banner"
-                                android:textAllCaps="true"
-                                android:textAppearance="?android:textAppearanceSmall"
-                                android:textColor="?android:textColorPrimary"
-                                android:textStyle="bold" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:splitMotionEvents="false">
-
-                                <org.mariotaku.twidere.view.ActionIconThemedTextView
-                                    android:id="@+id/profile_banner_gallery"
-                                    style="?android:borderlessButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="?selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_action_gallery"
-                                    android:drawableStart="@drawable/ic_action_gallery"
-                                    android:paddingBottom="0dp"
-                                    android:paddingLeft="@dimen/element_spacing_normal"
-                                    android:paddingRight="@dimen/element_spacing_normal"
-                                    android:paddingTop="0dp"
-                                    android:text="@string/gallery" />
-
-                                <org.mariotaku.twidere.view.ActionIconThemedTextView
-                                    android:id="@+id/profile_banner_remove"
-                                    style="?android:borderlessButtonStyle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="?selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_action_cancel"
-                                    android:drawableStart="@drawable/ic_action_cancel"
-                                    android:paddingBottom="0dp"
-                                    android:paddingLeft="@dimen/element_spacing_normal"
-                                    android:paddingRight="@dimen/element_spacing_normal"
-                                    android:paddingTop="0dp"
-                                    android:text="@string/remove" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                            android:layout_marginLeft="@dimen/element_spacing_normal"
+                            android:layout_marginStart="@dimen/element_spacing_normal"
+                            android:paddingTop="@dimen/element_spacing_normal"
+                            android:text="@string/profile_banner"
+                            android:textAllCaps="true"
+                            android:textAppearance="?android:textAppearanceSmall"
+                            android:textColor="?android:textColorPrimary"
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -227,7 +141,7 @@
                         app:met_baseColor="?android:textColorPrimary"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelText="@string/name"
-                        app:met_maxCharacters="20" />
+                        app:met_maxCharacters="20"/>
 
                     <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
                         android:id="@+id/description"
@@ -239,7 +153,7 @@
                         app:met_baseColor="?android:textColorPrimary"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelText="@string/description"
-                        app:met_maxCharacters="160" />
+                        app:met_maxCharacters="160"/>
 
                     <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
                         android:id="@+id/location"
@@ -250,7 +164,7 @@
                         app:met_baseColor="?android:textColorPrimary"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelText="@string/location"
-                        app:met_maxCharacters="30" />
+                        app:met_maxCharacters="30"/>
 
                     <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
                         android:id="@+id/url"
@@ -261,7 +175,7 @@
                         app:met_baseColor="?android:textColorPrimary"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelText="@string/url"
-                        app:met_maxCharacters="100" />
+                        app:met_maxCharacters="100"/>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -294,7 +208,7 @@
                             android:id="@+id/link_color"
                             android:layout_width="@dimen/element_size_normal"
                             android:layout_height="@dimen/element_size_normal"
-                            android:layout_weight="0" />
+                            android:layout_weight="0"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -306,7 +220,7 @@
                             android:textAllCaps="true"
                             android:textAppearance="?android:textAppearanceSmall"
                             android:textColor="?android:textColorPrimary"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
@@ -323,7 +237,7 @@
                             android:id="@+id/background_color"
                             android:layout_width="@dimen/element_size_normal"
                             android:layout_height="@dimen/element_size_normal"
-                            android:layout_weight="0" />
+                            android:layout_weight="0"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -335,7 +249,7 @@
                             android:textAllCaps="true"
                             android:textAppearance="?android:textAppearanceSmall"
                             android:textColor="?android:textColorPrimary"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
@@ -353,7 +267,7 @@
         android:visibility="visible"
         tools:visibility="gone">
 
-        <include layout="@layout/layout_progress_wheel_medium" />
+        <include layout="@layout/layout_progress_wheel_medium"/>
     </FrameLayout>
 
 </FrameLayout>

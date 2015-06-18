@@ -646,7 +646,11 @@
     <string name="state_blocking">Blocking</string>
     <string name="load_more">Load more</string>
     <string name="photo">Photo</string>
+    <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="source_camera">Camera</string>
+    <string name="source_gallery">Gallery</string>
+    <string name="source_clipboard">Clipboard</string>
     <string name="remove">Remove</string>
     <string name="load_media">Load media</string>
     <string name="profile_text_color">Text color</string>

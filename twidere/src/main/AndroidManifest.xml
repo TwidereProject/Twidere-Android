@@ -316,7 +316,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.ImagePickerActivity"
+            android:name=".activity.support.ThemedImagePickerActivity"
             android:exported="false"
             android:theme="@style/Theme.Twidere.Light.NoDisplay"
             android:windowSoftInputMode="adjustResize">

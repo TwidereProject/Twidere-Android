@@ -28,14 +28,14 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.TypedData;
-import org.mariotaku.twidere.activity.support.ImagePickerActivity;
+import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
 
 import java.io.IOException;
 
 /**
  * Created by mariotaku on 15/6/17.
  */
-public class RestFuNetworkStreamDownloader extends ImagePickerActivity.NetworkStreamDownloader {
+public class RestFuNetworkStreamDownloader extends ThemedImagePickerActivity.NetworkStreamDownloader {
 
     public RestFuNetworkStreamDownloader(Context context) {
         super(context);

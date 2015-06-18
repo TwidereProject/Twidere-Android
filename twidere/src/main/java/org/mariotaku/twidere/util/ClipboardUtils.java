@@ -19,9 +19,14 @@
 
 package org.mariotaku.twidere.util;
 
+import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.Nullable;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 
 public final class ClipboardUtils {
 
@@ -30,5 +35,31 @@ public final class ClipboardUtils {
         final ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         clipboardManager.setPrimaryClip(ClipData.newPlainText(text, text));
         return true;
+    }
+
+    @Nullable
+    public static String getImageUrl(final Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return null;
+        return ClipboardUtilsAPI16.getImageUrl(context);
+    }
+
+    private static class ClipboardUtilsAPI16 {
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        public static String getImageUrl(final Context context) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return null;
+            final ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            final ClipData primaryClip = cm.getPrimaryClip();
+            if (primaryClip.getItemCount() > 0) {
+                final ClipData.Item item = primaryClip.getItemAt(0);
+                final CharSequence styledText = item.coerceToStyledText(context);
+                if (styledText instanceof Spanned) {
+                    final Spanned spanned = (Spanned) styledText;
+                    final ImageSpan[] imageSpans = spanned.getSpans(0, spanned.length(), ImageSpan.class);
+                    if (imageSpans.length == 1) return imageSpans[0].getSource();
+                }
+            }
+            return null;
+        }
     }
 }
