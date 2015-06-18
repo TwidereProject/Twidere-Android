@@ -73,13 +73,10 @@ import org.mariotaku.twidere.util.net.TwidereHostAddressResolver;
 
 import java.io.File;
 
-import edu.tsinghua.spice.SpiceService;
-
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
-import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
 @ReportsCrashes(formUri = "https://mariotaku.cloudant.com/acra-twidere/_design/acra-storage/_update/report",
         reportType = HttpSender.Type.JSON,
@@ -264,7 +261,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         }
 
         migrateUsageStatisticsPreferences();
-        startUsageStatisticsServiceIfNeeded(this);
         startRefreshServiceIfNeeded(this);
 
         reloadConnectivitySettings();
@@ -317,11 +313,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         } else if (KEY_ENABLE_PROXY.equals(key) || KEY_CONNECTION_TIMEOUT.equals(key) || KEY_PROXY_HOST.equals(key)
                 || KEY_PROXY_PORT.equals(key)) {
             reloadConnectivitySettings();
-        } else if (KEY_USAGE_STATISTICS.equals(key)) {
-            //spice
-            stopService(new Intent(this, SpiceService.class));
-            startUsageStatisticsServiceIfNeeded(this);
-            //end
         } else if (KEY_CONSUMER_KEY.equals(key) || KEY_CONSUMER_SECRET.equals(key) || KEY_API_URL_FORMAT.equals(key)
                 || KEY_AUTH_TYPE.equals(key) || KEY_SAME_OAUTH_SIGNING_URL.equals(key) || KEY_THUMBOR_ENABLED.equals(key)
                 || KEY_THUMBOR_ADDRESS.equals(key) || KEY_THUMBOR_SECURITY_KEY.equals(key)) {

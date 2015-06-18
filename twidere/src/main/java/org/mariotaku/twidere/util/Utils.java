@@ -256,8 +256,6 @@ import java.util.zip.CRC32;
 
 import javax.net.ssl.SSLException;
 
-import edu.tsinghua.spice.SpiceService;
-
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
@@ -3418,19 +3416,6 @@ public final class Utils implements Constants {
     public static void showWarnMessage(final Context context, final int resId, final boolean long_message) {
         if (context == null) return;
         showWarnMessage(context, context.getText(resId), long_message);
-    }
-
-    public static void startUsageStatisticsServiceIfNeeded(final Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        //spice
-        final Intent spiceProfilingServiceIntent = new Intent(context, SpiceService.class);
-        if (prefs.getBoolean(KEY_USAGE_STATISTICS, false)) {
-            //spice
-            context.startService(spiceProfilingServiceIntent);
-        } else {
-            //spice
-            context.stopService(spiceProfilingServiceIntent);
-        }
     }
 
     public static void startRefreshServiceIfNeeded(final Context context) {

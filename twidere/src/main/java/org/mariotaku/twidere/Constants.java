@@ -177,6 +177,8 @@ public interface Constants extends TwidereConstants {
     // SharedPreferences constants
     @Preference(type = BOOLEAN, exportable = false)
     String KEY_USAGE_STATISTICS = "usage_statistics";
+    @Preference(type = BOOLEAN, exportable = false)
+    String KEY_USAGE_STATISTICS_LAST_SUCCESSFUL_UPLOAD = "usage_statistics_last_successful_upload";
     @Preference(type = STRING, exportable = false)
     String KEY_DEVICE_SERIAL = "device_serial";
 }

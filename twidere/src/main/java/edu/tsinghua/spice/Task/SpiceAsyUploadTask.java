@@ -8,9 +8,11 @@ import android.util.Log;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
+import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.FileTypedData;
 import org.mariotaku.restfu.http.mime.MultipartTypedBody;
 import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.io.File;
@@ -20,19 +22,17 @@ import java.io.IOException;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
-import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 import static org.mariotaku.twidere.util.Utils.copyStream;
 
 /**
  * Created by Denny C. Ng on 2/20/15.
  */
 
-public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
+public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implements Constants {
+
+    public static final long UPLOAD_INTERVAL_MILLIS = 1000 * 60 * 60 * 24;
 
     private static final String PROFILE_SERVER_URL = "http://spice.hot-mobile.org/spice/usage";
-
-    private static final String LAST_UPLOAD_DATE = "last_upload_time";
-    private static final double MILLSECS_HALF_DAY = 1000 * 60 * 60 * 12;
 
     private final Context context;
     private final RestHttpClient client;
@@ -65,9 +65,12 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
             final MultipartTypedBody body = new MultipartTypedBody();
             body.add("file", new FileTypedData(tmp));
             builder.body(body);
-            client.execute(builder.build());
-            SpiceProfilingUtil.log("server has already received file " + tmp.getName());
-            tmp.delete();
+            final RestHttpResponse response = client.execute(builder.build());
+            if (response.isSuccessful()) {
+                SpiceProfilingUtil.log("server has already received file " + tmp.getName());
+                tmp.delete();
+            }
+            throw new IOException("Unable to send file");
         } catch (Exception e) {
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
@@ -84,9 +87,9 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
 
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
 
-        if (prefs.contains(LAST_UPLOAD_DATE)) {
-            final long lastUpload = prefs.getLong(LAST_UPLOAD_DATE, System.currentTimeMillis());
-            final double deltaDays = (System.currentTimeMillis() - lastUpload) / (MILLSECS_HALF_DAY * 2);
+        if (prefs.contains(KEY_USAGE_STATISTICS_LAST_SUCCESSFUL_UPLOAD)) {
+            final long lastUpload = prefs.getLong(KEY_USAGE_STATISTICS_LAST_SUCCESSFUL_UPLOAD, System.currentTimeMillis());
+            final double deltaDays = (System.currentTimeMillis() - lastUpload) / UPLOAD_INTERVAL_MILLIS;
             if (deltaDays < 1) {
                 SpiceProfilingUtil.log("Last uploaded was conducted in 1 day ago.");
                 return null;
@@ -96,7 +99,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> {
         final File root = context.getFilesDir();
         final File[] spiceFiles = root.listFiles(new SpiceFileFilter());
         uploadToServer(spiceFiles);
-        prefs.edit().putLong(LAST_UPLOAD_DATE, System.currentTimeMillis()).apply();
+        prefs.edit().putLong(KEY_USAGE_STATISTICS_LAST_SUCCESSFUL_UPLOAD, System.currentTimeMillis()).apply();
         return null;
     }
 

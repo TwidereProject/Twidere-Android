@@ -29,13 +29,14 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
 
+import edu.tsinghua.spice.Task.SpiceAsyUploadTask;
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
-import static org.mariotaku.twidere.util.Utils.startUsageStatisticsServiceIfNeeded;
 
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
 
@@ -47,7 +48,6 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             Log.d(RECEIVER_LOGTAG, String.format("Received Broadcast %s", intent));
         }
         if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
-        startUsageStatisticsServiceIfNeeded(context);
         startRefreshServiceIfNeeded(context);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
@@ -59,6 +59,13 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
                 SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_LOCATION, location.getTime() + ","
                         + location.getLatitude() + "," + location.getLongitude() + "," + location.getProvider());
             }
+        }
+        final boolean isWifi = Utils.isOnWifi(context.getApplicationContext());
+        final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());
+        final long currentTime = System.currentTimeMillis();
+        final long lastSuccessfulTime = prefs.getLong(KEY_USAGE_STATISTICS_LAST_SUCCESSFUL_UPLOAD, -1);
+        if (isWifi && isCharging && (currentTime - lastSuccessfulTime) > SpiceAsyUploadTask.UPLOAD_INTERVAL_MILLIS) {
+            AsyncTaskUtils.executeTask(new SpiceAsyUploadTask(context));
         }
     }
 }

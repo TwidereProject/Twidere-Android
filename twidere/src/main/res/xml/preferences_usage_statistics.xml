@@ -23,16 +23,20 @@
     <Preference android:layout="@layout/header_usage_statistics"/>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:order="11"
         android:defaultValue="false"
-        android:title="@string/usage_statistics"
-        android:key="usage_statistics"/>
+        android:key="usage_statistics"
+        android:order="11"
+        android:title="@string/usage_statistics"/>
     <PreferenceCategory
-        android:title="@string/projects_we_took_part"
-        android:order="12">
+        android:order="12"
+        android:title="@string/projects_we_took_part">
 
         <Preference
-            android:title="@string/research_tsinghua_hot_mobile"/>
+            android:title="@string/research_tsinghua_hot_mobile">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://spice.hot-mobile.org/"/>
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>
