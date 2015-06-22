@@ -47,6 +47,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Action;
 import android.support.v4.util.LongSparseArray;
@@ -97,6 +99,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.DraftsFragment;
+import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -153,6 +156,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private static final String EXTRA_SHOULD_SAVE_ACCOUNTS = "should_save_accounts";
     private static final String EXTRA_ORIGINAL_TEXT = "original_text";
     private static final String EXTRA_SHARE_SCREENSHOT = "share_screenshot";
+    private static final String DISCARD_STATUS_DIALOG_FRAGMENT_TAG = "discard_status";
 
     // Utility classes
     private final Extractor mExtractor = new Extractor();
@@ -1125,6 +1129,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     }
 
     private void setProgressVisible(final boolean visible) {
+        final FragmentManager fm = getSupportFragmentManager();
+        final Fragment f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
+        if (!visible && f instanceof DialogFragment) {
+            ((DialogFragment) f).dismiss();
+        } else if (visible) {
+            SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+            df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
+            df.setCancelable(false);
+        }
 //        mProgress.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 

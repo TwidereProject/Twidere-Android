@@ -102,12 +102,12 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
 
     @Override
     public boolean canSourceMediaTagTarget() {
-        return false;
+        return source.canMediaTag;
     }
 
     @Override
     public boolean canSourceDMTarget() {
-        return false;
+        return source.canDm;
     }
 
     @Override
@@ -166,5 +166,9 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
         boolean wantRetweets;
         @JsonField(name = "notifications_enabled")
         boolean notificationsEnabled;
+        @JsonField(name = "can_dm")
+        boolean canDm;
+        @JsonField(name = "can_media_tag")
+        boolean canMediaTag;
     }
 }
