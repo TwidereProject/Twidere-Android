@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/profile_banner_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +40,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"/>
-        </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/profile_birthday_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/profile_banner"
+                android:layout_alignTop="@+id/profile_banner">
+
+            </FrameLayout>
+        </RelativeLayout>
 
         <org.mariotaku.twidere.view.HeaderDrawerLayout
             android:id="@+id/user_profile_drawer"

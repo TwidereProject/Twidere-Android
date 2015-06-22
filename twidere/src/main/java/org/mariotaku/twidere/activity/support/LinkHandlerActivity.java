@@ -360,21 +360,22 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     private void setStatusBarColor(int linkId, Uri uri) {
         switch (linkId) {
             case LINK_ID_USER: {
+                mMainContent.setDrawShadow(true);
                 mMainContent.setShadowColor(0xA0000000);
-                // Fall through
+                break;
             }
             default: {
                 mMainContent.setDrawShadow(false);
-                mMainContent.setDrawColor(true);
-                mMainContent.setFactor(1);
-                final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption())
-                        ? ThemeUtils.getActionBarAlpha(getCurrentThemeBackgroundAlpha()) : 0xFF;
-                final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
-                mMainContent.setColor(statusBarColor, alpha);
-                StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
                 break;
             }
         }
+        mMainContent.setDrawColor(true);
+        mMainContent.setFactor(1);
+        final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption())
+                ? ThemeUtils.getActionBarAlpha(getCurrentThemeBackgroundAlpha()) : 0xFF;
+        final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
+        mMainContent.setColor(statusBarColor, alpha);
+        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
     }
 
     private void setTaskInfo(int linkId, Uri uri) {

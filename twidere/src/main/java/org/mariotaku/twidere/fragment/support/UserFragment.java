@@ -180,6 +180,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
+    private View mProfileBirthdayBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
             mListedCount, mFollowersCount, mFriendsCount, mHeaderErrorTextView;
     private View mDescriptionContainer, mLocationContainer, mURLContainer, mListedContainer, mFollowersContainer,
@@ -1086,6 +1087,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mHeaderErrorIcon = (ImageView) headerView.findViewById(R.id.error_icon);
         mProgressContainer = headerView.findViewById(R.id.progress_container);
         mProfileBannerView = (ProfileBannerImageView) view.findViewById(R.id.profile_banner);
+        mProfileBirthdayBannerView = view.findViewById(R.id.profile_birthday_banner);
         mProfileBannerContainer = view.findViewById(R.id.profile_banner_container);
         mNameView = (TextView) headerView.findViewById(R.id.name);
         mScreenNameView = (TextView) headerView.findViewById(R.id.screen_name);
@@ -1324,7 +1326,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void setListShown(boolean shown) {
         final TintedStatusFrameLayout tintedStatus = mTintedStatusContent;
         if (tintedStatus == null) return;
-        tintedStatus.setDrawShadow(shown);
+//        tintedStatus.setDrawShadow(shown);
     }
 
     private void getFriendship() {
@@ -1473,6 +1475,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private void updateScrollOffset(int offset) {
         final View space = mProfileBannerSpace;
         final ProfileBannerImageView profileBannerView = mProfileBannerView;
+        final View profileBirthdayBannerView = mProfileBirthdayBannerView;
         final View profileBannerContainer = mProfileBannerContainer;
         final int spaceHeight = space.getHeight();
         final float factor = MathUtils.clamp(spaceHeight == 0 ? 0 : (offset / (float) spaceHeight), 0, 1);
@@ -1480,6 +1483,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 //        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
         profileBannerContainer.setTranslationY(-offset);
         profileBannerView.setTranslationY(offset / 2);
+        profileBirthdayBannerView.setTranslationY(offset / 2);
 
         if (mActionBarBackground != null && mTintedStatusContent != null) {
             mActionBarBackground.setFactor(factor);
@@ -1506,7 +1510,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     activity.getThemeBackgroundOption());
 
             if (ThemeUtils.isTransparentBackground(activity.getCurrentThemeBackgroundOption())) {
-                stackedTabColor = ColorUtils.setAlphaComponent(stackedTabColor, ThemeUtils.getActionBarAlpha(activity.getCurrentThemeBackgroundAlpha()));
+                stackedTabColor = ColorUtils.setAlphaComponent(stackedTabColor,
+                        ThemeUtils.getActionBarAlpha(activity.getCurrentThemeBackgroundAlpha()));
             }
             final int tabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor, stackedTabColor, mCardBackgroundColor);
             ((ColorDrawable) tabBackground).setColor(tabColor);
