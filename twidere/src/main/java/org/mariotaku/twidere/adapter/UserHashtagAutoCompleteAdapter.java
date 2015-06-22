@@ -48,7 +48,7 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ShapedImageView;
+import org.mariotaku.twidere.view.ProfileImageView;
 
 
 public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
@@ -70,7 +70,6 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     private final EditText mEditText;
 
     private final boolean mDisplayProfileImage;
-    private final int mProfileImageStyle;
 
     private int mProfileImageUrlIdx, mNameIdx, mScreenNameIdx, mUserIdIdx;
     private char mToken = '@';
@@ -90,7 +89,6 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         mProfileImageLoader = app.getMediaLoaderWrapper();
         mDatabase = app.getSQLiteDatabase();
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
     }
 
     public UserHashtagAutoCompleteAdapter(final EditText view) {
@@ -102,7 +100,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         if (isCursorClosed()) return;
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-        final ShapedImageView icon = (ShapedImageView) view.findViewById(android.R.id.icon);
+        final ProfileImageView icon = (ProfileImageView) view.findViewById(android.R.id.icon);
 
         // Clear images in order to prevent images in recycled view shown.
         icon.setImageDrawable(null);
@@ -119,13 +117,11 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             if (mDisplayProfileImage) {
                 final String profileImageUrl = cursor.getString(mProfileImageUrlIdx);
                 mProfileImageLoader.displayProfileImage(icon, profileImageUrl);
-                icon.setStyle(mProfileImageStyle);
             } else {
                 mProfileImageLoader.cancelDisplayTask(icon);
             }
             icon.clearColorFilter();
         } else {
-            icon.setStyle(mProfileImageStyle);
             icon.setImageResource(R.drawable.ic_action_hashtag);
             icon.setColorFilter(text1.getCurrentTextColor(), Mode.SRC_ATOP);
         }

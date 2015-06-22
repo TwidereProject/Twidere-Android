@@ -62,10 +62,12 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
         }
         final boolean isWifi = Utils.isOnWifi(context.getApplicationContext());
         final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());
-        final long currentTime = System.currentTimeMillis();
-        final long lastSuccessfulTime = prefs.getLong(KEY_USAGE_STATISTICS_LAST_SUCCESSFUL_UPLOAD, -1);
-        if (isWifi && isCharging && (currentTime - lastSuccessfulTime) > SpiceAsyUploadTask.UPLOAD_INTERVAL_MILLIS) {
-            AsyncTaskUtils.executeTask(new SpiceAsyUploadTask(context));
+        if (isWifi && isCharging) {
+            final long currentTime = System.currentTimeMillis();
+            final long lastSuccessfulTime = SpiceAsyUploadTask.getLastUploadTime(context);
+            if ((currentTime - lastSuccessfulTime) > SpiceAsyUploadTask.UPLOAD_INTERVAL_MILLIS) {
+                AsyncTaskUtils.executeTask(new SpiceAsyUploadTask(context));
+            }
         }
     }
 }
