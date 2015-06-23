@@ -17,10 +17,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/fragment_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.DirectMessagesConversationFragment">
@@ -42,7 +43,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"/>
 
         </FrameLayout>
 
@@ -51,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_spacing_small"
             android:layout_above="@+id/input_panel"
-            android:background="@drawable/shadow_top" />
+            android:background="@drawable/shadow_top"/>
 
         <RelativeLayout
             android:id="@+id/input_panel"
@@ -76,7 +77,7 @@
                 android:color="?android:textColorSecondary"
                 android:contentDescription="@string/add_image"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_gallery" />
+                android:src="@drawable/ic_action_gallery"/>
 
             <org.mariotaku.twidere.view.ActionIconView
                 android:id="@+id/send"
@@ -89,7 +90,7 @@
                 android:color="?android:textColorSecondary"
                 android:contentDescription="@string/send"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_send" />
+                android:src="@drawable/ic_action_send"/>
 
             <org.mariotaku.messagebubbleview.library.MessageBubbleView
                 android:id="@+id/edit_text_container"
@@ -112,7 +113,7 @@
                     android:minHeight="@dimen/element_size_normal"
                     android:padding="@dimen/element_spacing_normal">
 
-                    <org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText
+                    <org.mariotaku.twidere.view.ComposeEditText
                         android:id="@+id/edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -126,14 +127,11 @@
                         android:maxHeight="140dp"
                         android:singleLine="false"
                         android:textAppearance="?android:textAppearanceMedium"
-                        app:met_baseColor="?android:textColorSecondary"
-                        app:met_helperTextColor="?android:textColorSecondary"
-                        app:met_hideUnderline="true"
-                        app:met_textColor="?android:textColorPrimary"
-                        app:met_textColorHint="?android:textColorTertiary">
+                        android:textColor="?android:textColorPrimary"
+                        android:textColorHint="?android:textColorTertiary">
 
-                        <requestFocus />
-                    </org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText>
+                        <requestFocus/>
+                    </org.mariotaku.twidere.view.ComposeEditText>
 
                 </FrameLayout>
             </org.mariotaku.messagebubbleview.library.MessageBubbleView>
@@ -154,7 +152,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
-            android:scrollbarStyle="outsideInset" />
+            android:scrollbarStyle="outsideInset"/>
 
         <LinearLayout
             android:id="@+id/users_search_empty"
@@ -169,7 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:color="?android:textColorSecondary"
-                android:src="@drawable/ic_info_search" />
+                android:src="@drawable/ic_info_search"/>
 
             <TextView
                 android:id="@+id/users_search_empty_text"
@@ -178,7 +176,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/element_spacing_normal"
                 android:gravity="center"
-                android:textAppearance="?android:textAppearanceMedium" />
+                android:textAppearance="?android:textAppearanceMedium"/>
         </LinearLayout>
 
         <ProgressBar
@@ -187,7 +185,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </FrameLayout>
 
 </FrameLayout>

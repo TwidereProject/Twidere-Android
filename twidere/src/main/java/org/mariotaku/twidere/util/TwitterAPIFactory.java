@@ -20,6 +20,7 @@ import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestMethodInfo;
 import org.mariotaku.restfu.RestRequestInfo;
 import org.mariotaku.restfu.annotation.RestMethod;
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.FileValue;
@@ -50,6 +51,7 @@ import java.net.Proxy;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -308,6 +310,21 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static class TwidereRequestInfoFactory implements RequestInfoFactory {
+
+        private static HashMap<String, String> sExtraParams = new HashMap<>();
+
+        static {
+            sExtraParams.put("include_cards", "true");
+            sExtraParams.put("cards_platform", "Android-12");
+            sExtraParams.put("include_entities", "true");
+            sExtraParams.put("include_my_retweet", "1");
+            sExtraParams.put("include_rts", "1");
+            sExtraParams.put("include_reply_count", "true");
+            sExtraParams.put("include_descendent_reply_count", "true");
+            sExtraParams.put("full_text", "true");
+        }
+
+
         @Override
         public RestRequestInfo create(RestMethodInfo methodInfo) {
             final RestMethod method = methodInfo.getMethod();
@@ -318,23 +335,19 @@ public class TwitterAPIFactory implements TwidereConstants {
             final List<Pair<String, TypedData>> parts = methodInfo.getParts();
             final FileValue file = methodInfo.getFile();
             final Map<String, Object> extras = methodInfo.getExtras();
-            if (parts.isEmpty()) {
-                final List<Pair<String, String>> params = method.hasBody() ? forms : queries;
-                addParameter(params, "include_cards", true);
-                addParameter(params, "cards_platform", "Android-12");
-                addParameter(params, "include_entities", true);
-                addParameter(params, "include_my_retweet", 1);
-                addParameter(params, "include_rts", 1);
-                addParameter(params, "include_reply_count", true);
-                addParameter(params, "include_descendent_reply_count", true);
-            } else {
-                addPart(parts, "include_cards", true);
-                addPart(parts, "cards_platform", "Android-12");
-                addPart(parts, "include_entities", true);
-                addPart(parts, "include_my_retweet", 1);
-                addPart(parts, "include_rts", 1);
-                addPart(parts, "include_reply_count", true);
-                addPart(parts, "include_descendent_reply_count", true);
+            final MethodExtra methodExtra = methodInfo.getMethodExtra();
+            if (methodExtra != null && "extra_params".equals(methodExtra.name())) {
+                final String[] extraParamKeys = methodExtra.values();
+                if (parts.isEmpty()) {
+                    final List<Pair<String, String>> params = method.hasBody() ? forms : queries;
+                    for (String key : extraParamKeys) {
+                        addParameter(params, key, sExtraParams.get(key));
+                    }
+                } else {
+                    for (String key : extraParamKeys) {
+                        addPart(parts, key, sExtraParams.get(key));
+                    }
+                }
             }
             return new RestRequestInfo(method.value(), path, queries, forms, headers, parts, file,
                     methodInfo.getBody(), extras);

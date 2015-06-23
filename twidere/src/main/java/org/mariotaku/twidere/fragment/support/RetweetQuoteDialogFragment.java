@@ -39,8 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.rengwuxian.materialedittext.validation.METLengthChecker;
-
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
@@ -52,7 +50,7 @@ import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText;
+import org.mariotaku.twidere.view.ComposeMaterialEditText;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 
@@ -62,7 +60,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         Constants, DialogInterface.OnClickListener {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
-    private UserHashtagAutoCompleteEditText mEditComment;
+    private ComposeMaterialEditText mEditComment;
     private PopupMenu mPopupMenu;
     private View mCommentMenu;
     private TwidereValidator mValidator;
@@ -121,18 +119,18 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
         view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
-        mEditComment = (UserHashtagAutoCompleteEditText) view.findViewById(R.id.edit_comment);
+        mEditComment = (ComposeMaterialEditText) view.findViewById(R.id.edit_comment);
         mEditComment.setAccountId(status.account_id);
-        mEditComment.setLengthChecker(new METLengthChecker() {
-
-            final String statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id).toString();
-
-            @Override
-            public int getLength(CharSequence text) {
-                return mValidator.getTweetLength(text + " " + statusLink);
-            }
-        });
-        mEditComment.setMaxCharacters(mValidator.getMaxTweetLength());
+//        mEditComment.setLengthChecker(new METLengthChecker() {
+//
+//            final String statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id).toString();
+//
+//            @Override
+//            public int getLength(CharSequence text) {
+//                return mValidator.getTweetLength(text + " " + statusLink);
+//            }
+//        });
+//        mEditComment.setMaxCharacters(mValidator.getMaxTweetLength());
 
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
         final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(mEditComment, new EditTextEnterHandler.EnterListener() {

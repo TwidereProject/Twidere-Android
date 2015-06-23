@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText
+            <org.mariotaku.twidere.view.ComposeMaterialEditText
                 android:id="@+id/edit_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                 app:met_textColorHint="?android:textColorTertiary">
 
                 <requestFocus />
-            </org.mariotaku.twidere.view.UserHashtagAutoCompleteEditText>
+            </org.mariotaku.twidere.view.ComposeMaterialEditText>
 
             <org.mariotaku.twidere.view.ActionIconButton
                 android:id="@+id/comment_menu"

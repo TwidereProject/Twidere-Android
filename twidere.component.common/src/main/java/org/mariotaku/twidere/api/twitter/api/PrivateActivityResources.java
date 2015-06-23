@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
@@ -27,6 +28,8 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 
 @SuppressWarnings("RedundantThrows")
+@MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
+        "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
 public interface PrivateActivityResources extends PrivateResources {
 
     @GET("/activity/about_me.json")

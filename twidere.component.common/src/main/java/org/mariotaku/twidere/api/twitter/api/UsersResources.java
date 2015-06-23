@@ -23,6 +23,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Body;
 import org.mariotaku.restfu.annotation.param.Form;
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Part;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
@@ -40,6 +41,7 @@ import org.mariotaku.twidere.api.twitter.model.SettingsUpdate;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 @SuppressWarnings("RedundantThrows")
+@MethodExtra(name = "extra_params", values = {"include_entities"})
 public interface UsersResources {
 
     @POST("/blocks/create.json")
@@ -134,8 +136,8 @@ public interface UsersResources {
     @POST("/account/update_profile_banner.json")
     @Body(BodyType.MULTIPART)
     ResponseCode updateProfileBannerImage(@Part("banner") FileTypedData data, @Part("width") int width,
-                                  @Part("height") int height, @Part("offset_left") int offsetLeft,
-                                  @Part("offset_top") int offsetTop)
+                                          @Part("height") int height, @Part("offset_left") int offsetLeft,
+                                          @Part("offset_top") int offsetTop)
             throws TwitterException;
 
     @POST("/account/update_profile_banner.json")

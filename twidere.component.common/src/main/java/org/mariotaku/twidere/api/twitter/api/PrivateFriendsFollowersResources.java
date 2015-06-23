@@ -19,10 +19,12 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 @SuppressWarnings("RedundantThrows")
+@MethodExtra(name = "extra_params", values = {"include_entities"})
 public interface PrivateFriendsFollowersResources extends PrivateResources {
 
 	User acceptFriendship(long userId) throws TwitterException;

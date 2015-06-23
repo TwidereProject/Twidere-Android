@@ -23,6 +23,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Body;
 import org.mariotaku.restfu.annotation.param.Form;
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -130,12 +131,18 @@ public interface ListsResources {
     ResponseList<UserList> getUserLists(@Query("screen_name") String screenName, @Query("reverse") boolean reverse) throws TwitterException;
 
     @GET("/lists/statuses.json")
+    @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
+            "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
     ResponseList<Status> getUserListStatuses(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
+    @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
+            "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
     ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_id") long ownerId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
+    @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
+            "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
     ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_screen_name") String ownerScreenName, @Query Paging paging)
             throws TwitterException;
 

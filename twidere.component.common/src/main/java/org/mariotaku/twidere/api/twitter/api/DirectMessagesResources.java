@@ -23,6 +23,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Body;
 import org.mariotaku.restfu.annotation.param.Form;
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -31,6 +32,7 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 
 @SuppressWarnings("RedundantThrows")
+@MethodExtra(name = "extra_params", values = {"full_text", "include_entities", "include_cards", "cards_platform"})
 public interface DirectMessagesResources {
 
     @POST("/direct_messages/destroy.json")
@@ -38,27 +40,30 @@ public interface DirectMessagesResources {
     DirectMessage destroyDirectMessage(@Form("id") long id) throws TwitterException;
 
     @GET("/direct_messages.json")
-    ResponseList<DirectMessage> getDirectMessages(@Query Paging paging, @Query("full_text") boolean fullText) throws TwitterException;
-
+    ResponseList<DirectMessage> getDirectMessages(@Query Paging paging) throws TwitterException;
 
     @GET("/direct_messages/sent.json")
-    ResponseList<DirectMessage> getSentDirectMessages(@Query Paging paging, @Query("full_text") boolean fullText) throws TwitterException;
+    ResponseList<DirectMessage> getSentDirectMessages(@Query Paging paging) throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @Body(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Form("user_id") long userId, @Form("text") String text) throws TwitterException;
+    DirectMessage sendDirectMessage(@Form("user_id") long userId, @Form("text") String text)
+            throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @Body(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Form("user_id") long userId, @Form("text") String text, @Form("media_id") long mediaId) throws TwitterException;
+    DirectMessage sendDirectMessage(@Form("user_id") long userId, @Form("text") String text,
+                                    @Form("media_id") long mediaId) throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @Body(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Form("screen_name") String screenName, @Form("text") String text) throws TwitterException;
+    DirectMessage sendDirectMessage(@Form("screen_name") String screenName, @Form("text") String text)
+            throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @Body(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Form("screen_name") String screenName, @Form("text") String text, @Form("media_id") long mediaId) throws TwitterException;
+    DirectMessage sendDirectMessage(@Form("screen_name") String screenName, @Form("text") String text,
+                                    @Form("media_id") long mediaId) throws TwitterException;
 
     @GET("/direct_messages/show.json")
     DirectMessage showDirectMessage(@Query("id") long id) throws TwitterException;

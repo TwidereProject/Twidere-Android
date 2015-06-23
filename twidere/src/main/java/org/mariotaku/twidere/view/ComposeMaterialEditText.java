@@ -22,31 +22,30 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.InputType;
 import android.text.method.ArrowKeyMovementMethod;
 import android.util.AttributeSet;
-
-import com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
 import org.mariotaku.twidere.util.widget.ScreenNameTokenizer;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
-public class UserHashtagAutoCompleteEditText extends MaterialMultiAutoCompleteTextView implements IThemeBackgroundTintView {
+public class ComposeMaterialEditText extends AppCompatMultiAutoCompleteTextView implements IThemeBackgroundTintView {
 
     private UserHashtagAutoCompleteAdapter mAdapter;
     private long mAccountId;
 
-    public UserHashtagAutoCompleteEditText(final Context context) {
+    public ComposeMaterialEditText(final Context context) {
         this(context, null);
     }
 
-    public UserHashtagAutoCompleteEditText(final Context context, final AttributeSet attrs) {
+    public ComposeMaterialEditText(final Context context, final AttributeSet attrs) {
         this(context, attrs, R.attr.autoCompleteTextViewStyle);
     }
 
-    public UserHashtagAutoCompleteEditText(final Context context, final AttributeSet attrs, final int defStyle) {
+    public ComposeMaterialEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         setTokenizer(new ScreenNameTokenizer());
         setMovementMethod(ArrowKeyMovementMethod.getInstance());
@@ -80,7 +79,7 @@ public class UserHashtagAutoCompleteEditText extends MaterialMultiAutoCompleteTe
 
     @Override
     public void setBackgroundTintColor(@NonNull ColorStateList color) {
-        setPrimaryColor(color.getDefaultColor());
+        setSupportBackgroundTintList(color);
     }
 
     public void setAccountId(long accountId) {

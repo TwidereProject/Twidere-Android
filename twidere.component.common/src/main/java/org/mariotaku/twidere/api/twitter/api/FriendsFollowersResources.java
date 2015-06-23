@@ -23,6 +23,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Body;
 import org.mariotaku.restfu.annotation.param.Form;
+import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -36,6 +37,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 @SuppressWarnings("RedundantThrows")
+@MethodExtra(name = "extra_params", values = {"include_entities"})
 public interface FriendsFollowersResources {
 
     @POST("/friendships/create.json")
