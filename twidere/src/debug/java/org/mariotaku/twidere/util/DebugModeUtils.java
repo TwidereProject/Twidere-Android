@@ -23,7 +23,10 @@ import android.app.Application;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
+
+import java.util.List;
 
 /**
  * Created by mariotaku on 15/5/27.
@@ -31,7 +34,8 @@ import com.squareup.okhttp.OkHttpClient;
 public class DebugModeUtils {
 
     public static void initForHttpClient(final OkHttpClient client) {
-        client.networkInterceptors().add(new StethoInterceptor());
+        final List<Interceptor> interceptors = client.networkInterceptors();
+        interceptors.add(new StethoInterceptor());
     }
 
     public static void initForApplication(final Application application) {

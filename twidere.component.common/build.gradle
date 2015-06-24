@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.bluelinelabs:logansquare:1.1.0'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.github.mariotaku:RestFu:b40c366f1c'
+    compile 'com.github.mariotaku:RestFu:d965fcf941'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     compile project(':twidere.component.querybuilder')
     compile fileTree(dir: 'libs', include: ['*.jar'])

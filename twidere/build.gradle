@@ -91,11 +91,11 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.0@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     compile 'com.github.mariotaku:PickNCrop:76563fae81'
+    compile 'com.diogobernardino:williamchart:1.7.0'
     googleCompile 'com.google.android.gms:play-services-maps:7.5.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
     fdroidCompile 'org.slf4j:slf4j-simple:1.7.12'
-    debugCompile 'im.dino:dbinspector:3.1.0@aar'
     debugCompile 'com.facebook.stetho:stetho:1.1.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp:1.1.1'
     compile project(':twidere.component.common')
@@ -104,9 +104,9 @@ dependencies {
 //    googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
 }
 
-task svgToPng(type: SvgDrawableTask) {
+task svgToDrawable(type: SvgDrawableTask) {
     // specify where to pick SVG from
-    from = file('src/main/svg-png')
+    from = file('src/main/svg/drawable')
     // specify the android res folder
     to = file('src/main/res-svg2png')
     // create qualified directories if missing
@@ -116,7 +116,9 @@ task svgToPng(type: SvgDrawableTask) {
     // let generate PNG for the following densities only
     targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
     // relative path of the file specifying nine patch specs
-    ninePatchConfig = file('src/main/svg-png/9patch.json')
+    ninePatchConfig = file('src/main/svg/drawable/9patch.json')
     // output format of the generated resources
     outputFormat = 'PNG'
+
+    outputType = 'drawable'
 }

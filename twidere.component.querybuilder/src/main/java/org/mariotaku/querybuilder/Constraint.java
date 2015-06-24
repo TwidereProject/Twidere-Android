@@ -23,8 +23,58 @@ package org.mariotaku.querybuilder;
  * Created by mariotaku on 15/3/30.
  */
 public class Constraint implements SQLLang {
+    private final String name;
+    private final String type;
+    private final SQLQuery constraint;
+
+    public Constraint(String name, String type, SQLQuery constraint) {
+        this.name = name;
+        this.type = type;
+        this.constraint = constraint;
+    }
+
     @Override
     public String getSQL() {
-        return null;
+        final StringBuilder sb = new StringBuilder();
+        if (name != null) {
+            sb.append("CONSTRAINT ");
+            sb.append(name);
+            sb.append(" ");
+        }
+        sb.append(type);
+        sb.append(" ");
+        sb.append(constraint.getSQL());
+        return sb.toString();
     }
+
+    public static Constraint unique(String name, Columns columns, OnConflict onConflict) {
+        return new Constraint(name, "UNIQUE", new ColumnConflictConstaint(columns, onConflict));
+    }
+
+    public static Constraint unique(Columns columns, OnConflict onConflict) {
+        return unique(null, columns, onConflict);
+    }
+
+    private static final class ColumnConflictConstaint implements SQLQuery {
+
+        private final Columns columns;
+        private final OnConflict onConflict;
+
+        public ColumnConflictConstaint(Columns columns, OnConflict onConflict) {
+            this.columns = columns;
+            this.onConflict = onConflict;
+        }
+
+        @Override
+        public String getSQL() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("(");
+            sb.append(columns.getSQL());
+            sb.append(") ");
+            sb.append("ON CONFLICT ");
+            sb.append(onConflict.getAction());
+            return sb.toString();
+        }
+    }
+
 }

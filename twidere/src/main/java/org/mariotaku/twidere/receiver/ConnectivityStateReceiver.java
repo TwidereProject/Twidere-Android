@@ -31,6 +31,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
 import edu.tsinghua.spice.Task.SpiceAsyUploadTask;
 import edu.tsinghua.spice.Utilies.NetworkStateUtil;
@@ -60,7 +61,9 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
                         + location.getLatitude() + "," + location.getLongitude() + "," + location.getProvider());
             }
         }
-        final boolean isWifi = Utils.isOnWifi(context.getApplicationContext());
+        final int networkType = Utils.getActiveNetworkType(context.getApplicationContext());
+        NetworkUsageUtils.setNetworkType(networkType);
+        final boolean isWifi = networkType == ConnectivityManager.TYPE_WIFI;
         final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());
         if (isWifi && isCharging) {
             final long currentTime = System.currentTimeMillis();

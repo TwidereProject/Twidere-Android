@@ -35,8 +35,8 @@ public class SQLCreateTableQuery implements SQLQuery {
         if (newColumns != null && newColumns.length > 0) {
             sb.append('(');
             sb.append(Utils.toString(newColumns, ',', true));
-            if (constraints != null) {
-                sb.append(' ');
+            if (constraints != null && constraints.length > 0) {
+                sb.append(", ");
                 sb.append(Utils.toString(constraints, ',', true));
                 sb.append(' ');
             }

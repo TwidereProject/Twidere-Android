@@ -9,7 +9,7 @@ public class SQLInsertQuery implements SQLQuery {
     private OnConflict onConflict;
     private String table;
     private String[] columns;
-    private SQLSelectQuery select;
+    private String values;
 
     SQLInsertQuery() {
 
@@ -21,11 +21,18 @@ public class SQLInsertQuery implements SQLQuery {
         final StringBuilder sb = new StringBuilder();
         sb.append("INSERT ");
         if (onConflict != null) {
-            sb.append(String.format("OR %s ", onConflict.getAction()));
+            sb.append("OR ");
+            sb.append(onConflict.getAction());
+            sb.append(" ");
         }
-        sb.append(String.format("INTO %s ", table));
-        sb.append(String.format("(%s) ", Utils.toString(columns, ',', false)));
-        sb.append(String.format("%s ", select.getSQL()));
+        sb.append("INTO ");
+        sb.append(table);
+        sb.append(" (");
+        sb.append(Utils.toString(columns, ',', false));
+        sb.append(") ");
+        sb.append("VALUES (");
+        sb.append(values);
+        sb.append(") ");
         return sb.toString();
     }
 
@@ -38,7 +45,11 @@ public class SQLInsertQuery implements SQLQuery {
     }
 
     void setSelect(final SQLSelectQuery select) {
-        this.select = select;
+        this.values = select.getSQL();
+    }
+
+    void setValues(final String... values) {
+        this.values = Utils.toString(values, ',', false);
     }
 
     void setTable(final String table) {
@@ -65,6 +76,18 @@ public class SQLInsertQuery implements SQLQuery {
         public Builder columns(final String[] columns) {
             checkNotBuilt();
             query.setColumns(columns);
+            return this;
+        }
+
+        public Builder values(final String[] values) {
+            checkNotBuilt();
+            query.setValues(values);
+            return this;
+        }
+
+        public Builder values(final String values) {
+            checkNotBuilt();
+            query.setValues(values);
             return this;
         }
 

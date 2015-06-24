@@ -13,6 +13,7 @@ import org.mariotaku.restfu.http.mime.FileTypedData;
 import org.mariotaku.restfu.http.mime.MultipartTypedBody;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.io.File;
@@ -66,6 +67,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implem
             final MultipartTypedBody body = new MultipartTypedBody();
             body.add("file", new FileTypedData(tmp));
             builder.body(body);
+            builder.extra(RequestType.USAGE_STATISTICS);
             final RestHttpResponse response = client.execute(builder.build());
             if (response.isSuccessful()) {
                 SpiceProfilingUtil.log("server has already received file " + tmp.getName());

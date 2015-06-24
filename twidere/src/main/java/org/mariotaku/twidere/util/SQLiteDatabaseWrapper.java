@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class SQLiteDatabaseWrapper {
@@ -45,6 +46,18 @@ public class SQLiteDatabaseWrapper {
         tryCreateDatabase();
         if (mDatabase == null) return -1;
         return mDatabase.insertWithOnConflict(table, nullColumnHack, initialValues, conflictAlgorithm);
+    }
+
+    public void execSQL(String sql) throws SQLException {
+        tryCreateDatabase();
+        if (mDatabase == null) return;
+        mDatabase.execSQL(sql);
+    }
+
+    public void execSQL(String sql, Object[] bindArgs) throws SQLException {
+        tryCreateDatabase();
+        if (mDatabase == null) return;
+        mDatabase.execSQL(sql, bindArgs);
     }
 
     public boolean isReady() {

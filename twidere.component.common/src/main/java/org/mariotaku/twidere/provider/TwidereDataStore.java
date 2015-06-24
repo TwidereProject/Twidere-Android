@@ -35,6 +35,7 @@ public interface TwidereDataStore {
     String TYPE_BOOLEAN_DEFAULT_TRUE = "INTEGER(1) DEFAULT 1";
     String TYPE_BOOLEAN_DEFAULT_FALSE = "INTEGER(1) DEFAULT 0";
     String TYPE_TEXT = "TEXT";
+    String TYPE_DOUBLE_NOT_NULL = "DOUBLE NOT NULL";
     String TYPE_TEXT_NOT_NULL = "TEXT NOT NULL";
     String TYPE_TEXT_NOT_NULL_UNIQUE = "TEXT NOT NULL UNIQUE";
 
@@ -913,5 +914,29 @@ public interface TwidereDataStore {
 
             Uri CONTENT_URI = Uri.withAppendedPath(UnreadCounts.CONTENT_URI, CONTENT_PATH_SEGMENT);
         }
+    }
+
+    interface NetworkUsages extends BaseColumns {
+
+        String TABLE_NAME = "network_usages";
+        String CONTENT_PATH = TABLE_NAME;
+
+        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+        String TIME_IN_HOURS = "time_in_hours";
+
+        String REQUEST_TYPE = "request_type";
+
+        String REQUEST_NETWORK = "request_network";
+
+        String KILOBYTES_SENT = "kilobytes_sent";
+
+        String KILOBYTES_RECEIVED = "kilobytes_received";
+
+        String[] COLUMNS = {_ID, TIME_IN_HOURS, REQUEST_TYPE, REQUEST_NETWORK, KILOBYTES_SENT,
+                KILOBYTES_RECEIVED};
+
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL,
+                TYPE_DOUBLE_NOT_NULL, TYPE_DOUBLE_NOT_NULL};
     }
 }

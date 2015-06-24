@@ -48,6 +48,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -186,7 +187,12 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         } else {
             requestUri = modifiedUri.toString();
         }
-        final RestHttpResponse resp = mClient.execute(new RestHttpRequest.Builder().method(method).url(requestUri).headers(additionalHeaders).build());
+        final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
+        builder.method(method);
+        builder.url(requestUri);
+        builder.headers(additionalHeaders);
+        builder.extra(RequestType.MEDIA);
+        final RestHttpResponse resp = mClient.execute(builder.build());
         final TypedData body = resp.getBody();
         return new ContentLengthInputStream(body.stream(), (int) body.length());
     }

@@ -72,7 +72,6 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
@@ -123,7 +122,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private LinearLayout mSignInSignUpContainer, mUsernamePasswordContainer;
 
     private final Handler mHandler = new Handler();
-    private TwidereApplication mApplication;
     private SharedPreferences mPreferences;
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
@@ -308,7 +306,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mResolver = getContentResolver();
-        mApplication = TwidereApplication.getInstance(this);
         setContentView(R.layout.activity_sign_in);
         setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
 
@@ -334,15 +331,17 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             mAPIChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE);
         }
 
-        mUsernamePasswordContainer
-                .setVisibility(mAuthType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE ? View.GONE : View.VISIBLE);
-        mSignInSignUpContainer.setOrientation(mAuthType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE ? LinearLayout.VERTICAL
-                : LinearLayout.HORIZONTAL);
+        final boolean isTwipOMode = mAuthType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE;
+        mUsernamePasswordContainer.setVisibility(isTwipOMode ? View.GONE : View.VISIBLE);
+        mSignInSignUpContainer.setOrientation(isTwipOMode ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
 
         mEditUsername.setText(mUsername);
         mEditUsername.addTextChangedListener(this);
         mEditPassword.setText(mPassword);
         mEditPassword.addTextChangedListener(this);
+
+        mSignUpButton.setOnClickListener(this);
+
         final Resources resources = getResources();
         final ColorStateList color = ColorStateList.valueOf(resources.getColor(R.color.material_light_green));
         ViewCompat.setBackgroundTintList(mSignInButton, color);

@@ -15,6 +15,10 @@ public class SetValue implements SQLLang {
         this.expression = expression;
     }
 
+    public SetValue(String column, SQLLang expression) {
+        this(new Columns.Column(column), expression);
+    }
+
 
     @Override
     public String getSQL() {

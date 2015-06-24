@@ -44,6 +44,7 @@ import org.mariotaku.twidere.api.twitter.util.TwitterConverter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.net.OkHttpRestClient;
 
 import java.net.InetSocketAddress;
@@ -119,7 +120,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             client.setProxy(getProxy(prefs));
         }
         Internal.instance.setNetwork(client, TwidereApplication.getInstance(context).getNetwork());
-        return new OkHttpRestClient(client);
+        return new OkHttpRestClient(context, client);
     }
 
 
@@ -373,7 +374,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 headers.add(Pair.create("Authorization", authorization.getHeader(endpoint, info)));
             }
             headers.add(Pair.create("User-Agent", userAgent));
-            return new RestHttpRequest(restMethod, url, headers, info.getBody(), null);
+            return new RestHttpRequest(restMethod, url, headers, info.getBody(), RequestType.API);
         }
     }
 

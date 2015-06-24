@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Columns.Column;
+import org.mariotaku.querybuilder.Constraint;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.querybuilder.NewColumn;
 import org.mariotaku.querybuilder.OnConflict;
@@ -48,38 +49,23 @@ import static org.mariotaku.querybuilder.SQLQueryBuilder.insertInto;
 import static org.mariotaku.querybuilder.SQLQueryBuilder.select;
 
 public final class DatabaseUpgradeHelper {
-    public static void safeUpgrade(final SQLiteDatabase db, final String table, final String[] newColNames,
-                                   final String[] newColTypes, final boolean dropDirectly, final boolean strictMode,
-                                   final Map<String, String> colAliases) {
-        safeUpgrade(db, table, newColNames, newColTypes, dropDirectly, strictMode, colAliases, OnConflict.REPLACE);
-    }
 
     public static void safeUpgrade(final SQLiteDatabase db, final String table, final String[] newColNames,
-                                   final String[] newColTypes, final boolean dropDirectly, final boolean strictMode,
-                                   final Map<String, String> colAliases, final OnConflict onConflict) {
-
+                                   final String[] newColTypes, final boolean dropDirectly,
+                                   final Map<String, String> colAliases, final OnConflict onConflict,
+                                   final Constraint... constraints) {
         if (newColNames == null || newColTypes == null || newColNames.length != newColTypes.length)
             throw new IllegalArgumentException("Invalid parameters for upgrading table " + table
                     + ", length of columns and types not match.");
 
         // First, create the table if not exists.
         final NewColumn[] newCols = NewColumn.createNewColumns(newColNames, newColTypes);
-        final String createQuery = createTable(true, table).columns(newCols).buildSQL();
+        final String createQuery = createTable(true, table).columns(newCols).constraint(constraints).buildSQL();
         db.execSQL(createQuery);
 
         // We need to get all data from old table.
         final String[] oldCols = getColumnNames(db, table);
-        if (strictMode) {
-            final String oldCreate = getCreateSQL(db, table);
-            final Map<String, String> map = getTypeMapByCreateQuery(oldCreate);
-            boolean different = false;
-            for (final NewColumn newCol : newCols) {
-                if (!newCol.getType().equalsIgnoreCase(map.get(newCol.getName()))) {
-                    different = true;
-                }
-            }
-            if (!different) return;
-        } else if (oldCols == null || TwidereArrayUtils.contentMatch(newColNames, oldCols)) return;
+        if (oldCols == null || TwidereArrayUtils.contentMatch(newColNames, oldCols)) return;
         if (dropDirectly) {
             db.beginTransaction();
             db.execSQL(dropTable(true, table).getSQL());
@@ -104,8 +90,8 @@ public final class DatabaseUpgradeHelper {
     }
 
     public static void safeUpgrade(final SQLiteDatabase db, final String table, final String[] newColNames,
-                                   final String[] newColTypes, final boolean dropDirectly, final Map<String, String> colAliases) {
-        safeUpgrade(db, table, newColNames, newColTypes, dropDirectly, true, colAliases, OnConflict.REPLACE);
+                                   final String[] newColTypes, final boolean dropDirectly, final Map<String, String> colAliases, final Constraint... constraints) {
+        safeUpgrade(db, table, newColNames, newColTypes, dropDirectly, colAliases, OnConflict.REPLACE, constraints);
     }
 
     private static String createInsertDataQuery(final String table, final String tempTable, final String[] newCols,

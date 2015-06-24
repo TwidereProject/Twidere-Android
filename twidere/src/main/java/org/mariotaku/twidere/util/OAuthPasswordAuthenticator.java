@@ -40,6 +40,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.model.RequestType;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -75,7 +76,7 @@ public class OAuthPasswordAuthenticator implements Constants {
         try {
             requestToken = oauth.getRequestToken(OAUTH_CALLBACK_OOB);
         } catch (final TwitterException e) {
-//            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
+            if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException(e);
         }
         RestHttpResponse authorizePage = null, authorizeResult = null;
@@ -86,6 +87,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             authorizePageBuilder.method(GET.METHOD);
             authorizePageBuilder.url(endpoint.construct("/oauth/authorize", Pair.create("oauth_token",
                     requestToken.getOauthToken())));
+            authorizePageBuilder.extra(RequestType.API);
             final RestHttpRequest authorizePageRequest = authorizePageBuilder.build();
             authorizePage = client.execute(authorizePageRequest);
             final String[] cookieHeaders = authorizePage.getHeaders("Set-Cookie");
@@ -120,6 +122,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             authorizeResultBuilder.url(endpoint.construct("/oauth/authorize"));
             authorizeResultBuilder.headers(requestHeaders);
             authorizeResultBuilder.body(authorizationResultBody);
+            authorizeResultBuilder.extra(RequestType.API);
             authorizeResult = client.execute(authorizeResultBuilder.build());
             final String oauthPin = readOAuthPINFromHtml(BaseTypedData.reader(authorizeResult.getBody()));
             if (isEmpty(oauthPin)) throw new WrongUserPassException();

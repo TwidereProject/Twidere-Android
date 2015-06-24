@@ -453,8 +453,8 @@ public class NyanDrawingHelper {
             }
         }
 
-        private static interface StarAnimFrames {
-            static final byte[][] FRAME1 = {
+        private interface StarAnimFrames {
+            byte[][] FRAME1 = {
                     {
                             0, 0, 0, 0, 0, 0, 0
                     },

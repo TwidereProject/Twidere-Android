@@ -214,6 +214,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters.Users;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
@@ -319,6 +320,8 @@ public final class Utils implements Constants {
                 TABLE_ID_SAVED_SEARCHES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
                 TABLE_ID_SEARCH_HISTORY);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, NetworkUsages.CONTENT_PATH,
+                TABLE_ID_NETWORK_USAGES);
 
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
@@ -2184,6 +2187,8 @@ public final class Utils implements Constants {
                 return SavedSearches.TABLE_NAME;
             case TABLE_ID_SEARCH_HISTORY:
                 return SearchHistory.TABLE_NAME;
+            case TABLE_ID_NETWORK_USAGES:
+                return NetworkUsages.TABLE_NAME;
             default:
                 return null;
         }
@@ -2516,6 +2521,13 @@ public final class Utils implements Constants {
         final NetworkInfo networkInfo = conn.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI
                 && networkInfo.isConnected();
+    }
+
+    public static int getActiveNetworkType(final Context context) {
+        if (context == null) return -1;
+        final ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = conn.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected() ? networkInfo.getType() : -1;
     }
 
     public static boolean isRedirected(final int code) {

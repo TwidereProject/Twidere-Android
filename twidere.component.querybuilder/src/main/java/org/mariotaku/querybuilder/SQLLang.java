@@ -34,5 +34,5 @@ public interface SQLLang extends Cloneable {
      *
      * @return SQL query
      */
-    public String getSQL();
+    String getSQL();
 }

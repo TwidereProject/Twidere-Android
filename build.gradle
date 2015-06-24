@@ -9,7 +9,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.9'
         classpath 'com.android.tools.build:gradle:1.2.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-        classpath('fr.avianey.androidsvgdrawable:gradle-plugin:1.0.1') {
+        classpath('fr.avianey.androidsvgdrawable:gradle-plugin:1.0.2') {
             // should be excluded to avoid conflict
             exclude group: 'xerces'
         }

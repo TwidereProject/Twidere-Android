@@ -61,8 +61,14 @@ import com.squareup.otto.Bus;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.querybuilder.Columns.Column;
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.querybuilder.OnConflict;
 import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.querybuilder.RawSQLLang;
+import org.mariotaku.querybuilder.SQLQueryBuilder;
+import org.mariotaku.querybuilder.SetValue;
+import org.mariotaku.querybuilder.query.SQLInsertQuery;
 import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.querybuilder.query.SQLUpdateQuery;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -78,6 +84,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -160,6 +167,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
                 case TABLE_ID_DIRECT_MESSAGES:
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
+                case TABLE_ID_NETWORK_USAGES:
                     return 0;
             }
             int result = 0;
@@ -300,6 +308,35 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                             SQLiteDatabase.CONFLICT_IGNORE);
                 }
+            } else if (tableId == TABLE_ID_NETWORK_USAGES) {
+                rowId = 0;
+                final long timeInHours = values.getAsLong(NetworkUsages.TIME_IN_HOURS);
+                final String requestNetwork = values.getAsString(NetworkUsages.REQUEST_NETWORK);
+                final String requestType = values.getAsString(NetworkUsages.REQUEST_TYPE);
+                final SQLInsertQuery insertOrIgnore = SQLQueryBuilder.insertInto(OnConflict.IGNORE, table)
+                        .columns(new String[]{NetworkUsages.TIME_IN_HOURS, NetworkUsages.REQUEST_NETWORK, NetworkUsages.REQUEST_TYPE,
+                                NetworkUsages.KILOBYTES_RECEIVED, NetworkUsages.KILOBYTES_SENT})
+                        .values("?, ?, ?, ?, ?")
+                        .build();
+                final SQLUpdateQuery updateIncremental = SQLQueryBuilder.update(OnConflict.REPLACE, table)
+                        .set(
+                                new SetValue(NetworkUsages.KILOBYTES_RECEIVED, new RawSQLLang(NetworkUsages.KILOBYTES_RECEIVED + " + ?")),
+                                new SetValue(NetworkUsages.KILOBYTES_SENT, new RawSQLLang(NetworkUsages.KILOBYTES_SENT + " + ?"))
+                        )
+                        .where(Expression.and(
+                                Expression.equals(NetworkUsages.TIME_IN_HOURS, timeInHours),
+                                Expression.equalsArgs(NetworkUsages.REQUEST_NETWORK),
+                                Expression.equalsArgs(NetworkUsages.REQUEST_TYPE)
+                        ))
+                        .build();
+                mDatabaseWrapper.beginTransaction();
+                mDatabaseWrapper.execSQL(insertOrIgnore.getSQL(),
+                        new Object[]{timeInHours, requestNetwork, requestType, 0.0, 0.0});
+                mDatabaseWrapper.execSQL(updateIncremental.getSQL(),
+                        new Object[]{values.getAsDouble(NetworkUsages.KILOBYTES_RECEIVED),
+                                values.getAsDouble(NetworkUsages.KILOBYTES_SENT), requestNetwork, requestType});
+                mDatabaseWrapper.setTransactionSuccessful();
+                mDatabaseWrapper.endTransaction();
             } else if (shouldReplaceOnConflict(tableId)) {
                 rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_REPLACE);
@@ -508,6 +545,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
                     case TABLE_ID_DIRECT_MESSAGES:
                     case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
+                    case TABLE_ID_NETWORK_USAGES:
                         return 0;
                 }
                 result = mDatabaseWrapper.update(table, values, selection, selectionArgs);
@@ -578,6 +616,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ");
                 break;
             }
+            default: {
+                if (!mPermissionsManager.checkSignature(Binder.getCallingUid())) {
+                    throw new SecurityException("Internal database is not allowed for third-party applications");
+                }
+            }
         }
     }
 
@@ -617,6 +660,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 if (!checkPermission(PERMISSION_WRITE))
                     throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_WRITE");
                 break;
+            }
+            default: {
+                if (!mPermissionsManager.checkSignature(Binder.getCallingUid())) {
+                    throw new SecurityException("Internal database is not allowed for third-party applications");
+                }
             }
         }
     }

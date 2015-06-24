@@ -85,7 +85,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:minHeight="48dp"
-                        android:onClick="onClick"
                         android:text="@string/register"/>
 
                     <Button
