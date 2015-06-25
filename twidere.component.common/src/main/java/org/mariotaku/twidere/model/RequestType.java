@@ -23,15 +23,29 @@ package org.mariotaku.twidere.model;
  * Created by mariotaku on 15/6/24.
  */
 public enum RequestType {
-    API("api"), MEDIA("media"), USAGE_STATISTICS("usage_statistics");
+    OTHER("other", 0), API("api", 1), MEDIA("media", 2), USAGE_STATISTICS("usage_statistics", 3);
+
+    private final int value;
+
+    private final String name;
 
     public String getName() {
         return name;
     }
 
-    private final String name;
+    public int getValue() {
+        return value;
+    }
 
-    RequestType(String name) {
+    RequestType(String name, int value) {
         this.name = name;
+        this.value = value;
+    }
+
+    public static int getValue(String name) {
+        if ("api".equalsIgnoreCase(name)) return API.getValue();
+        else if ("media".equalsIgnoreCase(name)) return MEDIA.getValue();
+        else if ("usage_statistics".equalsIgnoreCase(name)) return USAGE_STATISTICS.getValue();
+        return OTHER.getValue();
     }
 }

@@ -3823,7 +3823,7 @@ public final class Utils implements Constants {
         final SpannableStringBuilder text = SpannableStringBuilder.valueOf(textView.getText());
         final URLSpan[] spans = text.getSpans(0, text.length(), URLSpan.class);
         URLSpan found = null;
-        String findPattern = "twitter.com/" + status.quoted_by_user_screen_name + "/status/" + status.quote_id;
+        String findPattern = "twitter.com/" + status.user_screen_name + "/status/" + status.quote_id;
         for (URLSpan span : spans) {
             if (span.getURL().contains(findPattern)) {
                 found = span;
@@ -3920,4 +3920,17 @@ public final class Utils implements Constants {
         return location;
     }
 
+    public static final String[] fileSizeUnits = {"bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+
+    public static String calculateProperSize(double bytes) {
+        double value = bytes;
+        int index;
+        for (index = 0; index < fileSizeUnits.length; index++) {
+            if (value < 1024) {
+                break;
+            }
+            value = value / 1024;
+        }
+        return String.format("%.2f %s", value, fileSizeUnits[index]);
+    }
 }

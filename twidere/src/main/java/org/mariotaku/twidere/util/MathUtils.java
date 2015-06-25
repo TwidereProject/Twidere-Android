@@ -46,10 +46,18 @@ public class MathUtils {
     }
 
     // Returns the previous power of two.
-	// Returns the input if it is already power of 2.
-	// Throws IllegalArgumentException if the input is <= 0
-	public static int prevPowerOf2(final int n) {
-		if (n <= 0) throw new IllegalArgumentException();
-		return Integer.highestOneBit(n);
-	}
+    // Returns the input if it is already power of 2.
+    // Throws IllegalArgumentException if the input is <= 0
+    public static int prevPowerOf2(final int n) {
+        if (n <= 0) throw new IllegalArgumentException();
+        return Integer.highestOneBit(n);
+    }
+
+    public static double sum(double... doubles) {
+        double sum = 0;
+        for (double d : doubles) {
+            sum += d;
+        }
+        return sum;
+    }
 }
