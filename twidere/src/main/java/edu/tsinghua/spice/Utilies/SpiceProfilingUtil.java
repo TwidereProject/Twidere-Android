@@ -31,6 +31,7 @@ public class SpiceProfilingUtil {
     public static final String FILE_NAME_ONWIFI = "onWifi_SPICE";
     public static final String FILE_NAME_ONLAUNCH = "onLaunch_SPICE";
     public static final String FILE_NAME_SCREEN = "Screen_SPICE";
+    public static final String FILE_NAME_IP = "IP_SPICE";
 
     @SuppressLint("InlinedApi")
     public static boolean isCharging(final Context context) {
