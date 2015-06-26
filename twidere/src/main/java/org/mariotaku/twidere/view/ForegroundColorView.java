@@ -75,7 +75,10 @@ public class ForegroundColorView extends View implements IForegroundView {
 
     @Override
     public Drawable getForeground() {
-        return mForegroundViewHelper.getForeground();
+        if (mForegroundViewHelper != null) {
+            return mForegroundViewHelper.getForeground();
+        }
+        return null;
     }
 
     /**
@@ -89,7 +92,9 @@ public class ForegroundColorView extends View implements IForegroundView {
      */
     @Override
     public void setForeground(final Drawable drawable) {
-        mForegroundViewHelper.setForeground(drawable);
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.setForeground(drawable);
+        }
     }
 
     /**
@@ -100,7 +105,9 @@ public class ForegroundColorView extends View implements IForegroundView {
      */
     @Override
     public void setForegroundGravity(final int foregroundGravity) {
-        mForegroundViewHelper.setForegroundGravity(foregroundGravity);
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.setForegroundGravity(foregroundGravity);
+        }
     }
 
     public void setAlphaPatternEnable(final boolean alphaPattern) {
@@ -112,7 +119,9 @@ public class ForegroundColorView extends View implements IForegroundView {
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mForegroundViewHelper.dispatchOnSizeChanged(w, h, oldw, oldh);
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.dispatchOnSizeChanged(w, h, oldw, oldh);
+        }
         mColorRect.set(getPaddingLeft(), getPaddingTop(), w - getPaddingRight(), h - getPaddingBottom());
         mNumRectanglesHorizontal = (int) Math.ceil(w / mAlphaPatternSize);
         mNumRectanglesVertical = (int) Math.ceil(h / mAlphaPatternSize);
@@ -122,37 +131,47 @@ public class ForegroundColorView extends View implements IForegroundView {
     protected void onDraw(final Canvas canvas) {
         drawAlphaPattern(canvas);
         canvas.drawRect(mColorRect, mPaint);
-        mForegroundViewHelper.dispatchOnDraw(canvas);
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.dispatchOnDraw(canvas);
+        }
     }
 
     @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right, final int bottom) {
-        mForegroundViewHelper.dispatchOnLayout(changed, left, top, right, bottom);
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.dispatchOnLayout(changed, left, top, right, bottom);
+        }
         super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
     protected boolean verifyDrawable(final Drawable who) {
-        return super.verifyDrawable(who) || mForegroundViewHelper.verifyDrawable(who);
+        return super.verifyDrawable(who) || (mForegroundViewHelper != null && mForegroundViewHelper.verifyDrawable(who));
     }
 
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        mForegroundViewHelper.drawableStateChanged();
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.drawableStateChanged();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void drawableHotspotChanged(float x, float y) {
         super.drawableHotspotChanged(x, y);
-        mForegroundViewHelper.dispatchDrawableHotspotChanged(x, y);
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.dispatchDrawableHotspotChanged(x, y);
+        }
     }
 
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
-        mForegroundViewHelper.jumpDrawablesToCurrentState();
+        if (mForegroundViewHelper != null) {
+            mForegroundViewHelper.jumpDrawablesToCurrentState();
+        }
     }
 
     private void drawAlphaPattern(final Canvas canvas) {
