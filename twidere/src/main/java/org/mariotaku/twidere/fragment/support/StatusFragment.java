@@ -55,8 +55,6 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.LinkMovementMethod;
@@ -836,6 +834,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public void onClick(View v) {
             final ParcelableStatus status = adapter.getStatus(getLayoutPosition());
             final StatusFragment fragment = adapter.getFragment();
+            if (status == null || fragment == null) return;
             switch (v.getId()) {
                 case R.id.media_preview_load: {
                     if (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive) {
