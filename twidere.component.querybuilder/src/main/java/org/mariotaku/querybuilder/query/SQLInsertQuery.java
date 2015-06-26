@@ -28,10 +28,7 @@ public class SQLInsertQuery implements SQLQuery {
         sb.append("INTO ");
         sb.append(table);
         sb.append(" (");
-        sb.append(Utils.toString(columns, ',', false));
-        sb.append(") ");
-        sb.append("VALUES (");
-        sb.append(values);
+        sb.append(Utils.toString(columns, ',', true));
         sb.append(") ");
         return sb.toString();
     }
@@ -49,7 +46,7 @@ public class SQLInsertQuery implements SQLQuery {
     }
 
     void setValues(final String... values) {
-        this.values = Utils.toString(values, ',', false);
+        this.values = "VALUES (" + Utils.toString(values, ',', true) + ")";
     }
 
     void setTable(final String table) {

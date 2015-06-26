@@ -18,7 +18,7 @@ public class RawItemArray implements Selectable {
 
     @Override
     public String getSQL() {
-        return Utils.toString(array, ',', false);
+        return Utils.toString(array, ',', true);
     }
 
 }

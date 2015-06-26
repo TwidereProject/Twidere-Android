@@ -7,8 +7,6 @@ import org.mariotaku.querybuilder.SetValue;
 import org.mariotaku.querybuilder.Table;
 import org.mariotaku.querybuilder.Utils;
 
-import java.util.Locale;
-
 public class SQLUpdateQuery implements SQLQuery {
 
     private OnConflict onConflict;
@@ -26,12 +24,16 @@ public class SQLUpdateQuery implements SQLQuery {
         final StringBuilder sb = new StringBuilder();
         sb.append("UPDATE ");
         if (onConflict != null) {
-            sb.append(String.format(Locale.ROOT, "OR %s ", onConflict.getAction()));
+            sb.append("OR ");
+            sb.append(onConflict.getAction());
+            sb.append(" ");
         }
-        sb.append(String.format(Locale.ROOT, "%s ", table.getSQL()));
-        sb.append(String.format(Locale.ROOT, "SET %s ", Utils.toString(values, ',', false)));
+        sb.append(table.getSQL());
+        sb.append(" SET ");
+        sb.append(Utils.toString(values, ',', true));
         if (where != null) {
-            sb.append(String.format(Locale.ROOT, "WHERE %s ", where.getSQL()));
+            sb.append(" WHERE ");
+            sb.append(where.getSQL());
         }
         return sb.toString();
     }
