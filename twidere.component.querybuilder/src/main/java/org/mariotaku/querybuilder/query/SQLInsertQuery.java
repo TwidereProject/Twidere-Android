@@ -30,6 +30,7 @@ public class SQLInsertQuery implements SQLQuery {
         sb.append(" (");
         sb.append(Utils.toString(columns, ',', true));
         sb.append(") ");
+        sb.append(values);
         return sb.toString();
     }
 
