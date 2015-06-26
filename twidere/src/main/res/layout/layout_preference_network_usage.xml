@@ -22,19 +22,85 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/element_spacing_normal">
+
 
     <TextView
         android:id="@+id/total_usage"
+        android:layout_marginTop="@dimen/element_spacing_large"
+        android:layout_marginBottom="@dimen/element_spacing_large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="?android:textColorPrimary"
         tools:text="124.50mb" />
 
-    <com.db.chart.view.StackBarChartView
-        android:id="@+id/chart"
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@+id/total_usage"
-        app:chart_barSpacing="2dp" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/total_usage">
+
+
+        <TextView
+            android:id="@+id/day_usage_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="?android:textColorSecondary"
+            tools:text="10mb" />
+
+        <com.db.chart.view.StackBarChartView
+            android:id="@+id/chart"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_column="1"
+            android:layout_gravity="fill"
+            android:layout_row="0"
+            app:chart_barSpacing="2dp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="fill"
+            android:layout_row="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/day_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorSecondary"
+                tools:ignore="RtlHardcoded"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/day_mid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorSecondary"
+                tools:text="15" />
+
+            <TextView
+                android:id="@+id/day_max"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorSecondary"
+                tools:ignore="RtlHardcoded"
+                tools:text="30" />
+        </LinearLayout>
+    </GridLayout>
 </RelativeLayout>

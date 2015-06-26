@@ -28,8 +28,7 @@ import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartSet;
 
 import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.twidere.preference.NetworkUsageSummaryPreferences;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.util.MathUtils;
 
 import java.util.ArrayList;
@@ -40,33 +39,39 @@ import java.util.concurrent.TimeUnit;
  * Created by mariotaku on 15/6/25.
  */
 public class NetworkUsageInfo {
-    private final double totalSent;
-    private final double totalReceived;
-    private final ArrayList<ChartSet> chartData;
-    private final double dayMax;
+    private final double[][] chartUsage;
+    private final double totalSent, totalReceived;
+    private final double[] usageTotal;
+    private final double dayUsageMax;
+    private final int dayMin;
+    private final int dayMax;
 
-    public NetworkUsageInfo(ArrayList<ChartSet> chartData, double totalReceived, double totalSent, double dayMax) {
-        this.chartData = chartData;
+    public NetworkUsageInfo(double[][] chartUsage, double[] usageTotal, double totalReceived, double totalSent, double dayUsageMax, int dayMin, int dayMax) {
+        this.chartUsage = chartUsage;
+        this.usageTotal = usageTotal;
         this.totalReceived = totalReceived;
         this.totalSent = totalSent;
+        this.dayUsageMax = dayUsageMax;
+        this.dayMin = dayMin;
         this.dayMax = dayMax;
     }
 
-    public static NetworkUsageInfo get(Context context, Date start, Date end) {
+    public static NetworkUsageInfo get(Context context, Date start, Date end, int dayMin, int dayMax) {
         final ContentResolver cr = context.getContentResolver();
         final long startTime = TimeUnit.HOURS.convert(start.getTime(), TimeUnit.MILLISECONDS);
         final long endTime = TimeUnit.HOURS.convert(end.getTime(), TimeUnit.MILLISECONDS);
-        final Expression where = Expression.and(Expression.greaterEquals(TwidereDataStore.NetworkUsages.TIME_IN_HOURS, startTime),
-                Expression.lesserThan(TwidereDataStore.NetworkUsages.TIME_IN_HOURS, endTime));
+        final Expression where = Expression.and(Expression.greaterEquals(NetworkUsages.TIME_IN_HOURS, startTime),
+                Expression.lesserThan(NetworkUsages.TIME_IN_HOURS, endTime));
         final int days = (int) TimeUnit.DAYS.convert(endTime - startTime, TimeUnit.HOURS);
-        final Cursor c = cr.query(TwidereDataStore.NetworkUsages.CONTENT_URI, TwidereDataStore.NetworkUsages.COLUMNS,
-                where.getSQL(), null, TwidereDataStore.NetworkUsages.TIME_IN_HOURS);
-        final int idxDate = c.getColumnIndex(TwidereDataStore.NetworkUsages.TIME_IN_HOURS);
-        final int idxSent = c.getColumnIndex(TwidereDataStore.NetworkUsages.KILOBYTES_SENT);
-        final int idxReceived = c.getColumnIndex(TwidereDataStore.NetworkUsages.KILOBYTES_RECEIVED);
-        final int idxType = c.getColumnIndex(TwidereDataStore.NetworkUsages.REQUEST_TYPE);
-        final double[][] usageArray = new double[days][RequestType.values().length];
+        final Cursor c = cr.query(NetworkUsages.CONTENT_URI, NetworkUsages.COLUMNS,
+                where.getSQL(), null, NetworkUsages.TIME_IN_HOURS);
+        final int idxDate = c.getColumnIndex(NetworkUsages.TIME_IN_HOURS);
+        final int idxSent = c.getColumnIndex(NetworkUsages.KILOBYTES_SENT);
+        final int idxReceived = c.getColumnIndex(NetworkUsages.KILOBYTES_RECEIVED);
+        final int idxType = c.getColumnIndex(NetworkUsages.REQUEST_TYPE);
+        final double[][] chartUsage = new double[days][RequestType.values().length];
         double totalReceived = 0, totalSent = 0;
+        final double[] usageTotal = new double[RequestType.values().length];
         c.moveToFirst();
         while (!c.isAfterLast()) {
             final long hours = c.getLong(idxDate);
@@ -74,9 +79,12 @@ public class NetworkUsageInfo {
             final double sent = c.getDouble(idxSent);
             final double received = c.getDouble(idxReceived);
             final String type = c.getString(idxType);
-            usageArray[idx][RequestType.getValue(type)] += (sent + received);
+            final double hourTypeTotal = sent + received;
+            final int typeIdx = RequestType.getValue(type);
+            chartUsage[idx][typeIdx] += hourTypeTotal;
             totalReceived += received;
             totalSent += sent;
+            usageTotal[typeIdx] += hourTypeTotal;
             c.moveToNext();
         }
         c.close();
@@ -85,14 +93,14 @@ public class NetworkUsageInfo {
         final BarSet mediaSet = new BarSet();
         final BarSet usageStatisticsSet = new BarSet();
 
-        double dayMax = 0;
+        double dayUsageMax = 0;
         for (int i = 0; i < days; i++) {
             String day = String.valueOf(i + 1);
-            final double[] dayUsage = usageArray[i];
+            final double[] dayUsage = chartUsage[i];
             apiSet.addBar(day, (float) dayUsage[RequestType.API.getValue()]);
             mediaSet.addBar(day, (float) dayUsage[RequestType.MEDIA.getValue()]);
             usageStatisticsSet.addBar(day, (float) dayUsage[RequestType.USAGE_STATISTICS.getValue()]);
-            dayMax = Math.max(dayMax, MathUtils.sum(dayUsage));
+            dayUsageMax = Math.max(dayUsageMax, MathUtils.sum(dayUsage));
         }
 
         apiSet.setColor(Color.RED);
@@ -103,22 +111,34 @@ public class NetworkUsageInfo {
         data.add(apiSet);
         data.add(mediaSet);
         data.add(usageStatisticsSet);
-        return new NetworkUsageInfo(data, totalReceived, totalSent, dayMax);
+        return new NetworkUsageInfo(chartUsage, usageTotal, totalReceived, totalSent, dayUsageMax, dayMin, dayMax);
     }
 
-    public double getDayMax() {
+    public int getDayMax() {
         return dayMax;
+    }
+
+    public int getDayMin() {
+        return dayMin;
+    }
+
+    public double getDayUsageMax() {
+        return dayUsageMax;
     }
 
     public double getTotalSent() {
         return totalSent;
     }
 
+    public double[] getUsageTotal() {
+        return usageTotal;
+    }
+
     public double getTotalReceived() {
         return totalReceived;
     }
 
-    public ArrayList<ChartSet> getChartData() {
-        return chartData;
+    public double[][] getChartUsage() {
+        return chartUsage;
     }
 }

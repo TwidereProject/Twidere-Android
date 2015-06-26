@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,8 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -39,15 +37,19 @@
                 android:id="@+id/profile_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <FrameLayout
                 android:id="@+id/profile_birthday_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/profile_banner"
-                android:layout_alignTop="@+id/profile_banner">
+                android:layout_alignTop="@+id/profile_banner"
+                android:visibility="gone">
 
+                <org.mariotaku.twidere.view.BirthdayView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </FrameLayout>
         </RelativeLayout>
 
@@ -56,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:hdl_contentLayout="@layout/fragment_content_pages"
-            app:hdl_headerLayout="@layout/header_user"/>
+            app:hdl_headerLayout="@layout/header_user" />
     </org.mariotaku.twidere.view.ExtendedFrameLayout>
 
 </FrameLayout>
