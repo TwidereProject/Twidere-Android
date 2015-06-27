@@ -45,6 +45,14 @@
     </header>
     <header
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
+        android:icon="@drawable/ic_action_server"
+        android:title="@string/network">
+        <extra
+            android:name="resid"
+            android:value="@xml/preferences_network" />
+    </header>
+    <header
+        android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:icon="@drawable/ic_action_status_compose"
         android:title="@string/compose">
         <extra
@@ -66,14 +74,6 @@
         <extra
             android:name="resid"
             android:value="@xml/preferences_storage" />
-    </header>
-    <header
-        android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
-        android:icon="@drawable/ic_action_server"
-        android:title="@string/network">
-        <extra
-            android:name="resid"
-            android:value="@xml/preferences_network" />
     </header>
     <header
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"

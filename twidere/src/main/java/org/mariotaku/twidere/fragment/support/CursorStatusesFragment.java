@@ -181,6 +181,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     }
 
     protected void reloadStatuses() {
+        if (getActivity() == null || isDetached()) return;
         final Bundle args = new Bundle(), fragmentArgs = getArguments();
         if (fragmentArgs != null) {
             args.putAll(fragmentArgs);

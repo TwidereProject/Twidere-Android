@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.db.chart.model.BarSet;
-import com.db.chart.model.ChartSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.StackBarChartView;
 import com.desmond.asyncmanager.AsyncManager;
@@ -42,7 +41,6 @@ import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.Utils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -51,9 +49,8 @@ import java.util.Date;
  */
 public class NetworkUsageSummaryPreferences extends Preference {
 
-    private StackBarChartView mChartView;
     private NetworkUsageInfo mUsage;
-    private TextView mTotalUsage;
+    private TextView mTotalUsage, mTotalUsageSent, mTotalUsageReceived;
     private TextView mDayUsageMax;
     private TextView mDayMin, mDayMid, mDayMax;
 
@@ -74,17 +71,14 @@ public class NetworkUsageSummaryPreferences extends Preference {
     @Override
     protected View onCreateView(ViewGroup parent) {
         final View view = super.onCreateView(parent);
-        mChartView = (StackBarChartView) view.findViewById(R.id.chart);
         mTotalUsage = (TextView) view.findViewById(R.id.total_usage);
+        mTotalUsageSent = (TextView) view.findViewById(R.id.total_usage_sent);
+        mTotalUsageReceived = (TextView) view.findViewById(R.id.total_usage_received);
         mDayUsageMax = (TextView) view.findViewById(R.id.day_usage_max);
         mDayMin = (TextView) view.findViewById(R.id.day_min);
         mDayMid = (TextView) view.findViewById(R.id.day_mid);
         mDayMax = (TextView) view.findViewById(R.id.day_max);
 
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(0x20000000);
-        mChartView.setYLabels(AxisController.LabelPosition.NONE);
-        mChartView.setXLabels(AxisController.LabelPosition.NONE);
         return view;
     }
 
@@ -150,13 +144,9 @@ public class NetworkUsageSummaryPreferences extends Preference {
         mediaSet.setColor(Color.GREEN);
         usageStatisticsSet.setColor(Color.BLUE);
 
-        final ArrayList<ChartSet> data = new ArrayList<>();
-        data.add(apiSet);
-        data.add(mediaSet);
-        data.add(usageStatisticsSet);
-        mChartView.addData(data);
-        mChartView.show();
         mTotalUsage.setText(Utils.calculateProperSize((usage.getTotalSent() + usage.getTotalReceived()) * 1024));
+        mTotalUsageSent.setText(Utils.calculateProperSize(usage.getTotalSent() * 1024));
+        mTotalUsageReceived.setText(Utils.calculateProperSize(usage.getTotalReceived() * 1024));
         mDayUsageMax.setText(Utils.calculateProperSize((usage.getDayUsageMax()) * 1024));
         mDayMin.setText(String.valueOf(usage.getDayMin()));
         mDayMid.setText(String.valueOf((usage.getDayMin() + usage.getDayMax()) / 2));

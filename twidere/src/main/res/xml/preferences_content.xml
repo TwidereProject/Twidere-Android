@@ -4,27 +4,6 @@
     android:key="settings_content"
     android:title="@string/content_and_storage">
 
-    <!--<org.mariotaku.twidere.preference.NetworkUsageSummaryPreferences-->
-        <!--android:key="network_usage_summary"/>-->
-
-    <PreferenceCategory
-        android:key="category_multimedia_contents"
-        android:title="@string/multimedia_contents">
-        <org.mariotaku.twidere.preference.MediaUploaderPreference
-            android:defaultValue=""
-            android:key="media_uploader"
-            android:summary="%s"
-            android:title="@string/image_uploader" />
-
-        <org.mariotaku.twidere.preference.ImagePreloadPreference
-            android:key="image_preload_options"
-            android:title="@string/image_preload_options" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="preload_wifi_only"
-            android:title="@string/preload_wifi_only" />
-    </PreferenceCategory>
     <PreferenceCategory
         android:key="category_content"
         android:title="@string/content">
@@ -37,12 +16,6 @@
             app:max="200"
             app:min="10"
             app:step="5" />
-
-        <org.mariotaku.twidere.preference.TimelineSyncPreference
-            android:defaultValue=""
-            android:key="timeline_sync_service"
-            android:summary="%s"
-            android:title="@string/timeline_sync_service" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -72,6 +45,19 @@
             android:fragment="org.mariotaku.twidere.fragment.KeyboardShortcutsFragment"
             android:title="@string/keyboard_shortcuts" />
     </PreferenceCategory>
+
+    <org.mariotaku.twidere.preference.MediaUploaderPreference
+        android:defaultValue=""
+        android:key="media_uploader"
+        android:summary="%s"
+        android:title="@string/image_uploader" />
+
+    <org.mariotaku.twidere.preference.TimelineSyncPreference
+        android:defaultValue=""
+        android:key="timeline_sync_service"
+        android:summary="%s"
+        android:title="@string/timeline_sync_service" />
+
     <PreferenceCategory
         android:key="category_safety"
         android:title="@string/safety">

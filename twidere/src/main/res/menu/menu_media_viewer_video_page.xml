@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -19,20 +18,19 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@id/refresh"
         android:icon="@drawable/ic_action_refresh"
-        app:showAsAction="ifRoom"
-        android:title="@string/refresh"/>
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@id/share"
         android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        android:title="@string/share"/>
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@id/save"
         android:icon="@drawable/ic_action_save"
-        android:title="@string/save_to_gallery"/>
+        android:title="@string/save_to_gallery" />
 </menu>

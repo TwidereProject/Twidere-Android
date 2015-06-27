@@ -26,20 +26,79 @@
     android:padding="@dimen/element_spacing_normal">
 
 
-    <TextView
-        android:id="@+id/total_usage"
-        android:layout_marginTop="@dimen/element_spacing_large"
-        android:layout_marginBottom="@dimen/element_spacing_large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceLarge"
-        android:textColor="?android:textColorPrimary"
-        tools:text="124.50mb" />
-
-    <GridLayout
+    <LinearLayout
+        android:id="@+id/total_usage_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/total_usage">
+        android:layout_margin="@dimen/element_spacing_large"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/total_usage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="?android:textColorPrimary"
+                tools:text="124.50mb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/this_month" />
+        </LinearLayout>
+
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/total_usage_sent"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="?android:textColorPrimary"
+                tools:text="24.50mb" />
+
+            <TextView
+                android:layout_column="1"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_marginStart="@dimen/element_spacing_normal"
+                android:layout_row="0"
+                android:text="@string/usage_label_sent" />
+
+            <TextView
+                android:id="@+id/total_usage_received"
+                android:layout_column="0"
+                android:layout_row="1"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="?android:textColorPrimary"
+                tools:text="100mb" />
+
+            <TextView
+                android:layout_column="1"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_marginStart="@dimen/element_spacing_normal"
+                android:layout_row="1"
+                android:text="@string/usage_label_received" />
+        </GridLayout>
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/usage_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/total_usage_container"
+        android:visibility="gone">
 
 
         <TextView
