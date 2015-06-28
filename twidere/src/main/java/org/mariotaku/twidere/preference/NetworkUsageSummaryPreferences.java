@@ -21,7 +21,7 @@ package org.mariotaku.twidere.preference;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.net.ConnectivityManager;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -30,8 +30,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.db.chart.model.BarSet;
-import com.db.chart.view.AxisController;
-import com.db.chart.view.StackBarChartView;
 import com.desmond.asyncmanager.AsyncManager;
 import com.desmond.asyncmanager.TaskRunnable;
 
@@ -100,7 +98,8 @@ public class NetworkUsageSummaryPreferences extends Preference {
         task = new TaskRunnable<Object[], NetworkUsageInfo, NetworkUsageSummaryPreferences>() {
             @Override
             public NetworkUsageInfo doLongOperation(Object[] params) throws InterruptedException {
-                return NetworkUsageInfo.get((Context) params[0], (Date) params[1], (Date) params[2], dayMin, dayMax);
+                final int[] network = {ConnectivityManager.TYPE_MOBILE};
+                return NetworkUsageInfo.get((Context) params[0], (Date) params[1], (Date) params[2], dayMin, dayMax, network);
             }
 
             @Override

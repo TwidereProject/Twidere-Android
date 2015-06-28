@@ -230,7 +230,7 @@
     <style name="Theme.Twidere.Viewer" parent="Theme.AppCompat">
 
         <!-- Window attributes -->
-        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowBackground">@color/background_color_window_viewer</item>
         <!--<item name="android:windowIsTranslucent">true</item>-->
         <!--<item name="android:colorBackgroundCacheHint">@null</item>-->
         <item name="windowActionBarOverlay">true</item>

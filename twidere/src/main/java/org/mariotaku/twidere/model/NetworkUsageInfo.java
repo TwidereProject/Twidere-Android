@@ -22,16 +22,13 @@ package org.mariotaku.twidere.model;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 
-import com.db.chart.model.BarSet;
-import com.db.chart.model.ChartSet;
-
+import org.mariotaku.querybuilder.Columns;
 import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.querybuilder.RawItemArray;
 import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.util.MathUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -56,12 +53,13 @@ public class NetworkUsageInfo {
         this.dayMax = dayMax;
     }
 
-    public static NetworkUsageInfo get(Context context, Date start, Date end, int dayMin, int dayMax) {
+    public static NetworkUsageInfo get(Context context, Date start, Date end, int dayMin, int dayMax, int[] networks) {
         final ContentResolver cr = context.getContentResolver();
         final long startTime = TimeUnit.HOURS.convert(start.getTime(), TimeUnit.MILLISECONDS);
         final long endTime = TimeUnit.HOURS.convert(end.getTime(), TimeUnit.MILLISECONDS);
         final Expression where = Expression.and(Expression.greaterEquals(NetworkUsages.TIME_IN_HOURS, startTime),
-                Expression.lesserThan(NetworkUsages.TIME_IN_HOURS, endTime));
+                Expression.lesserThan(NetworkUsages.TIME_IN_HOURS, endTime),
+                Expression.in(new Columns.Column(NetworkUsages.REQUEST_NETWORK), new RawItemArray(networks)));
         final int days = (int) TimeUnit.DAYS.convert(endTime - startTime, TimeUnit.HOURS);
         final Cursor c = cr.query(NetworkUsages.CONTENT_URI, NetworkUsages.COLUMNS,
                 where.getSQL(), null, NetworkUsages.TIME_IN_HOURS);
@@ -89,28 +87,12 @@ public class NetworkUsageInfo {
         }
         c.close();
 
-        final BarSet apiSet = new BarSet();
-        final BarSet mediaSet = new BarSet();
-        final BarSet usageStatisticsSet = new BarSet();
-
         double dayUsageMax = 0;
         for (int i = 0; i < days; i++) {
-            String day = String.valueOf(i + 1);
             final double[] dayUsage = chartUsage[i];
-            apiSet.addBar(day, (float) dayUsage[RequestType.API.getValue()]);
-            mediaSet.addBar(day, (float) dayUsage[RequestType.MEDIA.getValue()]);
-            usageStatisticsSet.addBar(day, (float) dayUsage[RequestType.USAGE_STATISTICS.getValue()]);
             dayUsageMax = Math.max(dayUsageMax, MathUtils.sum(dayUsage));
         }
 
-        apiSet.setColor(Color.RED);
-        mediaSet.setColor(Color.GREEN);
-        usageStatisticsSet.setColor(Color.BLUE);
-
-        final ArrayList<ChartSet> data = new ArrayList<>();
-        data.add(apiSet);
-        data.add(mediaSet);
-        data.add(usageStatisticsSet);
         return new NetworkUsageInfo(chartUsage, usageTotal, totalReceived, totalSent, dayUsageMax, dayMin, dayMax);
     }
 

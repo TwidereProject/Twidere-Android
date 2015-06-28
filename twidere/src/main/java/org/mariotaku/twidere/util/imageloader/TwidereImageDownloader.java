@@ -53,6 +53,7 @@ import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.FileNotFoundException;
@@ -67,6 +68,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     private final Context mContext;
     private final SharedPreferencesWrapper mPreferences;
     private final boolean mUseThumbor;
+    private final String mUserAgent;
     private Thumbor mThumbor;
     private RestHttpClient mClient;
     private final boolean mFullImage;
@@ -80,6 +82,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         mFullImage = fullImage;
         mTwitterProfileImageSize = context.getString(R.string.profile_image_size);
         mUseThumbor = useThumbor;
+        mUserAgent = UserAgentUtils.getDefaultUserAgentString(context);
         reloadConnectivitySettings();
 
     }
@@ -163,6 +166,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             additionalHeaders.add(Pair.create("Accept", "image/webp, */*"));
         }
+        additionalHeaders.add(Pair.create("User-Agent", mUserAgent));
         final String method = GET.METHOD;
         final String requestUri;
         if (auth != null && auth.hasAuthorization()) {

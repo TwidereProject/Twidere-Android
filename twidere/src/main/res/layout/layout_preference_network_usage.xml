@@ -26,10 +26,17 @@
     android:padding="@dimen/element_spacing_normal">
 
 
+    <TextView
+        android:id="@+id/mobile_network_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/on_mobile_network" />
+
     <LinearLayout
         android:id="@+id/total_usage_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/mobile_network_label"
         android:layout_margin="@dimen/element_spacing_large"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -99,7 +106,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/total_usage_container"
         android:visibility="gone">
-
 
         <TextView
             android:id="@+id/day_usage_max"

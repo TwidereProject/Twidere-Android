@@ -16,6 +16,14 @@ public class RawItemArray implements Selectable {
         this.array = array;
     }
 
+    public RawItemArray(final int[] array) {
+        final Integer[] converted = new Integer[array.length];
+        for (int i = 0, j = array.length; i < j; i++) {
+            converted[i] = array[i];
+        }
+        this.array = converted;
+    }
+
     @Override
     public String getSQL() {
         return Utils.toString(array, ',', true);

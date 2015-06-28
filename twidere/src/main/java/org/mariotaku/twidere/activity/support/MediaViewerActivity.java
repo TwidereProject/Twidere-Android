@@ -85,6 +85,7 @@ import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifSupportChecker;
 import pl.droidsonroids.gif.GifTextureView;
@@ -863,7 +864,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 final int position = mMediaPlayerControl.getCurrentPosition();
                 if (duration <= 0 || position < 0) return;
                 mProgressBar.setProgress(Math.round(1000 * position / (float) duration));
-                final int durationSecs = duration / 1000, positionSecs = position / 1000;
+                final long durationSecs = TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS),
+                        positionSecs = TimeUnit.SECONDS.convert(position, TimeUnit.MILLISECONDS);
                 mDurationLabel.setText(String.format("%02d:%02d", durationSecs / 60, durationSecs % 60));
                 mPositionLabel.setText(String.format("%02d:%02d", positionSecs / 60, positionSecs % 60));
                 mHandler.postDelayed(this, 16);

@@ -768,4 +768,5 @@
     <string name="usage_label_received">Received</string>
     <string name="this_month">This month</string>
     <string name="media_preload">Media preload</string>
+    <string name="on_mobile_network">On mobile network</string>
 </resources>

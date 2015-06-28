@@ -59,6 +59,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
 import static android.text.TextUtils.isEmpty;
 
 /**
@@ -111,10 +114,14 @@ public class TwitterAPIFactory implements TwidereConstants {
 
         final OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(connectionTimeout, TimeUnit.SECONDS);
+        final long connectionTimeoutMillis = TimeUnit.MILLISECONDS.convert(connectionTimeout, TimeUnit.SECONDS);
+        final SSLSocketFactory sslSocketFactory;
         if (ignoreSslError) {
-            client.setSslSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
-        } else {
-            client.setSslSocketFactory(SSLCertificateSocketFactory.getDefault(0, null));
+            sslSocketFactory = SSLCertificateSocketFactory.getInsecure((int) connectionTimeoutMillis, null);
+            if (sslSocketFactory instanceof SSLCertificateSocketFactory) {
+
+            }
+            client.setSslSocketFactory(sslSocketFactory);
         }
         if (enableProxy) {
             client.setProxy(getProxy(prefs));
