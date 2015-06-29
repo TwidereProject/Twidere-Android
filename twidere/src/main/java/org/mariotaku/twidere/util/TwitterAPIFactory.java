@@ -9,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.webkit.URLUtil;
 
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
 
@@ -59,7 +61,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 import static android.text.TextUtils.isEmpty;
@@ -175,7 +176,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         return TwitterAPIFactory.getInstance(context, getEndpoint(credentials, cls), credentials, cls);
     }
 
-    public static Endpoint getEndpoint(ParcelableCredentials credentials, Class<?> cls) {
+    public static Endpoint getEndpoint(ParcelableCredentials credentials, Class<?> cls) throws APIFormatException {
         final String apiUrlFormat;
         final boolean sameOAuthSigningUrl = credentials.same_oauth_signing_url;
         final boolean noVersionSuffix = credentials.no_version_suffix;
@@ -202,6 +203,8 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
         final String endpointUrl;
         endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
+        if (endpointUrl == null || HttpUrl.parse(endpointUrl) == null)
+            throw new APIFormatException(apiUrlFormat);
         if (credentials.auth_type == ParcelableCredentials.AUTH_TYPE_XAUTH || credentials.auth_type == ParcelableCredentials.AUTH_TYPE_OAUTH) {
             final String signEndpointUrl;
             if (!sameOAuthSigningUrl) {
@@ -209,6 +212,8 @@ public class TwitterAPIFactory implements TwidereConstants {
             } else {
                 signEndpointUrl = endpointUrl;
             }
+            if (signEndpointUrl == null || HttpUrl.parse(signEndpointUrl) == null)
+                throw new APIFormatException(apiUrlFormat);
             return new OAuthEndpoint(endpointUrl, signEndpointUrl);
         }
         return new Endpoint(endpointUrl);
@@ -246,9 +251,13 @@ public class TwitterAPIFactory implements TwidereConstants {
         params.add(Pair.create(name, typedData));
     }
 
+    public static boolean verifyApiFormat(String format) {
+        return URLUtil.isValidUrl(getApiBaseUrl(format, "test"));
+    }
+
     public static String getApiBaseUrl(String format, final String domain) {
         if (format == null) return null;
-        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]").matcher(format);
+        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]", Pattern.CASE_INSENSITIVE).matcher(format);
         if (!matcher.find()) {
             // For backward compatibility
             format = substituteLegacyApiBaseUrl(format, domain);
@@ -396,6 +405,12 @@ public class TwitterAPIFactory implements TwidereConstants {
             }
             te.setResponse(response);
             return te;
+        }
+    }
+
+    public static class APIFormatException extends RuntimeException {
+        public APIFormatException(String format) {
+            super("Wrong api format " + format);
         }
     }
 }

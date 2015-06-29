@@ -943,8 +943,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setNumber(statusesCount);
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
-            nm.notify("home_" + accountId, NOTIFICATION_ID_HOME_TIMELINE, builder.build());
-            Utils.sendPebbleNotification(context, notificationContent);
+            try {
+                nm.notify("home_" + accountId, NOTIFICATION_ID_HOME_TIMELINE, builder.build());
+                Utils.sendPebbleNotification(context, notificationContent);
+            } catch (SecurityException e) {
+                // Silently ignore
+            }
         } finally {
             statusCursor.close();
             userCursor.close();
@@ -1043,9 +1047,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setStyle(style);
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getMentionsNotificationType());
-            nm.notify("mentions_" + accountId, NOTIFICATION_ID_MENTIONS_TIMELINE,
-                    builder.build());
-            Utils.sendPebbleNotification(context, notificationContent);
+            try {
+                nm.notify("mentions_" + accountId, NOTIFICATION_ID_MENTIONS_TIMELINE,
+                        builder.build());
+                Utils.sendPebbleNotification(context, notificationContent);
+            } catch (SecurityException e) {
+                // Silently ignore
+            }
         } finally {
             statusCursor.close();
             userCursor.close();
@@ -1238,8 +1246,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setStyle(style);
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getDirectMessagesNotificationType());
-            nm.notify("messages_" + accountId, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
-            Utils.sendPebbleNotification(context, notificationContent);
+            try {
+                nm.notify("messages_" + accountId, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
+                Utils.sendPebbleNotification(context, notificationContent);
+            } catch (SecurityException e) {
+                // Silently ignore
+            }
         } finally {
             messageCursor.close();
             userCursor.close();

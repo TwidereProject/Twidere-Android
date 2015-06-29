@@ -37,6 +37,7 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
@@ -75,7 +76,11 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.save: {
-                saveAndFinish();
+                if (checkApiUrl()) {
+                    saveAndFinish();
+                } else {
+                    mEditAPIUrlFormat.setError(getString(R.string.wrong_url_format));
+                }
                 break;
             }
             case R.id.api_url_format_help: {
@@ -83,6 +88,10 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
                 break;
             }
         }
+    }
+
+    private boolean checkApiUrl() {
+        return TwitterAPIFactory.verifyApiFormat(String.valueOf(mEditAPIUrlFormat.getText()));
     }
 
     @Override

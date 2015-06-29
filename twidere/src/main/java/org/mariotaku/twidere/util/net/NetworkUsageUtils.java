@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util.net;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,6 +31,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.util.Utils;
@@ -39,7 +41,7 @@ import java.io.IOException;
 /**
  * Created by mariotaku on 15/6/24.
  */
-public class NetworkUsageUtils {
+public class NetworkUsageUtils implements Constants {
     public static void initForHttpClient(Context context, OkHttpClient client) {
         client.networkInterceptors().add(new NetworkUsageInterceptor(context));
     }
@@ -71,7 +73,11 @@ public class NetworkUsageUtils {
             final Response response = chain.proceed(request);
             values.put(NetworkUsages.KILOBYTES_RECEIVED, getBodyLength(response.body()) / 1024.0);
             final ContentResolver cr = context.getContentResolver();
-            cr.insert(NetworkUsages.CONTENT_URI, values);
+            try {
+                cr.insert(NetworkUsages.CONTENT_URI, values);
+            } catch (IllegalStateException e) {
+                Log.e(LOGTAG, "Unable to log network usage", e);
+            }
             return response;
         }
 
