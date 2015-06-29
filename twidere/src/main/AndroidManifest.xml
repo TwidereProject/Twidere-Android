@@ -250,20 +250,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.BrowserActivity"
-            android:exported="false"
-            android:label="@string/browser">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.VIEW_WEBPAGE"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-
-                <data android:scheme="file"/>
-                <data android:scheme="http"/>
-                <data android:scheme="https"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity.support.ColorPickerDialogActivity"
             android:label="@string/set_color"
             android:theme="@style/Theme.Twidere.Light.NoDisplay"/>

@@ -44,6 +44,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
         switch (action) {
             case BROADCAST_NOTIFICATION_DELETED: {
                 final Uri uri = intent.getData();
+                if (uri == null) return;
                 final String tag = getPositionTag(uri.getLastPathSegment());
                 if (tag == null) return;
                 final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);

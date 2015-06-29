@@ -59,7 +59,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             if (cache != null) {
                 final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(cache);
                 final Bundle extras = response.getExtras();
-                extras.putParcelable(EXTRA_ACCOUNT, ParcelableAccount.getCredentials(getContext(), mAccountId));
+                extras.putParcelable(EXTRA_ACCOUNT, ParcelableCredentials.getCredentials(getContext(), mAccountId));
                 return response;
             }
         }

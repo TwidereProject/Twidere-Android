@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
@@ -31,7 +32,7 @@ import static org.mariotaku.twidere.util.Utils.copyStream;
 
 public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implements Constants {
 
-    public static final long UPLOAD_INTERVAL_MILLIS = 1000 * 60 * 60 * 24;
+    public static final long UPLOAD_INTERVAL_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
     public static final String LAST_UPLOAD_TIME = "last_upload_time";
 
     private static final String PROFILE_SERVER_URL = "http://spice.hot-mobile.org/spice/usage";
@@ -92,7 +93,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implem
 
         if (prefs.contains(LAST_UPLOAD_TIME)) {
             final long lastUpload = prefs.getLong(LAST_UPLOAD_TIME, System.currentTimeMillis());
-            final double deltaDays = (System.currentTimeMillis() - lastUpload) / UPLOAD_INTERVAL_MILLIS;
+            final double deltaDays = (System.currentTimeMillis() - lastUpload) / (double) UPLOAD_INTERVAL_MILLIS;
             if (deltaDays < 1) {
                 SpiceProfilingUtil.log("Last uploaded was conducted in 1 day ago.");
                 return null;

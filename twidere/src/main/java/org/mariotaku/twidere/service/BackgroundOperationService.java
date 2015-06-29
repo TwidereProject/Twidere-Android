@@ -195,7 +195,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     protected void onHandleIntent(final Intent intent) {
         if (intent == null) return;
         final String action = intent.getAction();
-
+        if (action == null) return;
         switch (action) {
             case INTENT_ACTION_UPDATE_STATUS:
                 handleUpdateStatusIntent(intent);
