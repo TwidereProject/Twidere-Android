@@ -199,6 +199,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private boolean mImageUploaderUsed, mStatusShortenerUsed;
     private boolean mNavigateBackPressed;
     private boolean mTextChanged;
+    private SetProgressVisibleRunnable mSetProgressVisibleRunnable;
+    private boolean mFragmentResumed;
 
     @Override
     public int getThemeColor() {
@@ -1129,16 +1131,51 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     }
 
     private void setProgressVisible(final boolean visible) {
-        final FragmentManager fm = getSupportFragmentManager();
-        final Fragment f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
-        if (!visible && f instanceof DialogFragment) {
-            ((DialogFragment) f).dismiss();
-        } else if (visible) {
-            SupportProgressDialogFragment df = new SupportProgressDialogFragment();
-            df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
-            df.setCancelable(false);
+        mSetProgressVisibleRunnable = new SetProgressVisibleRunnable(this, visible);
+        if (mFragmentResumed) {
+            runOnUiThread(mSetProgressVisibleRunnable);
+            mSetProgressVisibleRunnable = null;
         }
-//        mProgress.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        mFragmentResumed = true;
+        if (mSetProgressVisibleRunnable != null) {
+            runOnUiThread(mSetProgressVisibleRunnable);
+            mSetProgressVisibleRunnable = null;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFragmentResumed = false;
+    }
+
+    private static class SetProgressVisibleRunnable implements Runnable {
+
+        private final ComposeActivity activity;
+        private final boolean visible;
+
+        SetProgressVisibleRunnable(ComposeActivity activity, boolean visible) {
+            this.activity = activity;
+            this.visible = visible;
+        }
+
+        @Override
+        public void run() {
+            final FragmentManager fm = activity.getSupportFragmentManager();
+            final Fragment f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
+            if (!visible && f instanceof DialogFragment) {
+                ((DialogFragment) f).dismiss();
+            } else if (visible) {
+                SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+                df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
+                df.setCancelable(false);
+            }
+        }
     }
 
     private void setRecentLocation(ParcelableLocation location) {
