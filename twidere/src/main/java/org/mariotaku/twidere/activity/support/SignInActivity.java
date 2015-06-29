@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -42,6 +42,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -85,10 +86,12 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationExcep
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
@@ -346,6 +349,15 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         final ColorStateList color = ColorStateList.valueOf(resources.getColor(R.color.material_light_green));
         ViewCompat.setBackgroundTintList(mSignInButton, color);
         setSignInButton();
+
+        final String consumerKey = mPreferences.getString(KEY_CONSUMER_KEY, null);
+        final String consumerSecret = mPreferences.getString(KEY_CONSUMER_SECRET, null);
+        if (savedInstanceState == null && !mPreferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false)
+                && !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
+            final SetConsumerKeySecretDialogFragment df = new SetConsumerKeySecretDialogFragment();
+            df.setCancelable(false);
+            df.show(getSupportFragmentManager(), "set_consumer_key_secret");
+        }
     }
 
     private void doLogin() {
@@ -814,6 +826,40 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                               final String apiUrlFormat, final boolean noVersionSuffix) {
             this(alreadyLoggedIn, true, null, null, null, null, user, ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE, color,
                     apiUrlFormat, false, noVersionSuffix);
+        }
+    }
+
+    public static class SetConsumerKeySecretDialogFragment extends BaseSupportDialogFragment {
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setView(R.layout.dialog_set_consumer_key_secret);
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    final EditText editConsumerKey = (EditText) ((Dialog) dialog).findViewById(R.id.consumer_key);
+                    final EditText editConsumerSecret = (EditText) ((Dialog) dialog).findViewById(R.id.consumer_secret);
+                    final SharedPreferences prefs = SharedPreferencesWrapper.getInstance(getActivity(), SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(KEY_CONSUMER_KEY, ParseUtils.parseString(editConsumerKey.getText()));
+                    editor.putString(KEY_CONSUMER_SECRET, ParseUtils.parseString(editConsumerSecret.getText()));
+                    editor.apply();
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    final EditText editConsumerKey = (EditText) ((Dialog) dialog).findViewById(R.id.consumer_key);
+                    final EditText editConsumerSecret = (EditText) ((Dialog) dialog).findViewById(R.id.consumer_secret);
+                    final SharedPreferences prefs = SharedPreferencesWrapper.getInstance(getActivity(), SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+                    editConsumerKey.setText(prefs.getString(KEY_CONSUMER_KEY, null));
+                    editConsumerSecret.setText(prefs.getString(KEY_CONSUMER_SECRET, null));
+                }
+            });
+            return dialog;
         }
     }
 }

@@ -1038,22 +1038,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 //        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private boolean openDocument() {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        final String[] mimeTypes = {"image/png", "image/jpeg", "image/gif"};
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        try {
-            startActivityForResult(intent, REQUEST_OPEN_DOCUMENT);
-        } catch (final ActivityNotFoundException e) {
-            return false;
-        }
-        return true;
-    }
-
     private boolean pickImage() {
         final Intent intent = ThemedImagePickerActivity.withThemed(this).pickImage().build();
         startActivityForResult(intent, REQUEST_PICK_IMAGE);
@@ -1375,6 +1359,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             mSelection = new LongSparseArray<>();
             final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(activity,
                     SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+            assert preferences != null;
             mNameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         }
 
