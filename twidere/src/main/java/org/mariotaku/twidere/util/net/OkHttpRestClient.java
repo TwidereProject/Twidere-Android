@@ -28,6 +28,7 @@ import android.util.Pair;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -48,6 +49,7 @@ import org.mariotaku.twidere.util.DebugModeUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +75,14 @@ public class OkHttpRestClient implements RestHttpClient {
         return new OkRestHttpResponse(call.execute());
     }
 
-    private Call newCall(final RestHttpRequest restHttpRequest) {
+    private Call newCall(final RestHttpRequest restHttpRequest) throws MalformedURLException {
         final Request.Builder builder = new Request.Builder();
         builder.method(restHttpRequest.getMethod(), RestToOkBody.wrap(restHttpRequest.getBody()));
-        builder.url(restHttpRequest.getUrl());
+        final HttpUrl httpUrl = HttpUrl.parse(restHttpRequest.getUrl());
+        if (httpUrl == null) {
+            throw new MalformedURLException();
+        }
+        builder.url(httpUrl);
         final List<Pair<String, String>> headers = restHttpRequest.getHeaders();
         if (headers != null) {
             for (Pair<String, String> header : headers) {
@@ -89,7 +95,23 @@ public class OkHttpRestClient implements RestHttpClient {
 
     @Override
     public RestQueuedRequest enqueue(final RestHttpRequest request, final RestHttpCallback callback) {
-        final Call call = newCall(request);
+        final Call call;
+        try {
+            call = newCall(request);
+        } catch (final MalformedURLException e) {
+            final DummyRequest dummyCall = new DummyRequest();
+            client.getDispatcher().getExecutorService().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (dummyCall.isCancelled()) {
+                        callback.cancelled();
+                        return;
+                    }
+                    callback.exception(e);
+                }
+            });
+            return dummyCall;
+        }
         call.enqueue(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
@@ -231,6 +253,21 @@ public class OkHttpRestClient implements RestHttpClient {
         @Override
         public void close() throws IOException {
             body.close();
+        }
+    }
+
+    private static class DummyRequest implements RestQueuedRequest {
+
+        private boolean cancelled;
+
+        @Override
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
+        @Override
+        public void cancel() {
+            cancelled = true;
         }
     }
 
