@@ -32,6 +32,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -160,7 +161,7 @@ public class CustomTabUtils implements Constants {
             args.putBundle(EXTRA_EXTRAS, ParseUtils.jsonToBundle(cur.getString(idxExtras)));
             final CustomTabConfiguration conf = getTabConfiguration(type);
             final Class<? extends Fragment> cls = conf != null ? conf.getFragmentClass() : InvalidTabFragment.class;
-            tabs.add(new SupportTabSpec(name != null ? name : getTabTypeName(context, type),
+            tabs.add(new SupportTabSpec(TextUtils.isEmpty(name) ? getTabTypeName(context, type) : name,
                     getTabIconObject(iconType), type, cls, args, position, tag));
             cur.moveToNext();
         }

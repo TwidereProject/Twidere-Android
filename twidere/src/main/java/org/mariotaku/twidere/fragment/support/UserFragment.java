@@ -206,6 +206,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private TextView mPagesErrorText;
     private View mProfileNameBackground;
     private View mProfileDetailsContainer;
+    private View mFollowingYouIndicator;
 
 
     private ActionBarDrawable mActionBarBackground;
@@ -231,6 +232,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             invalidateOptionsMenu();
             mFollowButton.setVisibility(View.GONE);
             mFollowProgress.setVisibility(View.VISIBLE);
+            mFollowingYouIndicator.setVisibility(View.GONE);
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             final long userId = args.getLong(EXTRA_USER_ID, -1);
             return new RelationshipLoader(getActivity(), accountId, userId);
@@ -261,7 +263,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFollowButton.setText(R.string.edit);
             mFollowButton.setVisibility(View.VISIBLE);
         } else if (relationship != null) {
-            final int drawableRes;
             mFollowButton.setEnabled(!relationship.isSourceBlockedByTarget());
             if (relationship.isSourceBlockedByTarget()) {
                 mPagesErrorContainer.setVisibility(View.VISIBLE);
@@ -282,35 +283,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             if (relationship.isSourceBlockingTarget()) {
                 mFollowButton.setText(R.string.unblock);
-                drawableRes = R.drawable.ic_follow_blocked;
             } else if (relationship.isSourceFollowingTarget()) {
                 mFollowButton.setText(R.string.unfollow);
-                if (relationship.isTargetFollowingSource()) {
-                    drawableRes = R.drawable.ic_follow_bidirectional;
-                } else {
-                    drawableRes = R.drawable.ic_follow_outgoing;
-                }
             } else if (user.is_follow_request_sent) {
                 mFollowButton.setText(R.string.requested);
-                if (relationship.isTargetFollowingSource()) {
-                    drawableRes = R.drawable.ic_follow_incoming;
-                } else {
-                    drawableRes = R.drawable.ic_follow_pending;
-                }
             } else {
                 mFollowButton.setText(R.string.follow);
-                if (relationship.isTargetFollowingSource()) {
-                    drawableRes = R.drawable.ic_follow_incoming;
-                } else {
-                    drawableRes = R.drawable.ic_follow_none;
-                }
             }
-            final Drawable icon = ResourcesCompat.getDrawable(getResources(), drawableRes, null);
-            final int iconSize = Math.round(mFollowButton.getTextSize() * 1.4f);
-            icon.setBounds(0, 0, iconSize, iconSize);
-            icon.setColorFilter(mFollowButton.getCurrentTextColor(), Mode.SRC_ATOP);
-            mFollowButton.setCompoundDrawables(icon, null, null, null);
             mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
+            mFollowingYouIndicator.setVisibility(relationship.isTargetFollowingSource() ? View.VISIBLE : View.GONE);
 
             final ContentResolver resolver = getContentResolver();
             final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
@@ -1132,6 +1113,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mPagesErrorText = (TextView) view.findViewById(R.id.pages_error_text);
         mProfileNameBackground = view.findViewById(R.id.profile_name_background);
         mProfileDetailsContainer = view.findViewById(R.id.profile_details_container);
+        mFollowingYouIndicator = view.findViewById(R.id.following_you_indicator);
     }
 
     @Override

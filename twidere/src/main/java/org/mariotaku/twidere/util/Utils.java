@@ -1696,8 +1696,8 @@ public final class Utils implements Constants {
         if (context == null) return -1;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final long accountId = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
-        final long[] accountIds;
-        if (accountId == -1 && (accountIds = Utils.getAccountIds(context)).length > 0) {
+        final long[] accountIds = Utils.getAccountIds(context);
+        if (accountIds.length > 0 && !ArrayUtils.contains(accountIds, accountId) && accountIds.length > 0) {
              /* TODO: this is just a quick fix */
             return accountIds[0];
         }

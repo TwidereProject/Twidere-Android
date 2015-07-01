@@ -423,7 +423,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
 
                 @Override
                 public void callback(Pair<Fragment, Menu> callback, Pair<Boolean, Intent> result) {
-                    if (callback.first.isDetached()) return;
+                    if (callback.first.isDetached() || callback.first.getActivity() == null) return;
                     final Menu menu = callback.second;
                     final boolean hasImage = result.first;
                     MenuUtils.setMenuItemAvailability(menu, MENU_REFRESH, !hasImage && !isLoading);

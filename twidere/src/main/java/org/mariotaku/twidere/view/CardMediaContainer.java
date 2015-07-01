@@ -117,7 +117,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                     break;
                 }
                 case VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE: {
-                    imageView.setScaleType(ScaleType.CENTER);
+                    imageView.setScaleType(ScaleType.FIT_CENTER);
                     break;
                 }
             }

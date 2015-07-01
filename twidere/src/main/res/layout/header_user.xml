@@ -44,6 +44,8 @@
         android:layout_below="@id/profile_banner_space"
         android:layout_toEndOf="@id/profile_image"
         android:layout_toRightOf="@id/profile_image"
+        android:minHeight="@dimen/element_size_normal"
+        android:minWidth="48dp"
         android:orientation="vertical"
         android:paddingBottom="@dimen/element_spacing_xsmall"
         android:paddingLeft="@dimen/element_spacing_small"
@@ -57,8 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:minWidth="48dp">
+            android:layout_centerInParent="true">
 
             <Button
                 android:id="@+id/follow"
@@ -78,14 +79,13 @@
         </FrameLayout>
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/follow_container"
             android:layout_toStartOf="@id/follow_container"
             android:gravity="center_vertical"
-            android:minHeight="@dimen/element_size_normal"
             android:orientation="vertical">
 
             <TextView
@@ -99,13 +99,29 @@
 
             <TextView
                 android:id="@+id/screen_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"
                 tools:text="\@screenname" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/following_you_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/screen_name"
+                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_marginStart="@dimen/element_spacing_small"
+                android:layout_toEndOf="@+id/screen_name"
+                android:layout_toRightOf="@+id/screen_name"
+                android:singleLine="true"
+                android:text="@string/following_you"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorSecondary"
+                android:visibility="gone" />
+        </RelativeLayout>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
