@@ -380,7 +380,7 @@
     <string name="preview_images">Preview images</string>
     <string name="preload_wifi_only">Preload using Wi-Fi only</string>
     <string name="sign_in_method_introduction_title">How does it work?</string>
-    <string name="sign_in_method_introduction">Most clients like twicca open a browser asking you to type username and password, and then take you back to the clients. Sometimes this can become very inconvenient.\n\nTwidere uses simpler steps to sign in, without opening the browser. Don\'t worry about your password, Twidere will never store it, it\'s totally safe!</string>
+    <string name="sign_in_method_introduction">Most clients opens a webpage to authorize to Twitter, this could be inconvenient when using custom API, or on slow network. Twidere simulates a normal browser to help sign in to Twitter. Don\'t worry, your password will never be stored nor leaked.</string>
     <string name="quote_protected_status_notice">It\'s not recommended to quote protected tweets.</string>
     <string name="edit_draft">Edit draft</string>
     <string name="profile_image">Profile image</string>

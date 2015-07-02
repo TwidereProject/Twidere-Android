@@ -21,6 +21,8 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -206,13 +208,22 @@ public class TwitterContentUtils {
         return list;
     }
 
+    public static String getMediaUrl(MediaEntity entity) {
+        return TextUtils.isEmpty(entity.getMediaUrlHttps()) ? entity.getMediaUrl() : entity.getMediaUrlHttps();
+    }
+
+    public static String getProfileImageUrl(@Nullable User user) {
+        if (user == null) return null;
+        return TextUtils.isEmpty(user.getProfileImageUrlHttps()) ? user.getProfileImageUrl() : user.getProfileImageUrlHttps();
+    }
+
     private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
         // Format media.
         final MediaEntity[] mediaEntities = entities.getMediaEntities();
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
                 final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
-                final String mediaUrl = mediaEntity.getMediaUrl();
+                final String mediaUrl = TwitterContentUtils.getMediaUrl(mediaEntity);
                 if (mediaUrl != null && start >= 0 && end >= 0) {
                     builder.addLink(mediaUrl, mediaEntity.getDisplayUrl(), start, end);
                 }

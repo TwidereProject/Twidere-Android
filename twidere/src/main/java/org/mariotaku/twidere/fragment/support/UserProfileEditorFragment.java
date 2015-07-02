@@ -95,7 +95,11 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private AsyncTask<Object, Object, ?> mTask;
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
-    private MaterialEditText mEditName, mEditDescription, mEditLocation, mEditUrl;
+    private MaterialEditText mEditScreenName;
+    private MaterialEditText mEditName;
+    private MaterialEditText mEditDescription;
+    private MaterialEditText mEditLocation;
+    private MaterialEditText mEditUrl;
     private View mProgressContainer, mEditProfileContent;
     private View mEditProfileImage;
     private View mEditProfileBanner;
@@ -282,6 +286,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         mEditProfileContent = view.findViewById(R.id.edit_profile_content);
         mProfileBannerView = (ImageView) view.findViewById(R.id.profile_banner);
         mProfileImageView = (ImageView) view.findViewById(R.id.profile_image);
+        mEditScreenName = (MaterialEditText) view.findViewById(R.id.screen_name);
         mEditName = (MaterialEditText) view.findViewById(R.id.name);
         mEditDescription = (MaterialEditText) view.findViewById(R.id.description);
         mEditLocation = (MaterialEditText) view.findViewById(R.id.location);

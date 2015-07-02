@@ -247,7 +247,7 @@ public class MediaPreviewUtils {
         final MediaEntity[] mediaEntities = status.getMediaEntities();
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
-                final String expanded = mediaEntity.getMediaUrlHttps();
+                final String expanded = TwitterContentUtils.getMediaUrl(mediaEntity);
                 if (getSupportedLink(expanded) != null) return expanded;
             }
         }

@@ -22,8 +22,8 @@ package org.mariotaku.twidere.api.twitter;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.simple.tree.SimpleTreeCodec;
 
 import org.mariotaku.restfu.callback.RawCallback;
 import org.mariotaku.restfu.http.RestHttpResponse;
@@ -56,7 +56,7 @@ public abstract class UserStreamCallback implements RawCallback {
             onException(cause);
             return;
         }
-        final ObjectMapper mapper = new ObjectMapper(LoganSquare.JSON_FACTORY);
+        final SimpleTreeCodec mapper = new SimpleTreeCodec();
         final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
         try {
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {
@@ -65,7 +65,7 @@ public abstract class UserStreamCallback implements RawCallback {
                     connected = true;
                 }
                 if (line.isEmpty()) continue;
-                JsonNode rootNode = mapper.readTree(line);
+                TreeNode rootNode = mapper.readTree(LoganSquare.JSON_FACTORY.createParser(line));
                 switch (JSONObjectType.determine(rootNode)) {
                     case SENDER: {
                         break;
@@ -145,7 +145,7 @@ public abstract class UserStreamCallback implements RawCallback {
     }
 
 
-    private static <T> T parse(final Class<T> cls, final JsonNode json) throws IOException {
+    private static <T> T parse(final Class<T> cls, final TreeNode json) throws IOException {
         return LoganSquare.mapperFor(cls).parse(json.traverse());
     }
 

@@ -44,7 +44,6 @@
         android:layout_below="@id/profile_banner_space"
         android:layout_toEndOf="@id/profile_image"
         android:layout_toRightOf="@id/profile_image"
-        android:minHeight="@dimen/element_size_normal"
         android:minWidth="48dp"
         android:orientation="vertical"
         android:paddingBottom="@dimen/element_spacing_xsmall"
@@ -59,7 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:minHeight="@dimen/element_size_normal">
 
             <Button
                 android:id="@+id/follow"
@@ -86,6 +86,7 @@
             android:layout_toLeftOf="@id/follow_container"
             android:layout_toStartOf="@id/follow_container"
             android:gravity="center_vertical"
+            android:minHeight="@dimen/element_size_normal"
             android:orientation="vertical">
 
             <TextView

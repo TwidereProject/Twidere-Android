@@ -29,6 +29,18 @@
         android:icon="@drawable/ic_action_speaker_muted"
         android:title="@string/add_to_filter" />
     <item
+        android:id="@+id/incoming_friendships"
+        android:icon="@drawable/ic_action_profile"
+        android:title="@string/incoming_friendships" />
+    <item
+        android:id="@+id/user_mentions"
+        android:icon="@drawable/ic_action_at"
+        android:title="@string/user_mentions" />
+    <item
+        android:id="@+id/saved_searches"
+        android:icon="@drawable/ic_action_search"
+        android:title="@string/saved_searches" />
+    <item
         android:id="@id/enable_retweets"
         android:checkable="true"
         android:icon="@drawable/ic_action_retweet"
@@ -53,18 +65,6 @@
         android:id="@+id/blocked_users"
         android:icon="@drawable/ic_action_block"
         android:title="@string/blocked_users" />
-    <item
-        android:id="@+id/incoming_friendships"
-        android:icon="@drawable/ic_action_profile"
-        android:title="@string/incoming_friendships" />
-    <item
-        android:id="@+id/user_mentions"
-        android:icon="@drawable/ic_action_at"
-        android:title="@string/user_mentions" />
-    <item
-        android:id="@+id/saved_searches"
-        android:icon="@drawable/ic_action_search"
-        android:title="@string/saved_searches" />
     <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"

@@ -276,10 +276,10 @@ public class StreamingService extends Service implements Constants {
                 if (response != null) {
                     try {
                         final TypedData body = response.getBody();
-                        final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                        body.writeTo(os);
-                        final String charsetName;
                         if (body != null) {
+                            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                            body.writeTo(os);
+                            final String charsetName;
                             final ContentType contentType = body.contentType();
                             if (contentType != null) {
                                 final Charset charset = contentType.getCharset();
@@ -291,10 +291,8 @@ public class StreamingService extends Service implements Constants {
                             } else {
                                 charsetName = Charset.defaultCharset().name();
                             }
-                        } else {
-                            charsetName = Charset.defaultCharset().name();
+                            Log.w(LOGTAG, os.toString(charsetName));
                         }
-                        Log.w(LOGTAG, os.toString(charsetName));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

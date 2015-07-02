@@ -29,14 +29,13 @@ import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
-
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.api.twitter.model.User;
 
 @JsonObject
 public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
@@ -243,7 +242,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         description_expanded = TwitterContentUtils.formatExpandedUserDescription(user);
         description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
         location = user.getLocation();
-        profile_image_url = user.getProfileImageUrlHttps();
+        profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
         profile_banner_url = user.getProfileBannerImageUrl();
         url = user.getUrl();
         url_expanded = url != null && urls_url_entities != null && urls_url_entities.length > 0 ? urls_url_entities[0].getExpandedUrl() : null;

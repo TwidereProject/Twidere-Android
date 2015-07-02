@@ -81,7 +81,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Accounts.ACCOUNT_ID, user.getId());
         values.put(Accounts.SCREEN_NAME, user.getScreenName());
         values.put(Accounts.NAME, user.getName());
-        values.put(Accounts.PROFILE_IMAGE_URL, user.getProfileImageUrlHttps());
+        values.put(Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user));
         values.put(Accounts.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
         values.put(Accounts.COLOR, color);
         values.put(Accounts.IS_ACTIVATED, 1);
@@ -105,7 +105,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Accounts.ACCOUNT_ID, user.getId());
         values.put(Accounts.SCREEN_NAME, user.getScreenName());
         values.put(Accounts.NAME, user.getName());
-        values.put(Accounts.PROFILE_IMAGE_URL, user.getProfileImageUrlHttps());
+        values.put(Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user));
         values.put(Accounts.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
         values.put(Accounts.COLOR, color);
         values.put(Accounts.IS_ACTIVATED, 1);
@@ -123,8 +123,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Accounts.ACCOUNT_ID, user.getId());
         values.put(Accounts.SCREEN_NAME, user.getScreenName());
         values.put(Accounts.NAME, user.getName());
-        values.put(Accounts.PROFILE_IMAGE_URL, (user.getProfileImageUrlHttps()));
-        values.put(Accounts.PROFILE_BANNER_URL, (user.getProfileBannerImageUrl()));
+        values.put(Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user));
+        values.put(Accounts.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
         values.put(Accounts.COLOR, color);
         values.put(Accounts.IS_ACTIVATED, 1);
         values.put(Accounts.API_URL_FORMAT, apiUrlFormat);
@@ -147,7 +147,7 @@ public final class ContentValuesCreator implements TwidereConstants {
 
     public static ContentValues createCachedUser(final User user) {
         if (user == null || user.getId() <= 0) return null;
-        final String profile_image_url = user.getProfileImageUrlHttps();
+        final String profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
         final String url = user.getUrl();
         final UrlEntity[] urls = user.getUrlEntities();
         final ContentValues values = new ContentValues();
@@ -186,8 +186,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         final ContentValues values = new ContentValues();
         final User sender = message.getSender(), recipient = message.getRecipient();
         if (sender == null || recipient == null) return null;
-        final String sender_profile_image_url = sender.getProfileImageUrlHttps();
-        final String recipient_profile_image_url = recipient.getProfileImageUrlHttps();
+        final String sender_profile_image_url = TwitterContentUtils.getProfileImageUrl(sender);
+        final String recipient_profile_image_url = TwitterContentUtils.getProfileImageUrl(recipient);
         values.put(DirectMessages.ACCOUNT_ID, accountId);
         values.put(DirectMessages.MESSAGE_ID, message.getId());
         values.put(DirectMessages.MESSAGE_TIMESTAMP, message.getCreatedAt().getTime());
@@ -332,7 +332,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.RETWEETED_BY_USER_ID, retweetedById);
             values.put(Statuses.RETWEETED_BY_USER_NAME, retweetUser.getName());
             values.put(Statuses.RETWEETED_BY_USER_SCREEN_NAME, retweetUser.getScreenName());
-            values.put(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE, (retweetUser.getProfileImageUrlHttps()));
+            values.put(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE, TwitterContentUtils.getProfileImageUrl(retweetUser));
             values.put(Statuses.IS_RETWEET, true);
             if (retweetedById == accountId) {
                 values.put(Statuses.MY_RETWEET_ID, orig.getId());
@@ -364,7 +364,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.QUOTED_BY_USER_ID, quotedById);
             values.put(Statuses.QUOTED_BY_USER_NAME, quoteUser.getName());
             values.put(Statuses.QUOTED_BY_USER_SCREEN_NAME, quoteUser.getScreenName());
-            values.put(Statuses.QUOTED_BY_USER_PROFILE_IMAGE, quoteUser.getProfileImageUrlHttps());
+            values.put(Statuses.QUOTED_BY_USER_PROFILE_IMAGE, TwitterContentUtils.getProfileImageUrl(quoteUser));
             values.put(Statuses.QUOTED_BY_USER_IS_VERIFIED, quoteUser.isVerified());
             values.put(Statuses.QUOTED_BY_USER_IS_PROTECTED, quoteUser.isProtected());
             values.put(Statuses.IS_QUOTE, true);
@@ -386,7 +386,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         }
         final User user = status.getUser();
         final long userId = user.getId();
-        final String profileImageUrl = (user.getProfileImageUrlHttps());
+        final String profileImageUrl = TwitterContentUtils.getProfileImageUrl(user);
         final String name = user.getName(), screenName = user.getScreenName();
         values.put(Statuses.USER_ID, userId);
         values.put(Statuses.USER_NAME, name);

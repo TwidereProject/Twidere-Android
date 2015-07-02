@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.TreeNode;
 
 /**
  * @author Dan Checkoway - dcheckoway at gmail.com
@@ -66,29 +66,29 @@ public final class JSONObjectType {
      * @param json the JSONObject whose type should be determined
      * @return the determined JSONObjectType, or null if not recognized
      */
-    public static Type determine(JsonNode json) {
+    public static Type determine(TreeNode json) {
         // This code originally lived in AbstractStreamImplementation.
         // I've moved it in here to expose it as a public encapsulation of
         // the object type determination logic.
-        if (json.hasNonNull("sender")) {
+        if (json.get("sender") != null) {
             return Type.SENDER;
-        } else if (json.hasNonNull("text")) {
+        } else if (json.get("text") != null) {
             return Type.STATUS;
-        } else if (json.hasNonNull("direct_message")) {
+        } else if (json.get("direct_message") != null) {
             return Type.DIRECT_MESSAGE;
-        } else if (json.hasNonNull("delete")) {
+        } else if (json.get("delete") != null) {
             return Type.DELETE;
-        } else if (json.hasNonNull("limit")) {
+        } else if (json.get("limit") != null) {
             return Type.LIMIT;
-        } else if (json.hasNonNull("warning")) {
+        } else if (json.get("warning") != null) {
             return Type.STALL_WARNING;
-        } else if (json.hasNonNull("scrub_geo")) {
+        } else if (json.get("scrub_geo") != null) {
             return Type.SCRUB_GEO;
-        } else if (json.hasNonNull("friends")) {
+        } else if (json.get("friends") != null) {
             return Type.FRIENDS;
-        } else if (json.hasNonNull("event")) {
+        } else if (json.get("event") != null) {
             String event;
-            event = json.get("event").asText("event");
+            event = json.get("event").asToken().asString();
             if ("favorite".equals(event)) {
                 return Type.FAVORITE;
             } else if ("unfavorite".equals(event)) {
@@ -124,7 +124,7 @@ public final class JSONObjectType {
             } else if ("unblock".equals(event)) {
                 return Type.UNBLOCK;
             }
-        } else if (json.hasNonNull("disconnect")) {
+        } else if (json.get("disconnect") != null) {
             return Type.DISCONNECTION;
         }
         return Type.UNKNOWN;

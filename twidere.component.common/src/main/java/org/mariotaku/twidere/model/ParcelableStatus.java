@@ -397,7 +397,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         retweeted_by_user_id = retweet_user != null ? retweet_user.getId() : -1;
         retweeted_by_user_name = retweet_user != null ? retweet_user.getName() : null;
         retweeted_by_user_screen_name = retweet_user != null ? retweet_user.getScreenName() : null;
-        retweeted_by_user_profile_image = retweet_user != null ? retweet_user.getProfileImageUrlHttps() : null;
+        retweeted_by_user_profile_image = TwitterContentUtils.getProfileImageUrl(retweet_user);
 
         final Status quoted = orig.getQuotedStatus();
         final User quote_user = quoted != null ? orig.getUser() : null;
@@ -415,7 +415,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         quoted_by_user_id = quote_user != null ? quote_user.getId() : -1;
         quoted_by_user_name = quote_user != null ? quote_user.getName() : null;
         quoted_by_user_screen_name = quote_user != null ? quote_user.getScreenName() : null;
-        quoted_by_user_profile_image = quote_user != null ? quote_user.getProfileImageUrlHttps() : null;
+        quoted_by_user_profile_image = TwitterContentUtils.getProfileImageUrl(quote_user);
         quoted_by_user_is_protected = quote_user != null && quote_user.isProtected();
         quoted_by_user_is_verified = quote_user != null && quote_user.isVerified();
 
@@ -431,7 +431,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         user_id = user.getId();
         user_name = user.getName();
         user_screen_name = user.getScreenName();
-        user_profile_image_url = user.getProfileImageUrlHttps();
+        user_profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
         user_is_protected = user.isProtected();
         user_is_verified = user.isVerified();
         user_is_following = user.isFollowing();
