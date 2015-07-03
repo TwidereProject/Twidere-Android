@@ -22,7 +22,6 @@ package org.mariotaku.twidere.service;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -30,10 +29,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.provider.BaseColumns;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
@@ -46,7 +47,6 @@ import com.twitter.Extractor;
 import org.mariotaku.querybuilder.Expression;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileTypedData;
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
@@ -59,6 +59,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -206,6 +207,37 @@ public class BackgroundOperationService extends IntentService implements Constan
             case INTENT_ACTION_DISCARD_DRAFT:
                 handleDiscardDraftIntent(intent);
                 break;
+            case INTENT_ACTION_SEND_DRAFT: {
+                handleSendDraftIntent(intent);
+            }
+        }
+    }
+
+    private void handleSendDraftIntent(Intent intent) {
+        final Uri uri = intent.getData();
+        if (uri == null) return;
+        final long draftId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
+        if (draftId == -1) return;
+        final Expression where = Expression.equals(Drafts._ID, draftId);
+        final Cursor c = getContentResolver().query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.getSQL(), null, null);
+        final DraftItem.CursorIndices i = new DraftItem.CursorIndices(c);
+        final DraftItem item;
+        try {
+            if (!c.moveToFirst()) return;
+            item = new DraftItem(c, i);
+        } finally {
+            c.close();
+        }
+        if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
+            updateStatuses(new ParcelableStatusUpdate(this, item));
+        } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
+            final long recipientId = item.action_extras.optLong(EXTRA_RECIPIENT_ID);
+            if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
+                return;
+            }
+            final long accountId = item.account_ids[0];
+            final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
+            sendMessage(accountId, recipientId, item.text, imageUri);
         }
     }
 
@@ -213,39 +245,10 @@ public class BackgroundOperationService extends IntentService implements Constan
         final Uri data = intent.getData();
         if (data == null) return;
         mNotificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS);
-        final ContentResolver contentResolver = getContentResolver();
+        final ContentResolver cr = getContentResolver();
         final long id = ParseUtils.parseLong(data.getLastPathSegment(), -1);
         final Expression where = Expression.equals(Drafts._ID, id);
-        contentResolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
-    }
-
-    private Notification buildNotification(final String title, final String message, final int icon,
-                                           final Intent content_intent, final Intent deleteIntent) {
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setTicker(message);
-        builder.setContentTitle(title);
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-        builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(icon);
-        if (deleteIntent != null) {
-            builder.setDeleteIntent(PendingIntent.getBroadcast(this, 0, deleteIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        if (content_intent != null) {
-            content_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            builder.setContentIntent(PendingIntent.getActivity(this, 0, content_intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        // final Uri defRingtone =
-        // RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        // final String path =
-        // mPreferences.getString(PREFERENCE_KEY_NOTIFICATION_RINGTONE, "");
-        // builder.setSound(isEmpty(path) ? defRingtone : Uri.parse(path),
-        // Notification.STREAM_DEFAULT);
-        // builder.setLights(HOLO_BLUE_LIGHT, 1000, 2000);
-        // builder.setDefaults(Notification.DEFAULT_VIBRATE);
-        return builder.build();
+        cr.delete(Drafts.CONTENT_URI, where.getSQL(), null);
     }
 
     private void handleSendDirectMessageIntent(final Intent intent) {
@@ -253,9 +256,13 @@ public class BackgroundOperationService extends IntentService implements Constan
         final long recipientId = intent.getLongExtra(EXTRA_RECIPIENT_ID, -1);
         final String imageUri = intent.getStringExtra(EXTRA_IMAGE_URI);
         final String text = intent.getStringExtra(EXTRA_TEXT);
+        sendMessage(accountId, recipientId, text, imageUri);
+    }
+
+    private void sendMessage(long accountId, long recipientId, String text, String imageUri) {
         if (accountId <= 0 || recipientId <= 0 || isEmpty(text)) return;
         final String title = getString(R.string.sending_direct_message);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        final Builder builder = new Builder(this);
         builder.setSmallIcon(R.drawable.ic_stat_send);
         builder.setProgress(100, 0, true);
         builder.setTicker(title);
@@ -286,7 +293,6 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private void handleUpdateStatusIntent(final Intent intent) {
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         final ParcelableStatusUpdate status = intent.getParcelableExtra(EXTRA_STATUS);
         final Parcelable[] status_parcelables = intent.getParcelableArrayExtra(EXTRA_STATUSES);
         final ParcelableStatusUpdate[] statuses;
@@ -300,6 +306,11 @@ public class BackgroundOperationService extends IntentService implements Constan
             statuses[0] = status;
         } else
             return;
+        updateStatuses(statuses);
+    }
+
+    private void updateStatuses(ParcelableStatusUpdate... statuses) {
+        final Builder builder = new Builder(this);
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(this, builder, 0, null));
         for (final ParcelableStatusUpdate item : statuses) {
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
@@ -354,7 +365,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                     accountIdsValues.put(Drafts.ACCOUNT_IDS, ListUtils.toString(failedAccountIds, ',', false));
                     mResolver.update(Drafts.CONTENT_URI, accountIdsValues, where.getSQL(), null);
                     showErrorMessage(R.string.action_updating_status, exception, true);
-                    displayTweetNotSendNotification();
+                    final ContentValues notifValues = new ContentValues();
+                    notifValues.put(BaseColumns._ID, draftId);
+                    mResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, notifValues);
                 }
             } else {
                 showOkMessage(R.string.status_updated, false);
@@ -384,18 +397,6 @@ public class BackgroundOperationService extends IntentService implements Constan
         mNotificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS);
     }
 
-    private void displayTweetNotSendNotification() {
-        final String title = getString(R.string.status_not_updated);
-        final String message = getString(R.string.status_not_updated_summary);
-        final Intent intent = new Intent();
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_DRAFTS);
-        intent.setData(builder.build());
-        final Notification notification = buildNotification(title, message, R.drawable.ic_stat_twitter, intent, null);
-        mNotificationManager.notify(NOTIFICATION_ID_DRAFTS, notification);
-    }
 
     private SingleResponse<ParcelableDirectMessage> sendDirectMessage(final NotificationCompat.Builder builder,
                                                                       final long accountId, final long recipientId,

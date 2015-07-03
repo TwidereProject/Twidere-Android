@@ -46,6 +46,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
@@ -75,6 +76,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
+import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
@@ -90,6 +92,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.receiver.NotificationReceiver;
+import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ImagePreloader;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
@@ -272,7 +275,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
                     return null;
             }
-            if (table == null) return null;
             final long rowId;
             if (tableId == TABLE_ID_CACHED_USERS) {
                 final Expression where = Expression.equals(CachedUsers.USER_ID,
@@ -337,11 +339,15 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                                 values.getAsDouble(NetworkUsages.KILOBYTES_SENT), requestNetwork, requestType});
                 mDatabaseWrapper.setTransactionSuccessful();
                 mDatabaseWrapper.endTransaction();
+            } else if (tableId == VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS) {
+                rowId = showDraftNotification(uri, values);
             } else if (shouldReplaceOnConflict(tableId)) {
                 rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_REPLACE);
-            } else {
+            } else if (table != null) {
                 rowId = mDatabaseWrapper.insert(table, null, values);
+            } else {
+                return null;
             }
             onDatabaseUpdated(tableId, uri);
             onNewItemsInserted(uri, tableId, values, rowId);
@@ -349,6 +355,54 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private long showDraftNotification(Uri queryUri, ContentValues values) {
+        if (values == null) return -1;
+        final Long draftId = values.getAsLong(BaseColumns._ID);
+        if (draftId == null) return -1;
+        final Expression where = Expression.equals(Drafts._ID, draftId);
+        final Cursor c = getContentResolver().query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.getSQL(), null, null);
+        final DraftItem.CursorIndices i = new DraftItem.CursorIndices(c);
+        final DraftItem item;
+        try {
+            if (!c.moveToFirst()) return -1;
+            item = new DraftItem(c, i);
+        } finally {
+            c.close();
+        }
+        final Context context = getContext();
+        final String title = context.getString(R.string.status_not_updated);
+        final String message = context.getString(R.string.status_not_updated_summary);
+        final Intent intent = new Intent();
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        final Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme(SCHEME_TWIDERE);
+        uriBuilder.authority(AUTHORITY_DRAFTS);
+        intent.setData(uriBuilder.build());
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
+        notificationBuilder.setTicker(message);
+        notificationBuilder.setContentTitle(title);
+        notificationBuilder.setContentText(item.text);
+        notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setWhen(System.currentTimeMillis());
+        notificationBuilder.setSmallIcon(R.drawable.ic_stat_draft);
+        final Intent discardIntent = new Intent(context, BackgroundOperationService.class);
+        discardIntent.setAction(INTENT_ACTION_DISCARD_DRAFT);
+        discardIntent.setData(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)));
+        notificationBuilder.addAction(R.drawable.ic_action_delete, context.getString(R.string.discard),
+                PendingIntent.getService(context, 0, discardIntent, PendingIntent.FLAG_ONE_SHOT));
+
+        final Intent sendIntent = new Intent(context, BackgroundOperationService.class);
+        sendIntent.setAction(INTENT_ACTION_SEND_DRAFT);
+        sendIntent.setData(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)));
+        notificationBuilder.addAction(R.drawable.ic_action_send, context.getString(R.string.send),
+                PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        notificationBuilder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+        mNotificationManager.notify(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)).toString(),
+                NOTIFICATION_ID_DRAFTS, notificationBuilder.build());
+        return draftId;
     }
 
     @Override
@@ -826,7 +880,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values, final long newId) {
         onNewItemsInserted(uri, tableId, new ContentValues[]{values}, new long[]{newId});
-
     }
 
     private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues[] valuesArray, final long[] newIds) {

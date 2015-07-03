@@ -481,9 +481,11 @@ public interface TwidereDataStore {
         String TABLE_NAME = "drafts";
         String CONTENT_PATH = TABLE_NAME;
         String CONTENT_PATH_UNSENT = TABLE_NAME + "/unsent";
+        String CONTENT_PATH_NOTIFICATIONS = TABLE_NAME + "/notifications";
 
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         Uri CONTENT_URI_UNSENT = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_UNSENT);
+        Uri CONTENT_URI_NOTIFICATIONS = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_NOTIFICATIONS);
 
         /**
          * Status content.<br>

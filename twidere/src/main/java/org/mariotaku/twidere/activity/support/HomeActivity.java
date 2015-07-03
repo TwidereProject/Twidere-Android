@@ -429,7 +429,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
         setTabPosition(initialTabPosition);
 
-        startService(new Intent(this, StreamingService.class));
+        if (Utils.isStreamingEnabled()) {
+            startService(new Intent(this, StreamingService.class));
+        }
     }
 
     @Override

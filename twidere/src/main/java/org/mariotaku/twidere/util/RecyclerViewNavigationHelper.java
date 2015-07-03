@@ -98,7 +98,7 @@ public class RecyclerViewNavigationHelper implements KeyboardShortcutCallback {
         }
         positionBackup = position;
         RecyclerViewUtils.focusNavigate(view, layoutManager, position, direction);
-        return false;
+        return true;
     }
 
     @Override

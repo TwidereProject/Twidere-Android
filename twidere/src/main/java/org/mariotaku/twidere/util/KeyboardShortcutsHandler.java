@@ -182,7 +182,12 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
                 break;
             }
         }
-        return !event.isSystem() && !KeyEvent.isModifierKey(keyCode) && keyCode != KeyEvent.KEYCODE_UNKNOWN;
+        return !isNavigationKey(keyCode) && !KeyEvent.isModifierKey(keyCode) && keyCode != KeyEvent.KEYCODE_UNKNOWN;
+    }
+
+    private static boolean isNavigationKey(int keyCode) {
+        return keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME
+                || keyCode == KeyEvent.KEYCODE_MENU;
     }
 
     public static String metaToFriendlyString(int metaState) {
@@ -342,7 +347,9 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
             if (keyCode == KeyEvent.KEYCODE_UNKNOWN) return upperName;
             if (keyCode == KeyEvent.KEYCODE_DEL) return "Backspace";
             if (keyCode == KeyEvent.KEYCODE_FORWARD_DEL) return "Delete";
-            return String.valueOf(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode).getDisplayLabel());
+            final char displayLabel = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode).getDisplayLabel();
+            if (displayLabel == 0) return keyName.toUpperCase(Locale.US);
+            return String.valueOf(displayLabel);
         }
     }
 }

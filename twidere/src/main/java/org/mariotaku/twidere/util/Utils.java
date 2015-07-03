@@ -357,6 +357,8 @@ public final class Utils implements Constants {
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_UNSENT,
                 VIRTUAL_TABLE_ID_DRAFTS_UNSENT);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS,
+                VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS);
 
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS, null, LINK_ID_STATUS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER, null, LINK_ID_USER);
@@ -3532,7 +3534,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean useShareScreenshot() {
-        return false;
+        return Boolean.parseBoolean("false");
     }
 
     private static Drawable getMetadataDrawable(final PackageManager pm, final ActivityInfo info, final String key) {
@@ -3851,6 +3853,10 @@ public final class Utils implements Constants {
         if (TextUtils.isEmpty(consumerKey) || TextUtils.isEmpty(consumerSecret)) return false;
         return (!TWITTER_CONSUMER_KEY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET.equals(consumerKey))
                 && (!TWITTER_CONSUMER_KEY_LEGACY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET_LEGACY.equals(consumerSecret));
+    }
+
+    public static boolean isStreamingEnabled() {
+        return Boolean.parseBoolean("false");
     }
 
     static class UtilsL {
