@@ -613,7 +613,7 @@
     <string name="add">Add</string>
     <string name="N_media_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
     <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
-    <string name="delete_drafts_confirm">Delete selcted drafts?</string>
+    <string name="delete_drafts_confirm">Delete selected drafts?</string>
     <string name="extra_configurations">Extra configurations</string>
     <string name="click_item_to_config">Click an item to config</string>
     <string name="dark_drawer">Dark drawer</string>
