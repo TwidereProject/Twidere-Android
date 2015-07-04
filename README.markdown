@@ -42,7 +42,7 @@ Twidere is a powerful twitter client for Android 4.0+, which gives you a full Ma
 ### Icon designers ###
 
 * [@Linkzero](https://twitter.com/Linkzero)
-* [@lordfriend](https://twitter.com//lordfriend)
+* [@lordfriend](https://twitter.com/lordfriend)
 * [@ilovinheart](https://twitter.com/ilovinheart) (0.0.7 version)
 * [@Rieya](https://twitter.com/Rieya) (0.0.6 version)
 
