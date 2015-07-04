@@ -400,7 +400,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         notificationBuilder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
-        mNotificationManager.notify(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)).toString(),
+        getNotificationManager().notify(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)).toString(),
                 NOTIFICATION_ID_DRAFTS, notificationBuilder.build());
         return draftId;
     }
