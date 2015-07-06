@@ -23,12 +23,12 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
-import org.mariotaku.querybuilder.Columns;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.OrderBy;
-import org.mariotaku.querybuilder.SQLQueryBuilder;
-import org.mariotaku.querybuilder.Table;
-import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.sqliteqb.library.Columns;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.OrderBy;
+import org.mariotaku.sqliteqb.library.SQLQueryBuilder;
+import org.mariotaku.sqliteqb.library.Table;
+import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;

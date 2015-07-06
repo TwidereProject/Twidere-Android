@@ -71,10 +71,10 @@ import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.OrderBy;
-import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.OrderBy;
+import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
@@ -113,7 +113,6 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.ComposeEditText;
-import org.mariotaku.twidere.view.ComposeMaterialEditText;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -388,6 +387,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     public void onStop() {
         mMessagesListView.removeOnScrollListener(mScrollListener);
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.unregister(this);
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();

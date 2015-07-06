@@ -90,7 +90,7 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.1.0'
     compile 'com.soundcloud.android:android-crop:1.0.0@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
-    compile 'com.github.mariotaku:PickNCrop:b8322f8e3c'
+    compile 'com.github.mariotaku:PickNCrop:44b09cbc69'
     compile 'com.diogobernardino:williamchart:1.7.0'
     googleCompile 'com.google.android.gms:play-services-maps:7.5.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.3.4'

@@ -32,7 +32,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Outline;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
@@ -86,7 +85,7 @@ import com.meizu.flyme.reflect.StatusBarProxy;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
@@ -294,7 +293,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFollowingYouIndicator.setVisibility(relationship.isTargetFollowingSource() ? View.VISIBLE : View.GONE);
 
             final ContentResolver resolver = getContentResolver();
-            final ContentValues cachedValues = ParcelableUser.makeCachedUserContentValues(user);
+            final ContentValues cachedValues = ContentValuesCreator.makeCachedUserContentValues(user);
             resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
             mFollowButton.setVisibility(View.VISIBLE);
         } else {

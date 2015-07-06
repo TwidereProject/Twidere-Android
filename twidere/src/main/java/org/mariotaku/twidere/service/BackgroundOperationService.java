@@ -44,7 +44,7 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
-import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileTypedData;
 import org.mariotaku.twidere.Constants;

@@ -120,18 +120,18 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mariotaku.querybuilder.AllColumns;
-import org.mariotaku.querybuilder.Columns;
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.OrderBy;
-import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.SQLFunctions;
-import org.mariotaku.querybuilder.SQLQueryBuilder;
-import org.mariotaku.querybuilder.Selectable;
-import org.mariotaku.querybuilder.Table;
-import org.mariotaku.querybuilder.Tables;
-import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.sqliteqb.library.AllColumns;
+import org.mariotaku.sqliteqb.library.Columns;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.OrderBy;
+import org.mariotaku.sqliteqb.library.RawItemArray;
+import org.mariotaku.sqliteqb.library.SQLFunctions;
+import org.mariotaku.sqliteqb.library.SQLQueryBuilder;
+import org.mariotaku.sqliteqb.library.Selectable;
+import org.mariotaku.sqliteqb.library.Table;
+import org.mariotaku.sqliteqb.library.Tables;
+import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.http.Authorization;
@@ -200,6 +200,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedImages;
@@ -582,6 +583,58 @@ public final class Utils implements Constants {
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build()),
                 Expression.equals(new Column(new Table(table), Statuses.IS_GAP), 1)
+        );
+        if (extraSelection != null) {
+            return Expression.and(filterExpression, extraSelection);
+        }
+        return filterExpression;
+    }
+
+    @NonNull
+    public static Expression buildActivityFilterWhereClause(@NonNull final String table, final Expression extraSelection) {
+        final SQLSelectQuery filteredUsersQuery = SQLQueryBuilder
+                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
+                .from(new Tables(Filters.Users.TABLE_NAME))
+                .build();
+        final Expression filteredUsersWhere = Expression.or(
+                Expression.in(new Column(new Table(table), Activities.STATUS_USER_ID), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Activities.STATUS_RETWEETED_BY_USER_ID), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Activities.STATUS_QUOTED_BY_USER_ID), filteredUsersQuery)
+        );
+        final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
+                .select(true, new Column(new Table(table), Activities._ID))
+                .from(new Tables(table))
+                .where(filteredUsersWhere)
+                .union()
+                .select(true, new Columns(new Column(new Table(table), Activities._ID)))
+                .from(new Tables(table, Filters.Sources.TABLE_NAME))
+                .where(Expression.or(
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_SOURCE),
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_SOURCE),
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
+                ))
+                .union()
+                .select(true, new Columns(new Column(new Table(table), Activities._ID)))
+                .from(new Tables(table, Filters.Keywords.TABLE_NAME))
+                .where(Expression.or(
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_TEXT_PLAIN),
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_TEXT_PLAIN),
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
+                ))
+                .union()
+                .select(true, new Columns(new Column(new Table(table), Activities._ID)))
+                .from(new Tables(table, Filters.Links.TABLE_NAME))
+                .where(Expression.or(
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_TEXT_HTML),
+                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"),
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_TEXT_HTML),
+                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'")
+                ));
+        final Expression filterExpression = Expression.or(
+                Expression.notIn(new Column(new Table(table), Activities._ID), filteredIdsQueryBuilder.build()),
+                Expression.equals(new Column(new Table(table), Activities.STATUS_IS_GAP), 1)
         );
         if (extraSelection != null) {
             return Expression.and(filterExpression, extraSelection);

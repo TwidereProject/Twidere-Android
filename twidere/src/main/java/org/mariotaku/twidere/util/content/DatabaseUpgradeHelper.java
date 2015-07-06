@@ -24,15 +24,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.querybuilder.Columns;
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Constraint;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.NewColumn;
-import org.mariotaku.querybuilder.OnConflict;
-import org.mariotaku.querybuilder.Tables;
-import org.mariotaku.querybuilder.query.SQLInsertQuery;
-import org.mariotaku.querybuilder.query.SQLSelectQuery;
+import org.mariotaku.sqliteqb.library.Columns;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Constraint;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.NewColumn;
+import org.mariotaku.sqliteqb.library.OnConflict;
+import org.mariotaku.sqliteqb.library.Tables;
+import org.mariotaku.sqliteqb.library.query.SQLInsertQuery;
+import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.ArrayList;
@@ -42,11 +42,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.mariotaku.querybuilder.SQLQueryBuilder.alterTable;
-import static org.mariotaku.querybuilder.SQLQueryBuilder.createTable;
-import static org.mariotaku.querybuilder.SQLQueryBuilder.dropTable;
-import static org.mariotaku.querybuilder.SQLQueryBuilder.insertInto;
-import static org.mariotaku.querybuilder.SQLQueryBuilder.select;
+import static org.mariotaku.sqliteqb.library.SQLQueryBuilder.alterTable;
+import static org.mariotaku.sqliteqb.library.SQLQueryBuilder.createTable;
+import static org.mariotaku.sqliteqb.library.SQLQueryBuilder.dropTable;
+import static org.mariotaku.sqliteqb.library.SQLQueryBuilder.insertInto;
+import static org.mariotaku.sqliteqb.library.SQLQueryBuilder.select;
 
 public final class DatabaseUpgradeHelper {
 

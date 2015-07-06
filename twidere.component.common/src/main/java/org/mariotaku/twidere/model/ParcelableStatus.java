@@ -58,20 +58,9 @@ import java.util.Map.Entry;
 @ParcelablePlease(allFields = false)
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus> {
 
-    public static final Parcelable.Creator<ParcelableStatus> CREATOR = new Parcelable.Creator<ParcelableStatus>() {
-        @Override
-        public ParcelableStatus createFromParcel(final Parcel in) {
-            ParcelableStatus status = new ParcelableStatus();
-            ParcelableStatusParcelablePlease.readFromParcel(status, in);
-            return status;
-        }
-
-        @Override
-        public ParcelableStatus[] newArray(final int size) {
-            return new ParcelableStatus[size];
-        }
-    };
-
+    @ParcelableThisPlease
+    @JsonField(name = "id")
+    public long id;
     public static final Comparator<ParcelableStatus> REVERSE_ID_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
@@ -82,7 +71,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return (int) diff;
         }
     };
-
+    @ParcelableThisPlease
+    @JsonField(name = "account_id")
+    public long account_id;
+    @ParcelableThisPlease
+    @JsonField(name = "timestamp")
+    public long timestamp;
     public static final Comparator<ParcelableStatus> TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
@@ -93,16 +87,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return (int) diff;
         }
     };
-
-    @ParcelableThisPlease
-    @JsonField(name = "id")
-    public long id;
-    @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    public long account_id;
-    @ParcelableThisPlease
-    @JsonField(name = "timestamp")
-    public long timestamp;
     @ParcelableThisPlease
     @JsonField(name = "user_id")
     public long user_id;
@@ -259,6 +243,19 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "card")
     public ParcelableCardEntity card;
+    public static final Parcelable.Creator<ParcelableStatus> CREATOR = new Parcelable.Creator<ParcelableStatus>() {
+        @Override
+        public ParcelableStatus createFromParcel(final Parcel in) {
+            ParcelableStatus status = new ParcelableStatus();
+            ParcelableStatusParcelablePlease.readFromParcel(status, in);
+            return status;
+        }
+
+        @Override
+        public ParcelableStatus[] newArray(final int size) {
+            return new ParcelableStatus[size];
+        }
+    };
 
     public ParcelableStatus(final Cursor c, final CursorIndices idx) {
         id = idx.status_id != -1 ? c.getLong(idx.status_id) : -1;
@@ -458,6 +455,16 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         card_name = card != null ? card.name : null;
     }
 
+    @Nullable
+    private static String getPlaceFullName(@Nullable Place place) {
+        if (place == null) return null;
+        return place.getFullName();
+    }
+
+    private static long getTime(final Date date) {
+        return date != null ? date.getTime() : 0;
+    }
+
     @Override
     public int compareTo(@NonNull final ParcelableStatus another) {
         final long diff = another.id - id;
@@ -550,17 +557,22 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 '}';
     }
 
-    @Nullable
-    private static String getPlaceFullName(@Nullable Place place) {
-        if (place == null) return null;
-        return place.getFullName();
+    @Override
+    public void writeToParcel(final Parcel out, final int flags) {
+        ParcelableStatusParcelablePlease.writeToParcel(this, out, flags);
     }
 
-    private static long getTime(final Date date) {
-        return date != null ? date.getTime() : 0;
+    public static ParcelableStatus[] fromStatuses(Status[] statuses, long accountId) {
+        if (statuses == null) return null;
+        int size = statuses.length;
+        final ParcelableStatus[] result = new ParcelableStatus[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = new ParcelableStatus(statuses[i], accountId, false);
+        }
+        return result;
     }
 
-    public static final class CursorIndices {
+    public static final class CursorIndices extends ObjectCursor.CursorIndices<ParcelableStatus> {
 
         public final int _id, account_id, status_id, status_timestamp, user_name, user_screen_name,
                 text_html, text_plain, text_unescaped, user_profile_image_url, is_favorite, is_retweet,
@@ -575,6 +587,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 quoted_by_user_is_protected, quoted_by_user_is_verified;
 
         public CursorIndices(final Cursor cursor) {
+            super(cursor);
             _id = cursor.getColumnIndex(Statuses._ID);
             account_id = cursor.getColumnIndex(Statuses.ACCOUNT_ID);
             status_id = cursor.getColumnIndex(Statuses.STATUS_ID);
@@ -631,6 +644,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             card = cursor.getColumnIndex(Statuses.CARD);
             card_name = cursor.getColumnIndex(Statuses.CARD_NAME);
             place_full_name = cursor.getColumnIndex(Statuses.PLACE_FULL_NAME);
+        }
+
+        @Override
+        ParcelableStatus newObject(Cursor cursor) {
+            return new ParcelableStatus(cursor, this);
         }
 
         @Override
@@ -745,6 +763,25 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             values = ParcelableBindingValue.from(card.getBindingValues());
         }
 
+        public static ParcelableCardEntity fromCardEntity(CardEntity card, long account_id) {
+            if (card == null) return null;
+            return new ParcelableCardEntity(card, account_id);
+        }
+
+        public static ParcelableCardEntity fromJSONString(final String json) {
+            if (TextUtils.isEmpty(json)) return null;
+            try {
+                return LoganSquare.parse(json, ParcelableCardEntity.class);
+            } catch (final IOException e) {
+                return null;
+            }
+        }
+
+        public static ParcelableBindingValue getValue(@Nullable ParcelableCardEntity entity, @Nullable String key) {
+            if (entity == null || entity.values == null || key == null) return null;
+            return entity.values.get(key);
+        }
+
         @Override
         public String toString() {
             return "ParcelableCardEntity{" +
@@ -770,25 +807,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 }
             }
             dest.writeBundle(bundle);
-        }
-
-        public static ParcelableCardEntity fromCardEntity(CardEntity card, long account_id) {
-            if (card == null) return null;
-            return new ParcelableCardEntity(card, account_id);
-        }
-
-        public static ParcelableCardEntity fromJSONString(final String json) {
-            if (TextUtils.isEmpty(json)) return null;
-            try {
-                return LoganSquare.parse(json, ParcelableCardEntity.class);
-            } catch (final IOException e) {
-                return null;
-            }
-        }
-
-        public static ParcelableBindingValue getValue(@Nullable ParcelableCardEntity entity, @Nullable String key) {
-            if (entity == null || entity.values == null || key == null) return null;
-            return entity.values.get(key);
         }
 
         @JsonObject
@@ -835,11 +853,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 }
             }
 
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
             public static Map<String, ParcelableBindingValue> from(Map<String, BindingValue> bindingValues) {
                 if (bindingValues == null) return null;
                 final Map<String, ParcelableBindingValue> map = new HashMap<>();
@@ -847,6 +860,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                     map.put(entry.getKey(), new ParcelableBindingValue(entry.getValue()));
                 }
                 return map;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
             }
 
             @Override
@@ -858,11 +876,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
         }
 
-    }
-
-    @Override
-    public void writeToParcel(final Parcel out, final int flags) {
-        ParcelableStatusParcelablePlease.writeToParcel(this, out, flags);
     }
 
 }

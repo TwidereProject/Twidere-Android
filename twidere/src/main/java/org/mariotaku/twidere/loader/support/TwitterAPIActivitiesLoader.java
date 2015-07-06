@@ -104,27 +104,27 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
             e.printStackTrace();
             return new CopyOnWriteArrayList<>(data);
         }
-        final Pair<Long, Long> minId;
+        final Pair<Long, Long> position;
         if (activities.isEmpty()) {
-            minId = new Pair<>(-1L, -1L);
+            position = new Pair<>(-1L, -1L);
         } else {
             final Activity minActivity = Collections.min(activities);
-            minId = new Pair<>(minActivity.getMinPosition(), minActivity.getMaxPosition());
+            position = new Pair<>(minActivity.getMinPosition(), minActivity.getMaxPosition());
         }
-        final boolean insertGap = minId.first > 0 && minId.second > 0 && activities.size() > 1
+        final boolean insertGap = position.first > 0 && position.second > 0 && activities.size() > 1
                 && !data.isEmpty() && !truncated;
 //        mHandler.post(CacheUsersStatusesTask.getRunnable(context, new StatusListResponse(mAccountIds, activities)));
         for (final Activity activity : activities) {
             final long min = activity.getMinPosition(), max = activity.getMaxPosition();
-            final boolean deleted = deleteStatus(data, max);
-            final boolean isGap = minId.first == min && minId.second == max && insertGap && !deleted;
+            final boolean deleted = deleteActivity(data, max);
+            final boolean isGap = position.first == min && position.second == max && insertGap && !deleted;
             data.add(new ParcelableActivity(activity, mAccountIds, isGap));
         }
 //        final ParcelableActivity[] array = data.toArray(new ParcelableActivity[data.size()]);
 //        for (int i = 0, size = array.length; i < size; i++) {
 //            final ParcelableActivity status = array[i];
 //            if (shouldFilterActivity(mDatabase, status) && !status.is_gap && i != size - 1) {
-//                deleteStatus(data, status.max_position);
+//                deleteActivity(data, status.max_position);
 //            }
 //        }
         if (mComparator != null) {

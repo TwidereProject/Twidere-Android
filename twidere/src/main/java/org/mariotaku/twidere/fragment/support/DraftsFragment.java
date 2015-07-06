@@ -56,9 +56,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;

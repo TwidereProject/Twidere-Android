@@ -23,7 +23,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,14 +34,15 @@ import com.desmond.asyncmanager.AsyncManager;
 import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
-import org.mariotaku.twidere.adapter.CursorStatusesAdapter;
-import org.mariotaku.twidere.loader.support.ExtendedCursorLoader;
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.loader.support.ObjectCursorLoader;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -55,6 +55,8 @@ import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 
+import java.util.List;
+
 import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
 import static org.mariotaku.twidere.util.Utils.getNewestStatusIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.getOldestStatusIdsFromDatabase;
@@ -63,12 +65,12 @@ import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
 /**
  * Created by mariotaku on 14/12/3.
  */
-public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor> {
+public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
     @Override
     protected void onLoadingFinished() {
         final long[] accountIds = getAccountIds();
-        final AbsStatusesAdapter<Cursor> adapter = getAdapter();
+        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
         } else if (accountIds.length > 0) {
@@ -84,9 +86,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     public abstract Uri getContentUri();
 
     @Override
-    protected Loader<Cursor> onCreateStatusesLoader(final Context context,
-                                                    final Bundle args,
-                                                    final boolean fromUser) {
+    protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
@@ -99,10 +101,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
             where = accountWhere;
         }
         final String selection = processWhere(where).getSQL();
-        final AbsStatusesAdapter<Cursor> adapter = getAdapter();
+        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         adapter.setShowAccountsColor(accountIds.length > 1);
         final String[] projection = Statuses.COLUMNS;
-        return new ExtendedCursorLoader(context, uri, projection, selection, null, sortOrder, fromUser);
+        return new ObjectCursorLoader<>(context, ParcelableStatus.CursorIndices.class, uri, projection,
+                selection, null, sortOrder);
     }
 
     @Override
@@ -198,18 +201,18 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<Cursor>
     }
 
     @Override
-    protected boolean hasMoreData(final Cursor cursor) {
-        return cursor != null && cursor.getCount() != 0;
+    protected boolean hasMoreData(final List<ParcelableStatus> cursor) {
+        return cursor != null && cursor.size() != 0;
     }
 
     @NonNull
     @Override
-    protected CursorStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new CursorStatusesAdapter(context, compact);
+    protected ParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
+        return new ParcelableStatusesAdapter(context, compact);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(Loader<List<ParcelableStatus>> loader) {
         getAdapter().setData(null);
     }
 

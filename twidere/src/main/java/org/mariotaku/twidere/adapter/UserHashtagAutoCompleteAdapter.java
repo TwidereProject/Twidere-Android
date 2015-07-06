@@ -32,10 +32,10 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.TextView;
 
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.OrderBy;
-import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.OrderBy;
+import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;

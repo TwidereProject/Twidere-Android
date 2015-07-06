@@ -48,6 +48,7 @@ import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
 import android.support.v4.util.LongSparseArray;
@@ -60,16 +61,16 @@ import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.OnConflict;
-import org.mariotaku.querybuilder.RawItemArray;
-import org.mariotaku.querybuilder.RawSQLLang;
-import org.mariotaku.querybuilder.SQLQueryBuilder;
-import org.mariotaku.querybuilder.SetValue;
-import org.mariotaku.querybuilder.query.SQLInsertQuery;
-import org.mariotaku.querybuilder.query.SQLSelectQuery;
-import org.mariotaku.querybuilder.query.SQLUpdateQuery;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.OnConflict;
+import org.mariotaku.sqliteqb.library.RawItemArray;
+import org.mariotaku.sqliteqb.library.RawSQLLang;
+import org.mariotaku.sqliteqb.library.SQLQueryBuilder;
+import org.mariotaku.sqliteqb.library.SetValue;
+import org.mariotaku.sqliteqb.library.query.SQLInsertQuery;
+import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
+import org.mariotaku.sqliteqb.library.query.SQLUpdateQuery;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -136,7 +137,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private ContentResolver mContentResolver;
     private SQLiteDatabaseWrapper mDatabaseWrapper;
     private PermissionsManager mPermissionsManager;
+
+    @Nullable
     private NotificationManager mNotificationManager;
+
     private ReadStateManager mReadStateManager;
     private SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;

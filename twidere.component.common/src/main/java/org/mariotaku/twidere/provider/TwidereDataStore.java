@@ -836,6 +836,38 @@ public interface TwidereDataStore {
 
     }
 
+    interface Activities extends BaseColumns {
+
+        String ACCOUNT_ID = "account_id";
+        String TIMESTAMP = "timestamp";
+        String STATUS_USER_ID = "status_user_id";
+        String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
+        String STATUS_QUOTED_BY_USER_ID = "status_quoted_by_user_id";
+        String STATUS_SOURCE = "status_source";
+        String STATUS_QUOTE_SOURCE = "status_quote_source";
+        String STATUS_TEXT_PLAIN = "status_text_plain";
+        String STATUS_QUOTE_TEXT_PLAIN = "status_quote_text_plain";
+        String STATUS_TEXT_HTML = "status_text_html";
+        String STATUS_QUOTE_TEXT_HTML = "status_quote_text_html";
+        String STATUS_IS_GAP = "status_is_gap";
+        String MIN_POSITION = "min_position";
+        String MAX_POSITION = "max_position";
+        String SOURCES = "sources";
+        String TARGET_STATUSES = "target_statuses";
+        String TARGET_USERS = "target_users";
+        String TARGET_USER_LISTS = "target_user_lists";
+        String TARGET_OBJECT_STATUSES = "target_object_statuses";
+        String TARGET_OBJECT_USER_LISTS = "target_object_user_lists";
+
+    }
+
+    interface ActivitiesAboutMe extends Activities {
+
+        String CONTENT_PATH = "activities_about_me";
+
+        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+    }
+
     interface Tabs extends BaseColumns {
         String TABLE_NAME = "tabs";
         String CONTENT_PATH = TABLE_NAME;

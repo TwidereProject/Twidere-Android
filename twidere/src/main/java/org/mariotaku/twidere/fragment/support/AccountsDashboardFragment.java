@@ -77,7 +77,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;

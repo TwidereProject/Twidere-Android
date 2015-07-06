@@ -35,7 +35,7 @@ import android.widget.TextView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 
-import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.SignInActivity;

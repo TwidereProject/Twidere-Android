@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,16 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twiderecomponentsqlquerybuilder;
-
-import android.app.Application;
-import android.test.ApplicationTestCase;
+package android.support.v4.content;
 
 /**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
+ * Created by mariotaku on 15/7/5.
  */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+public class LoaderTrojan {
+    public static <T> boolean isContentChanged(final Loader<T> loader) {
+        return loader.mContentChanged;
     }
 }

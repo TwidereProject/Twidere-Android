@@ -19,20 +19,22 @@
 
 package org.mariotaku.twidere.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
+
+import org.mariotaku.twidere.api.twitter.model.Activity;
 
 import java.util.Arrays;
 
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-
+@ParcelablePlease(allFields = false)
 @JsonObject
-public class ParcelableActivity implements Comparable<ParcelableActivity> {
+public class ParcelableActivity implements Comparable<ParcelableActivity>, Parcelable {
 
     public final static int ACTION_FAVORITE = Activity.Action.ACTION_FAVORITE;
     public final static int ACTION_FOLLOW = Activity.Action.ACTION_FOLLOW;
@@ -44,30 +46,54 @@ public class ParcelableActivity implements Comparable<ParcelableActivity> {
     public final static int ACTION_FAVORITED_RETWEET = Activity.Action.ACTION_FAVORITED_RETWEET;
     public final static int ACTION_RETWEETED_RETWEET = Activity.Action.ACTION_RETWEETED_RETWEET;
 
+    public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
+        @Override
+        public ParcelableActivity createFromParcel(Parcel source) {
+            return new ParcelableActivity(source);
+        }
+
+        @Override
+        public ParcelableActivity[] newArray(int size) {
+            return new ParcelableActivity[size];
+        }
+    };
+
+    @ParcelableThisPlease
     @JsonField(name = "account_id")
     public long account_id;
+    @ParcelableThisPlease
     @JsonField(name = "timestamp")
     public long timestamp;
+    @ParcelableThisPlease
     @JsonField(name = "max_position")
     public long max_position;
+    @ParcelableThisPlease
     @JsonField(name = "min_position")
     public long min_position;
+    @ParcelableThisPlease
     @JsonField(name = "action")
     public int action;
 
+    @ParcelableThisPlease
     @JsonField(name = "sources")
     public ParcelableUser[] sources;
+    @ParcelableThisPlease
     @JsonField(name = "target_users")
     public ParcelableUser[] target_users;
+    @ParcelableThisPlease
     @JsonField(name = "target_statuses")
     public ParcelableStatus[] target_statuses;
+    @ParcelableThisPlease
     @JsonField(name = "target_user_lists")
     public ParcelableUserList[] target_user_lists;
 
+    @ParcelableThisPlease
     @JsonField(name = "target_object_user_lists")
     public ParcelableUserList[] target_object_user_lists;
+    @ParcelableThisPlease
     @JsonField(name = "target_object_statuses")
     public ParcelableStatus[] target_object_statuses;
+    @ParcelableThisPlease
     @JsonField(name = "is_gap")
     public boolean is_gap;
 
@@ -80,59 +106,17 @@ public class ParcelableActivity implements Comparable<ParcelableActivity> {
         action = activity.getAction().getActionId();
         max_position = activity.getMaxPosition();
         min_position = activity.getMinPosition();
-        final int sources_size = activity.getSourcesSize();
-        sources = new ParcelableUser[sources_size];
-        for (int i = 0; i < sources_size; i++) {
-            sources[i] = new ParcelableUser(activity.getSources()[i], account_id);
-        }
-        final int targets_size = activity.getTargetsSize();
-        final User[] targetUsers = activity.getTargetUsers();
-        if (targetUsers != null) {
-            target_users = new ParcelableUser[targets_size];
-            for (int i = 0; i < targets_size; i++) {
-                target_users[i] = new ParcelableUser(targetUsers[i], account_id);
-            }
-        } else {
-            target_users = null;
-        }
-        final UserList[] targetUserLists = activity.getTargetUserLists();
-        if (targetUserLists != null) {
-            target_user_lists = new ParcelableUserList[targets_size];
-            for (int i = 0; i < targets_size; i++) {
-                target_user_lists[i] = new ParcelableUserList(targetUserLists[i], account_id);
-            }
-        } else {
-            target_user_lists = null;
-        }
-        final Status[] targetStatuses = activity.getTargetStatuses();
-        if (targetStatuses != null) {
-            target_statuses = new ParcelableStatus[targets_size];
-            for (int i = 0; i < targets_size; i++) {
-                target_statuses[i] = new ParcelableStatus(targetStatuses[i], account_id, false);
-            }
-        } else {
-            target_statuses = null;
-        }
-        final int target_objects_size = activity.getTargetObjectsSize();
-        final Status[] targetObjectStatuses = activity.getTargetObjectStatuses();
-        if (targetObjectStatuses != null) {
-            target_object_statuses = new ParcelableStatus[target_objects_size];
-            for (int i = 0; i < target_objects_size; i++) {
-                target_object_statuses[i] = new ParcelableStatus(targetObjectStatuses[i], account_id, false);
-            }
-        } else {
-            target_object_statuses = null;
-        }
-        final UserList[] targetObjectUserLists = activity.getTargetObjectUserLists();
-        if (targetObjectUserLists != null) {
-            target_object_user_lists = new ParcelableUserList[target_objects_size];
-            for (int i = 0; i < target_objects_size; i++) {
-                target_object_user_lists[i] = new ParcelableUserList(targetObjectUserLists[i], account_id);
-            }
-        } else {
-            target_object_user_lists = null;
-        }
+        sources = ParcelableUser.fromUsers(activity.getSources(), account_id);
+        target_users = ParcelableUser.fromUsers(activity.getTargetUsers(), account_id);
+        target_user_lists = ParcelableUserList.fromUserLists(activity.getTargetUserLists(), account_id);
+        target_statuses = ParcelableStatus.fromStatuses(activity.getTargetStatuses(), account_id);
+        target_object_statuses = ParcelableStatus.fromStatuses(activity.getTargetObjectStatuses(), account_id);
+        target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), account_id);
         this.is_gap = is_gap;
+    }
+
+    public ParcelableActivity(Parcel src) {
+        ParcelableActivityParcelablePlease.readFromParcel(this, src);
     }
 
 
@@ -163,4 +147,13 @@ public class ParcelableActivity implements Comparable<ParcelableActivity> {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableActivityParcelablePlease.writeToParcel(this, dest, flags);
+    }
 }

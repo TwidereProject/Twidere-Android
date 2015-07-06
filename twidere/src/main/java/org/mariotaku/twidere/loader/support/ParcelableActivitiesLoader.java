@@ -56,7 +56,7 @@ public abstract class ParcelableActivitiesLoader extends AsyncTaskLoader<List<Pa
         return false;
     }
 
-    protected boolean deleteStatus(final List<ParcelableActivity> activities, final long id) {
+    protected boolean deleteActivity(final List<ParcelableActivity> activities, final long id) {
         if (activities == null || activities.isEmpty()) return false;
         boolean result = false;
         for (final ParcelableActivity activity : activities.toArray(new ParcelableActivity[activities.size()])) {

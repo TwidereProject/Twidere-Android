@@ -27,13 +27,14 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import org.mariotaku.querybuilder.Expression;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
@@ -71,7 +72,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
-                final ContentValues values = ParcelableUser.makeCachedUserContentValues(user);
+                final ContentValues values = ContentValuesCreator.makeCachedUserContentValues(user);
                 resolver.insert(CachedUsers.CONTENT_URI, values);
                 return SingleResponse.getInstance(user);
             }

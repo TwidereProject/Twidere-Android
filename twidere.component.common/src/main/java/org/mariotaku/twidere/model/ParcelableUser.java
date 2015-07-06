@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.model;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -360,33 +359,14 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         return new ParcelableUser(account_id, id, name, screen_name, profile_image_url);
     }
 
-    public static ContentValues makeCachedUserContentValues(final ParcelableUser user) {
-        if (user == null) return null;
-        final ContentValues values = new ContentValues();
-        values.put(CachedUsers.USER_ID, user.id);
-        values.put(CachedUsers.NAME, user.name);
-        values.put(CachedUsers.SCREEN_NAME, user.screen_name);
-        values.put(CachedUsers.PROFILE_IMAGE_URL, user.profile_image_url);
-        values.put(CachedUsers.CREATED_AT, user.created_at);
-        values.put(CachedUsers.IS_PROTECTED, user.is_protected);
-        values.put(CachedUsers.IS_VERIFIED, user.is_verified);
-        values.put(CachedUsers.LISTED_COUNT, user.listed_count);
-        values.put(CachedUsers.FAVORITES_COUNT, user.favorites_count);
-        values.put(CachedUsers.FOLLOWERS_COUNT, user.followers_count);
-        values.put(CachedUsers.FRIENDS_COUNT, user.friends_count);
-        values.put(CachedUsers.STATUSES_COUNT, user.statuses_count);
-        values.put(CachedUsers.LOCATION, user.location);
-        values.put(CachedUsers.DESCRIPTION_PLAIN, user.description_plain);
-        values.put(CachedUsers.DESCRIPTION_HTML, user.description_html);
-        values.put(CachedUsers.DESCRIPTION_EXPANDED, user.description_expanded);
-        values.put(CachedUsers.URL, user.url);
-        values.put(CachedUsers.URL_EXPANDED, user.url_expanded);
-        values.put(CachedUsers.PROFILE_BANNER_URL, user.profile_banner_url);
-        values.put(CachedUsers.IS_FOLLOWING, user.is_following);
-        values.put(CachedUsers.BACKGROUND_COLOR, user.background_color);
-        values.put(CachedUsers.LINK_COLOR, user.link_color);
-        values.put(CachedUsers.TEXT_COLOR, user.text_color);
-        return values;
+    public static ParcelableUser[] fromUsers(final User[] users, long accountId) {
+        if (users == null) return null;
+        int size = users.length;
+        final ParcelableUser[] result = new ParcelableUser[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = new ParcelableUser(users[i], accountId);
+        }
+        return result;
     }
 
     public static final class CachedIndices {

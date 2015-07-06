@@ -53,10 +53,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.querybuilder.Columns.Column;
-import org.mariotaku.querybuilder.Expression;
-import org.mariotaku.querybuilder.OrderBy;
-import org.mariotaku.querybuilder.RawItemArray;
+import org.mariotaku.sqliteqb.library.Columns.Column;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.OrderBy;
+import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.QuickSearchBarActivity.SuggestionItem;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
