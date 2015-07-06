@@ -51,6 +51,7 @@ import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusActivitySummary;
 import org.mariotaku.twidere.api.twitter.model.StatusDeletionNotice;
@@ -82,6 +83,7 @@ import org.mariotaku.twidere.api.twitter.model.impl.RelationshipImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.RelationshipWrapper;
 import org.mariotaku.twidere.api.twitter.model.impl.ResponseListImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.SavedSearchImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusActivitySummaryImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusDeletionNoticeImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusImpl;
@@ -152,6 +154,7 @@ public class TwitterConverter implements Converter {
         TypeConverterMapper.register(Activity.class, ActivityImpl.class, ActivityImpl.MAPPER);
         TypeConverterMapper.register(Warning.class, WarningImpl.class);
         TypeConverterMapper.register(StatusDeletionNotice.class, StatusDeletionNoticeImpl.class);
+        TypeConverterMapper.register(ScheduledStatus.class, ScheduledStatusImpl.class);
 
         LoganSquare.registerTypeConverter(Indices.class, Indices.CONVERTER);
         LoganSquare.registerTypeConverter(GeoLocation.class, GeoLocation.CONVERTER);

@@ -22,7 +22,7 @@ package org.mariotaku.twidere.api.twitter.model;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.SimpleValueMap;
 
-public final class StatusUpdate extends SimpleValueMap {
+public class StatusUpdate extends SimpleValueMap {
 
     public StatusUpdate(final String status) {
         put("status", status);

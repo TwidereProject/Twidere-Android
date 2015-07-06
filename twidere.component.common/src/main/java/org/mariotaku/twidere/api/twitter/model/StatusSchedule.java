@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,23 +17,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model;
+package org.mariotaku.twidere.api.twitter.model;
 
-import android.support.annotation.NonNull;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Created by mariotaku on 15/4/20.
+ * Created by mariotaku on 15/7/6.
  */
-public enum ConsumerKeyType {
-    TWITTER_FOR_ANDROID, TWITTER_FOR_IPHONE, TWITTER_FOR_IPAD, TWITTER_FOR_MAC,
-    TWITTER_FOR_WINDOWS_PHONE, TWITTER_FOR_GOOGLE_TV, TWEETDECK, UNKNOWN;
+public class StatusSchedule extends StatusUpdate {
+    public StatusSchedule(String status) {
+        super(status);
+    }
 
-    @NonNull
-    public static ConsumerKeyType parse(String type) {
-        try {
-            return ConsumerKeyType.valueOf(type);
-        } catch (Exception e) {
-            return UNKNOWN;
-        }
+    public void setExecuteAt(Date executeAt) {
+        put("execute_at", TimeUnit.SECONDS.convert(executeAt.getTime(), TimeUnit.MILLISECONDS));
     }
 }

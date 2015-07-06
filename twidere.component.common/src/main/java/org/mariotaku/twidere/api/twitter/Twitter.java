@@ -28,6 +28,7 @@ import org.mariotaku.twidere.api.twitter.api.PlacesGeoResources;
 import org.mariotaku.twidere.api.twitter.api.PrivateActivityResources;
 import org.mariotaku.twidere.api.twitter.api.PrivateDirectMessagesResources;
 import org.mariotaku.twidere.api.twitter.api.PrivateFriendsFollowersResources;
+import org.mariotaku.twidere.api.twitter.api.PrivateScheduleResources;
 import org.mariotaku.twidere.api.twitter.api.PrivateTimelinesResources;
 import org.mariotaku.twidere.api.twitter.api.PrivateTweetResources;
 import org.mariotaku.twidere.api.twitter.api.SavedSearchesResources;
@@ -46,5 +47,5 @@ public interface Twitter extends SearchResource, TimelinesResources,
         TweetResources, UsersResources, ListsResources, DirectMessagesResources, FriendsFollowersResources,
         FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
         HelpResources, PrivateActivityResources, PrivateTweetResources, PrivateTimelinesResources,
-        PrivateFriendsFollowersResources, PrivateDirectMessagesResources {
+        PrivateFriendsFollowersResources, PrivateDirectMessagesResources, PrivateScheduleResources {
 }

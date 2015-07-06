@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -33,6 +32,8 @@
         <item>62bd0d33</item>
         <!--Twitter for Google TV-->
         <item>56d8f9ff</item>
+        <!--TweetDeck-->
+        <item>ac602936</item>
     </string-array>
     <string-array name="names_official_consumer_secret">
         <!--Twitter for Android-->
@@ -47,6 +48,8 @@
         <item>Twitter for Windows Phone</item>
         <!--Twitter for Google TV-->
         <item>Twitter for Google TV</item>
+        <!--TweetDeck-->
+        <item>TweetDeck</item>
     </string-array>
     <string-array name="types_official_consumer_secret">
         <!--Twitter for Android-->
@@ -61,5 +64,7 @@
         <item>TWITTER_FOR_WINDOWS_PHONE</item>
         <!--Twitter for Google TV-->
         <item>TWITTER_FOR_GOOGLE_TV</item>
+        <!--TweetDeck-->
+        <item>TWEETDECK</item>
     </string-array>
 </resources>
