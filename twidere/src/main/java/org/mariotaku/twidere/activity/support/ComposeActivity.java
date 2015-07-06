@@ -747,6 +747,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 final MarkForDeleteSpan[] deletes = s.getSpans(0, s.length(), MarkForDeleteSpan.class);
                 for (MarkForDeleteSpan delete : deletes) {
                     s.delete(s.getSpanStart(delete), s.getSpanEnd(delete));
+                    s.removeSpan(delete);
                 }
             }
         });
