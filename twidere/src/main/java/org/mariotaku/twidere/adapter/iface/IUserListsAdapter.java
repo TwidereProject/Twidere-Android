@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.adapter.iface;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.view.holder.UserListViewHolder.UserListClickListener;
@@ -40,6 +42,7 @@ public interface IUserListsAdapter<Data> extends IContentCardAdapter, UserListCl
 
     boolean isNameFirst();
 
+    @NonNull
     @Override
     MediaLoaderWrapper getMediaLoader();
 

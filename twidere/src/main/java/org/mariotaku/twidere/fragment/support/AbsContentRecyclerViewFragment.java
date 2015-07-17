@@ -42,8 +42,8 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
+import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
-import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
@@ -54,9 +54,10 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 
 /**
+ * Comment, blah, blah, blah.
  * Created by mariotaku on 15/4/16.
  */
-public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapter> extends BaseSupportFragment
+public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter> extends BaseSupportFragment
         implements OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, ControlBarOffsetListener,
         ContentListSupport {
 
@@ -222,7 +223,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends IContentCardAdapt
             mItemDecoration = new DividerItemDecoration(context, mLayoutManager.getOrientation());
             mRecyclerView.addItemDecoration(mItemDecoration);
         }
-        mRecyclerView.setAdapter((RecyclerView.Adapter) mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new ContentListScrollListener(this);
         mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());

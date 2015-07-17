@@ -41,6 +41,10 @@
         android:icon="@drawable/ic_action_search"
         android:title="@string/saved_searches" />
     <item
+        android:id="@+id/scheduled_statuses"
+        android:icon="@drawable/ic_action_time"
+        android:title="@string/scheduled_statuses" />
+    <item
         android:id="@id/enable_retweets"
         android:checkable="true"
         android:icon="@drawable/ic_action_retweet"

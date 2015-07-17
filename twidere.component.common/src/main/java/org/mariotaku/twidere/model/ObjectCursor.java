@@ -50,7 +50,7 @@ public class ObjectCursor<E> extends AbstractList<E> {
             mCache.put(location, object);
             return object;
         }
-        throw new ArrayIndexOutOfBoundsException(location);
+        throw new ArrayIndexOutOfBoundsException("length=" + mCursor.getCount() + "; index=" + location);
     }
 
     private void ensureCursor() {

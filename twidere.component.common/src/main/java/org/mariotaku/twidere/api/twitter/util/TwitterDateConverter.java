@@ -19,24 +19,50 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
-import com.bluelinelabs.logansquare.typeconverters.DateTypeConverter;
+import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
+
+import org.mariotaku.twidere.util.AbsLogger;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class TwitterDateConverter extends DateTypeConverter {
+public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
 
+    private static final long ONE_MINUTE = TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
     private final DateFormat mDateFormat;
 
     public TwitterDateConverter() {
-        mDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.ENGLISH);
+        mDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.US);
+        mDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
-    public DateFormat getDateFormat() {
-        return mDateFormat;
+    @Override
+    public Date getFromString(String string) {
+        final Date date;
+        try {
+            date = mDateFormat.parse(string);
+        } catch (ParseException e) {
+            AbsLogger.error("Unrecognized date: " + string, e);
+            return null;
+        }
+        final long currentTime = System.currentTimeMillis();
+        if (date.getTime() - currentTime > ONE_MINUTE) {
+            AbsLogger.error("Tweet date from future: " + string + ", current time is " + currentTime);
+        }
+        return date;
     }
+
+    @Override
+    public String convertToString(Date date) {
+        return mDateFormat.format(date);
+    }
+
 }

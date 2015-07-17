@@ -103,7 +103,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
         final List<Object> selectedItems = mMultiSelectManager.getSelectedItems();
         if (selectedItems.isEmpty()) return false;
         switch (item.getItemId()) {
-            case MENU_REPLY: {
+            case R.id.reply: {
                 final Extractor extractor = new Extractor();
                 final Intent intent = new Intent(INTENT_ACTION_REPLY_MULTIPLE);
                 final Bundle bundle = new Bundle();
@@ -133,7 +133,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 mode.finish();
                 break;
             }
-            case MENU_MUTE_USER: {
+            case R.id.mute_user: {
                 final ContentResolver resolver = mActivity.getContentResolver();
                 final ArrayList<ContentValues> valuesList = new ArrayList<>();
                 final Set<Long> userIds = new HashSet<>();
@@ -155,7 +155,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 mActivity.sendBroadcast(new Intent(BROADCAST_MULTI_MUTESTATE_CHANGED));
                 break;
             }
-            case MENU_BLOCK: {
+            case R.id.block: {
                 final long accountId = mMultiSelectManager.getAccountId();
                 final long[] userIds = MultiSelectManager.getSelectedUserIds(selectedItems);
                 if (accountId > 0 && userIds != null) {
@@ -164,7 +164,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 mode.finish();
                 break;
             }
-            case MENU_REPORT_SPAM: {
+            case R.id.report_spam: {
                 final long accountId = mMultiSelectManager.getAccountId();
                 final long[] userIds = MultiSelectManager.getSelectedUserIds(selectedItems);
                 if (accountId > 0 && userIds != null) {
@@ -190,7 +190,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
     @Override
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
         mode.getMenuInflater().inflate(R.menu.action_multi_select_contents, menu);
-        mAccountActionProvider = (AccountActionProvider) menu.findItem(MENU_SELECT_ACCOUNT).getActionProvider();
+        mAccountActionProvider = (AccountActionProvider) menu.findItem(R.id.select_account).getActionProvider();
         mAccountActionProvider.setSelectedAccountIds(mMultiSelectManager.getFirstSelectAccountId());
         return true;
     }

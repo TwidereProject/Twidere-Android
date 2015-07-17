@@ -3,7 +3,6 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.Spanned;
@@ -170,15 +169,14 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             nameView.setName(manager.getUserNickname(status.quoted_by_user_id, status.quoted_by_user_name, false));
             nameView.setScreenName("@" + status.quoted_by_user_screen_name);
 
-            final int idx = status.quote_text_unescaped.lastIndexOf(" twitter.com");
             if (translation != null) {
                 quoteTextView.setText(translation.getText());
             } else if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                 final String text = status.quote_text_unescaped;
-                quoteTextView.setText(idx > 0 ? text.substring(0, idx) : text);
+                quoteTextView.setText(text);
             } else {
                 final Spanned text = Html.fromHtml(status.quote_text_html);
-                quoteTextView.setText(idx > 0 ? text.subSequence(0, idx) : text);
+                quoteTextView.setText(text);
                 linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
                 quoteTextView.setMovementMethod(null);
@@ -326,10 +324,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         nameView.updateText();
         quotedNameView.updateText();
-    }
 
-    public CardView getCardView() {
-        return (CardView) itemView.findViewById(R.id.card);
     }
 
     public ImageView getProfileImageView() {
@@ -504,11 +499,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             updateOptions();
         }
 
+        @NonNull
         @Override
         public MediaLoaderWrapper getMediaLoader() {
             return loader;
         }
 
+        @NonNull
         @Override
         public Context getContext() {
             return context;
@@ -519,6 +516,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             return handler;
         }
 
+        @NonNull
         @Override
         public UserColorNameManager getUserColorNameManager() {
             return manager;

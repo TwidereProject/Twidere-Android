@@ -90,7 +90,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_HOME: {
+            case android.R.id.home: {
                 finish();
                 return true;
             }

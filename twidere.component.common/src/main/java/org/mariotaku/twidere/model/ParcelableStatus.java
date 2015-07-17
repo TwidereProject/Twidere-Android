@@ -648,7 +648,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
         @Override
         ParcelableStatus newObject(Cursor cursor) {
-            return new ParcelableStatus(cursor, this);
+            final long time = System.currentTimeMillis();
+            final ParcelableStatus status = new ParcelableStatus(cursor, this);
+            TwitterContentUtils.checkTime(status.timestamp, time);
+            TwitterContentUtils.checkTime(status.quote_timestamp, time);
+            TwitterContentUtils.checkTime(status.retweet_timestamp, time);
+            return status;
         }
 
         @Override

@@ -37,6 +37,7 @@ import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
+import org.mariotaku.twidere.api.twitter.model.ExtendedProfile;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.HashtagEntity;
 import org.mariotaku.twidere.api.twitter.model.IDs;
@@ -52,6 +53,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
+import org.mariotaku.twidere.api.twitter.model.ScheduledStatusesList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusActivitySummary;
 import org.mariotaku.twidere.api.twitter.model.StatusDeletionNotice;
@@ -69,6 +71,7 @@ import org.mariotaku.twidere.api.twitter.model.impl.ActivityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.CardEntityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.DirectMessageImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.ErrorInfoImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.ExtendedProfileImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.HashtagEntityImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.IDsImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.Indices;
@@ -84,6 +87,7 @@ import org.mariotaku.twidere.api.twitter.model.impl.RelationshipWrapper;
 import org.mariotaku.twidere.api.twitter.model.impl.ResponseListImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.SavedSearchImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusesListWrapper;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusActivitySummaryImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusDeletionNoticeImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.StatusImpl;
@@ -155,6 +159,7 @@ public class TwitterConverter implements Converter {
         TypeConverterMapper.register(Warning.class, WarningImpl.class);
         TypeConverterMapper.register(StatusDeletionNotice.class, StatusDeletionNoticeImpl.class);
         TypeConverterMapper.register(ScheduledStatus.class, ScheduledStatusImpl.class);
+        TypeConverterMapper.register(ExtendedProfile.class, ExtendedProfileImpl.class);
 
         LoganSquare.registerTypeConverter(Indices.class, Indices.CONVERTER);
         LoganSquare.registerTypeConverter(GeoLocation.class, GeoLocation.CONVERTER);
@@ -163,11 +168,13 @@ public class TwitterConverter implements Converter {
         LoganSquare.registerTypeConverter(MediaEntity.Type.class, EnumConverter.get(MediaEntity.Type.class));
         LoganSquare.registerTypeConverter(UserList.Mode.class, EnumConverter.get(UserList.Mode.class));
         LoganSquare.registerTypeConverter(Activity.Action.class, EnumConverter.get(Activity.Action.class));
+        LoganSquare.registerTypeConverter(ScheduledStatus.State.class, EnumConverter.get(ScheduledStatus.State.class));
 
         registerWrapper(QueryResult.class, QueryResultWrapper.class);
         registerWrapper(PageableResponseList.class, PageableResponseListWrapper.class);
         registerWrapper(Relationship.class, RelationshipWrapper.class);
         registerWrapper(CardEntity.BindingValue.class, CardEntityImpl.BindingValueWrapper.class);
+        registerWrapper(ScheduledStatusesList.class, ScheduledStatusesListWrapper.class);
     }
 
     @Override

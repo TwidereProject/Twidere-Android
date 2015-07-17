@@ -250,6 +250,12 @@ public class ParcelableAccount implements Parcelable {
         return getCredentialsList(context, activatedOnly, false);
     }
 
+    public static ParcelableCredentials[] getCredentialsArray(final Context context, final boolean activatedOnly,
+                                                              final boolean officialKeyOnly) {
+        final List<ParcelableCredentials> credentialsList = getCredentialsList(context, activatedOnly, officialKeyOnly);
+        return credentialsList.toArray(new ParcelableCredentials[credentialsList.size()]);
+    }
+
     public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly,
                                                                  final boolean officialKeyOnly) {
         if (context == null) return Collections.emptyList();

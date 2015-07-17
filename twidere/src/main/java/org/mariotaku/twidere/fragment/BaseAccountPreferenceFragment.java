@@ -83,7 +83,7 @@ public abstract class BaseAccountPreferenceFragment extends PreferenceFragment i
         final String switchKey = getSwitchPreferenceKey();
         if (!TextUtils.isEmpty(switchKey)) {
             inflater.inflate(R.menu.menu_switch_preference, menu);
-            final View actionView = menu.findItem(MENU_TOGGLE).getActionView();
+            final View actionView = menu.findItem(R.id.toggle).getActionView();
             final CompoundButton toggle = (CompoundButton) actionView.findViewById(android.R.id.toggle);
             final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
             toggle.setOnCheckedChangeListener(this);

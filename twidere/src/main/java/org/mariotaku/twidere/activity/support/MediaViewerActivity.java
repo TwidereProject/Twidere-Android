@@ -426,11 +426,11 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     if (callback.first.isDetached() || callback.first.getActivity() == null) return;
                     final Menu menu = callback.second;
                     final boolean hasImage = result.first;
-                    MenuUtils.setMenuItemAvailability(menu, MENU_REFRESH, !hasImage && !isLoading);
-                    MenuUtils.setMenuItemAvailability(menu, MENU_SHARE, hasImage && !isLoading);
-                    MenuUtils.setMenuItemAvailability(menu, MENU_SAVE, hasImage && !isLoading);
+                    MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
+                    MenuUtils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
+                    MenuUtils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
                     if (!hasImage) return;
-                    final MenuItem shareItem = menu.findItem(MENU_SHARE);
+                    final MenuItem shareItem = menu.findItem(R.id.share);
                     shareItem.setIntent(Intent.createChooser(result.second, callback.first.getString(R.string.share)));
                 }
             };
@@ -449,15 +449,15 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case MENU_OPEN_IN_BROWSER: {
+                case R.id.open_in_browser: {
                     openInBrowser();
                     return true;
                 }
-                case MENU_SAVE: {
+                case R.id.save: {
                     saveToGallery();
                     return true;
                 }
-                case MENU_REFRESH: {
+                case R.id.refresh: {
                     loadImage();
                     return true;
                 }
@@ -885,11 +885,11 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             final Pair<String, String> linkAndType = mVideoUrlAndType;
             final boolean isLoading = linkAndType != null && mVideoLoader.isLoading(linkAndType.first);
             final boolean hasVideo = file != null && file.exists() && linkAndType != null;
-            MenuUtils.setMenuItemAvailability(menu, MENU_REFRESH, !hasVideo && !isLoading);
-            MenuUtils.setMenuItemAvailability(menu, MENU_SHARE, hasVideo && !isLoading);
-            MenuUtils.setMenuItemAvailability(menu, MENU_SAVE, hasVideo && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasVideo && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.share, hasVideo && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.save, hasVideo && !isLoading);
             if (!hasVideo) return;
-            final MenuItem shareItem = menu.findItem(MENU_SHARE);
+            final MenuItem shareItem = menu.findItem(R.id.share);
             final Intent intent = new Intent(Intent.ACTION_SEND);
             final Uri fileUri = Uri.fromFile(file);
             intent.setDataAndType(fileUri, linkAndType.second);
@@ -913,11 +913,11 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case MENU_SAVE: {
+                case R.id.save: {
                     saveToGallery();
                     return true;
                 }
-                case MENU_REFRESH: {
+                case R.id.refresh: {
                     loadVideo();
                     return true;
                 }

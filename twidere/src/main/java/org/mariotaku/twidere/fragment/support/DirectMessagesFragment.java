@@ -288,7 +288,7 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_COMPOSE: {
+            case R.id.compose: {
                 openMessageConversation(getActivity(), -1, -1);
                 break;
             }

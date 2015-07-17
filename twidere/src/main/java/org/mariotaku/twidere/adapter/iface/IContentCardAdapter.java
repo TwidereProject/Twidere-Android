@@ -31,8 +31,11 @@ import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
  * Created by mariotaku on 15/1/3.
  */
 public interface IContentCardAdapter extends ILoadMoreSupportAdapter {
+
+    @NonNull
     Context getContext();
 
+    @NonNull
     UserColorNameManager getUserColorNameManager();
 
     int getItemCount();
@@ -47,5 +50,6 @@ public interface IContentCardAdapter extends ILoadMoreSupportAdapter {
     @NonNull
     AsyncTwitterWrapper getTwitterWrapper();
 
+    @NonNull
     MediaLoaderWrapper getMediaLoader();
 }

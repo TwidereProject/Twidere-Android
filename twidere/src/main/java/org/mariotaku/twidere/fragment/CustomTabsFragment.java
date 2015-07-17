@@ -101,7 +101,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     @Override
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_DELETE: {
+            case R.id.delete: {
                 final long[] itemIds = mListView.getCheckedItemIds();
                 final Expression where = Expression.in(new Column(Tabs._ID), new RawItemArray(itemIds));
                 mResolver.delete(Tabs.CONTENT_URI, where.getSQL(), null);

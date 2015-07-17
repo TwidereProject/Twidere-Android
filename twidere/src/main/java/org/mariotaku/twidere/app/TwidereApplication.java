@@ -44,7 +44,6 @@ import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
-import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpSender;
 import org.mariotaku.twidere.BuildConfig;
@@ -53,15 +52,16 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
+import org.mariotaku.twidere.util.AbsLogger;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DebugModeUtils;
-import org.mariotaku.twidere.util.ErrorLogger;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
+import org.mariotaku.twidere.util.TwidereLogger;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -271,8 +271,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     private void initBugReport() {
-        ACRA.init(this);
-        ErrorLogger.setEnabled(BuildConfig.DEBUG);
+        AbsLogger.setImplementation(new TwidereLogger());
+        AbsLogger.init(this);
     }
 
     private void migrateUsageStatisticsPreferences() {

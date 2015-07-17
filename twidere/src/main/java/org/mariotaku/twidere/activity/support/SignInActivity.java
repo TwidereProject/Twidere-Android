@@ -62,6 +62,7 @@ import com.meizu.flyme.reflect.StatusBarProxy;
 
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -78,9 +79,9 @@ import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.util.AbsLogger;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.ErrorLogger;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
@@ -219,21 +220,21 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_HOME: {
+            case android.R.id.home: {
                 final long[] account_ids = getActivatedAccountIds(this);
                 if (account_ids.length > 0) {
                     onBackPressed();
                 }
                 break;
             }
-            case MENU_SETTINGS: {
+            case R.id.settings: {
                 if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING)
                     return false;
                 final Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             }
-            case MENU_EDIT_API: {
+            case R.id.edit_api: {
                 if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING)
                     return false;
                 setDefaultAPI();
@@ -247,7 +248,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 startActivityForResult(intent, REQUEST_EDIT_API);
                 break;
             }
-            case MENU_OPEN_IN_BROWSER: {
+            case R.id.open_in_browser: {
                 if (mAuthType != ParcelableCredentials.AUTH_TYPE_OAUTH || mTask != null
                         && mTask.getStatus() == AsyncTask.Status.RUNNING) return false;
                 saveEditedText();
@@ -263,7 +264,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        final MenuItem itemBrowser = menu.findItem(MENU_OPEN_IN_BROWSER);
+        final MenuItem itemBrowser = menu.findItem(R.id.open_in_browser);
         if (itemBrowser != null) {
             final boolean is_oauth = mAuthType == ParcelableCredentials.AUTH_TYPE_OAUTH;
             itemBrowser.setVisible(is_oauth);
@@ -440,18 +441,26 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             ((DialogFragment) f).dismiss();
         }
         if (result != null) {
-            if (result.succeed) {
-                insertAccount(result);
+            if (result.alreadyLoggedIn) {
+                final ContentValues values = result.toContentValues();
+                if (values != null) {
+                    mResolver.update(Accounts.CONTENT_URI, values, Expression.equals(Accounts.ACCOUNT_ID,
+                            result.user.getId()).getSQL(), null);
+                }
+                Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show();
+            } else if (result.succeed) {
+                final ContentValues values = result.toContentValues();
+                if (values != null) {
+                    mResolver.insert(Accounts.CONTENT_URI, values);
+                }
                 final long loggedId = result.user.getId();
                 final Intent intent = new Intent(this, HomeActivity.class);
                 intent.putExtra(EXTRA_REFRESH_IDS, new long[]{loggedId});
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 finish();
-            } else if (result.alreadyLoggedIn) {
-                Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show();
             } else {
-                ErrorLogger.exception(result.exception);
+                AbsLogger.error(result.exception);
                 if (result.exception instanceof AuthenticityTokenException) {
                     Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof WrongUserPassException) {
@@ -464,35 +473,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             }
         }
         setSignInButton();
-    }
-
-    private void insertAccount(final SignInResponse result) {
-        final ContentValues values;
-        switch (result.authType) {
-            case ParcelableCredentials.AUTH_TYPE_BASIC: {
-                values = createAccount(result.basicUsername, result.basicPassword,
-                        result.user, result.color, result.apiUrlFormat, result.noVersionSuffix);
-                break;
-            }
-            case ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE: {
-                values = ContentValuesCreator.createAccount(result.user, result.color,
-                        result.apiUrlFormat, result.noVersionSuffix);
-                break;
-            }
-            case ParcelableCredentials.AUTH_TYPE_OAUTH:
-            case ParcelableCredentials.AUTH_TYPE_XAUTH: {
-                values = ContentValuesCreator.createAccount(result.oauth,
-                        result.user, result.authType, result.color, result.apiUrlFormat,
-                        result.sameOauthSigningUrl, result.noVersionSuffix);
-                break;
-            }
-            default: {
-                values = null;
-            }
-        }
-        if (values != null) {
-            mResolver.insert(Accounts.CONTENT_URI, values);
-        }
     }
 
     void onSignInStart() {
@@ -609,13 +589,14 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 final String versionSuffix = noVersionSuffix ? null : "1.1";
-                final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
+                Endpoint endpoint = new OAuthEndpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", null));
                 final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint,
                         new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret()), TwitterOAuth.class);
                 final OAuthToken accessToken = oauth.getAccessToken(requestToken, oauthVerifier);
                 final long userId = accessToken.getUserId();
                 if (userId <= 0) return new SignInResponse(false, false, null);
                 final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
+                endpoint = new OAuthEndpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
                 final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint,
                         auth, Twitter.class);
                 final User user = twitter.verifyCredentials();
@@ -707,28 +688,14 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
 
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
-            String endpointUrl, signEndpointUrl;
-            endpointUrl = TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", null);
-            if (!sameOAuthSigningUrl) {
-                signEndpointUrl = TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", null);
-            } else {
-                signEndpointUrl = endpointUrl;
-            }
-            Endpoint endpoint = new OAuthEndpoint(endpointUrl, signEndpointUrl);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth);
             final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
-            final String versionSuffix = noVersionSuffix ? null : "1.1";
-            endpointUrl = TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix);
-            if (!sameOAuthSigningUrl) {
-                signEndpointUrl = TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", versionSuffix);
-            } else {
-                signEndpointUrl = endpointUrl;
-            }
-            endpoint = new OAuthEndpoint(endpointUrl, signEndpointUrl);
+            endpoint = TwitterAPIFactory.getRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
             final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint,
                     auth, Twitter.class);
@@ -751,20 +718,14 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
 
         private SignInResponse authxAuth() throws TwitterException {
-            String endpointUrl, signEndpointUrl;
-            endpointUrl = TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", null);
-            if (!sameOAuthSigningUrl) {
-                signEndpointUrl = TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", null);
-            } else {
-                signEndpointUrl = endpointUrl;
-            }
-            Endpoint endpoint = new OAuthEndpoint(endpointUrl, signEndpointUrl);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
+            endpoint = TwitterAPIFactory.getRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
             final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
@@ -826,6 +787,31 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                               final String apiUrlFormat, final boolean noVersionSuffix) {
             this(alreadyLoggedIn, true, null, null, null, null, user, ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE, color,
                     apiUrlFormat, false, noVersionSuffix);
+        }
+
+        private ContentValues toContentValues() {
+            final ContentValues values;
+            switch (authType) {
+                case ParcelableCredentials.AUTH_TYPE_BASIC: {
+                    values = createAccount(basicUsername, basicPassword, user, color, apiUrlFormat,
+                            noVersionSuffix);
+                    break;
+                }
+                case ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE: {
+                    values = ContentValuesCreator.createAccount(user, color, apiUrlFormat, noVersionSuffix);
+                    break;
+                }
+                case ParcelableCredentials.AUTH_TYPE_OAUTH:
+                case ParcelableCredentials.AUTH_TYPE_XAUTH: {
+                    values = ContentValuesCreator.createAccount(oauth, user, authType, color, apiUrlFormat,
+                            sameOauthSigningUrl, noVersionSuffix);
+                    break;
+                }
+                default: {
+                    values = null;
+                }
+            }
+            return values;
         }
     }
 

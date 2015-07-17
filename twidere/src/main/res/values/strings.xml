@@ -770,4 +770,6 @@
     <string name="media_preload">Media preload</string>
     <string name="on_mobile_network">On mobile network</string>
     <string name="set_consumer_key_secret_message">Twidere is reaching token limit, you will have to create an app at https://apps.twitter.com/ and paste consumer key and secret below.\nIf you continue using default key, you may not be able to sign in.</string>
+    <string name="send_at">Send at</string>
+    <string name="scheduled_statuses">Scheduled tweets</string>
 </resources>

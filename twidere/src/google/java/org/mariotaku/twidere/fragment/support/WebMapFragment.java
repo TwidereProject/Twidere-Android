@@ -50,7 +50,7 @@ public class WebMapFragment extends BaseSupportWebViewFragment implements IMapFr
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_CENTER: {
+            case R.id.center: {
                 center();
                 break;
             }

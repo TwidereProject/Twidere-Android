@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.support:wearable:1.1.0'
+    compile 'com.google.android.support:wearable:1.2.0'
     compile project(':twidere.component.nyan')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

@@ -159,12 +159,12 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         final ListView listView = getListView();
         switch (item.getItemId()) {
-            case MENU_DELETE: {
+            case R.id.delete: {
                 final Expression where = Expression.in(new Column(Filters._ID), new RawItemArray(listView.getCheckedItemIds()));
                 mResolver.delete(getContentUri(), where.getSQL(), null);
                 break;
             }
-            case MENU_INVERSE_SELECTION: {
+            case R.id.inverse_selection: {
                 final SparseBooleanArray positions = listView.getCheckedItemPositions();
                 for (int i = 0, j = listView.getCount(); i < j; i++) {
                     listView.setItemChecked(i, !positions.get(i));
@@ -214,7 +214,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_ADD: {
+            case R.id.add: {
                 final Bundle args = new Bundle();
                 args.putParcelable(EXTRA_URI, getContentUri());
                 final AddItemFragment dialog = new AddItemFragment();
@@ -367,7 +367,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case MENU_ADD: {
+                case R.id.add: {
                     final Bundle args = new Bundle();
                     args.putInt(EXTRA_AUTO_COMPLETE_TYPE, AUTO_COMPLETE_TYPE_SOURCES);
                     args.putParcelable(EXTRA_URI, getContentUri());
@@ -454,7 +454,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case MENU_ADD: {
+                case R.id.add: {
                     final Intent intent = new Intent(INTENT_ACTION_SELECT_USER);
                     intent.setClass(getActivity(), UserListSelectorActivity.class);
                     intent.putExtra(EXTRA_ACCOUNT_ID, getDefaultAccountId(getActivity()));

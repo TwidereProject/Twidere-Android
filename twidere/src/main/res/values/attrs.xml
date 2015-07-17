@@ -72,9 +72,6 @@
         <attr name="step" format="integer"/>
         <attr name="progressTextSuffix" format="string"/>
     </declare-styleable>
-    <declare-styleable name="AssetFontTextView">
-        <attr name="fontPath" format="string"/>
-    </declare-styleable>
     <declare-styleable name="IconActionButton">
         <attr name="iabColor" format="color"/>
         <attr name="iabActivatedColor" format="color"/>

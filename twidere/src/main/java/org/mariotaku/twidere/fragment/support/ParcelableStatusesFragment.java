@@ -90,6 +90,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     @Override
     public void onStop() {
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
+        assert bus != null;
         bus.unregister(this);
         super.onStop();
     }

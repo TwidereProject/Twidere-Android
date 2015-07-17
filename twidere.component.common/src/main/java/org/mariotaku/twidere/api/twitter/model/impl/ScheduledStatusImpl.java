@@ -43,6 +43,29 @@ public class ScheduledStatusImpl implements ScheduledStatus {
     String text;
     @JsonField(name = "media_ids")
     long[] mediaIds;
+    @JsonField(name = "id")
+    long id;
+    @JsonField(name = "possiblySensitive")
+    boolean possiblySensitive;
+    @JsonField(name = "user_id")
+    long userId;
+    @JsonField(name = "state")
+    State state;
+
+    @Override
+    public long getUserId() {
+        return userId;
+    }
+
+    @Override
+    public boolean isPossiblySensitive() {
+        return possiblySensitive;
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
 
     @Override
     public long[] getMediaIds() {
@@ -67,5 +90,10 @@ public class ScheduledStatusImpl implements ScheduledStatus {
     @Override
     public String getText() {
         return text;
+    }
+
+    @Override
+    public State getState() {
+        return state;
     }
 }

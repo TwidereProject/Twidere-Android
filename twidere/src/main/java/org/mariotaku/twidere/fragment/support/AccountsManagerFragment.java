@@ -78,7 +78,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_ADD_ACCOUNT: {
+            case R.id.add_account: {
                 final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
                 intent.setClass(getActivity(), SignInActivity.class);
                 startActivity(intent);
@@ -118,14 +118,14 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         mSelectedAccount = mAdapter.getAccount(info.position);
         if (mSelectedAccount == null) return false;
         switch (item.getItemId()) {
-            case MENU_SET_COLOR: {
+            case R.id.set_color: {
                 final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
                 intent.putExtra(EXTRA_COLOR, mSelectedAccount.color);
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false);
                 startActivityForResult(intent, REQUEST_SET_COLOR);
                 break;
             }
-            case MENU_DELETE: {
+            case R.id.delete: {
                 final AccountDeletionDialogFragment f = new AccountDeletionDialogFragment();
                 final Bundle args = new Bundle();
                 args.putLong(EXTRA_ACCOUNT_ID, mSelectedAccount.account_id);

@@ -91,7 +91,7 @@
                 android:paddingRight="0dp"
                 android:paddingStart="8dp">
 
-                <TextView
+                <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                     android:textStyle="bold"
                     tools:text="Name" />
 
-                <TextView
+                <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:id="@+id/screen_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <TextView
+        <org.mariotaku.twidere.view.themed.ThemedTextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
             android:orientation="horizontal"
             android:padding="8dp">
 
-            <TextView
+            <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/statuses_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
+            <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/followers_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
+            <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/friends_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

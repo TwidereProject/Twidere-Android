@@ -44,9 +44,9 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
-import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
@@ -216,6 +216,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     private void handleSendDraftIntent(Intent intent) {
         final Uri uri = intent.getData();
         if (uri == null) return;
+        mNotificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS);
         final long draftId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
         if (draftId == -1) return;
         final Expression where = Expression.equals(Drafts._ID, draftId);

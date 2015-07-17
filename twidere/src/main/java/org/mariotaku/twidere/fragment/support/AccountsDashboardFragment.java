@@ -141,6 +141,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private AccountToggleProvider mAccountActionProvider;
 
     private boolean mSwitchAccountAnimationPlaying;
+    private final Rect mSystemWindowsInsets = new Rect();
 
     public long[] getActivatedAccountIds() {
         if (mAccountActionProvider != null) {
@@ -242,7 +243,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
         final Menu menu = mAccountsToggleMenu.getMenu();
-        mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(MENU_SELECT_ACCOUNT));
+        mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account));
         final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(data);
         if (accounts.length > 0) {
             mNoAccountContainer.setVisibility(View.GONE);
@@ -285,29 +286,29 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             if (account == null || !(item instanceof OptionItem)) return;
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
-                case MENU_SEARCH: {
+                case R.id.search: {
                     final Intent intent = new Intent(getActivity(), QuickSearchBarActivity.class);
                     intent.putExtra(EXTRA_ACCOUNT_ID, account.account_id);
                     startActivity(intent);
                     closeAccountsDrawer();
                     break;
                 }
-                case MENU_COMPOSE: {
+                case R.id.compose: {
                     final Intent composeIntent = new Intent(INTENT_ACTION_COMPOSE);
                     composeIntent.setClass(getActivity(), ComposeActivity.class);
                     composeIntent.putExtra(EXTRA_ACCOUNT_IDS, new long[]{account.account_id});
                     startActivity(composeIntent);
                     break;
                 }
-                case MENU_FAVORITES: {
+                case R.id.favorites: {
                     openUserFavorites(getActivity(), account.account_id, account.account_id, account.screen_name);
                     break;
                 }
-                case MENU_LISTS: {
+                case R.id.lists: {
                     openUserLists(getActivity(), account.account_id, account.account_id, account.screen_name);
                     break;
                 }
-                case MENU_EDIT: {
+                case R.id.edit: {
                     Utils.openProfileEditor(getActivity(), account.account_id);
                     break;
                 }
@@ -316,19 +317,19 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             if (!(item instanceof OptionItem)) return;
             final OptionItem option = (OptionItem) item;
             switch (option.id) {
-                case MENU_ACCOUNTS: {
+                case R.id.accounts: {
                     Utils.openAccountsManager(getActivity());
                     break;
                 }
-                case MENU_DRAFTS: {
+                case R.id.drafts: {
                     Utils.openDrafts(getActivity());
                     break;
                 }
-                case MENU_FILTERS: {
+                case R.id.filters: {
                     Utils.openFilters(getActivity());
                     break;
                 }
-                case MENU_SETTINGS: {
+                case R.id.settings: {
                     final Intent intent = new Intent(getActivity(), SettingsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivityForResult(intent, REQUEST_SETTINGS);
@@ -372,7 +373,17 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-        // No-op
+        mSystemWindowsInsets.set(insets);
+        updateSystemWindowsInsets();
+    }
+
+    private void updateSystemWindowsInsets() {
+        if (mAccountProfileContainer == null) return;
+        final HomeActivity activity = (HomeActivity) getActivity();
+        final Rect insets = mSystemWindowsInsets;
+        if (!activity.getDefaultSystemWindowsInsets(insets)) return;
+        final int top = Utils.getInsetsTopWithoutActionBarHeight(getActivity(), insets.top);
+        mAccountProfileContainer.setPadding(0, top, 0, 0);
     }
 
     @Override
@@ -436,6 +447,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mPreferences.registerOnSharedPreferenceChangeListener(this);
 
         getLoaderManager().initLoader(0, null, this);
+
+        updateSystemWindowsInsets();
     }
 
     @Override
@@ -466,12 +479,12 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     void initAccountActionsAdapter(ParcelableAccount[] accounts) {
         mAccountOptionsAdapter.clear();
-        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, MENU_SEARCH));
+        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, R.id.search));
         if (accounts.length > 1) {
-            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, MENU_COMPOSE));
+            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, R.id.compose));
         }
-        mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, MENU_FAVORITES));
-        mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, MENU_LISTS));
+        mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, R.id.favorites));
+        mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
     }
 
     private void closeAccountsDrawer() {
@@ -644,7 +657,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         @Override
         protected String getTitle(int position, OptionItem option) {
             final ParcelableAccount account = mSelectedAccount;
-            if (account != null && option.id == MENU_COMPOSE) {
+            if (account != null && option.id == R.id.compose) {
                 final Context context = getContext();
                 final String displayName = mUserColorNameManager.getDisplayName(-1, account.name,
                         account.screen_name, mNameFirst, false);
@@ -802,10 +815,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         public AppMenuAdapter(final Context context) {
             super(context);
-            add(new OptionItem(R.string.accounts, R.drawable.ic_action_accounts, MENU_ACCOUNTS));
-            add(new OptionItem(R.string.drafts, R.drawable.ic_action_draft, MENU_DRAFTS));
-            add(new OptionItem(R.string.filters, R.drawable.ic_action_speaker_muted, MENU_FILTERS));
-            add(new OptionItem(R.string.settings, R.drawable.ic_action_settings, MENU_SETTINGS));
+            add(new OptionItem(R.string.accounts, R.drawable.ic_action_accounts, R.id.accounts));
+            add(new OptionItem(R.string.drafts, R.drawable.ic_action_draft, R.id.drafts));
+            add(new OptionItem(R.string.filters, R.drawable.ic_action_speaker_muted, R.id.filters));
+            add(new OptionItem(R.string.settings, R.drawable.ic_action_settings, R.id.settings));
         }
 
     }

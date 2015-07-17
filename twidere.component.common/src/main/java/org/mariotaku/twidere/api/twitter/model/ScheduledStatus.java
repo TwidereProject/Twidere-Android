@@ -26,6 +26,12 @@ import java.util.Date;
  */
 public interface ScheduledStatus {
 
+    long getUserId();
+
+    boolean isPossiblySensitive();
+
+    long getId();
+
     long[] getMediaIds();
 
     Date getUpdatedAt();
@@ -35,4 +41,32 @@ public interface ScheduledStatus {
     Date getExecuteAt();
 
     String getText();
+
+    State getState();
+
+    enum State {
+        SCHEDULED("scheduled"), FAILED("failed"), CANCELED("canceled");
+
+        private final String value;
+
+        State(String value) {
+            this.value = value;
+        }
+
+        public static State parse(String value) {
+            if (SCHEDULED.value.equalsIgnoreCase(value)) {
+                return SCHEDULED;
+            } else if (FAILED.value.equalsIgnoreCase(value)) {
+                return FAILED;
+            } else if (CANCELED.value.equalsIgnoreCase(value)) {
+                return CANCELED;
+            }
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
 }

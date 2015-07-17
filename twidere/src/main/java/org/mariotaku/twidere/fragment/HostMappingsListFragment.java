@@ -95,7 +95,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     @Override
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_DELETE: {
+            case R.id.delete: {
                 final SharedPreferences.Editor editor = mPreferences.edit();
                 final SparseBooleanArray array = mListView.getCheckedItemPositions();
                 if (array == null) return false;
@@ -129,7 +129,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_ADD:
+            case R.id.add:
                 final DialogFragment df = new AddMappingDialogFragment();
                 df.show(getFragmentManager(), "add_mapping");
                 break;

@@ -48,7 +48,7 @@
             android:textIsSelectable="true"
             tools:text="@string/sample_status_text" />
 
-        <TextView
+        <org.mariotaku.twidere.view.themed.ThemedTextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

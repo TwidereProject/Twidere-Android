@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +58,7 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
 /**
  * Created by mariotaku on 15/1/3.
  */
-public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> implements Constants,
+public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
         IActivitiesAdapter<Data>, StatusClickListener, OnLinkClickListener {
 
     private static final int ITEM_VIEW_TYPE_STUB = 0;
@@ -83,8 +82,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     private final TwidereLinkify mLinkify;
     private final DummyStatusHolderAdapter mStatusAdapterDelegate;
     private final UserColorNameManager mUserColorNameManager;
-    private boolean mLoadMoreSupported;
-    private boolean mLoadMoreIndicatorVisible;
     private ActivityAdapterListener mActivityAdapterListener;
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
@@ -121,11 +118,13 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     @Override
     public abstract void setData(Data data);
 
+    @NonNull
     @Override
     public MediaLoaderWrapper getMediaLoader() {
         return mImageLoader;
     }
 
+    @NonNull
     @Override
     public Context getContext() {
         return mContext;
@@ -155,32 +154,6 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
     @Override
     public float getTextSize() {
         return mTextSize;
-    }
-
-    @Override
-    public boolean isLoadMoreIndicatorVisible() {
-        return mLoadMoreIndicatorVisible;
-    }
-
-    @Override
-    public boolean isLoadMoreSupported() {
-        return mLoadMoreSupported;
-    }
-
-    @Override
-    public void setLoadMoreSupported(boolean supported) {
-        mLoadMoreSupported = supported;
-        if (!supported) {
-            mLoadMoreIndicatorVisible = false;
-        }
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void setLoadMoreIndicatorVisible(boolean enabled) {
-        if (mLoadMoreIndicatorVisible == enabled) return;
-        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
-        notifyDataSetChanged();
     }
 
     public int getLinkHighlightingStyle() {
@@ -343,7 +316,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     @Override
     public final int getItemCount() {
-        return getActivityCount() + (mLoadMoreIndicatorVisible ? 1 : 0);
+        return getActivityCount() + (isLoadMoreIndicatorVisible() ? 1 : 0);
     }
 
     @Override
@@ -368,6 +341,7 @@ public abstract class AbsActivitiesAdapter<Data> extends Adapter<ViewHolder> imp
 
     }
 
+    @NonNull
     @Override
     public UserColorNameManager getUserColorNameManager() {
         return mUserColorNameManager;

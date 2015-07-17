@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@id/take_photo"
         android:icon="@drawable/ic_action_camera"
         android:title="@string/take_photo"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@id/add_image"
         android:icon="@drawable/ic_action_gallery"
         android:title="@string/add_image"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/media_menu"
         android:icon="@drawable/ic_action_gallery"
@@ -26,20 +26,20 @@
             <item
                 android:id="@+id/take_photo_sub_item"
                 android:icon="@drawable/ic_action_camera"
-                android:title="@string/take_photo"/>
+                android:title="@string/take_photo" />
             <item
                 android:id="@+id/add_image_sub_item"
                 android:icon="@drawable/ic_action_gallery"
-                android:title="@string/add_image"/>
+                android:title="@string/add_image" />
             <item
                 android:id="@id/edit_media"
                 android:icon="@drawable/ic_action_edit"
-                android:title="@string/edit_media"/>
+                android:title="@string/edit_media" />
             <item
                 android:id="@id/toggle_sensitive"
                 android:checkable="true"
                 android:icon="@drawable/ic_action_warning"
-                android:title="@string/mark_as_sensitive"/>
+                android:title="@string/mark_as_sensitive" />
         </menu>
     </item>
     <item
@@ -48,7 +48,7 @@
         android:title="@string/original_status"
         android:visible="false"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@id/add_location"
         android:checkable="true"
@@ -57,18 +57,23 @@
         android:title="@string/location"
         android:visible="false"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@id/drafts"
         android:icon="@drawable/ic_action_draft"
         android:title="@string/drafts"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/link_to_quoted_status"
-        android:icon="@drawable/ic_action_link"
         android:checkable="true"
+        android:icon="@drawable/ic_action_link"
         android:title="@string/link_to_quoted_status"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/schedule"
+        android:icon="@drawable/ic_action_time"
+        android:title="@string/send_at"
+        app:showAsAction="never" />
 
 </menu>

@@ -211,14 +211,14 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        final MenuItem item = menu.findItem(MENU_COMPOSE);
+        final MenuItem item = menu.findItem(R.id.compose);
         item.setTitle(getString(R.string.tweet_hashtag, getQuery()));
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_SAVE: {
+            case R.id.save: {
                 final AsyncTwitterWrapper twitter = getTwitterWrapper();
                 final Bundle args = getArguments();
                 if (twitter != null && args != null) {
@@ -226,7 +226,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
                 }
                 return true;
             }
-            case MENU_COMPOSE: {
+            case R.id.compose: {
                 final Intent intent = new Intent(getActivity(), ComposeActivity.class);
                 intent.setAction(INTENT_ACTION_COMPOSE);
                 intent.putExtra(Intent.EXTRA_TEXT, String.format("#%s ", getQuery()));

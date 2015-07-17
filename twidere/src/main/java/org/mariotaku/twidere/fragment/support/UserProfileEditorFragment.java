@@ -193,7 +193,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_SAVE: {
+            case R.id.save: {
                 final String name = ParseUtils.parseString(mEditName.getText());
                 final String url = ParseUtils.parseString(mEditUrl.getText());
                 final String location = ParseUtils.parseString(mEditLocation.getText());

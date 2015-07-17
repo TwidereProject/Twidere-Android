@@ -66,7 +66,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         public boolean onMenuItemClick(MenuItem item) {
             final ParcelableStatus status = mSelectedStatus;
             if (status == null) return false;
-            if (item.getItemId() == MENU_SHARE) {
+            if (item.getItemId() == R.id.share) {
                 final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share_status)));
                 return true;

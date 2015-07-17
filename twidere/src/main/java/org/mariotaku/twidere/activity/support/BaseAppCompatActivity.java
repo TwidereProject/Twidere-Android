@@ -28,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
@@ -110,7 +111,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_BACK: {
+            case R.id.back: {
                 onBackPressed();
                 return true;
             }

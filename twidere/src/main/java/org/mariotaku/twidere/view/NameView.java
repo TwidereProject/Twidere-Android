@@ -30,14 +30,14 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 /**
  * Created by mariotaku on 15/5/28.
  */
-public class NameView extends TextView {
+public class NameView extends ThemedTextView {
 
     private boolean mNameFirst;
 

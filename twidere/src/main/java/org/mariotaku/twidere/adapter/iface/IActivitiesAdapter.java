@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.adapter.iface;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
@@ -38,6 +40,7 @@ public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSuppo
     @PreviewStyle
     int getMediaPreviewStyle();
 
+    @NonNull
     @Override
     MediaLoaderWrapper getMediaLoader();
 

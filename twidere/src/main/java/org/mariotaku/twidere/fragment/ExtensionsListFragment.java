@@ -104,9 +104,9 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
         if (extensionInfo.pname != null && extensionInfo.settings != null) {
             final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SETTINGS);
             intent.setClassName(extensionInfo.pname, extensionInfo.settings);
-            MenuUtils.setMenuItemAvailability(menu, MENU_SETTINGS, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
+            MenuUtils.setMenuItemAvailability(menu, R.id.settings, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
         } else {
-            MenuUtils.setMenuItemAvailability(menu, MENU_SETTINGS, false);
+            MenuUtils.setMenuItemAvailability(menu, R.id.settings, false);
         }
 
     }
@@ -116,15 +116,15 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
         final AdapterContextMenuInfo adapterMenuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
         final ExtensionInfo extensionInfo = mAdapter.getItem(adapterMenuInfo.position);
         switch (item.getItemId()) {
-            case MENU_SETTINGS: {
+            case R.id.settings: {
                 openSettings(extensionInfo);
                 break;
             }
-            case MENU_DELETE: {
+            case R.id.delete: {
                 uninstallExtension(extensionInfo);
                 break;
             }
-            case MENU_REVOKE: {
+            case R.id.revoke: {
                 mPermissionsManager.revoke(extensionInfo.pname);
                 mAdapter.notifyDataSetChanged();
                 break;

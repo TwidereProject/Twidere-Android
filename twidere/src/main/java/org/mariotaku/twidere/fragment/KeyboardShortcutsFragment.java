@@ -88,7 +88,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_RESET: {
+            case R.id.reset: {
                 final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
                 f.show(getFragmentManager().beginTransaction(), "reset_keyboard_shortcut_confirm");
                 return true;

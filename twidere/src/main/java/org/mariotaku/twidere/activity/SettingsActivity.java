@@ -198,12 +198,12 @@ public class SettingsActivity extends BasePreferenceActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_IMPORT_SETTINGS: {
+            case R.id.import_settings: {
                 final Intent intent = new Intent(this, DataImportActivity.class);
                 startActivity(intent);
                 return true;
             }
-            case MENU_EXPORT_SETTINGS: {
+            case R.id.export_settings: {
                 final Intent intent = new Intent(this, DataExportActivity.class);
                 startActivity(intent);
                 return true;

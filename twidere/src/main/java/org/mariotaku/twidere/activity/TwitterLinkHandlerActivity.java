@@ -14,7 +14,7 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
-import org.mariotaku.twidere.util.ErrorLogger;
+import org.mariotaku.twidere.util.AbsLogger;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
@@ -112,7 +112,7 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
         if (handledIntent != null) {
             startActivity(handledIntent);
         } else {
-            ErrorLogger.exception(new TwitterLinkException("Unable to handle twitter uri " + uri));
+            AbsLogger.error(new TwitterLinkException("Unable to handle twitter uri " + uri));
             final String packageName = mPreferences.getString(KEY_FALLBACK_TWITTER_LINK_HANDLER, null);
             final Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, uri);
             fallbackIntent.setPackage(packageName);
