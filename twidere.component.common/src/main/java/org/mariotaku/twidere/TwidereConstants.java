@@ -158,7 +158,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int REQUEST_PICK_ACTIVITY = 18;
     int REQUEST_SETTINGS = 19;
     int REQUEST_OPEN_DOCUMENT = 20;
-    int REQUEST_SWIPEBACK_ACTIVITY = 101;
 
     int TABLE_ID_ACCOUNTS = 1;
     int TABLE_ID_STATUSES = 12;
