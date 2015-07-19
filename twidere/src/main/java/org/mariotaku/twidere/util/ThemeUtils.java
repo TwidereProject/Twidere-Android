@@ -590,8 +590,6 @@ public class ThemeUtils implements Constants {
         if (value.type >= TypedValue.TYPE_FIRST_COLOR_INT && value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
             // windowBackground is a color
             return value.data;
-        } else if (value.type == TypedValue.TYPE_REFERENCE) {
-            return theme.getResources().getColor(value.resourceId);
         }
         return 0;
     }
@@ -736,20 +734,11 @@ public class ThemeUtils implements Constants {
         final TypedArray a = context.obtainStyledAttributes(null, new int[]{android.R.attr.windowBackground}, 0, theme);
         final Drawable d = a.getDrawable(0);
         a.recycle();
-        if (d != null) {
-            d.setAlpha(MathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
-                    ThemeBackgroundPreference.MAX_ALPHA));
-        }
+        if (d == null) return null;
+        d.mutate();
+        d.setAlpha(MathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
+                ThemeBackgroundPreference.MAX_ALPHA));
         return d;
-    }
-
-    public static Drawable getWindowContentOverlay(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowContentOverlay});
-        try {
-            return a.getDrawable(0);
-        } finally {
-            a.recycle();
-        }
     }
 
     public static Drawable getWindowContentOverlay(final Context context, int themeRes) {
@@ -1017,6 +1006,7 @@ public class ThemeUtils implements Constants {
             d = getWindowBackgroundFromTheme(context, drawerThemeRes);
         }
         if (d == null) throw new NullPointerException();
+        d.mutate();
         if (isTransparentBackground(backgroundOption)) {
             d.setAlpha(alpha);
         }
