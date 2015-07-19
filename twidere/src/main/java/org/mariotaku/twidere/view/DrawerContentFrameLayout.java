@@ -25,17 +25,17 @@ import android.widget.FrameLayout;
 
 import org.mariotaku.twidere.util.ThemeUtils;
 
-public class LeftDrawerFrameLayout extends FrameLayout {
+public class DrawerContentFrameLayout extends FrameLayout {
 
-    public LeftDrawerFrameLayout(final Context context) {
+    public DrawerContentFrameLayout(final Context context) {
         this(context, null);
     }
 
-    public LeftDrawerFrameLayout(final Context context, final AttributeSet attrs) {
+    public DrawerContentFrameLayout(final Context context, final AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LeftDrawerFrameLayout(final Context context, final AttributeSet attrs, final int defStyle) {
+    public DrawerContentFrameLayout(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         ThemeUtils.setupDrawerBackground(context, this);
     }
