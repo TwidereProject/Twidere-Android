@@ -208,15 +208,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "quote_source")
     public String quote_source;
     @ParcelableThisPlease
-    @JsonField(name = "quote_retweet_count")
-    public long quote_retweet_count;
-    @ParcelableThisPlease
-    @JsonField(name = "quote_favorite_count")
-    public long quote_favorite_count;
-    @ParcelableThisPlease
-    @JsonField(name = "quote_reply_count")
-    public long quote_reply_count;
-    @ParcelableThisPlease
     @JsonField(name = "quoted_by_user_name")
     public String quoted_by_user_name;
     @ParcelableThisPlease
@@ -312,9 +303,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         quoted_by_user_is_protected = idx.quoted_by_user_is_protected != -1 && c.getShort(idx.quoted_by_user_is_protected) == 1;
         quoted_by_user_is_verified = idx.quoted_by_user_is_verified != -1 && c.getShort(idx.quoted_by_user_is_verified) == 1;
         quote_source = idx.quote_source != -1 ? c.getString(idx.quote_source) : null;
-        quote_retweet_count = idx.quote_retweet_count != -1 ? c.getLong(idx.quote_retweet_count) : -1;
-        quote_favorite_count = idx.quote_favorite_count != -1 ? c.getLong(idx.quote_favorite_count) : -1;
-        quote_reply_count = idx.quote_reply_count != -1 ? c.getLong(idx.quote_reply_count) : -1;
         card_name = card != null ? card.name : null;
     }
 
@@ -372,9 +360,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         quote_text_plain = orig.quote_text_plain;
         quote_text_unescaped = orig.quote_text_unescaped;
         quote_source = orig.quote_source;
-        quote_retweet_count = orig.quote_retweet_count;
-        quote_favorite_count = orig.quote_favorite_count;
-        quote_reply_count = orig.quote_reply_count;
         quoted_by_user_is_protected = orig.quoted_by_user_is_protected;
         quoted_by_user_is_verified = orig.quoted_by_user_is_verified;
         card_name = card != null ? card.name : null;
@@ -405,9 +390,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         quote_text_unescaped = HtmlEscapeHelper.toPlainText(quote_text_html);
         quote_timestamp = orig.getCreatedAt().getTime();
         quote_source = orig.getSource();
-        quote_retweet_count = orig.getRetweetCount();
-        quote_favorite_count = orig.getFavoriteCount();
-        quote_reply_count = orig.getReplyCount();
 
         quoted_by_user_id = quote_user != null ? quote_user.getId() : -1;
         quoted_by_user_name = quote_user != null ? quote_user.getName() : null;
@@ -424,6 +406,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         } else {
             status = orig;
         }
+
+        retweet_count = (retweeted != null ? retweeted : orig).getRetweetCount();
+        favorite_count = (retweeted != null ? retweeted : orig).getFavoriteCount();
+        reply_count = (retweeted != null ? retweeted : orig).getReplyCount();
+
         final User user = status.getUser();
         user_id = user.getId();
         user_name = user.getName();
@@ -436,9 +423,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         media = ParcelableMedia.fromStatus(status);
         quote_media = quoted != null ? ParcelableMedia.fromStatus(orig) : null;
         text_plain = TwitterContentUtils.unescapeTwitterStatusText(status.getText());
-        retweet_count = status.getRetweetCount();
-        favorite_count = status.getFavoriteCount();
-        reply_count = status.getReplyCount();
         in_reply_to_name = TwitterContentUtils.getInReplyToName(retweeted != null ? retweeted : orig);
         in_reply_to_screen_name = (retweeted != null ? retweeted : orig).getInReplyToScreenName();
         in_reply_to_status_id = (retweeted != null ? retweeted : orig).getInReplyToStatusId();
@@ -542,9 +526,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", quote_text_plain='" + quote_text_plain + '\'' +
                 ", quote_text_unescaped='" + quote_text_unescaped + '\'' +
                 ", quote_source='" + quote_source + '\'' +
-                ", quote_retweet_count=" + quote_retweet_count +
-                ", quote_favorite_count=" + quote_favorite_count +
-                ", quote_reply_count=" + quote_reply_count +
                 ", quoted_by_user_name='" + quoted_by_user_name + '\'' +
                 ", quoted_by_user_screen_name='" + quoted_by_user_screen_name + '\'' +
                 ", quoted_by_user_profile_image='" + quoted_by_user_profile_image + '\'' +
@@ -582,9 +563,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
                 is_possibly_sensitive, is_following, media, mentions, quote_media, card_name, card,
                 place_full_name, is_quote, quote_id, quote_text_html, quote_text_plain, quote_text_unescaped,
-                quote_timestamp, quote_source, quote_retweet_count, quote_favorite_count, quote_reply_count,
-                quoted_by_user_id, quoted_by_user_name, quoted_by_user_screen_name, quoted_by_user_profile_image,
-                quoted_by_user_is_protected, quoted_by_user_is_verified;
+                quote_timestamp, quote_source, quoted_by_user_id, quoted_by_user_name, quoted_by_user_screen_name,
+                quoted_by_user_profile_image, quoted_by_user_is_protected, quoted_by_user_is_verified;
 
         public CursorIndices(final Cursor cursor) {
             super(cursor);
@@ -622,9 +602,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             quote_text_unescaped = cursor.getColumnIndex(Statuses.QUOTE_TEXT_UNESCAPED);
             quote_timestamp = cursor.getColumnIndex(Statuses.QUOTE_TIMESTAMP);
             quote_source = cursor.getColumnIndex(Statuses.QUOTE_SOURCE);
-            quote_retweet_count = cursor.getColumnIndex(Statuses.QUOTE_RETWEET_COUNT);
-            quote_favorite_count = cursor.getColumnIndex(Statuses.QUOTE_FAVORITE_COUNT);
-            quote_reply_count = cursor.getColumnIndex(Statuses.QUOTE_REPLY_COUNT);
             quoted_by_user_id = cursor.getColumnIndex(Statuses.QUOTED_BY_USER_ID);
             quoted_by_user_name = cursor.getColumnIndex(Statuses.QUOTED_BY_USER_NAME);
             quoted_by_user_screen_name = cursor.getColumnIndex(Statuses.QUOTED_BY_USER_SCREEN_NAME);
@@ -706,9 +683,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                     ", quote_text_unescaped=" + quote_text_unescaped +
                     ", quote_timestamp=" + quote_timestamp +
                     ", quote_source=" + quote_source +
-                    ", quote_retweet_count=" + quote_retweet_count +
-                    ", quote_favorite_count=" + quote_favorite_count +
-                    ", quote_reply_count=" + quote_reply_count +
                     ", quoted_by_user_id=" + quoted_by_user_id +
                     ", quoted_by_user_name=" + quoted_by_user_name +
                     ", quoted_by_user_screen_name=" + quoted_by_user_screen_name +

@@ -351,7 +351,8 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getDrawerThemeResource(final int themeRes) {
-        return R.style.Theme_Twidere_Drawer_Dark;
+        if (isDarkTheme(themeRes)) return R.style.Theme_Twidere_Drawer_Dark;
+        return R.style.Theme_Twidere_Drawer_Light;
     }
 
     public static Drawable getImageHighlightDrawable(final Context context) {
@@ -370,9 +371,9 @@ public class ThemeUtils implements Constants {
         return R.style.Theme_Twidere_Light_NoDisplay;
     }
 
-    public static int getOptimalLinkColor(int linkColor, int color) {
+    public static int getOptimalLinkColor(int linkColor, int textColor) {
         final int[] yiq = new int[3];
-        TwidereColorUtils.colorToYIQ(color, yiq);
+        TwidereColorUtils.colorToYIQ(textColor, yiq);
         final int y = yiq[0];
         TwidereColorUtils.colorToYIQ(linkColor, yiq);
         if (y < 32 && yiq[0] <= ACCENT_COLOR_THRESHOLD) {

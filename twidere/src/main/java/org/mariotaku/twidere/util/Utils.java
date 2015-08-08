@@ -3903,27 +3903,6 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static void applyOriginalTweetSpan(final TextView textView, final ParcelableStatus status) {
-        if (!status.is_quote) return;
-        final SpannableStringBuilder text = SpannableStringBuilder.valueOf(textView.getText());
-        final URLSpan[] spans = text.getSpans(0, text.length(), URLSpan.class);
-        URLSpan found = null;
-        String findPattern = "twitter.com/" + status.user_screen_name + "/status/" + status.quote_id;
-        for (URLSpan span : spans) {
-            if (span.getURL().contains(findPattern)) {
-                found = span;
-                break;
-            }
-        }
-        if (found == null) return;
-        int start = text.getSpanStart(found), end = text.getSpanEnd(found);
-        text.replace(start, end, textView.getResources().getString(R.string.original_status));
-        start = text.getSpanStart(found);
-        end = text.getSpanEnd(found);
-        text.setSpan(new OriginalStatusSpan(textView.getContext()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textView.setText(text);
-    }
-
     public static boolean isCustomConsumerKeySecret(String consumerKey, String consumerSecret) {
         if (TextUtils.isEmpty(consumerKey) || TextUtils.isEmpty(consumerSecret)) return false;
         return (!TWITTER_CONSUMER_KEY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET.equals(consumerKey))

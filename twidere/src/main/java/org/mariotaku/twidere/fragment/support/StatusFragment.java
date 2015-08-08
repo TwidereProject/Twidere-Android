@@ -610,9 +610,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final TextView retweetedByView;
         private final View repliesContainer, retweetsContainer, favoritesContainer;
         private final TextView repliesCountView, retweetsCountView, favoritesCountView;
+        private final TextView quoteOriginalLink;
 
         private final ColorLabelRelativeLayout profileContainer;
-        private final View retweetedByContainer;
         private final View mediaPreviewContainer;
         private final View mediaPreviewLoad;
         private final CardMediaContainer mediaPreview;
@@ -638,7 +638,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
             timeSourceView = (TextView) itemView.findViewById(R.id.time_source);
             retweetedByView = (TextView) itemView.findViewById(R.id.retweeted_by);
-            retweetedByContainer = itemView.findViewById(R.id.retweeted_by_container);
             repliesContainer = itemView.findViewById(R.id.replies_container);
             retweetsContainer = itemView.findViewById(R.id.retweets_container);
             favoritesContainer = itemView.findViewById(R.id.favorites_container);
@@ -649,6 +648,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mediaPreviewLoad = itemView.findViewById(R.id.media_preview_load);
             mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
             locationView = (TextView) itemView.findViewById(R.id.location_view);
+            quoteOriginalLink = (TextView) itemView.findViewById(R.id.quote_original_link);
             profileContainer = (ColorLabelRelativeLayout) itemView.findViewById(R.id.profile_container);
             twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
 
@@ -676,10 +676,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
                         status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst, false);
                 retweetedByView.setText(context.getString(R.string.name_retweeted, retweetedBy));
-                retweetedByContainer.setVisibility(View.VISIBLE);
+                retweetedByView.setVisibility(View.VISIBLE);
             } else {
                 retweetedByView.setText(null);
-                retweetedByContainer.setVisibility(View.GONE);
+                retweetedByView.setVisibility(View.GONE);
             }
 
             profileContainer.drawEnd(Utils.getAccountColor(context, status.account_id));
@@ -696,13 +696,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 screenNameView.setText("@" + status.quoted_by_user_screen_name);
 
                 quoteTextView.setText(Html.fromHtml(status.quote_text_html));
-                Utils.applyOriginalTweetSpan(quoteTextView, status);
 
                 linkify.applyAllLinks(quoteTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
                 ThemeUtils.applyParagraphSpacing(quoteTextView, 1.1f);
 
                 loader.displayProfileImage(profileImageView, status.quoted_by_user_profile_image);
 
+                quoteOriginalLink.setVisibility(View.VISIBLE);
                 quotedNameContainer.setVisibility(View.VISIBLE);
                 quoteTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
@@ -723,6 +723,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 loader.displayProfileImage(profileImageView, status.user_profile_image_url);
 
+                quoteOriginalLink.setVisibility(View.GONE);
                 quotedNameContainer.setVisibility(View.GONE);
                 quoteTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
@@ -732,7 +733,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
                 typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);
 
-                timestamp = status.timestamp;
+                if (status.is_retweet) {
+                    timestamp = status.retweet_timestamp;
+                } else {
+                    timestamp = status.timestamp;
+                }
                 source = status.source;
             }
 
@@ -874,7 +879,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     }
                     break;
                 }
-                case R.id.retweeted_by_container: {
+                case R.id.retweeted_by: {
                     if (status.retweet_id > 0) {
                         Utils.openUserProfile(adapter.getContext(), status.account_id, status.retweeted_by_user_id,
                                 status.retweeted_by_user_screen_name, null);
@@ -925,7 +930,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             quotedNameContainer.setOnClickListener(this);
             retweetsContainer.setOnClickListener(this);
             favoritesContainer.setOnClickListener(this);
-            retweetedByContainer.setOnClickListener(this);
+            retweetedByView.setOnClickListener(this);
             locationView.setOnClickListener(this);
 
             final float defaultTextSize = adapter.getTextSize();

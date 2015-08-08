@@ -219,5 +219,6 @@ public interface IntentConstants {
     String EXTRA_DESTINATION = "destination";
     String EXTRA_ACTIVITY_OPTIONS = "activity_options";
     String EXTRA_MAKE_GAP = "make_gap";
+    String EXTRA_QUOTE_ORIGINAL_STATUS = "quote_original_status";
 
 }

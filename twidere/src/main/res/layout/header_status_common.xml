@@ -28,39 +28,27 @@
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
-    <LinearLayout
-        android:id="@+id/retweeted_by_container"
+    <org.mariotaku.twidere.view.themed.ThemedTextView
+        android:id="@+id/retweeted_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/element_spacing_minus_normal"
         android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:paddingLeft="@dimen/element_spacing_small"
-        android:paddingRight="@dimen/element_spacing_small"
-        tools:visiblity="visible">
-
-        <Space
-            android:layout_width="@dimen/element_spacing_large"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_profile_image_detail_page" />
-
-        <org.mariotaku.twidere.view.themed.ThemedTextView
-            android:id="@+id/retweeted_by"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/element_size_small"
-            android:padding="@dimen/element_spacing_normal"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="Retweeted by Mariotaku" />
-    </LinearLayout>
+        android:drawableLeft="@drawable/ic_indicator_retweet"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_indicator_retweet"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/element_size_small"
+        android:padding="@dimen/element_spacing_normal"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:textColorSecondary"
+        tools:text="Retweeted by Mariotaku" />
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profile_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/retweeted_by_container"
+        android:layout_below="@+id/retweeted_by"
         android:background="?selectableItemBackground"
         android:padding="@dimen/element_spacing_small"
         app:ignorePadding="true">
@@ -196,14 +184,13 @@
         android:id="@+id/quote_indicator"
         android:layout_width="@dimen/element_spacing_small"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/counts_container"
+        android:layout_alignBottom="@+id/quote_original_link"
         android:layout_alignTop="@+id/quoted_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:background="?android:dividerHorizontal"
         android:visibility="gone"
         tools:visibility="visible" />
-
 
     <LinearLayout
         android:id="@+id/quoted_name_container"
@@ -331,15 +318,31 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary" />
 
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
+        android:id="@+id/quote_original_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/location_view"
+        android:layout_toEndOf="@+id/quote_indicator"
+        android:layout_toRightOf="@+id/quote_indicator"
+        android:background="?selectableItemBackground"
+        android:drawableLeft="@drawable/ic_indicator_twitter"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_indicator_twitter"
+        android:gravity="center_vertical"
+        android:padding="@dimen/element_spacing_normal"
+        android:singleLine="true"
+        android:text="@string/original_status"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:textColorSecondary" />
+
     <LinearLayout
         android:id="@+id/counts_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/location_view"
+        android:layout_below="@+id/quote_original_link"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
         android:orientation="horizontal"
         android:splitMotionEvents="false">
 

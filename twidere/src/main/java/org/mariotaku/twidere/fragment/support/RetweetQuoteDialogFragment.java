@@ -79,7 +79,10 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             }
             case DialogInterface.BUTTON_NEUTRAL: {
                 final Intent intent = new Intent(INTENT_ACTION_QUOTE);
+                final Menu menu = mPopupMenu.getMenu();
+                final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
                 intent.putExtra(EXTRA_STATUS, status);
+                intent.putExtra(EXTRA_QUOTE_ORIGINAL_STATUS, quoteOriginalStatus.isChecked());
                 startActivity(intent);
                 break;
             }

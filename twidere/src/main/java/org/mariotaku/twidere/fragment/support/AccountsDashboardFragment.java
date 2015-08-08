@@ -417,13 +417,26 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mFloatingProfileImageSnapshotView = (ImageView) mAccountSelectorView.findViewById(R.id.floating_profile_image_snapshot);
         mAccountProfileNameView = (TextView) mAccountSelectorView.findViewById(R.id.name);
         mAccountProfileScreenNameView = (TextView) mAccountSelectorView.findViewById(R.id.screen_name);
-        mAccountsToggleMenu = (ActionMenuView) mAccountSelectorView.findViewById(R.id.toggle_menu);
+        mAccountsToggleMenu = (ActionMenuView) mAccountSelectorView.findViewById(R.id.account_dashboard_menu);
         final SupportMenuInflater menuInflater = new SupportMenuInflater(context);
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, mAccountsToggleMenu.getMenu());
         mAccountsToggleMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getGroupId() != AccountToggleProvider.MENU_GROUP) return false;
+                if (item.getGroupId() != AccountToggleProvider.MENU_GROUP) {
+                    switch (item.getItemId()) {
+                        case R.id.compose: {
+                            final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
+                            if (account == null) return true;
+                            final Intent composeIntent = new Intent(INTENT_ACTION_COMPOSE);
+                            composeIntent.setClass(getActivity(), ComposeActivity.class);
+                            composeIntent.putExtra(EXTRA_ACCOUNT_IDS, new long[]{account.account_id});
+                            startActivity(composeIntent);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
                 final ParcelableAccount[] accounts = mAccountActionProvider.getAccounts();
                 final ParcelableAccount account = accounts[item.getOrder()];
                 final ContentValues values = new ContentValues();
@@ -480,9 +493,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     void initAccountActionsAdapter(ParcelableAccount[] accounts) {
         mAccountOptionsAdapter.clear();
         mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, R.id.search));
-        if (accounts.length > 1) {
-            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, R.id.compose));
-        }
+//        if (accounts.length > 1) {
+//            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, R.id.compose));
+//        }
         mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, R.id.favorites));
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
     }

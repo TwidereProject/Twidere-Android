@@ -13,6 +13,7 @@
     <color name="bg_color_transparent_dark">#ff000000</color>
     <color name="bg_color_transparent_light">#ffffffff</color>
     <color name="bg_color_drawer_dark">#212121</color>
+    <color name="bg_color_drawer_light">#ffffff</color>
     <color name="bg_color_drawer_transparent_dark">#c01a1a1a</color>
     <color name="highlighted_text_holo_dark">#66b0b0b0</color>
     <color name="highlighted_text_holo_light">#66b0b0b0</color>

@@ -1391,10 +1391,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mActionBarBackground.setColor(actionBarColor);
         }
         ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(null, null, actionBarColor));
-        mDescriptionView.setLinkTextColor(color);
+        final int optimalLinkColor = ThemeUtils.getOptimalLinkColor(color,
+                mDescriptionView.getCurrentTextColor());
+        mDescriptionView.setLinkTextColor(optimalLinkColor);
+        mLocationView.setLinkTextColor(optimalLinkColor);
+        mURLView.setLinkTextColor(optimalLinkColor);
         mProfileBannerView.setBackgroundColor(color);
-        mLocationView.setLinkTextColor(color);
-        mURLView.setLinkTextColor(color);
         ViewSupport.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity,
                 themeRes, color, backgroundOption, true));
 

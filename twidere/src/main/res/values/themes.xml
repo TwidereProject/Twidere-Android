@@ -256,6 +256,11 @@
         <item name="android:windowBackground">@color/bg_color_drawer_dark</item>
     </style>
 
+    <style name="Theme.Twidere.Drawer.Light" parent="Theme.Twidere.Light.NoActionBar">
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/bg_color_drawer_light</item>
+    </style>
+
     <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Twidere.Dark.NoActionBar">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>

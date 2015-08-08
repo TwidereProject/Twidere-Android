@@ -325,6 +325,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.ACCOUNT_ID, accountId);
         values.put(Statuses.STATUS_ID, orig.getId());
         values.put(Statuses.STATUS_TIMESTAMP, orig.getCreatedAt().getTime());
+
+
         final Status status;
         if (orig.isRetweet()) {
             final Status retweetedStatus = orig.getRetweetedStatus();
@@ -354,9 +356,6 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.QUOTE_TEXT_UNESCAPED, toPlainText(textHtml));
             values.put(Statuses.QUOTE_TIMESTAMP, orig.getCreatedAt().getTime());
             values.put(Statuses.QUOTE_SOURCE, orig.getSource());
-            values.put(Statuses.QUOTE_RETWEET_COUNT, orig.getRetweetCount());
-            values.put(Statuses.QUOTE_FAVORITE_COUNT, orig.getFavoriteCount());
-            values.put(Statuses.QUOTE_REPLY_COUNT, orig.getReplyCount());
             final ParcelableMedia[] quoteMedia = ParcelableMedia.fromStatus(orig);
             if (quoteMedia != null && quoteMedia.length > 0) {
                 try {
@@ -381,11 +380,19 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Statuses.IN_REPLY_TO_USER_ID, status.getInReplyToUserId());
             values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(status));
             values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, status.getInReplyToScreenName());
+            values.put(Statuses.RETWEET_COUNT, status.getRetweetCount());
+            values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
+            values.put(Statuses.REPLY_COUNT, status.getReplyCount());
+
         } else {
             values.put(Statuses.IN_REPLY_TO_STATUS_ID, orig.getInReplyToStatusId());
             values.put(Statuses.IN_REPLY_TO_USER_ID, orig.getInReplyToUserId());
             values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(orig));
             values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, orig.getInReplyToScreenName());
+
+            values.put(Statuses.RETWEET_COUNT, orig.getRetweetCount());
+            values.put(Statuses.FAVORITE_COUNT, orig.getFavoriteCount());
+            values.put(Statuses.REPLY_COUNT, orig.getReplyCount());
         }
         final User user = status.getUser();
         final long userId = user.getId();
@@ -402,9 +409,6 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Statuses.TEXT_HTML, textHtml);
         values.put(Statuses.TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(status.getText()));
         values.put(Statuses.TEXT_UNESCAPED, toPlainText(textHtml));
-        values.put(Statuses.RETWEET_COUNT, status.getRetweetCount());
-        values.put(Statuses.REPLY_COUNT, status.getReplyCount());
-        values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
         values.put(Statuses.SOURCE, status.getSource());
         values.put(Statuses.IS_POSSIBLY_SENSITIVE, status.isPossiblySensitive());
         final GeoLocation location = status.getGeoLocation();

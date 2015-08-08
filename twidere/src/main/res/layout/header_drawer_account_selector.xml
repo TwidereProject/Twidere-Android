@@ -125,7 +125,7 @@
                     android:focusable="false">
 
                     <android.support.v7.widget.ActionMenuView
-                        android:id="@+id/toggle_menu"
+                        android:id="@+id/account_dashboard_menu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:focusable="true"

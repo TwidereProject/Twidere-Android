@@ -21,9 +21,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@id/compose"
+        android:icon="@drawable/ic_action_status_compose"
+        android:title="@string/compose"
+        app:showAsAction="always" />
+
+    <item
         android:id="@id/select_account"
+        android:enabled="false"
         android:icon="@drawable/ic_action_more_vertical"
         android:title="@string/select_account"
+        android:visible="false"
         app:actionProviderClass="org.mariotaku.twidere.menu.support.AccountToggleProvider"
         app:showAsAction="always" />
 

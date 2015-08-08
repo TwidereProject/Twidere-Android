@@ -62,7 +62,10 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.CharacterStyle;
 import android.text.style.ImageSpan;
+import android.text.style.MetricAffectingSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -752,6 +755,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                     s.delete(s.getSpanStart(delete), s.getSpanEnd(delete));
                     s.removeSpan(delete);
                 }
+                for (Object span : s.getSpans(0, s.length(), CharacterStyle.class)) {
+                    if (span instanceof URLSpan) {
+                        s.removeSpan(span);
+                    } else if (span instanceof MetricAffectingSpan) {
+                        s.removeSpan(span);
+                    }
+                }
             }
         });
         mEditText.setCustomSelectionActionModeCallback(this);
@@ -934,7 +944,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean handleQuoteIntent(final ParcelableStatus status) {
         if (status == null || status.id <= 0) return false;
-        mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
+        if (status.is_quote) {
+            mEditText.setText(Utils.getQuoteStatus(this, status.quote_id, status.quoted_by_user_screen_name,
+                    status.quote_text_plain));
+        } else {
+            mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
+        }
         mEditText.setSelection(0);
         mAccountsAdapter.setSelectedAccountIds(status.account_id);
         return true;

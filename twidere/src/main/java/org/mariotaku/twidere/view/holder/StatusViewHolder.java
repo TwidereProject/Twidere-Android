@@ -137,7 +137,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
 
-        final long reply_count = status.is_quote ? status.quote_reply_count : status.reply_count;
+        final long reply_count = status.reply_count;
         final long retweet_count;
         final long favorite_count;
 
@@ -288,13 +288,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         if (twitter.isDestroyingStatus(status.account_id, status.my_retweet_id)) {
             retweetCountView.setActivated(false);
-            retweet_count = Math.max(0, (status.is_quote ? status.quote_retweet_count : status.retweet_count) - 1);
+            retweet_count = Math.max(0, status.retweet_count - 1);
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_id, status.id);
             retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status.account_id,
                     status.retweeted_by_user_id, status.my_retweet_id));
-            retweet_count = (status.is_quote ? status.quote_retweet_count : status.retweet_count)
-                    + (creatingRetweet ? 1 : 0);
+            retweet_count = status.retweet_count + (creatingRetweet ? 1 : 0);
         }
         if (retweet_count > 0) {
             retweetCountView.setText(Utils.getLocalizedNumber(locale, retweet_count));
@@ -303,12 +302,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
         if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
             favoriteCountView.setActivated(false);
-            favorite_count = Math.max(0, (status.is_quote ? status.quote_favorite_count : status.favorite_count) - 1);
+            favorite_count = Math.max(0, status.favorite_count - 1);
         } else {
             final boolean creatingFavorite = twitter.isCreatingFavorite(status.account_id, status.id);
             favoriteCountView.setActivated(creatingFavorite || status.is_favorite);
-            favorite_count = (status.is_quote ? status.quote_favorite_count : status.favorite_count)
-                    + (creatingFavorite ? 1 : 0);
+            favorite_count = status.favorite_count + (creatingFavorite ? 1 : 0);
         }
         if (favorite_count > 0) {
             favoriteCountView.setText(Utils.getLocalizedNumber(locale, favorite_count));
