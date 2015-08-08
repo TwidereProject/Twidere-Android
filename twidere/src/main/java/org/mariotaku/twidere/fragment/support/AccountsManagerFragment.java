@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +56,8 @@ import java.util.ArrayList;
 /**
  * Created by mariotaku on 14/10/26.
  */
-public class AccountsManagerFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>, DropListener, OnSharedPreferenceChangeListener {
+public class AccountsManagerFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
+        DropListener, OnSharedPreferenceChangeListener, AdapterView.OnItemClickListener {
 
     private static final String FRAGMENT_TAG_ACCOUNT_DELETION = "account_deletion";
 
@@ -137,6 +139,13 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         return false;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final ParcelableAccount account = mAdapter.getAccount(position);
+        Utils.openUserProfile(getActivity(), account.account_id, account.account_id, account.screen_name,
+                null);
+    }
+
 
     public static final class AccountDeletionDialogFragment extends BaseSupportDialogFragment implements
             DialogInterface.OnClickListener {
@@ -144,18 +153,18 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
             final Bundle args = getArguments();
-            final long account_id = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
-            if (account_id < 0) return;
+            final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
+            if (accountId < 0) return;
             final ContentResolver resolver = getContentResolver();
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    resolver.delete(Accounts.CONTENT_URI, Accounts.ACCOUNT_ID + " = " + account_id, null);
+                    resolver.delete(Accounts.CONTENT_URI, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null);
                     // Also delete tweets related to the account we previously
                     // deleted.
-                    resolver.delete(Statuses.CONTENT_URI, Statuses.ACCOUNT_ID + " = " + account_id, null);
-                    resolver.delete(Mentions.CONTENT_URI, Mentions.ACCOUNT_ID + " = " + account_id, null);
-                    resolver.delete(Inbox.CONTENT_URI, DirectMessages.ACCOUNT_ID + " = " + account_id, null);
-                    resolver.delete(Outbox.CONTENT_URI, DirectMessages.ACCOUNT_ID + " = " + account_id, null);
+                    resolver.delete(Statuses.CONTENT_URI, Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL(), null);
+                    resolver.delete(Mentions.CONTENT_URI, Expression.equals(Mentions.ACCOUNT_ID, accountId).getSQL(), null);
+                    resolver.delete(Inbox.CONTENT_URI, Expression.equals(DirectMessages.ACCOUNT_ID, accountId).getSQL(), null);
+                    resolver.delete(Outbox.CONTENT_URI, Expression.equals(DirectMessages.ACCOUNT_ID, accountId).getSQL(), null);
                     break;
                 }
             }
@@ -216,6 +225,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         mListView.setAdapter(mAdapter);
         mListView.setDragEnabled(true);
         mListView.setDropListener(this);
+        mListView.setOnItemClickListener(this);
         mListView.setOnCreateContextMenuListener(this);
         mListView.setEmptyView(mEmptyView);
         mEmptyText.setText(R.string.no_account);
