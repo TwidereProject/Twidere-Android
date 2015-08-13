@@ -24,8 +24,6 @@ android:
 
 script: ./gradlew build --no-daemon
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y python2.7
+sudo: false
 
 after_success: ./scripts/travis_upload_release_to_github.py
