@@ -50,8 +50,8 @@ public class GeoLocation implements ValueMap {
         }
     };
 
-    protected double latitude;
-    protected double longitude;
+    double latitude;
+    double longitude;
 
     /**
      * Creates a GeoLocation instance
@@ -64,10 +64,6 @@ public class GeoLocation implements ValueMap {
         this.longitude = longitude;
     }
 
-    /* For serialization purposes only. */
-    /* package */GeoLocation() {
-
-    }
 
     @Override
     public boolean equals(final Object o) {

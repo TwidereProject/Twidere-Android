@@ -19,35 +19,12 @@
 
 package edu.tsinghua.hotmobi.model;
 
-import android.content.Context;
-
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
 /**
- * Created by mariotaku on 15/8/8.
+ * Created by mariotaku on 15/8/13.
  */
-@JsonObject
-public class RefreshEvent extends BaseEvent {
-    @JsonField(name = "ids")
-    long[] ids;
-
-    @JsonField(name = "timeline_type")
-    int timelineType;
-
-    public void setIds(long[] ids) {
-        this.ids = ids;
-    }
-
-    public void setTimelineType(int timelineType) {
-        this.timelineType = timelineType;
-    }
-
-    public static RefreshEvent create(final Context context, long[] ids, int timelineType) {
-        final RefreshEvent event = new RefreshEvent();
-        event.markStart(context);
-        event.setIds(ids);
-        event.setTimelineType(timelineType);
-        return event;
-    }
+public interface TweetType {
+    int TEXT = 0;
+    int PHOTO = 1;
+    int VIDEO = 2;
+    int OTHER = 3;
 }

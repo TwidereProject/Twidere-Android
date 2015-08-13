@@ -122,8 +122,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.tsinghua.spice.Utilies.TypeMappingUtil;
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.MediaEvent;
+import edu.tsinghua.hotmobi.model.TweetEvent;
 
 /**
  * Created by mariotaku on 14/12/5.
@@ -156,6 +157,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     // Data fields
     private boolean mRepliesLoaderInitialized;
     private ParcelableStatus mSelectedStatus;
+    private TweetEvent mStatusEvent;
 
     // Listeners
     private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
@@ -291,14 +293,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
-        SpiceProfilingUtil.log(
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
+
+        MediaEvent event = MediaEvent.create(getActivity(), status, media, 0,
+                mStatusAdapter.isMediaPreviewEnabled());
+        HotMobiLogger.getInstance(getActivity()).log(event);
     }
 
     @Override
@@ -375,16 +373,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
-        //spice
-        SpiceProfilingUtil.log(
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.preview_url + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + mStatusAdapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        //end
+        // BEGIN HotMobi
+        MediaEvent event = MediaEvent.create(getActivity(), status, media, 0,
+                mStatusAdapter.isMediaPreviewEnabled());
+        HotMobiLogger.getInstance(getActivity()).log(event);
+        // END HotMobi
     }
 
     @Override
@@ -479,45 +472,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
         getLoaderManager().initLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
         mRepliesLoaderInitialized = true;
-        //spice
-        if (status.media == null) {
-            SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                    status.id + ",Words," + status.account_id + "," + status.user_id + "," + status.reply_count
-                            + "," + status.retweet_count + "," + status.favorite_count
-                            + "," + status.text_plain.length() + "," + status.timestamp);
-            SpiceProfilingUtil.log(status.id + ",Words," + status.account_id + "," + status.user_id
-                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                    + "," + status.text_plain.length() + "," + status.timestamp);
-        } else {
-            for (final ParcelableMedia media : status.media) {
-                if (media.type == ParcelableMedia.TYPE_IMAGE) {
-                    SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                            status.id + ",PreviewM," + status.account_id + "," + status.user_id
-                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
-                                    + "," + media.media_url + "," + media.width + "x" + media.height
-                                    + "," + status.timestamp);
-                    SpiceProfilingUtil.log(
-                            status.id + ",PreviewM," + status.account_id + "," + status.user_id
-                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
-                                    + "," + media.media_url + "," + media.width + "x" + media.height
-                                    + "," + status.timestamp);
-                } else {
-                    SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                            status.id + ",PreviewO," + status.account_id + "," + status.user_id
-                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
-                                    + "," + media.preview_url + "," + media.media_url + "," + status.timestamp);
-                    SpiceProfilingUtil.log(
-                            status.id + ",PreviewO," + status.account_id + "," + status.user_id
-                                    + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + status.text_plain.length() + "," + TypeMappingUtil.getMediaType(media.type)
-                                    + "," + media.preview_url + "," + media.media_url + "," + status.timestamp);
-                }
-            }
-        }
-        //end
     }
 
     private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
@@ -559,6 +513,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mStatusAdapter.setReplies(null);
                 loadReplies(status);
                 loadConversation(status);
+                final TweetEvent event = TweetEvent.create(getActivity(), status, 0);
+                event.setAction(TweetEvent.Action.OPEN);
+                mStatusEvent = event;
             } else {
                 final int position = mStatusAdapter.findPositionById(itemId);
                 mLayoutManager.scrollToPositionWithOffset(position, top);
@@ -1601,7 +1558,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
-
+        final TweetEvent event = mStatusEvent;
+        if (event == null) return;
+        event.markEnd();
+        HotMobiLogger.getInstance(getActivity()).log(event);
     }
 
 

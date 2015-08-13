@@ -19,10 +19,14 @@
 
 package edu.tsinghua.hotmobi.model;
 
+import android.content.Context;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.model.Location;
+import java.util.TimeZone;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
 
 /**
  * Created by mariotaku on 15/8/8.
@@ -36,5 +40,31 @@ public class BaseEvent {
     @JsonField(name = "time_offset")
     long timeOffset;
     @JsonField(name = "location")
-    Location location;
+    LatLng location;
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setTimeOffset(long timeOffset) {
+        this.timeOffset = timeOffset;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
+    }
+
+    public void markStart(Context context) {
+        setStartTime(System.currentTimeMillis());
+        setTimeOffset(TimeZone.getDefault().getOffset(startTime));
+        setLocation(HotMobiLogger.getCachedLatLng(context));
+    }
+
+    public void markEnd() {
+        setEndTime(System.currentTimeMillis());
+    }
 }

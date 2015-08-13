@@ -19,14 +19,23 @@
 
 package edu.tsinghua.hotmobi;
 
+import android.content.Context;
+import android.location.Location;
+
+import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.Utils;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import edu.tsinghua.hotmobi.model.BaseEvent;
 import edu.tsinghua.hotmobi.model.FirstLaunchEvent;
+import edu.tsinghua.hotmobi.model.LatLng;
 import edu.tsinghua.hotmobi.model.RefreshEvent;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 import edu.tsinghua.hotmobi.model.TweetEvent;
+import edu.tsinghua.hotmobi.model.TweetType;
 
 /**
  * Created by mariotaku on 15/8/10.
@@ -35,7 +44,7 @@ public class HotMobiLogger {
 
     private final Executor mExecutor;
 
-    HotMobiLogger() {
+    public HotMobiLogger() {
         mExecutor = Executors.newSingleThreadExecutor();
     }
 
@@ -60,5 +69,19 @@ public class HotMobiLogger {
             return "tweet";
         }
         return null;
+    }
+
+    public static int getTweetType(ParcelableStatus status) {
+        return TweetType.TEXT;
+    }
+
+    public static HotMobiLogger getInstance(Context context) {
+        return ((TwidereApplication) context.getApplicationContext()).getHotMobiLogger();
+    }
+
+    public static LatLng getCachedLatLng(Context context) {
+        final Location location = Utils.getCachedLocation(context);
+        if (location == null) return null;
+        return new LatLng(location.getLatitude(), location.getLongitude());
     }
 }

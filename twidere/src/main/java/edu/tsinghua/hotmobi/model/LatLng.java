@@ -19,35 +19,41 @@
 
 package edu.tsinghua.hotmobi.model;
 
-import android.content.Context;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * Created by mariotaku on 15/8/8.
+ * Created by mariotaku on 15/8/13.
  */
 @JsonObject
-public class RefreshEvent extends BaseEvent {
-    @JsonField(name = "ids")
-    long[] ids;
+public class LatLng {
+    @JsonField(name = "latitude")
+    double latitude;
+    @JsonField(name = "longitude")
+    double longitude;
 
-    @JsonField(name = "timeline_type")
-    int timelineType;
-
-    public void setIds(long[] ids) {
-        this.ids = ids;
+    public LatLng() {
     }
 
-    public void setTimelineType(int timelineType) {
-        this.timelineType = timelineType;
+    public LatLng(double latitude, double longitude) {
+
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public static RefreshEvent create(final Context context, long[] ids, int timelineType) {
-        final RefreshEvent event = new RefreshEvent();
-        event.markStart(context);
-        event.setIds(ids);
-        event.setTimelineType(timelineType);
-        return event;
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

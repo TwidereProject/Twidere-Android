@@ -65,7 +65,6 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableLocation;
-import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -106,8 +105,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.tsinghua.spice.Utilies.TypeMappingUtil;
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.RefreshEvent;
+import edu.tsinghua.hotmobi.model.TweetEvent;
 
 public class AsyncTwitterWrapper extends TwitterWrapper {
 
@@ -918,17 +918,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
 
-                //spice
-                final Context context = getContext();
-                SpiceProfilingUtil.profile(context,
-                        status.account_id, status.id + ",Favor,"
-                                + status.account_id + "," + status.user_id + "," + status.reply_count
-                                + "," + status.retweet_count + "," + status.favorite_count
-                                + "," + status.timestamp);
-                SpiceProfilingUtil.log(status.id + ",Favor,"
-                        + status.account_id + "," + status.user_id + "," + status.reply_count
-                        + "," + status.retweet_count + "," + status.favorite_count + "," + status.timestamp);
-                //end
+                // BEGIN HotMobi
+
+                final TweetEvent event = TweetEvent.create(getContext(), status, 0);
+                event.setAction(TweetEvent.Action.FAVORITE);
+                HotMobiLogger.getInstance(getContext()).log(event);
+
+                // END HotMobi
 
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 assert bus != null;
@@ -1558,18 +1554,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             mDestroyingFavoriteIds.remove(account_id, status_id);
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
-                //spice
-                final Context context = getContext();
-                SpiceProfilingUtil.profile(context,
-                        status.account_id, status.id + ",Unfavor," + status.account_id
-                                + "," + status.user_id + "," + status.reply_count
-                                + "," + status.retweet_count + "," + status.favorite_count
-                                + "," + status.timestamp);
-                SpiceProfilingUtil.log(status.id + ",Unfavor," + status.account_id
-                        + "," + status.user_id + "," + status.reply_count
-                        + "," + status.retweet_count + "," + status.favorite_count
-                        + "," + status.timestamp);
-                //end
+                // BEGIN HotMobi
+
+                final TweetEvent event = TweetEvent.create(getContext(), status, 0);
+                event.setAction(TweetEvent.Action.UNFAVORITE);
+                HotMobiLogger.getInstance(getContext()).log(event);
+
+                // END HotMobi
 
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 assert bus != null;
@@ -2209,9 +2200,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 rowsDeleted = 0;
             }
             countCur.close();
-            //spice
-            SpiceProfilingUtil.profile(mContext, accountId, accountId + ",Refresh," + TwidereArrayUtils.toString(statusIds, ',', true));
-            //end
+
+            // BEGIN HotMobi
+            final RefreshEvent event = RefreshEvent.create(mContext, statusIds, 0);
+            HotMobiLogger.getInstance(mContext).log(event);
+            // END HotMobi
 
             // Insert a gap.
             final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
@@ -2569,6 +2562,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 Utils.showInfoMessage(mContext, R.string.reported_user_for_spam, false);
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
+                assert bus != null;
                 bus.post(new FriendshipUserUpdatedEvent(result.getData()));
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_reporting_for_spam, result.getException(), true);
@@ -2629,32 +2623,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), null);
                 }
-                //spice
-                if (status.media == null) {
-                    SpiceProfilingUtil.log(status.id + ",Retweet," + account_id + ","
-                            + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
-                    SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",Retweet," + account_id + ","
-                            + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count);
-                } else {
-                    for (final ParcelableMedia spiceMedia : status.media) {
-                        if (spiceMedia.type == ParcelableMedia.TYPE_IMAGE) {
-                            SpiceProfilingUtil.log(status.id + ",RetweetM," + account_id + ","
-                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height);
-                            SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetM," + account_id + ","
-                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + spiceMedia.preview_url + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type) + "," + spiceMedia.width + "x" + spiceMedia.height);
-                        } else {
-                            SpiceProfilingUtil.log(status.id + ",RetweetO," + account_id + ","
-                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
-                            SpiceProfilingUtil.profile(getContext(), account_id, status.id + ",RetweetO," + account_id + ","
-                                    + status.user_id + "," + status.reply_count + "," + status.retweet_count + "," + status.favorite_count
-                                    + "," + spiceMedia.preview_url + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
-                        }
-                    }
-                }
-                //end
+
+                // BEGIN HotMobi
+
+                final TweetEvent event = TweetEvent.create(getContext(), status, 0);
+                event.setAction(TweetEvent.Action.RETWEET);
+                HotMobiLogger.getInstance(getContext()).log(event);
+
+                // END HotMobi
+
                 final Bus bus = TwidereApplication.getInstance(mContext).getMessageBus();
                 assert bus != null;
                 bus.post(new StatusRetweetedEvent(status));

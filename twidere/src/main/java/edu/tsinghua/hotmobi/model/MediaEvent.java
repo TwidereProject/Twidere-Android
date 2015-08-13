@@ -24,6 +24,7 @@ import android.content.Context;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -32,7 +33,7 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
  * Created by mariotaku on 15/8/7.
  */
 @JsonObject
-public class TweetEvent extends BaseEvent {
+public class MediaEvent extends BaseEvent {
 
     @JsonField(name = "id")
     long id;
@@ -44,6 +45,37 @@ public class TweetEvent extends BaseEvent {
     int timelineType;
     @JsonField(name = "action")
     int action;
+    @JsonField(name = "preview_url")
+    String previewUrl;
+    @JsonField(name = "media_url")
+    String mediaUrl;
+    @JsonField(name = "preview_enabled")
+    boolean previewEnabled;
+
+    public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media, int timelineType, boolean previewEnabled) {
+        final MediaEvent event = new MediaEvent();
+        event.markStart(context);
+        event.setId(status.id);
+        event.setUserId(status.user_id);
+        event.setMediaUrl(media.media_url);
+        event.setPreviewUrl(media.preview_url);
+        event.setPreviewEnabled(previewEnabled);
+        event.setTimelineType(timelineType);
+        event.setTweetType(HotMobiLogger.getTweetType(status));
+        return event;
+    }
+
+    public void setPreviewEnabled(boolean previewEnabled) {
+        this.previewEnabled = previewEnabled;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
+    public void setPreviewUrl(String previewUrl) {
+        this.previewUrl = previewUrl;
+    }
 
     public void setAction(int action) {
         this.action = action;
@@ -65,22 +97,12 @@ public class TweetEvent extends BaseEvent {
         this.timelineType = timelineType;
     }
 
-    public static TweetEvent create(Context context, ParcelableStatus status, int timelineType) {
-        final TweetEvent event = new TweetEvent();
-        event.markStart(context);
-        event.setId(status.id);
-        event.setUserId(status.user_id);
-        event.setTimelineType(timelineType);
-        event.setTweetType(HotMobiLogger.getTweetType(status));
-        return event;
-    }
-
 
     public interface Action {
         int OPEN = 0;
         int RETWEET = 1;
         int FAVORITE = 2;
 
-        int UNFAVORITE =-2;
+        int UNFAVORITE = -2;
     }
 }

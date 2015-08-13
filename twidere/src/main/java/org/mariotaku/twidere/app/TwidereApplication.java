@@ -73,6 +73,8 @@ import org.mariotaku.twidere.util.net.TwidereHostAddressResolver;
 
 import java.io.File;
 
+import edu.tsinghua.hotmobi.HotMobiLogger;
+
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
@@ -110,6 +112,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private UserColorNameManager mUserColorNameManager;
 
     private String mDefaultUserAgent;
+    private HotMobiLogger mHotMobiLogger;
 
     @NonNull
     public static TwidereApplication getInstance(@NonNull final Context context) {
@@ -350,4 +353,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         }
     }
 
+    @NonNull
+    public HotMobiLogger getHotMobiLogger() {
+        if (mHotMobiLogger != null) return mHotMobiLogger;
+        return mHotMobiLogger = new HotMobiLogger();
+    }
 }

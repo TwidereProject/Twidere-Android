@@ -84,14 +84,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -147,6 +145,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthSupport;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -227,7 +226,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
-import org.mariotaku.twidere.text.OriginalStatusSpan;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -3972,6 +3970,12 @@ public final class Utils implements Constants {
 
             context.getApplicationContext().sendBroadcast(intent);
         }
+    }
+
+    public static GeoLocation getCachedGeoLocation(Context context) {
+        final Location location = getCachedLocation(context);
+        if (location == null) return null;
+        return new GeoLocation(location.getLatitude(), location.getLongitude());
     }
 
     public static Location getCachedLocation(Context context) {
