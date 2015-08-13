@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -76,7 +77,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
         final Context context = adapter.getContext();
         final Resources resources = adapter.getContext().getResources();
         switch (activity.action) {
-            case ParcelableActivity.ACTION_FOLLOW: {
+            case Activity.ACTION_FOLLOW: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
                 activityTypeView.setColorFilter(resources.getColor(R.color.highlight_follow), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
@@ -85,7 +86,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 summaryView.setVisibility(View.GONE);
                 break;
             }
-            case ParcelableActivity.ACTION_FAVORITE: {
+            case Activity.ACTION_FAVORITE: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
                 activityTypeView.setColorFilter(resources.getColor(R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
@@ -95,7 +96,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
-            case ParcelableActivity.ACTION_RETWEET: {
+            case Activity.ACTION_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
                 activityTypeView.setColorFilter(resources.getColor(R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
@@ -105,7 +106,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
-            case ParcelableActivity.ACTION_FAVORITED_RETWEET: {
+            case Activity.ACTION_FAVORITED_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
                 activityTypeView.setColorFilter(resources.getColor(R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
@@ -115,7 +116,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
-            case ParcelableActivity.ACTION_RETWEETED_RETWEET: {
+            case Activity.ACTION_RETWEETED_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
                 activityTypeView.setColorFilter(resources.getColor(R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_retweet,
@@ -125,7 +126,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
-            case ParcelableActivity.ACTION_LIST_MEMBER_ADDED: {
+            case Activity.ACTION_LIST_MEMBER_ADDED: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
                 activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
                 if (activity.sources.length == 1 && activity.target_object_user_lists != null

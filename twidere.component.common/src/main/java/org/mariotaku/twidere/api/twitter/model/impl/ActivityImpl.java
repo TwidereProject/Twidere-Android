@@ -101,6 +101,8 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                 if (instance.action == null) throw new IOException();
                 if (instance.action == Action.LIST_MEMBER_ADDED) {
                     instance.targetObjectUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetObjectsSize]);
+                } else if (instance.action == Action.RETWEETED_RETWEET) {
+                    instance.targetObjectUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetObjectsSize]);
                 } else {
                     instance.targetObjectStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetObjectsSize]);
                 }
@@ -112,7 +114,15 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
 
     private Date createdAt;
 
-    private User[] sources, targetUsers;
+    private User[] sources;
+    private User[] targetUsers;
+
+    @Override
+    public User[] getTargetObjectUsers() {
+        return targetObjectUsers;
+    }
+
+    private User[] targetObjectUsers;
 
     private Status[] targetObjectStatuses, targetStatuses;
 

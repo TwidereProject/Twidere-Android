@@ -80,6 +80,7 @@ dependencies {
     compile 'com.github.boxme:asyncmanager:1.0.0'
     compile 'com.sprylab.android.texturevideoview:texturevideoview:1.0.0'
     compile 'com.squareup:pollexor:2.0.2'
+    compile 'com.squareup:tape:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.bluelinelabs:logansquare:1.1.0'
     compile 'ch.acra:acra:4.6.2'

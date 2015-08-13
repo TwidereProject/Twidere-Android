@@ -254,11 +254,15 @@
     <style name="Theme.Twidere.Drawer.Dark" parent="Theme.Twidere.Dark.NoActionBar">
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/bg_color_drawer_dark</item>
+        <item name="textColorDrawerNamePrimary">?android:textColorPrimary</item>
+        <item name="textColorDrawerNameSecondary">?android:textColorSecondary</item>
     </style>
 
     <style name="Theme.Twidere.Drawer.Light" parent="Theme.Twidere.Light.NoActionBar">
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/bg_color_drawer_light</item>
+        <item name="textColorDrawerNamePrimary">?android:textColorPrimaryInverse</item>
+        <item name="textColorDrawerNameSecondary">?android:textColorSecondaryInverse</item>
     </style>
 
     <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Twidere.Dark.NoActionBar">

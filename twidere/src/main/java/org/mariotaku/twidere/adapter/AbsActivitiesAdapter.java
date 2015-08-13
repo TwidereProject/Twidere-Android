@@ -34,6 +34,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
+import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
@@ -177,7 +178,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     public void onStatusClick(StatusViewHolder holder, int position) {
         final ParcelableActivity activity = getActivity(position);
         final ParcelableStatus status;
-        if (activity.action == ParcelableActivity.ACTION_MENTION) {
+        if (activity.action == Activity.ACTION_MENTION) {
             status = activity.target_object_statuses[0];
         } else {
             status = activity.target_statuses[0];
@@ -195,7 +196,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         final Context context = getContext();
         final ParcelableActivity activity = getActivity(position);
         final ParcelableStatus status;
-        if (activity.action == ParcelableActivity.ACTION_MENTION) {
+        if (activity.action == Activity.ACTION_MENTION) {
             status = activity.target_object_statuses[0];
         } else {
             status = activity.target_statuses[0];
@@ -265,7 +266,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             case ITEM_VIEW_TYPE_STATUS: {
                 final ParcelableActivity activity = getActivity(position);
                 final ParcelableStatus status;
-                if (activity.action == ParcelableActivity.ACTION_MENTION) {
+                if (activity.action == Activity.ACTION_MENTION) {
                     status = activity.target_object_statuses[0];
                 } else {
                     status = activity.target_statuses[0];
@@ -298,16 +299,17 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             return ITEM_VIEW_TYPE_GAP;
         }
         switch (getActivityAction(position)) {
-            case ParcelableActivity.ACTION_MENTION:
-            case ParcelableActivity.ACTION_REPLY: {
+            case Activity.ACTION_MENTION:
+            case Activity.ACTION_REPLY:
+            case Activity.ACTION_QUOTE: {
                 return ITEM_VIEW_TYPE_STATUS;
             }
-            case ParcelableActivity.ACTION_FOLLOW:
-            case ParcelableActivity.ACTION_FAVORITE:
-            case ParcelableActivity.ACTION_RETWEET:
-            case ParcelableActivity.ACTION_FAVORITED_RETWEET:
-            case ParcelableActivity.ACTION_RETWEETED_RETWEET:
-            case ParcelableActivity.ACTION_LIST_MEMBER_ADDED: {
+            case Activity.ACTION_FOLLOW:
+            case Activity.ACTION_FAVORITE:
+            case Activity.ACTION_RETWEET:
+            case Activity.ACTION_FAVORITED_RETWEET:
+            case Activity.ACTION_RETWEETED_RETWEET:
+            case Activity.ACTION_LIST_MEMBER_ADDED: {
                 return ITEM_VIEW_TYPE_TITLE_SUMMARY;
             }
         }

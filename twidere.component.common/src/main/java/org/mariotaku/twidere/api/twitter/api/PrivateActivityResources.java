@@ -29,7 +29,8 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 
 @SuppressWarnings("RedundantThrows")
 @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
-        "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
+        "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count",
+        "model_version"})
 public interface PrivateActivityResources extends PrivateResources {
 
     @GET("/activity/about_me.json")

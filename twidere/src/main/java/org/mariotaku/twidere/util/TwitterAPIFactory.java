@@ -360,6 +360,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             sExtraParams.put("include_reply_count", "true");
             sExtraParams.put("include_descendent_reply_count", "true");
             sExtraParams.put("full_text", "true");
+            sExtraParams.put("model_version", "7");
         }
 
 

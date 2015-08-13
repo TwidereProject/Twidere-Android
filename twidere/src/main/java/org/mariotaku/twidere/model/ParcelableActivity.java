@@ -36,16 +36,6 @@ import java.util.Arrays;
 @JsonObject
 public class ParcelableActivity implements Comparable<ParcelableActivity>, Parcelable {
 
-    public final static int ACTION_FAVORITE = Activity.Action.ACTION_FAVORITE;
-    public final static int ACTION_FOLLOW = Activity.Action.ACTION_FOLLOW;
-    public final static int ACTION_MENTION = Activity.Action.ACTION_MENTION;
-    public final static int ACTION_REPLY = Activity.Action.ACTION_REPLY;
-    public final static int ACTION_RETWEET = Activity.Action.ACTION_RETWEET;
-    public final static int ACTION_LIST_MEMBER_ADDED = Activity.Action.ACTION_LIST_MEMBER_ADDED;
-    public final static int ACTION_LIST_CREATED = Activity.Action.ACTION_LIST_CREATED;
-    public final static int ACTION_FAVORITED_RETWEET = Activity.Action.ACTION_FAVORITED_RETWEET;
-    public final static int ACTION_RETWEETED_RETWEET = Activity.Action.ACTION_RETWEETED_RETWEET;
-
     public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
         @Override
         public ParcelableActivity createFromParcel(Parcel source) {
@@ -94,6 +84,9 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @JsonField(name = "target_object_statuses")
     public ParcelableStatus[] target_object_statuses;
     @ParcelableThisPlease
+    @JsonField(name = "target_object_users")
+    public ParcelableUser[] target_object_users;
+    @ParcelableThisPlease
     @JsonField(name = "is_gap")
     public boolean is_gap;
 
@@ -112,6 +105,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         target_statuses = ParcelableStatus.fromStatuses(activity.getTargetStatuses(), account_id);
         target_object_statuses = ParcelableStatus.fromStatuses(activity.getTargetObjectStatuses(), account_id);
         target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), account_id);
+        target_object_users = ParcelableUser.fromUsers(activity.getTargetObjectUsers(), account_id);
         this.is_gap = is_gap;
     }
 
@@ -119,6 +113,24 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         ParcelableActivityParcelablePlease.readFromParcel(this, src);
     }
 
+    @Override
+    public String toString() {
+        return "ParcelableActivity{" +
+                "account_id=" + account_id +
+                ", timestamp=" + timestamp +
+                ", max_position=" + max_position +
+                ", min_position=" + min_position +
+                ", action=" + action +
+                ", sources=" + Arrays.toString(sources) +
+                ", target_users=" + Arrays.toString(target_users) +
+                ", target_statuses=" + Arrays.toString(target_statuses) +
+                ", target_user_lists=" + Arrays.toString(target_user_lists) +
+                ", target_object_user_lists=" + Arrays.toString(target_object_user_lists) +
+                ", target_object_statuses=" + Arrays.toString(target_object_statuses) +
+                ", target_object_users=" + Arrays.toString(target_object_users) +
+                ", is_gap=" + is_gap +
+                '}';
+    }
 
     @Override
     public int compareTo(@NonNull final ParcelableActivity another) {
@@ -133,17 +145,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         if (!(that instanceof ParcelableActivity)) return false;
         final ParcelableActivity activity = (ParcelableActivity) that;
         return max_position == activity.max_position && min_position == activity.min_position;
-    }
-
-    @Override
-    public String toString() {
-        return "ParcelableActivity{account_id=" + account_id + ", timestamp=" + timestamp
-                + ", max_position=" + max_position + ", min_position=" + min_position + ", action=" + action
-                + ", sources=" + Arrays.toString(sources) + ", target_users=" + Arrays.toString(target_users)
-                + ", target_statuses=" + Arrays.toString(target_statuses) + ", target_user_lists="
-                + Arrays.toString(target_user_lists) + ", target_object_user_lists="
-                + Arrays.toString(target_object_user_lists) + ", target_object_statuses="
-                + Arrays.toString(target_object_statuses) + "}";
     }
 
 

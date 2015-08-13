@@ -23,6 +23,17 @@ import java.util.Date;
 
 public interface Activity extends TwitterResponse, Comparable<Activity> {
 
+    int ACTION_FAVORITE = 0x01;
+    int ACTION_FOLLOW = 0x02;
+    int ACTION_MENTION = 0x03;
+    int ACTION_REPLY = 0x04;
+    int ACTION_RETWEET = 0x05;
+    int ACTION_LIST_MEMBER_ADDED = 0x06;
+    int ACTION_LIST_CREATED = 0x07;
+    int ACTION_FAVORITED_RETWEET = 0x08;
+    int ACTION_RETWEETED_RETWEET = 0x09;
+    int ACTION_QUOTE = 0x0A;
+
     Action getAction();
 
     Date getCreatedAt();
@@ -49,19 +60,13 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
 
     User[] getTargetUsers();
 
-    enum Action {
-        FAVORITE(0x1), FOLLOW(0x2), MENTION(0x3), REPLY(0x4), RETWEET(0x5), LIST_MEMBER_ADDED(0x06),
-        LIST_CREATED(0x07), FAVORITED_RETWEET(0x08), RETWEETED_RETWEET(0x09);
+    User[] getTargetObjectUsers();
 
-        public final static int ACTION_FAVORITE = 0x01;
-        public final static int ACTION_FOLLOW = 0x02;
-        public final static int ACTION_MENTION = 0x03;
-        public final static int ACTION_REPLY = 0x04;
-        public final static int ACTION_RETWEET = 0x05;
-        public final static int ACTION_LIST_MEMBER_ADDED = 0x06;
-        public final static int ACTION_LIST_CREATED = 0x07;
-        public final static int ACTION_FAVORITED_RETWEET = 0x08;
-        public final static int ACTION_RETWEETED_RETWEET = 0x09;
+
+    enum Action {
+        FAVORITE(ACTION_FAVORITE), FOLLOW(ACTION_FOLLOW), MENTION(ACTION_MENTION), REPLY(ACTION_REPLY),
+        RETWEET(ACTION_RETWEET), LIST_MEMBER_ADDED(ACTION_LIST_MEMBER_ADDED), LIST_CREATED(ACTION_LIST_CREATED),
+        FAVORITED_RETWEET(ACTION_FAVORITED_RETWEET), RETWEETED_RETWEET(ACTION_RETWEETED_RETWEET), QUOTE(ACTION_QUOTE);
 
         private final int actionId;
 
@@ -83,6 +88,7 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
             if ("list_created".equalsIgnoreCase(string)) return LIST_CREATED;
             if ("favorited_retweet".equalsIgnoreCase(string)) return FAVORITED_RETWEET;
             if ("retweeted_retweet".equalsIgnoreCase(string)) return RETWEETED_RETWEET;
+            if ("quote".equalsIgnoreCase(string)) return QUOTE;
             throw new IllegalArgumentException("Unknown action " + string);
         }
     }
