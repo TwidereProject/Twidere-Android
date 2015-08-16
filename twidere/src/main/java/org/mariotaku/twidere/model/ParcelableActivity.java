@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.loader.support.ObjectCursorLoader;
 
 import java.util.Arrays;
 
@@ -156,5 +158,17 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableActivityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static class CursorIndices extends ObjectCursor.CursorIndices<ParcelableActivity> {
+
+        public CursorIndices(@NonNull Cursor cursor) {
+            super(cursor);
+        }
+
+        @Override
+        public ParcelableActivity newObject(Cursor cursor) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

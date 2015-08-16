@@ -80,6 +80,6 @@ public class ObjectCursor<E> extends AbstractList<E> {
 
         }
 
-        abstract T newObject(Cursor cursor);
+        public abstract T newObject(Cursor cursor);
     }
 }

@@ -856,13 +856,12 @@ public interface TwidereDataStore {
         String TARGET_OBJECT_STATUSES = "target_object_statuses";
         String TARGET_OBJECT_USER_LISTS = "target_object_user_lists";
 
-    }
+        interface AboutMe extends Activities {
 
-    interface ActivitiesAboutMe extends Activities {
+            String CONTENT_PATH = "activities_about_me";
 
-        String CONTENT_PATH = "activities_about_me";
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
     }
 
     interface Tabs extends BaseColumns {
