@@ -26,6 +26,10 @@ jdk:
 
 sudo: false
 
+env:
+  global:
+    MALLOC_ARENA_MAX=2
+
 addons:
   apt:
     packages:
