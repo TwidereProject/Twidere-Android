@@ -24,7 +24,7 @@ android:
 jdk:
   - oraclejdk7
 
-sudo: false
+sudo: required
 
 env:
   global:
