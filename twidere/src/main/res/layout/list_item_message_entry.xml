@@ -25,7 +25,6 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:focusable="true"
-    android:focusableInTouchMode="false"
     android:minHeight="?android:listPreferredItemHeight"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/element_spacing_normal"

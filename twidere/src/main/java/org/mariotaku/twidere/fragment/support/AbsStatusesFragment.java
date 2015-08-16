@@ -42,8 +42,8 @@ import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.tsinghua.spice.Utilies.TypeMappingUtil;
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.MediaEvent;
 
 import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 
@@ -148,6 +148,25 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (ACTION_NAVIGATION_REFRESH.equals(action)) {
+            return true;
+        }
+        if (action == null) {
+            action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
+        }
+        if (action == null) return false;
+        switch (action) {
+            case ACTION_STATUS_REPLY:
+            case ACTION_STATUS_RETWEET:
+            case ACTION_STATUS_FAVORITE:
+                return true;
+        }
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+    }
+
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
         return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
@@ -239,16 +258,10 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
-        //spice
-        SpiceProfilingUtil.log(
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + adapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        SpiceProfilingUtil.profile(getActivity(), status.account_id,
-                status.id + ",Clicked," + status.account_id + "," + status.user_id + "," + status.text_plain.length()
-                        + "," + media.media_url + "," + TypeMappingUtil.getMediaType(media.type)
-                        + "," + adapter.isMediaPreviewEnabled() + "," + status.timestamp);
-        //end
+        // BEGIN HotMobi
+        final MediaEvent event = MediaEvent.create(getActivity(), status, media, 0, adapter.isMediaPreviewEnabled());
+        HotMobiLogger.getInstance(getActivity()).log(event);
+        // END HotMobi
     }
 
     @Override

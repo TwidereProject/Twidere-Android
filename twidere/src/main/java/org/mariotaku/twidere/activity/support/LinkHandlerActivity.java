@@ -75,6 +75,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
     private MultiSelectEventHandler mMultiSelectHandler;
     private TwidereActionModeForChildListener mTwidereActionModeForChildListener;
+    private TintedStatusFrameLayout mMainContent;
     private final View.OnLayoutChangeListener mLayoutChangeListener = new View.OnLayoutChangeListener() {
 
         private final Rect tempInsets = new Rect();
@@ -90,8 +91,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
             }
         }
     };
-
-    private TintedStatusFrameLayout mMainContent;
     private View mActionBarWithOverlay;
     private ActionBarContainer mActionBarContainer;
 
@@ -191,6 +190,21 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         }
         if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+    }
+
+    @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
+        return super.isKeyboardShortcutHandled(handler, keyCode, event);
+    }
+
+    private boolean isFragmentKeyboardShortcutHandled(final KeyboardShortcutsHandler handler,
+                                                      final int keyCode, @NonNull final KeyEvent event) {
+        final Fragment fragment = getCurrentVisibleFragment();
+        if (fragment instanceof KeyboardShortcutCallback) {
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
+        }
+        return false;
     }
 
     @Override
@@ -545,14 +559,14 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public void setControlBarOffset(float offset) {
-        mActionBarContainer.setTranslationY(-Math.round((1 - offset) * getControlBarHeight()));
-        notifyControlBarOffsetChanged();
+    public float getControlBarOffset() {
+        return 1 + mActionBarContainer.getTranslationY() / (float) getControlBarHeight();
     }
 
     @Override
-    public float getControlBarOffset() {
-        return 1 + mActionBarContainer.getTranslationY() / (float) getControlBarHeight();
+    public void setControlBarOffset(float offset) {
+        mActionBarContainer.setTranslationY(-Math.round((1 - offset) * getControlBarHeight()));
+        notifyControlBarOffsetChanged();
     }
 
     @Override

@@ -38,7 +38,6 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:focusable="true"
-            android:focusableInTouchMode="false"
             android:listSelector="?selectableItemBackground" />
 
     </org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout>

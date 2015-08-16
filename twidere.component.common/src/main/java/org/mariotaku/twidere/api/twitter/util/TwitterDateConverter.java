@@ -55,7 +55,8 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         }
         final long currentTime = System.currentTimeMillis();
         if (date.getTime() - currentTime > ONE_MINUTE) {
-            AbsLogger.error("Tweet date from future: " + string + ", current time is " + currentTime);
+            AbsLogger.error("Tweet date from future, raw string: " + string + ", date parsed: "
+                    + date + ", current time is " + currentTime);
         }
         return date;
     }

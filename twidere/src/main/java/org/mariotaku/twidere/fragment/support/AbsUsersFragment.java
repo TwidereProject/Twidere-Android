@@ -62,6 +62,11 @@ abstract class AbsUsersFragment<Data> extends AbsContentRecyclerViewFragment<Abs
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

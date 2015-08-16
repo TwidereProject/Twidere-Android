@@ -129,8 +129,7 @@
                         android:id="@+id/account_dashboard_menu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:focusable="true"
-                        android:focusableInTouchMode="false" />
+                        android:focusable="true" />
                 </FrameLayout>
 
 

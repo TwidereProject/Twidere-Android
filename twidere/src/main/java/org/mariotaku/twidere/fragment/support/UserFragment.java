@@ -1149,6 +1149,20 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (action != null) {
+            switch (action) {
+                case ACTION_NAVIGATION_PREVIOUS_TAB:
+                case ACTION_NAVIGATION_NEXT_TAB:
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {
@@ -1167,6 +1181,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
             return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
+        }
+        return false;
+    }
+
+    private boolean isFragmentKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final Fragment fragment = getKeyboardShortcutRecipient();
+        if (fragment instanceof KeyboardShortcutCallback) {
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
         }
         return false;
     }

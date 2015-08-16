@@ -80,6 +80,11 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
         return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
+    @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, final int keyCode, @NonNull final KeyEvent event) {
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+    }
+
     public SharedPreferences getSharedPreferences() {
         if (mPreferences != null) return mPreferences;
         return mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);

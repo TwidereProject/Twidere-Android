@@ -246,6 +246,12 @@ public class SettingsActivity extends BasePreferenceActivity {
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        return ACTION_NAVIGATION_BACK.equals(action);
+    }
+
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }

@@ -153,6 +153,12 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        return ACTION_NAVIGATION_PREVIOUS.equals(action) || ACTION_NAVIGATION_NEXT.equals(action);
+    }
+
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
                                                 @NonNull final KeyEvent event) {

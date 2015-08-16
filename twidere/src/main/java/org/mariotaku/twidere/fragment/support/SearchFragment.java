@@ -131,6 +131,13 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        return ACTION_NAVIGATION_PREVIOUS_TAB.equals(action) || ACTION_NAVIGATION_NEXT_TAB.equals(action);
+    }
+
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
@@ -327,6 +334,14 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
             return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
+        }
+        return false;
+    }
+
+    private boolean isFragmentKeyboardShortcutHandled(KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final Fragment fragment = getKeyboardShortcutRecipient();
+        if (fragment instanceof KeyboardShortcutCallback) {
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
         }
         return false;
     }

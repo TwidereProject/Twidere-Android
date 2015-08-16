@@ -27,7 +27,6 @@
     android:gravity="center"
     android:text="@string/load_more"
     android:focusable="true"
-    android:focusableInTouchMode="false"
     android:textAppearance="?android:textAppearanceMedium"
     android:textColor="?android:textColorPrimary"
     android:textStyle="bold"/>

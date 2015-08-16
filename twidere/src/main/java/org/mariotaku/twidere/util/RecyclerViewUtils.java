@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -67,15 +68,22 @@ public class RecyclerViewUtils {
                 focusFallback(layoutManager);
                 return;
             }
-            viewToFocus.requestFocus();
+            focus(viewToFocus);
+        }
+    }
+
+    private static void focus(@NonNull View view) {
+        if (view.isInTouchMode()) {
+            view.requestFocusFromTouch();
+        } else {
+            view.requestFocus();
         }
     }
 
     private static void focusFallback(LinearLayoutManager layoutManager) {
         final int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
         final View firstVisibleView = layoutManager.findViewByPosition(firstVisibleItemPosition);
-        if (firstVisibleView != null) {
-            firstVisibleView.requestFocus();
-        }
+        if (firstVisibleView == null) return;
+        focus(firstVisibleView);
     }
 }

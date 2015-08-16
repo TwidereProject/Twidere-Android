@@ -129,12 +129,18 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, @NonNull final KeyEvent event) {
-        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
         if (ACTION_NAVIGATION_REFRESH.equals(action)) {
             triggerRefresh();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        return ACTION_NAVIGATION_REFRESH.equals(action) || mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
     }
 
 

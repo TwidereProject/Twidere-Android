@@ -253,6 +253,8 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event);
 
         boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
+
+        boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
     }
 
     public interface TakeAllKeyboardShortcut {

@@ -162,16 +162,21 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        return false;
+    }
+
+    @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event)) return true;
-        return super.onKeyUp(keyCode, event);
+        handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event) || super.onKeyUp(keyCode, event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
             return true;
-        return super.onKeyDown(keyCode, event);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event) || super.onKeyDown(keyCode, event);
     }
 
     @Override

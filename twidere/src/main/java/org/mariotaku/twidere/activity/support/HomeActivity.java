@@ -310,6 +310,12 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
+        return super.isKeyboardShortcutHandled(handler, keyCode, event);
+    }
+
+    @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
         if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
@@ -674,6 +680,15 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
             return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
+        }
+        return false;
+    }
+
+    private boolean isFragmentKeyboardShortcutHandled(final KeyboardShortcutsHandler handler,
+                                                      final int keyCode, @NonNull final KeyEvent event) {
+        final Fragment fragment = getKeyboardShortcutRecipient();
+        if (fragment instanceof KeyboardShortcutCallback) {
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
         }
         return false;
     }

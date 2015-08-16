@@ -22,7 +22,6 @@
     android:layout_height="wrap_content"
     android:clickable="false"
     android:focusable="true"
-    android:focusableInTouchMode="false"
     android:padding="@dimen/element_spacing_normal">
 
     <include layout="@layout/layout_progress_wheel_medium" />
