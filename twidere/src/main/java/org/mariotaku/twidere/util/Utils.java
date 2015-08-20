@@ -114,7 +114,6 @@ import android.widget.Toast;
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -3696,8 +3695,8 @@ public final class Utils implements Constants {
                     try {
                         final String template = "http://translate.google.com/#%s|%s|%s";
                         final String sourceLang = "auto";
-                        final String targetLang = URLEncoder.encode(locale.getLanguage(), HTTP.UTF_8);
-                        final String text = URLEncoder.encode(status.text_unescaped, HTTP.UTF_8);
+                        final String targetLang = URLEncoder.encode(locale.getLanguage(), "UTF-8");
+                        final String text = URLEncoder.encode(status.text_unescaped, "UTF-8");
                         final Uri uri = Uri.parse(String.format(Locale.ROOT, template, sourceLang, targetLang, text));
                         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         intent.addCategory(Intent.CATEGORY_BROWSABLE);

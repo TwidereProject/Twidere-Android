@@ -124,6 +124,7 @@ import java.util.Locale;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.MediaEvent;
+import edu.tsinghua.hotmobi.model.TimelineType;
 import edu.tsinghua.hotmobi.model.TweetEvent;
 
 /**
@@ -294,9 +295,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
 
-        MediaEvent event = MediaEvent.create(getActivity(), status, media, 0,
+        MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
                 mStatusAdapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(event);
+        HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
     }
 
     @Override
@@ -374,9 +375,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
         // BEGIN HotMobi
-        MediaEvent event = MediaEvent.create(getActivity(), status, media, 0,
+        MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
                 mStatusAdapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(event);
+        HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
         // END HotMobi
     }
 
@@ -526,7 +527,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mStatusAdapter.setReplies(null);
                 loadReplies(status);
                 loadConversation(status);
-                final TweetEvent event = TweetEvent.create(getActivity(), status, 0);
+                final TweetEvent event = TweetEvent.create(getActivity(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.OPEN);
                 mStatusEvent = event;
             } else {
@@ -867,6 +868,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                             status.user_screen_name, null);
                     break;
                 }
+                case R.id.quote_original_link: {
+                    Utils.openStatus(adapter.getContext(), status.account_id, status.quote_id);
+                }
             }
         }
 
@@ -902,6 +906,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             favoritesContainer.setOnClickListener(this);
             retweetedByView.setOnClickListener(this);
             locationView.setOnClickListener(this);
+            quoteOriginalLink.setOnClickListener(this);
 
             final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);
@@ -1574,7 +1579,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final TweetEvent event = mStatusEvent;
         if (event == null) return;
         event.markEnd();
-        HotMobiLogger.getInstance(getActivity()).log(event);
+        HotMobiLogger.getInstance(getActivity()).log(event.getAccountId(), event);
     }
 
 

@@ -23,10 +23,9 @@ import android.content.Context;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
-
-import edu.tsinghua.hotmobi.HotMobiLogger;
 
 /**
  * Created by mariotaku on 15/8/7.
@@ -36,16 +35,33 @@ public class TweetEvent extends BaseEvent {
 
     @JsonField(name = "id")
     long id;
+    @JsonField(name = "account_id")
+    long accountId;
     @JsonField(name = "user_id")
     long userId;
-    @JsonField(name = "tweet_type")
-    int tweetType;
-    @JsonField(name = "timeline_type")
-    int timelineType;
-    @JsonField(name = "action")
-    int action;
+    @JsonField(name = "tweet_type", typeConverter = TweetType.TweetTypeConverter.class)
+    TweetType tweetType;
+    @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    TimelineType timelineType;
+    @JsonField(name = "action", typeConverter = Action.TweetActionConverter.class)
+    Action action;
 
-    public void setAction(int action) {
+    public static TweetEvent create(Context context, ParcelableStatus status, TimelineType timelineType) {
+        final TweetEvent event = new TweetEvent();
+        event.markStart(context);
+        event.setId(status.id);
+        event.setAccountId(status.account_id);
+        event.setUserId(status.user_id);
+        event.setTimelineType(timelineType);
+        event.setTweetType(TweetType.getTweetType(status));
+        return event;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
+
+    public void setAction(Action action) {
         this.action = action;
     }
 
@@ -57,30 +73,54 @@ public class TweetEvent extends BaseEvent {
         this.userId = userId;
     }
 
-    public void setTweetType(int tweetType) {
+    public void setTweetType(TweetType tweetType) {
         this.tweetType = tweetType;
     }
 
-    public void setTimelineType(int timelineType) {
+    public void setTimelineType(TimelineType timelineType) {
         this.timelineType = timelineType;
     }
 
-    public static TweetEvent create(Context context, ParcelableStatus status, int timelineType) {
-        final TweetEvent event = new TweetEvent();
-        event.markStart(context);
-        event.setId(status.id);
-        event.setUserId(status.user_id);
-        event.setTimelineType(timelineType);
-        event.setTweetType(HotMobiLogger.getTweetType(status));
-        return event;
+    public long getAccountId() {
+        return accountId;
     }
 
 
-    public interface Action {
-        int OPEN = 0;
-        int RETWEET = 1;
-        int FAVORITE = 2;
+    public enum Action {
+        OPEN("open"), RETWEET("retweet"), FAVORITE("favorite"), UNFAVORITE("unfavorite"), UNKNOWN("unknown");
 
-        int UNFAVORITE =-2;
+        private final String value;
+
+        Action(String value) {
+            this.value = value;
+        }
+
+        public static Action parse(String action) {
+            if (OPEN.value.equalsIgnoreCase(action)) {
+                return OPEN;
+            } else if (RETWEET.value.equalsIgnoreCase(action)) {
+                return RETWEET;
+            } else if (FAVORITE.value.equalsIgnoreCase(action)) {
+                return FAVORITE;
+            } else if (UNFAVORITE.value.equalsIgnoreCase(action)) {
+                return UNFAVORITE;
+            }
+            return UNKNOWN;
+        }
+
+
+        public static class TweetActionConverter extends StringBasedTypeConverter<Action> {
+
+            @Override
+            public Action getFromString(String string) {
+                return Action.parse(string);
+            }
+
+            @Override
+            public String convertToString(Action action) {
+                if (action == null) return null;
+                return action.value;
+            }
+        }
     }
 }

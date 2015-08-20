@@ -27,8 +27,6 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-
 /**
  * Created by mariotaku on 15/8/7.
  */
@@ -39,12 +37,10 @@ public class MediaEvent extends BaseEvent {
     long id;
     @JsonField(name = "user_id")
     long userId;
-    @JsonField(name = "tweet_type")
-    int tweetType;
-    @JsonField(name = "timeline_type")
-    int timelineType;
-    @JsonField(name = "action")
-    int action;
+    @JsonField(name = "tweet_type", typeConverter = TweetType.TweetTypeConverter.class)
+    TweetType tweetType;
+    @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    TimelineType timelineType;
     @JsonField(name = "preview_url")
     String previewUrl;
     @JsonField(name = "media_url")
@@ -52,7 +48,7 @@ public class MediaEvent extends BaseEvent {
     @JsonField(name = "preview_enabled")
     boolean previewEnabled;
 
-    public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media, int timelineType, boolean previewEnabled) {
+    public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media, TimelineType timelineType, boolean previewEnabled) {
         final MediaEvent event = new MediaEvent();
         event.markStart(context);
         event.setId(status.id);
@@ -61,7 +57,7 @@ public class MediaEvent extends BaseEvent {
         event.setPreviewUrl(media.preview_url);
         event.setPreviewEnabled(previewEnabled);
         event.setTimelineType(timelineType);
-        event.setTweetType(HotMobiLogger.getTweetType(status));
+        event.setTweetType(TweetType.getTweetType(status));
         return event;
     }
 
@@ -77,10 +73,6 @@ public class MediaEvent extends BaseEvent {
         this.previewUrl = previewUrl;
     }
 
-    public void setAction(int action) {
-        this.action = action;
-    }
-
     public void setId(long id) {
         this.id = id;
     }
@@ -89,20 +81,13 @@ public class MediaEvent extends BaseEvent {
         this.userId = userId;
     }
 
-    public void setTweetType(int tweetType) {
+    public void setTweetType(TweetType tweetType) {
         this.tweetType = tweetType;
     }
 
-    public void setTimelineType(int timelineType) {
+    public void setTimelineType(TimelineType timelineType) {
         this.timelineType = timelineType;
     }
 
 
-    public interface Action {
-        int OPEN = 0;
-        int RETWEET = 1;
-        int FAVORITE = 2;
-
-        int UNFAVORITE = -2;
-    }
 }

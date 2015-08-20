@@ -44,6 +44,8 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.MediaEvent;
+import edu.tsinghua.hotmobi.model.ScrollRecord;
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 
@@ -82,6 +84,38 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                 final LinearLayoutManager layoutManager = getLayoutManager();
                 saveReadPosition(layoutManager.findFirstVisibleItemPosition());
             }
+        }
+    };
+
+    private OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
+
+        private long mFirstVisibleId = -1;
+        private int mFirstVisiblePosition = -1;
+        private int mScrollState;
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            final int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+            if (firstVisiblePosition != mFirstVisiblePosition) {
+                //noinspection unchecked
+                final AbsStatusesAdapter<Data> adapter = (AbsStatusesAdapter<Data>) recyclerView.getAdapter();
+                final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
+                if (status != null) {
+                    final long id = status.id, accountId = status.account_id;
+                    if (id != mFirstVisibleId) {
+                        final ScrollRecord record = ScrollRecord.create(id, System.currentTimeMillis(), mScrollState);
+                        HotMobiLogger.getInstance(getActivity()).log(accountId, record);
+                    }
+                    mFirstVisibleId = id;
+                }
+            }
+            mFirstVisiblePosition = firstVisiblePosition;
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            mScrollState = newState;
         }
     };
 
@@ -259,8 +293,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
         // BEGIN HotMobi
-        final MediaEvent event = MediaEvent.create(getActivity(), status, media, 0, adapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(event);
+        final MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
+                adapter.isMediaPreviewEnabled());
+        HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
         // END HotMobi
     }
 
@@ -345,6 +380,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         super.onStart();
         final RecyclerView recyclerView = getRecyclerView();
         recyclerView.addOnScrollListener(mOnScrollListener);
+        recyclerView.addOnScrollListener(mHotMobiScrollTracker);
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         assert bus != null;
         bus.register(mStatusesBusCallback);
@@ -356,6 +392,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         assert bus != null;
         bus.unregister(mStatusesBusCallback);
         final RecyclerView recyclerView = getRecyclerView();
+        recyclerView.removeOnScrollListener(mHotMobiScrollTracker);
         recyclerView.removeOnScrollListener(mOnScrollListener);
         super.onStop();
     }

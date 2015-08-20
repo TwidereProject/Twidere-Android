@@ -27,8 +27,30 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  */
 @JsonObject
 public class ScrollRecord {
-    @JsonField(name = "count")
-    long count;
-    @JsonField(name = "total")
-    long total;
+    @JsonField(name = "id")
+    long id;
+    @JsonField(name = "timestamp")
+    long timestamp;
+    @JsonField(name = "scroll_state")
+    int scrollState;
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setScrollState(int scrollState) {
+        this.scrollState = scrollState;
+    }
+
+    public static ScrollRecord create(long id, long timestamp, int scrollState) {
+        final ScrollRecord record = new ScrollRecord();
+        record.setId(id);
+        record.setTimestamp(timestamp);
+        record.setScrollState(scrollState);
+        return record;
+    }
 }

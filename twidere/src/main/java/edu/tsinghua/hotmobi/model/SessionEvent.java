@@ -19,14 +19,32 @@
 
 package edu.tsinghua.hotmobi.model;
 
-import java.util.Map;
+import android.content.Context;
+import android.content.res.Configuration;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
  * Created by mariotaku on 15/8/8.
  */
+@JsonObject
 public class SessionEvent extends BaseEvent {
 
-    Map<String, ScrollRecord> scrollRecords;
+    @JsonField(name = "configuration")
+    String configuration;
 
 
+    public static SessionEvent create(Context context) {
+        final SessionEvent event = new SessionEvent();
+        event.markStart(context);
+        final Context appContext = context.getApplicationContext();
+        final Configuration conf = appContext.getResources().getConfiguration();
+        event.setConfiguration(conf.toString());
+        return event;
+    }
+
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
 }

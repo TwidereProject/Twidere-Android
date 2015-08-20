@@ -20,27 +20,37 @@
 package edu.tsinghua.hotmobi;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.Utils;
 
+import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import edu.tsinghua.hotmobi.model.BaseEvent;
-import edu.tsinghua.hotmobi.model.FirstLaunchEvent;
 import edu.tsinghua.hotmobi.model.LatLng;
+import edu.tsinghua.hotmobi.model.MediaEvent;
 import edu.tsinghua.hotmobi.model.RefreshEvent;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 import edu.tsinghua.hotmobi.model.TweetEvent;
-import edu.tsinghua.hotmobi.model.TweetType;
 
 /**
  * Created by mariotaku on 15/8/10.
  */
 public class HotMobiLogger {
+
+    public static final long ACCOUNT_ID_NOT_NEEDED = -1;
+
+    private static final String LOGTAG = "HotMobiLogger";
 
     private final Executor mExecutor;
 
@@ -48,31 +58,31 @@ public class HotMobiLogger {
         mExecutor = Executors.newSingleThreadExecutor();
     }
 
-    public void log(BaseEvent event) {
-
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-    }
-
     private static String getLogFilename(BaseEvent event) {
-        if (event instanceof FirstLaunchEvent) {
-            return "first_launch";
-        } else if (event instanceof RefreshEvent) {
+        if (event instanceof RefreshEvent) {
             return "refresh";
         } else if (event instanceof SessionEvent) {
             return "session";
         } else if (event instanceof TweetEvent) {
             return "tweet";
+        } else if (event instanceof MediaEvent) {
+            return "media";
         }
         return null;
     }
 
-    public static int getTweetType(ParcelableStatus status) {
-        return TweetType.TEXT;
+    public static String getInstallationSerialId(Context context) {
+        final SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
+        final String persistedDeviceId = prefs.getString(Constants.KEY_DEVICE_SERIAL, null);
+        final String uuid;
+        if (!TextUtils.isEmpty(persistedDeviceId)) {
+            uuid = persistedDeviceId.replaceAll("[^\\w\\d]", "");
+        } else {
+            uuid = UUID.randomUUID().toString().replaceAll("[^\\w\\d]", "");
+            prefs.edit().putString(Constants.KEY_DEVICE_SERIAL, uuid).apply();
+        }
+        return uuid;
     }
 
     public static HotMobiLogger getInstance(Context context) {
@@ -83,5 +93,23 @@ public class HotMobiLogger {
         final Location location = Utils.getCachedLocation(context);
         if (location == null) return null;
         return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public void log(long accountId, final Object event) {
+
+        mExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.d(LOGTAG, LoganSquare.serialize(event));
+                } catch (IOException e) {
+                    Log.w(LOGTAG, e);
+                }
+            }
+        });
+    }
+
+    public void log(Object event) {
+        log(ACCOUNT_ID_NOT_NEEDED, event);
     }
 }

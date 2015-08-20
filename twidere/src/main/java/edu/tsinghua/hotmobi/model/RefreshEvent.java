@@ -32,18 +32,18 @@ public class RefreshEvent extends BaseEvent {
     @JsonField(name = "ids")
     long[] ids;
 
-    @JsonField(name = "timeline_type")
-    int timelineType;
+    @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    TimelineType timelineType;
 
     public void setIds(long[] ids) {
         this.ids = ids;
     }
 
-    public void setTimelineType(int timelineType) {
+    public void setTimelineType(TimelineType timelineType) {
         this.timelineType = timelineType;
     }
 
-    public static RefreshEvent create(final Context context, long[] ids, int timelineType) {
+    public static RefreshEvent create(final Context context, long[] ids, TimelineType timelineType) {
         final RefreshEvent event = new RefreshEvent();
         event.markStart(context);
         event.setIds(ids);

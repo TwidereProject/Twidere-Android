@@ -107,6 +107,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.RefreshEvent;
+import edu.tsinghua.hotmobi.model.TimelineType;
 import edu.tsinghua.hotmobi.model.TweetEvent;
 
 public class AsyncTwitterWrapper extends TwitterWrapper {
@@ -920,9 +921,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
                 // BEGIN HotMobi
 
-                final TweetEvent event = TweetEvent.create(getContext(), status, 0);
+                final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.FAVORITE);
-                HotMobiLogger.getInstance(getContext()).log(event);
+                HotMobiLogger.getInstance(getContext()).log(account_id, event);
 
                 // END HotMobi
 
@@ -1556,9 +1557,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ParcelableStatus status = result.getData();
                 // BEGIN HotMobi
 
-                final TweetEvent event = TweetEvent.create(getContext(), status, 0);
+                final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.UNFAVORITE);
-                HotMobiLogger.getInstance(getContext()).log(event);
+                HotMobiLogger.getInstance(getContext()).log(account_id, event);
 
                 // END HotMobi
 
@@ -1998,6 +1999,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             return Statuses.CONTENT_URI;
         }
 
+        @Override
+        protected TimelineType getTimelineType() {
+            return TimelineType.HOME;
+        }
+
 
         @Override
         protected void onPostExecute(final List<StatusListResponse> result) {
@@ -2054,6 +2060,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected Uri getDatabaseUri() {
             return Mentions.CONTENT_URI;
+        }
+
+        @Override
+        protected TimelineType getTimelineType() {
+            return TimelineType.INTERACTIONS;
         }
 
         @Override
@@ -2202,8 +2213,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             countCur.close();
 
             // BEGIN HotMobi
-            final RefreshEvent event = RefreshEvent.create(mContext, statusIds, 0);
-            HotMobiLogger.getInstance(mContext).log(event);
+            final RefreshEvent event = RefreshEvent.create(mContext, statusIds, getTimelineType());
+            HotMobiLogger.getInstance(mContext).log(accountId, event);
             // END HotMobi
 
             // Insert a gap.
@@ -2219,6 +2230,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             ContentResolverUtils.bulkInsert(mResolver, insertUri, values);
 
         }
+
+        protected abstract TimelineType getTimelineType();
 
         @SafeVarargs
         @Override
@@ -2626,9 +2639,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
                 // BEGIN HotMobi
 
-                final TweetEvent event = TweetEvent.create(getContext(), status, 0);
+                final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.RETWEET);
-                HotMobiLogger.getInstance(getContext()).log(event);
+                HotMobiLogger.getInstance(getContext()).log(account_id, event);
 
                 // END HotMobi
 

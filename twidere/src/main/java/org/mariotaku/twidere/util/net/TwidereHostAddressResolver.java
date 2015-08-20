@@ -27,7 +27,6 @@ import android.util.LruCache;
 
 import com.squareup.okhttp.internal.Network;
 
-import org.apache.http.conn.util.InetAddressUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.HostsFileParser;
