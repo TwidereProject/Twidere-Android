@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="settings_storage"
     android:title="@string/storage">
@@ -16,21 +15,29 @@
             android:title="@string/database_item_limit"
             app:max="500"
             app:min="50"
-            app:step="10"/>
+            app:step="10" />
+
+        <org.mariotaku.twidere.preference.SeekBarDialogPreference
+            android:defaultValue="300"
+            android:key="cache_size_limit"
+            android:title="@string/cache_size_limit"
+            app:max="500"
+            app:min="100"
+            app:step="50" />
 
         <org.mariotaku.twidere.preference.ClearSearchHistoryPreference
             android:key="clear_search_history"
-            android:title="@string/clear_search_history"/>
+            android:title="@string/clear_search_history" />
 
         <org.mariotaku.twidere.preference.ClearCachePreference
             android:key="clear_cache"
             android:summary="@string/clear_cache_summary"
-            android:title="@string/clear_cache"/>
+            android:title="@string/clear_cache" />
 
         <org.mariotaku.twidere.preference.ClearDatabasesPreference
             android:key="clear_databases"
             android:summary="@string/clear_databases_summary"
-            android:title="@string/clear_databases"/>
+            android:title="@string/clear_databases" />
 
     </PreferenceCategory>
 

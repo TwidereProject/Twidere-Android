@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 20
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

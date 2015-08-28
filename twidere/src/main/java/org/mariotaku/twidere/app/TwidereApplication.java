@@ -57,6 +57,7 @@ import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -340,9 +341,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         final File cacheDir = getBestCacheDir(this, dirName);
         final File fallbackCacheDir = getInternalCacheDir(this, dirName);
         final URLFileNameGenerator fileNameGenerator = new URLFileNameGenerator();
+        final SharedPreferences preferences = getSharedPreferences();
+        final int cacheSize = MathUtils.clamp(preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
         try {
             return new LruDiskCache(cacheDir, fallbackCacheDir, fileNameGenerator,
-                    384 * 1024 * 1024, 0);
+                    cacheSize * 1024 * 1024, 0);
         } catch (IOException e) {
             return new ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator);
         }

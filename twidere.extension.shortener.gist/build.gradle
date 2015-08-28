@@ -19,15 +19,15 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply from: rootProject.file('global.gradle')
+apply from: rootProject.file('signing.gradle')
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "org.mariotaku.twidere.extension.shortener.gist"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }

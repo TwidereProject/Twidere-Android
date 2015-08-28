@@ -773,4 +773,5 @@
     <string name="send_at">Send at</string>
     <string name="scheduled_statuses">Scheduled tweets</string>
     <string name="report_usage_statistics_now">Report usage statistics now</string>
+    <string name="cache_size_limit">Cache size limit</string>
 </resources>
