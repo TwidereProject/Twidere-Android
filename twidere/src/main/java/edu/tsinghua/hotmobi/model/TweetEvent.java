@@ -57,9 +57,6 @@ public class TweetEvent extends BaseEvent {
         return event;
     }
 
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
-    }
 
     public void setAction(Action action) {
         this.action = action;
@@ -85,9 +82,14 @@ public class TweetEvent extends BaseEvent {
         return accountId;
     }
 
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
+
 
     public enum Action {
-        OPEN("open"), RETWEET("retweet"), FAVORITE("favorite"), UNFAVORITE("unfavorite"), UNKNOWN("unknown");
+        OPEN("open"), RETWEET("retweet"), FAVORITE("favorite"), UNFAVORITE("unfavorite"),
+        TWEET("tweet"), UNKNOWN("unknown");
 
         private final String value;
 

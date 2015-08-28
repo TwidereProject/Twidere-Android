@@ -35,7 +35,7 @@ import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -67,11 +67,13 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
+import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
 import org.mariotaku.twidere.util.net.TwidereHostAddressResolver;
 
 import java.io.File;
+import java.io.IOException;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 
@@ -337,11 +339,13 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private DiskCache createDiskCache(final String dirName) {
         final File cacheDir = getBestCacheDir(this, dirName);
         final File fallbackCacheDir = getInternalCacheDir(this, dirName);
-//        final LruDiscCache discCache = new LruDiscCache(cacheDir, new URLFileNameGenerator(), 384 *
-//                1024 * 1024);
-//        discCache.setReserveCacheDir(fallbackCacheDir);
-//        return discCache;
-        return new UnlimitedDiskCache(cacheDir, fallbackCacheDir, new URLFileNameGenerator());
+        final URLFileNameGenerator fileNameGenerator = new URLFileNameGenerator();
+        try {
+            return new LruDiskCache(cacheDir, fallbackCacheDir, fileNameGenerator,
+                    384 * 1024 * 1024, 0);
+        } catch (IOException e) {
+            return new ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator);
+        }
     }
 
     private void initializeAsyncTask() {
@@ -356,6 +360,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     @NonNull
     public HotMobiLogger getHotMobiLogger() {
         if (mHotMobiLogger != null) return mHotMobiLogger;
-        return mHotMobiLogger = new HotMobiLogger();
+        return mHotMobiLogger = new HotMobiLogger(this);
     }
 }

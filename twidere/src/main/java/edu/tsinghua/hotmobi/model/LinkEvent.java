@@ -19,46 +19,37 @@
 
 package edu.tsinghua.hotmobi.model;
 
+import android.content.Context;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import edu.tsinghua.hotmobi.TypeMappingUtil;
+
 /**
- * Created by mariotaku on 15/8/8.
+ * Created by mariotaku on 15/8/20.
  */
 @JsonObject
-public class ScrollRecord {
-    @JsonField(name = "id")
-    long id;
+public class LinkEvent extends BaseEvent {
 
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
+    @JsonField(name = "link")
+    String link;
+    @JsonField(name = "type")
+    String type;
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
-    @JsonField(name = "account_id")
-    long accountId;
-    @JsonField(name = "timestamp")
-    long timestamp;
-    @JsonField(name = "scroll_state")
-    int scrollState;
-
-    public void setId(long id) {
-        this.id = id;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public void setScrollState(int scrollState) {
-        this.scrollState = scrollState;
-    }
-
-    public static ScrollRecord create(long id, long accountId, long timestamp, int scrollState) {
-        final ScrollRecord record = new ScrollRecord();
-        record.setId(id);
-        record.setAccountId(accountId);
-        record.setTimestamp(timestamp);
-        record.setScrollState(scrollState);
-        return record;
+    public static LinkEvent create(Context context, String link, int typeInt) {
+        final LinkEvent event = new LinkEvent();
+        event.markStart(context);
+        event.setLink(link);
+        event.setType(TypeMappingUtil.getLinkType(typeInt));
+        return event;
     }
 }

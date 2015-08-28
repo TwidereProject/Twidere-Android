@@ -19,46 +19,35 @@
 
 package edu.tsinghua.hotmobi.model;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * Created by mariotaku on 15/8/8.
+ * Created by mariotaku on 15/8/20.
  */
 @JsonObject
-public class ScrollRecord {
-    @JsonField(name = "id")
-    long id;
+public class NetworkEvent extends BaseEvent {
 
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
+    @JsonField(name = "network_type")
+    int networkType;
+
+
+    public static NetworkEvent create(Context context) {
+        final NetworkEvent event = new NetworkEvent();
+        event.markStart(context);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            event.setNetworkType(activeNetworkInfo.getType());
+        }
+        return event;
     }
 
-    @JsonField(name = "account_id")
-    long accountId;
-    @JsonField(name = "timestamp")
-    long timestamp;
-    @JsonField(name = "scroll_state")
-    int scrollState;
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public void setScrollState(int scrollState) {
-        this.scrollState = scrollState;
-    }
-
-    public static ScrollRecord create(long id, long accountId, long timestamp, int scrollState) {
-        final ScrollRecord record = new ScrollRecord();
-        record.setId(id);
-        record.setAccountId(accountId);
-        record.setTimestamp(timestamp);
-        record.setScrollState(scrollState);
-        return record;
+    public void setNetworkType(int networkType) {
+        this.networkType = networkType;
     }
 }

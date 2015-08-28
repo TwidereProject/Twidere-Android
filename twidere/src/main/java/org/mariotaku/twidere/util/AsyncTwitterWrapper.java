@@ -72,7 +72,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
+import org.mariotaku.twidere.provider.TwidereDataStore.*;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
@@ -837,9 +837,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
                 }
                 // I bet you don't want to see this user in your auto complete list.
-                //TODO insert to blocked users data
-//                final Expression where = Expression.equals(CachedUsers.USER_ID, user_id);
-//                mResolver.delete(CachedUsers.CONTENT_URI, where.getSQL(), null);
+                final ContentValues values = new ContentValues();
+                values.put(CachedRelationships.ACCOUNT_ID, account_id);
+                values.put(CachedRelationships.USER_ID, user_id);
+                values.put(CachedRelationships.BLOCKING, true);
+                mResolver.insert(CachedRelationships.CONTENT_URI, values);
                 return SingleResponse.getInstance(new ParcelableUser(user, account_id), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);

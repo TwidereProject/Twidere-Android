@@ -23,18 +23,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
-import edu.tsinghua.spice.Task.SpiceAsyUploadTask;
-import edu.tsinghua.spice.Utilies.NetworkStateUtil;
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.UploadLogsTask;
+import edu.tsinghua.hotmobi.model.NetworkEvent;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
@@ -53,13 +53,10 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
         if (prefs.getBoolean(KEY_USAGE_STATISTICS, false) && prefs.getBoolean(KEY_SETTINGS_WIZARD_COMPLETED, false)) {
-            //spice
-            SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_ONWIFI, NetworkStateUtil.getConnectedType(context));
-            final Location location = Utils.getCachedLocation(context);
-            if (location != null) {
-                SpiceProfilingUtil.profile(context, SpiceProfilingUtil.FILE_NAME_LOCATION, location.getTime() + ","
-                        + location.getLatitude() + "," + location.getLongitude() + "," + location.getProvider());
-            }
+            // BEGIN HotMobi
+            final NetworkEvent event = NetworkEvent.create(context);
+            HotMobiLogger.getInstance(context).log(event);
+            // END HotMobi
         }
         final int networkType = Utils.getActiveNetworkType(context.getApplicationContext());
         NetworkUsageUtils.setNetworkType(networkType);
@@ -67,10 +64,11 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
         final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());
         if (isWifi && isCharging) {
             final long currentTime = System.currentTimeMillis();
-            final long lastSuccessfulTime = SpiceAsyUploadTask.getLastUploadTime(context);
-            if ((currentTime - lastSuccessfulTime) > SpiceAsyUploadTask.UPLOAD_INTERVAL_MILLIS) {
-                AsyncTaskUtils.executeTask(new SpiceAsyUploadTask(context));
+            final long lastSuccessfulTime = HotMobiLogger.getLastUploadTime(context);
+            if ((currentTime - lastSuccessfulTime) > HotMobiLogger.UPLOAD_INTERVAL_MILLIS) {
+                AsyncTask.execute(new UploadLogsTask(context.getApplicationContext()));
             }
         }
+
     }
 }

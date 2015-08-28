@@ -28,6 +28,8 @@
         android:key="status_text_limit"
         android:title="@string/status_text_limit" />
 
+    <edu.tsinghua.hotmobi.UploadLogsPreferences android:title="@string/report_usage_statistics_now" />
+
     <Preference android:title="@string/settings_wizard">
         <intent
             android:targetClass="org.mariotaku.twidere.activity.SettingsWizardActivity"

@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
+import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 import static org.mariotaku.twidere.util.Utils.copyStream;
@@ -31,9 +31,6 @@ import static org.mariotaku.twidere.util.Utils.copyStream;
  */
 
 public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implements Constants {
-
-    public static final long UPLOAD_INTERVAL_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
-    public static final String LAST_UPLOAD_TIME = "last_upload_time";
 
     private static final String PROFILE_SERVER_URL = "http://spice.hot-mobile.org/spice/usage";
 
@@ -91,9 +88,9 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implem
 
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
 
-        if (prefs.contains(LAST_UPLOAD_TIME)) {
-            final long lastUpload = prefs.getLong(LAST_UPLOAD_TIME, System.currentTimeMillis());
-            final double deltaDays = (System.currentTimeMillis() - lastUpload) / (double) UPLOAD_INTERVAL_MILLIS;
+        if (prefs.contains(HotMobiLogger.LAST_UPLOAD_TIME)) {
+            final long lastUpload = prefs.getLong(HotMobiLogger.LAST_UPLOAD_TIME, System.currentTimeMillis());
+            final double deltaDays = (System.currentTimeMillis() - lastUpload) / (double) HotMobiLogger.UPLOAD_INTERVAL_MILLIS;
             if (deltaDays < 1) {
                 SpiceProfilingUtil.log("Last uploaded was conducted in 1 day ago.");
                 return null;
@@ -103,7 +100,7 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implem
         final File root = context.getFilesDir();
         final File[] spiceFiles = root.listFiles(new SpiceFileFilter());
         uploadToServer(spiceFiles);
-        prefs.edit().putLong(LAST_UPLOAD_TIME, System.currentTimeMillis()).apply();
+        prefs.edit().putLong(HotMobiLogger.LAST_UPLOAD_TIME, System.currentTimeMillis()).apply();
         return null;
     }
 
@@ -149,8 +146,4 @@ public class SpiceAsyUploadTask extends AsyncTask<Object, Object, Object> implem
         }
     }
 
-    public static long getLastUploadTime(final Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
-        return prefs.getLong(LAST_UPLOAD_TIME, -1);
-    }
 }

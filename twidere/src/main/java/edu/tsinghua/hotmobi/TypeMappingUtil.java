@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package edu.tsinghua.spice.Utilies;
+package edu.tsinghua.hotmobi;
 
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.TwidereLinkify;

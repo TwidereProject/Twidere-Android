@@ -84,7 +84,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(CachedUsers.TABLE_NAME, CachedUsers.COLUMNS, CachedUsers.TYPES, true));
         db.execSQL(createTable(CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, true));
         db.execSQL(createTable(CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, true));
-        db.execSQL(createTable(CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true));
+        db.execSQL(createTable(CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true,
+                createConflictReplaceConstraint(CachedRelationships.ACCOUNT_ID, CachedRelationships.USER_ID)));
         db.execSQL(createTable(Filters.Users.TABLE_NAME, Filters.Users.COLUMNS, Filters.Users.TYPES, true));
         db.execSQL(createTable(Filters.Keywords.TABLE_NAME, Filters.Keywords.COLUMNS, Filters.Keywords.TYPES, true));
         db.execSQL(createTable(Filters.Sources.TABLE_NAME, Filters.Sources.COLUMNS, Filters.Sources.TYPES, true));
@@ -98,7 +99,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(Tabs.TABLE_NAME, Tabs.COLUMNS, Tabs.TYPES, true));
         db.execSQL(createTable(SavedSearches.TABLE_NAME, SavedSearches.COLUMNS, SavedSearches.TYPES, true));
         db.execSQL(createTable(SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true));
-        db.execSQL(createTable(NetworkUsages.TABLE_NAME, NetworkUsages.COLUMNS, NetworkUsages.TYPES, true, createNetworkUsagesConstraint()));
+        db.execSQL(createTable(NetworkUsages.TABLE_NAME, NetworkUsages.COLUMNS, NetworkUsages.TYPES, true,
+                createConflictReplaceConstraint(NetworkUsages.TIME_IN_HOURS, NetworkUsages.REQUEST_NETWORK, NetworkUsages.REQUEST_TYPE)));
 
         createViews(db);
         createTriggers(db);
@@ -108,8 +110,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.endTransaction();
     }
 
-    private Constraint createNetworkUsagesConstraint() {
-        return Constraint.unique(new Columns(NetworkUsages.TIME_IN_HOURS, NetworkUsages.REQUEST_NETWORK, NetworkUsages.REQUEST_TYPE), OnConflict.IGNORE);
+    private Constraint createConflictReplaceConstraint(String... columns) {
+        return Constraint.unique(new Columns(columns), OnConflict.IGNORE);
     }
 
     private void createIndices(SQLiteDatabase db) {
@@ -234,7 +236,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         safeUpgrade(db, CachedUsers.TABLE_NAME, CachedUsers.COLUMNS, CachedUsers.TYPES, true, null);
         safeUpgrade(db, CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, true, null);
         safeUpgrade(db, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, true, null);
-        safeUpgrade(db, CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true, null);
+        safeUpgrade(db, CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true, null,
+                createConflictReplaceConstraint(CachedRelationships.ACCOUNT_ID, CachedRelationships.USER_ID));
         safeUpgrade(db, Filters.Users.TABLE_NAME, Filters.Users.COLUMNS, Filters.Users.TYPES,
                 oldVersion < 49, null);
         safeUpgrade(db, Filters.Keywords.TABLE_NAME, Filters.Keywords.COLUMNS, Filters.Keywords.TYPES,
@@ -253,7 +256,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         safeUpgrade(db, SavedSearches.TABLE_NAME, SavedSearches.COLUMNS, SavedSearches.TYPES, true, null);
         safeUpgrade(db, SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true, null);
         safeUpgrade(db, NetworkUsages.TABLE_NAME, NetworkUsages.COLUMNS, NetworkUsages.TYPES, true, null,
-                createNetworkUsagesConstraint());
+                createConflictReplaceConstraint(NetworkUsages.TIME_IN_HOURS, NetworkUsages.REQUEST_NETWORK, NetworkUsages.REQUEST_TYPE));
         db.beginTransaction();
         createViews(db);
         createTriggers(db);

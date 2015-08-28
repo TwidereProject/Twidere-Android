@@ -82,6 +82,10 @@ public class MediaLoaderWrapper implements Constants {
         mDashboardProfileImageDisplayOptions = dashboardProfileOptsBuilder.build();
     }
 
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
+    }
+
     public void clearFileCache() {
         mImageLoader.clearDiskCache();
     }

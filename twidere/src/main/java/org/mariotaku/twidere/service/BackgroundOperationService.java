@@ -64,7 +64,6 @@ import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
-import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -97,8 +96,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.tsinghua.spice.Utilies.TypeMappingUtil;
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.TimelineType;
+import edu.tsinghua.hotmobi.model.TweetEvent;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
@@ -330,28 +330,20 @@ public class BackgroundOperationService extends IntentService implements Constan
             final List<Long> failedAccountIds = ListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
 
             for (final SingleResponse<ParcelableStatus> response : result) {
-
-                if (response.getData() == null) {
+                final ParcelableStatus data = response.getData();
+                if (data == null) {
                     failed = true;
                     if (exception == null) {
                         exception = response.getException();
                     }
-                } else if (response.getData().account_id > 0) {
-                    failedAccountIds.remove(response.getData().account_id);
-                    //spice
-                    if (response.getData().media == null) {
-                        SpiceProfilingUtil.log(response.getData().id + ",Tweet," + response.getData().account_id + ","
-                                + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id);
-                        SpiceProfilingUtil.profile(this.getBaseContext(), response.getData().account_id, response.getData().id + ",Tweet," + response.getData().account_id + ","
-                                + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id);
-                    } else
-                        for (final ParcelableMedia spiceMedia : response.getData().media) {
-                            SpiceProfilingUtil.log(response.getData().id + ",Media," + response.getData().account_id + ","
-                                    + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
-                            SpiceProfilingUtil.profile(this.getBaseContext(), response.getData().account_id, response.getData().id + ",Media," + response.getData().account_id + ","
-                                    + response.getData().in_reply_to_user_id + "," + response.getData().in_reply_to_status_id + "," + spiceMedia.media_url + "," + TypeMappingUtil.getMediaType(spiceMedia.type));
-                        }
-                    //end
+                } else if (data.account_id > 0) {
+                    failedAccountIds.remove(data.account_id);
+                    // BEGIN HotMobi
+                    final TweetEvent event = TweetEvent.create(BackgroundOperationService.this, data,
+                            TimelineType.OTHER);
+                    event.setAction(TweetEvent.Action.TWEET);
+                    HotMobiLogger.getInstance(BackgroundOperationService.this).log(data.account_id, event);
+                    // END HotMobi
                 }
             }
 

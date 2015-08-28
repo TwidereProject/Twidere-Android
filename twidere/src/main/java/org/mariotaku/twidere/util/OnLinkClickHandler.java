@@ -31,8 +31,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
-import edu.tsinghua.spice.Utilies.TypeMappingUtil;
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.LinkEvent;
 
 import static org.mariotaku.twidere.util.Utils.openStatus;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
@@ -56,9 +56,10 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                             final boolean sensitive, int start, int end) {
         if (manager != null && manager.isActive()) return;
         if (!isPrivateData()) {
-            //spice
-            SpiceProfilingUtil.profile(context, accountId, accountId + ",Visit," + link + "," + TypeMappingUtil.getLinkType(type));
-            //end
+            // BEGIN HotMobi
+            final LinkEvent event = LinkEvent.create(context, link, type);
+            HotMobiLogger.getInstance(context).log(accountId, event);
+            // END HotMobi
         }
 
         switch (type) {

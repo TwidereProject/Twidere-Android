@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,44 +17,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view;
+package edu.tsinghua.hotmobi;
+
 
 import android.content.Context;
-import android.support.v7.internal.widget.ActionBarContextView;
-import android.support.v7.view.ActionMode;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.Preference;
 import android.util.AttributeSet;
 
-import org.mariotaku.twidere.util.ThemeUtils;
-
 /**
- * Created by mariotaku on 15/1/16.
+ * Created by mariotaku on 15/8/28.
  */
-public class TwidereActionBarContextView extends ActionBarContextView {
+public class UploadLogsPreferences extends Preference {
 
-    private int mItemColor;
-
-    public TwidereActionBarContextView(Context context) {
+    public UploadLogsPreferences(Context context) {
         super(context);
     }
 
-    public TwidereActionBarContextView(Context context, AttributeSet attrs) {
+    public UploadLogsPreferences(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TwidereActionBarContextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public UploadLogsPreferences(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    public void initForMode(ActionMode mode) {
-        super.initForMode(mode);
-        if (mItemColor != 0) {
-            ThemeUtils.setActionBarContextViewColor(this, mItemColor);
-        }
-    }
-
-    public void setItemColor(int itemColor) {
-        mItemColor = itemColor;
-        ThemeUtils.setActionBarContextViewColor(this, itemColor);
+    protected void onClick() {
+        final Context context = getContext();
+        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
+        prefs.edit().remove(HotMobiLogger.LAST_UPLOAD_TIME).apply();
+        AsyncTask.execute(new UploadLogsTask(context.getApplicationContext()));
     }
 }

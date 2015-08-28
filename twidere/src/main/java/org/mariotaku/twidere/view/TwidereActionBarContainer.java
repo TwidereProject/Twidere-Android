@@ -29,6 +29,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 /**
+ * Wraps context with ActionBar context
  * Created by mariotaku on 15/4/28.
  */
 public class TwidereActionBarContainer extends ActionBarContainer {

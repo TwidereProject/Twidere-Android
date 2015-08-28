@@ -19,27 +19,33 @@
 
 package edu.tsinghua.hotmobi;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.text.TextUtils;
-import android.util.Log;
-
-import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.Utils;
 
-import java.io.IOException;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-import edu.tsinghua.hotmobi.model.BaseEvent;
 import edu.tsinghua.hotmobi.model.LatLng;
+import edu.tsinghua.hotmobi.model.LinkEvent;
 import edu.tsinghua.hotmobi.model.MediaEvent;
+import edu.tsinghua.hotmobi.model.NetworkEvent;
 import edu.tsinghua.hotmobi.model.RefreshEvent;
+import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 import edu.tsinghua.hotmobi.model.TweetEvent;
 
@@ -50,15 +56,25 @@ public class HotMobiLogger {
 
     public static final long ACCOUNT_ID_NOT_NEEDED = -1;
 
-    private static final String LOGTAG = "HotMobiLogger";
+    public static final String LOGTAG = "HotMobiLogger";
+    public static final long UPLOAD_INTERVAL_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
+    public static final String LAST_UPLOAD_TIME = "last_upload_time";
+    final static SimpleDateFormat DATE_FORMAT;
 
+    static {
+        DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
+    private final Application mApplication;
     private final Executor mExecutor;
 
-    public HotMobiLogger() {
+    public HotMobiLogger(Application application) {
+        mApplication = application;
         mExecutor = Executors.newSingleThreadExecutor();
     }
 
-    private static String getLogFilename(BaseEvent event) {
+    public static String getLogFilename(Object event) {
         if (event instanceof RefreshEvent) {
             return "refresh";
         } else if (event instanceof SessionEvent) {
@@ -67,8 +83,14 @@ public class HotMobiLogger {
             return "tweet";
         } else if (event instanceof MediaEvent) {
             return "media";
+        } else if (event instanceof LinkEvent) {
+            return "link";
+        } else if (event instanceof NetworkEvent) {
+            return "network";
+        } else if (event instanceof ScrollRecord) {
+            return "scroll";
         }
-        return null;
+        throw new UnsupportedOperationException("Unknown event type " + event);
     }
 
     public static String getInstallationSerialId(Context context) {
@@ -95,21 +117,39 @@ public class HotMobiLogger {
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 
-    public void log(long accountId, final Object event) {
+    public static File getLogFile(Context context, long accountId, String type) {
+        final File logsDir = getLogsDir(context);
+        final File todayLogDir = new File(logsDir, DATE_FORMAT.format(new Date()));
+        if (!todayLogDir.exists()) {
+            todayLogDir.mkdirs();
+        }
+        final String logFilename;
+        if (accountId > 0) {
+            logFilename = type + "_" + accountId + ".log";
+        } else {
+            logFilename = type + ".log";
+        }
+        return new File(todayLogDir, logFilename);
+    }
 
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.d(LOGTAG, LoganSquare.serialize(event));
-                } catch (IOException e) {
-                    Log.w(LOGTAG, e);
-                }
-            }
-        });
+    public static File getLogsDir(Context context) {
+        return new File(context.getFilesDir(), "hotmobi");
+    }
+
+    public static long getLastUploadTime(final Context context) {
+        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
+        return prefs.getLong(LAST_UPLOAD_TIME, -1);
+    }
+
+    public void log(long accountId, final Object event) {
+        mExecutor.execute(new WriteLogTask(mApplication, accountId, event));
     }
 
     public void log(Object event) {
         log(ACCOUNT_ID_NOT_NEEDED, event);
+    }
+
+    public void logList(List<?> events, long accountId, String type) {
+        mExecutor.execute(new WriteLogTask(mApplication, accountId, type, events));
     }
 }

@@ -90,7 +90,8 @@ public final class DatabaseUpgradeHelper {
     }
 
     public static void safeUpgrade(final SQLiteDatabase db, final String table, final String[] newColNames,
-                                   final String[] newColTypes, final boolean dropDirectly, final Map<String, String> colAliases, final Constraint... constraints) {
+                                   final String[] newColTypes, final boolean dropDirectly,
+                                   final Map<String, String> colAliases, final Constraint... constraints) {
         safeUpgrade(db, table, newColNames, newColTypes, dropDirectly, colAliases, OnConflict.REPLACE, constraints);
     }
 

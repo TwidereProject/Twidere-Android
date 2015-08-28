@@ -61,7 +61,6 @@ public class StatusRepliesLoader extends UserMentionsLoader {
             }
         } else {
             final List<Status> statuses = super.getStatuses(twitter, paging);
-            // TODO null check
             for (final Status status : statuses) {
                 if (status.getInReplyToStatusId() == mInReplyToStatusId) {
                     result.add(status);

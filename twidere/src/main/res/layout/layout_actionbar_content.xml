@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <org.mariotaku.twidere.view.TwidereToolbar
         android:id="@+id/action_bar"
         style="?attr/toolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationContentDescription="@string/abc_action_bar_up_description" />
+        app:navigationContentDescription="@string/abc_action_bar_up_description"
+        tools:ignore="PrivateResource" />
 
-    <org.mariotaku.twidere.view.TwidereActionBarContextView
-        android:id="@+id/action_context_bar"
-        style="?attr/actionModeStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="?attr/actionBarTheme"
-        android:visibility="gone" />
 </merge>

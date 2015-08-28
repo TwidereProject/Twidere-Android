@@ -912,12 +912,14 @@ public interface TwidereDataStore {
 
         String MUTING = "muting";
 
+        String RETWEET_ENABLED = "retweet_enabled";
+
         String[] COLUMNS = {_ID, ACCOUNT_ID, USER_ID, FOLLOWING, FOLLOWED_BY, BLOCKING,
-                BLOCKED_BY, MUTING};
+                BLOCKED_BY, MUTING, RETWEET_ENABLED};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_BOOLEAN_DEFAULT_FALSE,
                 TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE,
-                TYPE_BOOLEAN_DEFAULT_FALSE};
+                TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_TRUE};
     }
 
     interface UnreadCounts extends BaseColumns {

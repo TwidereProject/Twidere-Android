@@ -454,11 +454,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         assert bus != null;
         bus.register(this);
         // BEGIN HotMobi
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Launch" + "," + Build.MODEL
-                + "," + "mediaPreview=" + mPreferences.getBoolean(KEY_MEDIA_PREVIEW, false));
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Launch"
-                + "," + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
-        SessionEvent event = SessionEvent.create(this);
+        final SessionEvent event = SessionEvent.create(this);
         mSessionEvent = event;
         // END HotMobi
         mReadStateManager.registerOnSharedPreferenceChangeListener(mReadStateChangeListener);
@@ -497,10 +493,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final SessionEvent event = mSessionEvent;
         event.markEnd();
         HotMobiLogger.getInstance(this).log(event);
-
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_APP, "App Stop");
-        SpiceProfilingUtil.profile(this, SpiceProfilingUtil.FILE_NAME_ONLAUNCH, "App Stop" + ","
-                + NetworkStateUtil.getConnectedType(this) + "," + Build.MODEL);
         // END HotMobi
         super.onStop();
     }

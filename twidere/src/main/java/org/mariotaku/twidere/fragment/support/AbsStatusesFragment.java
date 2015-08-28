@@ -21,6 +21,8 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.desmond.asyncmanager.AsyncManager;
+import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -38,9 +40,14 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.imageloader.PauseRecyclerViewOnScrollListener;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.MediaEvent;
@@ -77,7 +84,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                     getFragmentManager(), getTwitterWrapper(), status, item);
         }
     };
-    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -86,10 +93,12 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
             }
         }
     };
+    private OnScrollListener mPauseOnScrollListener;
 
-    private OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
+    private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
-        private long mFirstVisibleId = -1;
+        public List<ScrollRecord> mRecords;
+        private long mFirstVisibleId = -1, mFirstVisibleAccountId = -1;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
 
@@ -103,11 +112,13 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                 final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
                 if (status != null) {
                     final long id = status.id, accountId = status.account_id;
-                    if (id != mFirstVisibleId) {
-                        final ScrollRecord record = ScrollRecord.create(id, System.currentTimeMillis(), mScrollState);
-                        HotMobiLogger.getInstance(getActivity()).log(accountId, record);
+                    if (id != mFirstVisibleId || accountId != mFirstVisibleAccountId) {
+                        if (mRecords == null) mRecords = new ArrayList<>();
+                        mRecords.add(ScrollRecord.create(id, accountId, System.currentTimeMillis(),
+                                mScrollState));
                     }
                     mFirstVisibleId = id;
+                    mFirstVisibleAccountId = accountId;
                 }
             }
             mFirstVisiblePosition = firstVisiblePosition;
@@ -116,8 +127,16 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             mScrollState = newState;
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (mRecords != null) {
+                    HotMobiLogger.getInstance(getActivity()).logList(mRecords, HotMobiLogger.ACCOUNT_ID_NOT_NEEDED, "scroll");
+                }
+                mRecords = null;
+            }
         }
     };
+
+    private OnScrollListener mActiveHotMobiScrollTracker;
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
@@ -211,6 +230,18 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
         args.remove(EXTRA_FROM_USER);
         return onCreateStatusesLoader(getActivity(), args, fromUser);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            final LinearLayoutManager layoutManager = getLayoutManager();
+            if (layoutManager != null) {
+                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
+            }
+        }
     }
 
     @Override
@@ -380,7 +411,27 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         super.onStart();
         final RecyclerView recyclerView = getRecyclerView();
         recyclerView.addOnScrollListener(mOnScrollListener);
-        recyclerView.addOnScrollListener(mHotMobiScrollTracker);
+        recyclerView.addOnScrollListener(mPauseOnScrollListener);
+        final TaskRunnable<Object, Boolean, RecyclerView> task = new TaskRunnable<Object, Boolean, RecyclerView>() {
+            @Override
+            public Boolean doLongOperation(Object params) throws InterruptedException {
+                final Context context = getContext();
+                final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
+                        Context.MODE_PRIVATE);
+                if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return false;
+                final File logFile = HotMobiLogger.getLogFile(context, HotMobiLogger.ACCOUNT_ID_NOT_NEEDED, "scroll");
+                return logFile.length() < 131072;
+            }
+
+            @Override
+            public void callback(RecyclerView recyclerView, Boolean result) {
+                if (result) {
+                    recyclerView.addOnScrollListener(mActiveHotMobiScrollTracker = mHotMobiScrollTracker);
+                }
+            }
+        };
+        task.setResultHandler(recyclerView);
+        AsyncManager.runBackgroundTask(task);
         final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
         assert bus != null;
         bus.register(mStatusesBusCallback);
@@ -392,7 +443,11 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         assert bus != null;
         bus.unregister(mStatusesBusCallback);
         final RecyclerView recyclerView = getRecyclerView();
-        recyclerView.removeOnScrollListener(mHotMobiScrollTracker);
+        if (mActiveHotMobiScrollTracker != null) {
+            recyclerView.removeOnScrollListener(mActiveHotMobiScrollTracker);
+        }
+        mActiveHotMobiScrollTracker = null;
+        recyclerView.removeOnScrollListener(mPauseOnScrollListener);
         recyclerView.removeOnScrollListener(mOnScrollListener);
         super.onStop();
     }
@@ -425,6 +480,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                 adapter, this);
 
         adapter.setListener(this);
+        mPauseOnScrollListener = new PauseRecyclerViewOnScrollListener(adapter.getMediaLoader().getImageLoader(), false, true);
 
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);

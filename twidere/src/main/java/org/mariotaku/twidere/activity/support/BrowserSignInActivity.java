@@ -44,6 +44,7 @@ import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
+import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -237,7 +238,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
                 consumerSecret = defConsumerSecret;
             }
             try {
-                final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", "oauth"));
+                final OAuthEndpoint endpoint = new OAuthEndpoint(TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", null));
                 final Authorization auth = new OAuthAuthorization(consumerKey, consumerSecret);
                 final TwitterOAuth twitter = TwitterAPIFactory.getInstance(mActivity, endpoint, auth, TwitterOAuth.class);
                 return twitter.getRequestToken(OAUTH_CALLBACK_OOB);

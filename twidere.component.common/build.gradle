@@ -39,11 +39,11 @@ android {
 dependencies {
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
-    compile 'com.android.support:support-annotations:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:support-annotations:23.0.0'
+    compile 'com.android.support:support-v4:23.0.0'
     compile 'com.bluelinelabs:logansquare:1.1.0'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.github.mariotaku:RestFu:0.9'
+    compile 'com.github.mariotaku:RestFu:0.9.1'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     compile 'com.github.mariotaku:SQLiteQB:ef3f596199'
     compile fileTree(dir: 'libs', include: ['*.jar'])
