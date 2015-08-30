@@ -48,6 +48,7 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.MediaEvent;
@@ -114,8 +115,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
                     final long id = status.id, accountId = status.account_id;
                     if (id != mFirstVisibleId || accountId != mFirstVisibleAccountId) {
                         if (mRecords == null) mRecords = new ArrayList<>();
-                        mRecords.add(ScrollRecord.create(id, accountId, System.currentTimeMillis(),
-                                mScrollState));
+                        final long time = System.currentTimeMillis();
+                        mRecords.add(ScrollRecord.create(id, accountId, time,
+                                TimeZone.getDefault().getOffset(time), mScrollState));
                     }
                     mFirstVisibleId = id;
                     mFirstVisibleAccountId = accountId;

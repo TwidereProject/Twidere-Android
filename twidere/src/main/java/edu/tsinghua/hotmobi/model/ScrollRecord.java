@@ -29,17 +29,32 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class ScrollRecord {
     @JsonField(name = "id")
     long id;
+    @JsonField(name = "account_id")
+    long accountId;
+    @JsonField(name = "timestamp")
+    long timestamp;
+    @JsonField(name = "time_offset")
+    long timeOffset;
+    @JsonField(name = "scroll_state")
+    int scrollState;
+
+    public static ScrollRecord create(long id, long accountId, long timestamp, long timeOffset, int scrollState) {
+        final ScrollRecord record = new ScrollRecord();
+        record.setId(id);
+        record.setAccountId(accountId);
+        record.setTimestamp(timestamp);
+        record.setTimeOffset(timeOffset);
+        record.setScrollState(scrollState);
+        return record;
+    }
 
     public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 
-    @JsonField(name = "account_id")
-    long accountId;
-    @JsonField(name = "timestamp")
-    long timestamp;
-    @JsonField(name = "scroll_state")
-    int scrollState;
+    public void setTimeOffset(long timeOffset) {
+        this.timeOffset = timeOffset;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -51,14 +66,5 @@ public class ScrollRecord {
 
     public void setScrollState(int scrollState) {
         this.scrollState = scrollState;
-    }
-
-    public static ScrollRecord create(long id, long accountId, long timestamp, int scrollState) {
-        final ScrollRecord record = new ScrollRecord();
-        record.setId(id);
-        record.setAccountId(accountId);
-        record.setTimestamp(timestamp);
-        record.setScrollState(scrollState);
-        return record;
     }
 }

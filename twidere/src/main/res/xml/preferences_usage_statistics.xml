@@ -32,7 +32,7 @@
         android:title="@string/projects_we_took_part">
 
         <Preference
-            android:title="@string/research_tsinghua_hot_mobile">
+            android:title="@string/research_hot_mobile">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="http://spice.hot-mobile.org/"/>

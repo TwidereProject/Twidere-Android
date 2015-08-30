@@ -24,10 +24,10 @@
 
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:order="11"
-        android:title="@string/research_tsinghua_hot_mobile">
+        android:title="@string/research_hot_mobile">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://spice.hot-mobile.org/"/>
+            android:data="http://www.dnext.xyz/"/>
     </org.mariotaku.twidere.preference.ForegroundColorIconPreference>
 
 </PreferenceScreen>

@@ -93,7 +93,7 @@ public class UploadLogsTask implements Runnable {
                 try {
                     final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
                     builder.method(POST.METHOD);
-                    builder.url("http://oahu.hot-mobile.org/usage/upload");
+                    builder.url("http://www.dnext.xyz/usage/upload");
                     final List<Pair<String, String>> headers = new ArrayList<>();
                     headers.add(Pair.create("X-HotMobi-UUID", uuid));
                     headers.add(Pair.create("X-HotMobi-Date", dayLogsDir.getName()));
