@@ -3,6 +3,7 @@
 <resources>
   <string name="error_twitter_32">Kunne ikke godkende dig, du skal måske logge ind igen.</string>
   <string name="error_twitter_34">Dette tweet, bruger eller side eksistere ikke.</string>
+  <string name="error_twitter_88">Rategrænse overskredet, prøv igen senere.</string>
   <string name="error_twitter_89">Din login information er forkert eller udløbet, prøv at logge ind igen.</string>
   <string name="error_twitter_64">Din konto er suspenderet og har ikke adgang til denne funktion.</string>
   <string name="error_twitter_130">Twitter er midlertidigt overbelastet.</string>

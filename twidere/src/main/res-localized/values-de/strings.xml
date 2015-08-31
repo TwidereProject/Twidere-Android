@@ -44,6 +44,7 @@
   <string name="password">Passwort</string>
   <string name="label_data_provider">Twidere Datenbankanbieter</string>
   <string name="label_refresh_service">Dienst aktualisieren</string>
+  <string name="label_streaming_service">Streaming Service</string>
   <string name="label_background_operation_service">Hintergrunddienste</string>
   <string name="open_in_browser">Im Browser öffnen</string>
   <string name="tap_to_load_more">Weitere Tweets laden</string>
@@ -379,7 +380,6 @@
   <string name="preview_images">Vorschaubilder</string>
   <string name="preload_wifi_only">Vorausladen nur mit WLAN</string>
   <string name="sign_in_method_introduction_title">Wie funktioniert es?</string>
-  <string name="sign_in_method_introduction">Die meisten Anwendungen öffnen einen externen Browser, um dort nach dem Benutzernamen und Passwort zu fragen. Dies kann manchmal sehr umständlich sein.\n\nTwidere öffnet keinen externen Browser, sondern verwendet einfachere Methoden, um sich anzumelden. Twidere wird niemals Passwörter speichern und ist daher völlig sicher!</string>
   <string name="quote_protected_status_notice">Es ist nicht empfohlen einen geschützten Tweet zu zitieren.</string>
   <string name="edit_draft">Bearbeite Entwurf</string>
   <string name="profile_image">Profilbild</string>
@@ -532,6 +532,7 @@
   <string name="theme_background_solid">Schwarz/Weiß</string>
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">Dunkle Aktionsleiste</string>
+  <string name="wizard_hint_compose_select_account">Drücke auf das Profil Bild um den Account auszuwählen,  wenn du einen Tweet schreibst.</string>
   <string name="wizard_hint_quote_format">Stell das Zitat-Format in \"Einstellungen\" - \"Inhalt &amp; Speicher\" ein</string>
   <string name="wizard_hint_filters">Du kannst ungewünschte Tweets aus Deiner Timeline mit einem \"Filter\" entfernen.</string>
   <string name="view_replies">Antworten ansehen</string>
@@ -642,7 +643,11 @@
   <string name="state_blocking">Blockiert</string>
   <string name="load_more">Nachladen</string>
   <string name="photo">Foto</string>
+  <string name="camera">Kamera</string>
   <string name="gallery">Galerie</string>
+  <string name="source_camera">Kamera</string>
+  <string name="source_gallery">Gallerie</string>
+  <string name="source_clipboard">Zwischenablage</string>
   <string name="remove">Entfernen</string>
   <string name="load_media">Lade Medien</string>
   <string name="profile_text_color">Textfarbe</string>
@@ -659,6 +664,7 @@
   <string name="media_preview_style">Medienvorschau Stil</string>
   <string name="draft_saved">Entwurf gespeichert</string>
   <string name="open_twitter_links">Öffne Twitter Links</string>
+  <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">andere</string>
   <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> andere</string>
   <string name="type_name_to_search">Schreibe einen Namen um zu suchen</string>
   <string name="no_user_found">Kein Benutzer gefunden</string>
@@ -685,6 +691,9 @@
   <string name="no_tab">Kein Tab</string>
   <string name="user_protected_summary">Du musst eine Follow-Anfrage an diesen geschützten Nutzer schicken um Tweets zu sehen</string>
   <string name="no_account">Kein Benutzer</string>
+  <string name="permission_description_shorten_status">App kann deinen Tweet verkürzen um deinen Tweet zu senden.</string>
+  <string name="permission_description_upload_media">App kann Medien hochladen für Twidere um dann auf sie beim Tweet senden zugreifen zu können.</string>
+  <string name="permission_description_sync_timeline">App kann deine Position auslesen um darauf später zugreifen zu können.</string>
   <string name="usage_statistics_notification_summary">Hilf uns Twidere zu verbessern!</string>
   <string name="from_name">Von <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Von <xliff:g id="name">%1$s</xliff:g> und <xliff:g id="name">%2$s</xliff:g></string>
@@ -707,8 +716,53 @@
   <string name="thumbor_integration">Integration mit Thumbor</string>
   <string name="server_address">Serveradresse</string>
   <string name="security_key">Sicherheitsschlüssel</string>
+  <string name="hide_card_actions">Verstecke Karten Aktionen</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> Tweet</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> Tweets</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> Favoriten</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> Favoriten</string>
   <string name="drafts_hint_messages">Nicht gesendete Tweets werden hier gespeichert</string>
   <string name="keyboard_shortcuts">Tastaturkommandos</string>
+  <string name="keyboard_shortcut_hint">Drücke Tasten</string>
+  <string name="conflicts_with_name">Steht im Konflikt mit <xliff:g id="name">%s</xliff:g></string>
   <string name="overwrite">Überschreiben</string>
+  <string name="navigation">Navigation</string>
   <string name="reset_to_default">Voreinstellungen zurücksetzen</string>
+  <string name="reset_keyboard_shortcuts_confirm">Sollen alle Tastaturshortcuts zurückgesetzt werden?</string>
+  <string name="open_accounts_dashboard">Öffnen der Accountübersicht</string>
+  <string name="previous_tab">Vorheriger Tab</string>
+  <string name="next_tab">Nächster Tab</string>
+  <string name="keyboard_shortcut_back">Zurück</string>
+  <string name="press_again_to_close">Drücke nochmal um die App zu schließen</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> nicht gesetzt</string>
+  <string name="swipe_down_to_refresh">Wische nach unten um neu zu laden</string>
+  <string name="app_restart_confirm">Twidere wird neustarten um die Einstellung zu speichern.</string>
+  <string name="dont_restart">Nicht neustarten</string>
+  <string name="user_list_details">Detail Liste</string>
+  <string name="invalid_list_name">Muss mit einem Buchstaben beginnen und darf nur aus Buchstaben, Ziffern, \"-\", oder \"_\" bestehen.</string>
+  <string name="delete_conversation">Unterhaltung löschen</string>
+  <string name="delete_conversation_confirm_message">Alle Nachrichten dieser Unterhaltung löschen?</string>
+  <string name="name_first_summary_on">Name zuerst anzeigen</string>
+  <string name="name_first_summary_off">\@screenname zuerst anzeigen</string>
+  <string name="comment_hint">Kommentar&#8230;</string>
+  <string name="comment">Kommentar</string>
+  <string name="enable_retweets">Retweets erlauben</string>
+  <string name="disable_retweets">Retweets verbieten</string>
+  <string name="play">Play</string>
+  <string name="pause">Pause</string>
+  <string name="jump_to_top">Nach oben</string>
+  <string name="timeline_streaming_running">Timeline streaming läuft</string>
+  <string name="streaming">Streaming</string>
+  <string name="enable_streaming">Streaming freischalten</string>
+  <string name="dark_theme">Dark Theme</string>
+  <string name="wizard_hint_title_location_requirement">Ortungserlaubnis</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere benötigt Ortungserlaubnis wenn ein Tweet mit Ortungsinformationen gesendet werden soll.</string>
+  <string name="scrapyard">Schrottplatz</string>
+  <string name="crop_image">Bild zurechtschneiden</string>
+  <string name="usage_label_sent">Gesendet</string>
+  <string name="usage_label_received">Erhalten</string>
+  <string name="this_month">Dieser Monat</string>
+  <string name="media_preload">Medien im Voraus laden</string>
+  <string name="on_mobile_network">Im mobilen Netzwerk</string>
+  <string name="set_consumer_key_secret_message">Twidere hat das token limit erreicht, du musst eine app unter https://apps.twitter.com/ erstellen und den Benutzer-Key und den geheimen unten einfügen.\nWenn du weiterhin deinen Standard-Schlüssel verwendest, kannst du dich möglicherweise nicht mehr einloggen.</string>
 </resources>

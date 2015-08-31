@@ -359,7 +359,6 @@
   <string name="preview_images">Esikatsele kuvia</string>
   <string name="preload_wifi_only">Lataa etukäteen vain Wi-Fi-yhteydellä</string>
   <string name="sign_in_method_introduction_title">Kuinka se toimii?</string>
-  <string name="sign_in_method_introduction">Useimmat asiakasohjelmat, kuten Twicca, avaavat selaimen, johon kirjoitetaan käyttäjätunnus ja salasana. Tunnuksen syöttämisen jälkeen käyttäjä ohjataan takaisin asiakasohjelmaan. Tämä voi olla hyvinkin epäkäytännöllistä.\n\nTwidere käyttää yksinkertaisempaa tapaa, jossa ei tarvitse avata selainta. Älä murehdi salasanasta: Twidere ei säilytä sitä ja salasana on täysin turvassa!</string>
   <string name="quote_protected_status_notice">Ei ole suositeltavaa lainata suojattua twiittiä.</string>
   <string name="edit_draft">Muokkaa luonnosta</string>
   <string name="profile_image">Profiilikuva</string>

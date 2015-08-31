@@ -11,6 +11,7 @@
   <string name="remove_location">Ta bort plats</string>
   <string name="remove_image">Ta bort bild</string>
   <string name="remove_photo">Ta bort foto</string>
+  <string name="status_hint">Vad händer?</string>
   <string name="sign_up">Registrera</string>
   <string name="sign_in">Logga in</string>
   <string name="save">Spara</string>

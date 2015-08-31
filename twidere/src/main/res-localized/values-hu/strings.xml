@@ -44,6 +44,7 @@
   <string name="password">Jelszó</string>
   <string name="label_data_provider">Twidere adatbázis szolgáltató</string>
   <string name="label_refresh_service">Frissítő szolgáltatás</string>
+  <string name="label_streaming_service">Közvetítő szolgáltatás</string>
   <string name="label_background_operation_service">Háttér szolgáltatás</string>
   <string name="open_in_browser">Megnyitás böngészőben</string>
   <string name="tap_to_load_more">Érintse meg ha többet szeretne</string>
@@ -379,7 +380,6 @@
   <string name="preview_images">Képek előnézete</string>
   <string name="preload_wifi_only">Előtöltés csak Wi-Fi használata esetén</string>
   <string name="sign_in_method_introduction_title">Hogy működik?</string>
-  <string name="sign_in_method_introduction">A legtöbb program, mint a twicca megnyitja a böngészőt és bekéri a felhasználónevet és jelszót, majd visszairányít a kliensbe. Ez néha nagyon kényelmetlen lehet.\n\nA Twidere egyszerűbb eljárást alkalmaz a bejelentkezéshez, a böngésző megnyitása nélkül. Ne aggódj a jelszavad miatt, a Twidere soha nem tárolja azt, teljesen biztonságos!</string>
   <string name="quote_protected_status_notice">Nem ajánlott védett tweeteket idézni.</string>
   <string name="edit_draft">Piszkozat szerkesztése</string>
   <string name="profile_image">Profilkép</string>
@@ -532,6 +532,7 @@
   <string name="theme_background_solid">Tiszta fehér/fekete</string>
   <string name="theme_background_transparent">Átlátszó</string>
   <string name="theme_dark_actionbar">Sötét ActionBar</string>
+  <string name="wizard_hint_compose_select_account">Érintsd meg a profilképet a tweet írásakor a használandó fiók kiválasztásához.</string>
   <string name="wizard_hint_quote_format">Állítsd be a kedvenc idézet formátumodat a \"Beállítások\" - \"Tartalom\" menüben</string>
   <string name="wizard_hint_filters">Elrejtheted a nem kívánt tweeteket az idővonaladról és az értesítésekből a \"Szűrők\" használatával.</string>
   <string name="view_replies">Válaszok megtekintése</string>
@@ -642,7 +643,11 @@
   <string name="state_blocking">Blokkolva</string>
   <string name="load_more">Még több betöltése</string>
   <string name="photo">Fotó</string>
+  <string name="camera">Kamera</string>
   <string name="gallery">Galéria</string>
+  <string name="source_camera">Kamera</string>
+  <string name="source_gallery">Galéria</string>
+  <string name="source_clipboard">Vágólap</string>
   <string name="remove">Eltávolít</string>
   <string name="load_media">Média betöltése</string>
   <string name="profile_text_color">Szöveg színe</string>
@@ -738,10 +743,26 @@
   <string name="delete_conversation">Beszélgetés törlése</string>
   <string name="delete_conversation_confirm_message">Töröljem az összes elemét ennek a beszélgetésnek ?</string>
   <string name="name_first_summary_on">Név megjelenítése először</string>
+  <string name="name_first_summary_off">\@Felhasználónév megjelenítése először</string>
   <string name="comment_hint">Megjegyzés&#8230;</string>
   <string name="comment">Megjegyzés</string>
   <string name="enable_retweets">Retweetek engedélyezése</string>
   <string name="disable_retweets">Retweetek tiltása</string>
   <string name="play">Lejátszás</string>
   <string name="pause">Szünet</string>
+  <string name="jump_to_top">Ugrás az tetejére</string>
+  <string name="timeline_streaming_running">Idővonal közvetítés fut</string>
+  <string name="streaming">Közvetítés</string>
+  <string name="enable_streaming">Közvetítés bekapcsolása</string>
+  <string name="dark_theme">Sötét téma</string>
+  <string name="wizard_hint_title_location_requirement">Tartozkodási hely engedélyezése</string>
+  <string name="wizard_hint_summary_location_requirement">A Twidere-nek tartózkodási hely engedélyre van szüksége helyszínt tartalmazó tweet küldéséhez.</string>
+  <string name="scrapyard">Szemetes</string>
+  <string name="crop_image">Kép vágása</string>
+  <string name="usage_label_sent">Elküldött</string>
+  <string name="usage_label_received">Fogadott</string>
+  <string name="this_month">Ebben a hónapban</string>
+  <string name="media_preload">Média előtöltés</string>
+  <string name="on_mobile_network">Mobil adat hálózaton</string>
+  <string name="set_consumer_key_secret_message">Twidere lassan eléri a token korlátozást, létre kell majd hoznod egy alkalmazást a https://apps.twitter.com/ webhelyen és be kell illeszteni a lenti felhasználó kulcsot és jelszót.\nHa folytatod az alapértelmezett kulcs használatát, lehetséges, hogy nem tudsz majd bejelentkezni.</string>
 </resources>

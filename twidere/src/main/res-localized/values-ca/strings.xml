@@ -44,6 +44,7 @@
   <string name="password">Contrasenya</string>
   <string name="label_data_provider">Proveïdor de la base de dades de Twidere</string>
   <string name="label_refresh_service">Actualitza el servei</string>
+  <string name="label_streaming_service">Servei streaming</string>
   <string name="label_background_operation_service">Servei d\'execució en rerefons</string>
   <string name="open_in_browser">Obrir al navegador</string>
   <string name="tap_to_load_more">Feu un toc per carregar-ne més</string>
@@ -380,7 +381,7 @@
   <string name="preview_images">Previsualització d\'imatges</string>
   <string name="preload_wifi_only">Precarrega només a través de Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Com funciona, això?</string>
-  <string name="sign_in_method_introduction">La majoria de clients com Twicca obren un navegador demanant que escriviu el vostre nom d\'usuari i contrasenya, i aleshores us tornen al seu client. Però això pot ser molt incòmode.\n\nTwidere utilitza passes més senzilles per connectar-vos, sense obrir el navegador. No us preocupeu per la contrasenya, Twidere mai la desarà, és totalment segur!</string>
+  <string name="sign_in_method_introduction">La majoria de clients obre una pàgina web per autoritzar a Twitter, això podria ser un inconvenient quan es fa servir una API personalitzada, o a una xarxa lenta. Twidere simula un navegador normal per registrar-te a Twitter. No et preocupis, la teva contrasenya no s\'emmagatzemarà ni es filtrarà.</string>
   <string name="quote_protected_status_notice">No és recomanable citar piulades protegides.</string>
   <string name="edit_draft">Edita l\'esborrany</string>
   <string name="profile_image">Imatge de perfil</string>
@@ -534,6 +535,7 @@
   <string name="theme_background_solid">Blanc i negre pur</string>
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">Barra d\'acció fosca</string>
+  <string name="wizard_hint_compose_select_account">Prem la imatge de perfil per seleccionar un compte al escriure un tuit.</string>
   <string name="wizard_hint_quote_format">Estableix el text de cita a «Paràmetres» - «Contingut i emmagatzematge»</string>
   <string name="wizard_hint_filters">Podeu evitar que apareguin piulades no desitjades a la vostra cronologia i com a notificacions mitjançant «Filtres».</string>
   <string name="view_replies">Mostra les respostes</string>
@@ -644,7 +646,10 @@
   <string name="state_blocking">Blocatge</string>
   <string name="load_more">Carrega\'n més</string>
   <string name="photo">Foto</string>
+  <string name="camera">Càmera</string>
   <string name="gallery">Galeria</string>
+  <string name="source_camera">Càmera</string>
+  <string name="source_gallery">Galeria</string>
   <string name="remove">Suprimeix</string>
   <string name="load_media">Carregar multimèdia</string>
   <string name="profile_text_color">Color de la lletra</string>
@@ -746,4 +751,19 @@
   <string name="disable_retweets">Desactiva les repiulades</string>
   <string name="play">Reprodueix</string>
   <string name="pause">Pausa</string>
+  <string name="jump_to_top">Saltar al principi</string>
+  <string name="streaming">Streaming</string>
+  <string name="enable_streaming">Habilitar l\'streaming</string>
+  <string name="dark_theme">Tema fosc</string>
+  <string name="wizard_hint_title_location_requirement">Accés a la localització</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere necessita accés a la vostra localització quan envies un tuit que conté localització.</string>
+  <string name="crop_image">Retallar imatge</string>
+  <string name="usage_label_sent">Enviat</string>
+  <string name="usage_label_received">Rebut</string>
+  <string name="this_month">Aquest mes</string>
+  <string name="media_preload">Precàrrega media</string>
+  <string name="on_mobile_network">A la xarxa mòbil</string>
+  <string name="send_at">Enviar a</string>
+  <string name="cache_size_limit">Límit del tamany de la caché</string>
+  <string name="bug_reports">Informes d\'errors</string>
 </resources>

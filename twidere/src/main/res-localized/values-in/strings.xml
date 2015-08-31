@@ -372,7 +372,6 @@
   <string name="preview_images">Pratinjau gambar</string>
   <string name="preload_wifi_only">Preload menggunakan Wi-Fi saja</string>
   <string name="sign_in_method_introduction_title">Bagaimana cara kerjanya?</string>
-  <string name="sign_in_method_introduction">Umumnya aplikasi pihak ke-3 seperti twicca perlu membuka peramban untuk memasukkan nama pengguna dan sandi, kemudian akan kembali ke aplikasi tersebut. Terkadang hal ini sangat menggangu. \n\nTwidere menggunakan langkah-langkah yang lebih sederhana untuk masuk ke twitter tanpa perlu membuka peramban. Tidak perlu khawatir dengan sandi anda, Twidere tidak akan pernah menyimpannya, ini benar-benar aman!</string>
   <string name="quote_protected_status_notice">Tidak direkomendasikan untuk mengutip twit terproteksi.</string>
   <string name="edit_draft">Ubah draf</string>
   <string name="profile_image">Gambar Profil</string>

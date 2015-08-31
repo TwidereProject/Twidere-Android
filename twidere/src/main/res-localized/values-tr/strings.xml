@@ -44,6 +44,7 @@
   <string name="password">Şifre</string>
   <string name="label_data_provider">Twidere veritabanı sağlayıcı</string>
   <string name="label_refresh_service">Servisi yenile</string>
+  <string name="label_streaming_service">Akış servisi</string>
   <string name="label_background_operation_service">Arkaplan çalışma servisi</string>
   <string name="open_in_browser">Tarayıcıda aç</string>
   <string name="tap_to_load_more">Daha fazlasını yüklemek için dokunun</string>
@@ -365,6 +366,7 @@
   <string name="no_thanks">Hayır, teşekkürler</string>
   <string name="revoke_permissions">İzinleri kaldır</string>
   <string name="fast_scroll_thumb">Hızlı kaydırma butonu</string>
+  <string name="indicate_your_status">Tweet\'lerimi işaretle</string>
   <string name="default_ringtone">Varsayılan zil sesi</string>
   <string name="phishing_link_warning">Sahte adres linki uyarısı</string>
   <string name="phishing_link_warning_summary">Direkt mesajdaki bir muhtemel sahte adrese tıklarken uyar.</string>
@@ -375,7 +377,6 @@
   <string name="preview_images">Resim önizleme</string>
   <string name="preload_wifi_only">Yalnız Wi-Fi kullanarak önyükleme yap</string>
   <string name="sign_in_method_introduction_title">Nasıl çalışıyor?</string>
-  <string name="sign_in_method_introduction">çoğu istemci örneğin twicca bir tarayıcı açar ve size kullanıcı adı ve şifre girmenizi söyler, ve sonra sizi istemciye geri döndürür. Bazen bu çok sakıncalı olabilir. Twidere giriş için tarayıcı kullanmadan daha basit adımlar kullanır. Şifreniz hakkında endişelenmeyin. Twidere onu asla kaydetmez, bu tamamen güvenli.</string>
   <string name="quote_protected_status_notice">Korunan tweet\'i alıntı yapmak önerilmez.</string>
   <string name="edit_draft">Taslağı düzenle</string>
   <string name="profile_image">Profil resmi</string>
@@ -402,6 +403,7 @@
   <string name="search_name_deleted">Arama \"<xliff:g id="name">%s</xliff:g>\" silindi.</string>
   <string name="import_from">Şuradan import&#8230;</string>
   <string name="link_to_quoted_status">Alıntılanmış tweet\'a link</string>
+  <string name="quote_original_status">Özgün tweeti alıntıla</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> takiplendi.</string>
   <string name="sent_follow_request_to_user"><xliff:g id="user">%s</xliff:g> kişisine takip isteği gönderildi.</string>
   <string name="unfollowed_user"><xliff:g id="user">%s</xliff:g> takipten çıkarıldı.</string>

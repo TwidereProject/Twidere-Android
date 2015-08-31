@@ -44,6 +44,7 @@
   <string name="password">Mot de passe</string>
   <string name="label_data_provider">Fournisseur de base de donnée pour Twidere</string>
   <string name="label_refresh_service">Refraîcher le service</string>
+  <string name="label_streaming_service">Service de streaming</string>
   <string name="label_background_operation_service">Service en arrière-plan</string>
   <string name="open_in_browser">Ouvrir dans un navigateur</string>
   <string name="tap_to_load_more">Touchez pour charger plus</string>
@@ -379,7 +380,6 @@
   <string name="preview_images">Prévisualisation des images</string>
   <string name="preload_wifi_only">Précharger seulement en Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Comment ça marche ?</string>
-  <string name="sign_in_method_introduction">La plupart des clients comme Twicca ouvrent un navigateur et vous demandent de saisir votre nom d\'utilisateur et votre mot de passe, pour ensuite vous ramener à l\'application. Cela peut parfois être très gênant.\n\nTwidere utilise des moyens plus simples pour se connecter, sans ouvrir de navigateur. Ne vous inquiétez pas pour votre mot de passe, Twidere ne l\'enregistrera jamais, c\'est totalement sécurisé !</string>
   <string name="quote_protected_status_notice">Il n\'est pas recommandé de citer un tweet protégé.</string>
   <string name="edit_draft">Modifier brouillons</string>
   <string name="profile_image">Photo de profil</string>
@@ -532,6 +532,7 @@
   <string name="theme_background_solid">Blanc/noir pur</string>
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">«ActionBar» sombre</string>
+  <string name="wizard_hint_compose_select_account">Cliquez sur l\'image de profil pour sélectionner un compte lorsque vous composez un tweet.</string>
   <string name="wizard_hint_quote_format">Configurer le format de citation favori dans \"Paramètres\" - \"Contenu &amp; Stockage\"</string>
   <string name="wizard_hint_filters">Vous pouvez cacher les tweets indésirables du fil d\'actualité et des notifications en utilisant les \"Filtres\".</string>
   <string name="view_replies">Voir les réponses</string>
@@ -642,7 +643,11 @@
   <string name="state_blocking">Bloquant</string>
   <string name="load_more">Plus de contenu</string>
   <string name="photo">Photo</string>
+  <string name="camera">Appareil photo</string>
   <string name="gallery">Gallerie</string>
+  <string name="source_camera">Appareil photo</string>
+  <string name="source_gallery">Gallerie</string>
+  <string name="source_clipboard">Presse-papiers</string>
   <string name="remove">Supprimer</string>
   <string name="load_media">Charger le média</string>
   <string name="profile_text_color">Couleur du texte</string>
@@ -667,6 +672,7 @@
   <string name="subscribers">Abonné</string>
   <string name="read_from_bottom">Lire depuis le bas</string>
   <string name="read_from_bottom_summary_off">Allez au dernier tweet après rafraichissement</string>
+  <string name="read_from_bottom_summary_on">Garder la position de lecture après l\'actualisation</string>
   <string name="register">S\'inscrire</string>
   <string name="follows">Suit</string>
   <string name="belongs_to">Appartient à</string>
@@ -723,4 +729,39 @@
   <string name="navigation">Naviguation</string>
   <string name="reset_to_default">Remettre par défaut</string>
   <string name="reset_keyboard_shortcuts_confirm">Remettre les raccourcis clavier par défaut ?</string>
+  <string name="open_accounts_dashboard">Ouvrir le gestionnaire de comptes</string>
+  <string name="previous_tab">Onglet précédent</string>
+  <string name="next_tab">Onglet suivant</string>
+  <string name="keyboard_shortcut_back">Retour</string>
+  <string name="press_again_to_close">Appuyer une nouvelle fois pour fermer</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> non défini</string>
+  <string name="swipe_down_to_refresh">Tirer vers le bas pour rafraîchir</string>
+  <string name="app_restart_confirm">Twidere va redémarrer pour appliquer les paramètres.</string>
+  <string name="dont_restart">Ne pas redémarrer</string>
+  <string name="user_list_details">Détails de la liste</string>
+  <string name="invalid_list_name">Doit commencer avec une lettre et n\'être composé que de lettres, nombres, \"-\" ou \"_\".</string>
+  <string name="delete_conversation">Supprimer la conversation</string>
+  <string name="delete_conversation_confirm_message">Supprimer tous les messages de cette conversation ?</string>
+  <string name="name_first_summary_on">Afficher le nom en premier</string>
+  <string name="name_first_summary_off">Afficher \@utilisateur d\'abord</string>
+  <string name="comment_hint">Commenter&#8230;</string>
+  <string name="comment">Commenter</string>
+  <string name="enable_retweets">Activer les retweets</string>
+  <string name="disable_retweets">Désactiver les retweets</string>
+  <string name="play">Démarrer</string>
+  <string name="pause">Mettre en pause</string>
+  <string name="jump_to_top">Aller en haut</string>
+  <string name="streaming">Streaming</string>
+  <string name="enable_streaming">Activer le streaming</string>
+  <string name="dark_theme">Thème sombre</string>
+  <string name="wizard_hint_title_location_requirement">Permission de localisation</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere a besoin de votre permission pour la localisation quand vous envoyez un tweet contenant la localisation.</string>
+  <string name="scrapyard">Divers</string>
+  <string name="crop_image">Rogner l\'image</string>
+  <string name="usage_label_sent">Envoyé</string>
+  <string name="usage_label_received">Reçu</string>
+  <string name="this_month">Ce mois</string>
+  <string name="media_preload">Précharger le média</string>
+  <string name="on_mobile_network">Sur le réseau mobile</string>
+  <string name="set_consumer_key_secret_message">Twidere a atteint sa limite de requêtes autorisées, vous devez désormais créer une app sur https://apps.twitter.com/ et copier ci-dessous votre nouvelle clé client. \nSi vous continuez à utiliser la clé par défaut, vous ne pourrez plus vous connecter.</string>
 </resources>

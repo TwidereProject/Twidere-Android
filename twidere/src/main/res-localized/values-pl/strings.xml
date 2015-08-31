@@ -360,8 +360,6 @@
   <string name="preview_images">Podgląd obrazków</string>
   <string name="preload_wifi_only">Wczytuj tylko gdy działa Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Jak to działa?</string>
-  <string name="sign_in_method_introduction">Większość klientów jak np. Twicca otwiera okno przeglądarki gdzie należy podać nazwę użytkownika i hasło a następnie wraca do aplikacji. Czasami może to być całkiem niewygodne.\n\n
-Twidere używa znacznie prostszego mechanizmu logowania, bez otwierania okna przeglądarki. Twoje hasło jest całkowicie bezpieczne gdyż Twidere nigdy go nie przechowuje.</string>
   <string name="quote_protected_status_notice">Nie jest zalecane cytowanie chronionych tweetów.</string>
   <string name="edit_draft">Edytuj szkic</string>
   <string name="profile_image">Zdjęcie profilowe</string>

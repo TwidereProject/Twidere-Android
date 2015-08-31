@@ -380,7 +380,7 @@
   <string name="preview_images">推文预览图片</string>
   <string name="preload_wifi_only">仅使用Wi-Fi预加载</string>
   <string name="sign_in_method_introduction_title">输入密码登录是怎样工作的？</string>
-  <string name="sign_in_method_introduction">大多数客户端（例如twicca）通过打开浏览器验证登录Twitter，然后浏览器再将你引导回客户端。有时这会导致许多不便，因为一些第三方浏览器不会引导你回客户端。\n\nTwidere使用更加简便的步骤代替浏览器登录到Twitter，不必担心你会泄露你的密码，这个方式非常安全！\n\nTwidere不会保存密码，仅在登录时发送给Twitter，只要网络足够安全，你的密码永远不会被第三方获取！</string>
+  <string name="sign_in_method_introduction">很多客户端打开网页登录到Twitter。这在使用自定义API或是网速缓慢时可能会有所不便。Twidere模拟普通的浏览器帮助登录到Twitter。毋须担心，你的密码永远不会被保存或者被泄露。</string>
   <string name="quote_protected_status_notice">不建议引用受保护的推文</string>
   <string name="edit_draft">编辑草稿</string>
   <string name="profile_image">个人资料图片</string>
@@ -644,7 +644,11 @@
   <string name="state_blocking">正在阻止</string>
   <string name="load_more">加载更多</string>
   <string name="photo">照片</string>
+  <string name="camera">相机</string>
   <string name="gallery">相册</string>
+  <string name="source_camera">相机</string>
+  <string name="source_gallery">相册</string>
+  <string name="source_clipboard">剪贴板</string>
   <string name="remove">移除</string>
   <string name="load_media">载入媒体</string>
   <string name="profile_text_color">文字颜色</string>
@@ -754,4 +758,16 @@
   <string name="dark_theme">暗色主题</string>
   <string name="wizard_hint_title_location_requirement">位置权限</string>
   <string name="wizard_hint_summary_location_requirement">在你发送含有位置的推文时，Twidere需要位置权限</string>
+  <string name="scrapyard">垃圾场</string>
+  <string name="crop_image">裁剪图像</string>
+  <string name="usage_label_sent">已发送</string>
+  <string name="usage_label_received">已接收</string>
+  <string name="this_month">本月</string>
+  <string name="media_preload">媒体预加载</string>
+  <string name="on_mobile_network">使用移动网络</string>
+  <string name="set_consumer_key_secret_message">Twidere 的令牌将要用完了。你需要在 https://apps.twitter.com/ 创建一个应用并把 consumer key and secret 粘贴在下面。\n如果你继续使用默认的key，可能会没法登录。</string>
+  <string name="send_at">发送于</string>
+  <string name="report_usage_statistics_now">立即汇报使用情况</string>
+  <string name="cache_size_limit">缓存空间限制</string>
+  <string name="bug_reports">错误报告</string>
 </resources>

@@ -379,7 +379,6 @@
   <string name="preview_images">推文預覽圖片</string>
   <string name="preload_wifi_only">僅使用 Wi-Fi 預加載</string>
   <string name="sign_in_method_introduction_title">輸入密碼登錄是怎樣工作的？</string>
-  <string name="sign_in_method_introduction">大多數客戶端（例如twicca）通過打開瀏覽器驗證登錄Twitter，然後瀏覽器再將你引導回客戶端。有時這會導致許多不便，因為一些第三方瀏覽器不會引導你回客戶端。\n\nTwidere使用更加簡便的步驟代替瀏覽器登錄到Twitter，不必擔心你會洩露你的密碼，這個方式非常安全！\n\nTwidere不會儲存密碼，僅在登錄時發送給Twitter，只要網絡足夠安全，你的密碼永遠不會被第三方獲取！</string>
   <string name="quote_protected_status_notice">不建議引用受保護的推文</string>
   <string name="edit_draft">編輯草稿</string>
   <string name="profile_image">個人資料圖片</string>

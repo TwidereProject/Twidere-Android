@@ -268,7 +268,6 @@
   <string name="preview_images">پیش‌نمایش تصاویر</string>
   <string name="preload_wifi_only">فقط با Wi-Fi پیش بارگذاری کن</string>
   <string name="sign_in_method_introduction_title">چگونه کار می‌کند؟</string>
-  <string name="sign_in_method_introduction">بیش‌تر کلاینت‌ها مانند twicca مرورگری برای پرسیدن نام‌کاربری و گذرواژه از شما باز می‌کنند، و شما را برمی‌گردانند. گاهی این می‌تواند خیلی نامناسب باشد.\n\nTwidere از راه‌های ساده‌تری برای واردشدن، بدون بازکردن مرورگر بهره می‌برد. نگران گذرواژه‌ی خود نباشید، Twidere هیچ‌گاه آن را ذخیره نمی‌کند، کاملاً امن است!</string>
   <string name="quote_protected_status_notice">توصیه نمی‌شود که توئیت‌های محافظت‌شده را نقل قول کنید.</string>
   <string name="edit_draft">ویرایش پیش‌نویس</string>
   <string name="profile_image">تصویر نمایه</string>

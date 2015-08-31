@@ -378,7 +378,6 @@
   <string name="preview_images">Visualização de imagens</string>
   <string name="preload_wifi_only">Pré-Carregar apenas em Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Como isso funciona?</string>
-  <string name="sign_in_method_introduction">Muitos clientes, como Twicca, abrem o navegador solicitando que você digite seu nome de usuário e senha, e redirecionam você de volta. As vezes isso pode ser muito inconveniente.\n\n Usuários do Twidere tem passos simples para logar, sem abrir o navegador. Não se preocupe com sua senha, Twidere jamais a armazenará, é totalmente seguro.</string>
   <string name="quote_protected_status_notice">Não é recomendado citar tweets de perfis protegidos.</string>
   <string name="edit_draft">Editar rascunho</string>
   <string name="profile_image">Imagem do perfil</string>
@@ -640,6 +639,8 @@
   <string name="load_more">A carregar mais</string>
   <string name="photo">Foto</string>
   <string name="gallery">Galeria</string>
+  <string name="source_camera">Câmera</string>
+  <string name="source_gallery">Galeria</string>
   <string name="remove">Eliminar</string>
   <string name="load_media">Carregar multimédia</string>
   <string name="profile_text_color">Cor de texto</string>
@@ -715,4 +716,7 @@
   <string name="next_tab">Separador seguinte</string>
   <string name="keyboard_shortcut_back">Atrás</string>
   <string name="press_again_to_close">Carregar outra vez para fechar</string>
+  <string name="user_list_details">Lista de detalhes</string>
+  <string name="delete_conversation">Deletar conversa</string>
+  <string name="delete_conversation_confirm_message">Deletar todas as mensagens dessa conversa?</string>
 </resources>

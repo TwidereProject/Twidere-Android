@@ -44,6 +44,7 @@
   <string name="password">패스워드</string>
   <string name="label_data_provider">Twidere 데이터베이스 제공자</string>
   <string name="label_refresh_service">서비스 새로고침</string>
+  <string name="label_streaming_service">스트리밍 서비스</string>
   <string name="label_background_operation_service">백그라운드 동작 서비스</string>
   <string name="open_in_browser">브라우저에서 열기</string>
   <string name="tap_to_load_more">더 불러오기</string>
@@ -339,7 +340,7 @@
   <string name="silent_notifications">묵음 알림</string>
   <string name="silent_notifications_summary">알림시 소리/진동 해제</string>
   <string name="disable_background_service">백그라운드 서비스 사용 안함</string>
-  <string name="disable_background_service_summary">자동 갱신과 익명 데이터 전송을 사용하지 않으면 Twidere는 백그라운드 서비스를 수행하지 않습니다. 주의하세요!</string>
+  <string name="disable_background_service_summary">자동 새로고침과 데이터 색인을 사용하지 않으면 Twidere는 백그라운드 서비스를 수행하지 않습니다. 주의하세요!</string>
   <string name="text_copied">클립보드로 복사되었습니다.</string>
   <string name="hashtag">해시태그</string>
   <string name="links">링크</string>
@@ -367,7 +368,7 @@
   <string name="accept_permission_request">수락</string>
   <string name="no_thanks">아뇨, 괜찮습니다</string>
   <string name="revoke_permissions">권한 취소</string>
-  <string name="fast_scroll_thumb">빠른 손가락 스크롤</string>
+  <string name="fast_scroll_thumb">빠른 스크롤 섬네일 보기</string>
   <string name="indicate_your_status">내 트윗 나타내기</string>
   <string name="default_ringtone">기본 알림 소리</string>
   <string name="phishing_link_warning">피싱 링크 경고</string>
@@ -379,7 +380,6 @@
   <string name="preview_images">이미지 미리보기</string>
   <string name="preload_wifi_only">와이파이에서만 미리 불러오기</string>
   <string name="sign_in_method_introduction_title">어떻게 동작하나요?</string>
-  <string name="sign_in_method_introduction">대부분의 클라이언트는 브라우저를 열어 사용자 이름과 패스워드를 입력한 뒤 클라이언트로 돌아갑니다. 때로는 이것이 매우 불편합니다.\n\nTwidere는 브라우저를 열지 않고 간단하게 로그인할 수 있습니다. 패스워드를 보관하지 않으므로 안전합니다!</string>
   <string name="quote_protected_status_notice">비공개 트윗를 인용하는 것은 적절하지 않습니다.</string>
   <string name="edit_draft">보관된 트윗 편집</string>
   <string name="profile_image">프로필 이미지</string>
@@ -532,6 +532,7 @@
   <string name="theme_background_solid">하양/검정</string>
   <string name="theme_background_transparent">투명</string>
   <string name="theme_dark_actionbar">어두운 행동바</string>
+  <string name="wizard_hint_compose_select_account">트윗을 쓸 때, 프로필 사진을 클릭해 계정을 선택하세요.</string>
   <string name="wizard_hint_quote_format">인용 양식은 \"설정\" - \"콘텐츠 및 저장소\"에서 설정할 수 있습니다.</string>
   <string name="wizard_hint_filters">타임라인과 알림의 원하지 않는 트윗은 \"필터\"를 써서 숨길 수 있습니다.</string>
   <string name="view_replies">답글 보기</string>
@@ -744,10 +745,20 @@
   <string name="delete_conversation">대화 삭제</string>
   <string name="delete_conversation_confirm_message">이 대화의 모든 메세지를 삭제할까요?</string>
   <string name="name_first_summary_on">이름 먼저 표시</string>
+  <string name="name_first_summary_off">\@screenname 먼저 표시</string>
   <string name="comment_hint">코멘트&#8230;</string>
   <string name="comment">코멘트</string>
   <string name="enable_retweets">리트윗 사용</string>
   <string name="disable_retweets">리트윗 사용 안함</string>
   <string name="play">재생</string>
   <string name="pause">일시중지</string>
+  <string name="jump_to_top">맨 위로</string>
+  <string name="timeline_streaming_running">타임라인 스트리밍이 실행중입니다.</string>
+  <string name="streaming">스트리밍</string>
+  <string name="enable_streaming">스트리밍 작동</string>
+  <string name="dark_theme">어두운 테마</string>
+  <string name="wizard_hint_title_location_requirement">위치정보 사용 허가</string>
+  <string name="wizard_hint_summary_location_requirement">위치정보를 포함한 트윗을 하려면 위치정보 사용 허가가 필요합니다.</string>
+  <string name="scrapyard">휴지통</string>
+  <string name="crop_image">이미지 자르기</string>
 </resources>

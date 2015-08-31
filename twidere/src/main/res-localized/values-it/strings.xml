@@ -44,6 +44,7 @@
   <string name="password">Password</string>
   <string name="label_data_provider">Twidere database provider</string>
   <string name="label_refresh_service">Aggiorna servizio</string>
+  <string name="label_streaming_service">Servizio di streaming</string>
   <string name="label_background_operation_service">Background operation service</string>
   <string name="open_in_browser">Apri nel browser</string>
   <string name="tap_to_load_more">Tocca per caricare più Tweet</string>
@@ -379,7 +380,6 @@
   <string name="preview_images">Anteprima immagini</string>
   <string name="preload_wifi_only">Precarica solo se in Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Come funziona?</string>
-  <string name="sign_in_method_introduction">Molti client come twicca aprono una finestra del browser per effettuare il login, per poi ritornare all\'app. Troppo complicato. \n\nTwidere usa usa un metodo di login semplificato, che non ha bisogno del browser. Non preoccuparti della tua password, Twidere non la memorizza, ed è sicuro al 100%!</string>
   <string name="quote_protected_status_notice">Non è raccomandato quotare un tweet protetto.</string>
   <string name="edit_draft">Modifica bozza</string>
   <string name="profile_image">Immagine del profilo</string>
@@ -532,6 +532,7 @@
   <string name="theme_background_solid">Bianco/Nero puro</string>
   <string name="theme_background_transparent">Trasparente</string>
   <string name="theme_dark_actionbar">ActionBar scura</string>
+  <string name="wizard_hint_compose_select_account">Clicca sull\'immagine del profilo per scegliere un account quando scrivi un tweet.</string>
   <string name="wizard_hint_quote_format">Imposta il tipo di citazione preferita in \"Impostazioni\" - \"Contenuti &amp; Archiviazione\"</string>
   <string name="wizard_hint_filters">Puoi nascondere tweet e notifiche non desiderate utilizzando i \"Filtri\".</string>
   <string name="view_replies">Visualizza Risposte</string>
@@ -642,7 +643,11 @@
   <string name="state_blocking">Bloccato</string>
   <string name="load_more">Carica altro</string>
   <string name="photo">Foto</string>
+  <string name="camera">Camera</string>
   <string name="gallery">Galleria</string>
+  <string name="source_camera">Camera</string>
+  <string name="source_gallery">Galleria</string>
+  <string name="source_clipboard">Appunti</string>
   <string name="remove">Rimuovi</string>
   <string name="load_media">Carica media</string>
   <string name="profile_text_color">Colore testo</string>
@@ -664,6 +669,7 @@
   <string name="type_name_to_search">Digita un nome da cercare</string>
   <string name="no_user_found">Nessun utente trovato</string>
   <string name="members">Membri</string>
+  <string name="subscribers">Iscritto</string>
   <string name="read_from_bottom">Leggi dal basso</string>
   <string name="read_from_bottom_summary_off">Salta all\'ultimo tweet dopo l\'aggiornamento</string>
   <string name="read_from_bottom_summary_on">Mantieni la posizione dopo l\'aggiornamento</string>
@@ -710,6 +716,7 @@
   <string name="thumbor_integration">Integrazione Thumbor</string>
   <string name="server_address">Indirizzo del server</string>
   <string name="security_key">Chiave di sicurezza</string>
+  <string name="hide_card_actions">Nascondi azioni di carte</string>
   <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
   <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
   <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> preferito</string>
@@ -731,14 +738,23 @@
   <string name="swipe_down_to_refresh">Tira in giù per aggiornare</string>
   <string name="app_restart_confirm">Twidere si riavvierà per rendere effettive le nuove le impostazioni.</string>
   <string name="dont_restart">Non riavviare</string>
+  <string name="user_list_details">Dettagli della lista</string>
   <string name="invalid_list_name">Deve iniziare con una lettera e può contenere solo lettere, numeri, \"-\" o \"_\".</string>
   <string name="delete_conversation">Cancella conversazione</string>
   <string name="delete_conversation_confirm_message">Cancellare tutti i messaggi di questa conversazione?</string>
   <string name="name_first_summary_on">Mostra il nome prima</string>
+  <string name="name_first_summary_off">Display \@nomeschermo primo</string>
   <string name="comment_hint">Commento&#8230;</string>
   <string name="comment">Commenta</string>
   <string name="enable_retweets">Abilita retweet</string>
   <string name="disable_retweets">Disabilita retweet</string>
   <string name="play">Play</string>
   <string name="pause">Pausa</string>
+  <string name="jump_to_top">Salta all\'inizio</string>
+  <string name="timeline_streaming_running">Timeline di streaming in esecuzione</string>
+  <string name="streaming">Streaming</string>
+  <string name="enable_streaming">Attiva streaming</string>
+  <string name="dark_theme">Tema scuro</string>
+  <string name="wizard_hint_title_location_requirement">Permessi di locazione</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere necessita dei permessi di posizione quando si inviano tweets contenenti la posizione.</string>
 </resources>

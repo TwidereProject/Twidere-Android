@@ -25,7 +25,7 @@
   <string name="xauth">xAuth</string>
   <string name="basic">Basic</string>
   <string name="twip_o">twip O Mode</string>
-  <string name="advanced">Складніша</string>
+  <string name="advanced">Додатково</string>
   <string name="save">Зберегти</string>
   <string name="edit">Редагувати</string>
   <string name="edit_api">Редагувати АРІ</string>
@@ -43,7 +43,8 @@
   <string name="username">Ім\'я користувача</string>
   <string name="password">Пароль</string>
   <string name="label_data_provider">Постачальник бази даних Twidere</string>
-  <string name="label_refresh_service">Оновити сервіс</string>
+  <string name="label_refresh_service">Сервіс оновлення</string>
+  <string name="label_streaming_service">Сервіс стимінгу</string>
   <string name="label_background_operation_service">Сервіс фонових операцій</string>
   <string name="open_in_browser">Відкрити у переглядачі</string>
   <string name="tap_to_load_more">Натисніть, щоб завантажити більше</string>
@@ -67,7 +68,7 @@
   <string name="about">Про</string>
   <string name="open_source_license">Ліцензія відкритого вихідного коду</string>
   <string name="api">API</string>
-  <string name="default_api_settings">Типові параметри API</string>
+  <string name="default_api_settings">Усталені параметри API</string>
   <string name="default_api_settings_summary">Ці параметри застосовуються лише до нових профілів</string>
   <string name="consumer_key">Ключ авторизації користувача</string>
   <string name="consumer_secret">Секретний ключ користувача</string>
@@ -130,14 +131,14 @@
   <string name="url">URL</string>
   <string name="favorites">Обране</string>
   <string name="name">Ім\'я</string>
-  <string name="refresh">Оновити</string>
+  <string name="refresh">Оновлення</string>
   <string name="retry">Спробувати</string>
   <string name="more">Більше</string>
   <string name="quote_format">Формат цитати</string>
   <string name="quote_format_summary">\"[TEXT]\" = текст твіту\n\"[NAME]\" = ім\'я користувача</string>
   <string name="direct_messages">Повідомлення</string>
   <string name="blocked_users">Заблоковані користувачі</string>
-  <string name="set_as_default">Встановити типовим</string>
+  <string name="set_as_default">Встановити усталеним</string>
   <string name="search_users">Пошук користувачів</string>
   <string name="search_statuses">Пошук твітів</string>
   <string name="created_at">Створено</string>
@@ -179,8 +180,8 @@
   <string name="light">Світла</string>
   <string name="notifications">Сповіщення</string>
   <string name="screen_name">Ім\'я користувача</string>
-  <string name="refresh_on_start">Оновлювати при запуску</string>
-  <string name="refresh_on_start_summary">Оновити стрічку та згадки при запуску.</string>
+  <string name="refresh_on_start">Оновити при запуску</string>
+  <string name="refresh_on_start_summary">Оновлює стрічку та згадки при запуску.</string>
   <string name="refresh_after_status_updated">Оновити після надсилання твіту</string>
   <string name="refresh_after_status_updated_summary">Оновлює стрічку та згадки після надсилання твіту.</string>
   <string name="list_timeline">Список стрічки</string>
@@ -233,7 +234,7 @@
   <string name="content_and_storage">Вміст і пам\'ять</string>
   <string name="image_uploader">Завантажувач зображень</string>
   <string name="media_uploader">Завантажувач медіа</string>
-  <string name="image_uploader_default">Типовий (Твіттер)</string>
+  <string name="image_uploader_default">Усталений (Твіттер)</string>
   <string name="home_refresh">Оновлення у домашній стрічці</string>
   <string name="error_message_image_upload_failed">Не вдалося завантажити зображення.</string>
   <string name="error_message_image_uploader_not_found">Завантажувач зображень не знайдено, можливо, його було видалено.</string>
@@ -263,7 +264,7 @@
   <string name="add_host_mapping">Додати перенаправлення вузлів</string>
   <string name="tcp_dns_query">TCP DNS запит</string>
   <string name="tcp_dns_query_summary">Використовувати протокол TCP для DNS-запитів, це допоможе уникнути DNS Cache Poisoning.</string>
-  <string name="dns_server">сервер DNS</string>
+  <string name="dns_server">DNS-сервер</string>
   <string name="dns_server_summary">Вкажіть DNS-сервер для API-запитів.</string>
   <string name="activities_about_me">Моя діяльність</string>
   <string name="activities_by_friends">Діяльність друзів</string>
@@ -306,7 +307,7 @@
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> надіслав вам приватне повідомлення.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> надіслав вам <xliff:g id="messages_count">%2$d</xliff:g> приватні повідомлення.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> і ще <xliff:g id="users_count">%2$d</xliff:g> інших надіслали вам <xliff:g id="messages_count">%3$d</xliff:g> приватних повідомлень.</string>
-  <string name="action_getting_status">отримуємо твіт</string>
+  <string name="action_getting_status">отримання твіту</string>
   <string name="action_updating_status">надсилання твіту</string>
   <string name="action_sending_direct_message">надсилання приватного повідомлення</string>
   <string name="action_refreshing_home_timeline">оновлення домашньої стрічки</string>
@@ -339,7 +340,7 @@
   <string name="silent_notifications">Тихі сповіщення</string>
   <string name="silent_notifications_summary">Вимкнути мелодію/вібрацію для сповіщень</string>
   <string name="disable_background_service">Вимкнути фоновий режим</string>
-  <string name="disable_background_service_summary">Twidere не має фонової служби, якщо ви відключили автоматичне оновлення і профілювання даних, не говоріть дурниць!</string>
+  <string name="disable_background_service_summary">Twidere не має фонової служби, якщо ви відключили автоматичне оновлення і профілювання даних, нарікайте на себе!</string>
   <string name="text_copied">Текст скопійовано до буферу обміну.</string>
   <string name="hashtag">Хештеґ</string>
   <string name="links">Посилання</string>
@@ -369,7 +370,7 @@
   <string name="revoke_permissions">Перерозподілити права</string>
   <string name="fast_scroll_thumb">Швидка прокрутка пальцем</string>
   <string name="indicate_your_status">Вказати ваш твіт</string>
-  <string name="default_ringtone">Типова мелодія</string>
+  <string name="default_ringtone">Усталена мелодія</string>
   <string name="phishing_link_warning">Попередження про фішингове посилання</string>
   <string name="phishing_link_warning_summary">Попереджати, коли ви намагаєтеся відкрити можливе фішингове посилання у приватному повідомленні.</string>
   <string name="phishing_link_warning_message_1">Відкриття посилання у приватному повідомленні може привести вас на фішинговий сайт.\n\nУважно перевірте адресу, перш ніж надавати будь-яку персональну інформацію.</string>
@@ -379,11 +380,10 @@
   <string name="preview_images">Перегляд зображень</string>
   <string name="preload_wifi_only">Попереднє завантаження лише через wi-fi</string>
   <string name="sign_in_method_introduction_title">Як це працює?</string>
-  <string name="sign_in_method_introduction">Більшість клієнтів на кшталт twicca відкривають переглядач і просять вас ввести ім\'я користувача та пароль, і тоді повертаються назад до своїх оболонок. Іноді, це дуже незручно.\n\nTwidere використовує простіші кроки для входу, не відкриваючи переглядач. Не турбуйтеся про пароль, Twidere ніколи не зберігатиме його, це повністю безпечно!</string>
   <string name="quote_protected_status_notice">Не рекомендується цитувати захищений твіт.</string>
   <string name="edit_draft">Редагувати чернетку</string>
   <string name="profile_image">Зображення профілю</string>
-  <string name="your_profile_image">Зображення профілю</string>
+  <string name="your_profile_image">Зображення вашого профілю</string>
   <string name="mention_user">Згадка <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Колір теми</string>
   <string name="wrong_url_format">Невірний формат URL.</string>
@@ -391,7 +391,7 @@
   <string name="network_error">Помилка мережі.</string>
   <string name="api_data_corrupted">Дані API пошкоджені.</string>
   <string name="ssl_error">Помилка SSL, можливо, потрібно увімкнути параметр \"Ігнорувати помилку SSL\".</string>
-  <string name="wrong_api_key">Невірне API url або ключ споживача, спробуйте їх знову.</string>
+  <string name="wrong_api_key">Невірне API url або ключ користувача, перевірте їх знову.</string>
   <string name="status_updated">Твіт надіслано.</string>
   <string name="status_deleted">Твіт видалено.</string>
   <string name="status_favorited">Твіт обрано.</string>
@@ -438,7 +438,7 @@
   <string name="no_close_after_status_updated">Не закривати вікно створення твіту після надсилання</string>
   <string name="no_close_after_status_updated_summary">Маленький подарунок для базіки</string>
   <string name="status_saved_to_draft">Твіт збережено як чернетку.</string>
-  <string name="default_account">Типовий профіль</string>
+  <string name="default_account">Усталений профіль</string>
   <string name="created_at_with_N_tweets_per_day_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> твіт на день)</string>
   <string name="created_at_with_N_tweets_per_day_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> твітів на день)</string>
   <string name="empty_content">Порожній вміст</string>
@@ -482,7 +482,7 @@
   <string name="wizard_page_tabs_unchanged_message">Ви можете додати вкладки у \"Налаштування\" - \"Вкладки\"</string>
   <string name="wizard_page_cards_text">Налаштуємо картки.</string>
   <string name="wizard_page_hints_text">Ось декілька корисних порад.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere приймає участь у дослідницькому проєкті, який потребує збору деяких даних о використанні програми.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere приймає участь у дослідницькому проекті, який потребує збору деяких даних о використанні програми.</string>
   <string name="wizard_page_finished_title">Завершено</string>
   <string name="wizard_page_finished_text">Тепер Twidere готовий до використання.</string>
   <string name="invalid_tab">Невірна вкладка</string>
@@ -528,14 +528,15 @@
   <string name="hints">Підказки</string>
   <string name="finish">Завершити</string>
   <string name="background">Фон</string>
-  <string name="theme_background_default">Типовий</string>
+  <string name="theme_background_default">Усталений</string>
   <string name="theme_background_solid">Суцільно білий/чорний</string>
   <string name="theme_background_transparent">Прозорий</string>
   <string name="theme_dark_actionbar">Темна панель дій</string>
+  <string name="wizard_hint_compose_select_account">Щоб обрати обліковий запис при створенні твіту, натисніть на його зображення.</string>
   <string name="wizard_hint_quote_format">Задайте ваш улюблений формат цитати у \"Налаштуваннях\" - \"Вміст і пам\'ять\"</string>
   <string name="wizard_hint_filters">Ви можете приховати небажаний твіт зі стрічки та сповіщень за допомогою \"Фільтрів\".</string>
   <string name="view_replies">Переглянути відповіді</string>
-  <string name="compact_cards">Компактні карти</string>
+  <string name="compact_cards">Компактні картки</string>
   <string name="compact_cards_summary">Відображати більше карток на екрані</string>
   <string name="N_new_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> новий твіт</string>
   <string name="N_new_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> нові твіти</string>
@@ -628,13 +629,13 @@
   <string name="action_muting">ігнорування</string>
   <string name="action_unmuting">зняття ігнорування</string>
   <string name="mute_user_confirm_message">Ігнорувати <xliff:g id="name">%s</xliff:g>? Ви більше не побачите твітів користувача, але все одно будете його читачем.</string>
-  <string name="remove_from_filter">Видалити з фільтру</string>
+  <string name="remove_from_filter">Виключити з фільтру</string>
   <string name="sort_timeline_by_id">Сортувати стрічку за ID</string>
   <string name="style">Стиль</string>
   <string name="color">Колір</string>
   <string name="font_family">Сімейство шрифтів</string>
   <string name="appearance">Зовнішній вигляд</string>
-  <string name="function">Функція</string>
+  <string name="function">Функції</string>
   <string name="replies">Відповіді</string>
   <string name="profile_banner">Обкладинка профілю</string>
   <string name="profile">Профіль</string>
@@ -642,7 +643,11 @@
   <string name="state_blocking">Блокування</string>
   <string name="load_more">Завантажити ще</string>
   <string name="photo">Світлина</string>
+  <string name="camera">Камера</string>
   <string name="gallery">Галерея</string>
+  <string name="source_camera">Камера</string>
+  <string name="source_gallery">Галерея</string>
+  <string name="source_clipboard">Буфер обміну</string>
   <string name="remove">Видалити</string>
   <string name="load_media">Завантажити медіа</string>
   <string name="profile_text_color">Колір тексту</string>
@@ -669,8 +674,8 @@
   <string name="read_from_bottom_summary_off">Перейти до найсвіжішого твіту після оновлення стрічки</string>
   <string name="read_from_bottom_summary_on">Зберегти позицію читання після оновлення стрічки</string>
   <string name="register">Реєстрація</string>
-  <string name="follows">Читаю</string>
-  <string name="belongs_to">Списки зі мною</string>
+  <string name="follows">Підписаний на</string>
+  <string name="belongs_to">Учасник</string>
   <string name="blocked_by_user_summary">Ви були заблоковані користувачем <xliff:g id="name">%s</xliff:g></string>
   <string name="select_accounts">Виберіть обліковий запис</string>
   <string name="media_preview">Попередній перегляд медіа</string>
@@ -682,7 +687,7 @@
   <string name="unknown_location">Невідоме місцеположення</string>
   <string name="ellipsis">&#8230;</string>
   <string name="import_export_settings">Імпорт/Експорт налаштувань</string>
-  <string name="usage_statistics_header_summary">Twidere приймає участь у деяких дослідницькому проєктах. Долучившись до них, ви покращете Twidere та деякі інші програми.</string>
+  <string name="usage_statistics_header_summary">Twidere приймає участь у деяких дослідницких проектах. Долучившись до них, ви покращите Twidere та деякі інші програми.</string>
   <string name="no_tab">Нема вкладок</string>
   <string name="user_protected_summary">Треба відправити запит цьому захищеному користувачу, щоб побачити його твіти</string>
   <string name="no_account">Немає облікового запису</string>
@@ -722,8 +727,8 @@
   <string name="conflicts_with_name">Конфліктує з <xliff:g id="name">%s</xliff:g></string>
   <string name="overwrite">Перезаписати</string>
   <string name="navigation">Навігація</string>
-  <string name="reset_to_default">Скидання налаштувань</string>
-  <string name="reset_keyboard_shortcuts_confirm">Скинути гарячі клавіші?</string>
+  <string name="reset_to_default">Скидання налаштувань до усталених</string>
+  <string name="reset_keyboard_shortcuts_confirm">Скинути гарячі клавіші до усталених?</string>
   <string name="open_accounts_dashboard">Відкрити панель профілів</string>
   <string name="previous_tab">Попередня вкладка</string>
   <string name="next_tab">Наступна вкладка</string>
@@ -738,10 +743,26 @@
   <string name="delete_conversation">Видалити бесіду</string>
   <string name="delete_conversation_confirm_message">Видалити всі повідомлення у цій бесіді?</string>
   <string name="name_first_summary_on">Відображати спершу ім\'я</string>
+  <string name="name_first_summary_off">Показувати спочатку \@нікнейм</string>
   <string name="comment_hint">Коментувати&#8230;</string>
   <string name="comment">Коментар</string>
   <string name="enable_retweets">Увімкнути ретвіти</string>
   <string name="disable_retweets">Вимкнути ретвіти</string>
   <string name="play">Відтворити</string>
   <string name="pause">Пауза</string>
+  <string name="jump_to_top">Перейти нагору</string>
+  <string name="timeline_streaming_running">Стримінг стрічки запущено</string>
+  <string name="streaming">Стримінг</string>
+  <string name="enable_streaming">Увімкнути стримінг</string>
+  <string name="dark_theme">Темна тема</string>
+  <string name="wizard_hint_title_location_requirement">Запит місцезнаходження</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere потрібен доступ до місцезнаходження, коли ви відправляєте твіт, що містить місцезнаходження.</string>
+  <string name="scrapyard">Смітник</string>
+  <string name="crop_image">Обрізати зображення</string>
+  <string name="usage_label_sent">Надіслано</string>
+  <string name="usage_label_received">Прийнято</string>
+  <string name="this_month">Цього місяця</string>
+  <string name="media_preload">Предзавантаження медіа</string>
+  <string name="on_mobile_network">В мобільній мережі</string>
+  <string name="set_consumer_key_secret_message">Twidere доходить до обмеження за токеном, вам потрібно створти додаток за адресою https://apps.twitter.com/ і ввести код та cекретний ключ користувача нижче.\nПри подальшому використанні усталеного токену ви не зможете увійти.</string>
 </resources>

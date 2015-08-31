@@ -44,6 +44,7 @@
   <string name="password">Contraseña</string>
   <string name="label_data_provider">Proveedor de base de datos Twidere</string>
   <string name="label_refresh_service">Recargar servicio</string>
+  <string name="label_streaming_service">Servicio Stream</string>
   <string name="label_background_operation_service">Servicio en segundo plano</string>
   <string name="open_in_browser">Abrir en el navegador</string>
   <string name="tap_to_load_more">Puntee para cargar más</string>
@@ -379,7 +380,6 @@
   <string name="preview_images">Previsualizar imágenes</string>
   <string name="preload_wifi_only">Precargar solo con Wi-Fi</string>
   <string name="sign_in_method_introduction_title">¿Cómo funciona?</string>
-  <string name="sign_in_method_introduction">La mayoría de los clientes como twicca abren un navegador solicitando que escribas el nombre de usuario y la contraseña, después el navegador te devuelve al cliente. A veces esto puede llegar a ser muy inconveniente. \n\n Twidere usa unos pasos más simples para iniciar sesión, sin abrir el navegador. No te preocupes por tu contraseña, Twidere nunca la almacenará, ¡es totalmente seguro!</string>
   <string name="quote_protected_status_notice">No se recomienda citar tweets protegidos.</string>
   <string name="edit_draft">Editar borrador</string>
   <string name="profile_image">Imagen de perfil</string>
@@ -532,6 +532,7 @@
   <string name="theme_background_solid">Blanco/Negro puro</string>
   <string name="theme_background_transparent">Transparente</string>
   <string name="theme_dark_actionbar">Barra de acciones oscura</string>
+  <string name="wizard_hint_compose_select_account">Click en la imagen de perfil para seleccionar una cuenta al escribir un tweet.</string>
   <string name="wizard_hint_quote_format">Configure su formato de cita favorita en \"Configuración\">\"Contenido y Almacenamiento\"</string>
   <string name="wizard_hint_filters">Puede ocultar tweets indeseados de su cronología y notificaciones usando «Filtros».</string>
   <string name="view_replies">Ver respuestas</string>
@@ -642,7 +643,11 @@
   <string name="state_blocking">Bloqueando</string>
   <string name="load_more">Cargar más</string>
   <string name="photo">Foto</string>
+  <string name="camera">Camara</string>
   <string name="gallery">Galería</string>
+  <string name="source_camera">Camara</string>
+  <string name="source_gallery">Galería</string>
+  <string name="source_clipboard">Portapapeles</string>
   <string name="remove">Eliminar</string>
   <string name="load_media">Cargar multimedia</string>
   <string name="profile_text_color">Color del texto</string>
@@ -738,10 +743,24 @@
   <string name="delete_conversation">Borrar la conversación</string>
   <string name="delete_conversation_confirm_message">¿Borrar todos los mensajes de esta conversación?</string>
   <string name="name_first_summary_on">Mostrar nombre primero</string>
+  <string name="name_first_summary_off">Mostrar \@nombre de usuario primero</string>
   <string name="comment_hint">Comentario&#8230;</string>
   <string name="comment">Comentario</string>
   <string name="enable_retweets">Habilitar retweets</string>
   <string name="disable_retweets">Deshabilitar retweets</string>
   <string name="play">Reproducir</string>
   <string name="pause">Pausa</string>
+  <string name="jump_to_top">Saltar al principio</string>
+  <string name="streaming">Streaming</string>
+  <string name="enable_streaming">Habilitar streaming</string>
+  <string name="dark_theme">Tema oscuro</string>
+  <string name="wizard_hint_title_location_requirement">Acceso a locación</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere necesita acceso a su locación cuando ud envía un tweet que contiene locación.</string>
+  <string name="crop_image">Cortar imagen</string>
+  <string name="usage_label_sent">Enviado</string>
+  <string name="usage_label_received">Recivido</string>
+  <string name="this_month">Este mes</string>
+  <string name="media_preload">Pre-cargar media</string>
+  <string name="on_mobile_network">En red movil</string>
+  <string name="set_consumer_key_secret_message">Twidere está alcanzando el limite de token, ud necesita crear una aplicación en https://apps.twitter.com/ y pegar la llave de consumidor y el secreto debajo.\n si ud continua usando la llave por defecto, no podrá acceder.</string>
 </resources>

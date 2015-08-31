@@ -350,7 +350,6 @@
   <string name="preview_images">Voorbeeldafbeeldingen</string>
   <string name="preload_wifi_only">Preload alleen via Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Hoe werkt het?</string>
-  <string name="sign_in_method_introduction">De meeste cliënten zoals twicca openen een browser en vragen je je gebruikersnaam en wachtwoord te typen, en daarna brengen ze je terug naar hun cliënten. Soms kan dit erg lastig worden.\n\nTwidere gebruikt gemakkelijkere stappen om in te loggen, zonder de browser te openen. Maak je geen zorgen over je wachtwoord, Twidere zal het nooit opslaan, het is geheel veilig!</string>
   <string name="quote_protected_status_notice">Het is niet aangeraden om beschermde tweets te citeren.</string>
   <string name="edit_draft">Wijzig concept</string>
   <string name="profile_image">Profielfoto</string>

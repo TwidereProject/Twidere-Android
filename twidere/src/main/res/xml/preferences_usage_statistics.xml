@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -20,22 +19,28 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference android:layout="@layout/header_usage_statistics"/>
+    <Preference android:layout="@layout/header_usage_statistics" />
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="usage_statistics"
         android:order="11"
-        android:title="@string/usage_statistics"/>
-    <PreferenceCategory
+        android:title="@string/usage_statistics" />
+
+    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        android:defaultValue="true"
+        android:key="bug_reports"
         android:order="12"
+        android:title="@string/bug_reports" />
+
+    <PreferenceCategory
+        android:order="13"
         android:title="@string/projects_we_took_part">
 
-        <Preference
-            android:title="@string/research_hot_mobile">
+        <Preference android:title="@string/research_hot_mobile">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="http://spice.hot-mobile.org/"/>
+                android:data="http://spice.hot-mobile.org/" />
         </Preference>
     </PreferenceCategory>
 
