@@ -180,7 +180,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         mPopupMenu.inflate(R.menu.menu_dialog_comment);
         final Menu menu = mPopupMenu.getMenu();
         MenuUtils.setMenuItemAvailability(menu, R.id.quote_original_status,
-                status.retweet_id > 0 || status.quote_id > 0);
+                status.retweet_id > 0 || status.quoted_id > 0);
         mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -208,15 +208,12 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             final MenuItem linkToQuotedStatus = menu.findItem(R.id.link_to_quoted_status);
             final Uri statusLink;
             final long inReplyToStatusId;
-            if (!status.is_quote) {
+            if (!status.is_quote || !quoteOriginalStatus.isChecked()) {
                 inReplyToStatusId = status.id;
                 statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
-            } else if (quoteOriginalStatus.isChecked()) {
-                inReplyToStatusId = status.quote_id;
-                statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.quote_id);
             } else {
-                inReplyToStatusId = status.id;
-                statusLink = LinkCreator.getTwitterStatusLink(status.quoted_by_user_screen_name, status.id);
+                inReplyToStatusId = status.quoted_id;
+                statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id);
             }
             final String commentText = mEditComment.getText() + " " + statusLink;
             twitter.updateStatusAsync(new long[]{status.account_id}, commentText, null, null,

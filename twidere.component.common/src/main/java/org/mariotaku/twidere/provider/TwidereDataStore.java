@@ -794,31 +794,31 @@ public interface TwidereDataStore {
 
         String DEFAULT_SORT_ORDER = SORT_ORDER_TIMESTAMP_DESC;
 
-        String QUOTE_ID = "quote_id";
-        String QUOTE_TEXT_HTML = "quote_text_html";
-        String QUOTE_TEXT_PLAIN = "quote_text_plain";
-        String QUOTE_TEXT_UNESCAPED = "quote_text_unescaped";
-        String QUOTE_MEDIA_JSON = "quote_media_json";
-        String QUOTE_TIMESTAMP = "quote_timestamp";
-        String QUOTE_SOURCE = "quote_source";
-        String QUOTED_BY_USER_ID = "quoted_by_user_id";
-        String QUOTED_BY_USER_NAME = "quoted_by_user_name";
-        String QUOTED_BY_USER_SCREEN_NAME = "quoted_by_user_screen_name";
-        String QUOTED_BY_USER_PROFILE_IMAGE = "quoted_by_user_profile_image";
-        String QUOTED_BY_USER_IS_VERIFIED = "quoted_by_user_is_verified";
-        String QUOTED_BY_USER_IS_PROTECTED = "quoted_by_user_is_protected";
+        String QUOTED_ID = "quoted_id";
+        String QUOTED_TEXT_HTML = "quoted_text_html";
+        String QUOTED_TEXT_PLAIN = "quoted_text_plain";
+        String QUOTED_TEXT_UNESCAPED = "quoted_text_unescaped";
+        String QUOTED_MEDIA_JSON = "quoted_media_json";
+        String QUOTED_TIMESTAMP = "quoted_timestamp";
+        String QUOTED_SOURCE = "quoted_source";
+        String QUOTED_USER_ID = "quoted_user_id";
+        String QUOTED_USER_NAME = "quoted_user_name";
+        String QUOTED_USER_SCREEN_NAME = "quoted_user_screen_name";
+        String QUOTED_USER_PROFILE_IMAGE = "quoted_user_profile_image";
+        String QUOTED_USER_IS_VERIFIED = "quoted_user_is_verified";
+        String QUOTED_USER_IS_PROTECTED = "quoted_user_is_protected";
 
         String[] COLUMNS = {_ID, ACCOUNT_ID, STATUS_ID, USER_ID,
                 STATUS_TIMESTAMP, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, USER_NAME, USER_SCREEN_NAME,
                 USER_PROFILE_IMAGE_URL, IN_REPLY_TO_STATUS_ID, IN_REPLY_TO_USER_ID, IN_REPLY_TO_USER_NAME,
                 IN_REPLY_TO_USER_SCREEN_NAME, SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT, REPLY_COUNT,
                 RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID, RETWEETED_BY_USER_NAME,
-                RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE, QUOTE_ID, QUOTE_TEXT_HTML,
-                QUOTE_TEXT_PLAIN, QUOTE_TEXT_UNESCAPED, QUOTE_TIMESTAMP, QUOTE_SOURCE, QUOTED_BY_USER_ID,
-                QUOTED_BY_USER_NAME, QUOTED_BY_USER_SCREEN_NAME, QUOTED_BY_USER_PROFILE_IMAGE,
-                QUOTED_BY_USER_IS_VERIFIED, QUOTED_BY_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
+                RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE, QUOTED_ID, QUOTED_TEXT_HTML,
+                QUOTED_TEXT_PLAIN, QUOTED_TEXT_UNESCAPED, QUOTED_TIMESTAMP, QUOTED_SOURCE, QUOTED_USER_ID,
+                QUOTED_USER_NAME, QUOTED_USER_SCREEN_NAME, QUOTED_USER_PROFILE_IMAGE,
+                QUOTED_USER_IS_VERIFIED, QUOTED_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
                 IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
-                IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTE_MEDIA_JSON, CARD_NAME, CARD,
+                IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTED_MEDIA_JSON, CARD_NAME, CARD,
                 PLACE_FULL_NAME};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
@@ -839,7 +839,7 @@ public interface TwidereDataStore {
         String TIMESTAMP = "timestamp";
         String STATUS_USER_ID = "status_user_id";
         String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
-        String STATUS_QUOTED_BY_USER_ID = "status_quoted_by_user_id";
+        String STATUS_QUOTED_USER_ID = "status_quoted_user_id";
         String STATUS_SOURCE = "status_source";
         String STATUS_QUOTE_SOURCE = "status_quote_source";
         String STATUS_TEXT_PLAIN = "status_text_plain";

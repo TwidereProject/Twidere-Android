@@ -70,6 +70,7 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
@@ -573,7 +574,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final ActionMenuView menuBar;
         private final TextView nameView, screenNameView;
         private final StatusTextView textView;
-        private final TextView quoteTextView;
+        private final TextView quotedTextView;
         private final TextView quotedNameView, quotedScreenNameView;
         private final ImageView profileImageView;
         private final ImageView profileTypeView;
@@ -623,7 +624,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             profileContainer = (ColorLabelRelativeLayout) itemView.findViewById(R.id.profile_container);
             twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
 
-            quoteTextView = (TextView) itemView.findViewById(R.id.quote_text);
+            quotedTextView = (TextView) itemView.findViewById(R.id.quoted_text);
             quotedNameView = (TextView) itemView.findViewById(R.id.quoted_name);
             quotedScreenNameView = (TextView) itemView.findViewById(R.id.quoted_screen_name);
             quotedNameContainer = itemView.findViewById(R.id.quoted_name_container);
@@ -655,62 +656,47 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             profileContainer.drawEnd(Utils.getAccountColor(context, status.account_id));
 
-            final int typeIconRes, typeDescriptionRes;
-            final long timestamp;
-            final String source;
             final int layoutPosition = getLayoutPosition();
-            if (status.is_quote) {
-                quotedNameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
-                quotedScreenNameView.setText("@" + status.user_screen_name);
-
-                nameView.setText(manager.getUserNickname(status.quoted_by_user_id, status.quoted_by_user_name, false));
-                screenNameView.setText("@" + status.quoted_by_user_screen_name);
-
-                quoteTextView.setText(Html.fromHtml(status.quote_text_html));
-
-                linkify.applyAllLinks(quoteTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
-                ThemeUtils.applyParagraphSpacing(quoteTextView, 1.1f);
-
-                loader.displayProfileImage(profileImageView, status.quoted_by_user_profile_image);
+            if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
 
                 quoteOriginalLink.setVisibility(View.VISIBLE);
                 quotedNameContainer.setVisibility(View.VISIBLE);
-                quoteTextView.setVisibility(View.VISIBLE);
+                quotedTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
 
+                quotedNameView.setText(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
+                quotedScreenNameView.setText("@" + status.quoted_user_screen_name);
+
+                quotedTextView.setText(Html.fromHtml(status.quoted_text_html));
+
+                linkify.applyAllLinks(quotedTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
+                ThemeUtils.applyParagraphSpacing(quotedTextView, 1.1f);
                 quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
-                profileContainer.drawStart(manager.getUserColor(status.quoted_by_user_id, false));
-
-                typeIconRes = Utils.getUserTypeIconRes(status.quoted_by_user_is_verified, status.quoted_by_user_is_protected);
-                typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.quoted_by_user_is_verified,
-                        status.quoted_by_user_is_protected);
-
-                timestamp = status.quote_timestamp;
-                source = status.quote_source;
-
+                profileContainer.drawStart(manager.getUserColor(status.quoted_user_id, false));
             } else {
-                nameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
-                screenNameView.setText("@" + status.user_screen_name);
-
-                loader.displayProfileImage(profileImageView, status.user_profile_image_url);
-
                 quoteOriginalLink.setVisibility(View.GONE);
                 quotedNameContainer.setVisibility(View.GONE);
-                quoteTextView.setVisibility(View.GONE);
+                quotedTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
 
                 profileContainer.drawStart(manager.getUserColor(status.user_id, false));
-
-                typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
-                typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);
-
-                if (status.is_retweet) {
-                    timestamp = status.retweet_timestamp;
-                } else {
-                    timestamp = status.timestamp;
-                }
-                source = status.source;
             }
+
+            final long timestamp;
+
+            if (status.is_retweet) {
+                timestamp = status.retweet_timestamp;
+            } else {
+                timestamp = status.timestamp;
+            }
+
+            nameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
+            screenNameView.setText("@" + status.user_screen_name);
+
+            loader.displayProfileImage(profileImageView, status.user_profile_image_url);
+
+            final int typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
+            final int typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);
 
             if (typeIconRes != 0 && typeDescriptionRes != 0) {
                 profileTypeView.setImageResource(typeIconRes);
@@ -723,11 +709,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
 
             final String timeString = Utils.formatToLongTimeString(context, timestamp);
-            if (!TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(source)) {
-                timeSourceView.setText(Html.fromHtml(context.getString(R.string.time_source, timeString, source)));
-            } else if (TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(source)) {
-                timeSourceView.setText(Html.fromHtml(context.getString(R.string.source, source)));
-            } else if (!TextUtils.isEmpty(timeString) && TextUtils.isEmpty(source)) {
+            if (!TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(status.source)) {
+                timeSourceView.setText(Html.fromHtml(context.getString(R.string.time_source, timeString, status.source)));
+            } else if (TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(status.source)) {
+                timeSourceView.setText(Html.fromHtml(context.getString(R.string.source, status.source)));
+            } else if (!TextUtils.isEmpty(timeString) && TextUtils.isEmpty(status.source)) {
                 timeSourceView.setText(timeString);
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -800,10 +786,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             Utils.setMenuForStatus(context, menuBar.getMenu(), status, adapter.getStatusAccount());
 
             textView.setTextIsSelectable(true);
-            quoteTextView.setTextIsSelectable(true);
+            quotedTextView.setTextIsSelectable(true);
 
             textView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
-            quoteTextView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
+            quotedTextView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
         }
 
         @Override
@@ -826,13 +812,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
                             new Pair<View, String>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
                             new Pair<View, String>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-                    if (status.is_quote) {
-                        Utils.openUserProfile(adapter.getContext(), status.account_id, status.quoted_by_user_id,
-                                status.quoted_by_user_screen_name, activityOption);
-                    } else {
-                        Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name,
-                                activityOption);
-                    }
+                    Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name,
+                            activityOption);
                     break;
                 }
                 case R.id.retweets_container: {
@@ -864,12 +845,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.quoted_name_container: {
-                    Utils.openUserProfile(adapter.getContext(), status.account_id, status.user_id,
-                            status.user_screen_name, null);
+                    Utils.openUserProfile(adapter.getContext(), status.account_id, status.quoted_user_id,
+                            status.quoted_user_screen_name, null);
                     break;
                 }
                 case R.id.quote_original_link: {
-                    Utils.openStatus(adapter.getContext(), status.account_id, status.quote_id);
+                    Utils.openStatus(adapter.getContext(), status.account_id, status.quoted_id);
                 }
             }
         }
@@ -912,7 +893,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             nameView.setTextSize(defaultTextSize * 1.25f);
             quotedNameView.setTextSize(defaultTextSize * 1.25f);
             textView.setTextSize(defaultTextSize * 1.25f);
-            quoteTextView.setTextSize(defaultTextSize * 1.25f);
+            quotedTextView.setTextSize(defaultTextSize * 1.25f);
             screenNameView.setTextSize(defaultTextSize * 0.85f);
             quotedScreenNameView.setTextSize(defaultTextSize * 0.85f);
             locationView.setTextSize(defaultTextSize * 0.85f);
@@ -920,7 +901,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());
 
-            quoteTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quoteTextView, activity));
+            quotedTextView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(quotedTextView, activity));
             textView.setCustomSelectionActionModeCallback(new StatusActionModeCallback(textView, activity));
         }
 

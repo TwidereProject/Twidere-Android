@@ -162,7 +162,7 @@
 
 
     <org.mariotaku.twidere.view.StatusTextView
-        android:id="@+id/quote_text"
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_container"
@@ -174,10 +174,9 @@
         android:paddingRight="@dimen/element_spacing_normal"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:text="@string/sample_status_text"
         tools:visibility="visible" />
-
 
     <org.mariotaku.twidere.view.ForegroundColorView
         android:id="@+id/quote_indicator"
@@ -187,7 +186,7 @@
         android:layout_alignTop="@+id/quoted_name_container"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
-        android:background="?android:dividerHorizontal"
+        android:background="?quoteIndicatorBackgroundColor"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -195,7 +194,7 @@
         android:id="@+id/quoted_name_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quote_text"
+        android:layout_below="@+id/text"
         android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:background="?selectableItemBackground"
@@ -228,11 +227,26 @@
             tools:text="\@username" />
     </LinearLayout>
 
+    <org.mariotaku.twidere.view.StatusTextView
+        android:id="@+id/quoted_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/quoted_name_container"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:layout_toEndOf="@+id/quote_indicator"
+        android:layout_toRightOf="@+id/quote_indicator"
+        android:singleLine="false"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="?android:textColorPrimary"
+        android:visibility="gone"
+        tools:text="@string/sample_status_text"
+        tools:visibility="visible" />
+
     <FrameLayout
         android:id="@+id/media_preview_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quoted_name_container"
+        android:layout_below="@+id/quoted_text"
         android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         tools:visibility="visible">
@@ -277,24 +291,11 @@
 
     </FrameLayout>
 
-    <org.mariotaku.twidere.view.StatusTextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/media_preview_container"
-        android:layout_margin="@dimen/element_spacing_normal"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
-        android:singleLine="false"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="?android:textColorPrimary"
-        tools:text="@string/sample_status_text" />
-
     <org.mariotaku.twidere.view.TwitterCardContainer
         android:id="@+id/twitter_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text"
+        android:layout_below="@+id/media_preview_container"
         android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:visibility="gone" />

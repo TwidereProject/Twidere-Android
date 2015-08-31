@@ -346,31 +346,31 @@ public final class ContentValuesCreator implements TwidereConstants {
             }
             status = retweetedStatus;
         } else if (orig.isQuote()) {
-            final Status quotedStatus = orig.getQuotedStatus();
-            final User quoteUser = orig.getUser();
-            final long quotedById = quoteUser.getId();
-            values.put(Statuses.QUOTE_ID, quotedStatus.getId());
-            final String textHtml = TwitterContentUtils.formatStatusText(orig);
-            values.put(Statuses.QUOTE_TEXT_HTML, textHtml);
-            values.put(Statuses.QUOTE_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(orig.getText()));
-            values.put(Statuses.QUOTE_TEXT_UNESCAPED, toPlainText(textHtml));
-            values.put(Statuses.QUOTE_TIMESTAMP, orig.getCreatedAt().getTime());
-            values.put(Statuses.QUOTE_SOURCE, orig.getSource());
-            final ParcelableMedia[] quoteMedia = ParcelableMedia.fromStatus(orig);
+            final Status quoted = orig.getQuotedStatus();
+            final User quotedUser = quoted.getUser();
+            final long quotedById = quotedUser.getId();
+            values.put(Statuses.QUOTED_ID, quoted.getId());
+            final String textHtml = TwitterContentUtils.formatStatusText(quoted);
+            values.put(Statuses.QUOTED_TEXT_HTML, textHtml);
+            values.put(Statuses.QUOTED_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(quoted.getText()));
+            values.put(Statuses.QUOTED_TEXT_UNESCAPED, toPlainText(textHtml));
+            values.put(Statuses.QUOTED_TIMESTAMP, quoted.getCreatedAt().getTime());
+            values.put(Statuses.QUOTED_SOURCE, quoted.getSource());
+            final ParcelableMedia[] quoteMedia = ParcelableMedia.fromStatus(quoted);
             if (quoteMedia != null && quoteMedia.length > 0) {
                 try {
-                    values.put(Statuses.QUOTE_MEDIA_JSON, LoganSquare.serialize(Arrays.asList(quoteMedia), ParcelableMedia.class));
+                    values.put(Statuses.QUOTED_MEDIA_JSON, LoganSquare.serialize(Arrays.asList(quoteMedia), ParcelableMedia.class));
                 } catch (IOException ignored) {
                 }
             }
-            values.put(Statuses.QUOTED_BY_USER_ID, quotedById);
-            values.put(Statuses.QUOTED_BY_USER_NAME, quoteUser.getName());
-            values.put(Statuses.QUOTED_BY_USER_SCREEN_NAME, quoteUser.getScreenName());
-            values.put(Statuses.QUOTED_BY_USER_PROFILE_IMAGE, TwitterContentUtils.getProfileImageUrl(quoteUser));
-            values.put(Statuses.QUOTED_BY_USER_IS_VERIFIED, quoteUser.isVerified());
-            values.put(Statuses.QUOTED_BY_USER_IS_PROTECTED, quoteUser.isProtected());
+            values.put(Statuses.QUOTED_USER_ID, quotedById);
+            values.put(Statuses.QUOTED_USER_NAME, quotedUser.getName());
+            values.put(Statuses.QUOTED_USER_SCREEN_NAME, quotedUser.getScreenName());
+            values.put(Statuses.QUOTED_USER_PROFILE_IMAGE, TwitterContentUtils.getProfileImageUrl(quotedUser));
+            values.put(Statuses.QUOTED_USER_IS_VERIFIED, quotedUser.isVerified());
+            values.put(Statuses.QUOTED_USER_IS_PROTECTED, quotedUser.isProtected());
             values.put(Statuses.IS_QUOTE, true);
-            status = quotedStatus;
+            status = orig;
         } else {
             values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
             status = orig;
@@ -498,7 +498,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Activities.STATUS_QUOTE_TEXT_HTML, textHtml);
             values.put(Activities.STATUS_QUOTE_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(orig.getText()));
             values.put(Activities.STATUS_QUOTE_SOURCE, orig.getSource());
-            values.put(Activities.STATUS_QUOTED_BY_USER_ID, quotedById);
+            values.put(Activities.STATUS_QUOTED_USER_ID, quotedById);
             status = quotedStatus;
         } else {
             status = orig;

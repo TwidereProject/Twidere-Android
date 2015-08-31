@@ -13,6 +13,7 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
@@ -58,7 +59,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     private final ImageView profileTypeView;
     private final ImageView extraTypeView;
     private final TextView textView;
-    private final TextView quoteTextView;
+    private final TextView quotedTextView;
     private final NameView nameView;
     private final NameView quotedNameView;
     private final TextView replyRetweetView;
@@ -80,7 +81,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
         extraTypeView = (ImageView) itemView.findViewById(R.id.extra_type);
         textView = (TextView) itemView.findViewById(R.id.text);
-        quoteTextView = (TextView) itemView.findViewById(R.id.quote_text);
+        quotedTextView = (TextView) itemView.findViewById(R.id.quoted_text);
         nameView = (NameView) itemView.findViewById(R.id.name);
         quotedNameView = (NameView) itemView.findViewById(R.id.quoted_name);
         replyRetweetIcon = (ImageView) itemView.findViewById(R.id.reply_retweet_icon);
@@ -160,76 +161,36 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             replyRetweetIcon.setVisibility(View.GONE);
         }
 
-        final int typeIconRes;
 
-        if (status.is_quote) {
-            quotedNameView.setName(manager.getUserNickname(status.user_id, status.user_name, false));
-            quotedNameView.setScreenName("@" + status.user_screen_name);
-            timeView.setTime(status.quote_timestamp);
-            nameView.setName(manager.getUserNickname(status.quoted_by_user_id, status.quoted_by_user_name, false));
-            nameView.setScreenName("@" + status.quoted_by_user_screen_name);
-
-            if (translation != null) {
-                quoteTextView.setText(translation.getText());
-            } else if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                final String text = status.quote_text_unescaped;
-                quoteTextView.setText(text);
-            } else {
-                final Spanned text = Html.fromHtml(status.quote_text_html);
-                quoteTextView.setText(text);
-                linkify.applyAllLinks(quoteTextView, status.account_id, getLayoutPosition(),
-                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
-                quoteTextView.setMovementMethod(null);
-            }
+        if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
 
             quotedNameView.setVisibility(View.VISIBLE);
-            quoteTextView.setVisibility(View.VISIBLE);
+            quotedTextView.setVisibility(View.VISIBLE);
             quoteIndicator.setVisibility(View.VISIBLE);
 
-            quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
+            quotedNameView.setName(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
+            quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
 
-            if (adapter.isProfileImageEnabled()) {
-                profileTypeView.setVisibility(View.VISIBLE);
-                profileImageView.setVisibility(View.VISIBLE);
-                loader.displayProfileImage(profileImageView, status.quoted_by_user_profile_image);
-
-                typeIconRes = getUserTypeIconRes(status.quoted_by_user_is_verified, status.quoted_by_user_is_protected);
+            if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+                final String text = status.quoted_text_unescaped;
+                quotedTextView.setText(text);
             } else {
-                profileTypeView.setVisibility(View.GONE);
-                profileImageView.setVisibility(View.GONE);
-                loader.cancelDisplayTask(profileImageView);
-
-                typeIconRes = 0;
+                final Spanned text = Html.fromHtml(status.quoted_text_html);
+                quotedTextView.setText(text);
+                linkify.applyAllLinks(quotedTextView, status.account_id, getLayoutPosition(),
+                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
+                quotedTextView.setMovementMethod(null);
             }
 
-            itemContent.drawStart(manager.getUserColor(status.quoted_by_user_id, false),
+            quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
+            itemContent.drawStart(manager.getUserColor(status.quoted_user_id, false),
                     manager.getUserColor(status.user_id, false));
         } else {
-            nameView.setName(manager.getUserNickname(status.user_id, status.user_name, false));
-            nameView.setScreenName("@" + status.user_screen_name);
-            if (status.is_retweet) {
-                timeView.setTime(status.retweet_timestamp);
-            } else {
-                timeView.setTime(status.timestamp);
-            }
 
             quotedNameView.setVisibility(View.GONE);
-            quoteTextView.setVisibility(View.GONE);
+            quotedTextView.setVisibility(View.GONE);
             quoteIndicator.setVisibility(View.GONE);
 
-            if (adapter.isProfileImageEnabled()) {
-                profileImageView.setVisibility(View.VISIBLE);
-                final String user_profile_image_url = status.user_profile_image_url;
-                loader.displayProfileImage(profileImageView, user_profile_image_url);
-
-                typeIconRes = getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
-            } else {
-                profileTypeView.setVisibility(View.GONE);
-                profileImageView.setVisibility(View.GONE);
-                loader.cancelDisplayTask(profileImageView);
-
-                typeIconRes = 0;
-            }
             if (status.is_retweet) {
                 itemContent.drawStart(manager.getUserColor(status.retweeted_by_user_id, false),
                         manager.getUserColor(status.user_id, false));
@@ -238,14 +199,32 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             }
         }
 
-        if (typeIconRes != 0) {
-            profileTypeView.setImageResource(typeIconRes);
+        if (status.is_retweet) {
+            timeView.setTime(status.retweet_timestamp);
+        } else {
+            timeView.setTime(status.timestamp);
+        }
+        nameView.setName(manager.getUserNickname(status.user_id, status.user_name, false));
+        nameView.setScreenName("@" + status.user_screen_name);
+
+
+        if (adapter.isProfileImageEnabled()) {
+            profileImageView.setVisibility(View.VISIBLE);
+            final String user_profile_image_url = status.user_profile_image_url;
+
+            loader.displayProfileImage(profileImageView, user_profile_image_url);
+
+            profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected));
             profileTypeView.setVisibility(View.VISIBLE);
         } else {
+            profileTypeView.setVisibility(View.GONE);
+            profileImageView.setVisibility(View.GONE);
+
+            loader.cancelDisplayTask(profileImageView);
+
             profileTypeView.setImageDrawable(null);
             profileTypeView.setVisibility(View.GONE);
         }
-
 
         if (adapter.shouldShowAccountsColor()) {
             itemContent.drawEnd(Utils.getAccountColor(context, status.account_id));
@@ -253,13 +232,14 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             itemContent.drawEnd();
         }
 
+        final ParcelableMedia[] media = status.is_quote && ArrayUtils.isEmpty(status.media) ? status.quoted_media : status.media;
 
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());
-            final boolean hasMedia = status.media != null && status.media.length > 0;
+            final boolean hasMedia = media != null && media.length > 0;
             if (hasMedia && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
                 mediaPreview.setVisibility(View.VISIBLE);
-                mediaPreview.displayMedia(status.media, loader, status.account_id, this,
+                mediaPreview.displayMedia(media, loader, status.account_id, this,
                         adapter.getMediaLoadingHandler());
             } else {
                 mediaPreview.setVisibility(View.GONE);
@@ -267,7 +247,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             mediaPreview.setVisibility(View.GONE);
         }
-        if (!status.is_quote && translation != null) {
+        if (translation != null) {
             textView.setText(translation.getText());
         } else if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(status.text_unescaped);
@@ -314,7 +294,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             favoriteCountView.setText(null);
         }
         if (shouldDisplayExtraType) {
-            displayExtraTypeIcon(status.card_name, status.media, status.location, status.place_full_name,
+            displayExtraTypeIcon(status.card_name, media, status.location, status.place_full_name,
                     status.is_possibly_sensitive);
         } else {
             extraTypeView.setVisibility(View.GONE);
@@ -322,7 +302,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         nameView.updateText();
         quotedNameView.updateText();
-
     }
 
     public ImageView getProfileImageView() {
@@ -398,7 +377,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         nameView.setPrimaryTextSize(textSize);
         quotedNameView.setPrimaryTextSize(textSize);
         textView.setTextSize(textSize);
-        quoteTextView.setTextSize(textSize);
+        quotedTextView.setTextSize(textSize);
         nameView.setSecondaryTextSize(textSize * 0.85f);
         quotedNameView.setSecondaryTextSize(textSize * 0.85f);
         timeView.setTextSize(textSize * 0.85f);

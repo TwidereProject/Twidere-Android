@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff.Mode;
@@ -46,6 +48,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
@@ -300,7 +303,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     @Override
     protected void onStop() {
         saveAccountSelection();
-        mLocationManager.removeUpdates(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationManager.removeUpdates(this);
+        }
         super.onStop();
     }
 
@@ -944,12 +950,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean handleQuoteIntent(final ParcelableStatus status) {
         if (status == null || status.id <= 0) return false;
-        if (status.is_quote) {
-            mEditText.setText(Utils.getQuoteStatus(this, status.quote_id, status.quoted_by_user_screen_name,
-                    status.quote_text_plain));
-        } else {
-            mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
-        }
+        mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
         mEditText.setSelection(0);
         mAccountsAdapter.setSelectedAccountIds(status.account_id);
         return true;
@@ -960,14 +961,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         final String myScreenName = Utils.getAccountScreenName(this, status.account_id);
         if (TextUtils.isEmpty(myScreenName)) return false;
         int selectionStart = 0;
-        if (status.is_quote) {
-            mEditText.append("@" + status.quoted_by_user_screen_name + " ");
-            selectionStart = mEditText.length();
-        }
         mEditText.append("@" + status.user_screen_name + " ");
-        if (!status.is_quote) {
-            selectionStart = mEditText.length();
-        }
+        selectionStart = mEditText.length();
         if (status.is_retweet) {
             mEditText.append("@" + status.retweeted_by_user_screen_name + " ");
         }

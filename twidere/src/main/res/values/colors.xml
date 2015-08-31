@@ -37,5 +37,7 @@
     <color name="background_color_action_bar_dark">#212121</color>
     <color name="bg_color_video_playback_progress">#A0000000</color>
     <color name="drawer_banner_foreground">#80000000</color>
+    <color name="quote_indicator_background_dark">#40aaaaaa</color>
+    <color name="quote_indicator_background_light">#40333333</color>
 
 </resources>

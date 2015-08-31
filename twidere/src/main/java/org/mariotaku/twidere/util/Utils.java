@@ -547,7 +547,7 @@ public final class Utils implements Constants {
         final Expression filteredUsersWhere = Expression.or(
                 Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery),
                 Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Statuses.QUOTED_BY_USER_ID), filteredUsersQuery)
+                Expression.in(new Column(new Table(table), Statuses.QUOTED_USER_ID), filteredUsersQuery)
         );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(true, new Column(new Table(table), Statuses._ID))
@@ -559,7 +559,7 @@ public final class Utils implements Constants {
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
                                 "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTE_SOURCE),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_SOURCE),
                                 "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
                 ))
                 .union()
@@ -568,7 +568,7 @@ public final class Utils implements Constants {
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_PLAIN),
                                 "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTE_TEXT_PLAIN),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_TEXT_PLAIN),
                                 "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
                 ))
                 .union()
@@ -577,7 +577,7 @@ public final class Utils implements Constants {
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_HTML),
                                 "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTE_TEXT_HTML),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_TEXT_HTML),
                                 "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'")
                 ));
         final Expression filterExpression = Expression.or(
@@ -599,7 +599,7 @@ public final class Utils implements Constants {
         final Expression filteredUsersWhere = Expression.or(
                 Expression.in(new Column(new Table(table), Activities.STATUS_USER_ID), filteredUsersQuery),
                 Expression.in(new Column(new Table(table), Activities.STATUS_RETWEETED_BY_USER_ID), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Activities.STATUS_QUOTED_BY_USER_ID), filteredUsersQuery)
+                Expression.in(new Column(new Table(table), Activities.STATUS_QUOTED_USER_ID), filteredUsersQuery)
         );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(true, new Column(new Table(table), Activities._ID))
@@ -3356,7 +3356,7 @@ public final class Utils implements Constants {
     private static boolean isMyStatus(ParcelableStatus status) {
         if (isMyRetweet(status)) return true;
         if (status.is_quote) {
-            return status.account_id == status.quoted_by_user_id;
+            return status.account_id == status.quoted_user_id;
         }
         return status.account_id == status.user_id;
     }

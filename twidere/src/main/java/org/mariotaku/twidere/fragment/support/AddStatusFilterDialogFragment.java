@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -30,6 +29,7 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 
 import com.twitter.Extractor;
 
@@ -157,8 +157,8 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
                     status.retweeted_by_user_name, status.retweeted_by_user_screen_name)));
         }
         if (status.is_quote) {
-            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.quoted_by_user_id,
-                    status.quoted_by_user_name, status.quoted_by_user_screen_name)));
+            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.quoted_user_id,
+                    status.quoted_user_name, status.quoted_user_screen_name)));
         }
         list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.user_id,
                 status.user_name, status.user_screen_name)));
