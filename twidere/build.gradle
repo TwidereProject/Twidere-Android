@@ -14,7 +14,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 117
+        versionCode 118
         versionName "0.3.0"
         multiDexEnabled true
     }
@@ -71,7 +71,7 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.1.4'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.5'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.7'
     compile 'com.github.johnpersano:supertoasts:1.3.4.1@aar'
     compile 'com.github.mariotaku:MessageBubbleView:1.2'

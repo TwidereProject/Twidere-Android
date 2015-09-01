@@ -24,7 +24,7 @@ apply from: rootProject.file('global.gradle')
 android {
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.bluelinelabs:logansquare:1.1.0'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.github.mariotaku:RestFu:0.9.1'
+    compile 'com.github.mariotaku:RestFu:0.9.2'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     compile 'com.github.mariotaku:SQLiteQB:ef3f596199'
     compile fileTree(dir: 'libs', include: ['*.jar'])

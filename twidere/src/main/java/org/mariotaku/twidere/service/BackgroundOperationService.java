@@ -284,8 +284,6 @@ public class BackgroundOperationService extends IntentService implements Constan
             mResolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
             mResolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
-
-
         } else {
             final ContentValues values = createMessageDraft(accountId, recipientId, text, imageUri);
             mResolver.insert(Drafts.CONTENT_URI, values);
@@ -339,10 +337,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                 } else if (data.account_id > 0) {
                     failedAccountIds.remove(data.account_id);
                     // BEGIN HotMobi
-                    final TweetEvent event = TweetEvent.create(BackgroundOperationService.this, data,
-                            TimelineType.OTHER);
+                    final TweetEvent event = TweetEvent.create(this, data, TimelineType.OTHER);
                     event.setAction(TweetEvent.Action.TWEET);
-                    HotMobiLogger.getInstance(BackgroundOperationService.this).log(data.account_id, event);
+                    HotMobiLogger.getInstance(this).log(data.account_id, event);
                     // END HotMobi
                 }
             }
@@ -546,12 +543,14 @@ public class BackgroundOperationService extends IntentService implements Constan
                             } else {
                                 contentType = ContentType.parse(o.outMimeType);
                             }
-                            final MediaUploadResponse uploadResp = upload.uploadMedia(new FileTypedData(is, file.getName(), file.length(), contentType));
+                            final MediaUploadResponse uploadResp = upload.uploadMedia(new FileTypedData(is,
+                                    file.getName(), file.length(), contentType));
                             mediaIds[i] = uploadResp.getId();
                         }
                     } catch (final FileNotFoundException e) {
                         Log.w(LOGTAG, e);
                     } catch (final TwitterException e) {
+                        Log.w(LOGTAG, e);
                         final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
                         results.add(response);
                         continue;
@@ -586,11 +585,13 @@ public class BackgroundOperationService extends IntentService implements Constan
                     final ParcelableStatus result = new ParcelableStatus(resultStatus, account.account_id, false);
                     results.add(SingleResponse.getInstance(result));
                 } catch (final TwitterException e) {
+                    Log.w(LOGTAG, e);
                     final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
                     results.add(response);
                 }
             }
         } catch (final UpdateStatusException e) {
+            Log.w(LOGTAG, e);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
             results.add(response);
         }

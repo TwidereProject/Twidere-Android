@@ -37,13 +37,15 @@ import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by mariotaku on 15/6/24.
  */
 public class NetworkUsageUtils implements Constants {
     public static void initForHttpClient(Context context, OkHttpClient client) {
-        client.networkInterceptors().add(new NetworkUsageInterceptor(context));
+        final List<Interceptor> interceptors = client.networkInterceptors();
+        interceptors.add(new NetworkUsageInterceptor(context));
     }
 
     private static int sNetworkType;
