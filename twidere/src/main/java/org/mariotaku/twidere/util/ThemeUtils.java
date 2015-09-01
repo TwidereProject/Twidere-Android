@@ -59,6 +59,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -978,8 +979,8 @@ public class ThemeUtils implements Constants {
         if (contentLayout == null) {
             contentLayout = window.findViewById(android.R.id.content);
         }
-        if (contentLayout instanceof ContentFrameLayout) {
-            contentLayout.setForeground(overlay);
+        if (contentLayout instanceof FrameLayout) {
+            ViewSupport.setForeground(contentLayout, overlay);
         }
     }
 
