@@ -80,16 +80,15 @@ import java.lang.reflect.Field;
 public class ThemeUtils implements Constants {
 
     public static final int ACCENT_COLOR_THRESHOLD = 192;
-
-    private static final int[] ANIM_OPEN_STYLE_ATTRS = {android.R.attr.activityOpenEnterAnimation,
-            android.R.attr.activityOpenExitAnimation};
-    private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
-            android.R.attr.activityCloseExitAnimation};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY_AND_INVERSE = {android.R.attr.textColorPrimary,
             android.R.attr.textColorPrimaryInverse};
     public static final int[] ATTRS_COLOR_FOREGROUND_AND_INVERSE = {android.R.attr.colorForeground,
             android.R.attr.colorForegroundInverse};
+    private static final int[] ANIM_OPEN_STYLE_ATTRS = {android.R.attr.activityOpenEnterAnimation,
+            android.R.attr.activityOpenExitAnimation};
+    private static final int[] ANIM_CLOSE_STYLE_ATTRS = {android.R.attr.activityCloseEnterAnimation,
+            android.R.attr.activityCloseExitAnimation};
 
     private ThemeUtils() {
         throw new AssertionError();
@@ -285,7 +284,7 @@ public class ThemeUtils implements Constants {
         if (!(view instanceof ActionBarOverlayLayout)) {
             final View contentLayout = window.findViewById(android.support.v7.appcompat.R.id.action_bar_activity_content);
             if (contentLayout instanceof ContentFrameLayout) {
-                return ((ContentFrameLayout) contentLayout).getForeground();
+                return contentLayout.getForeground();
             }
             return null;
         }
@@ -980,7 +979,7 @@ public class ThemeUtils implements Constants {
             contentLayout = window.findViewById(android.R.id.content);
         }
         if (contentLayout instanceof ContentFrameLayout) {
-            ((ContentFrameLayout) contentLayout).setForeground(overlay);
+            contentLayout.setForeground(overlay);
         }
     }
 
@@ -1002,7 +1001,7 @@ public class ThemeUtils implements Constants {
         final int alpha = ((IThemedActivity) context).getCurrentThemeBackgroundAlpha();
         final Drawable d;
         if (isSolidBackground(backgroundOption)) {
-            d = new ColorDrawable(Color.BLACK);
+            d = new ColorDrawable(isDarkTheme(themeRes) ? Color.BLACK : Color.WHITE);
         } else {
             d = getWindowBackgroundFromTheme(context, drawerThemeRes);
         }
@@ -1148,18 +1147,18 @@ public class ThemeUtils implements Constants {
         return VALUE_THEME_NAME_DARK.equals(name);
     }
 
-    public static final class ActionBarContextThemeWrapper extends android.support.v7.internal.view.ContextThemeWrapper {
-
-        public ActionBarContextThemeWrapper(Context base, int themeres) {
-            super(base, themeres);
-        }
-    }
-
     public static int getActionBarThemeResource(int themeId, int accentColor) {
         if (isDarkTheme(themeId) || TwidereColorUtils.getYIQLuminance(accentColor) <= ACCENT_COLOR_THRESHOLD) {
             return R.style.Theme_Twidere_Dark;
         } else {
             return R.style.Theme_Twidere_Light;
+        }
+    }
+
+    public static final class ActionBarContextThemeWrapper extends android.support.v7.internal.view.ContextThemeWrapper {
+
+        public ActionBarContextThemeWrapper(Context base, int themeres) {
+            super(base, themeres);
         }
     }
 }
