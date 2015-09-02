@@ -52,9 +52,9 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@android:id/icon"
-        android:layout_toLeftOf="@android:id/checkbox"
+        android:layout_toLeftOf="@+id/toggle_container"
         android:layout_toRightOf="@android:id/icon"
-        android:layout_toStartOf="@android:id/checkbox"
+        android:layout_toStartOf="@+id/toggle_container"
         android:orientation="vertical"
         android:padding="@dimen/element_spacing_normal">
 
@@ -75,14 +75,21 @@
             android:textColor="?android:textColorSecondary" />
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.ActivatedCheckBox
-        android:id="@android:id/checkbox"
+    <com.lnikkila.extendedtouchview.ExtendedTouchView
+        android:id="@+id/toggle_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:clickable="false"
-        android:focusable="false" />
+        app:touchHeight="48dp"
+        app:touchWidth="48dp">
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@android:id/toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </com.lnikkila.extendedtouchview.ExtendedTouchView>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

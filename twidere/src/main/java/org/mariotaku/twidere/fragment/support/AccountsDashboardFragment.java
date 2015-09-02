@@ -39,6 +39,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -110,9 +111,7 @@ import java.util.List;
 public class AccountsDashboardFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         OnSharedPreferenceChangeListener, ImageLoadingListener, OnClickListener, KeyboardShortcutCallback, AdapterView.OnItemClickListener {
 
-    private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
-            this, 0, this);
-
+    private final Rect mSystemWindowsInsets = new Rect();
     private ContentResolver mResolver;
     private SharedPreferences mPreferences;
     private MergeAdapter mAdapter;
@@ -135,9 +134,18 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private Context mThemedContext;
     private MediaLoaderWrapper mImageLoader;
     private AccountToggleProvider mAccountActionProvider;
-
+    private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
+            this, 0, this) {
+        @Override
+        public void onChange(boolean selfChange, @Nullable Uri uri) {
+            final ContentResolver cr = getContentResolver();
+            final Cursor c = cr.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION);
+            updateAccountProviderData(c);
+            c.close();
+            super.onChange(selfChange, uri);
+        }
+    };
     private boolean mSwitchAccountAnimationPlaying;
-    private final Rect mSystemWindowsInsets = new Rect();
 
     public long[] getActivatedAccountIds() {
         if (mAccountActionProvider != null) {
@@ -244,9 +252,13 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
+        updateAccountProviderData(data);
+    }
+
+    private void updateAccountProviderData(final Cursor cursor) {
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account));
-        final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(data);
+        final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(cursor);
         if (accounts.length > 0) {
             mNoAccountContainer.setVisibility(View.GONE);
             mAccountProfileContainer.setVisibility(View.VISIBLE);
@@ -719,6 +731,13 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             setHasStableIds(true);
         }
 
+        private static int indexOfAccount(List<ParcelableAccount> accounts, long accountId) {
+            for (int i = 0, j = accounts.size(); i < j; i++) {
+                if (accounts.get(i).account_id == accountId) return i;
+            }
+            return -1;
+        }
+
         public ParcelableAccount getAdapterAccount(int adapterPosition) {
             if (mInternalAccounts == null || mInternalAccounts.length < 1) {
                 return null;
@@ -800,13 +819,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             mFragment.onAccountSelected(holder, getAdapterAccount(holder.getAdapterPosition()));
         }
 
-        private static int indexOfAccount(List<ParcelableAccount> accounts, long accountId) {
-            for (int i = 0, j = accounts.size(); i < j; i++) {
-                if (accounts.get(i).account_id == accountId) return i;
-            }
-            return -1;
-        }
-
         private void swap(long fromId, long toId) {
             int fromIdx = -1, toIdx = -1;
             for (int i = 0, j = mInternalAccounts.length; i < j; i++) {
@@ -856,8 +868,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             final OptionItem other = (OptionItem) obj;
             if (icon != other.icon) return false;
             if (id != other.id) return false;
-            if (name != other.name) return false;
-            return true;
+            return name == other.name;
         }
 
         @Override

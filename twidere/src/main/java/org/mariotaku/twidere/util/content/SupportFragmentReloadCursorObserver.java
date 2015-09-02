@@ -24,39 +24,40 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
 import org.mariotaku.twidere.TwidereConstants;
 
-public final class SupportFragmentReloadCursorObserver extends ContentObserver implements TwidereConstants {
+public class SupportFragmentReloadCursorObserver extends ContentObserver implements TwidereConstants {
 
-	private final Fragment mFragment;
-	private final int mLoaderId;
-	private final LoaderCallbacks<Cursor> mCallback;
+    private final Fragment mFragment;
+    private final int mLoaderId;
+    private final LoaderCallbacks<Cursor> mCallback;
 
-	public SupportFragmentReloadCursorObserver(final Fragment fragment, final int loaderId,
-			final LoaderCallbacks<Cursor> callback) {
-		super(createHandler());
-		mFragment = fragment;
-		mLoaderId = loaderId;
-		mCallback = callback;
-	}
+    public SupportFragmentReloadCursorObserver(final Fragment fragment, final int loaderId,
+                                               final LoaderCallbacks<Cursor> callback) {
+        super(createHandler());
+        mFragment = fragment;
+        mLoaderId = loaderId;
+        mCallback = callback;
+    }
 
-	@Override
-	public void onChange(final boolean selfChange) {
-		onChange(selfChange, null);
-	}
+    private static Handler createHandler() {
+        if (Thread.currentThread().getId() != 1) return new Handler(Looper.getMainLooper());
+        return new Handler();
+    }
 
-	@Override
-	public void onChange(final boolean selfChange, final Uri uri) {
-		if (mFragment == null || mFragment.getActivity() == null || mFragment.isDetached()) return;
-		// Handle change.
-		mFragment.getLoaderManager().restartLoader(mLoaderId, null, mCallback);
-	}
+    @Override
+    public final void onChange(final boolean selfChange) {
+        onChange(selfChange, null);
+    }
 
-	private static Handler createHandler() {
-		if (Thread.currentThread().getId() != 1) return new Handler(Looper.getMainLooper());
-		return new Handler();
-	}
+    @Override
+    public void onChange(final boolean selfChange, @Nullable final Uri uri) {
+        if (mFragment == null || mFragment.getActivity() == null || mFragment.isDetached()) return;
+        // Handle change.
+        mFragment.getLoaderManager().restartLoader(mLoaderId, null, mCallback);
+    }
 }

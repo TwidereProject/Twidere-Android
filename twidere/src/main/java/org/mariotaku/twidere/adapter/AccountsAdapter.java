@@ -24,7 +24,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.CompoundButton;
 
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
@@ -44,9 +44,20 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     private final SharedPreferences mPreferences;
 
     private boolean mDisplayProfileImage;
-    private int mChoiceMode;
     private boolean mSortEnabled;
     private Indices mIndices;
+    private boolean mSwitchEnabled;
+    private OnAccountToggleListener mOnAccountToggleListener;
+
+    private CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            final Object tag = buttonView.getTag();
+            if (!(tag instanceof Long) || mOnAccountToggleListener == null) return;
+            final long accountId = (Long) tag;
+            mOnAccountToggleListener.onAccountToggle(accountId, isChecked);
+        }
+    };
 
     public AccountsAdapter(final Context context) {
         super(context, R.layout.list_item_account, null, new String[]{Accounts.NAME},
@@ -66,17 +77,17 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final int color = cursor.getInt(mIndices.color);
         final AccountViewHolder holder = (AccountViewHolder) view.getTag();
-        holder.screen_name.setText("@" + cursor.getString(mIndices.screen_name));
+        holder.screenName.setText("@" + cursor.getString(mIndices.screen_name));
         holder.setAccountColor(color);
         if (mDisplayProfileImage) {
-            mImageLoader.displayProfileImage(holder.profile_image, cursor.getString(mIndices.profile_image_url));
+            mImageLoader.displayProfileImage(holder.profileImage, cursor.getString(mIndices.profile_image_url));
         } else {
-            mImageLoader.cancelDisplayTask(holder.profile_image);
-//            holder.profile_image.setImageResource(R.drawable.ic_profile_image_default);
+            mImageLoader.cancelDisplayTask(holder.profileImage);
         }
-        final boolean isMultipleChoice = mChoiceMode == ListView.CHOICE_MODE_MULTIPLE
-                || mChoiceMode == ListView.CHOICE_MODE_MULTIPLE_MODAL;
-        holder.checkbox.setVisibility(isMultipleChoice ? View.VISIBLE : View.GONE);
+        holder.toggle.setChecked(cursor.getShort(mIndices.is_activated) == 1);
+        holder.toggle.setOnCheckedChangeListener(mCheckedChangeListener);
+        holder.toggle.setVisibility(mSwitchEnabled ? View.VISIBLE : View.GONE);
+        holder.toggle.setTag(cursor.getLong(mIndices.account_id));
         holder.setSortEnabled(mSortEnabled);
         super.bindView(view, context, cursor);
     }
@@ -100,8 +111,18 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
+    public void setLinkHighlightOption(String option) {
+
+    }
+
+    @Override
     public float getTextSize() {
         return 0;
+    }
+
+    @Override
+    public void setTextSize(float textSize) {
+
     }
 
     @Override
@@ -110,10 +131,14 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
+    public void setDisplayNameFirst(boolean nameFirst) {
+
+    }
+
+    @Override
     public boolean isProfileImageDisplayed() {
         return mDisplayProfileImage;
     }
-
 
     @Override
     public boolean isShowAccountColor() {
@@ -121,13 +146,13 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     @Override
-    public void setDisplayNameFirst(boolean nameFirst) {
+    public void setShowAccountColor(boolean show) {
 
     }
 
-    public void setChoiceMode(final int mode) {
-        if (mChoiceMode == mode) return;
-        mChoiceMode = mode;
+    public void setSwitchEnabled(final boolean enabled) {
+        if (mSwitchEnabled == enabled) return;
+        mSwitchEnabled = enabled;
         notifyDataSetChanged();
     }
 
@@ -137,19 +162,8 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         notifyDataSetChanged();
     }
 
-    @Override
-    public void setLinkHighlightOption(String option) {
-
-    }
-
-    @Override
-    public void setShowAccountColor(boolean show) {
-
-    }
-
-    @Override
-    public void setTextSize(float textSize) {
-
+    public void setOnAccountToggleListener(OnAccountToggleListener listener) {
+        mOnAccountToggleListener = listener;
     }
 
     @Override
@@ -164,5 +178,9 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         if (mSortEnabled == sortEnabled) return;
         mSortEnabled = sortEnabled;
         notifyDataSetChanged();
+    }
+
+    public interface OnAccountToggleListener {
+        void onAccountToggle(long accountId, boolean state);
     }
 }

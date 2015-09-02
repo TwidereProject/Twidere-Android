@@ -14,7 +14,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 121
+        versionCode 122
         versionName "0.3.0"
         multiDexEnabled true
     }
@@ -91,6 +91,7 @@ dependencies {
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     compile 'com.github.mariotaku:PickNCrop:44b09cbc69'
     compile 'com.diogobernardino:williamchart:2.0.1'
+    compile 'com.lnikkila:extendedtouchview:0.1.0'
     googleCompile 'com.google.android.gms:play-services-maps:7.8.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'

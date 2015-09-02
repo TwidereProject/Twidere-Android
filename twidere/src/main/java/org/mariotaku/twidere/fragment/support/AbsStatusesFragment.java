@@ -64,38 +64,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         implements LoaderCallbacks<Data>, StatusAdapterListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
-    private SharedPreferences mPreferences;
-    private PopupMenu mPopupMenu;
-    private ReadStateManager mReadStateManager;
-    private RecyclerViewNavigationHelper mNavigationHelper;
-
-    private ParcelableStatus mSelectedStatus;
-
-    private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            final ParcelableStatus status = mSelectedStatus;
-            if (status == null) return false;
-            if (item.getItemId() == R.id.share) {
-                final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_status)));
-                return true;
-            }
-            return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
-                    getFragmentManager(), getTwitterWrapper(), status, item);
-        }
-    };
-    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                final LinearLayoutManager layoutManager = getLayoutManager();
-                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
-            }
-        }
-    };
-    private OnScrollListener mPauseOnScrollListener;
-
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
         public List<ScrollRecord> mRecords;
@@ -107,7 +75,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             final int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
-            if (firstVisiblePosition != mFirstVisiblePosition) {
+            if (firstVisiblePosition != mFirstVisiblePosition && firstVisiblePosition >= 0) {
                 //noinspection unchecked
                 final AbsStatusesAdapter<Data> adapter = (AbsStatusesAdapter<Data>) recyclerView.getAdapter();
                 final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
@@ -137,7 +105,35 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
             }
         }
     };
-
+    private SharedPreferences mPreferences;
+    private PopupMenu mPopupMenu;
+    private ReadStateManager mReadStateManager;
+    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                final LinearLayoutManager layoutManager = getLayoutManager();
+                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
+            }
+        }
+    };
+    private RecyclerViewNavigationHelper mNavigationHelper;
+    private ParcelableStatus mSelectedStatus;
+    private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            final ParcelableStatus status = mSelectedStatus;
+            if (status == null) return false;
+            if (item.getItemId() == R.id.share) {
+                final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_status)));
+                return true;
+            }
+            return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
+                    getFragmentManager(), getTwitterWrapper(), status, item);
+        }
+    };
+    private OnScrollListener mPauseOnScrollListener;
     private OnScrollListener mActiveHotMobiScrollTracker;
 
     protected AbsStatusesFragment() {
@@ -261,7 +257,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         } else {
             lastVisiblePos = layoutManager.findFirstVisibleItemPosition();
         }
-        if (lastVisiblePos != RecyclerView.NO_POSITION) {
+        if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter.getItemCount()) {
             lastReadId = adapter.getStatusId(lastVisiblePos);
             final View positionView = layoutManager.findViewByPosition(lastVisiblePos);
             lastVisibleTop = positionView != null ? positionView.getTop() : 0;
