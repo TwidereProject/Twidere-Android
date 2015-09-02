@@ -45,7 +45,6 @@ import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
 import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.AssistLauncherActivity;
@@ -83,11 +82,7 @@ import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
-@ReportsCrashes(formUri = "https://mariotaku.cloudant.com/acra-twidere/_design/acra-storage/_update/report",
-        reportType = HttpSender.Type.JSON,
-        httpMethod = HttpSender.Method.PUT,
-        formUriBasicAuthLogin = "membeentlyposedistderryb",
-        formUriBasicAuthPassword = "oYETEB0KXUThmyXketa8V4XY",
+@ReportsCrashes(formUri = "https://twidere-bugreport.herokuapp.com/reports",
         buildConfigClass = BuildConfig.class)
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
