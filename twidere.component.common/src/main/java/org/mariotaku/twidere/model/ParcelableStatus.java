@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
@@ -449,6 +450,16 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         return date != null ? date.getTime() : 0;
     }
 
+    public static ParcelableStatus[] fromStatuses(Status[] statuses, long accountId) {
+        if (statuses == null) return null;
+        int size = statuses.length;
+        final ParcelableStatus[] result = new ParcelableStatus[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = new ParcelableStatus(statuses[i], accountId, false);
+        }
+        return result;
+    }
+
     @Override
     public int compareTo(@NonNull final ParcelableStatus another) {
         final long diff = another.id - id;
@@ -543,14 +554,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         ParcelableStatusParcelablePlease.writeToParcel(this, out, flags);
     }
 
-    public static ParcelableStatus[] fromStatuses(Status[] statuses, long accountId) {
-        if (statuses == null) return null;
-        int size = statuses.length;
-        final ParcelableStatus[] result = new ParcelableStatus[size];
-        for (int i = 0; i < size; i++) {
-            result[i] = new ParcelableStatus(statuses[i], accountId, false);
-        }
-        return result;
+    @OnJsonParseComplete
+    void onParseComplete() throws IOException {
+        if (is_quote && TextUtils.isEmpty(quoted_text_html))
+            throw new IOException("Incompatible model");
     }
 
     public static final class CursorIndices extends ObjectCursor.CursorIndices<ParcelableStatus> {

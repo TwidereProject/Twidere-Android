@@ -171,15 +171,16 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             quotedNameView.setName(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
             quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
 
-            if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                final String text = status.quoted_text_unescaped;
-                quotedTextView.setText(text);
-            } else {
+            if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
+                    && !TextUtils.isEmpty(status.quoted_text_html)) {
                 final Spanned text = Html.fromHtml(status.quoted_text_html);
                 quotedTextView.setText(text);
                 linkify.applyAllLinks(quotedTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
                 quotedTextView.setMovementMethod(null);
+            } else {
+                final String text = status.quoted_text_unescaped;
+                quotedTextView.setText(text);
             }
 
             quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
@@ -531,17 +532,17 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
 
         @Override
+        public void setLoadMoreIndicatorVisible(boolean enabled) {
+
+        }
+
+        @Override
         public boolean isLoadMoreSupported() {
             return false;
         }
 
         @Override
         public void setLoadMoreSupported(boolean supported) {
-
-        }
-
-        @Override
-        public void setLoadMoreIndicatorVisible(boolean enabled) {
 
         }
 
@@ -568,6 +569,10 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         @Override
         public boolean isMediaPreviewEnabled() {
             return displayMediaPreview;
+        }
+
+        public void setMediaPreviewEnabled(boolean enabled) {
+            displayMediaPreview = enabled;
         }
 
         @Override
@@ -598,10 +603,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         @Override
         public boolean shouldShowAccountsColor() {
             return false;
-        }
-
-        public void setMediaPreviewEnabled(boolean enabled) {
-            displayMediaPreview = enabled;
         }
 
         @Override

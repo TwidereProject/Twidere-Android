@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Pair;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
@@ -85,9 +86,11 @@ public class UploadLogsTask implements Runnable {
                 return !filename.equalsIgnoreCase(todayDir);
             }
         };
-        for (File dayLogsDir : logsDir.listFiles(filter)) {
+        for (Object dayLogsDirObj : ArrayUtils.nullToEmpty(logsDir.listFiles(filter))) {
+            final File dayLogsDir = (File) dayLogsDirObj;
             boolean succeeded = true;
-            for (File logFile : dayLogsDir.listFiles()) {
+            for (Object logFileObj : ArrayUtils.nullToEmpty(dayLogsDir.listFiles())) {
+                File logFile = (File) logFileObj;
                 FileTypedData body = null;
                 RestHttpResponse response = null;
                 try {
