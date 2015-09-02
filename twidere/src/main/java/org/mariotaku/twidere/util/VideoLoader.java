@@ -120,18 +120,22 @@ public class VideoLoader {
 
         @Override
         protected SingleResponse<File> doInBackground(Object... params) {
-            final File file = mPreLoader.mDiskCache.get(mUri);
-            if (file.isFile() && file.length() > 0) return SingleResponse.getInstance(file);
+            final DiskCache diskCache = mPreLoader.mDiskCache;
+            final File cachedFile = diskCache.get(mUri);
+            if (cachedFile != null && cachedFile.isFile() && cachedFile.length() > 0)
+                return SingleResponse.getInstance(cachedFile);
+            InputStream is = null;
             try {
-                final InputStream is = mPreLoader.mImageDownloader.getStream(mUri, null);
-                mPreLoader.mDiskCache.save(mUri, is, this);
-                IoUtils.closeSilently(is);
+                is = mPreLoader.mImageDownloader.getStream(mUri, null);
+                diskCache.save(mUri, is, this);
+                return SingleResponse.getInstance(diskCache.get(mUri));
             } catch (IOException e) {
-                mPreLoader.mDiskCache.remove(mUri);
+                diskCache.remove(mUri);
                 Log.w(LOGTAG, e);
                 return SingleResponse.getInstance(e);
+            } finally {
+                IoUtils.closeSilently(is);
             }
-            return SingleResponse.getInstance(file);
         }
 
         @Override
