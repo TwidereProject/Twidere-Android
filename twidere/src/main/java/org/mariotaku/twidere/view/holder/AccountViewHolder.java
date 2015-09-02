@@ -32,6 +32,7 @@ public class AccountViewHolder {
     public final ImageView profileImage;
     public final TextView name, screenName;
     public final CompoundButton toggle;
+    public final View toggleContainer;
     private final ColorLabelRelativeLayout content;
     private final View dragHandle;
 
@@ -41,6 +42,7 @@ public class AccountViewHolder {
         screenName = (TextView) view.findViewById(android.R.id.text2);
         profileImage = (ImageView) view.findViewById(android.R.id.icon);
         toggle = (CompoundButton) view.findViewById(android.R.id.toggle);
+        toggleContainer = view.findViewById(R.id.toggle_container);
         dragHandle = view.findViewById(R.id.drag_handle);
     }
 

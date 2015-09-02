@@ -41,7 +41,6 @@ import org.mariotaku.twidere.util.collection.LongSparseMap;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -54,7 +53,6 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 public class TwitterContentUtils {
 
     public static final int TWITTER_BULK_QUERY_COUNT = 100;
-    private static final long ONE_MINUTE = TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
     private static final Pattern PATTERN_TWITTER_STATUS_LINK = Pattern.compile("https?://twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)");
 
     public static String formatDirectMessageText(final DirectMessage message) {

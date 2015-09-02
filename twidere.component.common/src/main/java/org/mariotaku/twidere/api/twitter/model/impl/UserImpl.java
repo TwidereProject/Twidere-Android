@@ -24,14 +24,15 @@ import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
+
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by mariotaku on 15/3/31.
@@ -479,5 +480,10 @@ public class UserImpl extends TwitterResponseImpl implements User {
     @Override
     public int compareTo(@NonNull final User that) {
         return (int) (id - that.getId());
+    }
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() throws IOException {
+        if (id <= 0 || screenName == null) throw new IOException("Malformed User object");
     }
 }

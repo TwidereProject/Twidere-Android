@@ -86,8 +86,8 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         }
         holder.toggle.setChecked(cursor.getShort(mIndices.is_activated) == 1);
         holder.toggle.setOnCheckedChangeListener(mCheckedChangeListener);
-        holder.toggle.setVisibility(mSwitchEnabled ? View.VISIBLE : View.GONE);
         holder.toggle.setTag(cursor.getLong(mIndices.account_id));
+        holder.toggleContainer.setVisibility(mSwitchEnabled ? View.VISIBLE : View.GONE);
         holder.setSortEnabled(mSortEnabled);
         super.bindView(view, context, cursor);
     }

@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
@@ -35,6 +36,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -119,6 +121,11 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
 
     @JsonField(name = "possibly_sensitive")
     boolean possiblySensitive;
+
+    public static void setQuotedStatus(Status status, Status quoted) {
+        if (!(status instanceof StatusImpl)) return;
+        ((StatusImpl) status).quotedStatus = quoted;
+    }
 
     @Override
     public User getUser() {
@@ -217,7 +224,6 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
         return currentUserRetweet.id;
     }
 
-
     @Override
     public Status getQuotedStatus() {
         return quotedStatus;
@@ -283,7 +289,6 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
         return contributors;
     }
 
-
     @Override
     public int compareTo(@NonNull final Status that) {
         final long delta = id - that.getId();
@@ -325,9 +330,10 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
                 '}';
     }
 
-    public static void setQuotedStatus(Status status, Status quoted) {
-        if (!(status instanceof StatusImpl)) return;
-        ((StatusImpl) status).quotedStatus = quoted;
+    @OnJsonParseComplete
+    void onJsonParseComplete() throws IOException {
+        if (id <= 0 || user == null || text == null)
+            throw new IOException("Malformed Status object");
     }
 
     @JsonObject
