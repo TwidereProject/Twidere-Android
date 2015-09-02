@@ -126,6 +126,26 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
+            case Activity.ACTION_RETWEETED_MENTION: {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
+                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_retweet), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_mention,
+                        R.string.activity_about_me_retweeted_mention_multi, activity.sources));
+                displayUserProfileImages(activity.sources);
+                summaryView.setText(activity.target_statuses[0].text_unescaped);
+                summaryView.setVisibility(View.VISIBLE);
+                break;
+            }
+            case Activity.ACTION_FAVORITED_MENTION: {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_favorite), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
+                        R.string.activity_about_me_favorited_mention_multi, activity.sources));
+                displayUserProfileImages(activity.sources);
+                summaryView.setText(activity.target_statuses[0].text_unescaped);
+                summaryView.setVisibility(View.VISIBLE);
+                break;
+            }
             case Activity.ACTION_LIST_MEMBER_ADDED: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
                 activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);

@@ -41,6 +41,18 @@ import java.util.Locale;
 
 public class ActivityImpl extends TwitterResponseImpl implements Activity {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+    private Action action;
+
+    private Date createdAt;
+
+    private User[] sources;
+    private User[] targetUsers;
+    private User[] targetObjectUsers;
+    private Status[] targetObjectStatuses, targetStatuses;
+    private UserList[] targetUserLists, targetObjectUserLists;
+    private long maxPosition, minPosition;
+    private int targetObjectsSize, targetsSize, sourcesSize;
     public static final JsonMapper<Activity> MAPPER = new JsonMapper<Activity>() {
         @SuppressWarnings("TryWithIdenticalCatches")
         @Override
@@ -90,49 +102,63 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                 instance.sources = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.sourcesSize]);
             } else if ("targets".equals(fieldName)) {
                 if (instance.action == null) throw new IOException();
-                if (instance.action == Action.FOLLOW || instance.action == Action.MENTION || instance.action == Action.LIST_MEMBER_ADDED) {
-                    instance.targetUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetsSize]);
-                } else if (instance.action == Action.LIST_CREATED) {
-                    instance.targetUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetsSize]);
-                } else {
-                    instance.targetStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetsSize]);
+                switch (instance.action) {
+                    case FAVORITE:
+                    case REPLY:
+                    case RETWEET:
+                    case QUOTE:
+                    case FAVORITED_RETWEET:
+                    case RETWEETED_RETWEET:
+                    case RETWEETED_MENTION:
+                    case FAVORITED_MENTION: {
+                        instance.targetStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetsSize]);
+                        break;
+                    }
+                    case FOLLOW:
+                    case MENTION:
+                    case LIST_MEMBER_ADDED: {
+                        instance.targetUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetsSize]);
+                        break;
+                    }
+                    case LIST_CREATED: {
+                        instance.targetUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetsSize]);
+                        break;
+                    }
                 }
             } else if ("target_objects".equals(fieldName)) {
                 if (instance.action == null) throw new IOException();
-                if (instance.action == Action.LIST_MEMBER_ADDED) {
-                    instance.targetObjectUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetObjectsSize]);
-                } else if (instance.action == Action.RETWEETED_RETWEET) {
-                    instance.targetObjectUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetObjectsSize]);
-                } else {
-                    instance.targetObjectStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetObjectsSize]);
+                switch (instance.action) {
+                    case FAVORITE:
+                    case FOLLOW:
+                    case MENTION:
+                    case REPLY:
+                    case RETWEET:
+                    case LIST_CREATED:
+                    case QUOTE: {
+                        instance.targetObjectStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetObjectsSize]);
+                        break;
+                    }
+                    case LIST_MEMBER_ADDED: {
+                        instance.targetObjectUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetObjectsSize]);
+                        break;
+                    }
+                    case FAVORITED_RETWEET:
+                    case RETWEETED_RETWEET:
+                    case RETWEETED_MENTION:
+                    case FAVORITED_MENTION: {
+                        instance.targetObjectUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetObjectsSize]);
+                    }
                 }
             }
         }
     };
 
-    private Action action;
-
-    private Date createdAt;
-
-    private User[] sources;
-    private User[] targetUsers;
+    ActivityImpl() {
+    }
 
     @Override
     public User[] getTargetObjectUsers() {
         return targetObjectUsers;
-    }
-
-    private User[] targetObjectUsers;
-
-    private Status[] targetObjectStatuses, targetStatuses;
-
-    private UserList[] targetUserLists, targetObjectUserLists;
-
-    private long maxPosition, minPosition;
-
-    private int targetObjectsSize, targetsSize, sourcesSize;
-
-    ActivityImpl() {
     }
 
     @Override
@@ -225,7 +251,5 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                 ", sourcesSize=" + sourcesSize +
                 '}';
     }
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
 }

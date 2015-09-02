@@ -33,6 +33,8 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
     int ACTION_FAVORITED_RETWEET = 0x08;
     int ACTION_RETWEETED_RETWEET = 0x09;
     int ACTION_QUOTE = 0x0A;
+    int ACTION_RETWEETED_MENTION = 0x0B;
+    int ACTION_FAVORITED_MENTION = 0x0C;
 
     Action getAction();
 
@@ -66,16 +68,14 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
     enum Action {
         FAVORITE(ACTION_FAVORITE), FOLLOW(ACTION_FOLLOW), MENTION(ACTION_MENTION), REPLY(ACTION_REPLY),
         RETWEET(ACTION_RETWEET), LIST_MEMBER_ADDED(ACTION_LIST_MEMBER_ADDED), LIST_CREATED(ACTION_LIST_CREATED),
-        FAVORITED_RETWEET(ACTION_FAVORITED_RETWEET), RETWEETED_RETWEET(ACTION_RETWEETED_RETWEET), QUOTE(ACTION_QUOTE);
+        FAVORITED_RETWEET(ACTION_FAVORITED_RETWEET), RETWEETED_RETWEET(ACTION_RETWEETED_RETWEET),
+        QUOTE(ACTION_QUOTE), RETWEETED_MENTION(ACTION_RETWEETED_MENTION),
+        FAVORITED_MENTION(ACTION_FAVORITED_MENTION);
 
         private final int actionId;
 
         Action(final int action) {
             actionId = action;
-        }
-
-        public int getActionId() {
-            return actionId;
         }
 
         public static Action parse(final String string) {
@@ -89,7 +89,13 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
             if ("favorited_retweet".equalsIgnoreCase(string)) return FAVORITED_RETWEET;
             if ("retweeted_retweet".equalsIgnoreCase(string)) return RETWEETED_RETWEET;
             if ("quote".equalsIgnoreCase(string)) return QUOTE;
+            if ("retweeted_mention".equalsIgnoreCase(string)) return RETWEETED_MENTION;
+            if ("favorited_mention".equalsIgnoreCase(string)) return FAVORITED_MENTION;
             throw new IllegalArgumentException("Unknown action " + string);
+        }
+
+        public int getActionId() {
+            return actionId;
         }
     }
 }

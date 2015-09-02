@@ -278,6 +278,10 @@
     <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted your tweet.</string>
     <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweeted your retweet.</string>
     <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted your retweet.</string>
+    <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweeted a tweet mentioned you.</string>
+    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet mentioned you.</string>
+    <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favorited a tweet mentioned you.</string>
+    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet mentioned you.</string>
     <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> added you to list.</string>
     <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> added you to list <xliff:g id="list">%2$s</xliff:g>".</string>
     <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> added you to their lists.</string>

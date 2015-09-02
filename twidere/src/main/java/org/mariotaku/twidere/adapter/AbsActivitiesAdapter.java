@@ -309,6 +309,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             case Activity.ACTION_RETWEET:
             case Activity.ACTION_FAVORITED_RETWEET:
             case Activity.ACTION_RETWEETED_RETWEET:
+            case Activity.ACTION_RETWEETED_MENTION:
+            case Activity.ACTION_FAVORITED_MENTION:
             case Activity.ACTION_LIST_MEMBER_ADDED: {
                 return ITEM_VIEW_TYPE_TITLE_SUMMARY;
             }

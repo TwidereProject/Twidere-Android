@@ -231,6 +231,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/quoted_text"
+            android:layout_marginBottom="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:layout_toEndOf="@+id/quote_indicator"
             android:layout_toRightOf="@+id/quote_indicator"
@@ -248,7 +249,7 @@
             android:layout_alignLeft="@+id/profile_container"
             android:layout_alignStart="@+id/profile_container"
             android:layout_below="@+id/media_preview"
-            android:layout_marginTop="@dimen/element_spacing_minus_small"
+            android:layout_marginTop="@dimen/element_spacing_minus_msmall"
             android:gravity="center_vertical|start"
             android:orientation="horizontal">
 
