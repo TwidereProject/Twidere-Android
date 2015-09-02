@@ -55,6 +55,7 @@ public class TwitterContentUtils {
 
     public static final int TWITTER_BULK_QUERY_COUNT = 100;
     private static final long ONE_MINUTE = TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
+    private static final Pattern PATTERN_TWITTER_STATUS_LINK = Pattern.compile("https?://twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)");
 
     public static String formatDirectMessageText(final DirectMessage message) {
         if (message == null) return null;
@@ -173,8 +174,6 @@ public class TwitterContentUtils {
         return str.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">");
     }
 
-    private static final Pattern PATTERN_TWITTER_STATUS_LINK = Pattern.compile("https?://twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)");
-
     public static <T extends List<Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {
         LongSparseMap<Status> quotes = new LongSparseMap<>();
         // Phase 1: collect all statuses contains a status link, and put it in the map
@@ -243,10 +242,4 @@ public class TwitterContentUtils {
         }
     }
 
-    public static void checkTime(long that, long current) {
-        if (that <= 0) return;
-        if ((that - current) > ONE_MINUTE) {
-            AbsLogger.error(new Exception("Wrong timestamp " + that + ", current " + current));
-        }
-    }
 }

@@ -40,7 +40,8 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
     private final DateFormat mDateFormat;
 
     public TwitterDateConverter() {
-        mDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.US);
+        mDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
+        mDateFormat.setLenient(true);
         mDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
