@@ -14,7 +14,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 120
+        versionCode 121
         versionName "0.3.0"
         multiDexEnabled true
     }
