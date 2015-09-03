@@ -147,6 +147,7 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                     case RETWEETED_MENTION:
                     case FAVORITED_MENTION: {
                         instance.targetObjectUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetObjectsSize]);
+                        break;
                     }
                 }
             }

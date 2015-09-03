@@ -332,8 +332,7 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
 
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
-        if (id <= 0 || user == null || text == null)
-            throw new IOException("Malformed Status object");
+        if (id <= 0 || text == null) throw new IOException("Malformed Status object");
     }
 
     @JsonObject
