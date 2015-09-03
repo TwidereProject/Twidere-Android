@@ -503,7 +503,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 break;
             }
             case LINK_ID_STATUS_FAVORITERS: {
-                setTitle(R.string.users_retweeted_this);
+                setTitle(R.string.users_favorited_this);
                 break;
             }
             case LINK_ID_STATUS_REPLIES: {
