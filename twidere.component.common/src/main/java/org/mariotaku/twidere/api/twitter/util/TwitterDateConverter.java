@@ -19,15 +19,22 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
+import android.util.Log;
+
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.util.AbsLogger;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -36,18 +43,31 @@ import java.util.concurrent.TimeUnit;
  */
 public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
 
+    private static final String[] WEEK_NAMES = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    private static final String[] MONTH_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct", "Nov", "Dec"};
+
     private static final long ONE_MINUTE = TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
+    private static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC");
+    private static final Locale LOCALE = Locale.ENGLISH;
     private final DateFormat mDateFormat;
 
     public TwitterDateConverter() {
-        mDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
+        mDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", LOCALE);
         mDateFormat.setLenient(true);
-        mDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        mDateFormat.setTimeZone(TIME_ZONE);
     }
 
     @Override
     public Date getFromString(String string) {
-        final Date date;
+        Date date = null;
+        try {
+            date = parseTwitterDate(string);
+        } catch (NumberFormatException e) {
+            Log.w("Twidere", e);
+            // Ignore
+        }
+        if (date != null) return date;
         try {
             date = mDateFormat.parse(string);
         } catch (ParseException e) {
@@ -58,6 +78,37 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         if (date.getTime() - currentTime > ONE_MINUTE) {
             AbsLogger.error("Tweet date from future, raw string: " + string + ", date parsed: "
                     + date + ", current time is " + currentTime);
+        }
+        return date;
+    }
+
+    private Date parseTwitterDate(String string) {
+        final String[] segs = StringUtils.split(string, ' ');
+        if (segs.length != 6) {
+            return null;
+        }
+        final String[] timeSegs = StringUtils.split(segs[3], ':');
+        if (timeSegs.length != 3) {
+            return null;
+        }
+
+        final GregorianCalendar calendar = new GregorianCalendar(TIME_ZONE, LOCALE);
+        calendar.clear();
+        final int monthIdx = ArrayUtils.indexOf(MONTH_NAMES, segs[1]);
+        if (monthIdx < 0) {
+            return null;
+        }
+        calendar.set(Calendar.YEAR, Integer.parseInt(segs[5]));
+        calendar.set(Calendar.MONTH, monthIdx);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(segs[2]));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSegs[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(timeSegs[1]));
+        calendar.set(Calendar.SECOND, Integer.parseInt(timeSegs[2]));
+        calendar.set(Calendar.ZONE_OFFSET, SimpleTimeZone.getTimeZone("GMT" + segs[4]).getRawOffset());
+        final Date date = calendar.getTime();
+        if (!WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals(segs[0])) {
+            AbsLogger.error("Week mismatch " + string + " => " + date);
+            return null;
         }
         return date;
     }

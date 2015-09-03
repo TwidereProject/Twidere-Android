@@ -37,6 +37,10 @@ import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import java.io.File;
 import java.io.IOException;
 
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
+
 import static android.text.TextUtils.isEmpty;
 
 public class SaveFileTask extends AsyncTask<Object, Object, File> implements Constants {
@@ -62,6 +66,43 @@ public class SaveFileTask extends AsyncTask<Object, Object, File> implements Con
         final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         final File saveDir = new File(pubDir, "Twidere");
         return new SaveFileTask(activity, source, mimeType, saveDir);
+    }
+
+    public static File saveFile(final Context context, final File source, final String mimeType, final File destination) {
+        if (context == null && source == null) return null;
+        Source ioSrc = null;
+        BufferedSink sink = null;
+        try {
+            final String name = source.getName();
+            if (isEmpty(name)) return null;
+            final MimeTypeMap map = MimeTypeMap.getSingleton();
+            final String extension = map.getExtensionFromMimeType(mimeType);
+            if (extension == null) return null;
+            final String nameToSave = getFileNameWithExtension(name, extension);
+            if (!destination.isDirectory() && !destination.mkdirs()) return null;
+            final File saveFile = new File(destination, nameToSave);
+            ioSrc = Okio.source(source);
+            sink = Okio.buffer(Okio.sink(saveFile));
+            sink.writeAll(ioSrc);
+            sink.flush();
+            if (mimeType != null) {
+                MediaScannerConnection.scanFile(context, new String[]{saveFile.getPath()},
+                        new String[]{mimeType}, null);
+            }
+            return saveFile;
+        } catch (final IOException e) {
+            Log.w(LOGTAG, "Failed to save file", e);
+            return null;
+        } finally {
+            Utils.closeSilently(sink);
+            Utils.closeSilently(ioSrc);
+        }
+    }
+
+    private static String getFileNameWithExtension(String name, String extension) {
+        int lastDotIdx = name.lastIndexOf('.');
+        if (lastDotIdx < 0) return name + "." + extension;
+        return name.substring(0, lastDotIdx) + "." + extension;
     }
 
     @Override
@@ -101,29 +142,6 @@ public class SaveFileTask extends AsyncTask<Object, Object, File> implements Con
         fragment.setCancelable(false);
         fragment.show(activity.getFragmentManager(), PROGRESS_FRAGMENT_TAG);
         super.onPreExecute();
-    }
-
-    public static File saveFile(final Context context, final File source, final String mimeType, final File destination) {
-        if (context == null && source == null) return null;
-        try {
-            final String name = source.getName();
-            if (isEmpty(name)) return null;
-            final MimeTypeMap map = MimeTypeMap.getSingleton();
-            final String extension = map.getExtensionFromMimeType(mimeType);
-            if (extension == null) return null;
-            final String nameToSave = name.contains(".") ? name : name + "." + extension;
-            if (!destination.isDirectory() && !destination.mkdirs()) return null;
-            final File saveFile = new File(destination, nameToSave);
-            FileUtils.copyFile(source, saveFile);
-            if (mimeType != null) {
-                MediaScannerConnection.scanFile(context, new String[]{saveFile.getPath()},
-                        new String[]{mimeType}, null);
-            }
-            return saveFile;
-        } catch (final IOException e) {
-            Log.w(LOGTAG, "Failed to save file", e);
-            return null;
-        }
     }
 
 }
