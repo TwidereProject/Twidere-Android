@@ -71,7 +71,6 @@ import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
@@ -108,11 +107,11 @@ import static org.mariotaku.twidere.util.Utils.trim;
 
 public class SignInActivity extends BaseAppCompatActivity implements OnClickListener, TextWatcher {
 
+    public static final String FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress";
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
     private static final String EXTRA_API_LAST_CHANGE = "api_last_change";
-    public static final String FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress";
     private static final String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
-
+    private final Handler mHandler = new Handler();
     @Nullable
     private String mAPIUrlFormat;
     private int mAuthType;
@@ -120,12 +119,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private String mUsername, mPassword;
     private long mAPIChangeTimestamp;
     private boolean mSameOAuthSigningUrl, mNoVersionSuffix;
-
     private EditText mEditUsername, mEditPassword;
     private Button mSignInButton, mSignUpButton;
     private LinearLayout mSignInSignUpContainer, mUsernamePasswordContainer;
-
-    private final Handler mHandler = new Handler();
     private SharedPreferences mPreferences;
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
@@ -162,7 +158,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             }
             case REQUEST_BROWSER_SIGN_IN: {
                 if (resultCode == BaseAppCompatActivity.RESULT_OK && data != null) {
-                    doLogin(data);
+                    doBrowserLogin(data);
                 }
                 break;
             }
@@ -374,7 +370,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         AsyncTaskUtils.executeTask(mTask);
     }
 
-    private void doLogin(final Intent intent) {
+    private void doBrowserLogin(final Intent intent) {
         if (intent == null) return;
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
             mTask.cancel(true);
@@ -589,14 +585,16 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 final String versionSuffix = noVersionSuffix ? null : "1.1";
-                Endpoint endpoint = new OAuthEndpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", null));
+                Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null,
+                        sameOauthSigningUrl);
                 final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint,
                         new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret()), TwitterOAuth.class);
                 final OAuthToken accessToken = oauth.getAccessToken(requestToken, oauthVerifier);
                 final long userId = accessToken.getUserId();
                 if (userId <= 0) return new SignInResponse(false, false, null);
                 final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-                endpoint = new OAuthEndpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
+                endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", versionSuffix,
+                        sameOauthSigningUrl);
                 final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint,
                         auth, Twitter.class);
                 final User user = twitter.verifyCredentials();
@@ -688,14 +686,14 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
 
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
-            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, sameOAuthSigningUrl);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth);
             final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
-            endpoint = TwitterAPIFactory.getRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
+            endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
             final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint,
                     auth, Twitter.class);
@@ -718,14 +716,14 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
 
         private SignInResponse authxAuth() throws TwitterException {
-            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, sameOAuthSigningUrl);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-            endpoint = TwitterAPIFactory.getRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
+            endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
             final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);

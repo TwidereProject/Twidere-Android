@@ -324,23 +324,15 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
     }
 
-    public static Endpoint getOAuthEndpoint(String apiUrlFormat, boolean sameOAuthSigningUrl) {
-        String endpointUrl, signEndpointUrl;
-        endpointUrl = getApiUrl(apiUrlFormat, "api", null);
-        if (!sameOAuthSigningUrl) {
-            signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", null);
-        } else {
-            signEndpointUrl = endpointUrl;
-        }
-        return new OAuthEndpoint(endpointUrl, signEndpointUrl);
+    public static Endpoint getOAuthRestEndpoint(String apiUrlFormat, boolean sameOAuthSigningUrl, boolean noVersionSuffix) {
+        return getOAuthEndpoint(apiUrlFormat, "api", noVersionSuffix ? null : "1.1", sameOAuthSigningUrl);
     }
 
-    public static Endpoint getRestEndpoint(String apiUrlFormat, boolean sameOAuthSigningUrl, boolean noVersionSuffix) {
-        final String versionSuffix = noVersionSuffix ? null : "1.1";
+    public static Endpoint getOAuthEndpoint(String apiUrlFormat, String domain, String versionSuffix, boolean sameOAuthSigningUrl) {
         String endpointUrl, signEndpointUrl;
-        endpointUrl = getApiUrl(apiUrlFormat, "api", versionSuffix);
+        endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
         if (!sameOAuthSigningUrl) {
-            signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", versionSuffix);
+            signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
         } else {
             signEndpointUrl = endpointUrl;
         }
