@@ -222,8 +222,11 @@ public class TwitterAPIFactory implements TwidereConstants {
                         TWITTER_CONSUMER_KEY_LEGACY : credentials.consumer_key;
                 final String consumerSecret = TextUtils.isEmpty(credentials.consumer_secret) ?
                         TWITTER_CONSUMER_SECRET_LEGACY : credentials.consumer_secret;
-                final OAuthToken accessToken = new OAuthToken(credentials.oauth_token, credentials.oauth_token_secret);
-                return new OAuthAuthorization(consumerKey, consumerSecret, accessToken);
+                final OAuthToken accessToken = new OAuthToken(credentials.oauth_token,
+                        credentials.oauth_token_secret);
+                if (isValidConsumerKeySecret(consumerKey) && isValidConsumerKeySecret(consumerSecret))
+                    return new OAuthAuthorization(consumerKey, consumerSecret, accessToken);
+                return new OAuthAuthorization(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, accessToken);
             }
             case ParcelableCredentials.AUTH_TYPE_BASIC: {
                 final String screenName = credentials.screen_name;
@@ -337,6 +340,23 @@ public class TwitterAPIFactory implements TwidereConstants {
             signEndpointUrl = endpointUrl;
         }
         return new OAuthEndpoint(endpointUrl, signEndpointUrl);
+    }
+
+    public static OAuthToken getOAuthToken(String consumerKey, String consumerSecret) {
+        if (isValidConsumerKeySecret(consumerKey) && isValidConsumerKeySecret(consumerSecret))
+            return new OAuthToken(consumerKey, consumerSecret);
+        return new OAuthToken(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+    }
+
+    public static boolean isValidConsumerKeySecret(@NonNull CharSequence text) {
+        for (int i = 0, j = text.length(); i < j; i++) {
+            if (!isAsciiLetterOrDigit(text.charAt(i))) return false;
+        }
+        return true;
+    }
+
+    private static boolean isAsciiLetterOrDigit(int codePoint) {
+        return ('A' <= codePoint && codePoint <= 'Z') || ('a' <= codePoint && codePoint <= 'z') || '0' <= codePoint && codePoint <= '9';
     }
 
     public static class TwidereRequestInfoFactory implements RequestInfoFactory {
