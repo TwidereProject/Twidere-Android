@@ -566,6 +566,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mErrorContainer.setVisibility(state == STATE_ERROR ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
+        final TweetEvent event = mStatusEvent;
+        if (event == null) return;
+        event.markEnd();
+        HotMobiLogger.getInstance(getActivity()).log(event.getAccountId(), event);
+    }
+
     private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener,
             ActionMenuView.OnMenuItemClickListener {
 
@@ -743,8 +751,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             retweetsCountView.setText(Utils.getLocalizedNumber(locale, status.retweet_count));
             favoritesCountView.setText(Utils.getLocalizedNumber(locale, status.favorite_count));
 
+            final ParcelableMedia[] media;
+            if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
+                media = status.quoted_media;
+            } else {
+                media = status.media;
+            }
 
-            if (status.media == null) {
+            if (media == null) {
                 mediaPreviewContainer.setVisibility(View.GONE);
                 mediaPreview.setVisibility(View.GONE);
                 mediaPreviewLoad.setVisibility(View.GONE);
@@ -753,7 +767,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.GONE);
-                mediaPreview.displayMedia(status.media, loader, status.account_id,
+                mediaPreview.displayMedia(media, loader, status.account_id,
                         adapter.getFragment(), adapter.getMediaLoadingHandler());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
@@ -1045,18 +1059,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mDisplayProfileImage;
         private final boolean mSensitiveContentEnabled;
         private final boolean mHideCardActions;
-
+        private final UserColorNameManager mUserColorNameManager;
         private boolean mLoadMoreSupported;
         private boolean mLoadMoreIndicatorVisible;
-
         private boolean mDetailMediaExpanded;
-
         private ParcelableStatus mStatus;
         private ParcelableCredentials mStatusAccount;
         private List<ParcelableStatus> mConversation, mReplies;
         private StatusAdapterListener mStatusAdapterListener;
-        private final UserColorNameManager mUserColorNameManager;
-
         private RecyclerView mRecyclerView;
         private DetailStatusViewHolder mStatusViewHolder;
 
@@ -1552,15 +1562,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             super.setOrientation(orientation);
         }
 
-    }
-
-
-    @Override
-    public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
-        final TweetEvent event = mStatusEvent;
-        if (event == null) return;
-        event.markEnd();
-        HotMobiLogger.getInstance(getActivity()).log(event.getAccountId(), event);
     }
 
 

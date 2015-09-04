@@ -62,7 +62,6 @@ import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereLogger;
-import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
@@ -109,7 +108,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private UserColorNameManager mUserColorNameManager;
 
-    private String mDefaultUserAgent;
     private HotMobiLogger mHotMobiLogger;
 
     @NonNull
@@ -120,10 +118,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public AsyncTaskManager getAsyncTaskManager() {
         if (mAsyncTaskManager != null) return mAsyncTaskManager;
         return mAsyncTaskManager = AsyncTaskManager.getInstance();
-    }
-
-    public String getDefaultUserAgent() {
-        return mDefaultUserAgent;
     }
 
     public DiskCache getDiskCache() {
@@ -236,7 +230,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         super.onCreate();
         initDebugMode();
         initBugReport();
-        mDefaultUserAgent = UserAgentUtils.getDefaultUserAgentString(this);
         mHandler = new Handler();
         mMessageBus = new Bus();
         initializeAsyncTask();

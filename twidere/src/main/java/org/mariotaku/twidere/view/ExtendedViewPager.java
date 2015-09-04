@@ -45,5 +45,4 @@ public class ExtendedViewPager extends ViewPager {
         if (!isEnabled()) return false;
         return super.onTouchEvent(event);
     }
-
 }
