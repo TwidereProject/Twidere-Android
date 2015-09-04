@@ -99,10 +99,10 @@ public interface UsersResources {
 
     @POST("/users/lookup.json")
     @Body(BodyType.FORM)
-    ResponseList<User> lookupUsers(@Form("id") long[] ids) throws TwitterException;
+    ResponseList<User> lookupUsers(@Form("user_id") long[] ids) throws TwitterException;
 
     @GET("/users/lookup.json")
-    ResponseList<User> lookupUsers(@Form("id") String[] screenNames) throws TwitterException;
+    ResponseList<User> lookupUsers(@Form("screen_name") String[] screenNames) throws TwitterException;
 
     @POST("/account/remove_profile_banner.json")
     @Body(BodyType.FORM)
