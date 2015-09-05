@@ -227,30 +227,6 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         }
     }
 
-    private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableStatus status) {
-        if (mEditComment.length() > 0) {
-            final Menu menu = mPopupMenu.getMenu();
-            final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
-            final MenuItem linkToQuotedStatus = menu.findItem(R.id.link_to_quoted_status);
-            final Uri statusLink;
-            final long inReplyToStatusId;
-            if (!status.is_quote || !quoteOriginalStatus.isChecked()) {
-                inReplyToStatusId = status.id;
-                statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
-            } else {
-                inReplyToStatusId = status.quoted_id;
-                statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id);
-            }
-            final String commentText = mEditComment.getText() + " " + statusLink;
-            twitter.updateStatusAsync(new long[]{status.account_id}, commentText, null, null,
-                    linkToQuotedStatus.isChecked() ? inReplyToStatusId : -1, status.is_possibly_sensitive);
-        } else if (isMyRetweet(status)) {
-            twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
-        } else {
-            twitter.retweetStatusAsync(status.account_id, status.id);
-        }
-    }
-
     public static RetweetQuoteDialogFragment show(final FragmentManager fm, final ParcelableStatus status) {
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_STATUS, status);
