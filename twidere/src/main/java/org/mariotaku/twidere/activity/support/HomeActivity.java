@@ -45,7 +45,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayoutTrojan;
-import android.support.v7.app.ThemedAppCompatDelegateFactory;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -309,6 +308,37 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
     }
 
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU: {
+                final DrawerLayout drawer = mDrawerLayout;
+                if (isDrawerOpen()) {
+                    drawer.closeDrawers();
+                } else {
+                    drawer.openDrawer(Gravity.LEFT);
+                }
+                return true;
+            }
+            case KeyEvent.KEYCODE_BACK: {
+                final DrawerLayout drawer = mDrawerLayout;
+                if (isDrawerOpen()) {
+                    drawer.closeDrawers();
+                } else {
+                    onBackPressed();
+                }
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    private boolean isDrawerOpen() {
+        final DrawerLayout drawer = mDrawerLayout;
+        if (drawer == null) return false;
+        return drawer.isDrawerOpen(GravityCompat.START) || drawer.isDrawerOpen(GravityCompat.END);
+    }
+
     /**
      * Called when the context is first created.
      */
@@ -384,31 +414,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         initUnreadCount();
         updateActionsButton();
         updateSlidingMenuTouchMode();
-        getDelegate().setKeyListener(new ThemedAppCompatDelegateFactory.KeyListener() {
-            @Override
-            public boolean onKeyDown(int keyCode, KeyEvent event) {
-                return false;
-            }
-
-            @Override
-            public boolean onKeyUp(int keyCode, KeyEvent event) {
-                // Steal MENU key event
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_MENU: {
-                        if (mDrawerLayout != null) {
-                            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                                mDrawerLayout.closeDrawers();
-                            } else {
-                                mDrawerLayout.openDrawer(GravityCompat.START);
-                            }
-                            return true;
-                        }
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
@@ -593,16 +598,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         cleanDatabasesByItemLimit(this);
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONDESTROY));
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        //TODO handle secondary drawer
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawers();
-            return;
-        }
-        super.onBackPressed();
     }
 
     @Override
