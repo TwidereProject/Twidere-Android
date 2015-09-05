@@ -18,20 +18,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-        android:defaultValue="true"
-        android:key="name_first"
-        android:title="@string/name_first"
-        app:asb_summaryOff="@string/name_first_summary_off"
-        app:asb_summaryOn="@string/name_first_summary_on">
-        <extra
-            android:name="notify_change"
-            android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
     <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
@@ -58,14 +46,6 @@
         android:key="show_absolute_time"
         android:summary="@string/show_absolute_time_summary"
         android:title="@string/show_absolute_time">
-        <extra
-            android:name="notify_change"
-            android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-        android:defaultValue="true"
-        android:key="card_animation"
-        android:title="@string/card_animation">
         <extra
             android:name="notify_change"
             android:value="true"/>

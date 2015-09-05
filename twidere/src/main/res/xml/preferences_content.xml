@@ -8,6 +8,17 @@
         android:key="category_content"
         android:title="@string/content">
 
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+            android:defaultValue="true"
+            android:key="name_first"
+            android:title="@string/name_first"
+            app:asb_summaryOff="@string/name_first_summary_off"
+            app:asb_summaryOn="@string/name_first_summary_on">
+            <extra
+                android:name="notify_change"
+                android:value="true" />
+        </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+
         <org.mariotaku.twidere.preference.SeekBarDialogPreference
             android:defaultValue="20"
             android:key="load_item_limit"

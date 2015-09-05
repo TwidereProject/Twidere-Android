@@ -70,16 +70,20 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         if (date != null) return date;
         try {
             date = mDateFormat.parse(string);
+            checkTime(string, date);
         } catch (ParseException e) {
             AbsLogger.error("Unrecognized date: " + string, e);
             return null;
         }
+        return date;
+    }
+
+    private void checkTime(String string, Date date) {
         final long currentTime = System.currentTimeMillis();
         if (date.getTime() - currentTime > ONE_MINUTE) {
             AbsLogger.error("Tweet date from future, raw string: " + string + ", date parsed: "
                     + date + ", current time is " + currentTime);
         }
-        return date;
     }
 
     private Date parseTwitterDate(String string) {
@@ -110,6 +114,7 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
             AbsLogger.error("Week mismatch " + string + " => " + date);
             return null;
         }
+        checkTime(string, date);
         return date;
     }
 

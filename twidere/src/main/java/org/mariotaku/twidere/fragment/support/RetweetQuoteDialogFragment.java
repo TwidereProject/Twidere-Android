@@ -101,7 +101,9 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         final LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
-        final StatusViewHolder holder = new StatusViewHolder(new DummyStatusHolderAdapter(context), view.findViewById(R.id.item_content));
+        final DummyStatusHolderAdapter adapter = new DummyStatusHolderAdapter(context);
+        adapter.setShouldShowAccountsColor(true);
+        final StatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
 
         assert status != null;
@@ -199,6 +201,30 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final Bundle args = getArguments();
         if (!args.containsKey(EXTRA_STATUS)) return null;
         return args.getParcelable(EXTRA_STATUS);
+    }
+
+    private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableStatus status) {
+        if (mEditComment.length() > 0) {
+            final Menu menu = mPopupMenu.getMenu();
+            final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
+            final MenuItem linkToQuotedStatus = menu.findItem(R.id.link_to_quoted_status);
+            final Uri statusLink;
+            final long inReplyToStatusId;
+            if (!status.is_quote || !quoteOriginalStatus.isChecked()) {
+                inReplyToStatusId = status.id;
+                statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
+            } else {
+                inReplyToStatusId = status.quoted_id;
+                statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id);
+            }
+            final String commentText = mEditComment.getText() + " " + statusLink;
+            twitter.updateStatusAsync(new long[]{status.account_id}, commentText, null, null,
+                    linkToQuotedStatus.isChecked() ? inReplyToStatusId : -1, status.is_possibly_sensitive);
+        } else if (isMyRetweet(status)) {
+            twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
+        } else {
+            twitter.retweetStatusAsync(status.account_id, status.id);
+        }
     }
 
     private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableStatus status) {
