@@ -139,6 +139,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         @Override
         public void onChange(boolean selfChange, @Nullable Uri uri) {
             final ContentResolver cr = getContentResolver();
+            if (cr == null) return;
             final Cursor c = cr.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION);
             updateAccountProviderData(c);
             c.close();

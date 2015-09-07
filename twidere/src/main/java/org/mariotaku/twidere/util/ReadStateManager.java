@@ -53,7 +53,7 @@ public class ReadStateManager implements Constants {
         if (set == null) return new StringLongPair[0];
         final StringLongPair[] pairs = new StringLongPair[set.size()];
         int count = 0;
-        for (String entry : set) {
+        for (String entry : set.toArray(new String[set.size()])) {
             try {
                 pairs[count++] = StringLongPair.valueOf(entry);
             } catch (NumberFormatException e) {

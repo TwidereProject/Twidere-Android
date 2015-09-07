@@ -154,12 +154,13 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
             triggerRefresh();
             return true;
         }
-        final RecyclerView mRecyclerView = getRecyclerView();
+        final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, layoutManager.getFocusedChild());
+        if (recyclerView == null || layoutManager == null) return false;
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.getFocusedChild());
         final int position;
-        if (focusedChild != null && focusedChild.getParent() == mRecyclerView) {
-            position = mRecyclerView.getChildLayoutPosition(focusedChild);
+        if (focusedChild != null && focusedChild.getParent() == recyclerView) {
+            position = recyclerView.getChildLayoutPosition(focusedChild);
         } else {
             return false;
         }

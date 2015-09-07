@@ -218,6 +218,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        if (isDetached() || getActivity() == null) return;
         final MenuItem item = menu.findItem(R.id.compose);
         item.setTitle(getString(R.string.tweet_hashtag, getQuery()));
     }

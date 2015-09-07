@@ -38,6 +38,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
@@ -838,11 +839,13 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
+                    final FragmentActivity activity = getActivity();
+                    if (activity == null) return;
                     final MaterialEditText editConsumerKey = (MaterialEditText) ((Dialog) dialog).findViewById(R.id.consumer_key);
                     final MaterialEditText editConsumerSecret = (MaterialEditText) ((Dialog) dialog).findViewById(R.id.consumer_secret);
                     editConsumerKey.addValidator(new ConsumerKeySecretValidator(getString(R.string.invalid_consumer_key)));
                     editConsumerSecret.addValidator(new ConsumerKeySecretValidator(getString(R.string.invalid_consumer_secret)));
-                    final SharedPreferences prefs = SharedPreferencesWrapper.getInstance(getActivity(), SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+                    final SharedPreferences prefs = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME, MODE_PRIVATE);
                     editConsumerKey.setText(prefs.getString(KEY_CONSUMER_KEY, null));
                     editConsumerSecret.setText(prefs.getString(KEY_CONSUMER_SECRET, null));
                 }

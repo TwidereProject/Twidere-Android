@@ -784,6 +784,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     private void updateRecipientInfo() {
         final FragmentActivity activity = getActivity();
+        if (activity == null) return;
         if (mRecipient != null) {
             activity.setTitle(mUserColorNameManager.getDisplayName(mRecipient,
                     mPreferences.getBoolean(KEY_NAME_FIRST), true));

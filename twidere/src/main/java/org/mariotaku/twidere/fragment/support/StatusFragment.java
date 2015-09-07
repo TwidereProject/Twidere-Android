@@ -516,9 +516,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
                                final SingleResponse<ParcelableStatus> data) {
         if (data.hasData()) {
-            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
-            final View firstChild = mLayoutManager.getChildAt(0);
-            final int top = firstChild != null ? firstChild.getTop() : 0;
+            final int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
             final ParcelableStatus status = data.getData();
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
@@ -531,7 +529,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final TweetEvent event = TweetEvent.create(getActivity(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.OPEN);
                 mStatusEvent = event;
-            } else {
+            } else if (firstVisibleItemPosition >= 0) {
+                final long itemId = mStatusAdapter.getItemId(firstVisibleItemPosition);
+                final View firstChild = mLayoutManager.getChildAt(0);
+                final int top = firstChild != null ? firstChild.getTop() : 0;
                 final int position = mStatusAdapter.findPositionById(itemId);
                 mLayoutManager.scrollToPositionWithOffset(position, top);
             }

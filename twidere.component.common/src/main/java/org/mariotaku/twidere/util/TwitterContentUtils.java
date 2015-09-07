@@ -183,7 +183,10 @@ public class TwitterContentUtils {
             for (int i = entities.length - 1; i >= 0; i--) {
                 final Matcher m = PATTERN_TWITTER_STATUS_LINK.matcher(entities[i].getExpandedUrl());
                 if (!m.matches()) continue;
-                quotes.put(Long.parseLong(m.group(3)), status);
+                final long quoteId = ParseUtils.parseLong(m.group(3), -1);
+                if (quoteId > 0) {
+                    quotes.put(quoteId, status);
+                }
                 break;
             }
         }
