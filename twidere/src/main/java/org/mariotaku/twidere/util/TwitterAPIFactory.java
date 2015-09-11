@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.webkit.URLUtil;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
 
@@ -435,7 +436,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             if (cause != null) {
                 te = new TwitterException(cause);
             } else {
-                te = new TwitterException();
+                te = TwitterConverter.parseTwitterException(response);
             }
             te.setResponse(response);
             return te;

@@ -43,24 +43,20 @@ import java.util.Locale;
 @JsonObject
 public class TwitterException extends Exception implements TwitterResponse, HttpResponseCode {
 
+    private static final long serialVersionUID = -2623309261327598087L;
     @JsonField(name = "errors")
     ErrorInfo[] errors;
-
+    boolean nested = false;
     private int statusCode = -1;
     private RateLimitStatus rateLimitStatus;
-
-    public ErrorInfo[] getErrors() {
-        return errors;
-    }
-
-    private static final long serialVersionUID = -2623309261327598087L;
-
-
-    boolean nested = false;
     private RestHttpRequest request;
     private RestHttpResponse response;
 
     public TwitterException() {
+    }
+
+    public TwitterException(RestHttpResponse response) {
+        setResponse(response);
     }
 
     public TwitterException(final Throwable cause) {
@@ -76,13 +72,39 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     public TwitterException(final String message, final Throwable cause, final int statusCode) {
         this(message, cause);
-        this.statusCode = statusCode;
+        setStatusCode(statusCode);
     }
 
     public TwitterException(final String message, final RestHttpRequest req, final RestHttpResponse res) {
         this(message);
         setResponse(res);
-        request = req;
+        setRequest(req);
+    }
+
+    public TwitterException(final String message, final Throwable cause, final RestHttpRequest req, final RestHttpResponse res) {
+        this(message, cause);
+        setResponse(res);
+        setRequest(req);
+    }
+
+    public TwitterException(final String message, final RestHttpResponse res) {
+        this(message, null, null, res);
+    }
+
+    public TwitterException(final String message, final Throwable cause, final RestHttpResponse res) {
+        this(message, cause, null, res);
+    }
+
+    public TwitterException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    private void setRequest(RestHttpRequest request) {
+        this.request = request;
+    }
+
+    public ErrorInfo[] getErrors() {
+        return errors;
     }
 
     public void setResponse(RestHttpResponse res) {
@@ -95,15 +117,6 @@ public class TwitterException extends Exception implements TwitterResponse, Http
             statusCode = -1;
         }
     }
-
-    public TwitterException(final String message, final RestHttpResponse res) {
-        this(message, null, res);
-    }
-
-    public TwitterException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
 
     /**
      * Tests if the exception is caused by rate limitation exceed
@@ -136,7 +149,6 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         if (errors == null || errors.length == 0) return -1;
         return errors[0].getCode();
     }
-
 
     public RestHttpRequest getHttpRequest() {
         return request;
@@ -214,6 +226,10 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     public int getStatusCode() {
         return statusCode;
+    }
+
+    private void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 
     /**

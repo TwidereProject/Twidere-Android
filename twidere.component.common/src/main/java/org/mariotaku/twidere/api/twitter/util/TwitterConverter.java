@@ -177,6 +177,44 @@ public class TwitterConverter implements Converter {
         registerWrapper(ScheduledStatusesList.class, ScheduledStatusesListWrapper.class);
     }
 
+    public static TwitterException parseTwitterException(RestHttpResponse resp) {
+        try {
+            final TypedData body = resp.getBody();
+            if (body == null) return new TwitterException(resp);
+            final TwitterException parse = LoganSquare.parse(body.stream(), TwitterException.class);
+            if (parse != null) return parse;
+            return new TwitterException(resp);
+        } catch (JsonParseException e) {
+            return new TwitterException("Malformed JSON Data", e, resp);
+        } catch (IOException e) {
+            return new TwitterException("IOException while throwing exception", e, resp);
+        }
+    }
+
+    private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
+        try {
+            final T parse = LoganSquare.parse(stream, cls);
+            if (TwitterException.class.isAssignableFrom(cls) && parse == null) {
+                throw new TwitterException();
+            }
+            return parse;
+        } catch (JsonParseException e) {
+            throw new TwitterException("Malformed JSON Data", resp);
+        }
+    }
+
+    private static <T> List<T> parseListOrThrow(RestHttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
+        try {
+            return LoganSquare.parseList(stream, elementCls);
+        } catch (JsonParseException e) {
+            throw new TwitterException("Malformed JSON Data", resp);
+        }
+    }
+
+    private static <T> void registerWrapper(Class<T> cls, Class<? extends Wrapper<? extends T>> wrapperCls) {
+        wrapperMap.put(cls, wrapperCls);
+    }
+
     @Override
     public Object convert(RestHttpResponse response, Type type) throws Exception {
         final TypedData body = response.getBody();
@@ -237,34 +275,10 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
-        try {
-            final T parse = LoganSquare.parse(stream, cls);
-            if (TwitterException.class.isAssignableFrom(cls) && parse == null) {
-                throw new TwitterException();
-            }
-            return parse;
-        } catch (JsonParseException e) {
-            throw new TwitterException("Malformed JSON Data", resp);
-        }
-    }
-
-    private static <T> List<T> parseListOrThrow(RestHttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
-        try {
-            return LoganSquare.parseList(stream, elementCls);
-        } catch (JsonParseException e) {
-            throw new TwitterException("Malformed JSON Data", resp);
-        }
-    }
-
     private void checkResponse(Class<?> cls, Object object, RestHttpResponse response) throws TwitterException {
         if (User.class.isAssignableFrom(cls)) {
             if (object == null) throw new TwitterException("User is null");
         }
-    }
-
-    private static <T> void registerWrapper(Class<T> cls, Class<? extends Wrapper<? extends T>> wrapperCls) {
-        wrapperMap.put(cls, wrapperCls);
     }
 
     private static class EnumConverter<T extends Enum<T>> implements TypeConverter<T> {
@@ -272,6 +286,10 @@ public class TwitterConverter implements Converter {
 
         EnumConverter(Class<T> cls) {
             this.cls = cls;
+        }
+
+        public static <T extends Enum<T>> EnumConverter<T> get(Class<T> cls) {
+            return new EnumConverter<>(cls);
         }
 
         @SuppressWarnings({"unchecked", "TryWithIdenticalCatches"})
@@ -292,10 +310,6 @@ public class TwitterConverter implements Converter {
         @Override
         public void serialize(T object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) {
             throw new UnsupportedOperationException();
-        }
-
-        public static <T extends Enum<T>> EnumConverter<T> get(Class<T> cls) {
-            return new EnumConverter<>(cls);
         }
     }
 

@@ -17,6 +17,8 @@
     <string name="error_twitter_131">Twitter\'s server may temporarily down, please try later.</string>
     <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
     <string name="error_twitter_135">Please check your system clock.</string>
+    <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
+    <string name="error_twitter_136">You\'ve been blocked by this user.</string>
     <string name="error_twitter_139">You\'ve already favorited this tweet.</string>
     <string name="error_twitter_161">You\'ve already requested to follow this user.</string>
     <!-- 172 You have been blocked from following this account at the request of the user. -->
