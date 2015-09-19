@@ -120,7 +120,27 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
 
     @Override
     public String convertToString(Date date) {
-        return mDateFormat.format(date);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        final StringBuilder sb = new StringBuilder();
+        sb.append(WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+        sb.append(' ');
+        sb.append(MONTH_NAMES[calendar.get(Calendar.MONTH)]);
+        sb.append(' ');
+        sb.append(calendar.get(Calendar.DAY_OF_MONTH));
+        sb.append(' ');
+        sb.append(calendar.get(Calendar.HOUR_OF_DAY));
+        sb.append(':');
+        sb.append(calendar.get(Calendar.MINUTE));
+        sb.append(':');
+        sb.append(calendar.get(Calendar.SECOND));
+        sb.append(' ');
+        final long offset = TimeUnit.MILLISECONDS.toMinutes(calendar.get(Calendar.ZONE_OFFSET));
+        sb.append(offset > 0 ? '+' : '-');
+        sb.append(String.format(Locale.ROOT, "%02d%02d", Math.abs(offset) / 60, Math.abs(offset) % 60));
+        sb.append(' ');
+        sb.append(calendar.get(Calendar.YEAR));
+        return sb.toString();
     }
 
 }

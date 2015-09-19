@@ -26,6 +26,7 @@
     android:layout_marginLeft="@dimen/element_spacing_normal"
     android:layout_marginRight="@dimen/element_spacing_normal"
     android:layout_marginTop="@dimen/element_spacing_small"
+    android:focusable="false"
     app:cardBackgroundColor="?cardItemBackgroundColor"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp">
@@ -35,6 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
         android:orientation="horizontal"
         android:padding="@dimen/element_spacing_normal">
 

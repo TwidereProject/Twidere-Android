@@ -374,7 +374,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
-        Utils.openMediaDirectly(getActivity(), accountId, status, media, status.media, options);
+        Utils.openMediaDirectly(getActivity(), accountId, status, media, options);
         // BEGIN HotMobi
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
                 mStatusAdapter.isMediaPreviewEnabled());
@@ -752,12 +752,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             retweetsCountView.setText(Utils.getLocalizedNumber(locale, status.retweet_count));
             favoritesCountView.setText(Utils.getLocalizedNumber(locale, status.favorite_count));
 
-            final ParcelableMedia[] media;
-            if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
-                media = status.quoted_media;
-            } else {
-                media = status.media;
-            }
+            final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
 
             if (media == null) {
                 mediaPreviewContainer.setVisibility(View.GONE);

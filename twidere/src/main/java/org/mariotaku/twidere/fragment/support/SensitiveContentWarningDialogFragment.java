@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -50,7 +50,7 @@ public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFrag
                 final Bundle option = args.getBundle(EXTRA_ACTIVITY_OPTIONS);
                 final ParcelableMedia[] media = Utils.newParcelableArray(args.getParcelableArray(EXTRA_MEDIA),
                         ParcelableMedia.CREATOR);
-                openMediaDirectly(context, accountId, status, current, media, option);
+                openMediaDirectly(context, accountId, status, null, current, media, option);
                 break;
             }
         }

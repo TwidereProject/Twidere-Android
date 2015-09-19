@@ -233,7 +233,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             itemContent.drawEnd();
         }
 
-        final ParcelableMedia[] media = status.is_quote && ArrayUtils.isEmpty(status.media) ? status.quoted_media : status.media;
+        final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
 
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());

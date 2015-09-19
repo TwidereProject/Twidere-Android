@@ -23,6 +23,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
