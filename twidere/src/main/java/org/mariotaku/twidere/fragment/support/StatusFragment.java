@@ -1376,6 +1376,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public int getItemViewType(int position) {
             final int conversationCount = getConversationCount();
             if (position == getItemCount() - 1) {
+                // Space is always the last item
                 return VIEW_TYPE_SPACE;
             } else if (position < conversationCount) {
                 return mConversation != null ? VIEW_TYPE_LIST_STATUS : VIEW_TYPE_CONVERSATION_LOAD_INDICATOR;

@@ -4,15 +4,16 @@ from __future__ import print_function
 
 import os
 import sys
-import httplib
-import urllib
-import urlparse
+import urllib2
 import json
 import fnmatch
-import re
+import magic
+import uritemplate
+import string
 from os import getenv
 from subprocess import check_output
 from subprocess import CalledProcessError
+from urllib2 import HTTPError
 
 __author__ = 'mariotaku'
 git_https_url_prefix = 'https://github.com/'
@@ -46,6 +47,9 @@ if not user_repo_name:
 if user_repo_name.endswith(git_file_suffix):
     user_repo_name = user_repo_name[:-len(git_file_suffix)]
 
+github_user_name = string.split(user_repo_name, '/')[0]
+github_repo_name = string.split(user_repo_name, '/')[1]
+
 current_tag = None
 current_tag_body = None
 try:
@@ -68,54 +72,67 @@ if not github_access_token:
 
 github_authorization_header = "token %s" % github_access_token
 
-print('Creating release for tag %s' % current_tag)
-
 req_headers = {'Accept': github_header_accept}
 
-conn = httplib.HTTPSConnection('api.github.com')
-conn.request('POST', '/repos/%s/releases' % user_repo_name,
-             body=json.dumps({
-                 'tag_name': current_tag,
-                 'name': "Version %s" % current_tag,
-                 'body': current_tag_body
-             }),
-             headers={
-                 'Accept': github_header_accept,
-                 'Authorization': github_authorization_header,
-                 'Content-Type': 'application/json',
-                 'User-Agent': github_header_user_agent
-             })
-response = conn.getresponse()
-if response.status == 422:
-    conn = httplib.HTTPSConnection('api.github.com')
-    conn.request('GET', '/repos/%s/releases/tags/%s' % (user_repo_name, current_tag),
-                 headers={
-                     'Accept': github_header_accept,
-                     'Authorization': github_authorization_header,
-                     'User-Agent': github_header_user_agent
-                 })
-    response = conn.getresponse()
+request = urllib2.Request(
+    uritemplate.expand('https://api.github.com/repos/{user}/{repo}/releases/tags/{tag}',
+                       {'user': github_user_name, 'repo': github_repo_name, 'tag': current_tag}),
+    headers={
+        'Accept': github_header_accept,
+        'Authorization': github_authorization_header,
+        'User-Agent': github_header_user_agent
+    })
+response = None
+try:
+    response = urllib2.urlopen(request)
+except HTTPError, err:
+    print(err.code)
+    if err.code == 404:
+        print('Creating release for tag %s' % current_tag)
+        request = urllib2.Request(
+            uritemplate.expand('https://api.github.com/repos/{user}/{repo}/releases',
+                               {'user': github_user_name, 'repo': github_repo_name}),
+            data=json.dumps({
+                'tag_name': current_tag,
+                'name': "Version %s" % current_tag,
+                'body': current_tag_body
+            }),
+            headers={
+                'Accept': github_header_accept,
+                'Authorization': github_authorization_header,
+                'Content-Type': 'application/json',
+                'User-Agent': github_header_user_agent
+            })
+        try:
+            response = urllib2.urlopen(request)
+        except HTTPError:
+            print('Unable to create release, abort', file=sys.stderr)
+            exit(0)
+    else:
+        response = None
 
-if response.status not in range(200, 204):
-    print('Unable to create or get release, abort', file=sys.stderr)
+if not response:
+    print('Unable to get release, abort', file=sys.stderr)
     exit(0)
 
 response_values = json.loads(response.read())
 
-upload_url = urlparse.urlparse(re.sub('\{\?([\w\d_\-]+)\}', '', response_values['upload_url']))
 for root, dirnames, filenames in os.walk(os.getcwd()):
     for filename in fnmatch.filter(filenames, '*-release.apk'):
-        conn = httplib.HTTPSConnection(upload_url.hostname)
-        conn.request('POST', "%s?%s" % (upload_url.path, urllib.urlencode({'name': filename})),
-                     body=open(os.path.join(root, filename), 'r'),
-                     headers={
-                         'Accept': github_header_accept,
-                         'Authorization': github_authorization_header,
-                         'Content-Type': 'application/json',
-                         'User-Agent': github_header_user_agent
-                     })
-        response = conn.getresponse()
-        if response.status in range(200, 204):
-            print("Upload %s success" % filename)
-        else:
-            print("Upload %s returned %d" % (filename, response.status), file=sys.stderr)
+        file_path = os.path.join(root, filename)
+        request = urllib2.Request(
+            uritemplate.expand(response_values['upload_url'], {'name': filename}),
+            data=open(file_path, 'rb'),
+            headers={
+                'Accept': github_header_accept,
+                'Authorization': github_authorization_header,
+                'Content-Type': magic.from_file(file_path, mime=True),
+                'Content-Length': os.path.getsize(file_path),
+                'User-Agent': github_header_user_agent
+            })
+        print("Uploading %s ..." % filename),
+        try:
+            response = urllib2.urlopen(request)
+            print("OK")
+        except HTTPError, err:
+            print("Error %d" % err.code)
