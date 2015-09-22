@@ -3471,13 +3471,13 @@ public final class Utils implements Constants {
         final String message;
         if (te != null) {
             if (action != null) {
-                if (te.exceededRateLimitation()) {
-                    final RateLimitStatus status = te.getRateLimitStatus();
-                    final long sec_until_reset = status.getSecondsUntilReset() * 1000;
-                    final String next_reset_time = ParseUtils.parseString(getRelativeTimeSpanString(System
-                            .currentTimeMillis() + sec_until_reset));
+                final RateLimitStatus status = te.getRateLimitStatus();
+                if (te.exceededRateLimitation() && status != null) {
+                    final long secUntilReset = status.getSecondsUntilReset() * 1000;
+                    final String nextResetTime = ParseUtils.parseString(getRelativeTimeSpanString(System
+                            .currentTimeMillis() + secUntilReset));
                     message = context.getString(R.string.error_message_rate_limit_with_action, action,
-                            next_reset_time.trim());
+                            nextResetTime.trim());
                 } else if (isErrorCodeMessageSupported(te)) {
                     final String msg = StatusCodeMessageUtils
                             .getMessage(context, te.getStatusCode(), te.getErrorCode());

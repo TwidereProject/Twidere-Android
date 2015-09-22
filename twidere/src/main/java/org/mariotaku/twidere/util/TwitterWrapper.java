@@ -128,6 +128,10 @@ public class TwitterWrapper implements Constants {
             throw new IllegalArgumentException();
         final Paging paging = new Paging();
         paging.count(1);
+        for (final User user : twitter.searchUsers(searchScreenName, paging)) {
+            if (user.getId() == id || searchScreenName.equalsIgnoreCase(user.getScreenName()))
+                return user;
+        }
         if (id != -1) {
             final ResponseList<Status> timeline = twitter.getUserTimeline(id, paging);
             for (final Status status : timeline) {
@@ -141,10 +145,6 @@ public class TwitterWrapper implements Constants {
                 if (searchScreenName.equalsIgnoreCase(user.getScreenName()))
                     return user;
             }
-        }
-        for (final User user : twitter.searchUsers(searchScreenName, paging)) {
-            if (user.getId() == id || searchScreenName.equalsIgnoreCase(user.getScreenName()))
-                return user;
         }
         throw new TwitterException("can't find user");
     }
