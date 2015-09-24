@@ -134,6 +134,13 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                     handledIntent.putExtra(Intent.EXTRA_TEXT, Utils.getShareStatus(this, text, url));
                     return Pair.create(handledIntent, true);
                 }
+                case "search": {
+                    final Uri.Builder builder = new Uri.Builder();
+                    builder.scheme(SCHEME_TWIDERE);
+                    builder.authority(AUTHORITY_SEARCH);
+                    builder.appendQueryParameter(QUERY_PARAM_QUERY, uri.getQueryParameter("q"));
+                    return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
+                }
                 case "following": {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);

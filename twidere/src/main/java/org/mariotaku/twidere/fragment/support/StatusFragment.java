@@ -95,6 +95,7 @@ import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -165,6 +166,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
         @Override
         public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
+            mStatusAdapter.setRepliesLoading(true);
             mStatusAdapter.updateItemDecoration();
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
@@ -180,6 +182,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
+            mStatusAdapter.setRepliesLoading(false);
             mStatusAdapter.updateItemDecoration();
             final Pair<Long, Integer> readPosition = saveReadPosition();
             setReplies(data);
@@ -969,7 +972,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            fragment.getAdapter().setConversationsLoading(true);
+        }
+
+        @Override
         protected void onPostExecute(final ListResponse<ParcelableStatus> data) {
+            fragment.getAdapter().setConversationsLoading(false);
             if (data.hasData()) {
                 fragment.setConversation(data.getData());
             } else {
@@ -1043,6 +1053,18 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final MediaLoadingHandler mMediaLoadingHandler;
         private final TwidereLinkify mTwidereLinkify;
 
+        private static final int ITEM_IDX_CONVERSATION_ERROR = 0;
+        private static final int ITEM_IDX_CONVERSATION_LOAD_MORE = 1;
+        private static final int ITEM_IDX_CONVERSATION = 2;
+        private static final int ITEM_IDX_STATUS = 3;
+        private static final int ITEM_IDX_REPLY = 4;
+        private static final int ITEM_IDX_REPLY_LOAD_MORE = 5;
+        private static final int ITEM_IDX_REPLY_ERROR = 6;
+        private static final int ITEM_IDX_SPACE = 7;
+        private static final int ITEM_TYPES_SUM = 8;
+
+        private final int[] mItemCounts;
+
         private final boolean mNameFirst;
         private final int mCardLayoutResource;
         private final int mTextSize;
@@ -1072,6 +1094,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final Resources res = context.getResources();
             final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                     SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            mItemCounts = new int[ITEM_TYPES_SUM];
+            // There's always a space at the end of the list
+            mItemCounts[ITEM_IDX_SPACE] = 1;
             mFragment = fragment;
             mContext = context;
             mInflater = LayoutInflater.from(context);
@@ -1102,6 +1127,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mConversation = new ArrayList<>();
             }
             mConversation.add(position, status);
+            mItemCounts[ITEM_IDX_CONVERSATION] = mConversation.size();
             notifyDataSetChanged();
             updateItemDecoration();
         }
@@ -1162,16 +1188,24 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public ParcelableStatus getStatus(int position) {
-            final int conversationCount = getConversationCount();
-            if (position == getItemCount() - 1) {
-                return null;
-            } else if (position < conversationCount) {
-                return mConversation != null ? mConversation.get(position) : null;
-            } else if (position > conversationCount) {
-                return mReplies != null ? mReplies.get(position - conversationCount - 1) : null;
-            } else {
-                return mStatus;
+            final int itemStart = getItemTypeStart(position);
+            final int itemType = getItemType(position);
+            return getStatusByItemType(position, itemStart, itemType);
+        }
+
+        private ParcelableStatus getStatusByItemType(int position, int itemStart, int itemType) {
+            switch (itemType) {
+                case ITEM_IDX_CONVERSATION: {
+                    return mConversation != null ? mConversation.get(position - itemStart) : null;
+                }
+                case ITEM_IDX_REPLY: {
+                    return mReplies != null ? mReplies.get(position - itemStart) : null;
+                }
+                case ITEM_IDX_STATUS: {
+                    return mStatus;
+                }
             }
+            return null;
         }
 
         @Override
@@ -1182,7 +1216,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public int getStatusesCount() {
-            return getConversationCount() + 1 + getRepliesCount() + 1;
+            return mItemCounts[ITEM_IDX_CONVERSATION] + mItemCounts[ITEM_IDX_STATUS] + mItemCounts[ITEM_IDX_REPLY];
         }
 
         @Override
@@ -1354,7 +1388,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            switch (getItemViewType(position)) {
+            final int itemType = getItemType(position);
+            final int itemViewType = getItemViewTypeByItemType(itemType);
+            switch (itemViewType) {
                 case VIEW_TYPE_DETAIL_STATUS: {
                     final ParcelableStatus status = getStatus(position);
                     final DetailStatusViewHolder detailHolder = (DetailStatusViewHolder) holder;
@@ -1366,7 +1402,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     final StatusViewHolder statusHolder = (StatusViewHolder) holder;
                     // Display 'in reply to' for first item
                     // useful to indicate whether first tweet has reply or not
-                    statusHolder.displayStatus(status, position == 0);
+                    // We only display that indicator for first conversation item
+                    statusHolder.displayStatus(status, itemType == ITEM_IDX_CONVERSATION
+                            && (position - getItemTypeStart(position)) == 0);
                     break;
                 }
             }
@@ -1374,36 +1412,58 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public int getItemViewType(int position) {
-            final int conversationCount = getConversationCount();
-            if (position == getItemCount() - 1) {
-                // Space is always the last item
-                return VIEW_TYPE_SPACE;
-            } else if (position < conversationCount) {
-                return mConversation != null ? VIEW_TYPE_LIST_STATUS : VIEW_TYPE_CONVERSATION_LOAD_INDICATOR;
-            } else if (position > conversationCount) {
-                return mReplies != null ? VIEW_TYPE_LIST_STATUS : VIEW_TYPE_REPLIES_LOAD_INDICATOR;
-            } else {
-                return VIEW_TYPE_DETAIL_STATUS;
+            return getItemViewTypeByItemType(getItemType(position));
+        }
+
+        private int getItemViewTypeByItemType(int type) {
+            switch (type) {
+                case ITEM_IDX_CONVERSATION:
+                case ITEM_IDX_REPLY:
+                    return VIEW_TYPE_LIST_STATUS;
+                case ITEM_IDX_CONVERSATION_LOAD_MORE:
+                    return VIEW_TYPE_CONVERSATION_LOAD_INDICATOR;
+                case ITEM_IDX_REPLY_LOAD_MORE:
+                    return VIEW_TYPE_REPLIES_LOAD_INDICATOR;
+                case ITEM_IDX_STATUS:
+                    return VIEW_TYPE_DETAIL_STATUS;
+                case ITEM_IDX_SPACE:
+                    return VIEW_TYPE_SPACE;
             }
+            throw new IllegalStateException();
+        }
+
+        private int getItemType(int position) {
+            int typeStart = 0;
+            for (int type = 0; type < ITEM_TYPES_SUM; type++) {
+                int typeCount = mItemCounts[type];
+                final int typeEnd = typeStart + typeCount;
+                if (position >= typeStart && position < typeEnd) return type;
+                typeStart = typeEnd;
+            }
+            throw new IllegalStateException();
+        }
+
+        private int getItemTypeStart(int position) {
+            int typeStart = 0;
+            for (int type = 0; type < ITEM_TYPES_SUM; type++) {
+                int typeCount = mItemCounts[type];
+                final int typeEnd = typeStart + typeCount;
+                if (position >= typeStart && position < typeEnd) return typeStart;
+                typeStart = typeEnd;
+            }
+            throw new IllegalStateException();
         }
 
         @Override
         public long getItemId(int position) {
-            final int conversationCount = getConversationCount();
-            if (position == getItemCount() - 1) {
-                return VIEW_TYPE_SPACE;
-            } else if (position < conversationCount) {
-                return mConversation != null ? mConversation.get(position).id : VIEW_TYPE_CONVERSATION_LOAD_INDICATOR;
-            } else if (position > conversationCount) {
-                return mReplies != null ? mReplies.get(position - conversationCount - 1).id : VIEW_TYPE_REPLIES_LOAD_INDICATOR;
-            } else {
-                return mStatus != null ? mStatus.id : VIEW_TYPE_DETAIL_STATUS;
-            }
+            final ParcelableStatus status = getStatus(position);
+            if (status != null) return status.id;
+            return getItemType(position) * 100 + position;
         }
 
         @Override
         public int getItemCount() {
-            return getStatusesCount();
+            return MathUtils.sum(mItemCounts);
         }
 
         @Override
@@ -1469,6 +1529,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         public void setConversation(List<ParcelableStatus> conversation) {
             mConversation = conversation;
+            mItemCounts[ITEM_IDX_CONVERSATION] = conversation != null ? conversation.size() : 0;
             notifyDataSetChanged();
             updateItemDecoration();
         }
@@ -1479,6 +1540,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         public void setReplies(List<ParcelableStatus> replies) {
             mReplies = replies;
+            mItemCounts[ITEM_IDX_REPLY] = replies != null ? replies.size() : 0;
             notifyDataSetChanged();
             updateItemDecoration();
         }
@@ -1486,6 +1548,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public boolean setStatus(final ParcelableStatus status, final ParcelableCredentials credentials) {
             final ParcelableStatus old = mStatus;
             mStatus = status;
+            mItemCounts[ITEM_IDX_STATUS] = status != null ? 1 : 0;
             mStatusAccount = credentials;
             notifyDataSetChanged();
             updateItemDecoration();
@@ -1514,6 +1577,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 decoration.setDecorationEndOffset(1);
             }
             mRecyclerView.invalidateItemDecorations();
+        }
+
+        public void setRepliesLoading(boolean loading) {
+            mItemCounts[ITEM_IDX_REPLY_LOAD_MORE] = loading ? 1 : 0;
+            notifyDataSetChanged();
+        }
+
+        public void setConversationsLoading(boolean loading) {
+            mItemCounts[ITEM_IDX_CONVERSATION_LOAD_MORE] = loading ? 1 : 0;
+            notifyDataSetChanged();
         }
     }
 

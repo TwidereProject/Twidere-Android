@@ -86,7 +86,6 @@ response = None
 try:
     response = urllib2.urlopen(request)
 except HTTPError, err:
-    print(err.code)
     if err.code == 404:
         print('Creating release for tag %s' % current_tag)
         request = urllib2.Request(
