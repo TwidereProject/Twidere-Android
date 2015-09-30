@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.internal.view.StandaloneActionMode;
@@ -38,6 +39,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.PopupWindow;
 
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 /**
@@ -120,12 +122,13 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
                     mThemed.getCurrentThemeResourceId(), mThemed.getCurrentThemeColor(),
                     mThemed.getCurrentThemeBackgroundOption(), false);
             mActionModePopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+            final int actionModeOffset = getActionModeOffset();
             mShowActionModePopup = new Runnable() {
                 @Override
                 public void run() {
                     mActionModePopup.showAtLocation(
                             mWindow.getDecorView(),
-                            Gravity.TOP | Gravity.FILL_HORIZONTAL, 0, 0);
+                            Gravity.TOP | Gravity.FILL_HORIZONTAL, 0, actionModeOffset);
                 }
             };
         }
@@ -157,6 +160,16 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
             mAppCompatCallback.onSupportActionModeStarted(mActionMode);
         }
         return mActionMode;
+    }
+
+    private int getActionModeOffset() {
+        if (mActivity instanceof IBaseFragment.SystemWindowsInsetsCallback) {
+            final Rect insets = new Rect();
+            if (((IBaseFragment.SystemWindowsInsetsCallback) mActivity).getSystemWindowsInsets(insets)) {
+                return Utils.getInsetsTopWithoutActionBarHeight(mActivity, insets.top);
+            }
+        }
+        return 0;
     }
 
     public boolean finishExisting() {

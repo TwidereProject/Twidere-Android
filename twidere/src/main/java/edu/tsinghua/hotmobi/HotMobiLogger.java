@@ -21,8 +21,10 @@ package edu.tsinghua.hotmobi;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.BatteryManager;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
@@ -40,6 +42,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import edu.tsinghua.hotmobi.model.BatteryRecord;
 import edu.tsinghua.hotmobi.model.LatLng;
 import edu.tsinghua.hotmobi.model.LinkEvent;
 import edu.tsinghua.hotmobi.model.MediaEvent;
@@ -89,6 +92,8 @@ public class HotMobiLogger {
             return "network";
         } else if (event instanceof ScrollRecord) {
             return "scroll";
+        } else if (event instanceof BatteryRecord) {
+            return "battery";
         }
         throw new UnsupportedOperationException("Unknown event type " + event);
     }
@@ -139,6 +144,18 @@ public class HotMobiLogger {
     public static long getLastUploadTime(final Context context) {
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
         return prefs.getLong(LAST_UPLOAD_TIME, -1);
+    }
+
+    public static void logPowerBroadcast(Context context, Intent intent) {
+        if (!intent.hasExtra(BatteryManager.EXTRA_LEVEL) || !intent.hasExtra(BatteryManager.EXTRA_SCALE) ||
+                !intent.hasExtra(BatteryManager.EXTRA_STATUS)) return;
+        final BatteryRecord record = new BatteryRecord();
+        record.setLevel(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) / (float)
+                intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1));
+        record.setState(intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1));
+        record.setTimestamp(System.currentTimeMillis());
+        record.setTimeOffset(TimeZone.getDefault().getRawOffset());
+        getInstance(context).log(record);
     }
 
     public void log(long accountId, final Object event) {
