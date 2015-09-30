@@ -22,6 +22,7 @@ package edu.tsinghua.hotmobi;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.BatteryManager;
@@ -146,7 +147,12 @@ public class HotMobiLogger {
         return prefs.getLong(LAST_UPLOAD_TIME, -1);
     }
 
+    public static void logPowerBroadcast(Context context) {
+        logPowerBroadcast(context, context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
+    }
+
     public static void logPowerBroadcast(Context context, Intent intent) {
+        if (intent == null) return;
         if (!intent.hasExtra(BatteryManager.EXTRA_LEVEL) || !intent.hasExtra(BatteryManager.EXTRA_SCALE) ||
                 !intent.hasExtra(BatteryManager.EXTRA_STATUS)) return;
         final BatteryRecord record = new BatteryRecord();

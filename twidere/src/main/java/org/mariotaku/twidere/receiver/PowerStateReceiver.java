@@ -22,6 +22,7 @@ package org.mariotaku.twidere.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 
@@ -29,8 +30,15 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
  * Created by mariotaku on 15/9/29.
  */
 public class PowerStateReceiver extends BroadcastReceiver {
+    private static boolean serviceReceiverStarted;
+
+    public static void setServiceReceiverStarted(boolean started) {
+        PowerStateReceiver.serviceReceiverStarted = started;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        HotMobiLogger.logPowerBroadcast(context, intent);
+        if (serviceReceiverStarted) return;
+        HotMobiLogger.logPowerBroadcast(context);
     }
 }

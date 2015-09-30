@@ -36,6 +36,7 @@ import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 
@@ -123,10 +124,19 @@ public class RefreshService extends Service implements Constants {
 
     };
 
-    private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mPowerStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            HotMobiLogger.logPowerBroadcast(context, intent);
+            switch (intent.getAction()) {
+                case Intent.ACTION_BATTERY_CHANGED: {
+                    HotMobiLogger.logPowerBroadcast(context, intent);
+                    break;
+                }
+                default: {
+                    HotMobiLogger.logPowerBroadcast(context);
+                    break;
+                }
+            }
         }
     };
 
@@ -157,18 +167,20 @@ public class RefreshService extends Service implements Constants {
         refreshFilter.addAction(BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING);
         registerReceiver(mStateReceiver, refreshFilter);
         final IntentFilter batteryFilter = new IntentFilter();
-        refreshFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
-        refreshFilter.addAction(Intent.ACTION_BATTERY_OKAY);
-        refreshFilter.addAction(Intent.ACTION_BATTERY_LOW);
-        refreshFilter.addAction(Intent.ACTION_POWER_CONNECTED);
-        refreshFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-        registerReceiver(mBatteryReceiver, batteryFilter);
+        batteryFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        batteryFilter.addAction(Intent.ACTION_BATTERY_OKAY);
+        batteryFilter.addAction(Intent.ACTION_BATTERY_LOW);
+        batteryFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+        batteryFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        registerReceiver(mPowerStateReceiver, batteryFilter);
+        PowerStateReceiver.setServiceReceiverStarted(true);
         startAutoRefresh();
     }
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mBatteryReceiver);
+        PowerStateReceiver.setServiceReceiverStarted(false);
+        unregisterReceiver(mPowerStateReceiver);
         unregisterReceiver(mStateReceiver);
         if (hasAutoRefreshAccounts(this)) {
             // Auto refresh enabled, so I will try to start service after it was
