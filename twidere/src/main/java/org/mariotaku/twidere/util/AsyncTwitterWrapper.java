@@ -72,7 +72,8 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore;
-import org.mariotaku.twidere.provider.TwidereDataStore.*;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
@@ -86,6 +87,7 @@ import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -130,8 +132,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public AsyncTwitterWrapper(final Context context) {
         mContext = context;
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        mAsyncTaskManager = app.getAsyncTaskManager();
+        mAsyncTaskManager = ApplicationModule.get(context).getAsyncTaskManager();
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         mResolver = context.getContentResolver();

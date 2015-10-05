@@ -30,6 +30,7 @@ import com.squareup.otto.Bus;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.message.VideoLoadFinishedEvent;
 
@@ -53,8 +54,8 @@ public class VideoLoader {
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mContext = context;
         mDiskCache = app.getDiskCache();
-        mImageDownloader = new TwidereImageDownloader(context, false, false);
-        mTaskManager = app.getAsyncTaskManager();
+        mImageDownloader = new TwidereImageDownloader(context, false);
+        mTaskManager = ApplicationModule.get(context).getAsyncTaskManager();
         mBus = app.getMessageBus();
     }
 

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 
@@ -38,7 +39,7 @@ public final class AsyncTaskManager {
     private static AsyncTaskManager sInstance;
 
     AsyncTaskManager() {
-        this(new Handler());
+        this(new Handler(Looper.getMainLooper()));
     }
 
     AsyncTaskManager(final Handler handler) {

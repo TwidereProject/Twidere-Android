@@ -25,14 +25,18 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ActivityTracker;
+import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.VideoLoader;
+import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
+import org.mariotaku.twidere.util.net.TwidereNetwork;
 
 import dagger.Module;
 import dagger.Provides;
@@ -46,21 +50,32 @@ public class ApplicationModule {
     private final ActivityTracker activityTracker;
     private final AsyncTwitterWrapper asyncTwitterWrapper;
     private final ReadStateManager readStateManager;
-    private final MediaLoaderWrapper mediaLoaderWrapper;
-    private final ImageLoader imageLoader;
     private final VideoLoader videoLoader;
+    private final ImageLoader imageLoader;
+    private final MediaLoaderWrapper mediaLoaderWrapper;
+    private final TwidereImageDownloader imageDownloader;
+    private final AsyncTaskManager asyncTaskManager;
+    private final Network network;
 
     public ApplicationModule(TwidereApplication application) {
         activityTracker = new ActivityTracker();
         asyncTwitterWrapper = new AsyncTwitterWrapper(application);
         readStateManager = new ReadStateManager(application);
-        imageLoader = createImageLoader(application);
+        imageDownloader = new TwidereImageDownloader(application, true);
+        imageLoader = createImageLoader(application, imageDownloader);
         videoLoader = new VideoLoader(application);
         mediaLoaderWrapper = new MediaLoaderWrapper(imageLoader, videoLoader);
+        asyncTaskManager = AsyncTaskManager.getInstance();
+        network = new TwidereNetwork(application);
     }
 
     public static ApplicationModule get(Context context) {
         return TwidereApplication.getInstance(context).getApplicationModule();
+    }
+
+    @Provides
+    public AsyncTaskManager getAsyncTaskManager() {
+        return asyncTaskManager;
     }
 
     @Provides
@@ -71,6 +86,11 @@ public class ApplicationModule {
     @Provides
     public VideoLoader getVideoLoader() {
         return videoLoader;
+    }
+
+    @Provides
+    public TwidereImageDownloader getImageDownloader() {
+        return imageDownloader;
     }
 
     @Provides
@@ -93,7 +113,7 @@ public class ApplicationModule {
         return mediaLoaderWrapper;
     }
 
-    private static ImageLoader createImageLoader(TwidereApplication application) {
+    private static ImageLoader createImageLoader(TwidereApplication application, TwidereImageDownloader imageDownloader) {
         final ImageLoader loader = ImageLoader.getInstance();
         final ImageLoaderConfiguration.Builder cb = new ImageLoaderConfiguration.Builder(application);
         cb.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -101,9 +121,14 @@ public class ApplicationModule {
         cb.tasksProcessingOrder(QueueProcessingType.LIFO);
         // cb.memoryCache(new ImageMemoryCache(40));
         cb.diskCache(application.getDiskCache());
-        cb.imageDownloader(application.getImageDownloader());
+        cb.imageDownloader(imageDownloader);
         L.writeDebugLogs(BuildConfig.DEBUG);
         loader.init(cb.build());
         return loader;
+    }
+
+    @Provides
+    public Network getNetwork() {
+        return network;
     }
 }

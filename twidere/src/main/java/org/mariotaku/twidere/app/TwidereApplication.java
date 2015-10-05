@@ -36,11 +36,6 @@ import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
-import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
@@ -52,7 +47,6 @@ import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AbsLogger;
-import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MathUtils;
@@ -61,13 +55,11 @@ import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereLogger;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
-import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
-import org.mariotaku.twidere.util.net.TwidereHostAddressResolver;
+import org.mariotaku.twidere.util.net.TwidereNetwork;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,16 +81,13 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private static final String KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized";
 
     private Handler mHandler;
-    private AsyncTaskManager mAsyncTaskManager;
     private SharedPreferences mPreferences;
     private MultiSelectManager mMultiSelectManager;
-    private TwidereImageDownloader mImageDownloader, mFullImageDownloader;
     private DiskCache mDiskCache, mFullDiskCache;
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private Network mNetwork;
     private SQLiteDatabase mDatabase;
     private Bus mMessageBus;
-    private VideoLoader mVideoLoader;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private UserColorNameManager mUserColorNameManager;
 
@@ -108,11 +97,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     @NonNull
     public static TwidereApplication getInstance(@NonNull final Context context) {
         return (TwidereApplication) context.getApplicationContext();
-    }
-
-    public AsyncTaskManager getAsyncTaskManager() {
-        if (mAsyncTaskManager != null) return mAsyncTaskManager;
-        return mAsyncTaskManager = AsyncTaskManager.getInstance();
     }
 
     public DiskCache getDiskCache() {
@@ -130,18 +114,13 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mUserColorNameManager = new UserColorNameManager(this);
     }
 
-    public ImageDownloader getFullImageDownloader() {
-        if (mFullImageDownloader != null) return mFullImageDownloader;
-        return mFullImageDownloader = new TwidereImageDownloader(this, true, true);
-    }
-
     public Handler getHandler() {
         return mHandler;
     }
 
     public Network getNetwork() {
         if (mNetwork != null) return mNetwork;
-        return mNetwork = new TwidereHostAddressResolver(this);
+        return mNetwork = new TwidereNetwork(this);
     }
 
     public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
@@ -153,18 +132,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             preferences.edit().putBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, true).apply();
         }
         return mKeyboardShortcutsHandler;
-    }
-
-    public ImageDownloader getImageDownloader() {
-        if (mImageDownloader != null) return mImageDownloader;
-        return mImageDownloader = new TwidereImageDownloader(this, false, true);
-    }
-
-
-    public VideoLoader getVideoLoader() {
-        if (mVideoLoader != null) return mVideoLoader;
-        final VideoLoader loader = new VideoLoader(this);
-        return mVideoLoader = loader;
     }
 
     @Nullable
@@ -286,12 +253,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     public void reloadConnectivitySettings() {
-        if (mImageDownloader != null) {
-            mImageDownloader.reloadConnectivitySettings();
-        }
-        if (mFullImageDownloader != null) {
-            mFullImageDownloader.reloadConnectivitySettings();
-        }
+        ApplicationModule.get(this).getImageDownloader().reloadConnectivitySettings();
     }
 
     private DiskCache createDiskCache(final String dirName) {

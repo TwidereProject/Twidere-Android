@@ -38,7 +38,9 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.Exif;
 import org.mariotaku.twidere.util.ImageValidator;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.AccountExtra;
+import org.mariotaku.twidere.util.imageloader.AccountFullImageExtra;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +64,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         mUri = uri;
         mListener = listener;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mDownloader = app.getFullImageDownloader();
+        mDownloader = ApplicationModule.get(context).getImageDownloader();
         mDiskCache = app.getFullDiskCache();
         final Resources res = context.getResources();
         final DisplayMetrics dm = res.getDisplayMetrics();
@@ -89,7 +91,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
             }
             try {
                 // from SD cache
-                final InputStream is = mDownloader.getStream(url, new AccountExtra(mAccountId));
+                final InputStream is = mDownloader.getStream(url, new AccountFullImageExtra(mAccountId));
                 if (is == null) return Result.nullInstance();
                 try {
                     final long length = is.available();

@@ -66,7 +66,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.loader.support.TileImageLoader;
@@ -81,7 +80,6 @@ import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.SaveFileTask;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
 
 import java.io.File;
@@ -584,8 +582,6 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             }
         }
 
-        private VideoLoader mVideoLoader;
-
         private TextureVideoView mVideoView;
         private View mVideoViewOverlay;
         private SeekBar mVideoViewProgress;
@@ -734,7 +730,6 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             setHasOptionsMenu(true);
-            mVideoLoader = TwidereApplication.getInstance(getActivity()).getVideoLoader();
 
             Handler handler = mVideoViewProgress.getHandler();
             if (handler == null) {

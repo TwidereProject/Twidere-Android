@@ -46,6 +46,7 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
+import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
@@ -59,6 +60,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected ReadStateManager mReadStateManager;
     @Inject
     protected MediaLoaderWrapper mMediaLoader;
+    @Inject
+    protected VideoLoader mVideoLoader;
 
     public BaseSupportFragment() {
 

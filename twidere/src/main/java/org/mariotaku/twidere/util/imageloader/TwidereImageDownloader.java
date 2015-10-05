@@ -71,15 +71,13 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     private final String mUserAgent;
     private Thumbor mThumbor;
     private RestHttpClient mClient;
-    private final boolean mFullImage;
     private final String mTwitterProfileImageSize;
 
-    public TwidereImageDownloader(final Context context, final boolean fullImage, final boolean useThumbor) {
+    public TwidereImageDownloader(final Context context, final boolean useThumbor) {
         super(context);
         mContext = context;
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
-        mFullImage = fullImage;
         mTwitterProfileImageSize = context.getString(R.string.profile_image_size);
         mUseThumbor = useThumbor;
         mUserAgent = UserAgentUtils.getDefaultUserAgentString(context);
@@ -109,7 +107,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     @Override
     protected InputStream getStreamFromNetwork(final String uriString, final Object extras) throws IOException {
         if (uriString == null) return null;
-        final ParcelableMedia media = MediaPreviewUtils.getAllAvailableImage(uriString, mFullImage, mClient);
+        final ParcelableMedia media = MediaPreviewUtils.getAllAvailableImage(uriString, extras instanceof FullImageExtra, mClient);
         try {
             final String mediaUrl = media != null ? media.media_url : uriString;
             if (isTwitterProfileImage(uriString)) {

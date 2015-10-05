@@ -51,7 +51,7 @@ import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-public class TwidereHostAddressResolver implements Constants, Network {
+public class TwidereNetwork implements Constants, Network {
 
     private static final String RESOLVER_LOGTAG = "Twidere.Host";
 
@@ -64,7 +64,7 @@ public class TwidereHostAddressResolver implements Constants, Network {
 
     private Resolver mDns;
 
-    public TwidereHostAddressResolver(final Context context) {
+    public TwidereNetwork(final Context context) {
         mHostMapping = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String address = mPreferences.getString(KEY_DNS_SERVER, DEFAULT_DNS_SERVER_ADDRESS);

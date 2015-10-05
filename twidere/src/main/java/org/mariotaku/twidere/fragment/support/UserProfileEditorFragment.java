@@ -56,7 +56,6 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -71,6 +70,7 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
@@ -221,8 +221,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        final TwidereApplication application = TwidereApplication.getInstance(getActivity());
-        mAsyncTaskManager = application.getAsyncTaskManager();
+        mAsyncTaskManager = ApplicationModule.get(getContext()).getAsyncTaskManager();
         final Bundle args = getArguments();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         mAccountId = accountId;
