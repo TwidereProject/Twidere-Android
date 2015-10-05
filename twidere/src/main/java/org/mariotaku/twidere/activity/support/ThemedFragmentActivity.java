@@ -35,6 +35,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -54,6 +55,8 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    protected ActivityTracker mActivityTracker;
 
     // Data fields
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
@@ -193,5 +196,17 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
 
     protected boolean shouldApplyWindowBackground() {
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mActivityTracker.dispatchStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        mActivityTracker.dispatchStop(this);
+        super.onStop();
     }
 }

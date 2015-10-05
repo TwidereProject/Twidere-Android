@@ -33,6 +33,17 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 @ParcelablePlease
 @JsonObject
 public class LatLng implements Parcelable {
+    public static final Creator<LatLng> CREATOR = new Creator<LatLng>() {
+        @Override
+        public LatLng createFromParcel(Parcel in) {
+            return new LatLng(in);
+        }
+
+        @Override
+        public LatLng[] newArray(int size) {
+            return new LatLng[size];
+        }
+    };
     @ParcelableThisPlease
     @JsonField(name = "latitude")
     double latitude;
@@ -51,18 +62,6 @@ public class LatLng implements Parcelable {
     protected LatLng(Parcel in) {
         LatLngParcelablePlease.readFromParcel(this, in);
     }
-
-    public static final Creator<LatLng> CREATOR = new Creator<LatLng>() {
-        @Override
-        public LatLng createFromParcel(Parcel in) {
-            return new LatLng(in);
-        }
-
-        @Override
-        public LatLng[] newArray(int size) {
-            return new LatLng[size];
-        }
-    };
 
     public double getLatitude() {
         return latitude;
@@ -88,5 +87,13 @@ public class LatLng implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         LatLngParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    @Override
+    public String toString() {
+        return "LatLng{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

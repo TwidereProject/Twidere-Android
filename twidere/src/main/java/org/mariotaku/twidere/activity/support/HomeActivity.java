@@ -165,7 +165,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     private ControlBarShowHideHelper mControlBarShowHideHelper = new ControlBarShowHideHelper(this);
     private int mTabColumns;
     private View mActionBarContainer;
-    private SessionEvent mSessionEvent;
 
     public void closeAccountsDrawer() {
         if (mDrawerLayout == null) return;
@@ -429,9 +428,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             startService(new Intent(this, StreamingService.class));
         }
 
-        if (savedInstanceState != null) {
-            mSessionEvent = savedInstanceState.getParcelable(EXTRA_SESSION_EVENT);
-        }
     }
 
     @Override
@@ -444,11 +440,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
         assert bus != null;
         bus.register(this);
-        // BEGIN HotMobi
-        if (mSessionEvent == null) {
-            mSessionEvent = SessionEvent.create(this);
-        }
-        // END HotMobi
+
         mReadStateManager.registerOnSharedPreferenceChangeListener(mReadStateChangeListener);
         updateUnreadCount();
     }
@@ -481,14 +473,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).apply();
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONSTOP));
 
-        // BEGIN HotMobi
-        final SessionEvent event = mSessionEvent;
-        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        if (event != null && isFinishing()) {
-            event.markEnd();
-            HotMobiLogger.getInstance(this).log(event);
-        }
-        // END HotMobi
         super.onStop();
     }
 
@@ -502,7 +486,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(EXTRA_SESSION_EVENT, mSessionEvent);
     }
 
     @Subscribe

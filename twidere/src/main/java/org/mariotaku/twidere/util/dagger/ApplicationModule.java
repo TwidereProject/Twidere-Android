@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.util.dagger;
 
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.util.ActivityStack;
+import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
 
@@ -33,19 +33,19 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    private final ActivityStack activityStack;
+    private final ActivityTracker activityTracker;
     private final AsyncTwitterWrapper asyncTwitterWrapper;
     private final ReadStateManager readStateManager;
 
     public ApplicationModule(TwidereApplication application) {
-        activityStack = new ActivityStack();
+        activityTracker = new ActivityTracker();
         asyncTwitterWrapper = new AsyncTwitterWrapper(application);
         readStateManager = new ReadStateManager(application);
     }
 
     @Provides
-    ActivityStack provideActivityStack() {
-        return activityStack;
+    ActivityTracker provideActivityStack() {
+        return activityTracker;
     }
 
     @Provides
@@ -58,8 +58,8 @@ public class ApplicationModule {
         return readStateManager;
     }
 
-    public ActivityStack getActivityStack() {
-        return activityStack;
+    public ActivityTracker getActivityTracker() {
+        return activityTracker;
     }
 
     public AsyncTwitterWrapper getAsyncTwitterWrapper() {

@@ -30,6 +30,12 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 public enum TweetType {
     TEXT("text"), PHOTO("photo"), VIDEO("video"), OTHER("other");
 
+    private final String value;
+
+    TweetType(String value) {
+        this.value = value;
+    }
+
     public static TweetType getTweetType(ParcelableStatus status) {
         if (status.media != null) {
             boolean hasImage = false;
@@ -52,16 +58,6 @@ public enum TweetType {
         return TEXT;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    private final String value;
-
-    TweetType(String value) {
-        this.value = value;
-    }
-
     public static TweetType parse(String type) {
         if (TEXT.value.equalsIgnoreCase(type)) {
             return TEXT;
@@ -71,6 +67,10 @@ public enum TweetType {
             return VIDEO;
         }
         return OTHER;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public static class TweetTypeConverter extends StringBasedTypeConverter<TweetType> {

@@ -34,6 +34,17 @@ import edu.tsinghua.hotmobi.TypeMappingUtil;
 @JsonObject
 public class LinkEvent extends BaseEvent implements Parcelable {
 
+    public static final Creator<LinkEvent> CREATOR = new Creator<LinkEvent>() {
+        @Override
+        public LinkEvent createFromParcel(Parcel in) {
+            return new LinkEvent(in);
+        }
+
+        @Override
+        public LinkEvent[] newArray(int size) {
+            return new LinkEvent[size];
+        }
+    };
     @JsonField(name = "link")
     String link;
     @JsonField(name = "type")
@@ -49,6 +60,14 @@ public class LinkEvent extends BaseEvent implements Parcelable {
         type = in.readString();
     }
 
+    public static LinkEvent create(Context context, String link, int typeInt) {
+        final LinkEvent event = new LinkEvent();
+        event.markStart(context);
+        event.setLink(link);
+        event.setType(TypeMappingUtil.getLinkType(typeInt));
+        return event;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -61,18 +80,6 @@ public class LinkEvent extends BaseEvent implements Parcelable {
         return 0;
     }
 
-    public static final Creator<LinkEvent> CREATOR = new Creator<LinkEvent>() {
-        @Override
-        public LinkEvent createFromParcel(Parcel in) {
-            return new LinkEvent(in);
-        }
-
-        @Override
-        public LinkEvent[] newArray(int size) {
-            return new LinkEvent[size];
-        }
-    };
-
     public void setLink(String link) {
         this.link = link;
     }
@@ -81,11 +88,11 @@ public class LinkEvent extends BaseEvent implements Parcelable {
         this.type = type;
     }
 
-    public static LinkEvent create(Context context, String link, int typeInt) {
-        final LinkEvent event = new LinkEvent();
-        event.markStart(context);
-        event.setLink(link);
-        event.setType(TypeMappingUtil.getLinkType(typeInt));
-        return event;
+    @Override
+    public String toString() {
+        return "LinkEvent{" +
+                "link='" + link + '\'' +
+                ", type='" + type + '\'' +
+                "} " + super.toString();
     }
 }

@@ -99,5 +99,16 @@ public class MediaEvent extends BaseEvent {
         this.timelineType = timelineType;
     }
 
-
+    @Override
+    public String toString() {
+        return "MediaEvent{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", tweetType=" + tweetType +
+                ", timelineType=" + timelineType +
+                ", previewUrl='" + previewUrl + '\'' +
+                ", mediaUrl='" + mediaUrl + '\'' +
+                ", previewEnabled=" + previewEnabled +
+                "} " + super.toString();
+    }
 }

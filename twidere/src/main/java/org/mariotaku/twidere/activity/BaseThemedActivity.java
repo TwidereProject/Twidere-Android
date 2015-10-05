@@ -26,10 +26,15 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.ShapedImageView;
+
+import javax.inject.Inject;
 
 public abstract class BaseThemedActivity extends Activity implements IThemedActivity {
 
@@ -39,6 +44,20 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     private String mCurrentThemeFontFamily;
     private String mCurrentThemeBackgroundOption;
     private int mProfileImageStyle;
+    @Inject
+    protected ActivityTracker mActivityTracker;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mActivityTracker.dispatchStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        mActivityTracker.dispatchStop(this);
+        super.onStop();
+    }
 
     @Override
     public String getCurrentThemeFontFamily() {
@@ -100,6 +119,7 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
             StrictModeUtils.detectAllThreadPolicy();
         }
         super.onCreate(savedInstanceState);
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         setActionBarBackground();
     }
 

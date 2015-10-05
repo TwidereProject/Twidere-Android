@@ -32,7 +32,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
-import org.mariotaku.twidere.util.ActivityStack;
+import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -53,7 +53,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     // Utility classes
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     @Inject
-    protected ActivityStack mActivityStack;
+    protected ActivityTracker mActivityTracker;
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
     @Inject
@@ -157,7 +157,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onStart() {
         super.onStart();
-        mActivityStack.dispatchStart(this);
+        mActivityTracker.dispatchStart(this);
         mIsVisible = true;
     }
 
@@ -186,7 +186,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onStop() {
         mIsVisible = false;
-        mActivityStack.dispatchStop(this);
+        mActivityTracker.dispatchStop(this);
         super.onStop();
     }
 

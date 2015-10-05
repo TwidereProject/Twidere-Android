@@ -29,6 +29,11 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.twidere.model.AccountPreferences;
+import org.mariotaku.twidere.util.Utils;
+
+import java.util.HashMap;
+
 /**
  * Created by mariotaku on 15/8/8.
  */
@@ -51,6 +56,9 @@ public class SessionEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "configuration")
     String configuration;
+    @ParcelableThisPlease
+    @JsonField(name = "preferences")
+    HashMap<String, String> preferences;
 
     protected SessionEvent(Parcel in) {
         super(in);
@@ -70,10 +78,40 @@ public class SessionEvent extends BaseEvent implements Parcelable {
         return event;
     }
 
+    public String getConfiguration() {
+        return configuration;
+    }
+
+    public HashMap<String, String> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(HashMap<String, String> preferences) {
+        this.preferences = preferences;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         SessionEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public void dumpPreferences(Context context) {
+        final HashMap<String, String> preferences = new HashMap<>();
+        for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, Utils.getAccountIds(context))) {
+            final long accountId = pref.getAccountId();
+            preferences.put("notification_" + accountId + "_home", String.valueOf(pref.isHomeTimelineNotificationEnabled()));
+            preferences.put("notification_" + accountId + "_interactions", String.valueOf(pref.isMentionsNotificationEnabled()));
+        }
+        setPreferences(preferences);
+    }
+
+    @Override
+    public String toString() {
+        return "SessionEvent{" +
+                "configuration='" + configuration + '\'' +
+                ", preferences=" + preferences +
+                "} " + super.toString();
     }
 
     @Override

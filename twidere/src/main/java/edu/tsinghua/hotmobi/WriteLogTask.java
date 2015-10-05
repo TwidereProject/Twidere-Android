@@ -25,6 +25,7 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.Utils;
 
@@ -71,6 +72,13 @@ public class WriteLogTask implements Runnable, Constants {
             fc = raf.getChannel();
             final FileLock lock = fc.lock();
             for (Object event : events) {
+                if (BuildConfig.DEBUG) {
+                    if (accountId > 0) {
+                        Log.v(HotMobiLogger.LOGTAG, "Log " + type + " for account " + accountId + ": " + event);
+                    } else {
+                        Log.v(HotMobiLogger.LOGTAG, "Log " + type + ": " + event);
+                    }
+                }
                 final byte[] bytes = LoganSquare.serialize(event).getBytes("UTF-8");
                 final long start = raf.length();
                 final ByteBuffer bb;

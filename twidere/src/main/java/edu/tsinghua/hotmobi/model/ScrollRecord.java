@@ -67,4 +67,15 @@ public class ScrollRecord {
     public void setScrollState(int scrollState) {
         this.scrollState = scrollState;
     }
+
+    @Override
+    public String toString() {
+        return "ScrollRecord{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", timestamp=" + timestamp +
+                ", timeOffset=" + timeOffset +
+                ", scrollState=" + scrollState +
+                '}';
+    }
 }

@@ -54,4 +54,11 @@ public class NetworkEvent extends BaseEvent {
     public void setNetworkType(int networkType) {
         this.networkType = networkType;
     }
+
+    @Override
+    public String toString() {
+        return "NetworkEvent{" +
+                "networkType=" + networkType +
+                "} " + super.toString();
+    }
 }

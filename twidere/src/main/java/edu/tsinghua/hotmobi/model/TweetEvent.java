@@ -95,6 +95,17 @@ public class TweetEvent extends BaseEvent {
         this.accountId = accountId;
     }
 
+    @Override
+    public String toString() {
+        return "TweetEvent{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", userId=" + userId +
+                ", tweetType=" + tweetType +
+                ", timelineType=" + timelineType +
+                ", action=" + action +
+                "} " + super.toString();
+    }
 
     public enum Action {
         OPEN("open"), RETWEET("retweet"), FAVORITE("favorite"), UNFAVORITE("unfavorite"),

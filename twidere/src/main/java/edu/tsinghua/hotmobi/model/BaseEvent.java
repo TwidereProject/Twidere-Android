@@ -99,6 +99,16 @@ public class BaseEvent implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "BaseEvent{" +
+                "startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", timeOffset=" + timeOffset +
+                ", location=" + location +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

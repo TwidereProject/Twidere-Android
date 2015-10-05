@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.util.dagger.component;
 
+import org.mariotaku.twidere.activity.BasePreferenceActivity;
+import org.mariotaku.twidere.activity.BaseThemedActivity;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -39,4 +41,8 @@ public interface GeneralComponent {
     void inject(BaseSupportFragment object);
 
     void inject(MultiSelectEventHandler object);
+
+    void inject(BasePreferenceActivity object);
+
+    void inject(BaseThemedActivity object);
 }

@@ -22,21 +22,48 @@ package org.mariotaku.twidere.util;
 
 import android.app.Activity;
 
-import java.util.HashSet;
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.SessionEvent;
 
 /**
  * Created by mariotaku on 15/10/5.
  */
-public class ActivityStack {
+public class ActivityTracker {
 
-    private final HashSet<Integer> mInternalStack = new HashSet<>();
+    private final IntList mInternalStack = new ArrayIntList();
+    private SessionEvent mSessionEvent;
 
     public void dispatchStart(Activity activity) {
         mInternalStack.add(System.identityHashCode(activity));
+        // BEGIN HotMobi
+        if (mSessionEvent == null) {
+            mSessionEvent = SessionEvent.create(activity);
+        }
+        // END HotMobi
     }
 
     public void dispatchStop(Activity activity) {
-        mInternalStack.remove(System.identityHashCode(activity));
+
+        final int hashCode = System.identityHashCode(activity);
+
+        // BEGIN HotMobi
+        final SessionEvent event = mSessionEvent;
+        if (event != null && !isSwitchingInSameTask(hashCode)) {
+            event.dumpPreferences(activity);
+            event.markEnd();
+            HotMobiLogger.getInstance(activity).log(event);
+            mSessionEvent = null;
+        }
+        // END HotMobi
+
+        mInternalStack.removeElement(hashCode);
+    }
+
+    private boolean isSwitchingInSameTask(int hashCode) {
+        return mInternalStack.lastIndexOf(hashCode) < mInternalStack.size() - 1;
     }
 
     public int size() {
@@ -46,6 +73,5 @@ public class ActivityStack {
     public boolean isEmpty() {
         return mInternalStack.isEmpty();
     }
-
 
 }

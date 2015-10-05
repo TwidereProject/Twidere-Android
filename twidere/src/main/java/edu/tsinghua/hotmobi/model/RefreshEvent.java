@@ -26,6 +26,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import java.util.Arrays;
+
 /**
  * Created by mariotaku on 15/8/8.
  */
@@ -40,6 +42,14 @@ public class RefreshEvent extends BaseEvent {
     @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
     TimelineType timelineType;
 
+    public static RefreshEvent create(final Context context, long[] ids, TimelineType timelineType) {
+        final RefreshEvent event = new RefreshEvent();
+        event.markStart(context);
+        event.setIds(ids);
+        event.setTimelineType(timelineType);
+        return event;
+    }
+
     public void setIds(long[] ids) {
         this.ids = ids;
     }
@@ -48,11 +58,11 @@ public class RefreshEvent extends BaseEvent {
         this.timelineType = timelineType;
     }
 
-    public static RefreshEvent create(final Context context, long[] ids, TimelineType timelineType) {
-        final RefreshEvent event = new RefreshEvent();
-        event.markStart(context);
-        event.setIds(ids);
-        event.setTimelineType(timelineType);
-        return event;
+    @Override
+    public String toString() {
+        return "RefreshEvent{" +
+                "ids=" + Arrays.toString(ids) +
+                ", timelineType=" + timelineType +
+                "} " + super.toString();
     }
 }
