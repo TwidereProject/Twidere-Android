@@ -40,7 +40,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;

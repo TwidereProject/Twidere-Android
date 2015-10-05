@@ -17,14 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger.component;
+package org.mariotaku.twidere.util.dagger;
+
+import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.BaseThemedActivity;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
+import org.mariotaku.twidere.activity.support.ThemedFragmentActivity;
+import org.mariotaku.twidere.adapter.BaseAdapter;
 import org.mariotaku.twidere.fragment.BaseFragment;
+import org.mariotaku.twidere.fragment.BaseListFragment;
+import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
+import org.mariotaku.twidere.provider.TwidereCommandProvider;
+import org.mariotaku.twidere.provider.TwidereDataProvider;
+import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import dagger.Component;
@@ -45,4 +55,22 @@ public interface GeneralComponent {
     void inject(BasePreferenceActivity object);
 
     void inject(BaseThemedActivity object);
+
+    void inject(BaseSupportDialogFragment object);
+
+    void inject(RefreshService object);
+
+    void inject(ThemedFragmentActivity object);
+
+    void inject(TwidereCommandProvider object);
+
+    void inject(TwidereDataProvider object);
+
+    void inject(BaseListFragment object);
+
+    void inject(BaseAppCompatActivity object);
+
+    void inject(BackgroundOperationService object);
+
+    void inject(BaseAdapter<RecyclerView.ViewHolder> object);
 }

@@ -85,7 +85,7 @@ import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.component.DaggerBackgroundOperationServiceComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
 
@@ -132,7 +132,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerBackgroundOperationServiceComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         final TwidereApplication app = TwidereApplication.getInstance(this);
         mHandler = new Handler();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);

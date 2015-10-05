@@ -25,7 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
-import org.mariotaku.twidere.util.dagger.component.DaggerBaseAdapterComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import javax.inject.Inject;
 
@@ -40,7 +40,7 @@ public abstract class BaseAdapter<VH extends RecyclerView.ViewHolder> extends Re
 
     public BaseAdapter(Context context) {
         //noinspection unchecked
-        DaggerBaseAdapterComponent.builder()
+        DaggerGeneralComponent.builder()
                 .applicationModule(TwidereApplication.getModule(context))
                 .build()
                 .inject((BaseAdapter<RecyclerView.ViewHolder>) this);

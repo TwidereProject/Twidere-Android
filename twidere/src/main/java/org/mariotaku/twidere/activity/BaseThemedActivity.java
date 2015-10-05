@@ -31,7 +31,7 @@ import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.ShapedImageView;
 
 import javax.inject.Inject;

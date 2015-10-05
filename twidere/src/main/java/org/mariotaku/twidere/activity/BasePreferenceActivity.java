@@ -48,7 +48,7 @@ import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;

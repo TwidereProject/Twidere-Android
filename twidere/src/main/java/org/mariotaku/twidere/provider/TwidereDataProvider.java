@@ -109,7 +109,7 @@ import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
-import org.mariotaku.twidere.util.dagger.component.DaggerTwidereDataProviderComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 
 import java.io.File;
@@ -418,7 +418,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Override
     public boolean onCreate() {
         final Context context = getContext();
-        DaggerTwidereDataProviderComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);

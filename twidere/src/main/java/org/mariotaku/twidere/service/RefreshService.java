@@ -39,7 +39,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.dagger.component.DaggerRefreshServiceComponent;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import java.util.Arrays;
 
@@ -152,7 +152,7 @@ public class RefreshService extends Service implements Constants {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerRefreshServiceComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         final TwidereApplication app = TwidereApplication.getInstance(this);
         mPreferences = SharedPreferencesWrapper.getInstance(app, SHARED_PREFERENCES_NAME, MODE_PRIVATE);
