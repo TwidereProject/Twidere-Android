@@ -40,6 +40,8 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
+import javax.inject.Inject;
+
 public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
         IUsersAdapter<D> {
 
@@ -53,19 +55,18 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     private final boolean mCompactCards;
     private final int mProfileImageStyle;
     private final int mTextSize;
-    private final AsyncTwitterWrapper mTwitterWrapper;
     private final boolean mDisplayProfileImage;
 
     private final UserColorNameManager mUserColorNameManager;
 
     public AbsUsersAdapter(final Context context, final boolean compact) {
+        super(context);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mContext = context;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mMediaLoader = app.getMediaLoaderWrapper();
         mUserColorNameManager = app.getUserColorNameManager();
-        mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));

@@ -39,8 +39,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.dagger.component.DaggerRefreshServiceComponent;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 
@@ -59,7 +62,8 @@ public class RefreshService extends Service implements Constants {
     private SharedPreferencesWrapper mPreferences;
 
     private AlarmManager mAlarmManager;
-    private AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    AsyncTwitterWrapper mTwitterWrapper;
     private PendingIntent mPendingRefreshHomeTimelineIntent, mPendingRefreshMentionsIntent,
             mPendingRefreshDirectMessagesIntent, mPendingRefreshTrendsIntent;
 
@@ -148,9 +152,9 @@ public class RefreshService extends Service implements Constants {
     @Override
     public void onCreate() {
         super.onCreate();
+        DaggerRefreshServiceComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         final TwidereApplication app = TwidereApplication.getInstance(this);
-        mTwitterWrapper = app.getTwitterWrapper();
         mPreferences = SharedPreferencesWrapper.getInstance(app, SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mPendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, new Intent(
                 BROADCAST_REFRESH_HOME_TIMELINE), 0);

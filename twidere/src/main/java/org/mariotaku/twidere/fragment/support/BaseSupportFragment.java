@@ -45,8 +45,20 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
+import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
+
+import javax.inject.Inject;
 
 public class BaseSupportFragment extends Fragment implements IBaseFragment, Constants {
+
+    @Inject
+    protected AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    protected ReadStateManager mReadStateManager;
+
+    public BaseSupportFragment() {
+
+    }
 
     @Override
     public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -55,9 +67,12 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         requestFitSystemWindows();
     }
 
-    public BaseSupportFragment() {
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
     }
+
 
     public TwidereApplication getApplication() {
         final Activity activity = getActivity();
@@ -87,13 +102,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         return null;
     }
 
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return getApplication() != null ? getApplication().getTwitterWrapper() : null;
-    }
-
-    public ReadStateManager getReadStateManager() {
-        return getApplication() != null ? getApplication().getReadStateManager() : null;
-    }
 
     public void invalidateOptionsMenu() {
         final FragmentActivity activity = getActivity();

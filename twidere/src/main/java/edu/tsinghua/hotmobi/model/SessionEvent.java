@@ -21,19 +21,45 @@ package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 15/8/8.
  */
+@ParcelablePlease
 @JsonObject
-public class SessionEvent extends BaseEvent {
+public class SessionEvent extends BaseEvent implements Parcelable {
 
+    public static final Creator<SessionEvent> CREATOR = new Creator<SessionEvent>() {
+        @Override
+        public SessionEvent createFromParcel(Parcel in) {
+            return new SessionEvent(in);
+        }
+
+        @Override
+        public SessionEvent[] newArray(int size) {
+            return new SessionEvent[size];
+        }
+    };
+
+    @ParcelableThisPlease
     @JsonField(name = "configuration")
     String configuration;
 
+    protected SessionEvent(Parcel in) {
+        super(in);
+        SessionEventParcelablePlease.readFromParcel(this, in);
+    }
+
+    public SessionEvent() {
+
+    }
 
     public static SessionEvent create(Context context) {
         final SessionEvent event = new SessionEvent();
@@ -42,6 +68,17 @@ public class SessionEvent extends BaseEvent {
         final Configuration conf = appContext.getResources().getConfiguration();
         event.setConfiguration(conf.toString());
         return event;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        SessionEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public void setConfiguration(String configuration) {

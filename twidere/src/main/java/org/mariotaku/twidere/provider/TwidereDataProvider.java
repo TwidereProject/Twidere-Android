@@ -109,6 +109,7 @@ import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
+import org.mariotaku.twidere.util.dagger.component.DaggerTwidereDataProviderComponent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 
 import java.io.File;
@@ -121,6 +122,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.Utils.clearAccountColor;
 import static org.mariotaku.twidere.util.Utils.clearAccountName;
@@ -141,7 +144,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Nullable
     private NotificationManager mNotificationManager;
 
-    private ReadStateManager mReadStateManager;
+    @Inject
+    ReadStateManager mReadStateManager;
+    @Inject
+    AsyncTwitterWrapper mTwitterWrapper;
     private SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;
     private Network mNetwork;
@@ -165,7 +171,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     };
 
     @Override
-    public int bulkInsert(final Uri uri, @NonNull final ContentValues[] valuesArray) {
+    public int bulkInsert(@NonNull final Uri uri, @NonNull final ContentValues[] valuesArray) {
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);
@@ -223,7 +229,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
 
     @Override
-    public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
+    public int delete(@NonNull final Uri uri, final String selection, final String[] selectionArgs) {
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);
@@ -263,12 +269,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     @Override
-    public String getType(final Uri uri) {
+    public String getType(@NonNull final Uri uri) {
         return null;
     }
 
     @Override
-    public Uri insert(final Uri uri, final ContentValues values) {
+    public Uri insert(@NonNull final Uri uri, final ContentValues values) {
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);
@@ -412,6 +418,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Override
     public boolean onCreate() {
         final Context context = getContext();
+        DaggerTwidereDataProviderComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
@@ -420,7 +427,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         updatePreferences();
         mPermissionsManager = new PermissionsManager(context);
-        mReadStateManager = app.getReadStateManager();
         mImagePreloader = new ImagePreloader(context, app.getImageLoader());
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_HOME_ACTIVITY_ONSTART);
@@ -445,8 +451,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     @Override
-    public ParcelFileDescriptor openFile(final Uri uri, final String mode) throws FileNotFoundException {
-        if (uri == null || mode == null) throw new IllegalArgumentException();
+    public ParcelFileDescriptor openFile(@NonNull final Uri uri, @NonNull final String mode) throws FileNotFoundException {
         final int table_id = getTableId(uri);
         final String table = getTableNameById(table_id);
         final int mode_code;
@@ -476,7 +481,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     @Override
-    public Cursor query(final Uri uri, final String[] projection, final String selection, final String[] selectionArgs,
+    public Cursor query(@NonNull final Uri uri, final String[] projection, final String selection, final String[] selectionArgs,
                         final String sortOrder) {
         try {
             final int tableId = getTableId(uri);
@@ -566,8 +571,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return c;
                 }
                 case VIRTUAL_TABLE_ID_DRAFTS_UNSENT: {
-                    final TwidereApplication app = TwidereApplication.getInstance(getContext());
-                    final AsyncTwitterWrapper twitter = app.getTwitterWrapper();
+                    final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     final RawItemArray sendingIds = new RawItemArray(twitter.getSendingDraftIds());
                     final Expression where;
                     if (selection != null) {
@@ -592,7 +596,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     @Override
-    public int update(final Uri uri, final ContentValues values, final String selection, final String[] selectionArgs) {
+    public int update(@NonNull final Uri uri, final ContentValues values, final String selection, final String[] selectionArgs) {
         try {
             final int tableId = getTableId(uri);
             final String table = getTableNameById(tableId);

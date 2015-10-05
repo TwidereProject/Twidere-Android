@@ -52,7 +52,7 @@ public class AddUserListMemberDialogFragment extends BaseSupportDialogFragment i
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {
                 final String mText = ParseUtils.parseString(mEditText.getText());
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (mText == null || mText.length() <= 0 || twitter == null) return;
                 twitter.addUserListMembersAsync(args.getLong(EXTRA_ACCOUNT_ID), args.getLong(EXTRA_LIST_ID));
                 break;

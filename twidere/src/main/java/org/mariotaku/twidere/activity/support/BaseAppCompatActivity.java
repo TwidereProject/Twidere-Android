@@ -32,13 +32,18 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
+import org.mariotaku.twidere.util.ActivityStack;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.dagger.component.DaggerBaseAppCompatActivityComponent;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 @SuppressLint("Registered")
 public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Constants,
@@ -47,6 +52,12 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
 
     // Utility classes
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    @Inject
+    protected ActivityStack mActivityStack;
+    @Inject
+    protected AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    protected ReadStateManager mReadStateManager;
 
     // Registered listeners
     private ArrayList<ControlBarOffsetListener> mControlBarOffsetListeners = new ArrayList<>();
@@ -75,10 +86,6 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
 
     public TwidereApplication getTwidereApplication() {
         return (TwidereApplication) getApplication();
-    }
-
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return getTwidereApplication() != null ? getTwidereApplication().getTwitterWrapper() : null;
     }
 
     public boolean isVisible() {
@@ -142,6 +149,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerBaseAppCompatActivityComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 
@@ -149,6 +157,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onStart() {
         super.onStart();
+        mActivityStack.dispatchStart(this);
         mIsVisible = true;
     }
 
@@ -177,6 +186,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onStop() {
         mIsVisible = false;
+        mActivityStack.dispatchStop(this);
         super.onStop();
     }
 

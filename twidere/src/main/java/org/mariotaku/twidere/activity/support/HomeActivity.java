@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -85,7 +86,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.StreamingService;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -128,6 +128,7 @@ import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 public class HomeActivity extends BaseAppCompatActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, OnLongClickListener {
 
+    private static final String EXTRA_SESSION_EVENT = "session_event";
     private final Handler mHandler = new Handler();
 
     private final ContentObserver mAccountChangeObserver = new AccountChangeObserver(this, mHandler);
@@ -136,12 +137,10 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     private SharedPreferences mPreferences;
 
-    private AsyncTwitterWrapper mTwitterWrapper;
 
     private NotificationManager mNotificationManager;
 
     private MultiSelectEventHandler mMultiSelectHandler;
-    private ReadStateManager mReadStateManager;
 
     private SupportTabsAdapter mPagerAdapter;
 
@@ -355,9 +354,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             return;
         }
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mTwitterWrapper = getTwitterWrapper();
         final TwidereApplication app = TwidereApplication.getInstance(this);
-        mReadStateManager = app.getReadStateManager();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
@@ -431,6 +428,10 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (Utils.isStreamingEnabled()) {
             startService(new Intent(this, StreamingService.class));
         }
+
+        if (savedInstanceState != null) {
+            mSessionEvent = savedInstanceState.getParcelable(EXTRA_SESSION_EVENT);
+        }
     }
 
     @Override
@@ -444,8 +445,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         assert bus != null;
         bus.register(this);
         // BEGIN HotMobi
-        final SessionEvent event = SessionEvent.create(this);
-        mSessionEvent = event;
+        if (mSessionEvent == null) {
+            mSessionEvent = SessionEvent.create(this);
+        }
         // END HotMobi
         mReadStateManager.registerOnSharedPreferenceChangeListener(mReadStateChangeListener);
         updateUnreadCount();
@@ -481,8 +483,11 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         // BEGIN HotMobi
         final SessionEvent event = mSessionEvent;
-        event.markEnd();
-        HotMobiLogger.getInstance(this).log(event);
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        if (event != null && isFinishing()) {
+            event.markEnd();
+            HotMobiLogger.getInstance(this).log(event);
+        }
         // END HotMobi
         super.onStop();
     }
@@ -492,6 +497,12 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     public void notifyAccountsChanged() {
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(EXTRA_SESSION_EVENT, mSessionEvent);
     }
 
     @Subscribe

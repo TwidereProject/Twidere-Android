@@ -109,7 +109,7 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
     @Override
     public void onRefresh() {
         if (isRefreshing()) return;
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null) return;
         twitter.getLocalTrendsAsync(mAccountId, mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1));
     }
@@ -142,7 +142,7 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
     }
 
     protected void updateRefreshState() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null || !getUserVisibleHint()) return;
         setRefreshing(twitter.isLocalTrendsRefreshing());
     }

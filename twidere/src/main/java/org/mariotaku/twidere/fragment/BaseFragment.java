@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
@@ -31,8 +32,20 @@ import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
+
+import javax.inject.Inject;
 
 public class BaseFragment extends Fragment implements Constants {
+
+    @Inject
+    protected AsyncTwitterWrapper mTwitterWrapper;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+    }
 
     public TwidereApplication getApplication() {
         final Activity activity = getActivity();
@@ -61,11 +74,6 @@ public class BaseFragment extends Fragment implements Constants {
         final Activity activity = getActivity();
         if (activity != null) return activity.getSystemService(name);
         return null;
-    }
-
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        final TwidereApplication app = getApplication();
-        return app != null ? app.getTwitterWrapper() : null;
     }
 
     public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -29,6 +30,9 @@ import android.support.v4.app.DialogFragment;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.dagger.component.DaggerBaseSupportDialogFragmentComponent;
+
+import javax.inject.Inject;
 
 public class BaseSupportDialogFragment extends DialogFragment implements Constants {
 
@@ -60,9 +64,13 @@ public class BaseSupportDialogFragment extends DialogFragment implements Constan
         return null;
     }
 
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        final TwidereApplication app = getApplication();
-        return app != null ? app.getTwitterWrapper() : null;
+    @Inject
+    protected AsyncTwitterWrapper mTwitterWrapper;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerBaseSupportDialogFragmentComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
     }
 
     public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {

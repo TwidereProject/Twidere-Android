@@ -94,6 +94,7 @@ public class ScheduledStatusesFragment extends AbsContentRecyclerViewFragment<Sc
         private List<ScheduledStatus> mData;
 
         public ScheduledStatusesAdapter(Context context) {
+            super(context);
             mContext = context;
             mInflater = LayoutInflater.from(context);
             setLoadMoreSupported(false);

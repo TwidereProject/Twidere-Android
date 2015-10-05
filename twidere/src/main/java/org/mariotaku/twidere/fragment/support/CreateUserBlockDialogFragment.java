@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +26,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
@@ -45,7 +45,7 @@ public class CreateUserBlockDialogFragment extends BaseSupportDialogFragment imp
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 final ParcelableUser user = getUser();
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
                 twitter.createBlockAsync(user.account_id, user.id);
                 break;

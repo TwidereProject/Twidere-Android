@@ -46,7 +46,7 @@ public class DestroyFriendshipDialogFragment extends BaseSupportDialogFragment i
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 final ParcelableUser user = getUser();
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
                 twitter.destroyFriendshipAsync(user.account_id, user.id);
                 break;

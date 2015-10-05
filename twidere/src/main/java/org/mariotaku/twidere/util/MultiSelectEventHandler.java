@@ -40,6 +40,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.util.dagger.component.DaggerGeneralComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +49,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.Utils.getAccountScreenNames;
 import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkDelete;
@@ -58,7 +61,8 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
 
     private TwidereApplication mApplication;
 
-    private AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    AsyncTwitterWrapper mTwitterWrapper;
 
     private MultiSelectManager mMultiSelectManager;
 
@@ -71,6 +75,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
     public static final int MENU_GROUP = 201;
 
     public MultiSelectEventHandler(final BaseAppCompatActivity activity) {
+        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(activity)).build().inject(this);
         mActivity = activity;
     }
 
@@ -79,7 +84,6 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
      */
     public void dispatchOnCreate() {
         mApplication = mActivity.getTwidereApplication();
-        mTwitterWrapper = mApplication.getTwitterWrapper();
         mMultiSelectManager = mApplication.getMultiSelectManager();
     }
 

@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere.extension.launcher.compose"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }

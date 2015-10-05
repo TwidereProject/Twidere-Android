@@ -85,6 +85,7 @@ import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.component.DaggerBackgroundOperationServiceComponent;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
 
@@ -95,6 +96,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -114,7 +117,8 @@ public class BackgroundOperationService extends IntentService implements Constan
     private SharedPreferences mPreferences;
     private ContentResolver mResolver;
     private NotificationManager mNotificationManager;
-    private AsyncTwitterWrapper mTwitter;
+    @Inject
+    AsyncTwitterWrapper mTwitter;
 
     private MediaUploaderInterface mUploader;
     private StatusShortenerInterface mShortener;
@@ -128,13 +132,13 @@ public class BackgroundOperationService extends IntentService implements Constan
     @Override
     public void onCreate() {
         super.onCreate();
+        DaggerBackgroundOperationServiceComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         final TwidereApplication app = TwidereApplication.getInstance(this);
         mHandler = new Handler();
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mValidator = new TwidereValidator(this);
         mResolver = getContentResolver();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mTwitter = app.getTwitterWrapper();
         final String uploaderComponent = mPreferences.getString(KEY_MEDIA_UPLOADER, null);
         final String shortenerComponent = mPreferences.getString(KEY_STATUS_SHORTENER, null);
         mUseUploader = !ServicePickerPreference.isNoneValue(uploaderComponent);
@@ -222,6 +226,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         final Expression where = Expression.equals(Drafts._ID, draftId);
         final ContentResolver cr = getContentResolver();
         final Cursor c = cr.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.getSQL(), null, null);
+        if (c == null) return;
         final DraftItem.CursorIndices i = new DraftItem.CursorIndices(c);
         final DraftItem item;
         try {
@@ -319,7 +324,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item,
                     ParcelableAccount.getAccountIds(item.accounts));
             final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
-            final long draftId = ParseUtils.parseLong(draftUri.getLastPathSegment(), -1);
+            final long draftId = draftUri != null ? ParseUtils.parseLong(draftUri.getLastPathSegment(), -1) : -1;
             mTwitter.addSendingDraftId(draftId);
             final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
             boolean failed = false;

@@ -53,19 +53,18 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AbsLogger;
 import org.mariotaku.twidere.util.AsyncTaskManager;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
-import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereLogger;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
@@ -95,7 +94,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private ImageLoader mImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private SharedPreferences mPreferences;
-    private AsyncTwitterWrapper mTwitterWrapper;
     private MultiSelectManager mMultiSelectManager;
     private TwidereImageDownloader mImageDownloader, mFullImageDownloader;
     private DiskCache mDiskCache, mFullDiskCache;
@@ -104,11 +102,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private SQLiteDatabase mDatabase;
     private Bus mMessageBus;
     private VideoLoader mVideoLoader;
-    private ReadStateManager mReadStateManager;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private UserColorNameManager mUserColorNameManager;
 
     private HotMobiLogger mHotMobiLogger;
+    private ApplicationModule mApplicationModule;
 
     @NonNull
     public static TwidereApplication getInstance(@NonNull final Context context) {
@@ -147,11 +145,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public Network getNetwork() {
         if (mNetwork != null) return mNetwork;
         return mNetwork = new TwidereHostAddressResolver(this);
-    }
-
-    public ReadStateManager getReadStateManager() {
-        if (mReadStateManager != null) return mReadStateManager;
-        return mReadStateManager = new ReadStateManager(this);
     }
 
     public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
@@ -217,11 +210,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mSQLiteOpenHelper = new TwidereSQLiteOpenHelper(this, DATABASES_NAME, DATABASES_VERSION);
     }
 
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        if (mTwitterWrapper != null) return mTwitterWrapper;
-        return mTwitterWrapper = new AsyncTwitterWrapper(this);
-    }
-
     @Override
     public void onCreate() {
         if (BuildConfig.DEBUG) {
@@ -267,7 +255,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private void initBugReport() {
         final SharedPreferences preferences = getSharedPreferences();
         if (!preferences.getBoolean(KEY_BUG_REPORTS, true)) return;
-        AbsLogger.setImplementation(new TwidereLogger());
+        if (!BuildConfig.DEBUG) {
+            AbsLogger.setImplementation(new TwidereLogger());
+        }
         AbsLogger.init(this);
     }
 
@@ -354,5 +344,14 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     public HotMobiLogger getHotMobiLogger() {
         if (mHotMobiLogger != null) return mHotMobiLogger;
         return mHotMobiLogger = new HotMobiLogger(this);
+    }
+
+    public static ApplicationModule getModule(Context context) {
+        return getInstance(context).getApplicationModule();
+    }
+
+    private ApplicationModule getApplicationModule() {
+        if (mApplicationModule != null) return mApplicationModule;
+        return mApplicationModule = new ApplicationModule(this);
     }
 }

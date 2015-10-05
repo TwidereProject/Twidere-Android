@@ -227,7 +227,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save: {
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 final Bundle args = getArguments();
                 if (twitter != null && args != null) {
                     twitter.createSavedSearchAsync(getAccountId(), getQuery());

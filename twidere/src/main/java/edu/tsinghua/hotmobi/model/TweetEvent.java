@@ -24,25 +24,34 @@ import android.content.Context;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**
  * Created by mariotaku on 15/8/7.
  */
+@ParcelablePlease
 @JsonObject
 public class TweetEvent extends BaseEvent {
 
+    @ParcelableThisPlease
     @JsonField(name = "id")
     long id;
+    @ParcelableThisPlease
     @JsonField(name = "account_id")
     long accountId;
+    @ParcelableThisPlease
     @JsonField(name = "user_id")
     long userId;
+    @ParcelableThisPlease
     @JsonField(name = "tweet_type", typeConverter = TweetType.TweetTypeConverter.class)
     TweetType tweetType;
+    @ParcelableThisPlease
     @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
     TimelineType timelineType;
+    @ParcelableThisPlease
     @JsonField(name = "action", typeConverter = Action.TweetActionConverter.class)
     Action action;
 

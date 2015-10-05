@@ -18,7 +18,7 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/status_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,42 +32,53 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/comment_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <org.mariotaku.twidere.view.ComposeMaterialEditText
                 android:id="@+id/edit_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:completionThreshold="1"
                 android:focusable="true"
                 android:hint="@string/comment_hint"
                 android:inputType="textShortMessage|textMultiLine"
                 android:singleLine="false"
-                android:visibility="visible"
-                app:met_baseColor="?android:textColorSecondary"
-                app:met_helperTextColor="?android:textColorSecondary"
-                app:met_maxCharacters="140"
-                app:met_textColor="?android:textColorPrimary"
-                app:met_textColorHint="?android:textColorTertiary">
+                android:visibility="visible">
 
                 <requestFocus />
             </org.mariotaku.twidere.view.ComposeMaterialEditText>
+
+            <org.mariotaku.twidere.view.StatusTextCountView
+                android:id="@+id/comment_text_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/comment_menu"
+                android:layout_alignLeft="@+id/edit_comment"
+                android:layout_alignStart="@+id/edit_comment"
+                android:layout_alignTop="@+id/comment_menu"
+                android:layout_below="@+id/edit_comment"
+                android:layout_toLeftOf="@+id/comment_menu"
+                android:layout_toStartOf="@+id/comment_menu"
+                android:gravity="center_vertical|start"
+                android:paddingLeft="@dimen/element_spacing_normal"
+                android:paddingRight="@dimen/element_spacing_normal"
+                tools:text="140" />
 
             <org.mariotaku.twidere.view.ActionIconButton
                 android:id="@+id/comment_menu"
                 style="?cardActionButtonStyle"
                 android:layout_width="@dimen/element_size_normal"
                 android:layout_height="@dimen/element_size_normal"
-                android:layout_weight="0"
+                android:layout_alignEnd="@+id/edit_comment"
+                android:layout_alignRight="@+id/edit_comment"
+                android:layout_below="@+id/edit_comment"
                 android:color="?android:textColorTertiary"
                 android:focusable="false"
                 android:src="@drawable/ic_action_more_vertical" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <include layout="@layout/card_item_status_common" />
     </LinearLayout>

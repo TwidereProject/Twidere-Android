@@ -213,7 +213,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         super.onActivityCreated(savedInstanceState);
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = TwidereApplication.getInstance(activity);
-        mTwitterWrapper = application.getTwitterWrapper();
         mProfileImageLoader = application.getMediaLoaderWrapper();
         mUserColorNameManager = application.getUserColorNameManager();
         mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME,
@@ -308,7 +307,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUserList userList = mUserList;
         if (twitter == null || userList == null) return false;
         switch (item.getItemId()) {
@@ -466,7 +465,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         private long mAccountId;
         private long mListId;
         private boolean mIsPublic;
-        private AsyncTwitterWrapper mTwitterWrapper;
 
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
@@ -491,7 +489,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            mTwitterWrapper = getApplication().getTwitterWrapper();
             final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
             mAccountId = bundle != null ? bundle.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
             mListId = bundle != null ? bundle.getLong(EXTRA_LIST_ID, -1) : -1;

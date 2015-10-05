@@ -25,13 +25,17 @@ import android.net.NetworkInfo;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 15/8/20.
  */
+@ParcelablePlease
 @JsonObject
 public class NetworkEvent extends BaseEvent {
 
+    @ParcelableThisPlease
     @JsonField(name = "network_type")
     int networkType;
 

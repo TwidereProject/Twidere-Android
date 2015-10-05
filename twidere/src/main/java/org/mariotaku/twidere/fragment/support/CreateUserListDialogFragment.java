@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -33,7 +33,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.text.validator.UserListNameValidator;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -45,7 +44,6 @@ public class CreateUserListDialogFragment extends BaseSupportDialogFragment impl
     private long mAccountId;
     private long mListId;
     private boolean mIsPublic = true;
-    private AsyncTwitterWrapper mTwitterWrapper;
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
@@ -66,7 +64,6 @@ public class CreateUserListDialogFragment extends BaseSupportDialogFragment impl
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        mTwitterWrapper = getApplication().getTwitterWrapper();
         final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
         mAccountId = bundle != null ? bundle.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
         final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());

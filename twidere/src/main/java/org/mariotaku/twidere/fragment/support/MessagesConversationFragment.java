@@ -165,10 +165,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     // Utility classes
     private TwidereValidator mValidator;
-    private AsyncTwitterWrapper mTwitterWrapper;
     private SharedPreferencesWrapper mPreferences;
     private SharedPreferences mMessageDrafts;
-    private ReadStateManager mReadStateManager;
     private MediaLoaderWrapper mImageLoader;
     private UserColorNameManager mUserColorNameManager;
     private EffectViewHelper mEffectHelper;
@@ -239,8 +237,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mUserColorNameManager = UserColorNameManager.getInstance(activity);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mImageLoader = TwidereApplication.getInstance(activity).getMediaLoaderWrapper();
-        mReadStateManager = getReadStateManager();
-        mTwitterWrapper = getTwitterWrapper();
         mValidator = new TwidereValidator(activity);
 
         final View view = getView();
@@ -891,13 +887,16 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             return builder.create();
         }
 
+
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    final ParcelableCredentials account = getArguments().getParcelable(EXTRA_ACCOUNT);
-                    final ParcelableUser user = getArguments().getParcelable(EXTRA_USER);
-                    final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                    final Bundle args = getArguments();
+                    final ParcelableCredentials account = args.getParcelable(EXTRA_ACCOUNT);
+                    final ParcelableUser user = args.getParcelable(EXTRA_USER);
+                    if (account == null || user == null) return;
+                    final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     twitter.destroyMessageConversationAsync(account.account_id, user.id);
                     break;
                 }
@@ -905,15 +904,15 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
     }
 
-    private static class SetReadStateTask extends AsyncTask<Object, Object, Cursor> {
+    static class SetReadStateTask extends AsyncTask<Object, Object, Cursor> {
         private final Context mContext;
         private final ReadStateManager mReadStateManager;
         private final ParcelableCredentials mAccount;
         private final ParcelableUser mRecipient;
 
         public SetReadStateTask(Context context, ParcelableCredentials account, ParcelableUser recipient) {
+            mReadStateManager = TwidereApplication.getModule(context).getReadStateManager();
             mContext = context;
-            mReadStateManager = TwidereApplication.getInstance(context).getReadStateManager();
             mAccount = account;
             mRecipient = recipient;
         }

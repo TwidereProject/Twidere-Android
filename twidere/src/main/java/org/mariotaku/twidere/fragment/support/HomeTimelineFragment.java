@@ -49,20 +49,20 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
 
     @Override
     protected void updateRefreshState() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null) return;
         setRefreshing(twitter.isHomeTimelineRefreshing());
     }
 
     @Override
     public boolean isRefreshing() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         return twitter != null && twitter.isHomeTimelineRefreshing();
     }
 
     @Override
     public boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null) return false;
         if (maxIds == null) return twitter.refreshAll(accountIds);
         return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);

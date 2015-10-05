@@ -30,6 +30,8 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
+import javax.inject.Inject;
+
 /**
  * Created by mariotaku on 14/11/19.
  */
@@ -42,7 +44,6 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     private final LayoutInflater mInflater;
     private final MediaLoaderWrapper mMediaLoader;
     private final MediaLoadingHandler mLoadingHandler;
-    private final AsyncTwitterWrapper mTwitterWrapper;
     private final TwidereLinkify mLinkify;
     private final UserColorNameManager mUserColorNameManager;
 
@@ -68,6 +69,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     private boolean mShowAccountsColor;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
+        super(context);
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
@@ -75,7 +77,6 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         mMediaLoader = app.getMediaLoaderWrapper();
         mUserColorNameManager = app.getUserColorNameManager();
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
-        mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));

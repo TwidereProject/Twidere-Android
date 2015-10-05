@@ -45,7 +45,7 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 final ParcelableUser user = getUser();
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
                 twitter.reportSpamAsync(user.account_id, user.id);
                 break;

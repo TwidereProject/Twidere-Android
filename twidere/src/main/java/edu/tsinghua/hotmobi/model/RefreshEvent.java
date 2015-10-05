@@ -23,15 +23,20 @@ import android.content.Context;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 15/8/8.
  */
+@ParcelablePlease
 @JsonObject
 public class RefreshEvent extends BaseEvent {
+    @ParcelableThisPlease
     @JsonField(name = "ids")
     long[] ids;
 
+    @ParcelableThisPlease
     @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
     TimelineType timelineType;
 

@@ -3362,9 +3362,6 @@ public final class Utils implements Constants {
 
     private static boolean isMyStatus(ParcelableStatus status) {
         if (isMyRetweet(status)) return true;
-        if (status.is_quote) {
-            return status.account_id == status.quoted_user_id;
-        }
         return status.account_id == status.user_id;
     }
 

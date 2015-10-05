@@ -20,9 +20,13 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import java.util.TimeZone;
 
@@ -31,16 +35,42 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 /**
  * Created by mariotaku on 15/8/8.
  */
+@ParcelablePlease
 @JsonObject
-public class BaseEvent {
+public class BaseEvent implements Parcelable {
+
+    public static final Creator<BaseEvent> CREATOR = new Creator<BaseEvent>() {
+        @Override
+        public BaseEvent createFromParcel(Parcel in) {
+            return new BaseEvent(in);
+        }
+
+        @Override
+        public BaseEvent[] newArray(int size) {
+            return new BaseEvent[size];
+        }
+    };
+
+    @ParcelableThisPlease
     @JsonField(name = "start_time")
     long startTime;
+    @ParcelableThisPlease
     @JsonField(name = "end_time")
     long endTime;
+    @ParcelableThisPlease
     @JsonField(name = "time_offset")
     long timeOffset;
+    @ParcelableThisPlease
     @JsonField(name = "location")
     LatLng location;
+
+    public BaseEvent() {
+    }
+
+    protected BaseEvent(Parcel in) {
+        BaseEventParcelablePlease.readFromParcel(this, in);
+    }
+
 
     public void setStartTime(long startTime) {
         this.startTime = startTime;
@@ -66,5 +96,15 @@ public class BaseEvent {
 
     public void markEnd() {
         setEndTime(System.currentTimeMillis());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        BaseEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 }

@@ -644,7 +644,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case REQUEST_ADD_TO_LIST: {
                 if (user == null) return;
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                    final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     final ParcelableUserList list = data.getParcelableExtra(EXTRA_USER_LIST);
                     if (list == null || twitter == null) return;
                     twitter.addUserListMembersAsync(user.account_id, list.id, user);
@@ -837,7 +837,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onPrepareOptionsMenu(final Menu menu) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
         final Relationship relationship = mRelationship;
         if (twitter == null || user == null) return;
@@ -919,7 +919,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
         final Relationship relationship = mRelationship;
         if (user == null || twitter == null) return false;
@@ -1222,7 +1222,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     break;
                 }
                 final Relationship relationship = mRelationship;
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (relationship == null || twitter == null) return;
                 if (relationship.isSourceBlockingTarget()) {
                     twitter.destroyBlockAsync(user.account_id, user.id);
@@ -1469,7 +1469,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     private void updateFollowProgressState() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
         if (twitter == null || user == null) {
             mFollowButton.setVisibility(View.GONE);
@@ -1497,7 +1497,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private void updateRefreshState() {
         final ParcelableUser user = getUser();
         if (user == null) return;
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final boolean is_creating_friendship = twitter != null
                 && twitter.isCreatingFriendship(user.account_id, user.id);
         final boolean is_destroying_friendship = twitter != null

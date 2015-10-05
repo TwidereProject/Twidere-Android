@@ -147,7 +147,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
     public boolean scrollToStart() {
         final boolean result = super.scrollToStart();
         if (result) {
-            final AsyncTwitterWrapper twitter = getTwitterWrapper();
+            final AsyncTwitterWrapper twitter = mTwitterWrapper;
             final int tabPosition = getTabPosition();
             if (twitter != null && tabPosition != -1) {
                 twitter.clearUnreadCountAsync(tabPosition);

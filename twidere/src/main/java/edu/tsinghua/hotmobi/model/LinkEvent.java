@@ -20,6 +20,8 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -30,12 +32,46 @@ import edu.tsinghua.hotmobi.TypeMappingUtil;
  * Created by mariotaku on 15/8/20.
  */
 @JsonObject
-public class LinkEvent extends BaseEvent {
+public class LinkEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "link")
     String link;
     @JsonField(name = "type")
     String type;
+
+    public LinkEvent() {
+
+    }
+
+    protected LinkEvent(Parcel in) {
+        super(in);
+        link = in.readString();
+        type = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(link);
+        dest.writeString(type);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<LinkEvent> CREATOR = new Creator<LinkEvent>() {
+        @Override
+        public LinkEvent createFromParcel(Parcel in) {
+            return new LinkEvent(in);
+        }
+
+        @Override
+        public LinkEvent[] newArray(int size) {
+            return new LinkEvent[size];
+        }
+    };
 
     public void setLink(String link) {
         this.link = link;

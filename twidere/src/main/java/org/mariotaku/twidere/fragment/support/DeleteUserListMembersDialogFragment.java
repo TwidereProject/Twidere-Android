@@ -50,7 +50,7 @@ public class DeleteUserListMembersDialogFragment extends BaseSupportDialogFragme
             case DialogInterface.BUTTON_POSITIVE:
                 final ParcelableUser[] users = getUsers();
                 final ParcelableUserList userList = getUserList();
-                final AsyncTwitterWrapper twitter = getTwitterWrapper();
+                final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (users == null || userList == null || twitter == null) return;
                 twitter.deleteUserListMembersAsync(userList.account_id, userList.id, users);
                 break;

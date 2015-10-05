@@ -19,16 +19,24 @@
 
 package edu.tsinghua.hotmobi.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 15/8/13.
  */
+@ParcelablePlease
 @JsonObject
-public class LatLng {
+public class LatLng implements Parcelable {
+    @ParcelableThisPlease
     @JsonField(name = "latitude")
     double latitude;
+    @ParcelableThisPlease
     @JsonField(name = "longitude")
     double longitude;
 
@@ -36,10 +44,25 @@ public class LatLng {
     }
 
     public LatLng(double latitude, double longitude) {
-
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+    protected LatLng(Parcel in) {
+        LatLngParcelablePlease.readFromParcel(this, in);
+    }
+
+    public static final Creator<LatLng> CREATOR = new Creator<LatLng>() {
+        @Override
+        public LatLng createFromParcel(Parcel in) {
+            return new LatLng(in);
+        }
+
+        @Override
+        public LatLng[] newArray(int size) {
+            return new LatLng[size];
+        }
+    };
 
     public double getLatitude() {
         return latitude;
@@ -55,5 +78,15 @@ public class LatLng {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        LatLngParcelablePlease.writeToParcel(this, dest, flags);
     }
 }

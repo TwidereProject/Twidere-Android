@@ -48,8 +48,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 final String tag = getPositionTag(uri.getLastPathSegment());
                 if (tag == null) return;
                 final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-                final TwidereApplication app = TwidereApplication.getInstance(context);
-                final ReadStateManager manager = app.getReadStateManager();
+                final ReadStateManager manager = TwidereApplication.getModule(context).getReadStateManager();
                 final String paramReadPosition, paramReadPositions;
                 if (!TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {
                     manager.setPosition(Utils.getReadPositionTagWithAccounts(tag, accountId),

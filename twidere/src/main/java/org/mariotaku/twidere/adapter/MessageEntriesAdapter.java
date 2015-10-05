@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +47,8 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.MessageEntryViewHolder;
 
+import javax.inject.Inject;
+
 public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
         IContentCardAdapter, OnClickListener, OnReadStateChangeListener {
 
@@ -61,10 +62,8 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     private final int mTextSize;
     private final int mProfileImageStyle;
     private final int mMediaPreviewStyle;
-    private final ReadStateManager mReadStateManager;
     private final OnSharedPreferenceChangeListener mReadStateChangeListener;
     private UserColorNameManager mUserColorNameManager;
-    private final AsyncTwitterWrapper mTwitterWrapper;
 
     private final boolean mDisplayProfileImage;
     private boolean mShowAccountsColor;
@@ -73,19 +72,18 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     private StringLongPair[] mPositionPairs;
 
     public MessageEntriesAdapter(final Context context) {
+        super(context);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
         mImageLoader = app.getMediaLoaderWrapper();
-        mTwitterWrapper = app.getTwitterWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mReadStateManager = app.getReadStateManager();
         mUserColorNameManager = app.getUserColorNameManager();
         mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
 

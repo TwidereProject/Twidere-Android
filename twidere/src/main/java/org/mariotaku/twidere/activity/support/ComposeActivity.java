@@ -115,7 +115,6 @@ import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.text.MarkForDeleteSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
@@ -163,7 +162,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     // Utility classes
     private final Extractor mExtractor = new Extractor();
     private TwidereValidator mValidator;
-    private AsyncTwitterWrapper mTwitterWrapper;
     private LocationManager mLocationManager;
     private SharedPreferencesWrapper mPreferences;
     private ContentResolver mResolver;
@@ -589,7 +587,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
 
         final TwidereApplication app = TwidereApplication.getInstance(this);
-        mTwitterWrapper = app.getTwitterWrapper();
         mResolver = getContentResolver();
         mValidator = new TwidereValidator(this);
         mImageLoader = app.getMediaLoaderWrapper();

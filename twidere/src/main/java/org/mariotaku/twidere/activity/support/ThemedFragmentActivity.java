@@ -35,19 +35,25 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.component.DaggerThemedFragmentActivityComponent;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
+
+import javax.inject.Inject;
 
 public abstract class ThemedFragmentActivity extends FragmentActivity implements Constants,
         IThemedActivity, KeyboardShortcutCallback {
 
     // Utility classes
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    @Inject
+    protected AsyncTwitterWrapper mTwitterWrapper;
 
     // Data fields
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
@@ -129,6 +135,7 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
             StrictModeUtils.detectAllThreadPolicy();
         }
         super.onCreate(savedInstanceState);
+        DaggerThemedFragmentActivityComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
         mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 

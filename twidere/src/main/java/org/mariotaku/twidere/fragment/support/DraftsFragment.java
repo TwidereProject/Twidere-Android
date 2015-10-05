@@ -207,7 +207,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
 
     @Override
     public void onStart() {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter != null) {
             twitter.clearNotificationAsync(NOTIFICATION_ID_DRAFTS);
         }
@@ -257,7 +257,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
     }
 
     private boolean sendDrafts(final List<DraftItem> list) {
-        final AsyncTwitterWrapper twitter = getTwitterWrapper();
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null) return false;
         for (final DraftItem item : list) {
             if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
