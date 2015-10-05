@@ -57,6 +57,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 
@@ -109,6 +110,7 @@ import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 
@@ -148,6 +150,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     ReadStateManager mReadStateManager;
     @Inject
     AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    ImageLoader mMediaLoader;
     private SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;
     private Network mNetwork;
@@ -418,7 +422,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Override
     public boolean onCreate() {
         final Context context = getContext();
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
@@ -427,7 +431,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         updatePreferences();
         mPermissionsManager = new PermissionsManager(context);
-        mImagePreloader = new ImagePreloader(context, app.getImageLoader());
+        mImagePreloader = new ImagePreloader(context, mMediaLoader);
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_HOME_ACTIVITY_ONSTART);
         filter.addAction(BROADCAST_HOME_ACTIVITY_ONSTOP);

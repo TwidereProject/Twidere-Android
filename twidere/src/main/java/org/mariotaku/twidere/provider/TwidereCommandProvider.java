@@ -29,10 +29,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereCommands.Refresh;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.PermissionsManager;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import javax.inject.Inject;
@@ -75,7 +75,7 @@ public class TwidereCommandProvider extends ContentProvider implements Constants
     @Override
     public boolean onCreate() {
         mContext = getContext();
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(mContext)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(mContext)).build().inject(this);
         mPermissionsManager = new PermissionsManager(mContext);
         return true;
     }

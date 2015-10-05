@@ -40,11 +40,11 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
 import java.util.List;
 
@@ -105,8 +105,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_id;
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
-            final TwidereApplication app = TwidereApplication.getInstance(context);
-            mImageLoader = app.getMediaLoaderWrapper();
+            mImageLoader = ApplicationModule.get(context).getMediaLoaderWrapper();
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
         }
 

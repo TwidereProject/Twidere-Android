@@ -48,7 +48,11 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.ProfileImageView;
+
+import javax.inject.Inject;
 
 
 public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
@@ -60,8 +64,8 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     private final ContentResolver mResolver;
     @NonNull
     private final SQLiteDatabase mDatabase;
-    @NonNull
-    private final MediaLoaderWrapper mProfileImageLoader;
+    @Inject
+    MediaLoaderWrapper mProfileImageLoader;
     @NonNull
     private final SharedPreferencesWrapper mPreferences;
     @NonNull
@@ -81,12 +85,12 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
     public UserHashtagAutoCompleteAdapter(final Context context, final EditText view) {
         super(context, R.layout.list_item_auto_complete, null, FROM, TO, 0);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mEditText = view;
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mUserColorNameManager = app.getUserColorNameManager();
         mResolver = context.getContentResolver();
-        mProfileImageLoader = app.getMediaLoaderWrapper();
         mDatabase = app.getSQLiteDatabase();
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
     }

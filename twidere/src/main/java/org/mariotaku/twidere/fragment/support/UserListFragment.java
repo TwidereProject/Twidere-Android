@@ -75,7 +75,6 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.text.validator.UserListNameValidator;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.LinkCreator;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -94,9 +93,6 @@ import static org.mariotaku.twidere.util.Utils.openUserProfile;
 public class UserListFragment extends BaseSupportFragment implements OnClickListener,
         LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback,
         SupportFragmentCallback {
-
-    private MediaLoaderWrapper mProfileImageLoader;
-    private AsyncTwitterWrapper mTwitterWrapper;
 
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
@@ -213,7 +209,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         super.onActivityCreated(savedInstanceState);
         final FragmentActivity activity = getActivity();
         final TwidereApplication application = TwidereApplication.getInstance(activity);
-        mProfileImageLoader = application.getMediaLoaderWrapper();
         mUserColorNameManager = application.getUserColorNameManager();
         mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);

@@ -29,8 +29,12 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import java.util.Collection;
+
+import javax.inject.Inject;
 
 public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter, OnSharedPreferenceChangeListener {
 
@@ -42,7 +46,8 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
     private boolean mDisplayProfileImage, mDisplayNameFirst, mShowAccountColor;
 
     private final SharedPreferences mNicknamePrefs, mColorPrefs;
-    private final MediaLoaderWrapper mImageLoader;
+    @Inject
+    protected MediaLoaderWrapper mImageLoader;
 
     public BaseArrayAdapter(final Context context, final int layoutRes) {
         this(context, layoutRes, null);
@@ -50,9 +55,10 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
 
     public BaseArrayAdapter(final Context context, final int layoutRes, final Collection<? extends T> collection) {
         super(context, layoutRes, collection);
+        //noinspection unchecked
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject((BaseArrayAdapter<Object>) this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, app.getMultiSelectManager()));
-        mImageLoader = app.getMediaLoaderWrapper();
         mNicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mColorPrefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mNicknamePrefs.registerOnSharedPreferenceChangeListener(this);

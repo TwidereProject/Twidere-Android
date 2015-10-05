@@ -29,23 +29,27 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.holder.DraftViewHolder;
+
+import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.Utils.getAccountColors;
 
 public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
 
-    private final MediaLoaderWrapper mImageLoader;
+    @Inject
+    MediaLoaderWrapper mImageLoader;
     private final MediaLoadingHandler mMediaLoadingHandler;
     private final int mMediaPreviewStyle;
 
@@ -54,7 +58,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
 
     public DraftsAdapter(final Context context) {
         super(context, R.layout.list_item_draft, null, new String[0], new int[0], 0);
-        mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);

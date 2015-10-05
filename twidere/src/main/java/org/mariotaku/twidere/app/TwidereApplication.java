@@ -56,7 +56,6 @@ import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MathUtils;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereLogger;
@@ -90,8 +89,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private static final String KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized";
 
     private Handler mHandler;
-    private MediaLoaderWrapper mMediaLoaderWrapper;
-    private ImageLoader mImageLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private SharedPreferences mPreferences;
     private MultiSelectManager mMultiSelectManager;
@@ -163,30 +160,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mImageDownloader = new TwidereImageDownloader(this, false, true);
     }
 
-    public ImageLoader getImageLoader() {
-        if (mImageLoader != null) return mImageLoader;
-        final ImageLoader loader = ImageLoader.getInstance();
-        final ImageLoaderConfiguration.Builder cb = new ImageLoaderConfiguration.Builder(this);
-        cb.threadPriority(Thread.NORM_PRIORITY - 2);
-        cb.denyCacheImageMultipleSizesInMemory();
-        cb.tasksProcessingOrder(QueueProcessingType.LIFO);
-        // cb.memoryCache(new ImageMemoryCache(40));
-        cb.diskCache(getDiskCache());
-        cb.imageDownloader(getImageDownloader());
-        L.writeDebugLogs(BuildConfig.DEBUG);
-        loader.init(cb.build());
-        return mImageLoader = loader;
-    }
 
     public VideoLoader getVideoLoader() {
         if (mVideoLoader != null) return mVideoLoader;
         final VideoLoader loader = new VideoLoader(this);
         return mVideoLoader = loader;
-    }
-
-    public MediaLoaderWrapper getMediaLoaderWrapper() {
-        if (mMediaLoaderWrapper != null) return mMediaLoaderWrapper;
-        return mMediaLoaderWrapper = new MediaLoaderWrapper(getImageLoader(), getVideoLoader());
     }
 
     @Nullable
@@ -285,9 +263,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onLowMemory() {
-        if (mMediaLoaderWrapper != null) {
-            mMediaLoaderWrapper.clearMemoryCache();
-        }
+        final ApplicationModule module = getApplicationModule();
+        module.getMediaLoaderWrapper().clearMemoryCache();
         super.onLowMemory();
     }
 
@@ -346,11 +323,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mHotMobiLogger = new HotMobiLogger(this);
     }
 
-    public static ApplicationModule getModule(Context context) {
-        return getInstance(context).getApplicationModule();
-    }
-
-    private ApplicationModule getApplicationModule() {
+    public ApplicationModule getApplicationModule() {
         if (mApplicationModule != null) return mApplicationModule;
         return mApplicationModule = new ApplicationModule(this);
     }

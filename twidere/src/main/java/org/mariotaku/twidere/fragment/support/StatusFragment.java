@@ -51,7 +51,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
@@ -74,6 +73,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
+import org.mariotaku.twidere.adapter.BaseAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -1038,7 +1038,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
     }
 
-    private static class StatusAdapter extends Adapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
+    private static class StatusAdapter extends BaseAdapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
 
         private static final int VIEW_TYPE_LIST_STATUS = 0;
         private static final int VIEW_TYPE_DETAIL_STATUS = 1;
@@ -1049,7 +1049,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final Context mContext;
         private final StatusFragment mFragment;
         private final LayoutInflater mInflater;
-        private final MediaLoaderWrapper mImageLoader;
         private final MediaLoadingHandler mMediaLoadingHandler;
         private final TwidereLinkify mTwidereLinkify;
 
@@ -1089,6 +1088,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private DetailStatusViewHolder mStatusViewHolder;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
+            super(fragment.getContext());
             setHasStableIds(true);
             final Context context = fragment.getActivity();
             final Resources res = context.getResources();
@@ -1100,7 +1100,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mFragment = fragment;
             mContext = context;
             mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
             mUserColorNameManager = TwidereApplication.getInstance(context).getUserColorNameManager();
             mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
             mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
@@ -1169,7 +1168,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @NonNull
         @Override
         public MediaLoaderWrapper getMediaLoader() {
-            return mImageLoader;
+            return mMediaLoader;
         }
 
         public StatusFragment getFragment() {

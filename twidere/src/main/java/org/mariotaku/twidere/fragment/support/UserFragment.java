@@ -121,7 +121,6 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MathUtils;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -175,7 +174,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private static final String TAB_TYPE_MEDIA = "media";
     private static final String TAB_TYPE_FAVORITES = "favorites";
 
-    private MediaLoaderWrapper mMediaLoader;
     private UserColorNameManager mUserColorNameManager;
     private SharedPreferencesWrapper mPreferences;
 
@@ -693,7 +691,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ThemeUtils.getUserThemeBackgroundAlpha(activity));
         mActionBarShadowColor = 0xA0000000;
         final TwidereApplication app = TwidereApplication.getInstance(activity);
-        mMediaLoader = app.getMediaLoaderWrapper();
         final Bundle args = getArguments();
         long accountId = -1, userId = -1;
         String screenName = null;

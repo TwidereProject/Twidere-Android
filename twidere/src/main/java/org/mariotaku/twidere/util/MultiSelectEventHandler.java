@@ -40,6 +40,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
     public static final int MENU_GROUP = 201;
 
     public MultiSelectEventHandler(final BaseAppCompatActivity activity) {
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(activity)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(activity)).build().inject(this);
         mActivity = activity;
     }
 

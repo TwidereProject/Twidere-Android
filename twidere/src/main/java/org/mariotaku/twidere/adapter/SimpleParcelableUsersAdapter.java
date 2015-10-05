@@ -27,7 +27,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
@@ -38,7 +37,6 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> implements IBaseAdapter {
 
-    private final MediaLoaderWrapper mImageLoader;
     private final Context mContext;
     private final UserColorNameManager mUserColorNameManager;
 
@@ -50,7 +48,6 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
         super(context, layoutRes);
         mContext = context;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mImageLoader = app.getMediaLoaderWrapper();
         mUserColorNameManager = app.getUserColorNameManager();
         configBaseAdapter(context, this);
     }

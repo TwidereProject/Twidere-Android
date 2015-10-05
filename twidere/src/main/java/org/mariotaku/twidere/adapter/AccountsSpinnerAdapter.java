@@ -26,16 +26,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> {
 
-    private final MediaLoaderWrapper mImageLoader;
+    @Inject
+    MediaLoaderWrapper mImageLoader;
     private final boolean mDisplayProfileImage;
     private final Context mContext;
     private String mDummyItemText;
@@ -46,8 +50,8 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> 
 
     public AccountsSpinnerAdapter(final Context context, int itemViewResource) {
         super(context, itemViewResource);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mContext = context;
-        mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
         mDisplayProfileImage = context.getSharedPreferences(MessagesConversationFragment.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE).getBoolean(MessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);
     }

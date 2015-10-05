@@ -32,6 +32,7 @@ import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import javax.inject.Inject;
@@ -44,7 +45,7 @@ public class BaseFragment extends Fragment implements Constants {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
     }
 
     public TwidereApplication getApplication() {

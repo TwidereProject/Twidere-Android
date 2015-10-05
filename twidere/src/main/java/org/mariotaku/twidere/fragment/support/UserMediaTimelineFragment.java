@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -18,12 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.adapter.BaseAdapter;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.MediaSizeImageView;
@@ -157,16 +156,15 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
         mAdapter.setData(null);
     }
 
-    private static class MediaTimelineAdapter extends Adapter<MediaTimelineViewHolder> {
+    private static class MediaTimelineAdapter extends BaseAdapter<MediaTimelineViewHolder> {
 
         private final LayoutInflater mInflater;
-        private final MediaLoaderWrapper mImageLoader;
         private final MediaLoadingHandler mLoadingHandler;
         private List<ParcelableStatus> mData;
 
         MediaTimelineAdapter(Context context) {
+            super(context);
             mInflater = LayoutInflater.from(context);
-            mImageLoader = TwidereApplication.getInstance(context).getMediaLoaderWrapper();
             mLoadingHandler = new MediaLoadingHandler(R.id.media_image_progress);
         }
 
@@ -179,7 +177,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
         @Override
         public void onBindViewHolder(MediaTimelineViewHolder holder, int position) {
             if (mData == null) return;
-            holder.setMedia(mImageLoader, mLoadingHandler, mData.get(position));
+            holder.setMedia(mMediaLoader, mLoadingHandler, mData.get(position));
         }
 
         public void setData(List<ParcelableStatus> data) {

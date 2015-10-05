@@ -31,6 +31,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
@@ -452,7 +453,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         private final Context context;
         private final SharedPreferencesWrapper preferences;
-        private final MediaLoaderWrapper loader;
+        @Inject
+        MediaLoaderWrapper loader;
         private final MediaLoadingHandler handler;
         @Inject
         AsyncTwitterWrapper twitter;
@@ -471,11 +473,10 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         private boolean shouldShowAccountsColor;
 
         public DummyStatusHolderAdapter(Context context) {
-            DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+            DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
             this.context = context;
             preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             final TwidereApplication app = TwidereApplication.getInstance(context);
-            loader = app.getMediaLoaderWrapper();
             handler = new MediaLoadingHandler(R.id.media_preview_progress);
             manager = app.getUserColorNameManager();
             linkify = new TwidereLinkify(null);

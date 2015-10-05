@@ -48,6 +48,7 @@ import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
@@ -163,7 +164,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         }
         setupWindow();
         super.onCreate(savedInstanceState);
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
         mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 

@@ -37,6 +37,7 @@ import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import javax.inject.Inject;
@@ -112,7 +113,7 @@ public class BaseListFragment extends ListFragment implements Constants, OnScrol
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
     }
 
     @Override

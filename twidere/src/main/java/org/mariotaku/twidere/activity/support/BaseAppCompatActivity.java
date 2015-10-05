@@ -38,6 +38,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
@@ -149,7 +150,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(this)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
         mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 

@@ -30,6 +30,7 @@ import android.support.v4.app.DialogFragment;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import javax.inject.Inject;
@@ -70,7 +71,7 @@ public class BaseSupportDialogFragment extends DialogFragment implements Constan
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerGeneralComponent.builder().applicationModule(TwidereApplication.getModule(context)).build().inject(this);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
     }
 
     public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {

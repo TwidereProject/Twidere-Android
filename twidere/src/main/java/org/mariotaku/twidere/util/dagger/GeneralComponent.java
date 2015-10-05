@@ -25,7 +25,12 @@ import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.BaseThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.ThemedFragmentActivity;
+import org.mariotaku.twidere.adapter.AccountsAdapter;
+import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.BaseAdapter;
+import org.mariotaku.twidere.adapter.BaseArrayAdapter;
+import org.mariotaku.twidere.adapter.DraftsAdapter;
+import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
@@ -73,4 +78,14 @@ public interface GeneralComponent {
     void inject(BackgroundOperationService object);
 
     void inject(BaseAdapter<RecyclerView.ViewHolder> object);
+
+    void inject(AccountsAdapter object);
+
+    void inject(UserHashtagAutoCompleteAdapter object);
+
+    void inject(AccountsSpinnerAdapter object);
+
+    void inject(BaseArrayAdapter<Object> object);
+
+    void inject(DraftsAdapter object);
 }

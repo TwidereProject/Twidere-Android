@@ -90,7 +90,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private static final int RESULT_REMOVE_BANNER = 101;
     private static final String UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile";
 
-    private MediaLoaderWrapper mLazyImageLoader;
+    private MediaLoaderWrapper mMediaLoader;
     private AsyncTaskManager mAsyncTaskManager;
     private AsyncTask<Object, Object, ?> mTask;
     private ImageView mProfileImageView;
@@ -223,7 +223,6 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         setHasOptionsMenu(true);
         final TwidereApplication application = TwidereApplication.getInstance(getActivity());
         mAsyncTaskManager = application.getAsyncTaskManager();
-        mLazyImageLoader = application.getMediaLoaderWrapper();
         final Bundle args = getArguments();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         mAccountId = accountId;
@@ -346,9 +345,9 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             mEditDescription.setText(user.description_expanded);
             mEditLocation.setText(user.location);
             mEditUrl.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
-            mLazyImageLoader.displayProfileImage(mProfileImageView, user.profile_image_url);
+            mMediaLoader.displayProfileImage(mProfileImageView, user.profile_image_url);
             final int def_width = getResources().getDisplayMetrics().widthPixels;
-            mLazyImageLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, def_width);
+            mMediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, def_width);
             mLinkColor.setColor(user.link_color);
             mBackgroundColor.setColor(user.background_color);
         } else {

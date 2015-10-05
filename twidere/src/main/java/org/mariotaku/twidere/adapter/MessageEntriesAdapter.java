@@ -39,15 +39,12 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversati
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
-import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ReadStateManager.OnReadStateChangeListener;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.MessageEntryViewHolder;
-
-import javax.inject.Inject;
 
 public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
         IContentCardAdapter, OnClickListener, OnReadStateChangeListener {
@@ -57,7 +54,6 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final MediaLoaderWrapper mImageLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final int mTextSize;
     private final int mProfileImageStyle;
@@ -77,7 +73,6 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
         mInflater = LayoutInflater.from(context);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mMultiSelectManager = app.getMultiSelectManager();
-        mImageLoader = app.getMediaLoaderWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
@@ -130,7 +125,7 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     @NonNull
     @Override
     public MediaLoaderWrapper getMediaLoader() {
-        return mImageLoader;
+        return mMediaLoader;
     }
 
     @NonNull

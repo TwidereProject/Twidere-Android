@@ -27,11 +27,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
 /**
  * Created by mariotaku on 15/4/4.
@@ -48,7 +48,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 final String tag = getPositionTag(uri.getLastPathSegment());
                 if (tag == null) return;
                 final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-                final ReadStateManager manager = TwidereApplication.getModule(context).getReadStateManager();
+                final ReadStateManager manager = ApplicationModule.get(context).getReadStateManager();
                 final String paramReadPosition, paramReadPositions;
                 if (!TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {
                     manager.setPosition(Utils.getReadPositionTagWithAccounts(tag, accountId),

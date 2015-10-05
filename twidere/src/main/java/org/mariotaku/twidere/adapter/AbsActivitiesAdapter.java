@@ -56,8 +56,6 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
 
-import javax.inject.Inject;
-
 /**
  * Created by mariotaku on 15/1/3.
  */
@@ -72,7 +70,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final MediaLoaderWrapper mImageLoader;
     private final MediaLoadingHandler mLoadingHandler;
     private final int mCardBackgroundColor;
     private final int mTextSize;
@@ -92,7 +89,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
-        mImageLoader = app.getMediaLoaderWrapper();
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mUserColorNameManager = app.getUserColorNameManager();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
@@ -123,7 +119,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @NonNull
     @Override
     public MediaLoaderWrapper getMediaLoader() {
-        return mImageLoader;
+        return mMediaLoader;
     }
 
     @NonNull

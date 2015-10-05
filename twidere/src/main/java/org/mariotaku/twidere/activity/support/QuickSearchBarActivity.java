@@ -421,9 +421,9 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         SuggestionsAdapter(QuickSearchBarActivity activity) {
             mActivity = activity;
+            mImageLoader = activity.mImageLoader;
             mInflater = LayoutInflater.from(activity);
             final TwidereApplication application = TwidereApplication.getInstance(activity);
-            mImageLoader = application.getMediaLoaderWrapper();
             mUserColorNameManager = application.getUserColorNameManager();
         }
 

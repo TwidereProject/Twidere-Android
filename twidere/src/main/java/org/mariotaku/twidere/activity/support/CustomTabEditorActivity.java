@@ -74,7 +74,6 @@ import static org.mariotaku.twidere.util.CustomTabUtils.getTabTypeName;
 
 public class CustomTabEditorActivity extends BaseSupportDialogActivity implements OnClickListener {
 
-    private MediaLoaderWrapper mImageLoader;
     private SharedPreferences mPreferences;
 
     private AccountsSpinnerAdapter mAccountsAdapter;
@@ -269,7 +268,6 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        mImageLoader = TwidereApplication.getInstance(this).getMediaLoaderWrapper();
         final Intent intent = getIntent();
         final String type = mTabType = intent.getStringExtra(EXTRA_TYPE);
         final CustomTabConfiguration conf = getTabConfiguration(type);

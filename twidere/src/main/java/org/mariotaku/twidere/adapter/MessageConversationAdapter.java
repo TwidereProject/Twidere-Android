@@ -22,7 +22,6 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +46,7 @@ import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.holder.IncomingMessageViewHolder;
 import org.mariotaku.twidere.view.holder.MessageViewHolder;
 
-public class MessageConversationAdapter extends Adapter<ViewHolder> implements Constants,
+public class MessageConversationAdapter extends BaseAdapter<ViewHolder> implements Constants,
         IDirectMessagesAdapter, OnClickListener {
 
     private static final int ITEM_VIEW_TYPE_MESSAGE_OUTGOING = 1;
@@ -62,7 +61,6 @@ public class MessageConversationAdapter extends Adapter<ViewHolder> implements C
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final MediaLoaderWrapper mMediaLoader;
     private final MultiSelectManager mMultiSelectManager;
     private final MediaLoadingHandler mMediaLoadingHandler;
 
@@ -71,12 +69,12 @@ public class MessageConversationAdapter extends Adapter<ViewHolder> implements C
     private TwidereLinkify mLinkify;
 
     public MessageConversationAdapter(final Context context) {
+        super(context);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null));
         mMultiSelectManager = app.getMultiSelectManager();
-        mMediaLoader = app.getMediaLoaderWrapper();
         final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
                 SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);

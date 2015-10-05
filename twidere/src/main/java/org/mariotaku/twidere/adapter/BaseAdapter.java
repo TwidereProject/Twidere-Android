@@ -22,9 +22,10 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
 import javax.inject.Inject;
@@ -37,11 +38,13 @@ public abstract class BaseAdapter<VH extends RecyclerView.ViewHolder> extends Re
     protected AsyncTwitterWrapper mTwitterWrapper;
     @Inject
     protected ReadStateManager mReadStateManager;
+    @Inject
+    protected MediaLoaderWrapper mMediaLoader;
 
     public BaseAdapter(Context context) {
         //noinspection unchecked
         DaggerGeneralComponent.builder()
-                .applicationModule(TwidereApplication.getModule(context))
+                .applicationModule(ApplicationModule.get(context))
                 .build()
                 .inject((BaseAdapter<RecyclerView.ViewHolder>) this);
     }

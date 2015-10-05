@@ -111,6 +111,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.ComposeEditText;
 
@@ -167,7 +168,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private TwidereValidator mValidator;
     private SharedPreferencesWrapper mPreferences;
     private SharedPreferences mMessageDrafts;
-    private MediaLoaderWrapper mImageLoader;
     private UserColorNameManager mUserColorNameManager;
     private EffectViewHelper mEffectHelper;
 
@@ -236,7 +236,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         mUserColorNameManager = UserColorNameManager.getInstance(activity);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mImageLoader = TwidereApplication.getInstance(activity).getMediaLoaderWrapper();
         mValidator = new TwidereValidator(activity);
 
         final View view = getView();
@@ -911,7 +910,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         private final ParcelableUser mRecipient;
 
         public SetReadStateTask(Context context, ParcelableCredentials account, ParcelableUser recipient) {
-            mReadStateManager = TwidereApplication.getModule(context).getReadStateManager();
+            mReadStateManager = ApplicationModule.get(context).getReadStateManager();
             mContext = context;
             mAccount = account;
             mRecipient = recipient;
