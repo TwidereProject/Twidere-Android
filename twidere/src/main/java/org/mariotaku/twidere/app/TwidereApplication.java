@@ -230,8 +230,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onLowMemory() {
-        final ApplicationModule module = getApplicationModule();
-        module.getMediaLoaderWrapper().clearMemoryCache();
+//        final ApplicationModule module = getApplicationModule();
+//        module.getMediaLoaderWrapper().clearMemoryCache();
         super.onLowMemory();
     }
 

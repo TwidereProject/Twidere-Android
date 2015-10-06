@@ -87,7 +87,6 @@ import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -130,9 +129,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     private CopyOnWriteArraySet<Long> mSendingDraftIds = new CopyOnWriteArraySet<>();
 
-    public AsyncTwitterWrapper(final Context context) {
+    public AsyncTwitterWrapper(final Context context, final AsyncTaskManager manager) {
         mContext = context;
-        mAsyncTaskManager = ApplicationModule.get(context).getAsyncTaskManager();
+        mAsyncTaskManager = manager;
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         mResolver = context.getContentResolver();

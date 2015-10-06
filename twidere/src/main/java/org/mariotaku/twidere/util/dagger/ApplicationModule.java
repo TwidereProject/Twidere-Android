@@ -27,6 +27,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.internal.Network;
 
+import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ActivityTracker;
@@ -34,6 +35,7 @@ import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.net.TwidereNetwork;
@@ -56,21 +58,42 @@ public class ApplicationModule {
     private final TwidereImageDownloader imageDownloader;
     private final AsyncTaskManager asyncTaskManager;
     private final Network network;
+    private final RestHttpClient restHttpClient;
 
     public ApplicationModule(TwidereApplication application) {
         activityTracker = new ActivityTracker();
-        asyncTwitterWrapper = new AsyncTwitterWrapper(application);
-        readStateManager = new ReadStateManager(application);
-        imageDownloader = new TwidereImageDownloader(application, true);
-        imageLoader = createImageLoader(application, imageDownloader);
-        videoLoader = new VideoLoader(application);
-        mediaLoaderWrapper = new MediaLoaderWrapper(imageLoader, videoLoader);
         asyncTaskManager = AsyncTaskManager.getInstance();
+        asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager);
+        readStateManager = new ReadStateManager(application);
         network = new TwidereNetwork(application);
+        restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, network);
+        imageDownloader = new TwidereImageDownloader(application, network, true);
+        imageLoader = createImageLoader(application, imageDownloader);
+        videoLoader = new VideoLoader(application, imageDownloader, asyncTaskManager);
+        mediaLoaderWrapper = new MediaLoaderWrapper(imageLoader, videoLoader);
     }
 
     public static ApplicationModule get(Context context) {
         return TwidereApplication.getInstance(context).getApplicationModule();
+    }
+
+    private static ImageLoader createImageLoader(TwidereApplication application, TwidereImageDownloader imageDownloader) {
+        final ImageLoader loader = ImageLoader.getInstance();
+        final ImageLoaderConfiguration.Builder cb = new ImageLoaderConfiguration.Builder(application);
+        cb.threadPriority(Thread.NORM_PRIORITY - 2);
+        cb.denyCacheImageMultipleSizesInMemory();
+        cb.tasksProcessingOrder(QueueProcessingType.LIFO);
+        // cb.memoryCache(new ImageMemoryCache(40));
+        cb.diskCache(application.getDiskCache());
+        cb.imageDownloader(imageDownloader);
+        L.writeDebugLogs(BuildConfig.DEBUG);
+        loader.init(cb.build());
+        return loader;
+    }
+
+    @Provides
+    public RestHttpClient getRestHttpClient() {
+        return restHttpClient;
     }
 
     @Provides
@@ -111,20 +134,6 @@ public class ApplicationModule {
     @Provides
     public MediaLoaderWrapper getMediaLoaderWrapper() {
         return mediaLoaderWrapper;
-    }
-
-    private static ImageLoader createImageLoader(TwidereApplication application, TwidereImageDownloader imageDownloader) {
-        final ImageLoader loader = ImageLoader.getInstance();
-        final ImageLoaderConfiguration.Builder cb = new ImageLoaderConfiguration.Builder(application);
-        cb.threadPriority(Thread.NORM_PRIORITY - 2);
-        cb.denyCacheImageMultipleSizesInMemory();
-        cb.tasksProcessingOrder(QueueProcessingType.LIFO);
-        // cb.memoryCache(new ImageMemoryCache(40));
-        cb.diskCache(application.getDiskCache());
-        cb.imageDownloader(imageDownloader);
-        L.writeDebugLogs(BuildConfig.DEBUG);
-        loader.init(cb.build());
-        return loader;
     }
 
     @Provides

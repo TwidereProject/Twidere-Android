@@ -11,9 +11,9 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.webkit.URLUtil;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Internal;
+import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.HttpRequestFactory;
@@ -43,7 +43,6 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.util.TwitterConverter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RequestType;
@@ -104,12 +103,16 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static RestHttpClient getDefaultHttpClient(final Context context) {
-        if (context == null) return null;
-        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return createHttpClient(context, prefs);
+        return getDefaultHttpClient(context, ApplicationModule.get(context).getNetwork());
     }
 
-    public static RestHttpClient createHttpClient(final Context context, final SharedPreferences prefs) {
+    public static RestHttpClient getDefaultHttpClient(final Context context, final Network network) {
+        if (context == null || network == null) return null;
+        final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return createHttpClient(context, network, prefs);
+    }
+
+    public static RestHttpClient createHttpClient(final Context context, final Network network, final SharedPreferences prefs) {
         final int connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
@@ -128,7 +131,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         if (enableProxy) {
             client.setProxy(getProxy(prefs));
         }
-        Internal.instance.setNetwork(client, ApplicationModule.get(context).getNetwork());
+        Internal.instance.setNetwork(client, network);
         return new OkHttpRestClient(context, client);
     }
 

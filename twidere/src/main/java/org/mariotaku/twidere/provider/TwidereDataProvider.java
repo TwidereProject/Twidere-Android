@@ -35,6 +35,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteFullException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -83,7 +84,9 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
@@ -139,29 +142,24 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         LazyLoadCallback {
 
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
-    private ContentResolver mContentResolver;
-    private SQLiteDatabaseWrapper mDatabaseWrapper;
-    private PermissionsManager mPermissionsManager;
-
-    @Nullable
-    private NotificationManager mNotificationManager;
-
     @Inject
     ReadStateManager mReadStateManager;
     @Inject
     AsyncTwitterWrapper mTwitterWrapper;
     @Inject
     ImageLoader mMediaLoader;
+    private ContentResolver mContentResolver;
+    private SQLiteDatabaseWrapper mDatabaseWrapper;
+    private PermissionsManager mPermissionsManager;
+    @Nullable
+    private NotificationManager mNotificationManager;
     private SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;
     @Inject
-    private Network mNetwork;
+    Network mNetwork;
     private Handler mHandler;
 
     private boolean mHomeActivityInBackground;
-
-    private boolean mNameFirst;
-
     private final BroadcastReceiver mHomeActivityStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
@@ -174,103 +172,227 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
 
     };
+    private boolean mNameFirst;
+
+    private static PendingIntent getDeleteIntent(Context context, String type, long accountId, long position) {
+        // Setup delete intent
+        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
+        recvIntent.setAction(BROADCAST_NOTIFICATION_DELETED);
+        final Uri.Builder recvLinkBuilder = new Uri.Builder();
+        recvLinkBuilder.scheme(SCHEME_TWIDERE);
+        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        recvLinkBuilder.appendPath(type);
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
+        recvIntent.setData(recvLinkBuilder.build());
+        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
+    }
+
+    private static PendingIntent getDeleteIntent(Context context, String type, long accountId, StringLongPair[] positions) {
+        // Setup delete intent
+        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
+        final Uri.Builder recvLinkBuilder = new Uri.Builder();
+        recvLinkBuilder.scheme(SCHEME_TWIDERE);
+        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        recvLinkBuilder.appendPath(type);
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));
+        recvIntent.setData(recvLinkBuilder.build());
+        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
+    }
+
+    private static Cursor getPreferencesCursor(final SharedPreferencesWrapper preferences, final String key) {
+        final MatrixCursor c = new MatrixCursor(TwidereDataStore.Preferences.MATRIX_COLUMNS);
+        final Map<String, Object> map = new HashMap<>();
+        final Map<String, ?> all = preferences.getAll();
+        if (key == null) {
+            map.putAll(all);
+        } else {
+            map.put(key, all.get(key));
+        }
+        for (final Map.Entry<String, ?> item : map.entrySet()) {
+            final Object value = item.getValue();
+            final int type = getPreferenceType(value);
+            c.addRow(new Object[]{item.getKey(), ParseUtils.parseString(value), type});
+        }
+        return c;
+    }
+
+    private static int getPreferenceType(final Object object) {
+        if (object == null)
+            return Preferences.TYPE_NULL;
+        else if (object instanceof Boolean)
+            return Preferences.TYPE_BOOLEAN;
+        else if (object instanceof Integer)
+            return Preferences.TYPE_INTEGER;
+        else if (object instanceof Long)
+            return Preferences.TYPE_LONG;
+        else if (object instanceof Float)
+            return Preferences.TYPE_FLOAT;
+        else if (object instanceof String) return Preferences.TYPE_STRING;
+        return Preferences.TYPE_INVALID;
+    }
+
+    private static int getUnreadCount(final List<UnreadItem> set, final long... accountIds) {
+        if (set == null || set.isEmpty()) return 0;
+        int count = 0;
+        for (final UnreadItem item : set.toArray(new UnreadItem[set.size()])) {
+            if (item != null && ArrayUtils.contains(accountIds, item.account_id)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static boolean shouldReplaceOnConflict(final int table_id) {
+        switch (table_id) {
+            case TABLE_ID_CACHED_HASHTAGS:
+            case TABLE_ID_CACHED_STATUSES:
+            case TABLE_ID_CACHED_USERS:
+            case TABLE_ID_CACHED_RELATIONSHIPS:
+            case TABLE_ID_SEARCH_HISTORY:
+            case TABLE_ID_FILTERED_USERS:
+            case TABLE_ID_FILTERED_KEYWORDS:
+            case TABLE_ID_FILTERED_SOURCES:
+            case TABLE_ID_FILTERED_LINKS:
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public int bulkInsert(@NonNull final Uri uri, @NonNull final ContentValues[] valuesArray) {
         try {
-            final int tableId = getTableId(uri);
-            final String table = getTableNameById(tableId);
-            checkWritePermission(tableId, table);
-            switch (tableId) {
-                case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
-                case TABLE_ID_DIRECT_MESSAGES:
-                case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
-                case TABLE_ID_NETWORK_USAGES:
-                    return 0;
-            }
-            int result = 0;
-            final long[] newIds = new long[valuesArray.length];
-            if (table != null) {
-                mDatabaseWrapper.beginTransaction();
-                if (tableId == TABLE_ID_CACHED_USERS) {
-                    for (final ContentValues values : valuesArray) {
-                        final Expression where = Expression.equals(CachedUsers.USER_ID,
-                                values.getAsLong(CachedUsers.USER_ID));
-                        mDatabaseWrapper.update(table, values, where.getSQL(), null);
-                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
-                                values, SQLiteDatabase.CONFLICT_REPLACE);
-                    }
-                } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
-                    for (final ContentValues values : valuesArray) {
-                        values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
-                        final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
-                        final String[] args = {values.getAsString(SearchHistory.QUERY)};
-                        mDatabaseWrapper.update(table, values, where.getSQL(), args);
-                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
-                                values, SQLiteDatabase.CONFLICT_IGNORE);
-                    }
-                } else if (shouldReplaceOnConflict(tableId)) {
-                    for (final ContentValues values : valuesArray) {
-                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
-                                values, SQLiteDatabase.CONFLICT_REPLACE);
-                    }
-                } else {
-                    for (final ContentValues values : valuesArray) {
-                        newIds[result++] = mDatabaseWrapper.insert(table, null, values);
-                    }
-                }
-                mDatabaseWrapper.setTransactionSuccessful();
-                mDatabaseWrapper.endTransaction();
-            }
-            if (result > 0) {
-                onDatabaseUpdated(tableId, uri);
-            }
-            onNewItemsInserted(uri, tableId, valuesArray, newIds);
-            return result;
+            return bulkInsertInternal(uri, valuesArray);
         } catch (final SQLException e) {
+            if (handleSQLException(e)) {
+                try {
+                    return bulkInsertInternal(uri, valuesArray);
+                } catch (SQLException e1) {
+                    throw new IllegalStateException(e1);
+                }
+            }
             throw new IllegalStateException(e);
         }
     }
 
+    private boolean handleSQLException(SQLException e) {
+        try {
+            if (e instanceof SQLiteFullException) {
+                // Drop cached databases
+                mDatabaseWrapper.delete(CachedUsers.TABLE_NAME, null, null);
+                mDatabaseWrapper.delete(CachedStatuses.TABLE_NAME, null, null);
+                mDatabaseWrapper.delete(CachedHashtags.TABLE_NAME, null, null);
+                mDatabaseWrapper.execSQL("VACUUM");
+                return true;
+            }
+        } catch (SQLException ee) {
+            throw new IllegalStateException(ee);
+        }
+        throw new IllegalStateException(e);
+    }
+
+    private int bulkInsertInternal(@NonNull Uri uri, @NonNull ContentValues[] valuesArray) {
+        final int tableId = getTableId(uri);
+        final String table = getTableNameById(tableId);
+        checkWritePermission(tableId, table);
+        switch (tableId) {
+            case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
+            case TABLE_ID_DIRECT_MESSAGES:
+            case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
+            case TABLE_ID_NETWORK_USAGES:
+                return 0;
+        }
+        int result = 0;
+        final long[] newIds = new long[valuesArray.length];
+        if (table != null) {
+            mDatabaseWrapper.beginTransaction();
+            if (tableId == TABLE_ID_CACHED_USERS) {
+                for (final ContentValues values : valuesArray) {
+                    final Expression where = Expression.equals(CachedUsers.USER_ID,
+                            values.getAsLong(CachedUsers.USER_ID));
+                    mDatabaseWrapper.update(table, values, where.getSQL(), null);
+                    newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                            values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
+                for (final ContentValues values : valuesArray) {
+                    values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
+                    final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
+                    final String[] args = {values.getAsString(SearchHistory.QUERY)};
+                    mDatabaseWrapper.update(table, values, where.getSQL(), args);
+                    newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                            values, SQLiteDatabase.CONFLICT_IGNORE);
+                }
+            } else if (shouldReplaceOnConflict(tableId)) {
+                for (final ContentValues values : valuesArray) {
+                    newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                            values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            } else {
+                for (final ContentValues values : valuesArray) {
+                    newIds[result++] = mDatabaseWrapper.insert(table, null, values);
+                }
+            }
+            mDatabaseWrapper.setTransactionSuccessful();
+            mDatabaseWrapper.endTransaction();
+        }
+        if (result > 0) {
+            onDatabaseUpdated(tableId, uri);
+        }
+        onNewItemsInserted(uri, tableId, valuesArray, newIds);
+        return result;
+    }
 
     @Override
     public int delete(@NonNull final Uri uri, final String selection, final String[] selectionArgs) {
         try {
-            final int tableId = getTableId(uri);
-            final String table = getTableNameById(tableId);
-            checkWritePermission(tableId, table);
-            switch (tableId) {
-                case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
-                case TABLE_ID_DIRECT_MESSAGES:
-                case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
-                    return 0;
-                case VIRTUAL_TABLE_ID_NOTIFICATIONS: {
-                    final List<String> segments = uri.getPathSegments();
-                    if (segments.size() == 1) {
-                        clearNotification();
-                    } else if (segments.size() == 2) {
-                        final int notificationType = ParseUtils.parseInt(segments.get(1));
-                        clearNotification(notificationType, 0);
-                    } else if (segments.size() == 3) {
-                        final int notificationType = ParseUtils.parseInt(segments.get(1));
-                        final long accountId = ParseUtils.parseLong(segments.get(2));
-                        clearNotification(notificationType, accountId);
-                    }
-                    return 1;
-                }
-                case VIRTUAL_TABLE_ID_UNREAD_COUNTS: {
-                    return 0;
-                }
-            }
-            if (table == null) return 0;
-            final int result = mDatabaseWrapper.delete(table, selection, selectionArgs);
-            if (result > 0) {
-                onDatabaseUpdated(tableId, uri);
-            }
-            return result;
+            return deleteInternal(uri, selection, selectionArgs);
         } catch (final SQLException e) {
+            if (handleSQLException(e)) {
+                try {
+                    return deleteInternal(uri, selection, selectionArgs);
+                } catch (SQLException e1) {
+                    throw new IllegalStateException(e1);
+                }
+            }
             throw new IllegalStateException(e);
         }
+    }
+
+    private int deleteInternal(@NonNull Uri uri, String selection, String[] selectionArgs) {
+        final int tableId = getTableId(uri);
+        final String table = getTableNameById(tableId);
+        checkWritePermission(tableId, table);
+        switch (tableId) {
+            case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
+            case TABLE_ID_DIRECT_MESSAGES:
+            case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
+                return 0;
+            case VIRTUAL_TABLE_ID_NOTIFICATIONS: {
+                final List<String> segments = uri.getPathSegments();
+                if (segments.size() == 1) {
+                    clearNotification();
+                } else if (segments.size() == 2) {
+                    final int notificationType = ParseUtils.parseInt(segments.get(1));
+                    clearNotification(notificationType, 0);
+                } else if (segments.size() == 3) {
+                    final int notificationType = ParseUtils.parseInt(segments.get(1));
+                    final long accountId = ParseUtils.parseLong(segments.get(2));
+                    clearNotification(notificationType, accountId);
+                }
+                return 1;
+            }
+            case VIRTUAL_TABLE_ID_UNREAD_COUNTS: {
+                return 0;
+            }
+        }
+        if (table == null) return 0;
+        final int result = mDatabaseWrapper.delete(table, selection, selectionArgs);
+        if (result > 0) {
+            onDatabaseUpdated(tableId, uri);
+        }
+        return result;
     }
 
     @Override
@@ -281,103 +403,116 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Override
     public Uri insert(@NonNull final Uri uri, final ContentValues values) {
         try {
-            final int tableId = getTableId(uri);
-            final String table = getTableNameById(tableId);
-            checkWritePermission(tableId, table);
-            switch (tableId) {
-                case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
-                case TABLE_ID_DIRECT_MESSAGES:
-                case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
-                    return null;
-            }
-            final long rowId;
-            if (tableId == TABLE_ID_CACHED_USERS) {
-                final Expression where = Expression.equals(CachedUsers.USER_ID,
-                        values.getAsLong(CachedUsers.USER_ID));
-                mDatabaseWrapper.update(table, values, where.getSQL(), null);
-                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
-            } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
-                values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
-                final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
-                final String[] args = {values.getAsString(SearchHistory.QUERY)};
-                mDatabaseWrapper.update(table, values, where.getSQL(), args);
-                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
-            } else if (tableId == TABLE_ID_CACHED_RELATIONSHIPS) {
-                final long accountId = values.getAsLong(CachedRelationships.ACCOUNT_ID);
-                final long userId = values.getAsLong(CachedRelationships.USER_ID);
-                final Expression where = Expression.and(
-                        Expression.equals(CachedRelationships.ACCOUNT_ID, accountId),
-                        Expression.equals(CachedRelationships.USER_ID, userId)
-                );
-                if (mDatabaseWrapper.update(table, values, where.getSQL(), null) > 0) {
-                    final String[] projection = {CachedRelationships._ID};
-                    final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
-                            null, null, null);
-                    if (c.moveToFirst()) {
-                        rowId = c.getLong(0);
-                    } else {
-                        rowId = 0;
-                    }
-                    c.close();
-                } else {
-                    rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                            SQLiteDatabase.CONFLICT_IGNORE);
-                }
-            } else if (tableId == TABLE_ID_NETWORK_USAGES) {
-                rowId = 0;
-                final long timeInHours = values.getAsLong(NetworkUsages.TIME_IN_HOURS);
-                final String requestNetwork = values.getAsString(NetworkUsages.REQUEST_NETWORK);
-                final String requestType = values.getAsString(NetworkUsages.REQUEST_TYPE);
-                final SQLInsertQuery insertOrIgnore = SQLQueryBuilder.insertInto(OnConflict.IGNORE, table)
-                        .columns(new String[]{NetworkUsages.TIME_IN_HOURS, NetworkUsages.REQUEST_NETWORK, NetworkUsages.REQUEST_TYPE,
-                                NetworkUsages.KILOBYTES_RECEIVED, NetworkUsages.KILOBYTES_SENT})
-                        .values("?, ?, ?, ?, ?")
-                        .build();
-                final SQLUpdateQuery updateIncremental = SQLQueryBuilder.update(OnConflict.REPLACE, table)
-                        .set(
-                                new SetValue(NetworkUsages.KILOBYTES_RECEIVED, new RawSQLLang(NetworkUsages.KILOBYTES_RECEIVED + " + ?")),
-                                new SetValue(NetworkUsages.KILOBYTES_SENT, new RawSQLLang(NetworkUsages.KILOBYTES_SENT + " + ?"))
-                        )
-                        .where(Expression.and(
-                                Expression.equals(NetworkUsages.TIME_IN_HOURS, timeInHours),
-                                Expression.equalsArgs(NetworkUsages.REQUEST_NETWORK),
-                                Expression.equalsArgs(NetworkUsages.REQUEST_TYPE)
-                        ))
-                        .build();
-                mDatabaseWrapper.beginTransaction();
-                mDatabaseWrapper.execSQL(insertOrIgnore.getSQL(),
-                        new Object[]{timeInHours, requestNetwork, requestType, 0.0, 0.0});
-                mDatabaseWrapper.execSQL(updateIncremental.getSQL(),
-                        new Object[]{values.getAsDouble(NetworkUsages.KILOBYTES_RECEIVED),
-                                values.getAsDouble(NetworkUsages.KILOBYTES_SENT), requestNetwork, requestType});
-                mDatabaseWrapper.setTransactionSuccessful();
-                mDatabaseWrapper.endTransaction();
-            } else if (tableId == VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS) {
-                rowId = showDraftNotification(uri, values);
-            } else if (shouldReplaceOnConflict(tableId)) {
-                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                        SQLiteDatabase.CONFLICT_REPLACE);
-            } else if (table != null) {
-                rowId = mDatabaseWrapper.insert(table, null, values);
-            } else {
-                return null;
-            }
-            onDatabaseUpdated(tableId, uri);
-            onNewItemsInserted(uri, tableId, values, rowId);
-            return Uri.withAppendedPath(uri, String.valueOf(rowId));
+            return insertInternal(uri, values);
         } catch (final SQLException e) {
+            if (handleSQLException(e)) {
+                try {
+                    return insertInternal(uri, values);
+                } catch (SQLException e1) {
+                    throw new IllegalStateException(e1);
+                }
+            }
             throw new IllegalStateException(e);
         }
     }
 
+    private Uri insertInternal(@NonNull Uri uri, ContentValues values) {
+        final int tableId = getTableId(uri);
+        final String table = getTableNameById(tableId);
+        checkWritePermission(tableId, table);
+        switch (tableId) {
+            case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
+            case TABLE_ID_DIRECT_MESSAGES:
+            case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
+                return null;
+        }
+        final long rowId;
+        if (tableId == TABLE_ID_CACHED_USERS) {
+            final Expression where = Expression.equals(CachedUsers.USER_ID,
+                    values.getAsLong(CachedUsers.USER_ID));
+            mDatabaseWrapper.update(table, values, where.getSQL(), null);
+            rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                    SQLiteDatabase.CONFLICT_IGNORE);
+        } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
+            values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
+            final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
+            final String[] args = {values.getAsString(SearchHistory.QUERY)};
+            mDatabaseWrapper.update(table, values, where.getSQL(), args);
+            rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                    SQLiteDatabase.CONFLICT_IGNORE);
+        } else if (tableId == TABLE_ID_CACHED_RELATIONSHIPS) {
+            final long accountId = values.getAsLong(CachedRelationships.ACCOUNT_ID);
+            final long userId = values.getAsLong(CachedRelationships.USER_ID);
+            final Expression where = Expression.and(
+                    Expression.equals(CachedRelationships.ACCOUNT_ID, accountId),
+                    Expression.equals(CachedRelationships.USER_ID, userId)
+            );
+            if (mDatabaseWrapper.update(table, values, where.getSQL(), null) > 0) {
+                final String[] projection = {CachedRelationships._ID};
+                final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
+                        null, null, null);
+                if (c.moveToFirst()) {
+                    rowId = c.getLong(0);
+                } else {
+                    rowId = 0;
+                }
+                c.close();
+            } else {
+                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                        SQLiteDatabase.CONFLICT_IGNORE);
+            }
+        } else if (tableId == TABLE_ID_NETWORK_USAGES) {
+            rowId = 0;
+            final long timeInHours = values.getAsLong(NetworkUsages.TIME_IN_HOURS);
+            final String requestNetwork = values.getAsString(NetworkUsages.REQUEST_NETWORK);
+            final String requestType = values.getAsString(NetworkUsages.REQUEST_TYPE);
+            final SQLInsertQuery insertOrIgnore = SQLQueryBuilder.insertInto(OnConflict.IGNORE, table)
+                    .columns(new String[]{NetworkUsages.TIME_IN_HOURS, NetworkUsages.REQUEST_NETWORK, NetworkUsages.REQUEST_TYPE,
+                            NetworkUsages.KILOBYTES_RECEIVED, NetworkUsages.KILOBYTES_SENT})
+                    .values("?, ?, ?, ?, ?")
+                    .build();
+            final SQLUpdateQuery updateIncremental = SQLQueryBuilder.update(OnConflict.REPLACE, table)
+                    .set(
+                            new SetValue(NetworkUsages.KILOBYTES_RECEIVED, new RawSQLLang(NetworkUsages.KILOBYTES_RECEIVED + " + ?")),
+                            new SetValue(NetworkUsages.KILOBYTES_SENT, new RawSQLLang(NetworkUsages.KILOBYTES_SENT + " + ?"))
+                    )
+                    .where(Expression.and(
+                            Expression.equals(NetworkUsages.TIME_IN_HOURS, timeInHours),
+                            Expression.equalsArgs(NetworkUsages.REQUEST_NETWORK),
+                            Expression.equalsArgs(NetworkUsages.REQUEST_TYPE)
+                    ))
+                    .build();
+            mDatabaseWrapper.beginTransaction();
+            mDatabaseWrapper.execSQL(insertOrIgnore.getSQL(),
+                    new Object[]{timeInHours, requestNetwork, requestType, 0.0, 0.0});
+            mDatabaseWrapper.execSQL(updateIncremental.getSQL(),
+                    new Object[]{values.getAsDouble(NetworkUsages.KILOBYTES_RECEIVED),
+                            values.getAsDouble(NetworkUsages.KILOBYTES_SENT), requestNetwork, requestType});
+            mDatabaseWrapper.setTransactionSuccessful();
+            mDatabaseWrapper.endTransaction();
+        } else if (tableId == VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS) {
+            rowId = showDraftNotification(uri, values);
+        } else if (shouldReplaceOnConflict(tableId)) {
+            rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+        } else if (table != null) {
+            rowId = mDatabaseWrapper.insert(table, null, values);
+        } else {
+            return null;
+        }
+        onDatabaseUpdated(tableId, uri);
+        onNewItemsInserted(uri, tableId, values, rowId);
+        return Uri.withAppendedPath(uri, String.valueOf(rowId));
+    }
+
     private long showDraftNotification(Uri queryUri, ContentValues values) {
-        if (values == null) return -1;
+        final Context context = getContext();
+        if (values == null || context == null) return -1;
         final Long draftId = values.getAsLong(BaseColumns._ID);
         if (draftId == null) return -1;
         final Expression where = Expression.equals(Drafts._ID, draftId);
         final Cursor c = getContentResolver().query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.getSQL(), null, null);
+        if (c == null) return -1;
         final DraftItem.CursorIndices i = new DraftItem.CursorIndices(c);
         final DraftItem item;
         try {
@@ -386,7 +521,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         } finally {
             c.close();
         }
-        final Context context = getContext();
         final String title = context.getString(R.string.status_not_updated);
         final String message = context.getString(R.string.status_not_updated_summary);
         final Intent intent = new Intent();
@@ -601,27 +735,38 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Override
     public int update(@NonNull final Uri uri, final ContentValues values, final String selection, final String[] selectionArgs) {
         try {
-            final int tableId = getTableId(uri);
-            final String table = getTableNameById(tableId);
-            checkWritePermission(tableId, table);
-            int result = 0;
-            if (table != null) {
-                switch (tableId) {
-                    case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
-                    case TABLE_ID_DIRECT_MESSAGES:
-                    case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
-                    case TABLE_ID_NETWORK_USAGES:
-                        return 0;
-                }
-                result = mDatabaseWrapper.update(table, values, selection, selectionArgs);
-            }
-            if (result > 0) {
-                onDatabaseUpdated(tableId, uri);
-            }
-            return result;
+            return updateInternal(uri, values, selection, selectionArgs);
         } catch (final SQLException e) {
+            if (handleSQLException(e)) {
+                try {
+                    return updateInternal(uri, values, selection, selectionArgs);
+                } catch (SQLException e1) {
+                    throw new IllegalStateException(e1);
+                }
+            }
             throw new IllegalStateException(e);
         }
+    }
+
+    private int updateInternal(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        final int tableId = getTableId(uri);
+        final String table = getTableNameById(tableId);
+        checkWritePermission(tableId, table);
+        int result = 0;
+        if (table != null) {
+            switch (tableId) {
+                case TABLE_ID_DIRECT_MESSAGES_CONVERSATION:
+                case TABLE_ID_DIRECT_MESSAGES:
+                case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
+                case TABLE_ID_NETWORK_USAGES:
+                    return 0;
+            }
+            result = mDatabaseWrapper.update(table, values, selection, selectionArgs);
+        }
+        if (result > 0) {
+            onDatabaseUpdated(tableId, uri);
+        }
+        return result;
     }
 
     private boolean checkPermission(final String... permissions) {
@@ -765,8 +910,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private ParcelFileDescriptor getCacheFileFd(final String name) throws FileNotFoundException {
         if (name == null) return null;
-        final Context mContext = getContext();
-        final File cacheDir = mContext.getCacheDir();
+        final Context context = getContext();
+        final File cacheDir = context.getCacheDir();
         final File file = new File(cacheDir, name);
         if (!file.exists()) return null;
         return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
@@ -861,7 +1006,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         });
     }
 
-
     private void notifyUnreadCountChanged(final int position) {
         final Context context = getContext();
         final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
@@ -887,7 +1031,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         notifyContentObserver(getNotificationUri(tableId, uri));
     }
-
 
     private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values, final long newId) {
         onNewItemsInserted(uri, tableId, new ContentValues[]{values}, new long[]{newId});
@@ -1135,33 +1278,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return PendingIntent.getActivity(context, 0, homeIntent, 0);
     }
 
-    private static PendingIntent getDeleteIntent(Context context, String type, long accountId, long position) {
-        // Setup delete intent
-        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
-        recvIntent.setAction(BROADCAST_NOTIFICATION_DELETED);
-        final Uri.Builder recvLinkBuilder = new Uri.Builder();
-        recvLinkBuilder.scheme(SCHEME_TWIDERE);
-        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
-        recvLinkBuilder.appendPath(type);
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
-        recvIntent.setData(recvLinkBuilder.build());
-        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
-    }
-
-    private static PendingIntent getDeleteIntent(Context context, String type, long accountId, StringLongPair[] positions) {
-        // Setup delete intent
-        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
-        final Uri.Builder recvLinkBuilder = new Uri.Builder();
-        recvLinkBuilder.scheme(SCHEME_TWIDERE);
-        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
-        recvLinkBuilder.appendPath(type);
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));
-        recvIntent.setData(recvLinkBuilder.build());
-        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
-    }
-
     private void setNotificationPreferences(NotificationCompat.Builder builder, AccountPreferences pref, int defaultFlags) {
         int notificationDefaults = 0;
         if (AccountPreferences.isNotificationHasLight(defaultFlags)) {
@@ -1347,66 +1463,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private void updatePreferences() {
         mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, false);
-    }
-
-    private static Cursor getPreferencesCursor(final SharedPreferencesWrapper preferences, final String key) {
-        final MatrixCursor c = new MatrixCursor(TwidereDataStore.Preferences.MATRIX_COLUMNS);
-        final Map<String, Object> map = new HashMap<>();
-        final Map<String, ?> all = preferences.getAll();
-        if (key == null) {
-            map.putAll(all);
-        } else {
-            map.put(key, all.get(key));
-        }
-        for (final Map.Entry<String, ?> item : map.entrySet()) {
-            final Object value = item.getValue();
-            final int type = getPreferenceType(value);
-            c.addRow(new Object[]{item.getKey(), ParseUtils.parseString(value), type});
-        }
-        return c;
-    }
-
-    private static int getPreferenceType(final Object object) {
-        if (object == null)
-            return Preferences.TYPE_NULL;
-        else if (object instanceof Boolean)
-            return Preferences.TYPE_BOOLEAN;
-        else if (object instanceof Integer)
-            return Preferences.TYPE_INTEGER;
-        else if (object instanceof Long)
-            return Preferences.TYPE_LONG;
-        else if (object instanceof Float)
-            return Preferences.TYPE_FLOAT;
-        else if (object instanceof String) return Preferences.TYPE_STRING;
-        return Preferences.TYPE_INVALID;
-    }
-
-
-    private static int getUnreadCount(final List<UnreadItem> set, final long... accountIds) {
-        if (set == null || set.isEmpty()) return 0;
-        int count = 0;
-        for (final UnreadItem item : set.toArray(new UnreadItem[set.size()])) {
-            if (item != null && ArrayUtils.contains(accountIds, item.account_id)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    private static boolean shouldReplaceOnConflict(final int table_id) {
-        switch (table_id) {
-            case TABLE_ID_CACHED_HASHTAGS:
-            case TABLE_ID_CACHED_STATUSES:
-            case TABLE_ID_CACHED_USERS:
-            case TABLE_ID_CACHED_RELATIONSHIPS:
-            case TABLE_ID_SEARCH_HISTORY:
-            case TABLE_ID_FILTERED_USERS:
-            case TABLE_ID_FILTERED_KEYWORDS:
-            case TABLE_ID_FILTERED_SOURCES:
-            case TABLE_ID_FILTERED_LINKS:
-                return true;
-        }
-        return false;
     }
 
     @SuppressWarnings("unused")
