@@ -60,7 +60,7 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
  * Created by mariotaku on 15/1/3.
  */
 public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
-        IActivitiesAdapter<Data>, StatusClickListener, OnLinkClickListener {
+        IActivitiesAdapter<Data>, StatusClickListener, OnLinkClickListener, ActivityTitleSummaryViewHolder.ActivityClickListener {
 
     private static final int ITEM_VIEW_TYPE_STUB = 0;
     private static final int ITEM_VIEW_TYPE_GAP = 1;
@@ -239,6 +239,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
                     cardView.setCardBackgroundColor(mCardBackgroundColor);
                 }
                 final ActivityTitleSummaryViewHolder holder = new ActivityTitleSummaryViewHolder(this, view);
+                holder.setOnClickListeners();
                 holder.setTextSize(getTextSize());
                 return holder;
             }
@@ -321,6 +322,11 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     @Override
+    public boolean isGapItem(int position) {
+        return false;
+    }
+
+    @Override
     public void onGapClick(ViewHolder holder, int position) {
         if (mActivityAdapterListener != null) {
             mActivityAdapterListener.onGapClick((GapViewHolder) holder, position);
@@ -360,8 +366,16 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         return mDisplayMediaPreview;
     }
 
+    @Override
+    public void onActivityClick(ActivityTitleSummaryViewHolder holder, int position) {
+        if (mActivityAdapterListener == null) return;
+        mActivityAdapterListener.onActivityClick(holder, position);
+    }
+
     public interface ActivityAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
+
+        void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
     }
 
     private static class StubViewHolder extends ViewHolder {

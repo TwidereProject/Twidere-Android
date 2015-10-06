@@ -31,7 +31,7 @@
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp">
 
-    <RelativeLayout
+    <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -149,5 +149,5 @@
             tools:text="@string/sample_status_text"
             tools:textSize="12sp" />
 
-    </RelativeLayout>
+    </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 </android.support.v7.widget.CardView>

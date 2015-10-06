@@ -44,6 +44,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
+import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 
 /**
@@ -67,6 +68,11 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
         final long[] accountIds = {activity.account_id};
         final long[] maxIds = {activity.min_position};
         getActivities(accountIds, maxIds, null);
+    }
+
+    @Override
+    public void onActivityClick(ActivityTitleSummaryViewHolder holder, int position) {
+
     }
 
     @Override
