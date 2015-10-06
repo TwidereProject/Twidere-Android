@@ -24,6 +24,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -37,6 +38,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -73,13 +75,13 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
         profileImageMoreNumber = (TextView) itemView.findViewById(R.id.activity_profile_image_more_number);
     }
 
-    public void displayActivity(ParcelableActivity activity) {
+    public void displayActivityAboutMe(ParcelableActivity activity) {
         final Context context = adapter.getContext();
         final Resources resources = adapter.getContext().getResources();
         switch (activity.action) {
             case Activity.ACTION_FOLLOW: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_follow), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
                         R.string.activity_about_me_follow_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -88,7 +90,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             }
             case Activity.ACTION_FAVORITE: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_favorite), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
                         R.string.activity_about_me_favorite_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -98,7 +100,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             }
             case Activity.ACTION_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_retweet), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
                         R.string.activity_about_me_retweet_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -108,7 +110,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             }
             case Activity.ACTION_FAVORITED_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_favorite), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
                         R.string.activity_about_me_favorited_retweet_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -118,7 +120,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             }
             case Activity.ACTION_RETWEETED_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_retweet), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_retweet,
                         R.string.activity_about_me_retweeted_retweet_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -128,7 +130,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             }
             case Activity.ACTION_RETWEETED_MENTION: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_retweet), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_mention,
                         R.string.activity_about_me_retweeted_mention_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -138,7 +140,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
             }
             case Activity.ACTION_FAVORITED_MENTION: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(resources.getColor(R.color.highlight_favorite), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
                         R.string.activity_about_me_favorited_mention_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -167,6 +169,37 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
                 }
                 displayUserProfileImages(activity.sources);
                 summaryView.setVisibility(View.GONE);
+                break;
+            }
+        }
+    }
+
+    public void displayActivitiesByFriends(ParcelableActivity activity) {
+        final Context context = adapter.getContext();
+        final Resources resources = adapter.getContext().getResources();
+        switch (activity.action) {
+            case Activity.ACTION_FOLLOW: {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_follow,
+                        R.string.activity_by_friends_follow_multi, activity.sources, activity.target_users));
+                displayUserProfileImages(activity.sources);
+                summaryView.setVisibility(View.GONE);
+                break;
+            }
+            case Activity.ACTION_FAVORITE: {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
+                        R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
+                displayUserProfileImages(activity.sources);
+                summaryView.setText(activity.target_statuses[0].text_unescaped);
+                summaryView.setVisibility(View.VISIBLE);
+                break;
+            }
+            default: {
+                activityTypeView.setImageDrawable(null);
+                activityTypeView.clearColorFilter();
                 break;
             }
         }
@@ -240,7 +273,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
         }
     }
 
-    private Spanned getTitleStringByFriends(int stringRes, int stringResMulti, ParcelableUser[] sources, ParcelableUser[] targets) {
+    private Spanned getTitleStringByFriends(int stringRes, int stringResMulti, ParcelableUser[] sources, Object[] targets) {
         if (sources == null || sources.length == 0) return null;
         final Context context = adapter.getContext();
         final Resources resources = context.getResources();
@@ -250,8 +283,16 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder {
         final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(
                 sources[0], nameFirst, false));
         firstSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        final SpannableString firstTargetName = new SpannableString(manager.getDisplayName(
-                targets[0], nameFirst, false));
+        final String displayName;
+        final Object target = targets[0];
+        if (target instanceof ParcelableUser) {
+            displayName = manager.getDisplayName((ParcelableUser) target, nameFirst, false);
+        } else if (target instanceof ParcelableStatus) {
+            displayName = manager.getDisplayName((ParcelableStatus) target, nameFirst, false);
+        } else {
+            throw new IllegalArgumentException();
+        }
+        final SpannableString firstTargetName = new SpannableString(displayName);
         firstTargetName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstTargetName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (sources.length == 1) {
             final String format = context.getString(stringRes);

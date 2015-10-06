@@ -43,6 +43,11 @@ public class ActivitiesAboutMeFragment extends ParcelableActivitiesFragment {
     }
 
     @Override
+    protected boolean isByFriends() {
+        return false;
+    }
+
+    @Override
     protected String[] getSavedActivitiesFileArgs() {
         final Bundle args = getArguments();
         if (args != null && args.containsKey(EXTRA_ACCOUNT_ID)) {

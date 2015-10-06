@@ -95,8 +95,10 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
     @NonNull
     @Override
     protected ParcelableActivitiesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableActivitiesAdapter(context, compact);
+        return new ParcelableActivitiesAdapter(context, compact, isByFriends());
     }
+
+    protected abstract boolean isByFriends();
 
     protected long getAccountId() {
         final Bundle args = getArguments();

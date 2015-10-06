@@ -34,9 +34,11 @@ import java.util.List;
 public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<ParcelableActivity>> {
 
     private List<ParcelableActivity> mData;
+    private final boolean mIsByFriends;
 
-    public ParcelableActivitiesAdapter(Context context, boolean compact) {
+    public ParcelableActivitiesAdapter(Context context, boolean compact, boolean byFriends) {
         super(context, compact);
+        mIsByFriends = byFriends;
     }
 
     @Override
@@ -80,7 +82,11 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
     @Override
     protected void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position) {
-        holder.displayActivity(getActivity(position));
+        if (mIsByFriends) {
+            holder.displayActivitiesByFriends(getActivity(position));
+        } else {
+            holder.displayActivityAboutMe(getActivity(position));
+        }
     }
 
     @Override
