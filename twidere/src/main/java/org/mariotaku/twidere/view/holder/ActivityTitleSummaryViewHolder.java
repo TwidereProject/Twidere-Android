@@ -40,6 +40,7 @@ import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.ActionIconView;
@@ -82,15 +83,20 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         profileImageMoreNumber = (TextView) itemView.findViewById(R.id.activity_profile_image_more_number);
     }
 
-    public void displayActivityAboutMe(ParcelableActivity activity) {
+    public void displayActivity(ParcelableActivity activity, boolean byFriends) {
         final Context context = adapter.getContext();
         final Resources resources = adapter.getContext().getResources();
         switch (activity.action) {
             case Activity.ACTION_FOLLOW: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
-                        R.string.activity_about_me_follow_multi, activity.sources));
+                if (byFriends) {
+                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_follow,
+                            R.string.activity_by_friends_follow_multi, activity.sources, activity.target_users));
+                } else {
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
+                            R.string.activity_about_me_follow_multi, activity.sources));
+                }
                 displayUserProfileImages(activity.sources);
                 summaryView.setVisibility(View.GONE);
                 break;
@@ -98,8 +104,13 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
             case Activity.ACTION_FAVORITE: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
-                        R.string.activity_about_me_favorite_multi, activity.sources));
+                if (byFriends) {
+                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
+                            R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
+                } else {
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
+                            R.string.activity_about_me_favorite_multi, activity.sources));
+                }
                 displayUserProfileImages(activity.sources);
                 summaryView.setText(activity.target_statuses[0].text_unescaped);
                 summaryView.setVisibility(View.VISIBLE);
@@ -108,14 +119,22 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
             case Activity.ACTION_RETWEET: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
-                        R.string.activity_about_me_retweet_multi, activity.sources));
+                if (byFriends) {
+                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_retweet,
+                            R.string.activity_by_friends_retweet_multi, activity.sources, activity.target_statuses));
+                } else
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
+                            R.string.activity_about_me_retweet_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
                 summaryView.setText(activity.target_statuses[0].text_unescaped);
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
             case Activity.ACTION_FAVORITED_RETWEET: {
+                if (byFriends) {
+                    showNotSupported();
+                    return;
+                }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
@@ -126,6 +145,10 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                 break;
             }
             case Activity.ACTION_RETWEETED_RETWEET: {
+                if (byFriends) {
+                    showNotSupported();
+                    return;
+                }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_retweet,
@@ -136,6 +159,10 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                 break;
             }
             case Activity.ACTION_RETWEETED_MENTION: {
+                if (byFriends) {
+                    showNotSupported();
+                    return;
+                }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_mention,
@@ -146,6 +173,10 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                 break;
             }
             case Activity.ACTION_FAVORITED_MENTION: {
+                if (byFriends) {
+                    showNotSupported();
+                    return;
+                }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
                 activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
@@ -155,7 +186,34 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                 summaryView.setVisibility(View.VISIBLE);
                 break;
             }
+            case Activity.ACTION_LIST_CREATED: {
+                if (!byFriends) {
+                    showNotSupported();
+                    return;
+                }
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
+                activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_list_created,
+                        R.string.activity_by_friends_list_created_multi, activity.sources,
+                        activity.target_object_user_lists));
+                displayUserProfileImages(activity.sources);
+                boolean firstLine = true;
+                summaryView.setText("");
+                for (ParcelableUserList item : activity.target_object_user_lists) {
+                    if (!firstLine) {
+                        summaryView.append("\n");
+                    }
+                    summaryView.append(item.description);
+                    firstLine = false;
+                }
+                summaryView.setVisibility(View.VISIBLE);
+                break;
+            }
             case Activity.ACTION_LIST_MEMBER_ADDED: {
+                if (byFriends) {
+                    showNotSupported();
+                    return;
+                }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
                 activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
                 if (activity.sources.length == 1 && activity.target_object_user_lists != null
@@ -181,34 +239,8 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         }
     }
 
-    public void displayActivitiesByFriends(ParcelableActivity activity) {
-        final Context context = adapter.getContext();
-        switch (activity.action) {
-            case Activity.ACTION_FOLLOW: {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_follow,
-                        R.string.activity_by_friends_follow_multi, activity.sources, activity.target_users));
-                displayUserProfileImages(activity.sources);
-                summaryView.setVisibility(View.GONE);
-                break;
-            }
-            case Activity.ACTION_FAVORITE: {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
-                        R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
-            }
-            default: {
-                activityTypeView.setImageDrawable(null);
-                activityTypeView.clearColorFilter();
-                break;
-            }
-        }
+    private void showNotSupported() {
+
     }
 
     public void setTextSize(float textSize) {

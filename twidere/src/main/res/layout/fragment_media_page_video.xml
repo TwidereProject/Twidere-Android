@@ -78,11 +78,13 @@
                     android:textColor="?android:textColorPrimary"
                     tools:text="12:34" />
 
-                <SeekBar
+                <ProgressBar
                     android:id="@+id/video_view_progress"
+                    style="?android:progressBarStyleHorizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:indeterminate="false" />
 
                 <TextView
                     android:id="@+id/duration_label"

@@ -52,7 +52,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -584,7 +583,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
 
         private TextureVideoView mVideoView;
         private View mVideoViewOverlay;
-        private SeekBar mVideoViewProgress;
+        private ProgressBar mVideoViewProgress;
         private TextView mDurationLabel, mPositionLabel;
         private ImageButton mPlayPauseButton, mVolumeButton;
         private ProgressWheel mProgressBar;
@@ -596,16 +595,17 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         private File mVideoFile;
         private Pair<String, String> mVideoUrlAndType;
         private MediaPlayer mMediaPlayer;
+        private int mMediaPlayerError;
 
         public boolean isLoopEnabled() {
             return getArguments().getBoolean(EXTRA_LOOP, false);
         }
 
-        public void loadVideo() {
+        public void loadVideo(boolean forceReload) {
             Pair<String, String> urlAndType = getBestVideoUrlAndType(getMedia());
             if (urlAndType == null) return;
             mVideoUrlAndType = urlAndType;
-            mVideoLoader.loadVideo(urlAndType.first, this);
+            mVideoLoader.loadVideo(urlAndType.first, forceReload, this);
         }
 
         @Override
@@ -630,6 +630,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             mMediaPlayer = null;
             mVideoViewProgress.removeCallbacks(mVideoProgressRunnable);
             mVideoViewProgress.setVisibility(View.GONE);
+            mMediaPlayerError = what;
+            invalidateOptionsMenu();
             return true;
         }
 
@@ -637,7 +639,9 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onPrepared(MediaPlayer mp) {
             if (getUserVisibleHint()) {
                 mMediaPlayer = mp;
+                mMediaPlayerError = 0;
                 mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mp.setScreenOnWhilePlaying(true);
                 updateVolume();
                 mp.setLooping(isLoopEnabled());
                 mp.start();
@@ -645,6 +649,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 mVideoViewProgress.post(mVideoProgressRunnable);
                 updatePlayerState();
                 mVideoControl.setVisibility(View.VISIBLE);
+                invalidateOptionsMenu();
             }
         }
 
@@ -674,7 +679,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             super.onBaseViewCreated(view, savedInstanceState);
             mVideoView = (TextureVideoView) view.findViewById(R.id.video_view);
             mVideoViewOverlay = view.findViewById(R.id.video_view_overlay);
-            mVideoViewProgress = (SeekBar) view.findViewById(R.id.video_view_progress);
+            mVideoViewProgress = (ProgressBar) view.findViewById(R.id.video_view_progress);
             mProgressBar = (ProgressWheel) view.findViewById(R.id.load_progress);
             mDurationLabel = (TextView) view.findViewById(R.id.duration_label);
             mPositionLabel = (TextView) view.findViewById(R.id.position_label);
@@ -746,7 +751,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
 
             mPlayPauseButton.setOnClickListener(this);
             mVolumeButton.setOnClickListener(this);
-            loadVideo();
+            loadVideo(false);
             updateVolume();
         }
 
@@ -879,7 +884,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             final File file = mVideoFile;
             final Pair<String, String> linkAndType = mVideoUrlAndType;
             final boolean isLoading = linkAndType != null && mVideoLoader.isLoading(linkAndType.first);
-            final boolean hasVideo = file != null && file.exists() && linkAndType != null;
+            final boolean hasVideo = file != null && file.exists() && linkAndType != null && mMediaPlayerError == 0;
             MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasVideo && !isLoading);
             MenuUtils.setMenuItemAvailability(menu, R.id.share, hasVideo && !isLoading);
             MenuUtils.setMenuItemAvailability(menu, R.id.save, hasVideo && !isLoading);
@@ -913,7 +918,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     return true;
                 }
                 case R.id.refresh: {
-                    loadVideo();
+                    loadVideo(true);
                     return true;
                 }
             }

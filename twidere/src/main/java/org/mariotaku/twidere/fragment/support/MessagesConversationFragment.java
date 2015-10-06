@@ -68,7 +68,6 @@ import android.widget.TextView;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperToast.Duration;
 import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -82,7 +81,6 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -103,7 +101,6 @@ import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.TakeAllKeyboardShortcut;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -353,9 +350,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.register(this);
+        mBus.register(this);
         updateEmptyText();
         mMessagesListView.addOnScrollListener(mScrollListener);
         mScrollListener.reset();
@@ -381,9 +376,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public void onStop() {
         mMessagesListView.removeOnScrollListener(mScrollListener);
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.unregister(this);
+        mBus.unregister(this);
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();
         }

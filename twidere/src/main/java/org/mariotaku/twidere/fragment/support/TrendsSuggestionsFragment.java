@@ -32,11 +32,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.TrendsAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -123,16 +121,12 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
     public void onStart() {
         super.onStart();
         getLoaderManager().restartLoader(0, null, this);
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.register(this);
+        mBus.register(this);
     }
 
     @Override
     public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.unregister(this);
+        mBus.unregister(this);
         super.onStop();
     }
 

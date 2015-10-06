@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -62,7 +61,6 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.meizu.flyme.reflect.StatusBarProxy;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -112,9 +110,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.SessionEvent;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.Utils.cleanDatabasesByItemLimit;
@@ -435,9 +430,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONSTART));
         final ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mAccountChangeObserver);
-        final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
-        assert bus != null;
-        bus.register(this);
+        mBus.register(this);
 
         mReadStateManager.registerOnSharedPreferenceChangeListener(mReadStateChangeListener);
         updateUnreadCount();
@@ -463,9 +456,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     protected void onStop() {
         mMultiSelectHandler.dispatchOnStop();
         mReadStateManager.unregisterOnSharedPreferenceChangeListener(mReadStateChangeListener);
-        final Bus bus = TwidereApplication.getInstance(this).getMessageBus();
-        assert bus != null;
-        bus.unregister(this);
+        mBus.unregister(this);
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mAccountChangeObserver);
         mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).apply();

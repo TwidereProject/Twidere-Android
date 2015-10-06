@@ -31,13 +31,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 import com.squareup.okhttp.internal.Network;
-import com.squareup.otto.Bus;
 
 import org.acra.annotation.ReportsCrashes;
 import org.mariotaku.twidere.BuildConfig;
@@ -87,7 +85,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private Network mNetwork;
     private SQLiteDatabase mDatabase;
-    private Bus mMessageBus;
     private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private UserColorNameManager mUserColorNameManager;
 
@@ -134,11 +131,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mKeyboardShortcutsHandler;
     }
 
-    @Nullable
-    public Bus getMessageBus() {
-        return mMessageBus;
-    }
-
     public MultiSelectManager getMultiSelectManager() {
         if (mMultiSelectManager != null) return mMultiSelectManager;
         return mMultiSelectManager = new MultiSelectManager();
@@ -164,7 +156,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         initDebugMode();
         initBugReport();
         mHandler = new Handler();
-        mMessageBus = new Bus();
         initializeAsyncTask();
         initAccountColor(this);
 

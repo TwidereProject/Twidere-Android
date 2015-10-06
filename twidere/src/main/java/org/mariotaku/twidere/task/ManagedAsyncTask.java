@@ -25,23 +25,33 @@ import android.os.AsyncTask;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTaskManager;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
+
+import javax.inject.Inject;
 
 public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> implements
         Constants {
 
-    private final AsyncTaskManager manager;
+    @Inject
+    protected AsyncTaskManager manager;
+    @Inject
+    protected Bus bus;
     private final Context context;
     private final String tag;
 
-    public ManagedAsyncTask(final Context context, final AsyncTaskManager manager) {
-        this(context, manager, null);
+    public ManagedAsyncTask(final Context context) {
+        this(context, null);
     }
 
-    public ManagedAsyncTask(final Context context, final AsyncTaskManager manager, final String tag) {
-        this.manager = manager;
+    public ManagedAsyncTask(final Context context, final String tag) {
+        //noinspection unchecked
+        DaggerGeneralComponent.builder()
+                .applicationModule(ApplicationModule.get(context))
+                .build()
+                .inject((ManagedAsyncTask<Object, Object, Object>) this);
         this.context = context;
         this.tag = tag;
     }
@@ -63,21 +73,18 @@ public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTa
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
         bus.post(new TaskStateChangedEvent());
     }
 
     @Override
     protected void onPostExecute(final Result result) {
         super.onPostExecute(result);
-        final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
         bus.post(new TaskStateChangedEvent());
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        final Bus bus = TwidereApplication.getInstance(context).getMessageBus();
         bus.post(new TaskStateChangedEvent());
     }
 

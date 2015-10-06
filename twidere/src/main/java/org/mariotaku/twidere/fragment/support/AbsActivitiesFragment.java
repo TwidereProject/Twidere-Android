@@ -32,12 +32,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.otto.Bus;
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter.ActivityAdapterListener;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -119,16 +116,12 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
     @Override
     public void onStart() {
         super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.register(mStatusesBusCallback);
+        mBus.register(mStatusesBusCallback);
     }
 
     @Override
     public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.unregister(mStatusesBusCallback);
+        mBus.unregister(mStatusesBusCallback);
         super.onStop();
     }
 

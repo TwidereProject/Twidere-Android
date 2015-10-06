@@ -23,20 +23,17 @@ import android.view.View;
 
 import com.desmond.asyncmanager.AsyncManager;
 import com.desmond.asyncmanager.TaskRunnable;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
-import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -425,16 +422,12 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         };
         task.setResultHandler(recyclerView);
         AsyncManager.runBackgroundTask(task);
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.register(mStatusesBusCallback);
+        mBus.register(mStatusesBusCallback);
     }
 
     @Override
     public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.unregister(mStatusesBusCallback);
+        mBus.unregister(mStatusesBusCallback);
         final RecyclerView recyclerView = getRecyclerView();
         if (mActiveHotMobiScrollTracker != null) {
             recyclerView.removeOnScrollListener(mActiveHotMobiScrollTracker);

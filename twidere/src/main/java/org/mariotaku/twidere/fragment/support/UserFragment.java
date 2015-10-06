@@ -82,7 +82,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.meizu.flyme.reflect.StatusBarProxy;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.sqliteqb.library.Expression;
@@ -798,9 +797,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onStart() {
         super.onStart();
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.register(this);
+        mBus.register(this);
     }
 
     @Override
@@ -811,9 +808,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        assert bus != null;
-        bus.unregister(this);
+        mBus.unregister(this);
         super.onStop();
     }
 

@@ -36,6 +36,8 @@ import android.support.v4.view.LayoutInflaterFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.squareup.otto.Bus;
+
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
@@ -62,6 +64,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected MediaLoaderWrapper mMediaLoader;
     @Inject
     protected VideoLoader mVideoLoader;
+    @Inject
+    protected Bus mBus;
 
     public BaseSupportFragment() {
 

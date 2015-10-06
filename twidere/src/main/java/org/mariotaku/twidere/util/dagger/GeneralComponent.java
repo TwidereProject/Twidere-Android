@@ -39,6 +39,7 @@ import org.mariotaku.twidere.provider.TwidereCommandProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.service.RefreshService;
+import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
@@ -88,4 +89,6 @@ public interface GeneralComponent {
     void inject(BaseArrayAdapter<Object> object);
 
     void inject(DraftsAdapter object);
+
+    void inject(ManagedAsyncTask<Object, Object, Object> object);
 }

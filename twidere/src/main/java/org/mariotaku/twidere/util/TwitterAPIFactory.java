@@ -133,9 +133,13 @@ public class TwitterAPIFactory implements TwidereConstants {
 
             }
             client.setSslSocketFactory(sslSocketFactory);
+        } else {
+            client.setSslSocketFactory(null);
         }
         if (enableProxy) {
             client.setProxy(getProxy(prefs));
+        } else {
+            client.setProxy(Proxy.NO_PROXY);
         }
     }
 

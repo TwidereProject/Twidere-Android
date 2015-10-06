@@ -82,11 +82,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
     @Override
     protected void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position) {
-        if (mIsByFriends) {
-            holder.displayActivitiesByFriends(getActivity(position));
-        } else {
-            holder.displayActivityAboutMe(getActivity(position));
-        }
+        holder.displayActivity(getActivity(position), mIsByFriends);
     }
 
     @Override

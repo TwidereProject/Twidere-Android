@@ -39,7 +39,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -52,7 +51,6 @@ import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.DirectMessageEntry;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.MessageEntriesAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
@@ -274,8 +272,7 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
         super.onStart();
         final ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver);
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.register(this);
+        mBus.register(this);
         final MessageEntriesAdapter adapter = getAdapter();
         adapter.updateReadState();
         updateRefreshState();
@@ -283,8 +280,7 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
 
     @Override
     public void onStop() {
-        final Bus bus = TwidereApplication.getInstance(getActivity()).getMessageBus();
-        bus.unregister(this);
+        mBus.unregister(this);
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mReloadContentObserver);
         super.onStop();
