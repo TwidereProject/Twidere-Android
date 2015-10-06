@@ -73,6 +73,12 @@ public class DataImportActivity extends ThemedFragmentActivity implements FileSe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        setVisible(true);
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {

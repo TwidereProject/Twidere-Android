@@ -25,19 +25,23 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
+import org.mariotaku.twidere.util.net.OkHttpRestClient;
 import org.mariotaku.twidere.util.net.TwidereNetwork;
 
 import dagger.Module;
@@ -48,6 +52,8 @@ import dagger.Provides;
  */
 @Module
 public class ApplicationModule {
+
+    private final SharedPreferencesWrapper sharedPreferences;
 
     private final ActivityTracker activityTracker;
     private final AsyncTwitterWrapper asyncTwitterWrapper;
@@ -61,13 +67,14 @@ public class ApplicationModule {
     private final RestHttpClient restHttpClient;
 
     public ApplicationModule(TwidereApplication application) {
+        sharedPreferences = SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         activityTracker = new ActivityTracker();
         asyncTaskManager = AsyncTaskManager.getInstance();
         asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager);
         readStateManager = new ReadStateManager(application);
         network = new TwidereNetwork(application);
         restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, network);
-        imageDownloader = new TwidereImageDownloader(application, network, true);
+        imageDownloader = new TwidereImageDownloader(application, restHttpClient, true);
         imageLoader = createImageLoader(application, imageDownloader);
         videoLoader = new VideoLoader(application, imageDownloader, asyncTaskManager);
         mediaLoaderWrapper = new MediaLoaderWrapper(imageLoader, videoLoader);
@@ -139,5 +146,18 @@ public class ApplicationModule {
     @Provides
     public Network getNetwork() {
         return network;
+    }
+
+
+    public void reloadConnectivitySettings() {
+        imageDownloader.reloadConnectivitySettings();
+        if (restHttpClient instanceof OkHttpRestClient) {
+            final OkHttpClient okHttpClient = ((OkHttpRestClient) restHttpClient).getClient();
+            TwitterAPIFactory.updateHttpClientConfiguration(sharedPreferences, okHttpClient);
+        }
+    }
+
+    public void onLowMemory() {
+        mediaLoaderWrapper.clearMemoryCache();
     }
 }

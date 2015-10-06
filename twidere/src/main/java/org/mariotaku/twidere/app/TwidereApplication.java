@@ -230,8 +230,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onLowMemory() {
-//        final ApplicationModule module = getApplicationModule();
-//        module.getMediaLoaderWrapper().clearMemoryCache();
+        final ApplicationModule module = getApplicationModule();
+        module.onLowMemory();
         super.onLowMemory();
     }
 
@@ -253,7 +253,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     public void reloadConnectivitySettings() {
-        ApplicationModule.get(this).getImageDownloader().reloadConnectivitySettings();
+        getApplicationModule().reloadConnectivitySettings();
     }
 
     private DiskCache createDiskCache(final String dirName) {

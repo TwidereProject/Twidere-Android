@@ -47,7 +47,7 @@ android {
 }
 
 repositories {
-    maven { url 'http://repo.commonsware.com.s3.amazonaws.com' }
+    maven { url 'https://repo.commonsware.com.s3.amazonaws.com' }
 }
 
 configurations {

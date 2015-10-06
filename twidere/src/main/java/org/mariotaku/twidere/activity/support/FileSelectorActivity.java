@@ -46,6 +46,12 @@ public class FileSelectorActivity extends BaseSupportDialogActivity implements F
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		setVisible(true);
+	}
+
+	@Override
 	public void onDismissed(final DialogFragment df) {
 		if (!isFinishing()) {
 			finish();

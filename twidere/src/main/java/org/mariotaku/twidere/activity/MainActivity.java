@@ -45,6 +45,7 @@ public class MainActivity extends Activity implements Constants {
         }
         ThemeUtils.overrideActivityOpenAnimation(this);
         super.onCreate(savedInstanceState);
+        setVisible(true);
         final Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);

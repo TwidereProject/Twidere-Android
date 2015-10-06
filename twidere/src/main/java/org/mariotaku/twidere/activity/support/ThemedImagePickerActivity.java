@@ -21,6 +21,12 @@ public class ThemedImagePickerActivity extends ImagePickerActivity {
         return new ThemedIntentBuilder(context);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setVisible(true);
+    }
+
     public static final class ThemedIntentBuilder {
         private final Context context;
         private final IntentBuilder intentBuilder;

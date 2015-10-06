@@ -29,7 +29,6 @@ import android.webkit.URLUtil;
 
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.squareup.okhttp.internal.Network;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
 
@@ -70,25 +69,24 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     private final SharedPreferencesWrapper mPreferences;
     private final boolean mUseThumbor;
     private final String mUserAgent;
-    private final Network mNetwork;
+    private final RestHttpClient mClient;
     private Thumbor mThumbor;
-    private RestHttpClient mClient;
+
     private final String mTwitterProfileImageSize;
 
-    public TwidereImageDownloader(final Context context, final Network network, final boolean useThumbor) {
+    public TwidereImageDownloader(final Context context, final RestHttpClient client, final boolean useThumbor) {
         super(context);
         mContext = context;
-        mNetwork = network;
         mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         mTwitterProfileImageSize = context.getString(R.string.profile_image_size);
         mUseThumbor = useThumbor;
         mUserAgent = UserAgentUtils.getDefaultUserAgentString(context);
+        mClient = client;
         reloadConnectivitySettings();
     }
 
     public void reloadConnectivitySettings() {
-        mClient = TwitterAPIFactory.getDefaultHttpClient(mContext, mNetwork);
         if (mUseThumbor && mPreferences.getBoolean(KEY_THUMBOR_ENABLED)) {
             final String address = mPreferences.getString(KEY_THUMBOR_ADDRESS, null);
             final String securityKey = mPreferences.getString(KEY_THUMBOR_SECURITY_KEY, null);

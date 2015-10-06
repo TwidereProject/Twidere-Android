@@ -33,6 +33,7 @@ public class UsageStatisticsActivity extends Activity implements Constants {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setVisible(true);
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putInt(EXTRA_RESID, R.xml.preferences_usage_statistics);
         final Intent intent = new Intent(this, SettingsActivity.class);

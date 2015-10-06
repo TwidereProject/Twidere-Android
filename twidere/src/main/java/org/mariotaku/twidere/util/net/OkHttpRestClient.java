@@ -70,7 +70,12 @@ public class OkHttpRestClient implements RestHttpClient {
         DebugModeUtils.initForHttpClient(client);
     }
 
+    public OkHttpClient getClient() {
+        return client;
+    }
+
     @NonNull
+
     @Override
     public RestHttpResponse execute(RestHttpRequest restHttpRequest) throws IOException {
         final Call call = newCall(restHttpRequest);
