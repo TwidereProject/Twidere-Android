@@ -43,6 +43,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
+import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -66,6 +67,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected VideoLoader mVideoLoader;
     @Inject
     protected Bus mBus;
+    @Inject
+    protected AsyncTaskManager mAsyncTaskManager;
 
     public BaseSupportFragment() {
 

@@ -556,9 +556,8 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                 final boolean[] ascending = {false, false, true, true};
                 final OrderBy orderBy = new OrderBy(order, ascending);
                 final Uri uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId));
-                final Cursor usersCursor = context.getContentResolver().query(uri,
-                        CachedUsers.COLUMNS, selection.getSQL(),
-                        selectionArgs, orderBy.getSQL());
+                final Cursor usersCursor = context.getContentResolver().query(uri, CachedUsers.COLUMNS,
+                        selection.getSQL(), selectionArgs, orderBy.getSQL());
                 final CachedIndices usersIndices = new CachedIndices(usersCursor);
                 final int screenNamePos = result.size();
                 boolean hasName = false;

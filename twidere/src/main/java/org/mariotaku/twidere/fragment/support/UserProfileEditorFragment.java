@@ -64,13 +64,11 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
@@ -90,8 +88,6 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private static final int RESULT_REMOVE_BANNER = 101;
     private static final String UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile";
 
-    private MediaLoaderWrapper mMediaLoader;
-    private AsyncTaskManager mAsyncTaskManager;
     private AsyncTask<Object, Object, ?> mTask;
     private ImageView mProfileImageView;
     private ImageView mProfileBannerView;
@@ -221,7 +217,6 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        mAsyncTaskManager = ApplicationModule.get(getContext()).getAsyncTaskManager();
         final Bundle args = getArguments();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         mAccountId = accountId;

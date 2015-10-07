@@ -38,6 +38,8 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         sActionLabelMap.put(ACTION_STATUS_FAVORITE, R.string.favorite);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS, R.string.previous_item);
         sActionLabelMap.put(ACTION_NAVIGATION_NEXT, R.string.next_item);
+        sActionLabelMap.put(ACTION_NAVIGATION_PAGE_DOWN, R.string.page_down);
+        sActionLabelMap.put(ACTION_NAVIGATION_PAGE_UP, R.string.page_up);
         sActionLabelMap.put(ACTION_NAVIGATION_TOP, R.string.jump_to_top);
         sActionLabelMap.put(ACTION_NAVIGATION_REFRESH, R.string.refresh);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS_TAB, R.string.previous_tab);
@@ -349,6 +351,7 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
             if (keyCode == KeyEvent.KEYCODE_UNKNOWN) return upperName;
             if (keyCode == KeyEvent.KEYCODE_DEL) return "Backspace";
             if (keyCode == KeyEvent.KEYCODE_FORWARD_DEL) return "Delete";
+            if (keyCode == KeyEvent.KEYCODE_SPACE) return "Space";
             final char displayLabel = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode).getDisplayLabel();
             if (displayLabel == 0) return keyName.toUpperCase(Locale.US);
             return String.valueOf(displayLabel);

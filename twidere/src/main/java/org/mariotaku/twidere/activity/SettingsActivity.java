@@ -299,9 +299,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         }
         final ListView listView = getListView();
         if (listView != null) {
-//            listView.setDivider(new EmptyDrawable());
             listView.setChoiceMode(isMultiPane() ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
-//            listView.setDividerHeight(0);
             final LayoutParams lp = listView.getLayoutParams();
             if (lp instanceof MarginLayoutParams) {
                 final MarginLayoutParams mlp = (MarginLayoutParams) lp;
@@ -388,14 +386,11 @@ public class SettingsActivity extends BasePreferenceActivity {
 
         static final int HEADER_TYPE_NORMAL = 0;
         static final int HEADER_TYPE_CATEGORY = 1;
-        static final int HEADER_TYPE_SPACE = 2;
 
         private final Resources mResources;
         private final int mActionIconColor;
         private final ArrayList<Header> mHeaders;
         private final LayoutInflater mInflater;
-        private int mCategoriesCount;
-        private boolean mFirstItemIsCategory;
 
         public HeaderAdapter(final Context context) {
             mInflater = LayoutInflater.from(context);
@@ -407,10 +402,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         private static int getHeaderType(final Header header) {
             if (header.fragment != null || header.intent != null)
                 return HEADER_TYPE_NORMAL;
-            else if (header.title != null || header.titleRes != 0)
-                return HEADER_TYPE_CATEGORY;
-            else
-                return HEADER_TYPE_SPACE;
+            else return HEADER_TYPE_CATEGORY;
 
         }
 
@@ -431,24 +423,12 @@ public class SettingsActivity extends BasePreferenceActivity {
 
         @Override
         public int getCount() {
-            return mHeaders.size() + mCategoriesCount + (mFirstItemIsCategory ? 0 : 1);
+            return mHeaders.size();
         }
 
         @Override
         public Header getItem(final int position) {
-            if (position == getCount() - 1) return new Header();
-            final int realPosition = mFirstItemIsCategory ? position + 1 : position;
-            int categoriesCount = 0;
-            int i;
-            for (i = 0; i + categoriesCount < realPosition; i++) {
-                if (getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
-                    categoriesCount++;
-                }
-            }
-            if (i + categoriesCount == realPosition && getHeaderType(mHeaders.get(i)) == HEADER_TYPE_CATEGORY) {
-                return new Header();
-            }
-            return mHeaders.get(realPosition - categoriesCount);
+            return mHeaders.get(position);
         }
 
         @Override
@@ -466,21 +446,12 @@ public class SettingsActivity extends BasePreferenceActivity {
                     bindCategoryHeader(view, position, header);
                     break;
                 }
-                case HEADER_TYPE_SPACE: {
-                    break;
-                }
                 default: {
                     bindHeader(view, position, header);
                     break;
                 }
             }
             return view;
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            updateCategoriesInfo();
-            super.notifyDataSetChanged();
         }
 
         @Override
@@ -557,22 +528,12 @@ public class SettingsActivity extends BasePreferenceActivity {
                     layoutRes = R.layout.list_item_preference_header_category;
                     break;
                 }
-                case HEADER_TYPE_SPACE: {
-                    layoutRes = R.layout.list_item_preference_header_space;
-                    break;
-                }
                 default: {
                     layoutRes = R.layout.list_item_preference_header_item;
                     break;
                 }
             }
             return mInflater.inflate(layoutRes, parent, false);
-        }
-
-        private void updateCategoriesInfo() {
-            mFirstItemIsCategory = !mHeaders.isEmpty()
-                    && getHeaderType(mHeaders.get(0)) == HEADER_TYPE_CATEGORY;
-            mCategoriesCount = getCategoriesCount(0, mHeaders.size());
         }
 
         private static class HeaderViewHolder extends ViewListHolder {

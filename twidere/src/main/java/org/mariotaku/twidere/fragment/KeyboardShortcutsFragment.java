@@ -107,6 +107,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         final PreferenceCategory navigation = makeAndAddCategory(getString(R.string.navigation));
         navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_PREVIOUS));
         navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_NEXT));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_PAGE_DOWN));
+        navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_PAGE_UP));
         navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_PREVIOUS_TAB));
         navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_NEXT_TAB));
         navigation.addPreference(makePreferences(CONTEXT_TAG_NAVIGATION, ACTION_NAVIGATION_REFRESH));

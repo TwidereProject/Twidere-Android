@@ -34,6 +34,8 @@ public interface KeyboardShortcutConstants {
     String ACTION_NAVIGATION_REFRESH = "navigation.refresh";
     String ACTION_NAVIGATION_NEXT = "navigation.next";
     String ACTION_NAVIGATION_PREVIOUS = "navigation.previous";
+    String ACTION_NAVIGATION_PAGE_DOWN = "navigation.page_down";
+    String ACTION_NAVIGATION_PAGE_UP = "navigation.page_up";
     String ACTION_NAVIGATION_TOP = "navigation.top";
     String ACTION_STATUS_FAVORITE = "status.favorite";
     String ACTION_STATUS_RETWEET = "status.retweet";

@@ -783,4 +783,6 @@
     <string name="bug_reports">Bug reports</string>
     <string name="invalid_consumer_key">Invalid consumer key</string>
     <string name="invalid_consumer_secret">Invalid consumer secret</string>
+    <string name="page_up">Page up</string>
+    <string name="page_down">Page down</string>
 </resources>

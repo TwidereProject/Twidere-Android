@@ -72,6 +72,11 @@ public class RecyclerViewUtils {
         }
     }
 
+    public static void pageScroll(RecyclerView recyclerView, LinearLayoutManager layoutManager, int direction) {
+        final int contentHeight = layoutManager.getHeight() - layoutManager.getPaddingTop() - layoutManager.getPaddingBottom();
+        recyclerView.smoothScrollBy(0, direction > 0 ? contentHeight : -contentHeight);
+    }
+
     private static void focus(@NonNull View view) {
         if (view.isInTouchMode()) {
             view.requestFocusFromTouch();
